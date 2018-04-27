@@ -211,7 +211,7 @@ Deck.prototype = {
 let u = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
-let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELDOFFICER', 3, 2, u);
+let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u);
 let henchmenTemplates = [
   makeHenchmenCard('HAND NINJAS', 3, { fight: function(ev) { addRecruitEvent(ev, 1); } }),
   makeHenchmenCard('SAVAGE LAND MUTATES', 4, { fight: function(ev) { addEndDrawMod(1); } }),
@@ -977,14 +977,14 @@ function imageName(path, name, subname) {
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
   return "images/" + path + "/" + name + ".png";
 }
-function cardName(card) {
-  if (card.type === "HERO") return imageName("heroes", card.hero, card.name);
-  if (card.type === "VILLAIN" && card.villainGroup === undefined) return imageName("henchmen", card.name);
-  if (card.type === "VILLAIN") return imageName("villains", card.villainGroup, card.name);
-  if (card.type === "MASTERMIND") return imageName("masterminds", card.name);
-  if (card.type === "TACTICS") return imageName("masterminds", card.mastermind.name, card.name);
-  if (card.type === "SCHEME") return imageName("schemes", card.name);
-  return imageName("", card.type);
+function cardImageName(card) {
+  if (card.cardType === "HERO") return imageName("heroes", card.heroName, card.cardName);
+  if (card.cardType === "VILLAIN" && card.villainGroup === undefined) return imageName("henchmen", card.cardName);
+  if (card.cardType === "VILLAIN") return imageName("villains", card.villainGroup, card.cardName);
+  if (card.cardType === "MASTERMIND") return imageName("masterminds", card.cardName);
+  if (card.cardType === "TACTICS") return imageName("masterminds", card.mastermind.cardName, card.cardName);
+  if (card.cardType === "SCHEME") return imageName("schemes", card.cardName);
+  return imageName("", card.cardType);
 }
 function makeDisplayCard(c) {
   let res = c.id;
@@ -993,18 +993,38 @@ function makeDisplayCard(c) {
   }
   return res;
 }
+function makeDisplayCardImg(c) {
+  return '<IMG src="' + cardImageName(c) + '">';
+}
+function makeDisplayBackImg(c) {
+  return '<IMG src="images/back.png">';
+}
 function displayDecks() {
   let divs = document.getElementsByClassName("deck");
   let divByName = {};
   for (let i = 0; i < divs.length; i++) {
-    divByName[divs[i].getAttribute("data-deck")] = divs[i];
+    divByName[divs[i].getAttribute("data-deck")] = {
+      div: divs[i],
+      fanout: divs[i].getAttribute("data-fanout"),
+      mode: divs[i].getAttribute("data-mode"),
+    }
   }
   let list = Deck.prototype.deckList;
   for (let i = 0; i < list.length; i++) {
     let deck = list[i];
     let div = divByName[deck.id];
     if (!div) continue;
-    div.innerHTML = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+    if (div.mode === "IMG") {
+      if (!deck.faceup) {
+        div.div.innerHTML = deck.deck.map(makeDisplayBackImg).join('');
+      } else if (div.fanout) {
+        div.div.innerHTML = deck.deck.map(makeDisplayCardImg).join('');
+      } else {
+        div.div.innerHTML = deck.count ? makeDisplayCardImg(deck.top) : '';
+      }
+    } else {
+      div.div.innerHTML = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+    }
   }
 }
 function displayGame() {
@@ -1050,34 +1070,41 @@ Other villains
 */
 
 </script>
+<style>
+table { margin: 0; padding: 0; border: 0; }
+td { width: 270px; height: 375px; }
+</style>
 </head>
 <body>
 Recruit: <span id="recruit"></span>
 Attack: <span id="attack"></span>
-<div class="deck" data-deck="PLAYAREA" data-fanout="1"></div>
+<table><tr>
+<td><div class="deck" data-deck="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
+<td><div class="deck" data-deck="BRIDGE" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="ROOFTOPS" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="STREETS" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="BANK" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="SEWERS" data-mode="IMG"></div></td>
+</tr><tr>
+<td><div class="deck" data-deck="SHIELDOFFICER" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="HQ1" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="HQ2" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="HQ3" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="HQ4" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="HQ5" data-mode="IMG"></div></td>
+</tr></table>
+<div class="deck" data-deck="PLAYAREA" data-fanout="1" data-mode="IMG"></div>
 <hr>
-<div class="deck" data-deck="HAND0" data-fanout="1"></div>
+<div class="deck" data-deck="HAND0" data-fanout="1" data-mode="IMG"></div>
 <div class="deck" data-deck="DECK0"></div>
 <div class="deck" data-deck="DISCARD0"></div>
 <div class="deck" data-deck="VICTORY0"></div>
 <hr>
-<div class="deck" data-deck="SHIELDOFFICER"></div>
-<div class="deck" data-deck="HQ1"></div>
-<div class="deck" data-deck="HQ2"></div>
-<div class="deck" data-deck="HQ3"></div>
-<div class="deck" data-deck="HQ4"></div>
-<div class="deck" data-deck="HQ5"></div>
-<div class="deck" data-deck="VILLAIN"></div>
-<div class="deck" data-deck="SEWERS"></div>
-<div class="deck" data-deck="BANK"></div>
-<div class="deck" data-deck="STREETS"></div>
-<div class="deck" data-deck="ROOFTOPS"></div>
-<div class="deck" data-deck="BRIDGE"></div>
-<div class="deck" data-deck="ESCAPED"></div>
-<div class="deck" data-deck="MASTERMIND" data-fanout="1"></div>
 <div class="deck" data-deck="SCHEME"></div>
-<div class="deck" data-deck="WOUNDS"></div>
+<div class="deck" data-deck="ESCAPED"></div>
+<div class="deck" data-deck="VILLAIN"></div>
 <div class="deck" data-deck="KO"></div>
+<div class="deck" data-deck="WOUNDS"></div>
 <div class="deck" data-deck="BYSTANDERS"></div>
 </body>
 </html>
