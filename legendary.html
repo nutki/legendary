@@ -987,17 +987,17 @@ function cardImageName(card) {
   return imageName("", card.cardType);
 }
 function makeDisplayCard(c) {
-  let res = c.id;
+  let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
   if (c.attached) for (let i in c.attached) if (c.attached[i].count) {
     res += ' [ ' + i + ': ' + c.attached[i].deck.map(makeDisplayCard).join(' ') + ' ]';
   }
   return res;
 }
 function makeDisplayCardImg(c) {
-  return '<IMG src="' + cardImageName(c) + '">';
+  return `<IMG class="card" id="${c.id}" src="${cardImageName(c)}">`
 }
 function makeDisplayBackImg(c) {
-  return '<IMG src="images/back.png">';
+  return `<IMG class="card" id="${c.id}" src="images/back.png">`;
 }
 function displayDecks() {
   let divs = document.getElementsByClassName("deck");
@@ -1029,6 +1029,7 @@ function displayDecks() {
 }
 function displayGame() {
   displayDecks();
+  let cards = document.getElementsByClassName("card");
   document.getElementById("recruit").innerHTML = turnState.recruit;
   document.getElementById("attack").innerHTML = turnState.attack;
 }
@@ -1055,7 +1056,42 @@ function init() {
   displayGame();
   setTimeout(makeAction, 1000);
 }
-document.addEventListener('DOMContentLoaded', init, false);
+
+var clickActions = {};
+function clickCard(ev) {
+  console.log(this.id, ev.target.id, clickActions);
+  const id = ev.target.id;
+  if (id && clickActions[id]) clickActions[id]();
+}
+window.onclick = clickCard;
+function mainLoop() {
+  clickActions = {};
+  playGame();
+  displayGame();
+  let ev = popEvent();
+  ({
+    "SELECTEVENT": function () {
+      ev.options.map(option => {
+        if (option.what) {
+          clickActions[option.what.id] = () => { console.log(option); pushEvents(option); mainLoop(); };
+        } else {
+          console.log(option);
+        }
+      });
+    },
+    "SELECTCARD1": function () {
+      ev.options.map(option => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); mainLoop(); });
+    },
+    "SELECTCARD01": function () {
+      ev.options.map(option => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); mainLoop(); });
+    },
+    "SELECTONE": function () { pushEvents(ev.options[0]); mainLoop(); },
+  }[ev.type] || function () {
+    conosle.log("Unknown UI event type", ev);
+  })();
+  console.log("UI> " + ev.type, ev, clickActions);
+}
+document.addEventListener('DOMContentLoaded', mainLoop, false);
 /*
 GUI selectable options
 
@@ -1076,8 +1112,6 @@ td { width: 270px; height: 375px; }
 </style>
 </head>
 <body>
-Recruit: <span id="recruit"></span>
-Attack: <span id="attack"></span>
 <table><tr>
 <td><div class="deck" data-deck="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
 <td><div class="deck" data-deck="BRIDGE" data-mode="IMG"></div></td>
@@ -1093,6 +1127,8 @@ Attack: <span id="attack"></span>
 <td><div class="deck" data-deck="HQ4" data-mode="IMG"></div></td>
 <td><div class="deck" data-deck="HQ5" data-mode="IMG"></div></td>
 </tr></table>
+Recruit: <span id="recruit"></span>
+Attack: <span id="attack"></span>
 <div class="deck" data-deck="PLAYAREA" data-fanout="1" data-mode="IMG"></div>
 <hr>
 <div class="deck" data-deck="HAND0" data-fanout="1" data-mode="IMG"></div>
