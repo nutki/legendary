@@ -196,8 +196,8 @@ Deck.prototype = {
   _put: function(c) { this.deck.push(c); },
   _putBottom: function(c) { this.deck.unshift(c); },
   shuffle: function() { shuffleArray(this.deck, gameState.gameRand); },
-  get top() { return this.deck[0]; },
-  get bottom() { return this.deck[this.deck.length - 1]; },
+  get bottom() { return this.deck[0]; },
+  get top() { return this.deck[this.deck.length - 1]; },
   remove: function(c) { let p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; },
   filter: function(c) { return filter(this.deck, c); },
   fcount: function(c) { return count(this.deck, c); },
@@ -214,7 +214,7 @@ let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
 let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u);
 let henchmenTemplates = [
   makeHenchmenCard('HAND NINJAS', 3, { fight: function(ev) { addRecruitEvent(ev, 1); } }),
-  makeHenchmenCard('SAVAGE LAND MUTATES', 4, { fight: function(ev) { addEndDrawMod(1); } }),
+  makeHenchmenCard('SAVAGE LAND MUTATES', 3, { fight: function(ev) { addEndDrawMod(1); } }),
 ];
 let bystanderTemplates = [ makeBystanderCard() ];
 let twistTemplate = new Card("SCHEME TWIST");
@@ -304,6 +304,7 @@ let villainTemplates = [
 
 function makeSchemeCard(name, counts, effect, triggers, initfunc) {
   let c = new Card('SCHEME');
+  c.cardName = name;
   c.params = counts;
   c.twist = effect;
   if (triggers) c.triggers = triggers instanceof Array ? triggers : [ triggers ];
@@ -1057,7 +1058,12 @@ function init() {
   setTimeout(makeAction, 1000);
 }
 
-var clickActions = {};
+function getEventName(ev) {
+  if (ev.type === "ENDOFTURN") return "End Turn";
+  console.log(ev);
+  return "Unknown option";
+}
+let clickActions = {};
 function clickCard(ev) {
   console.log(this.id, ev.target.id, clickActions);
   const id = ev.target.id;
@@ -1065,6 +1071,7 @@ function clickCard(ev) {
 }
 window.onclick = clickCard;
 function mainLoop() {
+  let extraActions = [];
   clickActions = {};
   playGame();
   displayGame();
@@ -1072,10 +1079,10 @@ function mainLoop() {
   ({
     "SELECTEVENT": function () {
       ev.options.map(option => {
-        if (option.what) {
-          clickActions[option.what.id] = () => { console.log(option); pushEvents(option); mainLoop(); };
+        if (option.what && !clickActions[option.what.id]) {
+          clickActions[option.what.id] = () => { pushEvents(option); mainLoop(); };
         } else {
-          console.log(option);
+          extraActions.push({name: getEventName(option), func: () => { pushEvents(option); mainLoop() }})
         }
       });
     },
@@ -1084,16 +1091,24 @@ function mainLoop() {
     },
     "SELECTCARD01": function () {
       ev.options.map(option => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); mainLoop(); });
+      extraActions = [{name: "None", func: () => { pushEvents(ev.result0); mainLoop(); }}];
     },
     "SELECTONE": function () { pushEvents(ev.options[0]); mainLoop(); },
   }[ev.type] || function () {
     conosle.log("Unknown UI event type", ev);
   })();
-  console.log("UI> " + ev.type, ev, clickActions);
+  console.log("UI> " + ev.type, ev, clickActions, extraActions);
+  let extraActionsHTML = extraActions.map((action, i) => {
+    const id = "!extraAction" + i;
+    clickActions[id] = action.func;
+    return `<span id="${id}">${action.name}</span>`;
+  }).join('');
+  document.getElementById("extraActions").innerHTML = extraActionsHTML;
 }
 document.addEventListener('DOMContentLoaded', mainLoop, false);
 /*
-GUI selectable options
+GUI:
+Undo
 
 ENGINE:
 value modifiers/setters
@@ -1119,6 +1134,7 @@ td { width: 270px; height: 375px; }
 <td><div class="deck" data-deck="STREETS" data-mode="IMG"></div></td>
 <td><div class="deck" data-deck="BANK" data-mode="IMG"></div></td>
 <td><div class="deck" data-deck="SEWERS" data-mode="IMG"></div></td>
+<td><div class="deck" data-deck="SCHEME" data-mode="IMG"></div></td>
 </tr><tr>
 <td><div class="deck" data-deck="SHIELDOFFICER" data-mode="IMG"></div></td>
 <td><div class="deck" data-deck="HQ1" data-mode="IMG"></div></td>
@@ -1132,15 +1148,16 @@ Attack: <span id="attack"></span>
 <div class="deck" data-deck="PLAYAREA" data-fanout="1" data-mode="IMG"></div>
 <hr>
 <div class="deck" data-deck="HAND0" data-fanout="1" data-mode="IMG"></div>
-<div class="deck" data-deck="DECK0"></div>
-<div class="deck" data-deck="DISCARD0"></div>
-<div class="deck" data-deck="VICTORY0"></div>
+<div id="extraActions"></div>
+<div class="deck" data-deck="DECK0" data-mode="count"></div>
+<div class="deck" data-deck="DISCARD0" data-mode="popup"></div>
+<div class="deck" data-deck="VICTORY0" data-mode="popup"></div>
 <hr>
-<div class="deck" data-deck="SCHEME"></div>
-<div class="deck" data-deck="ESCAPED"></div>
-<div class="deck" data-deck="VILLAIN"></div>
-<div class="deck" data-deck="KO"></div>
-<div class="deck" data-deck="WOUNDS"></div>
-<div class="deck" data-deck="BYSTANDERS"></div>
+<div class="deck" data-deck="ESCAPED" data-mode="popup"></div>
+<div class="deck" data-deck="VILLAIN" data-mode="count"></div>
+<div class="deck" data-deck="KO" data-mode="popup"></div>
+<div class="deck" data-deck="WOUNDS" data-mode="count"></div>
+<div class="deck" data-deck="BYSTANDERS" data-mode="count"></div>
+<div class="deck" data-deck="HERO" data-mode="count"></div>
 </body>
 </html>
