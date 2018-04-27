@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Legendary</title>
+<script>
+"use strict";
+function RNG(seed) {
+  this.m = 0x100000000;
+  this.a = 1103515245;
+  this.c = 12345;
+  this.state = seed === undefined ? Math.floor(Math.random() * (this.m-1)) : seed;
+}
+RNG.prototype.nextInt = function() {
+  this.state = (this.a * this.state + this.c) % this.m;
+  return this.state;
+}
+RNG.prototype.nextFloat = function() {
+  return this.nextInt() / (this.m - 1);
+}
+RNG.prototype.nextRange = function(start, end) {
+  var rangeSize = end - start;
+  var randomUnder1 = this.nextInt() / this.m;
+  return start + Math.floor(randomUnder1 * rangeSize);
+}
+RNG.prototype.choice = function(array) {
+  return array[this.nextRange(0, array.length)];
+}
+var shuffleArray = function(a, r) {
+    var len = a.length;
+    var i = len;
+    while (i--) {
+	var p = r.nextRange(0,len);
+	var t = a[i];
+	a[i] = a[p];
+	a[p] = t;
+    }
+};
+var rand = new RNG();
+var Card = function() {}
+Card.prototype = {
+  get cost() { return this.printedCost; },
+  get attack() { return this.printedAttack; },
+  get recruit() { return this.printedRecruit; },
+  get attackCost() { return this.printedAttackCost; },
+  get vp() { return this.printedVP; },
+  isPlayable: function () { return this.playable; },
+  GRAY:0,
+  RED:1,
+  YELLOW:2,
+  BLACK:4,
+  BLUE:8,
+  GREEN:16,
+}
+function makeHeroCard(name, cost, recruit, attack) {
+  var c = new Card();
+  c.printedCost = cost;
+  c.printedRecruit = recruit;
+  c.printedAttack = attack;
+  c.cardName = name;
+  c.cardType = "HERO";
+  c.color = Card.prototype.GRAY;
+  c.playable = true;
+  return c;
+}
+var sa = makeHeroCard('SHIELD A', 0, 1, undefined);
+var sb = makeHeroCard('SHIELD B', 0, undefined, 1);
+var sc = makeHeroCard('SHIELD OFFICER', 3, 2, undefined);
+var id = 0;
+function makeCardInstance(c) {
+  var c = Object.create(c);
+  c.id = c.cardName + '@' + id++;
+  c.ctype = "I";
+  return c;
+}
+function makeCardInPlay(c, where, bottom) {
+  if (c.ctype !== 'I') throw TypeError("need card instance");
+  var r = Object.create(c);
+  r.instance = c;
+  r.ctype = "P";
+  r.location = where;
+  if (bottom) where._putBottom(r);
+  else where._put(r);
+}
+function makeCardCopy(c, where) {
+  if (c.ctype !== 'P') throw TypeError("need card in play");
+  var i = r.copyOf || c.instance;
+  var r = makeCardInPlay(i, where);
+  r.copyOf = i;
+  delete r.instance;
+  // Artifact specials - choose which ability -- embed in artifact play effect
+  return r;
+}
+function makeCardCopyPaste(c, p) {
+  if (c.ctype !== 'P') throw TypeError("need card in play");
+  if (p.ctype !== 'P') throw TypeError("need card in play");
+  var i = c.copyOf || c.instance;
+  var r = Object.create(i);
+  r.instance = p.instance;
+  r.ctype = "P";
+  r.location = p.location;
+  r.copyOf = i;
+  r.color = r.color | p.color;
+  // TODO: copy other tmp state (MOoT?)
+  r.location.deck[r.location.deck.indexOf(p)] = r;
+  // Return to stack effects - trigger replace move to sidekick/new recruit stacks
+}
+function moveCard(c, where, bottom) {
+  if (c.ctype !== 'P') throw TypeError("need card in play");
+  c.location.remove(c);
+  if (!c.instance) return;
+  //TODO retain some properties of cards when moved to played?
+  //TODO verify no attached cards (only cards in city decks can have those - maybe HQ)
+  makeCardInPlay(c.instance, where, bottom);
+}
+var Deck = function(name, faceup) {
+  this.name = name;
+  this.deck = [];
+  this.attached = [];
+  this.faceup = faceup === true;
+}
+Deck.prototype = {
+  get count() { return this.deck.length; },
+  addNewCard: function(c, n) { for (var i = 0; i < (n || 1); i++) makeCardInPlay(makeCardInstance(c), this); },
+  _put: function(c) { this.deck.push(c); },
+  //draw: function() { return this.deck.pop(); },
+  _putBottom: function(c) { this.deck.unshift(c); },
+  //drawBottom: function(c) { return this.deck.shift(); },
+  shuffle: function() { shuffleArray(this.deck, rand); },
+  //peek: function(n) { return this.deck[n || 0]; },
+  get top() { return this.deck[0]; },
+  get bottom() { return this.deck[this.deck.length - 1]; },
+  remove: function(c) { var p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; }
+}
+
+
+var deck = new Deck('DECK0');
+var discard = new Deck('DISCARD0', true);
+var hand = new Deck('HAND0', true);
+var officer = new Deck('SHIELDOFFICER', true);
+deck.addNewCard(sa, 8);
+deck.addNewCard(sb, 4);
+deck.shuffle();
+officer.addNewCard(sc, 30);
+for (var i = 0; i < 6; i++) {
+moveCard(deck.top, hand);
+console.log(hand.deck);
+}
+
+var currentPlayerNo = 0;
+var eventQueue = [];
+function getActions(ev) {
+  var p = hand.deck.filter(function(e) { return e.isPlayable(); }).map(function (e) { return {
+    type: "PLAY",
+    what: e,
+    parent: ev,
+  }; });
+  if (state.recruit >= 3 && officer.count) p = p.concat({
+    type: "RECRUIT",
+    what: officer.top,
+    parent: ev,
+  });
+  p = p.concat({type: "ENDOFTURN", parent:ev});
+  return p;
+}
+var state = { type: "STATE", cardsPlayed: [], playArea: new Deck('PLAYAREA'), recruit: 0, attack: 0, totalrecruit: 0 };
+var turnState = undefined;
+function addAttackEvent(ev, c) { return { type: "ADDATTACK", source: ev.what, parent: ev, amount: c }; }
+function addRecruitEvent(ev, c) { return { type: "ADDRECRUIT", source: ev.what, parent: ev, amount: c }; }
+function playCard(ev) {
+  // PAY PLAYCOST (discard or top deck 1-3 cards)
+  moveCard(ev.what, state.playArea);
+  state.cardsPlayed.push(ev.what);
+  if (ev.what.attack) eventQueue.unshift(addAttackEvent(ev, ev.what.attack));
+  if (ev.what.recruit) eventQueue.unshift(addRecruitEvent(ev, ev.what.recruit));
+}
+function buyCard(ev) {
+  // other pay options
+  state.recruit -= ev.what.cost;
+  eventQueue.unshift({ type: "GAIN", what:ev.what, parent:ev });
+}
+function gainCard(ev) {
+  //TRIGGER GAINREPLACE GAINBEFORE GAINITSELF TRIGGERGAINAFTER
+  //TODO: refill city stacks
+  moveCard(ev.what, discard);
+}
+function cleanUp(ev) {
+  while(hand.count) moveCard(hand.top, discard);
+  while(state.playArea.count) moveCard(state.playArea.top, discard);
+  eventQueue.unshift({type: "DRAW", parent:ev, amount:6 });
+  state.cardsPlayed = [];
+  state.recruit = state.attack = state.totalrecruit = 0;
+}
+function drawOne(ev) {
+  if (!deck.count && discard.count) {
+    eventQueue.unshift({type: "RESHUFFLE", parent:ev}, ev);
+  } else {
+    moveCard(deck.top, hand);
+  }
+}
+function reshufflePlayerDeck() {
+  //TRIGGER
+  while(discard.count) moveCard(discard.top, deck);
+  deck.shuffle();
+}
+var trigger = {
+  type: "GAIN",
+  match: function(ev) { },
+  replace: function(ev) { },
+  before: function(ev) { },
+  after: function(ev) { },
+}
+function installTrigger(ev) {
+  var triggers = findTriggers(ev).filter(function(t){return t.match(ev)});
+  var newev = [];
+  triggers.forEach(function(t) {
+    if (t.before)
+      newev.push({type:"EFFECT", func:t.before, state:ts[i], parent:ev});
+  });
+  newev.unshift({type:"DO_"+ev.type, parent:ev});
+  triggers.forEach(function(t) {
+    if (t.after)
+      newev.push({type:"EFFECT", func:t.before, state:ts[i], parent:ev});
+  });
+  triggers.forEach(function(t) {
+    if (t.replace)
+      newev = [{type:"EFFECT", func:t.replace, what:newev, parent:ev }];
+  });
+}
+function playGame() {
+var run = true;
+while (run) {
+  var ev = eventQueue.shift() || {type:"TURN",player:0,parent:state };
+  console.log(">>> " + ev.type, ev);
+  ({
+    "TURN": function() {
+      turnState = ev;
+      eventQueue.unshift({type:"VILLAINDRAW",parent:ev},{type:"ACTIONS",parent:ev},{type:"CLEANUP",parent:ev});
+    },
+    "ACTIONS": function () {
+      if (!ev.endofturn) {
+        eventQueue.unshift({type:"SELECT",parent:ev,options:getActions(ev)},ev);
+        run = false;
+      }
+    },
+    "ENDOFTURN": function () { ev.parent.endofturn = true; },
+    "CLEANUP": cleanUp,
+    "PLAY": playCard,
+    "RECRUIT": buyCard,
+    "GAIN": gainCard, //TRIGGER
+    "DRAW": function () { for (var i = 0; i < ev.amount; i++) eventQueue.unshift({type:"DRAWONE",parent:ev.parent}); },
+    "DRAWONE": drawOne,
+    "RESHUFFLE": reshufflePlayerDeck, //TRIGGER
+    "ADDATTACK": function () { state.attack += ev.amount; },
+    "ADDRECRUIT": function () { state.recruit += ev.amount; state.totalrecruit += ev.amount; }, //TRIGGER
+  }[ev.type] || function(){
+    console.log("Unknown event type", ev);
+  })(ev);
+}
+}
+playGame();
+for (i = 0; i < 200; i++) {
+console.log(state, eventQueue);
+eventQueue.unshift(eventQueue.shift().options[0]);
+playGame();
+}
+
+</script>
+</head>
+</html>
