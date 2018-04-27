@@ -45,6 +45,7 @@ Card.prototype = {
   get attackCost() { return this.printedAttackCost; },
   get vp() { return this.printedVP; },
   isPlayable: function () { return this.playable; },
+  toString: function () { return "AHA"; },
   GRAY:0,
   RED:1,
   YELLOW:2,
@@ -138,9 +139,22 @@ var deck = new Deck('DECK0');
 var discard = new Deck('DISCARD0', true);
 var hand = new Deck('HAND0', true);
 var officer = new Deck('SHIELDOFFICER', true);
+var herodeck = new Deck('HERO');
+var hq = [
+new Deck("HQ1", true),
+new Deck("HQ2", true),
+new Deck("HQ3", true),
+new Deck("HQ4", true),
+new Deck("HQ5", true),
+];
 deck.addNewCard(sa, 8);
 deck.addNewCard(sb, 4);
 deck.shuffle();
+
+herodeck.addNewCard(sc, 30);
+herodeck.shuffle();
+for (var i = 0; i < hq.length; i++) moveCard(herodeck.top, hq[i]);
+
 officer.addNewCard(sc, 30);
 for (var i = 0; i < 6; i++) {
 moveCard(deck.top, hand);
@@ -160,6 +174,11 @@ function getActions(ev) {
     what: officer.top,
     parent: ev,
   });
+  p = p.concat(hq.filter(function(d) { return d.count; }).map(function (d) { return {
+    type: "RECRUIT",
+    what: d.top,
+    parent: ev,
+  }; }));
   p = p.concat({type: "ENDOFTURN", parent:ev});
   return p;
 }
@@ -167,9 +186,12 @@ var state = { type: "STATE", cardsPlayed: [], playArea: new Deck('PLAYAREA'), re
 var turnState = undefined;
 function addAttackEvent(ev, c) { return { type: "ADDATTACK", source: ev.what, parent: ev, amount: c }; }
 function addRecruitEvent(ev, c) { return { type: "ADDRECRUIT", source: ev.what, parent: ev, amount: c }; }
+function moveCardEv(ev, what, where, bottom) {
+  eventQueue.unshift({ type:"MOVECARD", what:what, from:what.location, to:where, bottom:bottom, parent:ev }); 
+}
 function playCard(ev) {
   // PAY PLAYCOST (discard or top deck 1-3 cards)
-  moveCard(ev.what, state.playArea);
+  moveCardEv(ev, ev.what, state.playArea);
   state.cardsPlayed.push(ev.what);
   if (ev.what.attack) eventQueue.unshift(addAttackEvent(ev, ev.what.attack));
   if (ev.what.recruit) eventQueue.unshift(addRecruitEvent(ev, ev.what.recruit));
@@ -182,7 +204,7 @@ function buyCard(ev) {
 function gainCard(ev) {
   //TRIGGER GAINREPLACE GAINBEFORE GAINITSELF TRIGGERGAINAFTER
   //TODO: refill city stacks
-  moveCard(ev.what, discard);
+  moveCardEv(ev, ev.what, discard);
 }
 function cleanUp(ev) {
   while(hand.count) moveCard(hand.top, discard);
@@ -195,7 +217,7 @@ function drawOne(ev) {
   if (!deck.count && discard.count) {
     eventQueue.unshift({type: "RESHUFFLE", parent:ev}, ev);
   } else {
-    moveCard(deck.top, hand);
+    moveCardEv(ev, deck.top, hand);
   }
 }
 function reshufflePlayerDeck() {
@@ -215,12 +237,12 @@ function installTrigger(ev) {
   var newev = [];
   triggers.forEach(function(t) {
     if (t.before)
-      newev.push({type:"EFFECT", func:t.before, state:ts[i], parent:ev});
+      newev.push({type:"EFFECT", func:t.before, /*state:ts[i],*/ parent:ev});
   });
-  newev.unshift({type:"DO_"+ev.type, parent:ev});
+  newev.push({type:"DO_"+ev.type, parent:ev});
   triggers.forEach(function(t) {
     if (t.after)
-      newev.push({type:"EFFECT", func:t.before, state:ts[i], parent:ev});
+      newev.push({type:"EFFECT", func:t.before, /*state:ts[i],*/ parent:ev});
   });
   triggers.forEach(function(t) {
     if (t.replace)
@@ -253,6 +275,8 @@ while (run) {
     "RESHUFFLE": reshufflePlayerDeck, //TRIGGER
     "ADDATTACK": function () { state.attack += ev.amount; },
     "ADDRECRUIT": function () { state.recruit += ev.amount; state.totalrecruit += ev.amount; }, //TRIGGER
+    "MOVECARD": function () { moveCard(ev.what, ev.to, ev.bottom); }, //TRIGGER
+    "EFFECT": ev.func,
   }[ev.type] || function(){
     console.log("Unknown event type", ev);
   })(ev);
@@ -264,6 +288,13 @@ console.log(state, eventQueue);
 eventQueue.unshift(eventQueue.shift().options[0]);
 playGame();
 }
+/*
+Complete trigger API
+Todo install HQ empty trigger
+Chain decks
+Display decks in HTML
+GUI selectable options
+*/
 
 </script>
 </head>
