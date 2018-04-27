@@ -376,7 +376,11 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bystande
 }, function () {
   gameState.scheme.cardsAttached('TWIST').addNewCard(twistTemplate, 3);
   addStatMod('defense', function (c) { return isBystander(c) ? gameState.scheme.attachedCount('TWIST') : whathere });
+  addStatSet('defense', function (c) { if (isBystander(c)) return function (c) { return gameState.scheme.attachedCount('TWIST'); } });
+  addStatSet('defense', isBystander, function (c) { return gameState.scheme.attachedCount('TWIST'); });
   addStatMod('isVillain', function (c) { return isBystander(c) ? true : whathere });
+  addStatMod('type', isBystander, function (c, b) { return b | CType.VILLAIN; }
+  addStatMod('type', isBystander, function (c) { return CType.VILLAIN; }
 }),
 // 
 // Secret Invasion of the Skrull Shapeshifters
@@ -428,6 +432,7 @@ makeSchemeCard("Unleash the Power of the Cosmic Cube", { twists: 8 }, function (
 var herocards = [
 {
   name:'Thor',
+  team:'Avengers',
   c1:makeHeroCard('THOR', 'ODINSON', 3, 2, u, Color.GREEN, 'AVENGERS', function (ev) { if (superPower(ev, Color.GREEN)) addRecruitEvent(ev, 2); }),
   c2:makeHeroCard('THOR', 'SURGE OF POWER', 4, 2, 0, Color.BLUE, 'AVENGERS', function (ev) { if (turnState.totalRecruit >= 8) addAttackEvent(ev, 3); }),
   uc:makeHeroCard('THOR', 'CALL LIGHTNING', 6, u, 3, Color.BLUE, 'AVENGERS', function (ev) { if (superPower(ev, Color.BLUE)) addAttackEvent(ev, 3); }),
