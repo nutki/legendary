@@ -43,7 +43,9 @@ function isNumber(x) {
 }
 
 // Game primitives: Cards
-var Card = function() {}
+var Card = function(t) {
+  this.cardType = t;
+}
 Card.prototype = {
   get cost() { return this.printedCost; },
   get attack() { return this.printedAttack; },
@@ -53,6 +55,8 @@ Card.prototype = {
   get vp() { return this.printedVP; },
   isPlayable: function () { return this.playable; },
   isVillain: function () { return this.cardType === "VILLAIN"; },
+  isColor: function(c) { return (this.color & c) !== 0; },
+  isTeam: function(t) { return this.team === t; },
   toString: function () { return "AHA"; },
 }
 var Color = {
@@ -64,12 +68,11 @@ var Color = {
   GRAY:32,
 };
 function makeHeroCard(hero, name, cost, recruit, attack, color, team, effects) {
-  var c = new Card();
+  var c = new Card("HERO");
   c.printedCost = cost;
   c.printedRecruit = recruit;
   c.printedAttack = attack;
   c.cardName = name;
-  c.cardType = "HERO";
   c.heroName = hero;
   c.color = color || Color.GRAY;
   c.team = team;
@@ -78,14 +81,39 @@ function makeHeroCard(hero, name, cost, recruit, attack, color, team, effects) {
   return c;
 }
 function makeVillainCard(group, name, defense, vp, abilities) {
-  var c = new Card();
+  var c = new Card("VILLAIN");
   c.printedDefense = defense;
   c.printedVP = vp;
   c.cardName = name;
-  c.cardType = "VILLAIN";
   c.villainGroup = group;
   c.fightable = true;
   if (abilities) for (var i in abilities) c[i] = abilities[i];
+  return c;
+}
+function makeMastermindCard(name, defense, vp, leads, strike, tactics, abilities) {
+  var c = new Card("MASTERMIND");
+  c.printedDefense = defense;
+  c.printedVP = vp;
+  c.cardName = name;
+  c.leads = leads;
+  c.fightable = true;
+  c.strike = strike;
+  c.tacticsTemplates = tactics.map(function (e) {
+    var c = new Card("TACTICS");
+    c.printedVP = vp;
+    c.printedDefense = defense;
+    c.cardName = e[0];
+    c.fight = e[1];
+    return c;
+  });
+  if (abilities) for (var i in abilities) c[i] = abilities[i];
+  return c;
+}
+function makeBystanderCard(name, rescue) {
+  var c = new Card("BYSTANDER");
+  c.printedVP = 1;
+  c.cardName = name;
+  c.rescue = rescue;
   return c;
 }
 function makeHenchmenCard(name, defense, abilities) {
@@ -93,7 +121,7 @@ function makeHenchmenCard(name, defense, abilities) {
 }
 function makeCardInstance(c) {
   var c = Object.create(c);
-  c.id = c.cardName + '@' + gameState.nextId++;
+  c.id = (c.cardName || c.cardType) + '@' + gameState.nextId++;
   c.ctype = "I";
   return c;
 }
@@ -137,6 +165,9 @@ function moveCard(c, where, bottom) {
   //TODO verify no attached cards (only cards in city decks can have those - maybe HQ)
   makeCardInPlay(c.instance, where, bottom);
 }
+function moveAll(from, to, bottom) {
+  while (from.count) moveCard(from.top, to, bottom);
+}
 // Game primitives: Decks
 var Deck = function(name, faceup) {
   this.name = name;
@@ -149,11 +180,8 @@ Deck.prototype = {
   get count() { return this.deck.length; },
   addNewCard: function(c, n) { for (var i = 0; i < (n || 1); i++) makeCardInPlay(makeCardInstance(c), this); },
   _put: function(c) { this.deck.push(c); },
-  //draw: function() { return this.deck.pop(); },
   _putBottom: function(c) { this.deck.unshift(c); },
-  //drawBottom: function(c) { return this.deck.shift(); },
   shuffle: function() { shuffleArray(this.deck, gameState.gameRand); },
-  //peek: function(n) { return this.deck[n || 0]; },
   get top() { return this.deck[0]; },
   get bottom() { return this.deck[this.deck.length - 1]; },
   remove: function(c) { var p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; },
@@ -167,13 +195,56 @@ var sb = makeHeroCard('HERO', 'SHIELDTROOPER', 0, u, 1);
 var sc = makeHeroCard('MARIA HILL', 'SHIELDOFFICER', 3, 2, u);
 var sd = makeHenchmenCard('HAND NINJAS', 3, { fight: function(ev) { addRecruitEvent(ev, 1); } });
 var se = makeHenchmenCard('SAVAGE LAND MUTATES', 4, { fight: function(ev) { addEndDrawMod(1); } });
+var sf = makeBystanderCard();
+var sg = new Card("SCHEME TWIST");
+var dh = new Card("MASTER STRIKE");
+
+var di = makeMastermindCard("DR. DOOM", 9, 5, "DOOMBOT LEGION",
+  function (ev) {
+    //Each player with exactly 6 cards in hand reveals a Tech Hero or puts 2 cards from their hand on top of their deck.
+    if (playerState.hand.count === 6) { // TODO: multiplayer
+      revealOrEv(ev, Color.BLACK, function (ev) {
+        selectCardEv(ev, playerState.hand, function (ev) { moveCardEv(ev, ev.selected, playerState.deck); });
+        selectCardEv(ev, playerState.hand, function (ev) { moveCardEv(ev, ev.selected, playerState.deck); });
+      });
+    }
+  },
+  [
+    [ "Dark Technology", function (ev) { // You may recruit a Tech or Ranged Hero from the HQ for free.
+      selectCardEv(ev, HQCards().filter(isColor(Color.BLACK | Color.BLUE)), function (ev) { gainEv(ev, ev.selected); });
+    } ],
+    [ "Monarch's Decree", function (ev) { // Choose one: each other player draws a card or each other player discards a card.
+      chooseOneEv(ev, "Each other player draws a card", function (ev) {
+        eachOtherPlayerVM().forEach(function(p) { pickDiscardEv(ev, p); });
+      }, "Each other player discards a card", function (ev) {
+        eachOtherPlayerVM().forEach(function(p) { drawEv(ev, p); });
+      });
+    } ],
+    [ "Secrets of Time Travel", function (ev) { // Take another turn after this one.
+      gameState.extraTurn = true; // TODO: multiplayer
+    } ],
+    [ "Treasures of Latveria", function (ev) { // When you draw a new hand of cards at the end of this turn, draw three extra cards.
+      addEndDrawMod(3);
+    } ],
+  ]
+);
 var herocards = [
 {
   name:'Thor',
-  c1:makeHeroCard('THOR', 'CALL LIGHTNING', 6, u, 3, Color.BLUE, 'AVENGERS', function (ev) { if (superPower(ev, Color.BLUE)) addAttackEvent(ev, 3); }),
-  c2:makeHeroCard('THOR', 'GOD OF THUNDER', 8, 5, 0, Color.BLUE, 'AVENGERS', function (ev) { turnState.attackWithRecruit = true; }),
-  uc:makeHeroCard('THOR', 'ODINSON', 3, 2, u, Color.GREEN, 'AVENGERS', function (ev) { if (superPower(ev, Color.GREEN)) addRecruitEvent(ev, 2); }),
-  ra:makeHeroCard('THOR', 'SURGE OF POWER', 4, 2, 0, Color.BLUE, 'AVENGERS', function (ev) { if (turnState.totalRecruit >= 8) addAttackEvent(ev, 3); }),
+  c1:makeHeroCard('THOR', 'ODINSON', 3, 2, u, Color.GREEN, 'AVENGERS', function (ev) { if (superPower(ev, Color.GREEN)) addRecruitEvent(ev, 2); }),
+  c2:makeHeroCard('THOR', 'SURGE OF POWER', 4, 2, 0, Color.BLUE, 'AVENGERS', function (ev) { if (turnState.totalRecruit >= 8) addAttackEvent(ev, 3); }),
+  uc:makeHeroCard('THOR', 'CALL LIGHTNING', 6, u, 3, Color.BLUE, 'AVENGERS', function (ev) { if (superPower(ev, Color.BLUE)) addAttackEvent(ev, 3); }),
+  ra:makeHeroCard('THOR', 'GOD OF THUNDER', 8, 5, 0, Color.BLUE, 'AVENGERS', function (ev) { turnState.attackWithRecruit = true; }),
+},
+{
+  name:'Wolverine',
+  team:'X-Men',
+  c1:makeHeroCard('Wolverine', 'Healing Factor', 3, u, 2, Color.YELLOW, 'X-Men', function (ev) {
+    selectCardOptEv(ev, handOrDiscard().filter(isWound), function (ev) { drawEv(ev); KOEv(ev, ev.selected); });
+  }),
+  c2:makeHeroCard('Wolverine', 'Keen Senses', 2, u, 1, Color.YELLOW, 'X-Men', function (ev) { if (superPower(ev, Color.YELLOW)) drawEv(ev); }),
+  uc:makeHeroCard('Wolverine', 'Frenzied Slashing', 5, u, 2, Color.YELLOW, 'X-Men', function (ev) { if (superPower(ev, Color.YELLOW)) drawEv(ev, 2);}),
+  ra:makeHeroCard('Wolverine', 'Berserker Rage', 8, u, 0, Color.YELLOW, 'X-Men', [ function (ev) { drawEv(ev, 3); }, function (ev) { addAttackEvent(ev, turnState.cardsDrawn); } ]),
 },
 ];
 
@@ -186,6 +257,7 @@ var playerState = {
   hand: new Deck('HAND0', true),
   victory: new Deck('VICTORY0', true),
 };
+playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState;
 var gameState = {
   type: "STATE",
   nextId: 0,
@@ -193,7 +265,7 @@ var gameState = {
   playArea: new Deck('PLAYAREA'),
   escaped: new Deck('ESCAPED'),
   villaindeck: new Deck('VILLAIN'),
-  koed: new Deck('KOED', true),
+  ko: new Deck('KO', true),
   herodeck: new Deck('HERO'),
   officer: new Deck('SHIELDOFFICER', true),
   hq: [
@@ -223,6 +295,8 @@ var gameState = {
     },
   ],
   endDrawAmount: 6,
+  players: [ playerState ],
+  advancedSolo: true,
 };
 gameState.cityEntry = gameState.city[4];
 
@@ -239,13 +313,20 @@ playerState.deck.addNewCard(sa, 8);
 playerState.deck.addNewCard(sb, 4);
 playerState.deck.shuffle();
 // Init hero deck and populate initial HQ
-gameState.herodeck.addNewCard(sc, 30);
+for (var i = 0; i < herocards.length; i++) {
+  gameState.herodeck.addNewCard(herocards[i].c1, 5);
+  gameState.herodeck.addNewCard(herocards[i].c2, 5);
+  gameState.herodeck.addNewCard(herocards[i].uc, 3);
+  gameState.herodeck.addNewCard(herocards[i].ra);
+}
 gameState.herodeck.shuffle();
 for (var i = 0; i < gameState.hq.length; i++) moveCard(gameState.herodeck.top, gameState.hq[i]);
 // Init villain deck
 gameState.villaindeck.addNewCard(sd, 10);
 gameState.villaindeck.addNewCard(se, 10);
 gameState.villaindeck.shuffle();
+// Init Mastermind TODO
+// Init Scheme TODO
 // Init auxiliary decks
 gameState.officer.addNewCard(sc, 30);
 // Draw initial hand
@@ -255,16 +336,17 @@ for (var i = 0; i < gameState.endDrawAmount; i++) {
 
 
 // Card effects functions
-function othersPlayed(ev) {
-  return turnState.cardsPlayed.filter(function (c) { return c.id != ev.source.id; });
-}
+function isWound(c) { return c.cardType === "WOUND"; }
+function isColor(col) { return function (c) { return c.isColor(col); }; }
+function isTeam(team) { return function (c) { return c.isTeam(team); }; }
 
-function superPower(ev, w) {
-  return othersPlayed(ev).some(isNumber(w) ?
-    function (c) { return c.color & w } :
-    function (c) { return c.team === w; }
-  );
-}
+function othersPlayed(ev) { return turnState.cardsPlayed.filter(function (c) { return c.id != ev.source.id; }); } // TODO: find source upstream
+function handOrDiscard() { return playerState.hand.deck.concat(playerState.discard.deck); }
+function HQCards() { return gameState.hq.map(function (e) { return e.top; }).filter(function (e) { return e; }); }
+function eachOtherPlayer() { retuen gameState.filter(function (e) { return e !== playerState; }); }
+function eachOtherPlayerVM() { return gameState.advancedSolo ? gameState.players : eachOtherPlayer(); }
+
+function superPower(ev, w) { return othersPlayed(ev).some(isNumber(w) ? isColor(w) : isTeam(w)); }
 function addEndDrawMod(a) { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a) { turnState.endDrawAmount = a; }
 
@@ -308,11 +390,27 @@ function getActions(ev) {
   p = p.concat({type: "ENDOFTURN", parent:ev});
   return p;
 }
+
 function addAttackEvent(ev, c) { pushEvents({ type: "ADDATTACK", source: ev.what, parent: ev, amount: c }); }
 function addRecruitEvent(ev, c) { pushEvents({ type: "ADDRECRUIT", source: ev.what, parent: ev, amount: c }); }
 function moveCardEv(ev, what, where, bottom) {
   pushEvents({ type:"MOVECARD", what:what, from:what.location, to:where, bottom:bottom, parent:ev }); 
 }
+function gainEv(ev, card, who) { pushEvents({type:"GAIN", what:card, who:who || playerState, parent: ev}); }
+function discardEv(ev, card) { pushEvents({ type: "DISCARD", parent: ev, what:card }); }
+function drawEv(ev, amount, who) { pushEvents({ type: "DRAW", who: who || playerState, amount: amount || 1, parent: ev }); }
+function KOEv(ev, card) { pushEvents({ type:"KO", parent: ev, what:card }); }
+function selectCardEv(ev, cards, effect, who) { }
+function selectCardOptEv(ev, cards, effect1, effect0, who) { }
+//function revealOrEv(ev, cond, effect, who?) { }
+//function chooseOneEv(ev) { }
+function pickDiscardEv(ev, who, agent) {
+  who = who || playerState;
+  agent = agent || who;
+  selectCardEv(ev, who.hand, function (ev) { discardEv(ev, ev.selected); }, agent);
+}
+
+
 function playCard(ev) {
   // PAY PLAYCOST (discard or top deck 1-3 cards)
   moveCardEv(ev, ev.what, gameState.playArea);
@@ -324,31 +422,29 @@ function playCard(ev) {
   if (ev.what.recruit) addRecruitEvent(ev, ev.what.recruit);
 }
 function buyCard(ev) {
-  // other pay options
+  // TODO: other pay options
   turnState.recruit -= ev.what.cost;
-  pushEvents({ type: "GAIN", what:ev.what, parent:ev });
+  gainEv(ev, ev.what);
 }
 function gainCard(ev) {
-  //TRIGGER GAINREPLACE GAINBEFORE GAINITSELF TRIGGERGAINAFTER
-  //TODO: refill city stacks
-  moveCardEv(ev, ev.what, playerState.discard);
+  moveCardEv(ev, ev.what, ev.who.discard);
 }
 function cleanUp(ev) {
-  while(playerState.hand.count) moveCard(playerState.hand.top, playerState.discard);
-  while(gameState.playArea.count) moveCard(gameState.playArea.top, playerState.discard);
+  moveAll(playerState.hand, playerState.discard);
+  moveAll(gameState.playArea, playerState.discard);
   var drawAmount = (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0);
-  pushEvents({type: "DRAW", parent:ev, amount: drawAmount });
+  drawEv(ev, drawAmount);
 }
 function drawOne(ev) {
-  if (!playerState.deck.count && playerState.discard.count) {
-    pushEvents({type: "RESHUFFLE", parent:ev}, ev); // Make global state trigger
-  } else if (playerState.deck.count) {
-    moveCardEv(ev, playerState.deck.top, playerState.hand);
+  if (!ev.who.deck.count && ev.who.discard.count) {
+    pushEvents({type: "RESHUFFLE", parent:ev}, ev); // TODO: Make global state trigger?
+  } else if (ev.who.deck.count) {
+    moveCardEv(ev, ev.who.deck.top, ev.who.hand);
+    turnState.cardsDrawn++;
   }
 }
 function reshufflePlayerDeck() {
-  //TRIGGER
-  while(playerState.discard.count) moveCard(playerState.discard.top, playerState.deck);
+  moveAll(playerState.discard, playerState.deck);
   playerState.deck.shuffle();
 }
 function villainDraw(ev) {
@@ -389,6 +485,8 @@ function findTriggers(ev) {
   return gameState.triggers.concat(tempTriggers);
 }
 function addTriggers(ev) {
+  // TODO: more dynamic events (add generic { type:"TRIGGER", what:ev.type, when:"BEFORE" }), harder for replacement and steteful before/after triggers
+  // TODO: add state for before/after triggers
   var triggers = findTriggers(ev).filter(function(t){return t.event === ev.type && t.match(ev)});
   var newev = [];
   triggers.forEach(function(t) {
@@ -407,17 +505,17 @@ function addTriggers(ev) {
   return newev;
 }
 function playGame() {
-var run = true;
-while (run) {
+do {
   var ev = eventQueue.shift() || {
     type:"TURN",
     recruit: 0,
     attack: 0,
     totalRecruit: 0,
     cardsPlayed: [],
+    cardsDrawn: 0,
     parent:gameState
   };
-//  console.log(">>> " + ev.type, ev);
+  console.log(">>> " + ev.type, ev);
   ({
     "TURN": function() {
       turnState = ev;
@@ -425,30 +523,31 @@ while (run) {
     },
     "ACTIONS": function () {
       if (!ev.endofturn) {
-        pushEvents({type:"SELECT",parent:ev,options:getActions(ev)},ev);
-        run = false;
+        pushEvents({type:"EVENTSELECT",parent:ev,options:getActions(ev),ui:true},ev);
       }
     },
     "ENDOFTURN": function () { ev.parent.endofturn = true; },
     "CLEANUP": cleanUp,
     "PLAY": playCard,
     "RECRUIT": buyCard,
-    "GAIN": gainCard, //TRIGGER
-    "DRAW": function () { for (var i = 0; i < ev.amount; i++) pushEvents({type:"DRAWONE",parent:ev.parent}); },
+    "GAIN": gainCard,
+    "DRAW": function () { for (var i = 0; i < ev.amount; i++) pushEvents({type:"DRAWONE", who:ev.who, parent:ev.parent}); },
     "DRAWONE": drawOne,
-    "RESHUFFLE": reshufflePlayerDeck, //TRIGGER
+    "RESHUFFLE": reshufflePlayerDeck,
     "ADDATTACK": function () { turnState.attack += ev.amount; },
-    "ADDRECRUIT": function () { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; }, //TRIGGER
-    "MOVECARD": function () { moveCard(ev.what, ev.to, ev.bottom); }, //TRIGGER
+    "ADDRECRUIT": function () { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; },
+    "MOVECARD": function () { moveCard(ev.what, ev.to, ev.bottom); },
     "EFFECT": ev.func,
     "VILLAINDRAW": villainDraw,
     "ESCAPE": villainEscape,
     "FIGHT": villainFight,
     "DEFEAT": villainDefeat,
+    "DISCARD": function () { moveCardEv(ev, ev.what, ev.what.location.owner.discard); },
+    "KO": function () { moveCardEv(ev, ev.what, gameState.ko); },
   }[ev.type] || function(){
     console.log("Unknown event type", ev);
   })(ev);
-}
+} while (!eventQueue.length || !eventQueue[0].ui);
 }
 
 // GUI
@@ -476,14 +575,18 @@ function displayGame() {
 }
 function init() {
   var count = 0;
-function makeAction() {
-  count++;
-//  console.log(state, eventQueue);
-  pushEvents(eventQueue.shift().options[0]);
-  playGame();
-  displayGame();
-  if (count < 100) setTimeout(makeAction, 1000);  
-}
+  function makeAction() {
+    count++;
+    var ev = eventQueue.shift();
+    ({
+      "EVENTSELECT": function () { pushEvents(ev.options[0]); },
+    }[ev.type] || function () {
+      conosle.log("Unknown UI event type", ev);
+    })();
+    playGame();
+    displayGame();
+    if (count < 100) setTimeout(makeAction, 200);  
+  }
   playGame();
   displayGame();
   setTimeout(makeAction, 1000);
@@ -491,6 +594,18 @@ function makeAction() {
 document.addEventListener('DOMContentLoaded', init, false);
 /*
 GUI selectable options
+
+ENGINE:
+Scheme
+Scheme Twists
+
+Mastermind
+Master Strikes
+
+Bystanders
+
+Wounds
+Other villains
 */
 
 </script>
