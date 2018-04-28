@@ -707,7 +707,7 @@ function getActions(ev) {
     parent: ev,
   });
   }
-  p = p.concat({type: "ENDOFTURN", parent:ev});
+  p = p.concat({type: "ENDOFTURN", parent:ev, confirm: p.length === 0});
   return p;
 }
 
@@ -1082,7 +1082,7 @@ function mainLoop() {
         if (option.what && !clickActions[option.what.id]) {
           clickActions[option.what.id] = () => { pushEvents(option); mainLoop(); };
         } else {
-          extraActions.push({name: getEventName(option), func: () => { pushEvents(option); mainLoop() }})
+          extraActions.push({name: getEventName(option), confirm: option.confirm, func: () => { pushEvents(option); mainLoop() }})
         }
       });
     },
@@ -1101,14 +1101,17 @@ function mainLoop() {
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
-    return `<span id="${id}">${action.name}</span>`;
-  }).join('');
+    return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
+  }).join('<br>');
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
 }
 document.addEventListener('DOMContentLoaded', mainLoop, false);
 /*
 GUI:
 Undo
+UI events description
+Show hidden events / effect source
+Handle end game conditions
 
 ENGINE:
 value modifiers/setters
@@ -1122,8 +1125,19 @@ Other villains
 
 </script>
 <style>
+@font-face {
+  font-family: TitleFont;
+  src: url(fonts/percolatorexpert.ttf);
+}
+@font-face {
+  font-family: NumberFont;
+  src: url(fonts/MatrixBoldSmallCaps.ttf);
+}
 table { margin: 0; padding: 0; border: 0; }
-td { width: 270px; height: 375px; }
+td { min-width: 270px; height: 375px; }
+.number { font-family: NumberFont; font-size: 40px; }
+.action { font-family: TitleFont; font-size: 30px; border: 2px solid black; background: yellow; padding: 0px 20px; border-radius: 10px; margin: 20px; }
+.action.noconfirm { background: green; }
 </style>
 </head>
 <body>
@@ -1143,12 +1157,17 @@ td { width: 270px; height: 375px; }
 <td><div class="deck" data-deck="HQ4" data-mode="IMG"></div></td>
 <td><div class="deck" data-deck="HQ5" data-mode="IMG"></div></td>
 </tr></table>
-Recruit: <span id="recruit"></span>
-Attack: <span id="attack"></span>
-<div class="deck" data-deck="PLAYAREA" data-fanout="1" data-mode="IMG"></div>
-<hr>
-<div class="deck" data-deck="HAND0" data-fanout="1" data-mode="IMG"></div>
+<table><tr>
+<td>
+Recruit: <span class="number" id="recruit"></span>
+Attack: <span class="number" id="attack"></span>
+<br>
 <div id="extraActions"></div>
+</td>
+<td><div class="deck" data-deck="PLAYAREA" data-fanout="1" data-mode="IMG"></div></td>
+</tr></tr>
+<td colspan="2"><div class="deck" data-deck="HAND0" data-fanout="1" data-mode="IMG"></div></td>
+</tr></table>
 <div class="deck" data-deck="DECK0" data-mode="count"></div>
 <div class="deck" data-deck="DISCARD0" data-mode="popup"></div>
 <div class="deck" data-deck="VICTORY0" data-mode="popup"></div>
