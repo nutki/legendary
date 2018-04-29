@@ -1135,7 +1135,20 @@ Other villains
 }
 table { margin: 0; padding: 0; border: 0; }
 td { min-width: 270px; height: 375px; }
-.number { font-family: NumberFont; font-size: 40px; }
+.number {
+  color: white;
+  font-family: NumberFont;
+  font-size: 50px;
+  text-shadow:
+   -1.5px -1.5px 0 #000,
+    1.5px -1.5px 0 #000,
+   -1.5px  1.5px 0 #000,
+    1.5px  1.5px 0 #000,
+   -1.5px    0px 0 #000,
+    1.5px    0px 0 #000,
+      0px  1.5px 0 #000,
+      0px -1.5px 0 #000;
+}
 .action { font-family: TitleFont; font-size: 30px; border: 2px solid black; background: yellow; padding: 0px 20px; border-radius: 10px; margin: 20px; }
 .action.noconfirm { background: green; }
 </style>
@@ -1159,8 +1172,8 @@ td { min-width: 270px; height: 375px; }
 </tr></table>
 <table><tr>
 <td>
-Recruit: <span class="number" id="recruit"></span>
-Attack: <span class="number" id="attack"></span>
+<img src="icons/recruit.svg"><span class="number" id="recruit"></span>
+<img src="icons/attack.svg"><span class="number" id="attack"></span>
 <br>
 <div id="extraActions"></div>
 </td>
