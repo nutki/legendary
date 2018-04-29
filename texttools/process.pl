@@ -70,7 +70,7 @@ while (<A>) {
     }
     if ($name =~ /^Hench/) {
       s!^<b>(VP|Attack|Fight|Escape|Ambush)</b>: (.*)!"#" . uc($1) . ": $2"!gme;
-      s!^Ambush: (.*)!#AMBUSH: $2!gm; #FIX
+      s!^Ambush: (.*)!#AMBUSH: $1!gm; #FIX
     }
     if ($name =~ /^Villains/) {
       s!^<i>Teleport</i>$!{TELEPORT}!m; #FIX
