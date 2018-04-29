@@ -40,9 +40,11 @@ while (<A>) {
       s!^Cost: ?(.*?)$!#COST: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;
+      s!^<i>5th Circle of Kung-Fu</i> \(2 copies\)$!<i>5th Circle of Kung-Fu</i>!; #FIX
       s!^<i>(.*?)</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
       s!^(\[$class\])$!#CLASS: $1! && next;
       s!^($aff)$!#TEAM: $1! && next;
+      s!^(Bribe|Feast)$!'{'.(uc$1).'}'!e && next;
 
       s!^($aff): (.*)$!{TEAMPOWER $1} $2! && next;
       s!^\[($class)\]: (.*)$!{POWER $1} $2! && next;
@@ -69,15 +71,21 @@ while (<A>) {
     if ($name =~ /^Hench/) {
       s!^<b>(VP|Attack|Fight|Escape|Ambush)</b>: (.*)!"#" . uc($1) . ": $2"!gme;
       s!^Ambush: (.*)!#AMBUSH: $2!gm; #FIX
-      s!----+\nTeam: ($aff)\nClass: (\[$class\])(?:(?:, |/)(\[$class\]))?\n((.+\n)*\n)!#TEAM: $1\n#CLASS: $2$3\n$4!gm;
     }
     if ($name =~ /^Villains/) {
       s!^<i>Teleport</i>$!{TELEPORT}!m; #FIX
       s!^Burrow$!{BURROW}!;
       s!^<b>(VP|Attack|Fight|Escape|Ambush):?</b>:? ?(.*)!"#" . uc($1) . ": $2"!gme;
-      s!----+\n($aff)\n(\[$class\])\n((.+\n)*\n)!#TEAM: $1\n#CLASS: $2\n$3!gm;
-      s!----+\n(\[$class\])\n((.+\n)*\n)!#TEAM: (Unaffiliated)\n#CLASS: $1\n$2!gm;
-      s!----+\n((.+\n)*\n)!#TEAM: (Unaffiliated)\n#CLASS: [Basic]\n$1!gm;
+    }
+    if ($name =~ /^Masterminds/) {
+      s!^(?:<[bi]>)?Attack(?:</[bi]>)?: (.*)!#ATTACK: $1!gm;
+      s!^(?:<[bi]>)?VP(?:</[bi]>)?: (.*)!#VP: $1!gm;
+      s!^<[bi]>Always Leads(?::</[bi]>|</[bi]>:) (.*)!#LEADS: $1!gm;
+      s!^<[bi]>Master Strike(?::</[bi]>|</[bi]>:) (.*)!#STRIKE: $1!gm;
+      s!^<b>((?:Epic )?Vulture)</b>$!<i>$1</i>!gm; #FIX
+      s!^\n<i>(.*?)</i>$!\n#TACTIC: $1!gm;
+      s!^<b>Fight(?::</b>|</b>:) (.*)$!#FIGHT: $1!gm;
+      s!^<b>Start of Game</b>: (.*)$!#START: $1!gm;
     }
     if ($name =~ /^Hero/) {
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm
