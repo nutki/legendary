@@ -465,18 +465,26 @@ let herocards = [
 },
 ];
 
-// State init
 let eventQueue = [];
 let eventQueueNew = [];
 let turnState = undefined;
-let playerState = {
+let playerState = undefined;
+let gameState = undefined;
+
+// State init
+function initGameState() {
+eventQueue = [];
+eventQueueNew = [];
+turnState = undefined;
+playerState = {
   deck: new Deck('DECK0'),
   discard: new Deck('DISCARD0', true),
   hand: new Deck('HAND0', true),
   victory: new Deck('VICTORY0', true),
+  revealed: new Deck('REVEALED0', true),
 };
 playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState;
-let gameState = {
+gameState = {
   type: "STATE",
   nextId: 0,
   twistCount: 0,
@@ -592,7 +600,7 @@ for (let i = 0; i < gameState.endDrawAmount; i++) {
   moveCard(playerState.deck.top, playerState.hand);
 }
 if (gameState.scheme.top.init) gameState.scheme.top.init();
-
+}
 
 // Card effects functions
 function isWound(c) { return c.cardType === "WOUND"; }
@@ -622,8 +630,8 @@ function eachPlayer(f) { if (f) gameState.players.forEach(f); return gameState.p
 function revealable(who) {
   who = who || playerState;
   // TODO: also artifacts and maybe MOoT
-  if (who !== gameState) return who.hand.deck;
-  return who.hand.deck.concat(gameState.playArea);
+  if (who !== playerState) return who.hand.deck;
+  return who.hand.deck.concat(gameState.playArea.deck);
 }
 function yourHeroes(who) { return filter(revealable(who), isHero); }
 
@@ -762,7 +770,7 @@ function selectCardOrEv(ev, cards, effect1, effect0, who) {
   }});
 }
 function selectCardEv(ev, cards, effect, who) { selectCardOrEv(ev, cards, effect, undefined, who); }
-function selectCardAndKOEv(ev, cards, effect, who) { selectCardsEv(ev, cards, ev => KOEv(ev, ev.selected), who); }
+function selectCardAndKOEv(ev, cards, who) { selectCardEv(ev, cards, ev => KOEv(ev, ev.selected), who); }
 function selectCardOptEv(ev, cards, effect1, effect0, who) {
   if (cards instanceof Deck) cards = cards.deck;
   who = who || playerState;
@@ -799,14 +807,22 @@ function pickTopDeckEv(ev, who, agent) {
 }
 function lookAtDeckEv(ev, amount, action, who) {
   who = who || playerState;
-  for (let i = 0; i < amount; i++) drawOne(ev, who.revealed); // FIXME wrong, use a new event
+  for (let i = 0; i < amount; i++) cont(ev, ev => revealOne(ev, who));
   cont(ev, action);
   let cleanupRevealed = () => {
     if (who.revealed.count === 0) return;
-    if (who.revealed.count === 1) moveCardEv(ev, who.revealed.deck.top, who.deck);
+    if (who.revealed.count === 1) moveCardEv(ev, who.revealed.top, who.deck);
     else selectCardEv(ev, who.revealed, ev => { moveCardEv(ev, ev.selected, who.deck); cleanupRevealed(); });
   };
   cont(ev, cleanupRevealed);
+}
+function revealOne(ev, who) {
+  if (!who.deck.count && !who.discard.count) {
+  } else if (!who.deck.count) {
+    pushEvents({type: "RESHUFFLE", parent:ev}, ev);
+  } else {
+    moveCardEv(ev, who.deck.top, who.revealed);
+  }
 }
 
 function playCard(ev) {
@@ -1019,7 +1035,7 @@ function makeDisplayCard(c) {
   return res;
 }
 function makeDisplayCardImg(c) {
-  return `<IMG class="card" id="${c.id}" src="${cardImageName(c)}">`
+  return `<IMG class="card" id="${c.id}" src="${cardImageName(c)}">`;
 }
 function makeDisplayBackImg(c) {
   return `<IMG class="card" id="${c.id}" src="images/back.png">`;
@@ -1032,7 +1048,7 @@ function displayDecks() {
       div: divs[i],
       fanout: divs[i].getAttribute("data-fanout"),
       mode: divs[i].getAttribute("data-mode"),
-    }
+    };
   }
   let list = Deck.prototype.deckList;
   for (let i = 0; i < list.length; i++) {
@@ -1060,7 +1076,7 @@ function displayGame() {
 }
 
 // Main loop
-function init() {
+function mainLoopAuto() {
   let count = 0;
   function makeAction() {
     count++;
@@ -1105,8 +1121,8 @@ function mainLoop() {
       ev.options.map(option => {
         if (option.what && !clickActions[option.what.id]) {
           clickActions[option.what.id] = () => { pushEvents(option); mainLoop(); };
-        } else {
-          extraActions.push({name: getEventName(option), confirm: option.confirm, func: () => { pushEvents(option); mainLoop() }})
+        } else {;
+          extraActions.push({name: getEventName(option), confirm: option.confirm, func: () => { pushEvents(option); mainLoop(); }});
         }
       });
     },
@@ -1129,12 +1145,12 @@ function mainLoop() {
   }).join('<br>');
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
 }
-document.addEventListener('DOMContentLoaded', mainLoop, false);
+function startApp() {
+  initGameState();
+  mainLoop();
+}
+document.addEventListener('DOMContentLoaded', startApp, false);
 /*
-Move state init to a function
-Finish revealed decks (define them)
-What is with "who" in interactive events
-
 GUI:
 Undo
 UI events description
@@ -1207,12 +1223,13 @@ td { min-width: 270px; height: 375px; }
 <div id="extraActions"></div>
 </td>
 <td><div class="deck" data-deck="PLAYAREA" data-fanout="1" data-mode="IMG"></div></td>
-</tr></tr>
+</tr><tr>
 <td colspan="2"><div class="deck" data-deck="HAND0" data-fanout="1" data-mode="IMG"></div></td>
 </tr></table>
 <div class="deck" data-deck="DECK0" data-mode="count"></div>
 <div class="deck" data-deck="DISCARD0" data-mode="popup"></div>
 <div class="deck" data-deck="VICTORY0" data-mode="popup"></div>
+<div class="deck" data-deck="REVEALED0" data-mode="popup"></div>
 <hr>
 <div class="deck" data-deck="ESCAPED" data-mode="popup"></div>
 <div class="deck" data-deck="VILLAIN" data-mode="count"></div>
