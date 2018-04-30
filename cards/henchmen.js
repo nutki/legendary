@@ -1,3 +1,5 @@
+/* global playerState */
+
 addTemplates("HENCHMEN", "Legendary", [
 // CARDNAME: Doombot Legion
 // FIGHT: Look at the top two cards of your deck. KO one of them and put the other back.

@@ -1,3 +1,6 @@
+/* global Color, u, turnState, playerState, gameState */
+/* global isWound, handOrDiscard, CityCards */
+
 addTemplates("HEROES", "Legendary", [
 {
   name: "Black Widow",
@@ -255,20 +258,34 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Ranged} Draw a card.
 // COST: 3
 // FLAVOR: Two little raindrops. Then two billion.
-  c1: makeHeroCard("Storm", "Gathering Stormclouds", 3, 2, u, Color.RANGED, "X-Men", "FD"),
+  c1: makeHeroCard("Storm", "Gathering Stormclouds", 3, 2, u, Color.RANGED, "X-Men", "FD", ev => { if(superPower(Color.RANGED)) drawEv(ev); }),
 // ATTACK: 2
 // Any Villain you fight on the Rooftops this turn gets -2 Attack.
 // COST: 4
-  c2: makeHeroCard("Storm", "Lightning Bolt", 4, u, 2, Color.RANGED, "X-Men", "D"),
+  c2: makeHeroCard("Storm", "Lightning Bolt", 4, u, 2, Color.RANGED, "X-Men", "D", () => {
+    addTurnMod("defense", c => isVillain(c) && c.location.id === "ROOFTOPS", -2); // TODO addTurnMod
+  }),
 // ATTACK: 4
 // You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
 // COST: 6
-  uc: makeHeroCard("Storm", "Spinning Cyclone", 6, u, 4, Color.COVERT, "X-Men", ""),
+  uc: makeHeroCard("Storm", "Spinning Cyclone", 6, u, 4, Color.COVERT, "X-Men", "", ev => {
+    selectCardOptEv(ev, CityCards().filter(isVillain), ev => {
+      let v = ev.selected;
+      selectDeckEv(ev, gameState.city.filter(l => l !== v.location), ev => { // TODO selectDeck
+        let dest = ev.selected;
+        swapCardsEv(ev, v.location, dest); // TODO swapCards
+        v.cardsAttached('BYSTANDER').map(c => rescueEv(ev, c));
+      });
+    });
+  }),
 // ATTACK: 5
 // Any Villain you fight on the Bridge this turn gets -2 Attack.
 // {POWER Ranged} The Mastermind gets -2 Attack this turn.
 // COST: 7
-  ra: makeHeroCard("Storm", "Tidal Wave", 7, u, 5, Color.RANGED, "X-Men", "D"),
+  ra: makeHeroCard("Storm", "Tidal Wave", 7, u, 5, Color.RANGED, "X-Men", "D", () => {
+    addTurnMod("defense", c => isVillain(c) && c.location.id === "BRIDGE", -2);
+    if (superPower(Color.RANGED)) addTurnMod("defense", c => isMastermind(c), -2);
+  }),
 },
 {
   name: "Thor",
@@ -293,7 +310,7 @@ addTemplates("HEROES", "Legendary", [
 // You can use Recruit as Attack this turn.
 // COST: 8
 // FLAVOR: They call him the God of Thunder. His enemies better start praying.
-  ra: makeHeroCard("Thor", "God of Thunder", 8, 5, 0, Color.RANGED, "Avengers", "F", ev => turnState.attackWithRecruit = true),
+  ra: makeHeroCard("Thor", "God of Thunder", 8, 5, 0, Color.RANGED, "Avengers", "F", () => turnState.attackWithRecruit = true),
 },
 {
   name: "Wolverine",

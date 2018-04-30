@@ -580,6 +580,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init();
 // Card effects functions
 function isWound(c) { return c.cardType === "WOUND"; }
 function isHero(c) { return c.cardType === "HERO"; }
+function isVillain(c) { return c.cardType === "VILLAIN"; }
 function isPlayable(c) { return c.isPlayable(); }
 function isHealable(c) { return c.isHealable(); }
 function isColor(col) { return function (c) { return c.isColor(col); }; }
@@ -592,7 +593,8 @@ function filter(cards, cond) {
 function count(cards, cond) { return filter(cards, cond).length; }
 
 function handOrDiscard() { return playerState.hand.deck.concat(playerState.discard.deck); }
-function HQCards() { return gameState.hq.map(function (e) { return e.top; }).filter(e => e); }
+function HQCards() { return gameState.hq.map(e => e.top).filter(e => e !== undefined); }
+function CityCards() { return gameState.city.map(e => e.top).filter(e => e !== undefined); }
 function HQCardsHighestCost() {
   let all = HQCards();
   let maxCost = 0;
@@ -722,6 +724,7 @@ function runOutEv(ev, deck) { pushEvents({ type:"RUNOUT", parent: ev, what: deck
 function villainDrawEv(ev) { pushEvents({ type:"VILLAINDRAW", parent: ev }); }
 function playTwistEv(ev, what) { pushEvents({ type:"TWIST", parent: ev, what:what }); }
 function rescueEv(ev, what) {
+  if (what) pushEvents({ type: "RESCUE", parent: ev, what: what });
   // TODO check in an event
   what = what || gameState.bystanders.top;
   if (!what) runOutEv(ev, 'BYSTANDERS');
