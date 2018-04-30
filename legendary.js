@@ -1062,7 +1062,7 @@ function mainLoopAuto() {
       "SELECTCARD01": function () { ev.result1.selected = ev.options[0]; pushEvents(ev.result1); },
       "SELECTONE": function () { pushEvents(ev.options[0]); },
     }[ev.type] || function () {
-      conosle.log("Unknown UI event type", ev);
+      console.log("Unknown UI event type", ev);
     })();
     playGame();
     displayGame();
@@ -1110,7 +1110,7 @@ function mainLoop() {
     },
     "SELECTONE": function () { pushEvents(ev.options[0]); mainLoop(); },
   }[ev.type] || function () {
-    conosle.log("Unknown UI event type", ev);
+    console.log("Unknown UI event type", ev);
   })();
   console.log("UI> " + ev.type, ev, clickActions, extraActions);
   let extraActionsHTML = extraActions.map((action, i) => {
