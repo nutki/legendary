@@ -208,6 +208,15 @@ Deck.prototype = {
 };
 
 // Card definitions
+let cardTemplates = {
+  HENCHMEN: [],
+};
+function addTemplates(type, set, templates) {
+  templates.forEach(t => {
+    t.set = set;
+    cardTemplates[type].push(t);
+  });
+}
 let u = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
@@ -564,8 +573,10 @@ gameState.bystanders.addNewCard(bystanderTemplates[0], 30);
 gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
 // TODO sidekicks
 // Init villain deck
-gameState.villaindeck.addNewCard(henchmenTemplates[0], 10);
-gameState.villaindeck.addNewCard(henchmenTemplates[1], 10);
+gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[0], 10);
+gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[1], 10);
+gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[2], 10);
+gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[3], 10);
 gameState.villaindeck.addNewCard(strikeTemplate, 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
 for (let i = 0; i < getParam('vd_bystanders'); i++)
@@ -585,6 +596,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init();
 
 // Card effects functions
 function isWound(c) { return c.cardType === "WOUND"; }
+function isHero(c) { return c.cardType === "HERO"; }
 function isPlayable(c) { return c.isPlayable(); }
 function isHealable(c) { return c.isHealable(); }
 function isColor(col) { return function (c) { return c.isColor(col); }; }
@@ -611,8 +623,9 @@ function revealable(who) {
   who = who || playerState;
   // TODO: also artifacts and maybe MOoT
   if (who !== gameState) return who.hand.deck;
-  return who.hand.deck.concat(gameState.playArea); 
+  return who.hand.deck.concat(gameState.playArea);
 }
+function yourHeroes(who) { return filter(revealable(who), isHero); }
 
 function superPower(color, a) { return count(turnState.cardsPlayed, color) >= (a || 1); }
 function addEndDrawMod(a) { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
@@ -749,6 +762,7 @@ function selectCardOrEv(ev, cards, effect1, effect0, who) {
   }});
 }
 function selectCardEv(ev, cards, effect, who) { selectCardOrEv(ev, cards, effect, undefined, who); }
+function selectCardAndKOEv(ev, cards, effect, who) { selectCardsEv(ev, cards, ev => KOEv(ev, ev.selected), who); }
 function selectCardOptEv(ev, cards, effect1, effect0, who) {
   if (cards instanceof Deck) cards = cards.deck;
   who = who || playerState;
@@ -783,7 +797,17 @@ function pickTopDeckEv(ev, who, agent) {
   agent = agent || who;
   selectCardEv(ev, who.hand, function (ev) { moveCardEv(ev, ev.selected, who.deck); }, agent);
 }
-
+function lookAtDeckEv(ev, amount, action, who) {
+  who = who || playerState;
+  for (let i = 0; i < amount; i++) drawOne(ev, who.revealed); // FIXME wrong, use a new event
+  cont(ev, action);
+  let cleanupRevealed = () => {
+    if (who.revealed.count === 0) return;
+    if (who.revealed.count === 1) moveCardEv(ev, who.revealed.deck.top, who.deck);
+    else selectCardEv(ev, who.revealed, ev => { moveCardEv(ev, ev.selected, who.deck); cleanupRevealed(); });
+  };
+  cont(ev, cleanupRevealed);
+}
 
 function playCard(ev) {
   // PAY PLAYCOST (discard or top deck 1-3 cards)
@@ -1107,13 +1131,17 @@ function mainLoop() {
 }
 document.addEventListener('DOMContentLoaded', mainLoop, false);
 /*
+Move state init to a function
+Finish revealed decks (define them)
+What is with "who" in interactive events
+
 GUI:
 Undo
 UI events description
-Show hidden events / effect source
-Handle end game conditions
+Show hidden events (make all event pass the main UI loop) / effect source
 
 ENGINE:
+Handle end game conditions
 value modifiers/setters
 required villain/hero groups
 handle different sets
@@ -1124,6 +1152,7 @@ Other villains
 */
 
 </script>
+<script src="cards/henchmen.js"></script>
 <style>
 @font-face {
   font-family: TitleFont;
