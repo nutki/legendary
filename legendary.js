@@ -41,8 +41,11 @@ Card.prototype = {
   get cost() { return this.printedCost; },
   get attack() { return this.printedAttack; },
   get recruit() { return this.printedRecruit; },
-  get attackCost() { return this.printedAttackCost; },
-  get defense() { return this.printedDefense; },
+  get baseDefense() { return this.printedDefense; },
+  get defense() {
+    let value = getModifiedStat(this, "defense", this.baseDefense);
+    return value < 0 ? 0 : value;
+  },
   get vp() { return this.printedVP; },
   isPlayable: function () { return this.playable; },
   isHealable: function () { return this.cardType === "WOUND"; },
@@ -519,6 +522,7 @@ gameState = {
     },
   ],
   endDrawAmount: 6,
+  modifiers: {},
   players: [ playerState ],
   advancedSolo: true,
 };
@@ -581,6 +585,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init();
 function isWound(c) { return c.cardType === "WOUND"; }
 function isHero(c) { return c.cardType === "HERO"; }
 function isVillain(c) { return c.cardType === "VILLAIN"; }
+function isMastermind(c) { return c.cardType === "MASTERMIND"; }
 function isPlayable(c) { return c.isPlayable(); }
 function isHealable(c) { return c.isHealable(); }
 function isColor(col) { return function (c) { return c.isColor(col); }; }
@@ -616,6 +621,25 @@ function superPower(color, a) { return count(turnState.cardsPlayed, color) >= (a
 function addEndDrawMod(a) { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a) { turnState.endDrawAmount = a; }
 
+function addMod(modifiers, stat, cond, value) {
+  if (!modifiers[stat]) modifiers[stat] = [];
+  modifiers[stat].push({ cond: cond, value: value});
+}
+function addTurnMod(stat, cond, value) { addMod(turnState.modifiers, stat, cond, value); }
+function addStatMod(stat, cond, value) { addMod(gameState.modifiers, stat, cond, value); }
+function modifyStat(c, modifiers, value) {
+  if (!modifiers) return value;
+  modifiers.forEach(mod => {
+    if(mod.cond(c)) {
+      if (typeof mod.value === "number") value += mod.value;
+      else value = mod.value(c, value);
+    }
+  });
+  return value;
+}
+function getModifiedStat(c, stat, value) {
+  return modifyStat(c, turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
+}
 // Game engine functions
 function getParam(name) {
   let s = gameState.scheme.top;
@@ -725,15 +749,16 @@ function villainDrawEv(ev) { pushEvents({ type:"VILLAINDRAW", parent: ev }); }
 function playTwistEv(ev, what) { pushEvents({ type:"TWIST", parent: ev, what:what }); }
 function rescueEv(ev, what) {
   if (what) pushEvents({ type: "RESCUE", parent: ev, what: what });
-  // TODO check in an event
-  what = what || gameState.bystanders.top;
-  if (!what) runOutEv(ev, 'BYSTANDERS');
-  else pushEvents({ type: "RESCUE", parent: ev, what: what });
+  else cont(ev, () => {
+    if (gameState.bystanders.top) pushEvents({ type: "RESCUE", parent: ev, what: gameState.bystanders.top });
+    else runOutEv(ev, 'BYSTANDERS');
+  });
 }
 function gainWoundEv(ev, deck, who) {
-  // TODO check in event
-  if (gameState.wounds.top) pushEvents({ type:"GAIN", what: gameState.wounds.top, who: who || playerState, parent: ev });
-  else runOutEv(ev, "WOUNDS");
+  cont(ev, () => {
+    if (gameState.wounds.top) pushEvents({ type:"GAIN", what: gameState.wounds.top, who: who || playerState, parent: ev });
+    else runOutEv(ev, "WOUNDS");
+  });
 }
 function cont(ev, func) { pushEvents({ type: "EFFECT", parent:ev, func:func}); }
 function selectCardOrEv(ev, cards, effect1, effect0, who) {
@@ -950,6 +975,7 @@ do {
     totalRecruit: 0,
     cardsPlayed: [],
     cardsDrawn: 0,
+    modifiers: {},
     parent:gameState
   };
   console.log(">>> " + ev.type, ev);

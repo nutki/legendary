@@ -1,5 +1,5 @@
 /* global Color, u, turnState, playerState, gameState */
-/* global isWound, handOrDiscard, CityCards */
+/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain */
 
 addTemplates("HEROES", "Legendary", [
 {
@@ -263,7 +263,7 @@ addTemplates("HEROES", "Legendary", [
 // Any Villain you fight on the Rooftops this turn gets -2 Attack.
 // COST: 4
   c2: makeHeroCard("Storm", "Lightning Bolt", 4, u, 2, Color.RANGED, "X-Men", "D", () => {
-    addTurnMod("defense", c => isVillain(c) && c.location.id === "ROOFTOPS", -2); // TODO addTurnMod
+    addTurnMod("defense", c => isVillain(c) && c.location.id === "ROOFTOPS", -2);
   }),
 // ATTACK: 4
 // You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
@@ -284,7 +284,7 @@ addTemplates("HEROES", "Legendary", [
 // COST: 7
   ra: makeHeroCard("Storm", "Tidal Wave", 7, u, 5, Color.RANGED, "X-Men", "D", () => {
     addTurnMod("defense", c => isVillain(c) && c.location.id === "BRIDGE", -2);
-    if (superPower(Color.RANGED)) addTurnMod("defense", c => isMastermind(c), -2);
+    if (superPower(Color.RANGED)) addTurnMod("defense", isMastermind, -2);
   }),
 },
 {
