@@ -145,7 +145,7 @@ function makeCardInPlay(c, where, bottom) {
 }
 function makeCardCopy(c, where) {
   if (c.ctype !== 'P') throw TypeError("need card in play");
-  let i = r.copyOf || c.instance;
+  let i = c.copyOf || c.instance;
   let r = makeCardInPlay(i, where);
   r.copyOf = i;
   delete r.instance;
@@ -599,7 +599,7 @@ function HQCardsHighestCost() {
   all.forEach(function (c) { if (c.cost > maxCost) maxCost = c.cost; });
   return all.filter(function (c) { return c.cost === maxCost; });
 }
-function eachOtherPlayer() { let r = gameState.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
+function eachOtherPlayer(f) { let r = gameState.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
 function eachOtherPlayerVM(f) { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
 function eachPlayer(f) { if (f) gameState.players.forEach(f); return gameState.players; }
 function revealable(who) {
