@@ -72,7 +72,7 @@ Color.RANGED = Color.BLUE;
 Color.STRENTH = Color.GREEN;
 Color.INSTINCT = Color.YELLOW;
 Color.BASIC = Color.GRAY;
-function makeHeroCard(hero, name, cost, recruit, attack, color, team, effects) {
+function makeHeroCard(hero, name, cost, recruit, attack, color, team, effects, flags) {
   let c = new Card("HERO");
   c.printedCost = cost;
   c.printedRecruit = recruit;
@@ -82,6 +82,7 @@ function makeHeroCard(hero, name, cost, recruit, attack, color, team, effects) {
   c.color = color || Color.GRAY;
   c.team = team;
   c.playable = true;
+  c.flags = flags;
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   return c;
 }

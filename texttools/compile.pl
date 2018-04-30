@@ -68,7 +68,13 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         my $class = $_{CLASS} =~ s/\[(.*)\]/uc$1/er;
         $attack = 'u' if $attack eq '';
         $recruit = 'u' if $recruit eq '';
-        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam),\n";
+        my $flags = '';
+        # Deadpool flags
+        $flags .= 'G' if $hasgun || $_{GUN};
+        $flags .= 'F' if $_{FLAVOR};
+        $flags .= 'D' if /2/ || $heroname =~ /2/;
+        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam, \"$flags\"),\n";
+        checkimage("heroes", $heroname, $_{SUBNAME});
       }
       print "},\n";
     }
