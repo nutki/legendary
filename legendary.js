@@ -38,7 +38,7 @@ let Card = function(t) {
   this.cardType = t;
 };
 Card.prototype = {
-  get cost() { return this.printedCost; },
+  get cost() { return this.printedCost || 0; },
   get attack() { return this.printedAttack; },
   get recruit() { return this.printedRecruit; },
   get baseDefense() { return this.printedDefense; },
@@ -220,10 +220,6 @@ let u = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
 let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u);
-let henchmenTemplates = [
-  makeHenchmenCard('HAND NINJAS', 3, { fight: function(ev) { addRecruitEvent(ev, 1); } }),
-  makeHenchmenCard('SAVAGE LAND MUTATES', 3, { fight: function(ev) { addEndDrawMod(1); } }),
-];
 let bystanderTemplates = [ makeBystanderCard() ];
 let twistTemplate = new Card("SCHEME TWIST");
 let strikeTemplate = new Card("MASTER STRIKE");
@@ -547,6 +543,7 @@ playerState.deck.shuffle();
 // Init hero deck and populate initial HQ
 let herocards = cardTemplates.HEROES;
 for (let i = 0; i < herocards.length; i++) {
+  if (herocards[i].name !== "Storm" && herocards[i].name !== "Spider-Man") continue;
   gameState.herodeck.addNewCard(herocards[i].c1, 5);
   gameState.herodeck.addNewCard(herocards[i].c2, 5);
   gameState.herodeck.addNewCard(herocards[i].uc, 3);
@@ -729,7 +726,7 @@ function getActions(ev) {
     parent: ev,
   });
   }
-  p = p.concat({type: "ENDOFTURN", parent:ev, confirm: p.length === 0});
+  p = p.concat({type: "ENDOFTURN", parent:ev, confirm: p.length > 0});
   return p;
 }
 
@@ -802,7 +799,7 @@ function selectCardOptEv(ev, cards, effect1, effect0, who) {
 function revealOrEv(ev, cond, effect, who) {
   who = who || playerState;
   let cards = filter(revealable(who), cond);
-  selectCardOptEv(ev, cards, undefined, effect, who);
+  selectCardOptEv(ev, cards, () => {}, effect, who);
 }
 function chooseOneEv(ev) {
   let a = arguments;
@@ -961,18 +958,17 @@ function findTriggers(ev) {
 }
 function addTriggers(ev) {
   // TODO: more dynamic events (add generic { type:"TRIGGER", what:ev.type, when:"BEFORE" }), harder for replacement and steteful before/after triggers
-  // TODO: add state for before/after triggers
   // TODO: order triggers
   let triggers = findTriggers(ev).filter(function(t){return t.event === ev.type && t.match(ev);});
   let newev = [];
   triggers.forEach(function(t) {
     if (t.before)
-      newev.push({type:"EFFECT", func:t.before, /*state:ts[i],*/ parent:ev});
+      newev.push({type:"EFFECT", func:t.before, parent:ev});
   });
   newev.push(ev);
   triggers.forEach(function(t) {
     if (t.after)
-      newev.push({type:"EFFECT", func:t.after, /*state:ts[i],*/ parent:ev});
+      newev.push({type:"EFFECT", func:t.after, parent:ev});
   });
   triggers.forEach(function(t) {
     if (t.replace)
@@ -1118,15 +1114,20 @@ function mainLoopAuto() {
 
 function getEventName(ev) {
   if (ev.type === "ENDOFTURN") return "End Turn";
-  console.log(ev);
+  console.log("Unknown option", ev);
   return "Unknown option";
 }
 let clickActions = {};
 function clickCard(ev) {
   console.log(this.id, ev.target.id, clickActions);
   let node = ev.target;
-  while (!node.id || !clickActions[node.id]) node = node.parentNode;
-  if (node.id && clickActions[node.id]) clickActions[node.id]();
+  for (let node = ev.target; node; node = node.parentNode) {
+    if (node.id) console.log(node.id);
+    if (node.id && clickActions[node.id]) {
+      clickActions[node.id]();
+      return;
+    }
+  }
 }
 window.onclick = clickCard;
 function mainLoop() {

@@ -250,7 +250,7 @@ addTemplates("HEROES", "Legendary", [
 // Reveal the top three cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 // COST: 2
   ra: makeHeroCard("Spider-Man", "The Amazing Spider-Man", 2, u, u, Color.COVERT, "Spider Friends", "D", ev => {
-    lookAtDeckEv(ev, 3, () => playerState.revealed.filter(c => c.cost <= 2).map(c => moveCardEv(ev, c, playerState.revealed, playerState.hand)));
+    lookAtDeckEv(ev, 3, () => playerState.revealed.filter(c => c.cost <= 2).map(c => moveCardEv(ev, c, playerState.hand)));
   }),
 },
 {
@@ -276,7 +276,7 @@ addTemplates("HEROES", "Legendary", [
       selectCardEv(ev, gameState.city.filter(l => l !== v.location), ev => {
         let dest = ev.selected;
         swapCardsEv(ev, v.location, dest);
-        v.cardsAttached('BYSTANDER').map(c => rescueEv(ev, c));
+        v.attachedCards('BYSTANDER').each(c => rescueEv(ev, c));
       });
     });
   }),
