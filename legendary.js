@@ -738,10 +738,23 @@ function addRecruitEvent(ev, c) { pushEvents({ type: "ADDRECRUIT", source: ev.wh
 function moveCardEv(ev, what, where, bottom) {
   pushEvents({ type:"MOVECARD", what:what, from:what.location, to:where, bottom:bottom, parent:ev }); 
 }
+// Swaps contents of 2 city spaces
+// TODO: Should this trigger MOVECARD events? If there are any this will likely not work since the swap is not atomic.
+function swapCardsEv(ev, where1, where2) {
+  const what1 = where1.top;
+  const what2 = where2.top;
+  pushEvents({ type:"MOVECARD", what:what1, from:where1, to:where2, parent:ev });
+  if (what2) pushEvents({ type:"MOVECARD", what:what2, from:where2, to:where1, parent:ev });
+}
 function attachCardEv(ev, what, to, name) { moveCardEv(ev, what, to.attachedCards(name)); }
 function gainEv(ev, card, who) { pushEvents({type:"GAIN", what:card, who:who || playerState, parent: ev}); }
 function discardEv(ev, card) { pushEvents({ type: "DISCARD", parent: ev, what:card }); }
 function drawEv(ev, amount, who) { pushEvents({ type: "DRAW", who: who || playerState, amount: amount || 1, parent: ev }); }
+function drawIfEv(ev, cond, who) {
+    let draw = false;
+    lookAtDeckEv(ev, 1, () => draw = cond(playerState.revealed.top), who);
+    cont(ev, () => { if (draw) drawEv(ev, 1, who); });
+}
 function KOEv(ev, card) { pushEvents({ type:"KO", parent: ev, what:card }); }
 function evilWinsEv(ev) { pushEvents({ type:"EVILWINS", parent: ev }); }
 function runOutEv(ev, deck) { pushEvents({ type:"RUNOUT", parent: ev, what: deck }); }
@@ -949,6 +962,7 @@ function findTriggers(ev) {
 function addTriggers(ev) {
   // TODO: more dynamic events (add generic { type:"TRIGGER", what:ev.type, when:"BEFORE" }), harder for replacement and steteful before/after triggers
   // TODO: add state for before/after triggers
+  // TODO: order triggers
   let triggers = findTriggers(ev).filter(function(t){return t.event === ev.type && t.match(ev);});
   let newev = [];
   triggers.forEach(function(t) {
@@ -1048,7 +1062,7 @@ function displayDecks() {
   let divs = document.getElementsByClassName("deck");
   let divByName = {};
   for (let i = 0; i < divs.length; i++) {
-    divByName[divs[i].getAttribute("data-deck")] = {
+    divByName[divs[i].id] = {
       div: divs[i],
       fanout: divs[i].getAttribute("data-fanout"),
       mode: divs[i].getAttribute("data-mode"),
@@ -1110,8 +1124,9 @@ function getEventName(ev) {
 let clickActions = {};
 function clickCard(ev) {
   console.log(this.id, ev.target.id, clickActions);
-  const id = ev.target.id;
-  if (id && clickActions[id]) clickActions[id]();
+  let node = ev.target;
+  while (!node.id || !clickActions[node.id]) node = node.parentNode;
+  if (node.id && clickActions[node.id]) clickActions[node.id]();
 }
 window.onclick = clickCard;
 function mainLoop() {
@@ -1161,10 +1176,9 @@ UI events description
 Show hidden events (make all event pass the main UI loop) / effect source
 
 ENGINE:
+Merge chooseOne with selectevent
 Handle end game conditions
-value modifiers/setters
 required villain/hero groups
-handle different sets
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards
 

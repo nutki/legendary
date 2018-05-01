@@ -238,18 +238,20 @@ addTemplates("HEROES", "Legendary", [
 // RECRUIT: 1
 // Reveal the top card of your deck. If that card costs 2 or less, draw it.
 // COST: 2
-  c1: makeHeroCard("Spider-Man", "Astonishing Strength", 2, 1, u, Color.STRENGTH, "Spider Friends", "D"),
+  c1: makeHeroCard("Spider-Man", "Astonishing Strength", 2, 1, u, Color.STRENGTH, "Spider Friends", "D", ev => drawIfEv(ev, c => c.cost <= 2)),
 // ATTACK: 1
 // Reveal the top card of your deck. If that card costs 2 or less, draw it.
 // COST: 2
-  c2: makeHeroCard("Spider-Man", "Great Responsibility", 2, u, 1, Color.INSTINCT, "Spider Friends", "D"),
+  c2: makeHeroCard("Spider-Man", "Great Responsibility", 2, u, 1, Color.INSTINCT, "Spider Friends", "D", ev => drawIfEv(ev, c => c.cost <= 2)),
 // Rescue a Bystander.
 // Reveal the top card of your deck. If that card costs 2 or less, draw it.
 // COST: 2
-  uc: makeHeroCard("Spider-Man", "Web-Shooters", 2, u, u, Color.TECH, "Spider Friends", "D"),
+  uc: makeHeroCard("Spider-Man", "Web-Shooters", 2, u, u, Color.TECH, "Spider Friends", "D", [ rescueEv, ev => drawIfEv(ev, c => c.cost <= 2) ]),
 // Reveal the top three cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 // COST: 2
-  ra: makeHeroCard("Spider-Man", "The Amazing Spider-Man", 2, u, u, Color.COVERT, "Spider Friends", "D"),
+  ra: makeHeroCard("Spider-Man", "The Amazing Spider-Man", 2, u, u, Color.COVERT, "Spider Friends", "D", ev => {
+    lookAtDeckEv(ev, 3, () => playerState.revealed.filter(c => c.cost <= 2).map(c => moveCardEv(ev, c, playerState.revealed, playerState.hand)));
+  }),
 },
 {
   name: "Storm",
@@ -271,9 +273,9 @@ addTemplates("HEROES", "Legendary", [
   uc: makeHeroCard("Storm", "Spinning Cyclone", 6, u, 4, Color.COVERT, "X-Men", "", ev => {
     selectCardOptEv(ev, CityCards().filter(isVillain), ev => {
       let v = ev.selected;
-      selectDeckEv(ev, gameState.city.filter(l => l !== v.location), ev => { // TODO selectDeck
+      selectCardEv(ev, gameState.city.filter(l => l !== v.location), ev => {
         let dest = ev.selected;
-        swapCardsEv(ev, v.location, dest); // TODO swapCards
+        swapCardsEv(ev, v.location, dest);
         v.cardsAttached('BYSTANDER').map(c => rescueEv(ev, c));
       });
     });
