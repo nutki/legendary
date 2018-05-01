@@ -2,6 +2,7 @@
 %input = (
   HENCHMEN => "Henchmen_and_Backup_Adversaries.txt",
   HEROES => "Heroes_and_Allies.txt",
+  VILLAINS => "Villains_and_Adversaries.txt",
 );
 my ($type, @exp) = @ARGV;
 my $file = $input{$type};
@@ -77,6 +78,28 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         checkimage("heroes", $heroname, $_{SUBNAME});
       }
       print "},\n";
+    } elsif ($type eq "VILLAINS") {
+      ($_, my @subitems) = split/^\n+/m;
+      parse();
+      my $groupname = $_{CARDNAME};
+      my $copies = 0;
+      print "{ name: \"$groupname\", cards: [\n";
+      for (0..3) {
+        $_ = $subitems[$_];
+        parse();
+        filterprint(qw(SUBNAME COPIES));
+        my $vp = $_{VP} =~ s/[^0-9.]//gr;
+        my $defense = $_{ATTACK} =~ s/[^0-9]//gr;
+        $copies += $_{COPIES};
+        print "  [ $_{COPIES}, makeVillainCard(\"$groupname\", \"$_{SUBNAME}\", $defense, $vp), {\n";
+        print "    ambush: ev => {},\n" if $_{AMBUSH};
+        print "    fight: ev => {},\n" if $_{FIGHT};
+        print "    escape: ev => {},\n" if $_{ESCAPE};
+        print "  }],\n";
+        checkimage("villains", $groupname, $_{SUBNAME});
+      }
+      print "]},\n";
+      $copies == 8 or die "Group $groupname has $copies";
     }
   }
 }
