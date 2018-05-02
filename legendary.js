@@ -736,12 +736,13 @@ function moveCardEv(ev, what, where, bottom) {
   pushEvents({ type:"MOVECARD", what:what, from:what.location, to:where, bottom:bottom, parent:ev }); 
 }
 // Swaps contents of 2 city spaces
-// TODO: Should this trigger MOVECARD events? If there are any this will likely not work since the swap is not atomic.
 function swapCardsEv(ev, where1, where2) {
-  const what1 = where1.top;
-  const what2 = where2.top;
-  pushEvents({ type:"MOVECARD", what:what1, from:where1, to:where2, parent:ev });
-  if (what2) pushEvents({ type:"MOVECARD", what:what2, from:where2, to:where1, parent:ev });
+  cont(ev, () => {
+    const what1 = where1.top;
+    const what2 = where2.top;
+    if (what1) moveCard(what1, where2);
+    if (what2) moveCard(what2, where1);
+  });
 }
 function attachCardEv(ev, what, to, name) { moveCardEv(ev, what, to.attachedCards(name)); }
 function gainEv(ev, card, who) { pushEvents({type:"GAIN", what:card, who:who || playerState, parent: ev}); }
