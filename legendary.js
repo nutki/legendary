@@ -443,9 +443,41 @@ let eventQueueNew = [];
 let turnState = undefined;
 let playerState = undefined;
 let gameState = undefined;
+const undoLog = {
+  actions: [],
+  pos: 0,
+  init: function () {
+    this.pos = 0;
+    this.fromString(localStorage.legendaryLog);
+  },
+  get replaying() { return this.pos < this.actions.length; },
+  read: function() { return this.actions[this.pos++]; },
+  readInt: function() { return parseInt(this.read()); },
+  write: function(v) {
+    const strValue = v.toString();
+    this.actions[this.pos++] = strValue;
+    localStorage.legendaryLog = this.toString();
+  },
+  undo: function() { this.actions.pop(); this.pos = 0; },
+  restart: function () { this.actions.splice(1); this.pos = 0; },
+  newGame: function () { this.actions = []; this.pos = 0; },
+  toString: function () {
+    return this.actions.map(v => v.length === 1 ? v : `[${v}]`).join('');
+  },
+  fromString: function (input) {
+    this.actions = [];
+    if (input)
+      this.actions = input.match(/\[.*?\]|./g).map(s => s.replace(/[\[\]]/g,''));
+  },
+};
+const textLog = {
+  text: "",
+  log: function(s) { this.text += s + '<br>'; },
+};
 
 // State init
 function initGameState() {
+textLog.text = "";
 eventQueue = [];
 eventQueueNew = [];
 turnState = undefined;
@@ -461,7 +493,7 @@ gameState = {
   type: "STATE",
   nextId: 0,
   twistCount: 0,
-  gameRand: new RNG(),
+  gameRand: undefined,
   playArea: new Deck('PLAYAREA', true),
   escaped: new Deck('ESCAPED'),
   villaindeck: new Deck('VILLAIN', true),
@@ -522,6 +554,12 @@ gameState = {
   players: [ playerState ],
   advancedSolo: true,
 };
+if (undoLog.replaying) {
+  gameState.gameRand = new RNG(undoLog.readInt());
+} else {
+  gameState.gameRand = new RNG();
+  undoLog.write(gameState.gameRand.state);
+}
 gameState.cityEntry = gameState.city[4];
 
 for (let i = 0; i < 5; i++) {
@@ -891,12 +929,14 @@ function villainDraw(ev) {
     moveCardEv(ev, c, gameState.cityEntry);
     if (c.ambush) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.ambush });
   } else if (c.cardType === "MASTER STRIKE") {
+    textLog.log("Master Strike!");
     moveCardEv(ev, c, gameState.ko);
     pushEvents(gameState.mastermind.deck.map(function (m) { return {
       type: "EFFECT", source: m, parent: ev, func: m.strike
     }; }));
     if (gameState.advancedSolo) villainDrawEv(ev);
   } else if (c.cardType === "SCHEME TWIST") {
+    textLog.log("Scheme Twist!");
     moveCardEv(ev, c, gameState.ko);
     playTwistEv(ev, c);
   } else if (c.cardType === "BYSTANDER") {
@@ -906,6 +946,7 @@ function villainDraw(ev) {
     if (!i.top) { // no mastermind?
       moveCardEv(ev, c, gameState.ko);
     } else {
+      // TODO select mastermind in case of multiple
       attachCardEv(ev, c, i.top, "BYSTANDER");
     }
   } else {
@@ -992,6 +1033,7 @@ do {
   console.log(">>> " + ev.type, ev);
   ({
     "TURN": function() {
+      textLog.log("Turn Start");
       turnState = ev;
       pushEvents({type:"VILLAINDRAW",parent:ev},{type:"ACTIONS",parent:ev},{type:"CLEANUP",parent:ev});
     },
@@ -1115,6 +1157,7 @@ function mainLoopAuto() {
 
 function getEventName(ev) {
   if (ev.type === "ENDOFTURN") return "End Turn";
+  if (ev.what) return `${ev.type} ${ev.what}`;
   console.log("Unknown option", ev);
   return "Unknown option";
 }
@@ -1137,38 +1180,62 @@ function mainLoop() {
   playGame();
   displayGame();
   let ev = popEvent();
+  if (undoLog.replaying) {
+  ({
+    "SELECTEVENT": function () { pushEvents(ev.options[undoLog.readInt() - 1]); },
+    "SELECTCARD1": function () { ev.result1.selected = ev.options[undoLog.readInt() - 1]; pushEvents(ev.result1); },
+    "SELECTCARD01": function () {
+      const v = undoLog.readInt();
+      if (v) ev.result1.selected = ev.options[v - 1];
+      pushEvents(v ? ev.result1 : ev.result0);
+    },
+    "SELECTONE": function () { pushEvents(ev.options[0]); },
+  }[ev.type] || function () {
+    console.log("Unknown UI event type", ev);
+  })();
+  mainLoop();
+  return;
+  }
   ({
     "SELECTEVENT": function () {
-      ev.options.map(option => {
+      ev.options.map((option, i) => {
         if (option.what && !clickActions[option.what.id]) {
-          clickActions[option.what.id] = () => { pushEvents(option); mainLoop(); };
+          clickActions[option.what.id] = () => { pushEvents(option); undoLog.write(i + 1); mainLoop(); };
         } else {;
-          extraActions.push({name: getEventName(option), confirm: option.confirm, func: () => { pushEvents(option); mainLoop(); }});
+          extraActions.push({name: getEventName(option), confirm: option.confirm, func: () => { pushEvents(option); undoLog.write(i + 1); mainLoop(); }});
         }
       });
     },
     "SELECTCARD1": function () {
-      ev.options.map(option => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); mainLoop(); });
+      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); undoLog.write(i + 1); mainLoop(); });
     },
     "SELECTCARD01": function () {
-      ev.options.map(option => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); mainLoop(); });
-      extraActions = [{name: "None", func: () => { pushEvents(ev.result0); mainLoop(); }}];
+      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); undoLog.write(i + 1); mainLoop(); });
+      extraActions = [{name: "None", func: () => { pushEvents(ev.result0); undoLog.write(0); mainLoop(); }}];
     },
     "SELECTONE": function () { pushEvents(ev.options[0]); mainLoop(); },
   }[ev.type] || function () {
     console.log("Unknown UI event type", ev);
   })();
   console.log("UI> " + ev.type, ev, clickActions, extraActions);
+  extraActions.push({name: "Undo", func: () => { undoLog.undo(); startGame(); }});
+  extraActions.push({name: "Restart", func: () => { undoLog.restart(); startGame(); }});
+  extraActions.push({name: "New game", func: () => { undoLog.newGame(); startGame(); }});
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
     return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
   }).join('<br>');
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
+  document.getElementById("logContainer").innerHTML = `${undoLog.toString()}<br>${textLog.text}`;
 }
-function startApp() {
+function startGame() {
   initGameState();
   mainLoop();
+}
+function startApp() {
+  undoLog.init();
+  startGame();
 }
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
