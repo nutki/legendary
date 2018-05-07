@@ -87,6 +87,14 @@ while (<A>) {
       s!^<b>Fight(?::</b>|</b>:) (.*)$!#FIGHT: $1!gm;
       s!^<b>Start of Game</b>: (.*)$!#START: $1!gm;
     }
+    if ($name =~ /^Schemes/) {
+      s!^<b>Setup(?:</b>:|:</b>) (.*)!#SETUP: $1!gm;
+      s!^<b>Twist(?:</b>:|:</b>) (.*)!#TWIST: $1!gm;
+      s!^<b>Twists? (\d+(?:-\d+|(?:, (?:and )?\d+)+)?)(?:</b>:|:</b>) (.*)!#TWISTNR: NR[$1] $2!gm;
+      s!^Other Twists: (.*)!#TWISTELSE: $1!gm;
+      s!^<b>Special Rules(?:</b>:|:</b>) (.*)!#RULE: $1!gm;
+      s!^<b>(?:Good|Evil) Wins(?:</b>:|:</b>) (.*)!#EVILWINS: $1!gm;
+    }
     if ($name =~ /^Hero/) {
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm
     }

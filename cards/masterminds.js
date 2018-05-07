@@ -14,7 +14,7 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   [ "Treasures of Latveria", ev => {
   // When you draw a new hand of cards at the end of this turn, draw three extra cards.
   } ],
-},
+]),
 makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
 // Each player reveals a [Strength] Hero or gains a Wound
 }, [
@@ -30,7 +30,7 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
   [ "Whispers and Lies", ev => {
   // Each other player KOs two Bystanders from their Victory Pile.
   } ],
-},
+]),
 makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
 // Each player reveals an X-Men Hero or discards down to four cards.
 }, [
@@ -46,7 +46,7 @@ makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
   [ "Xavier's Nemesis", ev => {
   // For each of your X-Men Heroes, rescue a Bystander.
   } ],
-},
+]),
 makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
 // Each player KOs a Hero from their hand.
 }, [
@@ -62,5 +62,5 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   [ "Ruthless Dictator", ev => {
   // Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
   } ],
-},
+]),
 ]);

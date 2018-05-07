@@ -5,6 +5,7 @@
   VILLAINS => "Villains_and_Adversaries.txt",
   BYSTANDERS => "Bystanders.txt",
   MASTERMINDS => "Masterminds_and_Commanders.txt",
+  SCHEMES => "Schemes_and_Plots.txt",
 );
 my ($type, @exp) = @ARGV;
 my $file = $input{$type};
@@ -25,7 +26,7 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
   #print join"====\n",@items;
   sub parse {
     %_ = ();
-    /#(\w+): (.*)/ ? ($_{$1} = $2) : ($_{ABILITIES} .= $_) for split /\n/;
+    /#(\w+): (.*)/ ? ($_{$1} = $_{$1} ? "$_{$1}|$2" : $2) : ($_{ABILITIES} .= $_) for split /\n/;
     s!^#?!// !mg;
   }
   sub filterprint {
@@ -112,7 +113,7 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         print "  } ],\n";
         checkimage("masterminds", $mastermindname, $_{TACTIC});
       }
-      print "},\n";
+      print "]),\n";
     } elsif ($type eq "VILLAINS") {
       ($_, my @subitems) = split/^\n+/m;
       parse();
@@ -135,6 +136,38 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       }
       print "]},\n";
       $copies == 8 or die "Group $groupname has $copies";
+    } elsif ($type eq "SCHEMES") {
+      sub cond {
+        my $n = "ev.nr";
+        my $c = shift;
+        return "$n <= $1" if $c =~ /^1-(\d+)$/;
+        return "$n >= $1 && $n <= $2" if $c =~ /^(\d+)-(\d+)$/;
+        join ' || ',map"$n == $_",split(/,\s*(?:and )?/,$c)
+      }
+      parse();
+      filterprint(qw(CARDNAME EVILWINS TWIST TWISTNR TWISTELSE));
+      $_{SETUP} =~ /^(\d+) Twists(\.|$)/;
+      my $ntwists = $1 || 8;
+      print "makeSchemeCard(\"$_{CARDNAME}\", { twists: $ntwists }, ev => {\n";
+      print "  // Twist: $_{TWIST}\n" if $_{TWIST};
+      my $first = 1;
+      for (split/\|/,$_{TWISTNR}) {
+        /NR\[(\d+)\] (.*)/;
+        my $iselse = $first ? "  " : " else ";
+        my $c = cond($1);
+        print "${iselse}if ($c) {\n";
+        print "    // Twist $1 $2\n";
+        print "  }";
+        $first = 0;
+      }
+      if ($_{TWISTELSE}) {
+        print "else {\n";
+        print "    // $_{TWISTELSE}\n";
+        print "  }\n";
+      } elsif (!$first) {
+        print "\n";
+      }
+      print "}),\n";
     }
   }
   print "]);\n";
