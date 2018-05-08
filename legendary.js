@@ -69,7 +69,7 @@ Color.RANGED = Color.BLUE;
 Color.STRENTH = Color.GREEN;
 Color.INSTINCT = Color.YELLOW;
 Color.BASIC = Color.GRAY;
-function makeHeroCard(hero, name, cost, recruit, attack, color, team, flags, effects) {
+function makeHeroCard(hero, name, cost, recruit, attack, color, team, flags, effects, abilities) {
   let c = new Card("HERO");
   c.printedCost = cost;
   c.printedRecruit = recruit;
@@ -81,6 +81,7 @@ function makeHeroCard(hero, name, cost, recruit, attack, color, team, flags, eff
   c.playable = true;
   c.flags = flags;
   c.effects = typeof effects === "function" ? [ effects ] : effects;
+  if (abilities) for (let i in abilities) c[i] = abilities[i];
   return c;
 }
 function makeVillainCard(group, name, defense, vp, abilities) {
@@ -167,6 +168,7 @@ function makeCardCopyPaste(c, p) {
   r.color = r.color | p.color;
   // TODO: copy other tmp state (MOoT?)
   r.location.deck[r.location.deck.indexOf(p)] = r;
+  return r;
   // Return to stack effects - trigger replace move to sidekick/new recruit stacks
 }
 function moveCard(c, where, bottom) {
@@ -581,7 +583,7 @@ playerState.deck.shuffle();
 // Init hero deck and populate initial HQ
 let herocards = cardTemplates.HEROES;
 for (let i = 0; i < herocards.length; i++) {
-  if (herocards[i].name !== "Storm" && herocards[i].name !== "Spider-Man") continue;
+  if (herocards[i].name !== "Rogue" && herocards[i].name !== "Storm") continue;
   gameState.herodeck.addNewCard(herocards[i].c1, 5);
   gameState.herodeck.addNewCard(herocards[i].c2, 5);
   gameState.herodeck.addNewCard(herocards[i].uc, 3);
@@ -827,8 +829,8 @@ function selectCardOptEv(ev, cards, effect1, effect0, who) {
   if (cards instanceof Deck) cards = cards.deck;
   who = who || playerState;
   let newev = { type: "SELECTCARD01", parent:ev, options: cards, ui: true, agent: who };
-  if (effect0) newev.result0 = { type: "EFFECT", parent: ev, func: effect0 };
-  if (effect1) newev.result1 = { type: "EFFECT", parent: ev, func: effect1 };
+  newev.result0 = { type: "EFFECT", parent: ev, func: effect0 || (() => {})};
+  newev.result1 = { type: "EFFECT", parent: ev, func: effect1 };
   if (!cards.length) {
     if (effect0) pushEvents(newev.result0);
     return;
@@ -876,16 +878,47 @@ function revealOne(ev, who) {
     moveCardEv(ev, who.deck.top, who.revealed);
   }
 }
+function KOHandOrDiscardEv(ev, filter, func) {
+  let cards = handOrDiscard();
+  if (filter) cards = cards.filter(filter);
+  selectCardOptEv(ev, cards, ev => { KOEv(ev, ev.selected); cont(ev, func); })
+}
 
-function playCard(ev) {
-  // PAY PLAYCOST (discard or top deck 1-3 cards)
-  moveCardEv(ev, ev.what, gameState.playArea);
+
+function playCopyEv(ev, what) {
+  pushEvents({ type: "PLAY", what: makeCardCopy(what), parent: ev });
+}
+function playCardDo(ev) {
   if (ev.what.attack) addAttackEvent(ev, ev.what.attack);
   if (ev.what.recruit) addRecruitEvent(ev, ev.what.recruit);
   for (let i = 0; ev.what.effects && i < ev.what.effects.length; i++) {
     pushEvents( { type: "EFFECT", source: ev.what, parent: ev, func: ev.what.effects[i] } );
   }
   cont(ev, () => turnState.cardsPlayed.push(ev.what));
+}
+// Play copy
+// - actual card on cards played
+// - nothing in play area
+// Play copypaste
+// - copypaste in cards played
+// - copypaste in play area
+// Play copy of copypaste
+// - copypaste in cards played
+// - nothing in play area
+function playCard(ev) {
+  // PAY PLAYCOST (discard or top deck 1-3 cards)
+  moveCardEv(ev, ev.what, gameState.playArea); // Make sure not to loose copy due to move
+  if (ev.what.copyPasteCard) {
+    selectCardEv(ev, turnState.cardsPlayed, selectEv => {
+      const target = selectEv.selected;
+      console.log("COPYPASTE", ev.what, target);
+      ev.what = makeCardCopyPaste(target, ev.what);
+      console.log("RESULT", ev.what);
+      playCardDo(ev);
+    }); // TODO if there are no cards played this prevents rogue copy powers play at all currently
+  } else {
+    playCardDo(ev);
+  }
 }
 function buyCard(ev) {
   // TODO: other pay options

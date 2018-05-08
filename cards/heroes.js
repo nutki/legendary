@@ -219,18 +219,27 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Strength} You get +3 Attack.
 // COST: 4
 // FLAVOR: When Rogue steals super strength, enemies get super scared.
-  c1: makeHeroCard("Rogue", "Borrowed Brawn", 4, u, 1, Color.STRENGTH, "X-Men", "F"),
+  c1: makeHeroCard("Rogue", "Borrowed Brawn", 4, u, 1, Color.STRENGTH, "X-Men", "F", ev => { if(superPower(Color.STRENGTH)) addAttackEvent(ev, 3); }),
 // RECRUIT: 2+
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
 // COST: 3
-  c2: makeHeroCard("Rogue", "Energy Drain", 3, 2, u, Color.COVERT, "X-Men", "D"),
+  c2: makeHeroCard("Rogue", "Energy Drain", 3, 2, u, Color.COVERT, "X-Men", "D", ev => { if(superPower(Color.COVERT)) KOHandOrDiscardEv(ev, undefined, ev => addRecruitEvent(ev, 1)); }),
 // Play this card as a copy of another Hero you played this turn. This card is both [Covert] and the color you copy.
 // COST: 5
-  uc: makeHeroCard("Rogue", "Copy Powers", 5, u, u, Color.COVERT, "X-Men", ""),
+  uc: makeHeroCard("Rogue", "Copy Powers", 5, u, u, Color.COVERT, "X-Men", "", [], { copyPasteCard: true }),
 // ATTACK: 4
 // Each player discards the top card of their deck. Play a copy of each of those cards.
 // COST: 8
-  ra: makeHeroCard("Rogue", "Steal Abilities", 8, u, 4, Color.STRENGTH, "X-Men", ""),
+  ra: makeHeroCard("Rogue", "Steal Abilities", 8, u, 4, Color.STRENGTH, "X-Men", "", ev => {
+    let revealed = [];
+    eachPlayer(p => lookAtDeckEv(ev, 1, () => { reveled.push(p.revealed); discardEv(ev, p.revealed); }));
+    let playOne = () => selectCardEv(ev, revealed, ev => {
+      playCopyEv(ev, ev.selected);
+      revealed = reveled.filter(c => c !== ev.selected);
+      if (revealed.length > 0) cont(ev, playOne);
+    });
+    cont(ev, playOne);
+  }),
 },
 {
   name: "Spider-Man",
