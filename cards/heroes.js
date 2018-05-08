@@ -1,5 +1,6 @@
+"use strict";
 /* global Color, u, turnState, playerState, gameState */
-/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain */
+/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain, rescueEv, villainOrMastermind */
 
 addTemplates("HEROES", "Legendary", [
 {
@@ -8,11 +9,11 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 2
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, rescue a Bystander.
 // COST: 3
-  c1: makeHeroCard("Black Widow", "Dangerous Rescue", 3, u, 2, Color.COVERT, "Avengers", "GD"),
+  c1: makeHeroCard("Black Widow", "Dangerous Rescue", 3, u, 2, Color.COVERT, "Avengers", "GD", ev => { if (superPower(Color.COVERT)) KOHandOrDiscardEv(ev, undefined, ev => rescueEv(ev)); }),
 // Draw a card.
 // {POWER Tech} Rescue a Bystander.
 // COST: 2
-  c2: makeHeroCard("Black Widow", "Mission Accomplished", 2, u, u, Color.TECH, "Avengers", "GD"),
+  c2: makeHeroCard("Black Widow", "Mission Accomplished", 2, u, u, Color.TECH, "Avengers", "GD", [ ev => drawEv(ev, 1), ev => { if (superPower(Color.TECH)) rescueEv(ev); } ]),
 // ATTACK: 0+
 // You get +1 Attack for each Bystander in your Victory pile.
 // COST: 4
@@ -90,7 +91,7 @@ addTemplates("HEROES", "Legendary", [
 // Draw a card.
 // COST: 3
 // FLAVOR: A natural telepath, Emma knows what you're thinking before you do.
-  c1: makeHeroCard("Emma Frost", "Mental Discipline", 3, 1, u, Color.RANGED, "X-Men", "F"),
+  c1: makeHeroCard("Emma Frost", "Mental Discipline", 3, 1, u, Color.RANGED, "X-Men", "F", ev => drawEv(ev, 1)),
 // ATTACK: 2+
 // {POWER Covert} You may play the top card of the Villain Deck. If you do, you get +2 Attack.
 // COST: 4
@@ -134,12 +135,12 @@ addTemplates("HEROES", "Legendary", [
 // Draw a card.
 // COST: 3
 // FLAVOR: Against robots, Hawkeye's first shot is a warning shot. In the face.
-  c1: makeHeroCard("Hawkeye", "Quick Draw", 3, u, 1, Color.INSTINCT, "Avengers", "F"),
+  c1: makeHeroCard("Hawkeye", "Quick Draw", 3, u, 1, Color.INSTINCT, "Avengers", "F", ev => drawEv(ev, 1)),
 // ATTACK: 2+
 // {TEAMPOWER Avengers} You get +1 Attack.
 // COST: 4
 // FLAVOR: "You line 'em up, and I'll knock 'em down..."
-  c2: makeHeroCard("Hawkeye", "Team Player", 4, u, 2, Color.TECH, "Avengers", "FD"),
+  c2: makeHeroCard("Hawkeye", "Team Player", 4, u, 2, Color.TECH, "Avengers", "FD", ev => { if (superPower("Avengers")) addAttackEvent(ev, 1); }),
 // ATTACK: 3
 // {POWER Tech} Choose one: each other player draws a card or each other player discards a card.
 // COST: 5
@@ -156,21 +157,21 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Strength} You get +1 Attack.
 // COST: 3
 // FLAVOR: Don't make Hulk even mildly inconvenienced. You wouldn't like him when he's mildly inconvenienced...
-  c1: makeHeroCard("Hulk", "Growing Anger", 3, u, 2, Color.STRENGTH, "Avengers", "FD"),
+  c1: makeHeroCard("Hulk", "Growing Anger", 3, u, 2, Color.STRENGTH, "Avengers", "FD", ev => { if (superPower(Color.STRENGTH)) addAttackEvent(ev, 1); }),
 // ATTACK: 2+
 // You may KO a Wound from your hand or discard pile. If you do, you get +2 Attack.
 // COST: 4
-  c2: makeHeroCard("Hulk", "Unstoppable Hulk", 4, u, 2, Color.INSTINCT, "Avengers", "D"),
+  c2: makeHeroCard("Hulk", "Unstoppable Hulk", 4, u, 2, Color.INSTINCT, "Avengers", "D", ev => KOHandOrDiscardEv(ev, isWound, ev => addAttackEvent(ev, 2))),
 // ATTACK: 4
 // Each player gains a Wound.
 // COST: 5
 // FLAVOR: Hulk's rages tear everything apart: Enemies. Friends. Pants.
-  uc: makeHeroCard("Hulk", "Crazed Rampage", 5, u, 4, Color.STRENGTH, "Avengers", "F"),
+  uc: makeHeroCard("Hulk", "Crazed Rampage", 5, u, 4, Color.STRENGTH, "Avengers", "F", ev => eachPlayer(p => gainWoundEv(ev, p))),
 // ATTACK: 5+
 // {POWER Strength} You get +5 Attack.
 // COST: 8
 // FLAVOR: "PUNY HUMANS! HULK IS THE STRONGEST ONE THERE IS!"
-  ra: makeHeroCard("Hulk", "Hulk Smash!", 8, u, 5, Color.STRENGTH, "Avengers", "F"),
+  ra: makeHeroCard("Hulk", "Hulk Smash!", 8, u, 5, Color.STRENGTH, "Avengers", "F", ev => { if (superPower(Color.STRENGTH)) addAttackEvent(ev, 5); }),
 },
 {
   name: "Iron Man",
@@ -178,39 +179,39 @@ addTemplates("HEROES", "Legendary", [
 // Draw a card.
 // {POWER Tech} Draw another card.
 // COST: 3
-  c1: makeHeroCard("Iron Man", "Endless Invention", 3, u, u, Color.TECH, "Avengers", ""),
+  c1: makeHeroCard("Iron Man", "Endless Invention", 3, u, u, Color.TECH, "Avengers", "", [ ev => drawEv(ev, 1), ev => { if (superPower(Color.TECH)) drawEv(ev, 1); } ]),
 // ATTACK: 2+
 // {POWER Ranged} You get +1 Attack.
 // COST: 3
 // FLAVOR: Repulsor ray technology has many peaceful applications. This is not one of them.
-  c2: makeHeroCard("Iron Man", "Repulsor Rays", 3, u, 2, Color.RANGED, "Avengers", "FD"),
+  c2: makeHeroCard("Iron Man", "Repulsor Rays", 3, u, 2, Color.RANGED, "Avengers", "FD", ev => { if (superPower(Color.RANGED)) addAttackEvent(ev, 1); }),
 // ATTACK: 3+
 // {POWER Tech} You get +1 Attack for each other [Tech] Hero you played this turn.
 // COST: 5
-  uc: makeHeroCard("Iron Man", "Arc Reactor", 5, u, 3, Color.TECH, "Avengers", ""),
+  uc: makeHeroCard("Iron Man", "Arc Reactor", 5, u, 3, Color.TECH, "Avengers", "", ev => addAttackEvent(ev, superPower(Color.TECH))),
 // Draw two cards.
 // {POWER Tech} Draw two more cards.
 // COST: 7
-  ra: makeHeroCard("Iron Man", "Quantum Breakthrough", 7, u, u, Color.TECH, "Avengers", ""),
+  ra: makeHeroCard("Iron Man", "Quantum Breakthrough", 7, u, u, Color.TECH, "Avengers", "", [ ev => drawEv(ev, 2), ev => { if (superPower(Color.TECH)) drawEv(ev, 2); } ]),
 },
 {
   name: "Nick Fury",
   team: "S.H.I.E.L.D.",
 // You may KO a S.H.I.E.L.D. Hero from your hand or discard pile. If you do, you may gain a S.H.I.E.L.D. Officer to your hand.
 // COST: 4
-  c1: makeHeroCard("Nick Fury", "Battlefield Promotion", 4, u, u, Color.COVERT, "S.H.I.E.L.D.", "G"),
+  c1: makeHeroCard("Nick Fury", "Battlefield Promotion", 4, u, u, Color.COVERT, "S.H.I.E.L.D.", "G", ev => KOHandOrDiscardEv(ev, isTeam("S.H.I.E.L.D."), ev => { if (gameState.officer.top) gainToHandEv(ev, gameState.officer.top); })),
 // ATTACK: 2+
 // {POWER Tech} You get +1 Attack.
 // COST: 3
 // FLAVOR: Fury always budgets one extra prototype for his personal collection.
-  c2: makeHeroCard("Nick Fury", "High-Tech Weaponry", 3, u, 2, Color.TECH, "S.H.I.E.L.D.", "GFD"),
+  c2: makeHeroCard("Nick Fury", "High-Tech Weaponry", 3, u, 2, Color.TECH, "S.H.I.E.L.D.", "GFD", ev => { if (superPower(Color.TECH)) addAttackEvent(ev, 1); }),
 // ATTACK: 1+
 // You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 // COST: 6
-  uc: makeHeroCard("Nick Fury", "Legendary Commander", 6, u, 1, Color.STRENGTH, "S.H.I.E.L.D.", "G"),
+  uc: makeHeroCard("Nick Fury", "Legendary Commander", 6, u, 1, Color.STRENGTH, "S.H.I.E.L.D.", "G", ev => addAttackEvent(ev, superPower("S.H.I.E.L.D."))),
 // Defeat any Villain or Mastermind whose Attack is less than the number of S.H.I.E.L.D. Heroes in the KO pile.
 // COST: 8
-  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G"),
+  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, villainOrMastermind().filter(v => v.defense < superPower("S.H.I.E.L.D.")), ev => defeatEv(ev, ev.selected))),
 },
 {
   name: "Rogue",
@@ -232,10 +233,10 @@ addTemplates("HEROES", "Legendary", [
 // COST: 8
   ra: makeHeroCard("Rogue", "Steal Abilities", 8, u, 4, Color.STRENGTH, "X-Men", "", ev => {
     let revealed = [];
-    eachPlayer(p => lookAtDeckEv(ev, 1, () => { reveled.push(p.revealed); discardEv(ev, p.revealed); }));
+    eachPlayer(p => lookAtDeckEv(ev, 1, () => { revealed.push(p.revealed.top); discardEv(ev, p.revealed.top); }));
     let playOne = () => selectCardEv(ev, revealed, ev => {
       playCopyEv(ev, ev.selected);
-      revealed = reveled.filter(c => c !== ev.selected);
+      revealed = revealed.filter(c => c !== ev.selected);
       if (revealed.length > 0) cont(ev, playOne);
     });
     cont(ev, playOne);
@@ -329,9 +330,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 2
 // You may KO a Wound from your hand or discard pile. If you do, draw a card.
 // COST: 3
-  c1: makeHeroCard("Wolverine", "Healing Factor", 3, u, 2, Color.INSTINCT, "X-Men", "D",
-    ev => selectCardOptEv(ev, handOrDiscard().filter(isWound), ev => { drawEv(ev); KOEv(ev, ev.selected); })
-  ),
+  c1: makeHeroCard("Wolverine", "Healing Factor", 3, u, 2, Color.INSTINCT, "X-Men", "D", ev => KOHandOrDiscardEv(ev, isWound, ev => drawEv(ev))),
 // ATTACK: 1
 // {POWER Instinct} Draw a card.
 // COST: 2

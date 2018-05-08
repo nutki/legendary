@@ -15,6 +15,35 @@ undef $/;
 $_ = <A>;
 close A;
 #print length,"\n";
+sub autopower {
+  my %num = (a => 1, another => 1, two => 2, three => 3);
+  my %filt = (card => 'undefined', Wound => 'isWound');
+  my @a = split"\n",shift;
+  my @r = ();
+  for (@a) {
+    /^#|^$/ and next;
+    my $effect = undef;
+    my $cond = undef;
+    my $wrap = undef;
+    s/^{POWER (.*)} *// and $cond = "if (superPower(".(join' | ',map{"Color.".uc}split" ",$1)."))";
+    s/^{TEAMPOWER (.*)} *// and $cond = "if (superPower(\"$1\"))";
+    s/^<b>Spectrum<.b>: *// and $cond = "if (spectrumPower())";
+
+    s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, ev => XXX)";
+
+    /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
+    /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev, $num{$1})";
+    /^[Yy]ou get \+(\d+) (Attack|Recruit)\.?$/ and $effect = "add$2Event(ev, $1)";
+    /^Rescue a Bystander\.?$/ and $effect = "rescueEv(ev)";
+
+    $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
+    $effect = "{ $cond $effect; }" if $cond && $effect;
+    push @r, $effect if $effect;
+    #print "$_\n" if !$effect;
+  }
+  my $all = join', ',map"ev => $_",@r;
+  @r ? @r > 1 ? ", [ $all ]" : ", $all" : "";
+}
 while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
   #print "$1 ".length$2,"\n";
   $content = $2;
@@ -74,6 +103,7 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         my $count = (5, 5, 3, 1)[$_];
         my $pname = qw(c1 c2 uc ra)[$_];
         $_ = $subitems[$_];
+        my $autopower = autopower($_);
         parse();
         $_{COPIES} == $count or die "Bad number of copies for $pname: $_{COPIES}";
         filterprint(qw(SUBNAME COPIES CLASS));
@@ -88,7 +118,7 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         $flags .= 'G' if $hasgun || $_{GUN};
         $flags .= 'F' if $_{FLAVOR};
         $flags .= 'D' if /2/ || $heroname =~ /2/;
-        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam, \"$flags\"),\n";
+        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam, \"$flags\"$autopower),\n";
         checkimage("heroes", $heroname, $_{SUBNAME});
       }
       print "},\n";

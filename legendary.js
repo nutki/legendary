@@ -490,7 +490,7 @@ playerState = {
   victory: new Deck('VICTORY0', true),
   revealed: new Deck('REVEALED0', true),
 };
-playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState;
+playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState.revealed.owner = playerState;
 gameState = {
   type: "STATE",
   nextId: 0,
@@ -643,6 +643,9 @@ function HQCardsHighestCost() {
   all.forEach(function (c) { if (c.cost > maxCost) maxCost = c.cost; });
   return all.filter(function (c) { return c.cost === maxCost; });
 }
+function villainOrMastermind() {
+  return CityCards().filter(isVillain).concat(gameState.mastermind.deck);
+}
 function eachOtherPlayer(f) { let r = gameState.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
 function eachOtherPlayerVM(f) { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
 function eachPlayer(f) { if (f) gameState.players.forEach(f); return gameState.players; }
@@ -654,7 +657,7 @@ function revealable(who) {
 }
 function yourHeroes(who) { return filter(revealable(who), isHero); }
 
-function superPower(color, a) { return count(turnState.cardsPlayed, color) >= (a || 1); }
+function superPower(color) { return count(turnState.cardsPlayed, color); }
 function addEndDrawMod(a) { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a) { turnState.endDrawAmount = a; }
 
@@ -785,7 +788,14 @@ function swapCardsEv(ev, where1, where2) {
   });
 }
 function attachCardEv(ev, what, to, name) { moveCardEv(ev, what, to.attachedCards(name)); }
-function gainEv(ev, card, who) { pushEvents({type:"GAIN", what:card, who:who || playerState, parent: ev}); }
+function gainEv(ev, card, who) {
+  who = who || playerState;
+  pushEvents({type:"GAIN", what:card, who:who, where: who.discard, parent: ev});
+}
+function gainToHandEv(ev, card, who) {
+  who = who || playerState;
+  pushEvents({type:"GAIN", what:card, who:who, where: who.hand, parent: ev});
+}
 function discardEv(ev, card) { pushEvents({ type: "DISCARD", parent: ev, what:card }); }
 function drawEv(ev, amount, who) { pushEvents({ type: "DRAW", who: who || playerState, amount: amount || 1, parent: ev }); }
 function drawIfEv(ev, cond, who) {
@@ -805,9 +815,9 @@ function rescueEv(ev, what) {
     else runOutEv(ev, 'BYSTANDERS');
   });
 }
-function gainWoundEv(ev, deck, who) {
+function gainWoundEv(ev, who) {
   cont(ev, () => {
-    if (gameState.wounds.top) pushEvents({ type:"GAIN", what: gameState.wounds.top, who: who || playerState, parent: ev });
+    if (gameState.wounds.top) gainEv(ev, gameState.wounds.top, who);
     else runOutEv(ev, "WOUNDS");
   });
 }
@@ -886,7 +896,7 @@ function KOHandOrDiscardEv(ev, filter, func) {
 
 
 function playCopyEv(ev, what) {
-  pushEvents({ type: "PLAY", what: makeCardCopy(what), parent: ev });
+  pushEvents({ type: "PLAY", what: makeCardCopy(what, gameState.playArea), parent: ev });
 }
 function playCardDo(ev) {
   if (ev.what.attack) addAttackEvent(ev, ev.what.attack);
@@ -907,7 +917,8 @@ function playCardDo(ev) {
 // - nothing in play area
 function playCard(ev) {
   // PAY PLAYCOST (discard or top deck 1-3 cards)
-  moveCardEv(ev, ev.what, gameState.playArea); // Make sure not to loose copy due to move
+  if (ev.what.location !== gameState.playArea) // Make sure not to loose copy due to move
+    moveCardEv(ev, ev.what, gameState.playArea);
   if (ev.what.copyPasteCard) {
     selectCardEv(ev, turnState.cardsPlayed, selectEv => {
       const target = selectEv.selected;
@@ -927,7 +938,7 @@ function buyCard(ev) {
   gainEv(ev, ev.what);
 }
 function gainCard(ev) {
-  moveCardEv(ev, ev.what, ev.who.discard);
+  moveCardEv(ev, ev.what, ev.where);
 }
 function cleanUp(ev) {
   moveAll(playerState.hand, playerState.discard);
@@ -1008,6 +1019,9 @@ function villainFight(ev) {
     turnState.attack = 0;
   }
   turnState.recruitedOrFought = true;
+  defeatEv(ev, c);
+}
+function defeatEv(ev, c) {
   pushEvents({ type: "DEFEAT", what: c, parent: ev });
 }
 function villainDefeat(ev) {
@@ -1063,7 +1077,7 @@ do {
     modifiers: {},
     parent:gameState
   };
-  console.log(">>> " + ev.type, ev);
+  if (!undoLog.replaying) console.log(">>> " + ev.type, ev);
   ({
     "TURN": function() {
       textLog.log("Turn Start");
@@ -1210,10 +1224,9 @@ window.onclick = clickCard;
 function mainLoop() {
   let extraActions = [];
   clickActions = {};
+  while (undoLog.replaying) {
   playGame();
-  displayGame();
   let ev = popEvent();
-  if (undoLog.replaying) {
   ({
     "SELECTEVENT": function () { pushEvents(ev.options[undoLog.readInt() - 1]); },
     "SELECTCARD1": function () { ev.result1.selected = ev.options[undoLog.readInt() - 1]; pushEvents(ev.result1); },
@@ -1226,9 +1239,10 @@ function mainLoop() {
   }[ev.type] || function () {
     console.log("Unknown UI event type", ev);
   })();
-  mainLoop();
-  return;
   }
+  playGame();
+  displayGame();
+  let ev = popEvent();
   ({
     "SELECTEVENT": function () {
       ev.options.map((option, i) => {
@@ -1273,7 +1287,7 @@ function startApp() {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Undo
+Show played cards in UI
 UI events description
 Show hidden events (make all event pass the main UI loop) / effect source
 
@@ -1283,6 +1297,4 @@ Handle end game conditions
 required villain/hero groups
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards
-
-Other villains
 */
