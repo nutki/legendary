@@ -157,11 +157,11 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         my $vp = $_{VP} =~ s/[^0-9.]//gr;
         my $defense = $_{ATTACK} =~ s/[^0-9]//gr;
         $copies += $_{COPIES};
-        print "  [ $_{COPIES}, makeVillainCard(\"$groupname\", \"$_{SUBNAME}\", $defense, $vp), {\n";
+        print "  [ $_{COPIES}, makeVillainCard(\"$groupname\", \"$_{SUBNAME}\", $defense, $vp, {\n";
         print "    ambush: ev => {},\n" if $_{AMBUSH};
         print "    fight: ev => {},\n" if $_{FIGHT};
         print "    escape: ev => {},\n" if $_{ESCAPE};
-        print "  }],\n";
+        print "  })],\n";
         checkimage("villains", $groupname, $_{SUBNAME});
       }
       print "]},\n";
