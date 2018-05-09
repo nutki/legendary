@@ -1,6 +1,6 @@
 "use strict";
 /* global Color, u, turnState, playerState, gameState */
-/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain, rescueEv, villainOrMastermind */
+/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain, rescueEv, villainOrMastermind, isBystander, hasBystander */
 
 addTemplates("HEROES", "Legendary", [
 {
@@ -17,11 +17,11 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 0+
 // You get +1 Attack for each Bystander in your Victory pile.
 // COST: 4
-  uc: makeHeroCard("Black Widow", "Covert Operation", 4, u, 0, Color.COVERT, "Avengers", "G"),
+  uc: makeHeroCard("Black Widow", "Covert Operation", 4, u, 0, Color.COVERT, "Avengers", "G", ev => addAttackEvent(ev, playerState.victory.fcount(isBystander))),
 // ATTACK: 4
 // Defeat a Villain or Mastermind that has a Bystander.
 // COST: 7
-  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G"),
+  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, villainOrMastermind().filter(hasBystander), ev => defeatEv(ev, ev.selected))),
 },
 {
   name: "Captain America",
@@ -29,19 +29,21 @@ addTemplates("HEROES", "Legendary", [
 // RECRUIT: 0+
 // You get +1 Recruit for each color of Hero you have.
 // COST: 3
-  c1: makeHeroCard("Captain America", "Avengers Assemble!", 3, 0, u, Color.INSTINCT, "Avengers", ""),
+  c1: makeHeroCard("Captain America", "Avengers Assemble!", 3, 0, u, Color.INSTINCT, "Avengers", "", ev => addRecruitEvent(ev, numColorsYouHave())),
 // ATTACK: 0+
 // You get +1 Attack for each color of Hero you have.
 // COST: 4
-  c2: makeHeroCard("Captain America", "Perfect Teamwork", 4, u, 0, Color.STRENGTH, "Avengers", ""),
+  c2: makeHeroCard("Captain America", "Perfect Teamwork", 4, u, 0, Color.STRENGTH, "Avengers", "", ev => addRecruitEvent(ev, numColorsYouHave())),
 // ATTACK: 4
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
-  uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", ""),
+  uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
+    type: "GAIN", match: isWound, replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.what))
+  }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
 // COST: 7
-  ra: makeHeroCard("Captain America", "A Day Unlike Any Other", 7, u, 3, Color.COVERT, "Avengers", ""),
+  ra: makeHeroCard("Captain America", "A Day Unlike Any Other", 7, u, 3, Color.COVERT, "Avengers", "", ev => addAttackEvent(ev, 3 * superPower("Avengers"))),
 },
 {
   name: "Cyclops",
@@ -49,19 +51,21 @@ addTemplates("HEROES", "Legendary", [
 // RECRUIT: 3
 // To play this card, you must discard a card from your hand.
 // COST: 2
-  c1: makeHeroCard("Cyclops", "Determination", 2, 3, u, Color.STRENGTH, "X-Men", "D"),
+  c1: makeHeroCard("Cyclops", "Determination", 2, 3, u, Color.STRENGTH, "X-Men", "D", [], { playCost: 1, playCostType: "DISCARD" }),
 // ATTACK: 3
 // To play this card, you must discard a card from your hand.
 // COST: 3
-  c2: makeHeroCard("Cyclops", "Optic Blast", 3, u, 3, Color.RANGED, "X-Men", ""),
+  c2: makeHeroCard("Cyclops", "Optic Blast", 3, u, 3, Color.RANGED, "X-Men", "", [], { playCost: 1, playCostType: "DISCARD" }),
 // ATTACK: 4
 // If a card effect makes you discard this card, you may return this card to your hand.
 // COST: 6
-  uc: makeHeroCard("Cyclops", "Unending Energy", 6, u, 4, Color.RANGED, "X-Men", ""),
+  uc: makeHeroCard("Cyclops", "Unending Energy", 6, u, 4, Color.RANGED, "X-Men", "", [], { trigger: {
+    type: "DISCARD", match: (ev, source) => ev.what === source /* TODO && ev.source instanceof Card */, after: ev => moveCardEv(ev, ev.source, playerState.hand)
+  }}),
 // ATTACK: 6+
 // {TEAMPOWER X-Men} You get +2 Attack for each other X-Men Hero you played this turn.
 // COST: 8
-  ra: makeHeroCard("Cyclops", "X-Men United", 8, u, 6, Color.RANGED, "X-Men", "D"),
+  ra: makeHeroCard("Cyclops", "X-Men United", 8, u, 6, Color.RANGED, "X-Men", "D", ev => addAttackEvent(ev, 2 * superPower("X-Men"))),
 },
 {
   name: "Deadpool",
@@ -70,19 +74,28 @@ addTemplates("HEROES", "Legendary", [
 // A Villain of your choice captures a Bystander.
 // COST: 3
 // FLAVOR: "Hey, Abomination makes a pretty good babysitter."
-  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD"),
+  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, villains(), ev => captureEv(ev, ev.selected))),
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
-  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD"),
+  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAtackEvent(ev, turnState.cardsPlayed.filter(c => c.cost % 2 === 1).length)),
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
-  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD"),
+  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseOneEv(
+    "Yes", () => { discardHandEv(ev); drawEv(ev, 4); },
+    "No", () => {}
+  ); }),
 // ATTACK: 6
 // You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.
 // COST: 7
-  ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, u, "G"),
+  ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, u, "G", [
+  ev => chooseOneEv(ev, "Yes", () => gainWoundEv(ev), "No", () => {}),
+  ev => {
+    let selected = [];
+    eachPlayer(p => selectCardEv(ev, p.hand, ev => selected.push({ player: p, card:ev.selected }), p));
+    cont(() => selected.forEach(i => moveCardEv(ev, i.card, i.player.left.hand)));
+  }]),
 },
 {
   name: "Emma Frost",
@@ -96,17 +109,22 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Covert} You may play the top card of the Villain Deck. If you do, you get +2 Attack.
 // COST: 4
 // FLAVOR: Emma's days as a Villain are behind here...aren't they?
-  c2: makeHeroCard("Emma Frost", "Shadowed Thoughts", 4, u, 2, Color.COVERT, "X-Men", "FD"),
+  c2: makeHeroCard("Emma Frost", "Shadowed Thoughts", 4, u, 2, Color.COVERT, "X-Men", "FD", ev => { if (superPower(Color.COVERT)) chooseOneEv(ev,
+  "Yes", () => { villainDrawEv(ev); addAttackEvent(ev, 2); },
+  "No", () => {}
+  );}),
 // ATTACK: 3
 // Each player may reveal another X-Men Hero. Each player who does draws a card.
 // COST: 5
-  uc: makeHeroCard("Emma Frost", "Psychic Link", 5, u, 3, Color.INSTINCT, "X-Men", ""),
+  uc: makeHeroCard("Emma Frost", "Psychic Link", 5, u, 3, Color.INSTINCT, "X-Men", "", ev => eachPlayer(p => {
+    revealAndEv(ev, c => isTeam("X-Men")(c) && c !== ev.source, () => drawEv(ev, 1, p), p);
+  })),
 // RECRUIT: 0+
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, you get +3 Recruit.
 // COST: 7
 // FLAVOR: A secondary mutation allows Emma Frost to transform into pure diamond.
-  ra: makeHeroCard("Emma Frost", "Diamond Form", 7, 0, 5, Color.STRENGTH, "X-Men", "F"),
+  ra: makeHeroCard("Emma Frost", "Diamond Form", 7, 0, 5, Color.STRENGTH, "X-Men", "F", ev => addTurnTrigger("DEFEAT", u, () => addRecruitEvent(ev, 3))),
 },
 {
   name: "Gambit",
@@ -114,19 +132,25 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 2
 // Reveal the top card of your deck. If it's an X-Men Hero, draw it.
 // COST: 4
-  c1: makeHeroCard("Gambit", "Card Shark", 4, u, 2, Color.RANGED, "X-Men", "D"),
+  c1: makeHeroCard("Gambit", "Card Shark", 4, u, 2, Color.RANGED, "X-Men", "D", ev => drawIfEv(ev, isTeam("X-Men"))),
 // Draw two cards. Then put a card from your hand on top of your deck.
 // COST: 2
-  c2: makeHeroCard("Gambit", "Stack the Deck", 2, u, u, Color.COVERT, "X-Men", "D"),
+  c2: makeHeroCard("Gambit", "Stack the Deck", 2, u, u, Color.COVERT, "X-Men", "D", [ ev => drawEv(ev, 2), ev => pickTopDeckEv(ev) ]),
 // RECRUIT: 2
 // Reveal the top card of your deck. Discard it or put it back.
 // {POWER Instinct} Do the same thing to each other player's deck.
 // COST: 3
-  uc: makeHeroCard("Gambit", "Hypnotic Charm", 3, 2, u, Color.INSTINCT, "X-Men", "D"),
+  uc: makeHeroCard("Gambit", "Hypnotic Charm", 3, 2, u, Color.INSTINCT, "X-Men", "D", ev => eachPlayer(p => {
+    if (p === playerState || superPower(Color.INSTINCT)) lookAtDeckEv(ev, 1, () => {
+      selectCardOptEv(ev, turnState.revealed, sev => discardEv(ev, sev.selected));
+    }, p, playerState);
+  })),
 // ATTACK: 4+
 // Reveal the top card of your deck. You get + Attack equal to that card's cost.
 // COST: 7
-  ra: makeHeroCard("Gambit", "High Stakes Jackpot", 7, u, 4, Color.INSTINCT, "X-Men", ""),
+  ra: makeHeroCard("Gambit", "High Stakes Jackpot", 7, u, 4, Color.INSTINCT, "X-Men", "",
+    ev => lookAtDeckEv(ev, 1, () => addAttackEvent(ev, turnState.revealed.top ? turnState.revealed.top.cost : 0))
+  ),
 },
 {
   name: "Hawkeye",
@@ -144,11 +168,14 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 3
 // {POWER Tech} Choose one: each other player draws a card or each other player discards a card.
 // COST: 5
-  uc: makeHeroCard("Hawkeye", "Covering Fire", 5, u, 3, Color.TECH, "Avengers", ""),
+  uc: makeHeroCard("Hawkeye", "Covering Fire", 5, u, 3, Color.TECH, "Avengers", "", ev => { if (superPower(Color.TECH)) selectOneEv(ev,
+    "Each other player draws a card", () => eachOtherPlayer(p => drawEv(ev, 1, p)),
+    "Each other player discards a card", () => eachOtherPlayer(p => pickDiscard(ev, p))
+  );}),
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
 // COST: 7
-  ra: makeHeroCard("Hawkeye", "Impossible Trick Shot", 7, u, 5, Color.TECH, "Avengers", ""),
+  ra: makeHeroCard("Hawkeye", "Impossible Trick Shot", 7, u, 5, Color.TECH, "Avengers", "", ev => addTurnTrigger("DEFEAT", u, () => { rescueEv(ev); rescueEv(ev); rescueEv(ev); })),
 },
 {
   name: "Hulk",
