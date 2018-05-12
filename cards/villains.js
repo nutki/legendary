@@ -1,3 +1,4 @@
+"use strict";
 addTemplates("VILLAINS", "Legendary", [
 { name: "Brotherhood", cards: [
 // You can't defeat Blob unless you have an X-Men Hero.

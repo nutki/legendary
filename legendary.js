@@ -241,6 +241,8 @@ Cards.prototype = {
 let cardTemplates = {
   HEROES: [],
   HENCHMEN: [],
+  VILLAINS: [],
+  MASTERMINDS: [],
 };
 function addTemplates(type, set, templates) {
   templates.forEach(t => {
@@ -812,13 +814,13 @@ function getActions(ev) {
   // TODO any deck with recruitable
   p = p.concat(HQCards().filter(canRecruit).map(d => ({
     type: "RECRUIT",
-    what: d.top,
+    what: d,
     parent: ev,
   })));
   // TODO any deck with fightable
   p = p.concat(CityCards().filter(canFight).map(d => ({
     type: "FIGHT",
-    what: d.top,
+    what: d,
     parent: ev,
   })));
   if (gameState.mastermind.count && gameState.mastermind.top.attached.TACTICS.count && canFight(gameState.mastermind.top)) p.push({
