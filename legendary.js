@@ -250,6 +250,11 @@ function addTemplates(type, set, templates) {
     cardTemplates[type].push(t);
   });
 }
+function findTemplate(type, attr) { return name => cardTemplates[type].filter(t => t[attr] === name)[0]; }
+function findHeroTemplate(name) { return findTemplate('HEROES', 'name')(name); }
+function findHenchmanTemplate(name) { return findTemplate('HENCHMEN', 'cardName')(name); }
+function findVillainTemplate(name) { return findTemplate('VILLAIN', 'name')(name); }
+function findMastermindTemplate(name) { return findTemplate('MASTERMINDS', 'cardName')(name); }
 let u = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
@@ -263,82 +268,6 @@ let woundTemplate = makeWoundCard(function (ev) {
   playerState.hand.filter(isWound).forEach(function (w) { KOEv(ev, w); });
   turnState.noRecruitOrFight = true;
 });
-
-let mastermindTemplates = [
-makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion",
-  function (ev) {
-    //Each player with exactly 6 cards in hand reveals a Tech Hero or puts 2 cards from their hand on top of their deck.
-    eachPlayer(function(p) {
-      if (p.hand.count === 6) {
-        revealOrEv(ev, Color.BLACK, function (ev) { pickTopDeckEv(ev, p); pickTopDeckEv(ev, p); }, p);
-      }
-    });
-  },
-  [
-    [ "Dark Technology", function (ev) { // You may recruit a Tech or Ranged Hero from the HQ for free.
-      selectCardEv(ev, HQCards().filter(isColor(Color.BLACK | Color.BLUE)), function (ev) { gainEv(ev, ev.selected); });
-    } ],
-    [ "Monarch's Decree", function (ev) { // Choose one: each other player draws a card or each other player discards a card.
-      chooseOneEv(ev, "Each other player draws a card", function (ev) {
-        eachOtherPlayerVM(function(p) { pickDiscardEv(ev, p); });
-      }, "Each other player discards a card", function (ev) {
-        eachOtherPlayerVM(function(p) { drawEv(ev, p); });
-      });
-    } ],
-    [ "Secrets of Time Travel", function (ev) { // Take another turn after this one.
-      gameState.extraTurn = true; // TODO: multiplayer
-    } ],
-    [ "Treasures of Latveria", function (ev) { // When you draw a new hand of cards at the end of this turn, draw three extra cards.
-      addEndDrawMod(3);
-    } ],
-  ]
-),
-];
-
-let villainTemplates = [
-{ name: 'Brotherhood', cards: [
-// Brotherhood (Magneto always leads)
-// Blob
-// You can't defeat Blob unless you have an X-Men Hero.
-// Attack: 4
-// VP: 2
-[ 2, makeVillainCard('Brotherhood', 'Blob', 4, 2, {
-  fightCond: () => revealable().filter('X-Men').length > 0,
-  fightCost: ev => revealEv(ev, revealable().filter('X-Men'))
-}) ],
-// 
-// Juggernaut
-// Ambush: Each player KOs two Heroes from their discard pile.
-// Escape: Each player KOs two Heroes from their hand.
-// Attack: 6
-// VP: 4
-[ 2, makeVillainCard('Brotherhood', 'Juggernaut', 6, 4, {
-//  ambush: function (ev) { eachPlayer(function(p) { selectCardsEv(ev, p.discard, 2, function (ev) { KOEv(ev, ev.selected); }, p); }); },
-//  escape: function (ev) { eachPlayer(function(p) { selectCardsEv(ev, p.hand, 2, function (ev) { KOEv(ev, ev.selected); }, p); });}
-
-  ambush: ev => eachPlayer(p => selectCardsEv(ev, p.discard, 2, ev => KOEv(ev, ev.selected), p)),
-  escape: ev => eachPlayer(p => selectCardsEv(ev, p.hand, 2, ev => KOEv(ev, ev.selected), p))
-}) ],
-// 
-// Mystique
-// Escape: Mystique becomes a Scheme Twist that takes effect immediately.
-// Attack: 5
-// VP: 3
-[ 2, makeVillainCard('Brotherhood', 'Mystique', 5, 3, { escape: ev => playTwistEv(ev, ev.source) }) ],
-// 
-// Sabretooth
-// Fight: Each player reveals an X-Men Hero or gains a Wound.
-// Escape: Same effect.
-// Attack: 5
-// VP: 3
-[ 2, makeVillainCard('Brotherhood', 'Sabretooth', 5, 3, { fight: function (ev) {
-  eachPlayer(function(p) { revealOrEv(ev, 'X-Men', function (ev) { gainWoundEv(ev, p); }, p); });
-}, escape: function (ev) {
-  eachPlayer(function(p) { revealOrEv(ev, 'X-Men', function (ev) { gainWoundEv(ev, p); }, p); });
-} }) ],
-] },
-];
-
 
 function makeSchemeCard(name, counts, effect, triggers, initfunc) {
   let c = new Card('SCHEME');
@@ -615,9 +544,8 @@ playerState.deck.addNewCard(sa, 8);
 playerState.deck.addNewCard(sb, 4);
 playerState.deck.shuffle();
 // Init hero deck and populate initial HQ
-let herocards = cardTemplates.HEROES;
+let herocards = [ "Iron Man", "Hulk" ].map(findHeroTemplate);
 for (let i = 0; i < herocards.length; i++) {
-  if (herocards[i].name !== "Iron Man" && herocards[i].name !== "Hulk") continue;
   gameState.herodeck.addNewCard(herocards[i].c1, 5);
   gameState.herodeck.addNewCard(herocards[i].c2, 5);
   gameState.herodeck.addNewCard(herocards[i].uc, 3);
@@ -641,10 +569,13 @@ for (let i = 0; i < getParam('vd_bystanders'); i++)
   moveCard(gameState.bystanders.top, gameState.villaindeck);
 gameState.villaindeck.shuffle();
 // Init Mastermind
-gameState.mastermind.addNewCard(mastermindTemplates[0]);
-let tactics = gameState.mastermind.top.attachedCards('TACTICS');
-mastermindTemplates[0].tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
-tactics.shuffle();
+{
+  let mastermind = findMastermindTemplate("Dr. Doom")
+  gameState.mastermind.addNewCard(mastermind);
+  let tactics = gameState.mastermind.top.attachedCards('TACTICS');
+  mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
+  tactics.shuffle();
+}
 // Draw initial hand
 for (let i = 0; i < gameState.endDrawAmount; i++) {
   moveCard(playerState.deck.top, playerState.hand);
