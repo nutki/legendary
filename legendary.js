@@ -41,17 +41,24 @@ Card.prototype = {
   get cost() { return this.printedCost || 0; },
   get attack() { return this.printedAttack; },
   get recruit() { return this.printedRecruit; },
-  get baseDefense() { return this.printedDefense; },
+  get baseDefense() {
+    if (this.varDefense) return this.varDefense(this);
+    return this.printedDefense;
+  },
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
     return value < 0 ? 0 : value;
   },
-  get vp() { return this.printedVP; },
+  get vp() {
+    if (this.varVP) return this.varVP(this);
+    return this.printedVP;
+  },
   isPlayable: function () { return this.playable; },
   isHealable: function () { return this.cardType === "WOUND"; },
   isVillain: function () { return this.cardType === "VILLAIN"; },
   isColor: function(c) { return (this.color & c) !== 0; },
   isTeam: function(t) { return this.team === t; },
+  isGroup: function(t) { return this.villainGroup === t; },
   attachedCards: function (name) { return attachedCards(name, this); },
   attachedCount: function (name) { return attachedCount(name, this); },
 };
@@ -67,7 +74,7 @@ let Color = {
 Color.COVERT = Color.RED;
 Color.TECH = Color.BLACK;
 Color.RANGED = Color.BLUE;
-Color.STRENTH = Color.GREEN;
+Color.STRENGTH = Color.GREEN;
 Color.INSTINCT = Color.YELLOW;
 Color.BASIC = Color.GRAY;
 function makeHeroCard(hero, name, cost, recruit, attack, color, team, flags, effects, abilities) {
@@ -206,9 +213,28 @@ Deck.prototype = {
   filter: function(c) { return filter(this.deck, c); },
   fcount: function(c) { return count(this.deck, c); },
   each: function(f) { this.deck.forEach(f); },
+  withTop: function(f) { if (this.count !== 0) f(this.top); },
   attachedCards: function (name) { return attachedCards(name, this); },
   attachedCount: function (name) { return attachedCount(name, this); },
   deckList: [],
+};
+
+let Cards = function() {
+  for (let i = 0; i < arguments.length; i++) {
+    let p = p instanceof "Deck" || p instanceof "Cards" ? p.deck : p;
+    if (p) this.deck = this.deck.contcat(p);
+  }
+  this.deck = [];
+};
+Cards.prototype = {
+  get count() { return this.deck.length; },
+  get bottom() { return this.deck[0]; },
+  get top() { return this.deck[this.deck.length - 1]; },
+  filter: function(c) { return filter(this.deck, c); },
+  fcount: function(c) { return count(this.deck, c); },
+  has: function(c) { return count(this.deck, c) !== 0; },
+  each: function(f) { this.deck.forEach(f); },
+  withTop: function(f) { if (this.count !== 0) f(this.top); }
 };
 
 // Card definitions
@@ -488,6 +514,7 @@ eventQueue = [];
 eventQueueNew = [];
 turnState = undefined;
 playerState = {
+  name: "Player 1",
   deck: new Deck('DECK0'),
   discard: new Deck('DISCARD0', true),
   hand: new Deck('HAND0', true),
@@ -633,6 +660,7 @@ function isPlayable(c) { return c.isPlayable(); }
 function isHealable(c) { return c.isHealable(); }
 function isColor(col) { return function (c) { return c.isColor(col); }; }
 function isTeam(team) { return function (c) { return c.isTeam(team); }; }
+function isGroup(group) { return c => c.isGroup(group); }
 function filter(cards, cond) {
   if (cards instanceof Deck) cards = cards.deck;
   if (cond === undefined) return cards;
@@ -643,6 +671,11 @@ function count(cards, cond) { return filter(cards, cond).length; }
 function handOrDiscard(p) {
   p = p || playerState;
   return p.hand.deck.concat(playerState.discard.deck);
+}
+function owned(p) {
+  p = p || playerState;
+  let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed);
+  return p === playerState ? r.concat(gameState.playArea) : r;
 }
 function HQCards() { return gameState.hq.map(e => e.top).filter(e => e !== undefined); }
 function CityCards() { return gameState.city.map(e => e.top).filter(e => e !== undefined); }
@@ -747,6 +780,7 @@ function canRecruit(c) {
   return turnState.recruit >= c.cost;
 }
 function canFight(c) {
+  if (c.fightCond && !c.figthCond(c)) return false;
   let a = turnState.attack;
   if (c.bribe || turnState.attackWithRecruit) a += turnState.recruit;
   return a >= c.defense;
@@ -825,6 +859,10 @@ function gainToHandEv(ev, card, who) {
   who = who || playerState;
   pushEvents({type:"GAIN", what:card, who:who, where: who.hand, parent: ev});
 }
+function recruitForFreeEv(ev, card, who) {
+  who = who || playerState;
+  pushEvents({type:"RECRUIT", what:card, who:who, forFree:true, parent: ev});
+}
 function discardEv(ev, card) { pushEvents({ type: "DISCARD", parent: ev, what:card }); }
 function discardHandEv(ev, who) { (who || playerState).hand.forEach(c => discardEv(ev, c)); }
 function drawEv(ev, amount, who) { pushEvents({ type: "DRAW", who: who || playerState, amount: amount || 1, parent: ev }); }
@@ -839,8 +877,8 @@ function runOutEv(ev, deck) { pushEvents({ type:"RUNOUT", parent: ev, what: deck
 function villainDrawEv(ev) { pushEvents({ type:"VILLAINDRAW", parent: ev }); }
 function playTwistEv(ev, what) { pushEvents({ type:"TWIST", parent: ev, what:what }); }
 function rescueEv(ev, what) {
-  if (what) pushEvents({ type: "RESCUE", parent: ev, what: what });
-  else cont(ev, () => {
+  if (what && typeof what !== "number") pushEvents({ type: "RESCUE", parent: ev, what: what });
+  else for (let i = 0; i < what; i++) cont(ev, () => {
     if (gameState.bystanders.top) pushEvents({ type: "RESCUE", parent: ev, what: gameState.bystanders.top });
     else runOutEv(ev, 'BYSTANDERS');
   });
@@ -860,6 +898,30 @@ function gainWoundEv(ev, who) {
   });
 }
 function cont(ev, func) { pushEvents({ type: "EFFECT", parent:ev, func:func}); }
+function selectObjectsMinMaxEv(ev, min, max, objects, effect1, effect0, simple, who) {
+  if (objects instanceof Deck || objects instanceof Cards) objects = objects.deck;
+  who = who || playerState;
+  if (objects.length === 0) {
+    if (effect0) cont(ev, () => effect0());
+  } else if (objects.length <= min && simple) {
+    if (effect1) cont(ev, () => objects.forEach(effect1));
+  } else {
+    pushEvents({ type: "SELECTOBJECTS", parent:ev, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
+  }
+}
+function selectObjectsEv(ev, num, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, num, num, objects, effect1, undefined, who);
+}
+function selectObjectsOptEv(ev, num, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, 0, num, objects, effect1, undefined, who);
+}
+function selectObjectEv(ev, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, 1, 1, objects, effect1, undefined, who);
+}
+function selectObjectOptEv(ev, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, 0, 1, objects, effect1, undefined, who);
+}
+
 function selectCardOrEv(ev, cards, effect1, effect0, who) {
   if (cards instanceof Deck) cards = cards.deck;
   who = who || playerState;
@@ -901,6 +963,9 @@ function chooseOneEv(ev) {
   for (let i = 1; i < a.length; i += 2)
     newev.options.push({ type: "EFFECT", parent:ev, func: a[i+1], name: a[i] });
   pushEvents(newev);
+}
+function selectPlayerEv(ev, f, who) {
+  selectObjectEv(ev, gameState.players, f, who);
 }
 function pickDiscardEv(ev, who, agent) {
   who = who || playerState;
@@ -968,8 +1033,10 @@ function playCard(ev) {
   }
 }
 function buyCard(ev) {
-  // TODO: other pay options
-  turnState.recruit -= ev.what.cost;
+  if (!ev.forFree) {
+    // TODO: other pay options
+    turnState.recruit -= ev.what.cost;
+  }
   turnState.recruitedOrFought = true;
   gainEv(ev, ev.what);
 }
@@ -1058,7 +1125,7 @@ function villainFight(ev) {
   defeatEv(ev, c);
 }
 function defeatEv(ev, c) {
-  pushEvents({ type: "DEFEAT", what: c, parent: ev });
+  pushEvents({ type: "DEFEAT", what: c, where: c.location, parent: ev });
 }
 function villainDefeat(ev) {
   let c = ev.what;
@@ -1340,6 +1407,10 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 GUI:
 Show played cards in UI
 UI events description
+Direct function as UI results instead of events
+All events resolved with ev.func
+implement youMay
+Implement cardlist instead of array
 Show hidden events (make all event pass the main UI loop) / effect source
 
 ENGINE:

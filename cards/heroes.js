@@ -175,7 +175,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
 // COST: 7
-  ra: makeHeroCard("Hawkeye", "Impossible Trick Shot", 7, u, 5, Color.TECH, "Avengers", "", ev => addTurnTrigger("DEFEAT", u, () => { rescueEv(ev); rescueEv(ev); rescueEv(ev); })),
+  ra: makeHeroCard("Hawkeye", "Impossible Trick Shot", 7, u, 5, Color.TECH, "Avengers", "", ev => addTurnTrigger("DEFEAT", u, () => rescueEv(ev, 3))),
 },
 {
   name: "Hulk",
