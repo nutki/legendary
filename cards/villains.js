@@ -75,7 +75,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 3
 // VP: 1
   [ 3, makeVillainCard("HYDRA", "HYDRA Kidnappers", 3, 1, {
-    fight: ev => chooseOneEv(ev, "Yes", ev => { if (gameState.officer.top) gainEv(ev, gameState.officer.top); }, "No", () => {}),
+    fight: ev => chooseMayEv(ev, "Gain S.H.I.E.L.D. Officer", ev => { if (gameState.officer.top) gainEv(ev, gameState.officer.top); }),
   })],
 // Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
 // ATTACK: 6

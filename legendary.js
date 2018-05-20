@@ -220,11 +220,12 @@ Deck.prototype = {
 };
 
 let Cards = function() {
-  for (let i = 0; i < arguments.length; i++) {
-    let p = p instanceof "Deck" || p instanceof "Cards" ? p.deck : p;
-    if (p) this.deck = this.deck.contcat(p);
-  }
   this.deck = [];
+  for (let i = 0; i < arguments.length; i++) {
+    let p = arguments[i];
+    if (p instanceof "Deck" || p instanceof "Cards") p = p.deck;
+    if (p.length) this.deck = this.deck.contcat(p);
+  }
 };
 Cards.prototype = {
   get count() { return this.deck.length; },
@@ -824,7 +825,7 @@ function gainWoundEv(ev, who) {
 }
 function cont(ev, func) { event(ev, "EFFECT", func); }
 function event(ev, name, params) { let nev = new Event(ev, name, params); pushEvents(nev); return nev; }
-function selectObjectsMinMaxEv(ev, min, max, objects, effect1, effect0, simple, who) {
+function selectObjectsMinMaxEv(ev, desc, min, max, objects, effect1, effect0, simple, who) {
   if (objects instanceof Deck || objects instanceof Cards) objects = objects.deck;
   who = who || playerState;
   if (objects.length === 0) {
@@ -832,20 +833,20 @@ function selectObjectsMinMaxEv(ev, min, max, objects, effect1, effect0, simple, 
   } else if (objects.length <= min && simple) {
     if (effect1) cont(ev, () => objects.forEach(effect1));
   } else {
-    pushEvents({ type: "SELECTOBJECTS", parent:ev, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
+    pushEvents({ type: "SELECTOBJECTS", parent:ev, desc: desc, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
   }
 }
-function selectObjectsEv(ev, num, objects, effect1, who) {
-  selectObjectsMinMaxEv(ev, num, num, objects, effect1, undefined, who);
+function selectObjectsEv(ev, desc, num, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, desc, num, num, objects, effect1, undefined, who);
 }
-function selectObjectsOptEv(ev, num, objects, effect1, who) {
-  selectObjectsMinMaxEv(ev, 0, num, objects, effect1, undefined, who);
+function selectObjectsOptEv(ev, desc, num, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, desc, 0, num, objects, effect1, undefined, who);
 }
-function selectObjectEv(ev, objects, effect1, who) {
-  selectObjectsMinMaxEv(ev, 1, 1, objects, effect1, undefined, who);
+function selectObjectEv(ev, desc, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, desc, 1, 1, objects, effect1, undefined, who);
 }
-function selectObjectOptEv(ev, objects, effect1, who) {
-  selectObjectsMinMaxEv(ev, 0, 1, objects, effect1, undefined, who);
+function selectObjectOptEv(ev, desc, objects, effect1, who) {
+  selectObjectsMinMaxEv(ev, desc, 0, 1, objects, effect1, undefined, who);
 }
 
 function selectCardOrEv(ev, cards, effect1, effect0, who) {
@@ -883,15 +884,18 @@ function revealAndEv(ev, cond, effect, who) {
   let cards = filter(revealable(who), cond);
   selectCardOptEv(ev, cards, effect, () => {}, who);
 }
-function chooseOneEv(ev) {
+function chooseOneEv(ev, desc) {
   let a = arguments;
-  let newev = { type: "SELECTEVENT", parent:ev, options: [], ui: true, agent: playerState };
-  for (let i = 1; i < a.length; i += 2)
+  let newev = { type: "SELECTEVENT", parent:ev, desc: desc, options: [], ui: true, agent: playerState };
+  for (let i = 2; i < a.length; i += 2)
     newev.options.push({ type: "EFFECT", parent:ev, func: a[i+1], name: a[i] });
   pushEvents(newev);
 }
+function chooseMayEv(ev, desc, effect) {
+  chooseOneEv(ev, desc, "Yes", effect, "No", () => {});
+}
 function selectPlayerEv(ev, f, who) {
-  selectObjectEv(ev, gameState.players, f, who);
+  selectObjectEv(ev, "Choose a Player", gameState.players, f, who);
 }
 function pickDiscardEv(ev, who, agent) {
   who = who || playerState;
@@ -1302,8 +1306,7 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
 Show played cards in UI
-UI events description
-implement youMay
+Use new object selects and implement UI handling for them
 Implement cardlist instead of array
 Show hidden events (make all event pass the main UI loop) / effect source
 

@@ -10,9 +10,9 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   } ],
   // Choose one: each other player draws a card or each other player discards a card.
   [ "Monarch's Decree", ev => {
-      chooseOneEv(ev,
-      "Each other player draws a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, p)),
-      "Each other player discards a card", ev => eachOtherPlayerVM(p => drawEv(ev, 1, p))
+      chooseOneEv(ev, "Each other player",
+      "draws a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, p)),
+      "discards a card", ev => eachOtherPlayerVM(p => drawEv(ev, 1, p))
       );
   } ],
   // Take another turn after this one.

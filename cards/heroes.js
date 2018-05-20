@@ -82,15 +82,14 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
-  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseOneEv(
-    "Yes", () => { discardHandEv(ev); drawEv(ev, 4); },
-    "No", () => {}
+  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseMayEv(
+    "Discard hand", () => { discardHandEv(ev); drawEv(ev, 4); }
   ); }),
 // ATTACK: 6
 // You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.
 // COST: 7
   ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, u, "G", [
-  ev => chooseOneEv(ev, "Yes", () => gainWoundEv(ev), "No", () => {}),
+  ev => chooseMayEv(ev, "Gain a Wound", () => gainWoundEv(ev)),
   ev => {
     let selected = [];
     eachPlayer(p => selectCardEv(ev, p.hand, ev => selected.push({ player: p, card:ev.selected }), p));
@@ -109,9 +108,8 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Covert} You may play the top card of the Villain Deck. If you do, you get +2 Attack.
 // COST: 4
 // FLAVOR: Emma's days as a Villain are behind here...aren't they?
-  c2: makeHeroCard("Emma Frost", "Shadowed Thoughts", 4, u, 2, Color.COVERT, "X-Men", "FD", ev => { if (superPower(Color.COVERT)) chooseOneEv(ev,
-  "Yes", () => { villainDrawEv(ev); addAttackEvent(ev, 2); },
-  "No", () => {}
+  c2: makeHeroCard("Emma Frost", "Shadowed Thoughts", 4, u, 2, Color.COVERT, "X-Men", "FD", ev => { if (superPower(Color.COVERT)) chooseMayEv(ev,
+  "Play top card of the Villain Deck", () => { villainDrawEv(ev); addAttackEvent(ev, 2); }
   );}),
 // ATTACK: 3
 // Each player may reveal another X-Men Hero. Each player who does draws a card.
