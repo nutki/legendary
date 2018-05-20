@@ -1,3 +1,4 @@
+"use strinct";
 addTemplates("MASTERMINDS", "Legendary", [
 makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   // Each player with exactly 6 cards in hand reveals a [Tech] Hero or puts 2 cards from their hand on top of their deck.
@@ -5,7 +6,7 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
 }, [
   // You may recruit a [Tech] or [Ranged] Hero from the HQ for free.
   [ "Dark Technology", ev => {
-    selectCardEv(ev, HQCards().filter(isColor(Color.BLACK | Color.BLUE)), ev => recruitForFree(ev, ev.selected));
+    selectCardEv(ev, HQCards().filter(isColor(Color.BLACK | Color.BLUE)), ev => recruitForFreeEv(ev, ev.selected));
   } ],
   // Choose one: each other player draws a card or each other player discards a card.
   [ "Monarch's Decree", ev => {
