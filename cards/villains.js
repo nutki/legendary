@@ -5,9 +5,9 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Brotherhood", "Blob", 4, 2, {
-    fightCond: () => revealable().filter(isTeam("X-Men")).length > 0,
+    fightCond: () => revealable().limit("X-Men").length > 0,
     // fightCond: () => revealable().has('X-Men')
-    // fightCost: ev => revealEv(ev, revealable().filter(isTeam('X-Men'))), TODO
+    // fightCost: ev => revealEv(ev, revealable().limit('X-Men')), TODO
   })],
 // AMBUSH: Each player KOs two Heroes from their discard pile.
 // ESCAPE: Each player KOs two Heroes from their hand.
@@ -38,7 +38,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 7
 // VP: 5
   [ 1, makeVillainCard("Enemies of Asgard", "Destroyer", 7, 5, {
-    fight: ev => yourHeroes().filter(isTeam("S.H.I.E.L.D.")).forEach(c => KOEv(ev, c)),
+    fight: ev => yourHeroes().limit("S.H.I.E.L.D.").forEach(c => KOEv(ev, c)),
     escape: ev => eachPlayer(p => selectCardsNEv(ev, 2, yourHeroes(p), ev => KOEv(ev, ev.selected), p)),
   })],
 // FIGHT: Draw three cards
@@ -61,7 +61,7 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 4
   [ 2, makeVillainCard("Enemies of Asgard", "Ymir, Frost Giant King", 6, 4, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, ev => gainWoundEv(ev, p), p)),
-    fight: ev => selectPlayerEv(ev, pev => selectCardsOptEv(ev, handOrDiscard(ev.selected).filter(isWound), ev => KOEv(ev, ev.selected), ev.selected)), // TODO selectCardsOpt
+    fight: ev => selectPlayerEv(ev, pev => selectCardsOptEv(ev, handOrDiscard(ev.selected).limit(isWound), ev => KOEv(ev, ev.selected), ev.selected)), // TODO selectCardsOpt
   })],
 ]},
 { name: "HYDRA", cards: [
@@ -81,15 +81,15 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 3*
   [ 1, makeVillainCard("HYDRA", "Supreme HYDRA", 6, 3, {
-     varVP: c => 3 * c.location.fcount(isGroup("HYDRA")), 
+     varVP: c => 3 * c.location.count(isGroup("HYDRA")), 
   })],
 // FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
 // ESCAPE: Same effect.
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("HYDRA", "Viper", 5, 3, {
-    fight: ev => eachPlayer(p => { if (p.victory.fcount(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
-    escape: ev => eachPlayer(p => { if (p.victory.fcount(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
+    fight: ev => eachPlayer(p => { if (p.victory.count(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
+    escape: ev => eachPlayer(p => { if (p.victory.count(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
   })],
 ]},
 { name: "Masters of Evil", cards: [
@@ -97,7 +97,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Masters of Evil", "Baron Zemo", 6, 4, {
-    fight: ev => rescueEv(ev, yourHeroes().filter(isTeam("Avengers")).length),
+    fight: ev => rescueEv(ev, yourHeroes().limit("Avengers").length),
   })],
 // FIGHT: Each player reveals the top card of their deck. For each card, you choose to KO it or put it back.
 // ATTACK: 5
@@ -110,8 +110,8 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 2+
   [ 2, makeVillainCard("Masters of Evil", "Ultron", 6, 2, {
-    escape: ev => eachPlayer(p => revealOrEv(ev, isColor(Color.TECH), ev => gainWoundEv(ev, p), p)),
-    varVP: c => 2 + owned(c.location.owner).filter(isColor(Color.TECH))
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, ev => gainWoundEv(ev, p), p)),
+    varVP: c => 2 + owned(c.location.owner).limit(Color.TECH)
   })],
 // FIGHT: If you fight Whirlwind on the Rooftops or Bridge, KO two of your Heroes.
 // ATTACK: 4
@@ -137,15 +137,15 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Radiation", "Maestro", 6, 4, {
-    fight: ev => selectCardsNEv(ev, yourHeroes().filter(isColor(Color.STRENGTH)), playerState.hand, ev => KOEv(ev, ev.selected)) // TODO selectCardsNEv
+    fight: ev => selectCardsNEv(ev, yourHeroes().limit(Color.STRENGTH), playerState.hand, ev => KOEv(ev, ev.selected)) // TODO selectCardsNEv
   })],
 // FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
 // ESCAPE: Same effect.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Radiation", "Zzzax", 5, 3, {
-    fight: ev => eachPlayer(p => revealOrEv(ev, isColor(Color.STRENGTH), ev => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, isColor(Color.STRENGTH), ev => gainWoundEv(ev, p), p)),
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, ev => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, ev => gainWoundEv(ev, p), p)),
   })],
 ]},
 { name: "Skrulls", cards: [
@@ -155,7 +155,7 @@ addTemplates("VILLAINS", "Legendary", [
   [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
     fight: ev => {
       let selected = {};
-      eachPlayerEv(ev => selectCardEv(ev, HQCards().filter(c => !(c in selected)), sev => selected[ev.who] = sev.selected));
+      eachPlayerEv(ev => selectCardEv(ev, HQCards().limit(c => !(c in selected)), sev => selected[ev.who] = sev.selected));
       eachPlayerEv(ev => gainEv(ev, selected[ev.who]));
     }
   })],

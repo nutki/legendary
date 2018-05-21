@@ -17,11 +17,11 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 0+
 // You get +1 Attack for each Bystander in your Victory pile.
 // COST: 4
-  uc: makeHeroCard("Black Widow", "Covert Operation", 4, u, 0, Color.COVERT, "Avengers", "G", ev => addAttackEvent(ev, playerState.victory.fcount(isBystander))),
+  uc: makeHeroCard("Black Widow", "Covert Operation", 4, u, 0, Color.COVERT, "Avengers", "G", ev => addAttackEvent(ev, playerState.victory.count(isBystander))),
 // ATTACK: 4
 // Defeat a Villain or Mastermind that has a Bystander.
 // COST: 7
-  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, villainOrMastermind().filter(hasBystander), ev => defeatEv(ev, ev.selected))),
+  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, villainOrMastermind().limit(hasBystander), ev => defeatEv(ev, ev.selected))),
 },
 {
   name: "Captain America",
@@ -78,7 +78,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
-  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAtackEvent(ev, turnState.cardsPlayed.filter(c => c.cost % 2 === 1).length)),
+  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAtackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
@@ -224,7 +224,7 @@ addTemplates("HEROES", "Legendary", [
   team: "S.H.I.E.L.D.",
 // You may KO a S.H.I.E.L.D. Hero from your hand or discard pile. If you do, you may gain a S.H.I.E.L.D. Officer to your hand.
 // COST: 4
-  c1: makeHeroCard("Nick Fury", "Battlefield Promotion", 4, u, u, Color.COVERT, "S.H.I.E.L.D.", "G", ev => KOHandOrDiscardEv(ev, isTeam("S.H.I.E.L.D."), ev => { if (gameState.officer.top) gainToHandEv(ev, gameState.officer.top); })),
+  c1: makeHeroCard("Nick Fury", "Battlefield Promotion", 4, u, u, Color.COVERT, "S.H.I.E.L.D.", "G", ev => KOHandOrDiscardEv(ev, "S.H.I.E.L.D.", ev => { if (gameState.officer.top) gainToHandEv(ev, gameState.officer.top); })),
 // ATTACK: 2+
 // {POWER Tech} You get +1 Attack.
 // COST: 3
@@ -236,7 +236,7 @@ addTemplates("HEROES", "Legendary", [
   uc: makeHeroCard("Nick Fury", "Legendary Commander", 6, u, 1, Color.STRENGTH, "S.H.I.E.L.D.", "G", ev => addAttackEvent(ev, superPower("S.H.I.E.L.D."))),
 // Defeat any Villain or Mastermind whose Attack is less than the number of S.H.I.E.L.D. Heroes in the KO pile.
 // COST: 8
-  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, villainOrMastermind().filter(v => v.defense < superPower("S.H.I.E.L.D.")), ev => defeatEv(ev, ev.selected))),
+  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, villainOrMastermind().limit(v => v.defense < superPower("S.H.I.E.L.D.")), ev => defeatEv(ev, ev.selected))),
 },
 {
   name: "Rogue",
@@ -261,7 +261,7 @@ addTemplates("HEROES", "Legendary", [
     eachPlayer(p => lookAtDeckEv(ev, 1, () => { revealed.push(p.revealed.top); discardEv(ev, p.revealed.top); }));
     let playOne = () => selectCardEv(ev, revealed, ev => {
       playCopyEv(ev, ev.selected);
-      revealed = revealed.filter(c => c !== ev.selected);
+      revealed = revealed.limit(c => c !== ev.selected);
       if (revealed.length > 0) cont(ev, playOne);
     });
     cont(ev, playOne);
@@ -285,7 +285,7 @@ addTemplates("HEROES", "Legendary", [
 // Reveal the top three cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 // COST: 2
   ra: makeHeroCard("Spider-Man", "The Amazing Spider-Man", 2, u, u, Color.COVERT, "Spider Friends", "D", ev => {
-    lookAtDeckEv(ev, 3, () => playerState.revealed.filter(c => c.cost <= 2).map(c => moveCardEv(ev, c, playerState.hand)));
+    lookAtDeckEv(ev, 3, () => playerState.revealed.limit(c => c.cost <= 2).map(c => moveCardEv(ev, c, playerState.hand)));
   }),
 },
 {
@@ -306,9 +306,9 @@ addTemplates("HEROES", "Legendary", [
 // You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
 // COST: 6
   uc: makeHeroCard("Storm", "Spinning Cyclone", 6, u, 4, Color.COVERT, "X-Men", "", ev => {
-    selectCardOptEv(ev, CityCards().filter(isVillain), ev => {
+    selectCardOptEv(ev, CityCards().limit(isVillain), ev => {
       let v = ev.selected;
-      selectCardEv(ev, gameState.city.filter(l => l !== v.location), ev => {
+      selectCardEv(ev, gameState.city.limit(l => l !== v.location), ev => {
         let dest = ev.selected;
         swapCardsEv(ev, v.location, dest);
         v.attachedCards('BYSTANDER').each(c => rescueEv(ev, c));
