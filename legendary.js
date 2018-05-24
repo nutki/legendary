@@ -212,7 +212,7 @@ Deck.prototype = {
   remove: function(c) { let p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; },
   limit: function(c) { return limit(this.deck, c); },
   count: function(c) { return count(this.deck, c); },
-  has: function(c) { return count(this.dec, c) > 0; },
+  has: function(c) { return count(this.deck, c) > 0; },
   each: function(f) { this.deck.forEach(f); },
   withTop: function(f) { if (this.size !== 0) f(this.top); },
   attachedCards: function (name) { return attachedCards(name, this); },
@@ -1166,6 +1166,10 @@ function makeDisplayCardImg(c) {
 function makeDisplayBackImg(c) {
   return `<IMG class="card" id="${c.id}" src="images/back.png">`;
 }
+function makeDisplayPlayAreaImg(c) {
+  const gone = gameState.playArea.has(i => c.id === i.id) ? "" : " gone";
+  return `<IMG class="card${gone}" id="${c.id}" src="${cardImageName(c)}">`;
+}
 function displayDecks() {
   let divs = document.getElementsByClassName("deck");
   let divByName = {};
@@ -1182,7 +1186,9 @@ function displayDecks() {
     let div = divByName[deck.id];
     if (!div) continue;
     if (div.mode === "IMG") {
-      if (!deck.faceup) {
+      if (deck.id === "PLAYAREA") {
+        div.div.innerHTML = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
+      } else if (!deck.faceup) {
         div.div.innerHTML = deck.deck.map(makeDisplayBackImg).join('');
       } else if (div.fanout) {
         div.div.innerHTML = deck.deck.map(makeDisplayCardImg).join('');
@@ -1297,7 +1303,6 @@ function startApp() {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Show played cards in UI
 Use new object selects and implement UI handling for them
 Show hidden events (make all event pass the main UI loop) / effect source
 
