@@ -790,7 +790,7 @@ function swapCardsEv(ev, where1, where2) {
 function attachCardEv(ev, what, to, name) { console.log(`attaching as ${name} to `, to); moveCardEv(ev, what, to.attachedCards(name)); }
 function recruitForFreeEv(ev, card, who) {
   who = who || playerState;
-  event(ev, "RECRUIT", { func: buyCard, what: card });
+  event(ev, "RECRUIT", { func: buyCard, what: card, forFree: true });
 }
 function discardEv(ev, card) { event(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, ev.what.location.owner.discard) }); }
 function discardHandEv(ev, who) { (who || playerState).hand.forEach(c => discardEv(ev, c)); }
@@ -1228,7 +1228,6 @@ function getEventName(ev) {
 let clickActions = {};
 function clickCard(ev) {
   console.log(this.id, ev.target.id, clickActions);
-  let node = ev.target;
   for (let node = ev.target; node; node = node.parentNode) {
     if (node.id) console.log(node.id);
     if (node.id && clickActions[node.id]) {
