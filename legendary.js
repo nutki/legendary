@@ -296,7 +296,7 @@ let schemeTemplates = [
 // Twist: Each player reveals a Tech Hero or gains a Wound.
 // Evil Wins: If the Wound stack runs out.
 makeSchemeCard('The Legacy Virus', { twists: 8, wounds: [ 6, 12, 18, 24, 30 ] }, function (ev) {
-  eachPlayer(function (p) { revealOrEv(ev, Color.BLACK, function (ev) { gainWoundEv(ev, p); }, p); });
+  eachPlayer(function (p) { revealOrEv(ev, Color.BLACK, function () { gainWoundEv(ev, p); }, p); });
 }, {
   event: "RUNOUT",
   match: function (ev) { return ev.what === "WOUNDS"; },
@@ -846,26 +846,21 @@ function selectCardOrEv(ev, cards, effect1, effect0, who) {
   if (cards instanceof Deck) cards = cards.deck;
   who = who || playerState;
   if (!cards.length) {
-    if (effect0) pushEvents({ type: "EFFECT", parent: ev, func: effect0 });
+    if (effect0) effect0();
     return;
   }
-  pushEvents({ type: "SELECTCARD1", parent:ev, options: cards, ui: true, agent: who, result1: {
-    type: "EFFECT", parent: ev, func: effect1
-  }});
+  pushEvents({ type: "SELECTCARD1", parent:ev, options: cards, ui: true, agent: who, result1: effect1 });
 }
 function selectCardEv(ev, cards, effect, who) { selectCardOrEv(ev, cards, effect, undefined, who); }
-function selectCardAndKOEv(ev, cards, who) { selectCardEv(ev, cards, ev => KOEv(ev, ev.selected), who); }
+function selectCardAndKOEv(ev, cards, who) { selectCardEv(ev, cards, sel => KOEv(ev, sel), who); }
 function selectCardOptEv(ev, cards, effect1, effect0, who) {
   if (cards instanceof Deck) cards = cards.deck;
   who = who || playerState;
-  let newev = { type: "SELECTCARD01", parent:ev, options: cards, ui: true, agent: who };
-  newev.result0 = { type: "EFFECT", parent: ev, func: effect0 || (() => {})};
-  newev.result1 = { type: "EFFECT", parent: ev, func: effect1 };
   if (!cards.length) {
-    if (effect0) pushEvents(newev.result0);
+    if (effect0) effect0();
     return;
   }
-  pushEvents(newev);
+  pushEvents({ type: "SELECTCARD01", parent:ev, options: cards, ui: true, agent: who, result1: effect1, result0: effect0 || (() => {}) });
 }
 function revealOrEv(ev, cond, effect, who) {
   who = who || playerState;
@@ -893,12 +888,12 @@ function selectPlayerEv(ev, f, who) {
 function pickDiscardEv(ev, who, agent) {
   who = who || playerState;
   agent = agent || who;
-  selectCardEv(ev, who.hand, function (ev) { discardEv(ev, ev.selected); }, agent);
+  selectCardEv(ev, who.hand, sel => discardEv(ev, sel), agent);
 }
 function pickTopDeckEv(ev, who, agent) {
   who = who || playerState;
   agent = agent || who;
-  selectCardEv(ev, who.hand, function (ev) { moveCardEv(ev, ev.selected, who.deck); }, agent);
+  selectCardEv(ev, who.hand, sel => moveCardEv(ev, sel, who.deck), agent);
 }
 function lookAtDeckEv(ev, amount, action, who, agent) {
   who = who || playerState;
@@ -908,7 +903,7 @@ function lookAtDeckEv(ev, amount, action, who, agent) {
   let cleanupRevealed = () => {
     if (who.revealed.size === 0) return;
     if (who.revealed.size === 1) moveCardEv(ev, who.revealed.top, who.deck);
-    else selectCardEv(ev, who.revealed, ev => { moveCardEv(ev, ev.selected, who.deck); cleanupRevealed(); }, agent);
+    else selectCardEv(ev, who.revealed, sel => { moveCardEv(ev, sel, who.deck); cleanupRevealed(); }, agent);
   };
   cont(ev, cleanupRevealed);
 }
@@ -924,7 +919,7 @@ function revealOne(ev, who) {
 function KOHandOrDiscardEv(ev, filter, func) {
   let cards = handOrDiscard();
   if (filter) cards = cards.limit(filter);
-  selectCardOptEv(ev, cards, ev => { KOEv(ev, ev.selected); cont(ev, func); });
+  selectCardOptEv(ev, cards, sel => { KOEv(ev, sel); cont(ev, func); });
 }
 
 
@@ -945,8 +940,7 @@ function playCard(ev) {
   if (ev.what.instance)
     moveCardEv(ev, ev.what, gameState.playArea);
   if (ev.what.copyPasteCard) {
-    selectCardEv(ev, turnState.cardsPlayed, selectEv => {
-      const target = selectEv.selected;
+    selectCardEv(ev, turnState.cardsPlayed, target => {
       console.log("COPYPASTE", ev.what, target);
       ev.what = makeCardCopyPaste(target, ev.what);
       console.log("RESULT", ev.what);
@@ -1000,8 +994,13 @@ function reshufflePlayerDeck() {
 function playTwistEv(ev, what) { event(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev) {
   pushEvents({ type: "EFFECT", source: gameState.scheme.top, parent: ev, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what });
-  if (gameState.advancedSolo) 
-    selectCardEv(ev, HQCards().limit(c => c.cost <= 6), function (ev) { moveCardEv(ev, ev.selected, gameState.herodeck, true); });
+  if (gameState.players.length === 1) 
+    selectCardEv(ev, HQCards().limit(c => c.cost <= 6), function (sel) {
+      if (gameState.advancedSolo)
+        moveCardEv(ev, sel, gameState.herodeck, true);
+      else
+        KOEv(ev, sel);
+    });
 }
 function villainDrawEv(ev) { event(ev, "VILLAINDRAW", villainDraw); }
 function villainDraw(ev) {
@@ -1045,7 +1044,7 @@ function villainEscape(ev) {
     eachPlayer(function(p) { pickDiscardEv(ev, p); });
   }
   moveCardEv(ev, c, gameState.escaped);
-  selectCardEv(ev, HQCards().limit(function (c) { return c.cost <= 6; }), function (ev) { KOEv(ev, ev.selected); });
+  selectCardEv(ev, HQCards().limit(c => c.cost <= 6), s => KOEv(ev, s));
   if (c.escape) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.escape });
 }
 function villainFight(ev) {
@@ -1216,8 +1215,8 @@ function mainLoopAuto() {
     displayGame();
     ({
       "SELECTEVENT": function () { pushEvents(ev.options[0]); },
-      "SELECTCARD1": function () { ev.result1.selected = ev.options[0]; pushEvents(ev.result1); },
-      "SELECTCARD01": function () { ev.result1.selected = ev.options[0]; pushEvents(ev.result1); },
+      "SELECTCARD1": function () { ev.result1(ev.options[0]); },
+      "SELECTCARD01": function () { ev.result1(ev.options[0]); },
     }[ev.type] || ev.func)();
     if (count < 500) setTimeout(makeAction, 200);
   }
@@ -1250,11 +1249,10 @@ function mainLoop() {
   let ev = popEvent();
   ({
     "SELECTEVENT": function () { pushEvents(ev.options[undoLog.readInt() - 1]); },
-    "SELECTCARD1": function () { ev.result1.selected = ev.options[undoLog.readInt() - 1]; pushEvents(ev.result1); },
+    "SELECTCARD1": function () { ev.result1(ev.options[undoLog.readInt() - 1]); },
     "SELECTCARD01": function () {
       const v = undoLog.readInt();
-      if (v) ev.result1.selected = ev.options[v - 1];
-      pushEvents(v ? ev.result1 : ev.result0);
+      v ? ev.result1(ev.options[v - 1]) : ev.result0();
     },
   }[ev.type] || ev.func)(ev);
   }
@@ -1273,11 +1271,11 @@ function mainLoop() {
       });
     },
     "SELECTCARD1": function () {
-      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); undoLog.write(i + 1); mainLoop(); });
+      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
     },
     "SELECTCARD01": function () {
-      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1.selected = option; pushEvents(ev.result1); undoLog.write(i + 1); mainLoop(); });
-      extraActions = [{name: "None", func: () => { pushEvents(ev.result0); undoLog.write(0); mainLoop(); }}];
+      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
+      extraActions = [{name: "None", func: () => { ev.result0(); undoLog.write(0); mainLoop(); }}];
     },
   }[ev.type])(ev);
   console.log("UI> " + ev.type, ev, clickActions, extraActions);
@@ -1305,9 +1303,11 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 GUI:
 Use new object selects and implement UI handling for them
 Show hidden events (make all event pass the main UI loop) / effect source
+Select setup screen
 
 ENGINE:
 Handle end game conditions
+remove card in play layer
 required villain/hero groups
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards
