@@ -172,17 +172,17 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         my $c = shift;
         return "$n <= $1" if $c =~ /^1-(\d+)$/;
         return "$n >= $1 && $n <= $2" if $c =~ /^(\d+)-(\d+)$/;
-        join ' || ',map"$n == $_",split(/,\s*(?:and )?/,$c)
+        join ' || ',map"$n === $_",split(/,\s*(?:and )?/,$c)
       }
       parse();
-      filterprint(qw(CARDNAME EVILWINS TWIST TWISTNR TWISTELSE));
+      filterprint(qw(CARDNAME TWIST TWISTNR TWISTELSE));
       $_{SETUP} =~ /^(\d+) Twists(\.|$)/;
       my $ntwists = $1 || 8;
       print "makeSchemeCard(\"$_{CARDNAME}\", { twists: $ntwists }, ev => {\n";
       print "  // Twist: $_{TWIST}\n" if $_{TWIST};
       my $first = 1;
       for (split/\|/,$_{TWISTNR}) {
-        /NR\[(\d+)\] (.*)/;
+        /NR\[(.*?)\] (.*)/;
         my $iselse = $first ? "  " : " else ";
         my $c = cond($1);
         print "${iselse}if ($c) {\n";
