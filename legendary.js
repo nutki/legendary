@@ -1027,7 +1027,7 @@ function playTurn(ev) {
   villainDrawEv(ev);
   event(ev, "ACTIONS", ev => {
     if (!ev.endofturn) {
-      pushEvents({type:"SELECTEVENT",parent:ev,options:getActions(ev),ui:true},ev);
+      pushEvents({type:"SELECTEVENT",desc:"Play card or action",parent:ev,options:getActions(ev),ui:true},ev);
     }
   });
   event(ev, "CLEANUP", cleanUp);  
@@ -1132,7 +1132,6 @@ function getEventName(ev) {
 }
 let clickActions = {};
 function clickCard(ev) {
-  console.log(this.id, ev.target.id, clickActions);
   for (let node = ev.target; node; node = node.parentNode) {
     if (node.id) console.log(node.id);
     if (node.id && clickActions[node.id]) {
