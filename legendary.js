@@ -254,6 +254,7 @@ let cardTemplates = {
   HENCHMEN: [],
   VILLAINS: [],
   MASTERMINDS: [],
+  SCHEMES: [],
 };
 function addTemplates(type, set, templates) {
   templates.forEach(t => {
@@ -266,6 +267,7 @@ function findHeroTemplate(name) { return findTemplate('HEROES', 'name')(name); }
 function findHenchmanTemplate(name) { return findTemplate('HENCHMEN', 'cardName')(name); }
 function findVillainTemplate(name) { return findTemplate('VILLAINS', 'name')(name); }
 function findMastermindTemplate(name) { return findTemplate('MASTERMINDS', 'cardName')(name); }
+function findSchemeTemplate(name) { return findTemplate('SCHEMES', 'cardName')(name); }
 let u = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
@@ -289,128 +291,6 @@ function makeSchemeCard(name, counts, effect, triggers, initfunc) {
   if (initfunc) c.init = initfunc;
   return c;
 }
-
-let schemeTemplates = [
-// The Legacy Virus
-// Setup: 8 Twists. Wound stack holds 6 Wounds per player.
-// Twist: Each player reveals a Tech Hero or gains a Wound.
-// Evil Wins: If the Wound stack runs out.
-makeSchemeCard('The Legacy Virus', { twists: 8, wounds: [ 6, 12, 18, 24, 30 ] }, function (ev) {
-  eachPlayer(function (p) { revealOrEv(ev, Color.BLACK, function () { gainWoundEv(ev, p); }, p); });
-}, {
-  event: "RUNOUT",
-  match: function (ev) { return ev.what === "WOUNDS"; },
-  after: evilWinsEv,
-}),
-// 
-// Midtown Bank Robbery
-// Setup: 8 Twists. 12 total Bystanders in the Villain Deck.
-// Special Rules: Each Villain gets +1 Attack for each Bystander it has.
-// Twist: Any Villain in the Bank captures 2 Bystanders. Then play the top card of the Villain Deck.
-// Evil Wins: When 8 Bystanders are carried away by escaping Villains.
-makeSchemeCard('Midtown Bank Robbery', { twists: 8, vd_bystanders: 12 }, function (ev) {
-  let bank = gameState.cityByName.BANK;
-  drawVillainEv(ev);
-  if (!bank || !bank.top) return;
-  captureBystanderEv(ev, bank.top);
-  captureBystanderEv(ev, bank.top);
-}, {
-  event: "ESCAPE",
-  after: function (ev) { if (gameState.escaped.limit(isBystander).length >= 8) evilWinsEv(ev); },
-}, function () {
-  addStatMod('defense', function (c) { return c.cardType === "VILLAIN" ? c.attachedCount('BYSTANDER') : 0; });
-}),
-// 
-// Negative Zone Prison Breakout
-// Setup: 8 Twists. Add an extra Henchman group to the Villain Deck.
-// Twist: Play the top 2 cards of the Villain Deck.
-// Evil Wins: If 12 Villains escape.
-makeSchemeCard('Negative Zone Prison Breakout', { twists: 8, vd_henchmen: [ 1, 2, 2, 3, 3 ] }, function (ev) {
-  drawVillainEv(ev);
-  drawVillainEv(ev);
-}, {
-  event: "ESCAPE",
-  after: function (ev) { if (gameState.escaped.limit(isVillain).length >= 12) evilWinsEv(ev); },
-}),
-// 
-// Portals to Dark Dimension
-// Setup: 7 Twists. Each Twist is a Dark Portal.
-// Twist 1: Put the Dark Portal above the Mastermind. The Mastermind gets +1 Attack.
-// Twists 2-6: Put the Dark Portal in the leftmost city space that doesn't yet have a Dark Portal. Villains in that city space get +1 Attack.
-// Twist 7: Evil Wins!
-makeSchemeCard('Portals to Dark Dimension', { twists: 7 }, function (ev, nr) {
-  if (ev.nr < 7) {
-    attachCardEv(ev, ev.twist, nr === 1 ? gameState.mastermind : gameState.city[ev.nr - 2], 'PORTAL');
-  } else if (ev.nr === 7) {
-    evilWinsEv(ev);
-  }
-}, [], function () {
-  addStatMod('defense', function (c) { return c.location.attachedCount('PORTAL'); });
-}),
-// 
-// Replace Earth's Leaders with Killbots
-// Setup: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
-// Special Rules: Bystanders in the Villain Deck count as Killbot Villains, with Attack equal to the number of Twists next to this Scheme.
-// Twist: Put the Twist next to this Scheme.
-// Evil Wins: If 5 "Killbots" escape.
-makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bystanders: 18 }, function (ev) {
-  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
-}, {
-  event: "ESCAPE",
-  after: function (ev) { if (gameState.escaped.limit(isBystander).length >= 5) evilWinsEv(ev); },
-}, function () {
-  gameState.scheme.cardsAttached('TWIST').addNewCard(twistTemplate, 3);
-  addStatMod('defense', function (c) { return isBystander(c) ? gameState.scheme.attachedCount('TWIST') : whathere; });
-  addStatSet('defense', function (c) { if (isBystander(c)) return function (c) { return gameState.scheme.attachedCount('TWIST'); }; });
-  addStatSet('defense', isBystander, function (c) { return gameState.scheme.attachedCount('TWIST'); });
-  addStatMod('isVillain', function (c) { return isBystander(c) ? true : whathere; });
-}),
-// 
-// Secret Invasion of the Skrull Shapeshifters
-// Setup: 8 Twists. 6 Heroes. Skrull Villain Group required. Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.
-// Special Rules: Heroes in the Villain Deck count as Skrull Villains with Attack equal to the Hero's Cost +2. If you defeat that Hero, you gain it.
-// Twist: The highest-cost Hero from the HQ moves into the Sewers as a Skrull Villain, as above.
-// Evil Wins: If 6 Heroes get into the Escaped Villains pile.
-makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroes: 6 }, function (ev) {
-  selectCardEv(ev, HQCardsHighestCost(), function (ev) { moveCardEv(ev, ev.seleced, gameState.cityEntry); });
-}, {
-  event: "ESCAPE",
-  after: function (ev) { if (gameState.escaped.limit(isHero).length >= 6) evilWinsEv(ev); },
-}, function () {
-  addStatMod('defense', function (c) { return isHero(c) ? c.cost + 2 : whathere; });
-  addStatMod('isVillain', function (c) { return isHero(c) ? true : whathere; });
-  addStatMod('fight', function(c) { return function(ev) { gainEv(ev, ev.source); }; });
-  for (let i = 0; i < 12; i++) moveCard(gameState.herodeck.top, gameState.villaindeck);
-  // TODO require Skrulls
-  gameState.villaindeck.shuffle();
-}),
-// 
-// Super Hero Civil War
-// Setup: For 2-3 players, use 8 Twists. For 4-5 players, use 5 Twists. If only 2 players, use only 4 Heroes in the Hero Deck.
-// Twist: KO all the Heroes in the HQ.
-// Evil Wins: If the Hero Deck runs out.
-makeSchemeCard("Super Hero Civil War", { twists: [ 8, 8, 8, 5, 5 ], heroes: [ 3, 4, 5, 5, 5 ]}, function (ev) {
-  HQCards().forEach(function(c) { KOEv(ev, c); });
-}, {
-  event: "RUNOUT",
-  match: function (ev) { return ev.what === "HERO"; },
-  after: evilWinsEv,
-}),
-// 
-// Unleash the Power of the Cosmic Cube
-// Setup: 8 Twists.
-// Twist: Put the Twist next to this Scheme.
-// Twist 5-6: Each player gains a Wound.
-// Twist 7: Each player gains 3 Wounds.
-// Twist 8: Evil Wins!
-makeSchemeCard("Unleash the Power of the Cosmic Cube", { twists: 8 }, function (ev) {
-  let nr = ev.nr;
-  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
-  if (nr === 5 || nr === 6) gameState.players.forEach(function (p) { gainWoundEv(ev, p); });  
-  if (nr === 7) gameState.players.forEach(function (p) { gainWoundEv(ev, p); gainWoundEv(ev, p); gainWoundEv(ev, p); });  
-  if (nr === 8) evilWinsEv(ev);
-}),
-];
 
 let eventQueue = [];
 let eventQueueNew = [];
@@ -553,7 +433,7 @@ for (let i = 0; i < 5; i++) {
 }
 
 // Init Scheme
-gameState.scheme.addNewCard(schemeTemplates[0]);
+gameState.scheme.addNewCard(findSchemeTemplate("The Legacy Virus"));
 if (gameState.scheme.top.triggers)
 gameState.triggers = gameState.triggers.concat(gameState.scheme.top.triggers);
 // Init starting decks
@@ -1317,12 +1197,12 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
 Use new object selects and implement UI handling for them
-Show hidden events (make all event pass the main UI loop) / effect source
+Show hidden events / effect source
 Select setup screen
 
 ENGINE:
-Handle end game conditions
-remove card in play layer
+advancedSolo scoring
+remove card in play layer?
 required villain/hero groups
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards
