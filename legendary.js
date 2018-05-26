@@ -383,8 +383,6 @@ gameState = {
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
     heroes: [ 3, 5, 5, 5, 6 ],
     wounds: 30,
-    officers: 30,
-    bystanders: 30,
   },
   triggers: [
     { // Trigger RUNOUT events.
@@ -436,7 +434,7 @@ for (let i = 0; i < 5; i++) {
   if (i) gameState.city[i].next = gameState.city[i - 1];
 }
 
-let gameParams = {
+let gameSetup = {
   scheme: "The Legacy Virus",
   heroes: [ "Iron Man", "Hulk" ],
   henchmen: ["Doombot Legion", "Hand Ninjas", "Savage Land Mutates", "Sentinel" ],
@@ -447,7 +445,7 @@ let gameParams = {
   withWounds: true,
 };
 // Init Scheme
-gameState.scheme.addNewCard(findSchemeTemplate(gameParams.scheme));
+gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
 if (gameState.scheme.top.triggers)
 gameState.triggers = gameState.triggers.concat(gameState.scheme.top.triggers);
 // Init starting decks
@@ -457,7 +455,7 @@ gameState.players.forEach(p => {
   p.deck.shuffle();
 });
 // Init hero deck and populate initial HQ
-gameParams.heroes.map(findHeroTemplate).forEach(h => {
+gameSetup.heroes.map(findHeroTemplate).forEach(h => {
   gameState.herodeck.addNewCard(h.c1, 5);
   gameState.herodeck.addNewCard(h.c2, 5);
   gameState.herodeck.addNewCard(h.uc, 3);
@@ -466,21 +464,21 @@ gameParams.heroes.map(findHeroTemplate).forEach(h => {
 gameState.herodeck.shuffle();
 gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 // Init auxiliary decks
-if (gameParams.withOfficers) gameState.officer.addNewCard(officerTemplate, getParam('officers'));
-if (gameParams.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
-gameParams.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
+if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
+if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
+gameSetup.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
 //// TODO sidekicks
 // Init villain deck
-gameParams.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h[0] || h, h[1] || 10));
-gameParams.villains.map(findVillainTemplate).forEach(v => v.cards.forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
-gameState.villaindeck.addNewCard(strikeTemplate, 5);
+gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h[0] || h, h[1] || 10));
+gameSetup.villains.map(findVillainTemplate).forEach(v => v.cards.forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
+gameState.villaindeck.addNewCard(strikeTemplate, gameState.players.length === 1 && !gameState.advancedSolo ? 1 : 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
 for (let i = 0; i < getParam('vd_bystanders'); i++)
   moveCard(gameState.bystanders.top, gameState.villaindeck);
 gameState.villaindeck.shuffle();
 // Init Mastermind
 {
-  let mastermind = findMastermindTemplate(gameParams.mastermind);
+  let mastermind = findMastermindTemplate(gameSetup.mastermind);
   gameState.mastermind.addNewCard(mastermind);
   let tactics = gameState.mastermind.top.attachedCards('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
@@ -518,12 +516,12 @@ function owned(p) {
   let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed.deck, playerState.victory.deck);
   return p === playerState ? r.concat(gameState.playArea.deck) : r;
 }
-function advancedSoloVP() {
-  if (!gameState.advancedSolo) return 0;
+function soloVP() {
+  if (gameState.players.length > 1) return 0;
   return - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
 }
 function currentVP(p) {
-  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b) + advancedSoloVP();
+  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b) + soloVP();
 }
 function HQCards() { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards() { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
