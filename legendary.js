@@ -255,6 +255,7 @@ let cardTemplates = {
   VILLAINS: [],
   MASTERMINDS: [],
   SCHEMES: [],
+  BYSTANDERS: [],
 };
 function addTemplates(type, set, templates) {
   templates.forEach(t => {
@@ -268,11 +269,12 @@ function findHenchmanTemplate(name) { return findTemplate('HENCHMEN', 'cardName'
 function findVillainTemplate(name) { return findTemplate('VILLAINS', 'name')(name); }
 function findMastermindTemplate(name) { return findTemplate('MASTERMINDS', 'cardName')(name); }
 function findSchemeTemplate(name) { return findTemplate('SCHEMES', 'cardName')(name); }
+function findBystanderTemplate(name) { return findTemplate('BYSTANDERS', 'set')(name); }
 let u = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
 let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u);
-let bystanderTemplates = [ makeBystanderCard() ];
+addTemplates("BYSTANDERS", "Legendary", [{ card: [ 30, makeBystanderCard() ] }]);
 let twistTemplate = new Card("SCHEME TWIST");
 let strikeTemplate = new Card("MASTER STRIKE");
 let woundTemplate = makeWoundCard(function (ev) {
@@ -434,34 +436,43 @@ for (let i = 0; i < 5; i++) {
   if (i) gameState.city[i].next = gameState.city[i - 1];
 }
 
+let gameParams = {
+  scheme: "The Legacy Virus",
+  heroes: [ "Iron Man", "Hulk" ],
+  henchmen: ["Doombot Legion", "Hand Ninjas", "Savage Land Mutates", "Sentinel" ],
+  villains: [],
+  mastermind: "Dr. Doom",
+  bystanders: ["Legendary"],
+  withOfficers: true,
+  withWounds: true,
+};
 // Init Scheme
-gameState.scheme.addNewCard(findSchemeTemplate("The Legacy Virus"));
+gameState.scheme.addNewCard(findSchemeTemplate(gameParams.scheme));
 if (gameState.scheme.top.triggers)
 gameState.triggers = gameState.triggers.concat(gameState.scheme.top.triggers);
 // Init starting decks
-playerState.deck.addNewCard(sa, 8);
-playerState.deck.addNewCard(sb, 4);
-playerState.deck.shuffle();
+gameState.players.forEach(p => {
+  p.deck.addNewCard(sa, 8);
+  p.deck.addNewCard(sb, 4);
+  p.deck.shuffle();
+});
 // Init hero deck and populate initial HQ
-let herocards = [ "Iron Man", "Hulk" ].map(findHeroTemplate);
-for (let i = 0; i < herocards.length; i++) {
-  gameState.herodeck.addNewCard(herocards[i].c1, 5);
-  gameState.herodeck.addNewCard(herocards[i].c2, 5);
-  gameState.herodeck.addNewCard(herocards[i].uc, 3);
-  gameState.herodeck.addNewCard(herocards[i].ra);
-}
+gameParams.heroes.map(findHeroTemplate).forEach(h => {
+  gameState.herodeck.addNewCard(h.c1, 5);
+  gameState.herodeck.addNewCard(h.c2, 5);
+  gameState.herodeck.addNewCard(h.uc, 3);
+  gameState.herodeck.addNewCard(h.ra);
+});
 gameState.herodeck.shuffle();
-for (let i = 0; i < gameState.hq.length; i++) moveCard(gameState.herodeck.top, gameState.hq[i]);
+gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 // Init auxiliary decks
-gameState.officer.addNewCard(officerTemplate, getParam('officers'));
-gameState.bystanders.addNewCard(bystanderTemplates[0], 30);
-gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
-// TODO sidekicks
+if (gameParams.withOfficers) gameState.officer.addNewCard(officerTemplate, getParam('officers'));
+if (gameParams.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
+gameParams.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
+//// TODO sidekicks
 // Init villain deck
-gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[0], 10);
-gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[1], 10);
-gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[2], 10);
-gameState.villaindeck.addNewCard(cardTemplates.HENCHMEN[3], 10);
+gameParams.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h[0] || h, h[1] || 10));
+gameParams.villains.map(findVillainTemplate).forEach(v => v.cards.forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
 gameState.villaindeck.addNewCard(strikeTemplate, 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
 for (let i = 0; i < getParam('vd_bystanders'); i++)
@@ -469,16 +480,14 @@ for (let i = 0; i < getParam('vd_bystanders'); i++)
 gameState.villaindeck.shuffle();
 // Init Mastermind
 {
-  let mastermind = findMastermindTemplate("Dr. Doom");
+  let mastermind = findMastermindTemplate(gameParams.mastermind);
   gameState.mastermind.addNewCard(mastermind);
   let tactics = gameState.mastermind.top.attachedCards('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
 }
-// Draw initial hand
-for (let i = 0; i < gameState.endDrawAmount; i++) {
-  moveCard(playerState.deck.top, playerState.hand);
-}
+// Draw initial hands
+for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 if (gameState.scheme.top.init) gameState.scheme.top.init();
 }
 
