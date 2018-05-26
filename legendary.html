@@ -37,6 +37,7 @@ table div.deck { height: 375px; }
 .action { font-family: TitleFont; font-size: 30px; border: 2px solid black; background: yellow; padding: 0px 20px; border-radius: 10px; margin: 20px; }
 .action.noconfirm { background: green; }
 .card.gone { opacity: .5; }
+#message { font-family: TitleFont; font-size: 20px; }
 </style>
 </head>
 <body>
@@ -56,10 +57,12 @@ table div.deck { height: 375px; }
 <td><div class="deck" id="HQ4" data-mode="IMG"></div></td>
 <td><div class="deck" id="HQ5" data-mode="IMG"></div></td>
 </tr></table>
+<div id="message"></div>
 <table><tr>
 <td>
 <img src="icons/recruit.svg"><span class="number" id="recruit"></span>
 <img src="icons/attack.svg"><span class="number" id="attack"></span>
+VP<span class="number" id="vp"></span>
 <br>
 <div id="extraActions"></div>
 </td>

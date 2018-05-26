@@ -505,10 +505,15 @@ gameState = {
     bystanders: 30,
   },
   triggers: [
+    { // Trigger RUNOUT events.
+      event: "MOVECARD",
+      match: ev => ["VILLAIN", "HERO", "WOUNDS", "BINDINGS"].includes(ev.from.id),
+      after: ev => { if (!ev.parent.from.size) runOutEv(ev, ev.parent.from.id); },
+    },
     { // Replace HQ cards.
       event: "MOVECARD",
       match: function (ev) { return ev.from.isHQ; },
-      after: function (ev) { if (gameState.herodeck.size) moveCardEv(ev, gameState.herodeck.top, ev.parent.from); else runOutEv(ev, "HERO"); },
+      after: function (ev) { if (gameState.herodeck.size) moveCardEv(ev, gameState.herodeck.top, ev.parent.from); },
     },
     { // Shift city on entry.
       event: "MOVECARD",
@@ -518,12 +523,12 @@ gameState = {
     { // Win by defeating masterminds
       event: "DEFEAT",
       match: function (ev) { return ev.what.location === gameState.mastermind; },
-      after: function (ev) { if (!gameState.evilWins && false /*TODO!gameState.mastermind.deck.some()*/) gameState.goodWins = true; },
+      after: function (ev) { if (!gameState.mastermind.has(c => !c.tacticsTemplates || c.attachedCount("TACTICS"))) gameOverEv(ev, "WIN"); },
     },
-    { // Loss by villain deck
-      event: "RUNOUT",
-      match: function (ev) { return ev.what === "VILLAIN"; },
-      after: function (ev) { if (!gameState.goodWins) gameState.evilWins = 'VILLAINDECK'; },
+    { // Loss by villain deck or hero deck running out
+      event: "CLEANUP",
+      match: () => true,
+      after: ev => { if (!gameState.villaindeck.size || !gameState.herodeck.size) gameOverEv(ev, "DRAW"); },
     },
   ],
   endDrawAmount: 6,
@@ -619,8 +624,11 @@ function handOrDiscard(p) {
 }
 function owned(p) {
   p = p || playerState;
-  let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed);
+  let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed.deck, playerState.victory.deck);
   return p === playerState ? r.concat(gameState.playArea.deck) : r;
+}
+function currentVP(p) {
+  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b);
 }
 function HQCards() { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards() { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
@@ -800,20 +808,23 @@ function drawIfEv(ev, cond, who) {
     cont(ev, () => { if (draw) drawEv(ev, 1, who); });
 }
 function KOEv(ev, card) { event(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
-function evilWinsEv(ev) { event(ev, "EVILWINS", () => { if (!gameState.goodWins && !gameState.evilWins) gameState.evilWins = 'SCHEME'; }); }
+function evilWinsEv(ev) { gameOverEv(ev, 'LOSS'); }
+function gameOverEv(ev, result) {
+  let desc = result === "LOSS" ? "Evil Wins" : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
+  textLog.log("Game Over: " + desc);
+  pushEvents({ parent: ev, type: "GAMEOVER", ui: true, result: result, desc: desc });
+}
 function runOutEv(ev, deck) { event(ev, "RUNOUT", { what: deck, func: () => {} }); }
 function captureEv(ev, villain, what) {
   if (what) event(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "BYSTANDER"), what: what, villain: villain });
   else cont(ev, () => {
     if (gameState.bystanders.top) event(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "BYSTANDER"), what: gameState.bystanders.top, villain: villain });
-    else runOutEv(ev, 'BYSTANDERS');
   });
 }
 function gainWoundEv(ev, who) {
   who = who || playerState;
   cont(ev, () => {
     if (gameState.wounds.top) gainEv(ev, gameState.wounds.top, who);
-    else runOutEv(ev, "WOUNDS");
   });
 }
 function cont(ev, func) { event(ev, "EFFECT", func); }
@@ -978,7 +989,6 @@ function drawEv(ev, amount, who) {
 }
 function drawOne(ev) {
   if (!ev.who.deck.size && !ev.who.discard.size) {
-    runOutEv(ev, "DECK");
   } else if (!ev.who.deck.size) {
     event(ev, "RESHUFFLE", reshufflePlayerDeck);
     pushEvents(ev);
@@ -1006,7 +1016,6 @@ function villainDrawEv(ev) { event(ev, "VILLAINDRAW", villainDraw); }
 function villainDraw(ev) {
   let c = gameState.villaindeck.top;
   if (!c) {
-    runOutEv(ev, "VILLAIN");
   } else if (c.isVillain()) {
     moveCardEv(ev, c, gameState.cityEntry);
     if (c.ambush) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.ambush });
@@ -1076,7 +1085,6 @@ function rescueEv(ev, what) {
   if (what && typeof what !== "number") event(ev, "RESCUE", { func: rescueBystander, what: what });
   else for (let i = 0; i < what; i++) cont(ev, () => {
     if (gameState.bystanders.top) event(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top });
-    else runOutEv(ev, 'BYSTANDERS');
   });
 }
 function rescueBystander(ev) {
@@ -1203,6 +1211,7 @@ function displayGame() {
   displayDecks();
   document.getElementById("recruit").innerHTML = turnState.recruit;
   document.getElementById("attack").innerHTML = turnState.attack;
+  document.getElementById("vp").innerHTML = currentVP();
 }
 
 // Main loop
@@ -1221,6 +1230,9 @@ function mainLoopAuto() {
     if (count < 500) setTimeout(makeAction, 200);
   }
   setTimeout(makeAction, 0);
+}
+function setMessage(msg) {
+  document.getElementById("message").innerHTML = msg;
 }
 
 function getEventName(ev) {
@@ -1277,7 +1289,10 @@ function mainLoop() {
       ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
       extraActions = [{name: "None", func: () => { ev.result0(); undoLog.write(0); mainLoop(); }}];
     },
+    "GAMEOVER": function () {
+    }
   }[ev.type])(ev);
+  setMessage(ev.desc || "");
   console.log("UI> " + ev.type, ev, clickActions, extraActions);
   extraActions.push({name: "Undo", func: () => { undoLog.undo(); startGame(); }});
   extraActions.push({name: "Restart", func: () => { undoLog.restart(); startGame(); }});
