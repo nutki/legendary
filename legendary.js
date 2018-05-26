@@ -415,6 +415,8 @@ gameState = {
   modifiers: {},
   players: [ playerState ],
   advancedSolo: true,
+  villainsEscaped: 0,
+  bystandersCarried: 0,
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -507,8 +509,12 @@ function owned(p) {
   let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed.deck, playerState.victory.deck);
   return p === playerState ? r.concat(gameState.playArea.deck) : r;
 }
+function advancedSoloVP() {
+  if (!gameState.advancedSolo) return 0;
+  return - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
+}
 function currentVP(p) {
-  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b);
+  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b) + advancedSoloVP();
 }
 function HQCards() { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards() { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
@@ -928,7 +934,9 @@ function villainEscape(ev) {
   let c = ev.what;
   let b = undefined;
   if (c.attachedCount('BYSTANDER')) b = c.attachedCards('BYSTANDER');
+  gameState.villainsEscaped++;
   if (b) {
+    gameState.bystandersCarried += b.size;
     b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
     eachPlayer(function(p) { pickDiscardEv(ev, p); });
   }
@@ -1197,11 +1205,11 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
 Use new object selects and implement UI handling for them
+Show attached cards and deck counts
 Show hidden events / effect source
 Select setup screen
 
 ENGINE:
-advancedSolo scoring
 remove card in play layer?
 required villain/hero groups
 
