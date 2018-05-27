@@ -436,14 +436,27 @@ for (let i = 0; i < 5; i++) {
 
 let gameSetup = {
   scheme: "The Legacy Virus",
-  heroes: [ "Iron Man", "Hulk" ],
+  mastermind: "Dr. Doom",
   henchmen: ["Doombot Legion", "Hand Ninjas", "Savage Land Mutates", "Sentinel" ],
   villains: [],
-  mastermind: "Dr. Doom",
+  heroes: [ "Iron Man", "Hulk" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
 };
+function getGameSetup(scheme, mastermind) {
+  let setup = {
+    scheme,
+    mastermind,
+    henchmen: [],
+    villains: [],
+    heroes: [],
+    bystanders: undefined,
+    withOfficers: undefined,
+    withWounds: undefined,
+  };
+  return setup;
+}
 // Init Scheme
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
 if (gameState.scheme.top.triggers)
