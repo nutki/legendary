@@ -1243,9 +1243,9 @@ function startGame() {
 function startApp() {
   undoLog.init();
   window.onclick = clickCard;
-  document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); }; 
-  document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); }; 
-  document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); }; 
+  document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
+  document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
+  document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
   startGame();
 }
 document.addEventListener('DOMContentLoaded', startApp, false);

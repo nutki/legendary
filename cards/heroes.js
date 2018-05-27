@@ -1,6 +1,6 @@
 "use strict";
 /* global Color, u, turnState, playerState, gameState */
-/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain, rescueEv, villainOrMastermind, isBystander, hasBystander */
+/* global isWound, handOrDiscard, CityCards, isMastermind, isVillain, rescueEv, villainOrMastermind, isBystander, hasBystander, Card */
 
 addTemplates("HEROES", "Legendary", [
 {
@@ -60,7 +60,7 @@ addTemplates("HEROES", "Legendary", [
 // If a card effect makes you discard this card, you may return this card to your hand.
 // COST: 6
   uc: makeHeroCard("Cyclops", "Unending Energy", 6, u, 4, Color.RANGED, "X-Men", "", [], { trigger: {
-    type: "DISCARD", match: (ev, source) => ev.what === source /* TODO && ev.source instanceof Card */, after: ev => moveCardEv(ev, ev.source, playerState.hand)
+    type: "DISCARD", match: ev => ev.parent.what === ev.source && ev.parent.getSource() instanceof Card, after: ev => moveCardEv(ev, ev.source, playerState.hand)
   }}),
 // ATTACK: 6+
 // {TEAMPOWER X-Men} You get +2 Attack for each other X-Men Hero you played this turn.
