@@ -534,7 +534,7 @@ function soloVP() {
   return - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
 }
 function currentVP(p) {
-  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b) + soloVP();
+  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b, 0) + soloVP();
 }
 function HQCards() { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards() { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
@@ -555,8 +555,7 @@ function eachOtherPlayer(f) { let r = gameState.players.filter(function (e) { re
 function eachOtherPlayerVM(f) { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
 function eachPlayer(f) { if (f) gameState.players.forEach(f); return gameState.players; }
 function eachPlayerEv(ev, f) { eachPlayer(p => pushEvents({type: "EFFECT", who:p, func:f, parent:ev})); }
-function revealable(who) {
-  who = who || playerState;
+function revealable(who = playerState) {
   // TODO: also artifacts and maybe MOoT
   if (who !== playerState) return who.hand.deck;
   return who.hand.deck.concat(gameState.playArea.deck);
@@ -1209,6 +1208,9 @@ function mainLoop() {
     clickActions[id] = action.func;
     return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
   }).join('<br>');
+  Object.keys(clickActions).map(v => document.getElementById(v)).filter(e => e).forEach(e => {
+    e.classList.add("select");
+  });
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   document.getElementById("logContainer").innerHTML = `${undoLog.toString()}<br>${textLog.text}`;
 }
