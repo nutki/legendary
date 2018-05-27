@@ -508,6 +508,7 @@ function isWound(c) { return c.cardType === "WOUND"; }
 function isHero(c) { return c.cardType === "HERO"; }
 function isVillain(c) { return c.cardType === "VILLAIN"; }
 function isMastermind(c) { return c.cardType === "MASTERMIND"; }
+function isEnemy(c) { return isVillain(c) || isMastermind(c); }
 function isBystander(c) { return c.cardType === "BYSTANDER"; }
 function isPlayable(c) { return c.isPlayable(); }
 function isHealable(c) { return c.isHealable(); }
@@ -995,7 +996,7 @@ function villainDefeat(ev) {
 }
 function rescueEv(ev, what) {
   if (what && typeof what !== "number") event(ev, "RESCUE", { func: rescueBystander, what: what });
-  else for (let i = 0; i < what; i++) cont(ev, () => {
+  else for (let i = 0; i < (what || 1); i++) cont(ev, () => {
     if (gameState.bystanders.top) event(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top });
   });
 }
@@ -1164,7 +1165,6 @@ function clickCard(ev) {
     }
   }
 }
-window.onclick = clickCard;
 function mainLoop() {
   let extraActions = [];
   clickActions = {};
@@ -1215,7 +1215,7 @@ function mainLoop() {
         let num = selected.count(s => s);
         if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
         let indexes = selected.map((s, i) => s ? i : undefined).filter(i => i);
-        indexes.forEach(i => ev.result(ev.result(ev.options[i])));
+        indexes.forEach(i => ev.result1(ev.options[i]));
         if (num === 0) ev.result(0);
         undoLog.write(indexes.join(',')); mainLoop();
       }});
@@ -1225,9 +1225,6 @@ function mainLoop() {
   }[ev.type])(ev);
   setMessage(ev.desc || "");
   console.log("UI> " + ev.type, ev, clickActions, extraActions);
-  extraActions.push({name: "Undo", func: () => { undoLog.undo(); startGame(); }});
-  extraActions.push({name: "Restart", func: () => { undoLog.restart(); startGame(); }});
-  extraActions.push({name: "New game", func: () => { undoLog.newGame(); startGame(); }});
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
@@ -1245,6 +1242,10 @@ function startGame() {
 }
 function startApp() {
   undoLog.init();
+  window.onclick = clickCard;
+  document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); }; 
+  document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); }; 
+  document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); }; 
   startGame();
 }
 document.addEventListener('DOMContentLoaded', startApp, false);

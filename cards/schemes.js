@@ -40,7 +40,7 @@ makeSchemeCard("Portals to the Dark Dimension", { twists: 7 }, ev => {
     evilWinsEv(ev);
   }
 }, {}, () => {
-  addStatMod('defense', isVillain, c => c.location.attachedCount('DARK_PORTAL'));
+  addStatMod('defense', isEnemy, c => c.location.attachedCount('DARK_PORTAL'));
 }),
 // SETUP: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
 // RULE: Bystanders in the Villain Deck count as Killbot Villains, with Attack equal to the number of Twists next to this Scheme.

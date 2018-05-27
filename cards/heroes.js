@@ -140,7 +140,7 @@ addTemplates("HEROES", "Legendary", [
 // COST: 3
   uc: makeHeroCard("Gambit", "Hypnotic Charm", 3, 2, u, Color.INSTINCT, "X-Men", "D", ev => eachPlayer(p => {
     if (p === playerState || superPower(Color.INSTINCT)) lookAtDeckEv(ev, 1, () => {
-      selectCardOptEv(ev, turnState.revealed, sel => discardEv(ev, sel));
+      selectCardOptEv(ev, p.revealed, sel => discardEv(ev, sel));
     }, p, playerState);
   })),
 // ATTACK: 4+
