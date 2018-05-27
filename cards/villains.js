@@ -1,3 +1,5 @@
+/* global isHero, revealable */
+
 "use strict";
 addTemplates("VILLAINS", "Legendary", [
 { name: "Brotherhood", cards: [
@@ -14,8 +16,8 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Brotherhood", "Juggernaut", 6, 4, {
-    ambush: ev => eachPlayer(p => selectCardsNEv(ev, 2, p.discard, sel => KOEv(ev, sel), p)),
-    escape: ev => eachPlayer(p => selectCardsNEv(ev, 2, p.hand, sel => KOEv(ev, sel), p)),
+    ambush: ev => eachPlayer(p => selectObjectsEv(ev, "KO two heroes from discard", 2, p.discard.limit(isHero), sel => KOEv(ev, sel), p)),
+    escape: ev => eachPlayer(p => selectObjectsEv(ev, "KO two heroes from hand", 2, p.hand.limit(isHero), sel => KOEv(ev, sel), p)),
   })],
 // ESCAPE: Mystique becomes a Scheme Twist that takes effect immediately.
 // ATTACK: 5

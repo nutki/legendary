@@ -1,5 +1,5 @@
 "use strict";
-/* global Color, gameState, isVillain, isBystander, HQCards, isHero, twistTemplate */
+/* global Color, gameState, isVillain, isBystander, HQCards, isHero, twistTemplate, villainIn */
 addTemplates("SCHEMES", "Legendary", [
 // SETUP: 8 Twists. Wound stack holds 6 Wounds per player.
 // EVILWINS: If the Wound stack runs out.
@@ -16,14 +16,13 @@ makeSchemeCard("The Legacy Virus", { twists: 8, wounds: [ 6, 12, 18, 24, 30 ] },
 // EVILWINS: When 8 Bystanders are carried away by escaping Villains.
 makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
   // Twist: Any Villain in the Bank captures 2 Bystanders. Then play the top card of the Villain Deck.
-  let bank = gameState.cityByName('BANK'); // TODO
-  if (bank && bank.top && isVillain(bank.top)) { captureEv(ev, bank.top); captureEv(ev, bank.top); }
+  villainIn('BANK').each(v => { captureEv(ev, v); captureEv(ev, v); });
   drawVillainEv(ev);
 }, {
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isBystander) >= 8) evilWinsEv(ev); },
 }, () => {
-  addStatMod('defense', isVillain, c => c.attachedCount('BYSTANDER')); // TODO numerical mods with functions
+  addStatMod('defense', isVillain, c => c.attachedCount('BYSTANDER'));
 }),
 // SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
 // EVILWINS: If 12 Villains escape.
@@ -32,7 +31,7 @@ makeSchemeCard("Negative Zone Prison Breakout", { twists: 8, vd_henchmen: [ 1, 2
   drawVillainEv(ev); drawVillainEv(ev);
 }),
 // SETUP: 7 Twists. Each Twist is a Dark Portal.
-makeSchemeCard("Portals to Dark Dimension", { twists: 7 }, ev => {
+makeSchemeCard("Portals to the Dark Dimension", { twists: 7 }, ev => {
   if (ev.nr === 1) { // Twist 1 Put the Dark Portal above the Mastermind. The Mastermind gets +1 Attack.
     attachCardEv(ev, ev.twist, gameState.mastermind, 'DARK_PORTAL');
   } else if (ev.nr >= 2 && ev.nr <= 6) { // Twists 2-6 Put the Dark Portal in the leftmost city space that doesn't yet have a Dark Portal. Villains in that city space get +1 Attack.
@@ -55,9 +54,9 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bytstand
 }, function () {
   gameState.scheme.cardsAttached('TWIST').addNewCard(twistTemplate, 3);
   // TODO implement these mods
-  addStatMod('defense', isBystander, () => gameState.scheme.attachedCount('TWIST'));
-  addStatMod('isVillain', isBystander, () => true);
-  addStatMod('villainGroup', isHero, () => "Killbots");
+  addStatSet('defense', isBystander, () => gameState.scheme.attachedCount('TWIST'));
+  addStatSet('isVillain', isBystander, () => true);
+  addStatSet('villainGroup', isHero, () => "Killbots");
 }),
 // SETUP: 8 Twists. 6 Heroes. Skrull Villain Group required. Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.
 // RULE: Heroes in the Villain Deck count as Skrull Villains with Attack equal to the Hero's Cost +2. If you defeat that Hero, you gain it.
@@ -70,10 +69,10 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   after: ev => { if (gameState.escaped.count(isHero) >= 6) evilWinsEv(ev); },
 }, function () {
   // TODO implement these mods
-  addStatMod('defense', isHero, c => c.cost + 2);
-  addStatMod('isVillain', isHero, () => true);
-  addStatMod('villainGroup', isHero, () => "Skrulls");
-  addStatMod('fight', isHero, () => ev => gainEv(ev, ev.source));
+  addStatSet('defense', isHero, c => c.cost + 2);
+  addStatSet('isVillain', isHero, () => true);
+  addStatSet('villainGroup', isHero, () => "Skrulls");
+  addStatSet('fight', isHero, () => ev => gainEv(ev, ev.source));
   for (let i = 0; i < 12; i++) moveCard(gameState.herodeck.top, gameState.villaindeck);
   // TODO require Skrulls
   gameState.villaindeck.shuffle();

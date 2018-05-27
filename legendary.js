@@ -309,6 +309,7 @@ const undoLog = {
   get replaying() { return this.pos < this.actions.length; },
   read: function() { return this.actions[this.pos++]; },
   readInt: function() { return parseInt(this.read()); },
+  readInts: function() { return this.read().split(',').map(v => parseInt(v)); },
   write: function(v) {
     const strValue = v.toString();
     this.actions[this.pos++] = strValue;
@@ -435,11 +436,11 @@ for (let i = 0; i < 5; i++) {
 }
 
 let gameSetup = {
-  scheme: "The Legacy Virus",
+  scheme: "Portals to the Dark Dimension",
   mastermind: "Dr. Doom",
-  henchmen: ["Doombot Legion", "Hand Ninjas", "Savage Land Mutates", "Sentinel" ],
-  villains: [],
-  heroes: [ "Iron Man", "Hulk" ],
+  henchmen: ["Hand Ninjas"],
+  villains: ["Brotherhood"],
+  heroes: [ "Black Widow", "Cyclops", "Gambit" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -482,7 +483,7 @@ if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('w
 gameSetup.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
 //// TODO sidekicks
 // Init villain deck
-gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h[0] || h, h[1] || 10));
+gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h, 3));
 gameSetup.villains.map(findVillainTemplate).forEach(v => v.cards.forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
 gameState.villaindeck.addNewCard(strikeTemplate, gameState.players.length === 1 && !gameState.advancedSolo ? 1 : 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
@@ -545,10 +546,13 @@ function HQCardsHighestCost() {
   return all.limit(function (c) { return c.cost === maxCost; });
 }
 function villainOrMastermind() {
-  return CityCards().limit(isVillain).concat(gameState.mastermind.deck);
+  return villains().concat(gameState.mastermind.deck);
 }
 function villains() {
   return CityCards().limit(isVillain);
+}
+function villainIn(where) {
+  return CityCards().limit(isVillain).limit(c => c.location.id === where);
 }
 function hasBystander(c) { return c.attachedCount('BYSTANDER') > 0; }
 function eachOtherPlayer(f) { let r = gameState.players.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
@@ -573,21 +577,19 @@ function superPower(color) { return count(turnState.cardsPlayed, color); }
 function addEndDrawMod(a) { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a) { turnState.endDrawAmount = a; }
 
-function addMod(modifiers, stat, cond, value) {
+function addMod(modifiers, stat, cond, func) {
   if (!modifiers[stat]) modifiers[stat] = [];
-  modifiers[stat].push({ cond: cond, value: value});
+  modifiers[stat].push({ cond, func });
 }
-function addTurnMod(stat, cond, value) { addMod(turnState.modifiers, stat, cond, value); }
-function addStatMod(stat, cond, value) { addMod(gameState.modifiers, stat, cond, value); }
+function makeModFunc(value) {
+  if (typeof value === "number") return v => v + value;
+  return (c, v) => v + value(c);
+}
+function addTurnMod(stat, cond, value) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
+function addStatMod(stat, cond, value) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
+function addStatSet(stat, cond, func) { addMod(gameState.modifiers, stat, cond, func); }
 function modifyStat(c, modifiers, value) {
-  if (!modifiers) return value;
-  modifiers.forEach(mod => {
-    if(mod.cond(c)) {
-      if (typeof mod.value === "number") value += mod.value;
-      else value = mod.value(c, value);
-    }
-  });
-  return value;
+  return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
 function getModifiedStat(c, stat, value) {
   return modifyStat(c, turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
@@ -649,7 +651,7 @@ function canRecruit(c) {
   return turnState.recruit >= c.cost;
 }
 function canFight(c) {
-  if (c.fightCond && !c.figthCond(c)) return false;
+  if (c.fightCond && !c.fightCond(c)) return false;
   let a = turnState.attack;
   if (c.bribe || turnState.attackWithRecruit) a += turnState.recruit;
   return a >= c.defense;
@@ -742,6 +744,9 @@ function selectObjectsMinMaxEv(ev, desc, min, max, objects, effect1, effect0, si
   } else if (objects.length <= min && simple) {
     if (effect1) cont(ev, () => objects.forEach(effect1));
   } else {
+    if (objects.length < min) min = objects.length;
+    effect0 = effect0 || (() => {});
+    effect1 = effect1 || (() => {});
     pushEvents({ type: "SELECTOBJECTS", parent:ev, desc: desc, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
   }
 }
@@ -1172,6 +1177,10 @@ function mainLoop() {
       const v = undoLog.readInt();
       v ? ev.result1(ev.options[v - 1]) : ev.result0();
     },
+    "SELECTOBJECTS": () => {
+      const v = undoLog.readInts();
+      v.length ? v.forEach(o => ev.result1(ev.options[o])) : ev.result0();
+    }
   }[ev.type] || ev.func)(ev);
   }
   let ev = popEvent();
@@ -1194,6 +1203,22 @@ function mainLoop() {
     "SELECTCARD01": function () {
       ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
       extraActions = [{name: "None", func: () => { ev.result0(); undoLog.write(0); mainLoop(); }}];
+    },
+    "SELECTOBJECTS": function () {
+      let selected = ev.options.map(() => false);
+      ev.options.map((option, i) => clickActions[option.id] = () => {
+        selected[i] = !selected[i];
+        let cl = document.getElementById(option.id).classList;
+        if (selected[i]) cl.add('selected'); else cl.remove('selected');
+      });
+      extraActions.push({name: "Confirm", func: () => {
+        let num = selected.count(s => s);
+        if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
+        let indexes = selected.map((s, i) => s ? i : undefined).filter(i => i);
+        indexes.forEach(i => ev.result(ev.result(ev.options[i])));
+        if (num === 0) ev.result(0);
+        undoLog.write(indexes.join(',')); mainLoop();
+      }});
     },
     "GAMEOVER": function () {
     }
