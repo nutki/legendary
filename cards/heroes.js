@@ -60,7 +60,12 @@ addTemplates("HEROES", "Legendary", [
 // If a card effect makes you discard this card, you may return this card to your hand.
 // COST: 6
   uc: makeHeroCard("Cyclops", "Unending Energy", 6, u, 4, Color.RANGED, "X-Men", "", [], { trigger: {
-    event: "DISCARD", match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card, after: ev => moveCardEv(ev, ev.source, playerState.hand)
+    event: "DISCARD",
+    match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
+    after: ev => {
+      const who = ev.source.location.owner;
+      chooseMayEv(ev, "Return to hand", mev => who.discard.limit(c => c.id === ev.source.id).each(c => moveCardEv(mev, c, who.hand)), who);
+    }
   }}),
 // ATTACK: 6+
 // {TEAMPOWER X-Men} You get +2 Attack for each other X-Men Hero you played this turn.
