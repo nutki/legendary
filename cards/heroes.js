@@ -152,7 +152,7 @@ addTemplates("HEROES", "Legendary", [
 // Reveal the top card of your deck. You get + Attack equal to that card's cost.
 // COST: 7
   ra: makeHeroCard("Gambit", "High Stakes Jackpot", 7, u, 4, Color.INSTINCT, "X-Men", "",
-    ev => lookAtDeckEv(ev, 1, () => addAttackEvent(ev, turnState.revealed.top ? turnState.revealed.top.cost : 0))
+    ev => lookAtDeckEv(ev, 1, () => playerState.revealed.withLast(c => addAttackEvent(ev, c.cost)))
   ),
 },
 {
