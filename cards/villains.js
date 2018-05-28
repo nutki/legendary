@@ -7,8 +7,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Brotherhood", "Blob", 4, 2, {
-    fightCond: () => revealable().limit("X-Men").length > 0,
-    // fightCond: () => revealable().has('X-Men')
+    fightCond: () => revealable().has("X-Men"),
     // fightCost: ev => revealEv(ev, revealable().limit('X-Men')), TODO
   })],
 // AMBUSH: Each player KOs two Heroes from their discard pile.
@@ -157,8 +156,8 @@ addTemplates("VILLAINS", "Legendary", [
   [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
     fight: ev => {
       let selected = {};
-      eachPlayerEv(ev => selectCardEv(ev, HQCards().limit(c => !(c in selected)), sel => selected[ev.who] = sel));
-      eachPlayerEv(ev => gainEv(ev, selected[ev.who]));
+      eachPlayerEv(ev, ev => selectCardEv(ev, HQCards().limit(c => !(c in selected)), sel => selected[ev.who] = sel));
+      eachPlayerEv(ev, ev => gainEv(ev, selected[ev.who]));
     }
   })],
 // AMBUSH: Put the highest-cost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
@@ -167,19 +166,18 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 4
   [ 1, makeVillainCard("Skrulls", "Skrull Queen Veranke", 0, 4, {
     ambush: ev => selectCardEv(ev, HQCardsHighestCost(), sel => attachCardEv(ev, sel, ev.source, "SKRULL_CAPTURE")),
-    fight: ev => gainEv(ev, ev.source.attachedCards("SKRULL_CAPTURE").top),
-    varDefense: c => { let v = c.attachedCards("SKRULL_CAPTURE").top; return v.top ? v.top.cost : 0; },
+    // ambush: ev => HQCards().withHighest(c => c.cost, c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
+    fight: ev => ev.source.attachedCards("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
+    varDefense: c => c.attachedCards("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
   })],
 // AMBUSH: Put the rightmost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
 // FIGHT: Gain that Hero
 // ATTACK: *
 // VP: 2
   [ 3, makeVillainCard("Skrulls", "Skrull Shapeshifters", 0, 2, {
-    ambush: ev => {
-      let hq = HQCards().last; if (hq) attachCardEv(ev, hq, ev.source, "SKRULL_CAPTURE");
-    },
-    fight: ev => gainEv(ev, ev.source.attachedCards("SKRULL_CAPTURE").top),
-    varDefense: c => { let v = c.attachedCards("SKRULL_CAPTURE").top; return v.top ? v.top.cost : 0; },
+    ambush: ev => HQCards().withLast(c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
+    fight: ev => ev.source.attachedCards("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
+    varDefense: c => c.attachedCards("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
   })],
 // FIGHT: Each player KOs one of their Heroes.
 // ATTACK: 4

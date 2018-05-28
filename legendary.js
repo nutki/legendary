@@ -209,12 +209,16 @@ Deck.prototype = {
   shuffle: function() { shuffleArray(this.deck, gameState.gameRand); },
   get bottom() { return this.deck[0]; },
   get top() { return this.deck[this.deck.length - 1]; },
+  get first() { return this.deck[0]; },
+  get last() { return this.deck[this.deck.length - 1]; },
   remove: function(c) { let p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; },
   limit: function(c) { return limit(this.deck, c); },
   count: function(c) { return count(this.deck, c); },
   has: function(c) { return count(this.deck, c) > 0; },
   each: function(f) { this.deck.forEach(f); },
   withTop: function(f) { if (this.size !== 0) f(this.top); },
+  withFirst: function(f) { if (this.size !== 0) f(this.first); },
+  withLast: function(f) { if (this.size !== 0) f(this.last); },
   attachedCards: function (name) { return attachedCards(name, this); },
   attachedCount: function (name) { return attachedCount(name, this); },
   deckList: [],
@@ -228,6 +232,8 @@ Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function (f) { return this.forEach(f); };
 Object.defineProperty(Array.prototype, 'first', { get: function() { return this[0]; }, set: function(v) { return this[0] = v; } });
 Object.defineProperty(Array.prototype, 'last', { get: function() { return this[this.size-1]; }, set: function(v) { return this[this.size - 1] = v; } });
+Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
+Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
 
 let Event = function (ev, type, params) {
   this.parent = ev;
@@ -801,8 +807,12 @@ function chooseOneEv(ev, desc) {
     newev.options.push({ type: "EFFECT", parent:ev, func: a[i+1], name: a[i] });
   pushEvents(newev);
 }
-function chooseMayEv(ev, desc, effect) {
-  chooseOneEv(ev, desc, "Yes", effect, "No", () => {});
+function chooseMayEv(ev, desc, effect, agent) {
+  agent = agent || playerState;
+  pushEvents({ type: "SELECTEVENT", parent:ev, desc, options: [
+      { type: "EFFECT", parent:ev, func: effect, name: "Yes" },
+      { type: "EFFECT", parent:ev, func: () => {}, name: "No" },
+  ], ui: true, agent });
 }
 function selectPlayerEv(ev, f, who) {
   selectObjectEv(ev, "Choose a Player", gameState.players, f, who);
