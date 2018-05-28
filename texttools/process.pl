@@ -33,7 +33,7 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!<span style="background-color: #......;"><span style="color: #......;">($class)</span></span>![$1]!g;
-    s!<b>(Bribe|Soaring Flight|Dodge)</b>!'{'.(uc$1).'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?)</b>!'{'.(uc$1).'}'!ge;
     my @lines = split m!<br />!;
     for (@lines) {
       s!^== (.*?) ==$!#EXPANSION: $1! && next;
