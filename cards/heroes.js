@@ -38,7 +38,7 @@ addTemplates("HEROES", "Legendary", [
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
-    type: "GAIN", match: isWound, replace: ev => revealOrEv(ev, c => c.id === ev.source.id, () => pushEvents(ev.what))
+    event: "GAIN", match: ev => isWound(ev.what), replace: ev => revealOrEv(ev, c => c.id === ev.source.id, () => pushEvents(ev.what))
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
@@ -60,7 +60,7 @@ addTemplates("HEROES", "Legendary", [
 // If a card effect makes you discard this card, you may return this card to your hand.
 // COST: 6
   uc: makeHeroCard("Cyclops", "Unending Energy", 6, u, 4, Color.RANGED, "X-Men", "", [], { trigger: {
-    type: "DISCARD", match: ev => ev.parent.what === ev.source && ev.parent.getSource() instanceof Card, after: ev => moveCardEv(ev, ev.source, playerState.hand)
+    event: "DISCARD", match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card, after: ev => moveCardEv(ev, ev.source, playerState.hand)
   }}),
 // ATTACK: 6+
 // {TEAMPOWER X-Men} You get +2 Attack for each other X-Men Hero you played this turn.

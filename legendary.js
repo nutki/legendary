@@ -848,14 +848,17 @@ function KOHandOrDiscardEv(ev, filter, func) {
 function playCopyEv(ev, what) {
   event(ev, "PLAY", { func: playCard, what: makeCardCopy(what) });
 }
-function playCardDo(ev) {
-  if (ev.what.playCostType === "DISCARD") pickDiscardEv(ev);
-  if (ev.what.attack) addAttackEvent(ev, ev.what.attack);
-  if (ev.what.recruit) addRecruitEvent(ev, ev.what.recruit);
-  for (let i = 0; ev.what.effects && i < ev.what.effects.length; i++) {
-    pushEvents( { type: "EFFECT", source: ev.what, parent: ev, func: ev.what.effects[i] } );
-  }
-  cont(ev, () => turnState.cardsPlayed.push(ev.what));
+function playCardEffects(ev, card) {
+  card = card || ev.what;
+  event(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
+    if (card.playCostType === "DISCARD") pickDiscardEv(ev);
+    if (card.attack) addAttackEvent(ev, card.attack);
+    if (card.recruit) addRecruitEvent(ev, card.recruit);
+    for (let i = 0; card.effects && i < card.effects.length; i++) {
+      pushEvents( { type: "EFFECT", source: card, parent: ev, func: card.effects[i] } );
+    }
+    cont(ev, () => turnState.cardsPlayed.push(card));
+  }});
 }
 function playCard(ev) {
   if (!canPlay(ev.what)) return;
@@ -866,10 +869,10 @@ function playCard(ev) {
       console.log("COPYPASTE", ev.what, target);
       ev.what = makeCardCopyPaste(target, ev.what);
       console.log("RESULT", ev.what);
-      if (canPlay(ev.what)) playCardDo(ev);
+      if (canPlay(ev.what)) playCardEffects(ev);
     }); // TODO if there are no cards played this prevents rogue copy powers play at all currently
   } else {
-    playCardDo(ev);
+    playCardEffects(ev);
   }
 }
 function buyCard(ev) {
