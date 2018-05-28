@@ -1133,8 +1133,14 @@ function displayDecks() {
     }
   }
 }
-function displayGame() {
+function eventSource(ev) {
+  const s = Event.prototype.getSource.call(ev);
+  return s instanceof Card ? makeDisplayCardImg(s) : "";
+}
+
+function displayGame(ev) {
   displayDecks();
+  document.getElementById("source").innerHTML = eventSource(ev);
   document.getElementById("recruit").innerHTML = turnState.recruit;
   document.getElementById("attack").innerHTML = turnState.attack;
   document.getElementById("vp").innerHTML = currentVP();
@@ -1198,7 +1204,7 @@ function mainLoop() {
   }
   let ev = popEvent();
   while (!ev.ui) { ev.func(ev); ev = popEvent(); }
-  displayGame();
+  displayGame(ev);
   console.log(">>> " + ev.type, ev);
   ({
     "SELECTEVENT": function () {

@@ -45,6 +45,7 @@ table div.deck { height: 375px; }
 </style>
 </head>
 <body>
+<span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
 <table><tr>
 <td><div class="deck" id="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
 <td><div class="deck" id="BRIDGE" data-mode="IMG"></div></td>
@@ -60,7 +61,7 @@ table div.deck { height: 375px; }
 <td><div class="deck" id="HQ3" data-mode="IMG"></div></td>
 <td><div class="deck" id="HQ4" data-mode="IMG"></div></td>
 <td><div class="deck" id="HQ5" data-mode="IMG"></div></td>
-<td><span class="action" id="undo">Undo</span><br><span class="action" id="restart">Restart</span><br><span class="action" id="newGame">New Game</span></td>
+<td><div id="source"></div></td>
 </tr></table>
 <div id="message"></div>
 <table><tr>
