@@ -38,7 +38,7 @@ addTemplates("HEROES", "Legendary", [
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
-    event: "GAIN", match: ev => isWound(ev.what), replace: ev => revealOrEv(ev, [ ev.source ], () => pushEvents(ev.what))
+    event: "GAIN", match: ev => isWound(ev.what), replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.what))
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
