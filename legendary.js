@@ -139,57 +139,52 @@ function makeWoundCard(cond, heal, name) {
 function makeHenchmenCard(name, defense, abilities) {
   return makeVillainCard(undefined, name, defense, 1, abilities);
 }
-function makeCardInstance(src) {
-  let c = Object.create(src);
-  c.id = (c.cardName || c.cardType) + '@' + gameState.nextId++;
-  c.ctype = "I";
-  return c;
-}
 function makeCardInPlay(c, where, bottom) {
-  if (c.ctype !== 'I') throw TypeError("need card instance");
+  if (c.ctype === "P") throw TypeError("need card template");
   let r = Object.create(c);
+  r.id = (r.cardName || r.cardType) + '@' + gameState.nextId++;
   r.instance = c;
   r.ctype = "P";
-  r.location = where;
   if (bottom) where._putBottom(r);
   else where._put(r);
   return r;
 }
 function makeCardCopy(c) {
   if (c.ctype !== 'P') throw TypeError("need card in play");
-  let i = c.copyOf || c.instance;
-  let r = makeCardInPlay(i, undefined);
-  r.copyOf = i;
-  delete r.instance;
+  let r = Object.create(Object.getPrototypeOf(c));
+  r.id = c.id + '@COPY@' + gameState.nextId++;
+  r.ctype = "P";
   // Artifact specials - choose which ability -- embed in artifact play effect
   return r;
 }
 function makeCardCopyPaste(c, p) {
   if (c.ctype !== 'P') throw TypeError("need card in play");
   if (p.ctype !== 'P') throw TypeError("need card in play");
-  let i = c.copyOf || c.instance;
-  let r = Object.create(i);
-  r.instance = p.instance;
-  r.ctype = "P";
-  r.location = p.location;
-  r.copyOf = i;
-  r.color = r.color | p.color;
+  let color = p.color | c.color;
+  Object.setPrototypeOf(p, Object.getPrototypeOf(c));
+  p.color = color;
   // TODO: copy other tmp state (MOoT?)
-  r.location.deck[r.location.deck.indexOf(p)] = r;
-  return r;
-  // Return to stack effects - trigger replace move to sidekick/new recruit stacks
+  // TODO: remove tmp state from result?
+  // TODO Return to stack effects - trigger replace move to sidekick/new recruit stacks (they should check if the instance is correct)
+  return p;
 }
 function moveCard(c, where, bottom) {
+  // Card copies do not have a location and cannot be moved
+  if (!c.instance) return;
   if (c.ctype !== 'P') throw TypeError("need card in play");
   if (!c.location) {
     TypeError("Moving card without location " + c);
     console.log(c);
   };
   c.location.remove(c);
-  //TODO retain some properties of cards when moved to played?
-  let r = makeCardInPlay(c.instance, where, bottom);
-  if (c.attached) r.attached = c.attached;
-  c.invalid = true;
+  // Remove copy pasting
+  if (Object.getPrototypeOf(c) !== c.instance) {
+    delete c.color;
+    Object.setPrototypeOf(c, c.instance);
+  }
+  // TODO remove other temp state? (depending on target?)
+  if (bottom) where._putBottom(c);
+  else where._put(c);
 }
 function moveAll(from, to, bottom) {
   while (from.size) moveCard(from.top, to, bottom);
@@ -203,9 +198,9 @@ let Deck = function(name, faceup) {
 };
 Deck.prototype = {
   get size() { return this.deck.length; },
-  addNewCard: function(c, n) { for (let i = 0; i < (n || 1); i++) makeCardInPlay(makeCardInstance(c), this); },
-  _put: function(c) { this.deck.push(c); },
-  _putBottom: function(c) { this.deck.unshift(c); },
+  addNewCard: function(c, n) { for (let i = 0; i < (n || 1); i++) makeCardInPlay(c, this); },
+  _put: function(c) { this.deck.push(c); c.location = this; },
+  _putBottom: function(c) { this.deck.unshift(c); c.location = this; },
   shuffle: function() { shuffleArray(this.deck, gameState.gameRand); },
   get bottom() { return this.deck[0]; },
   get top() { return this.deck[this.deck.length - 1]; },
@@ -872,15 +867,14 @@ function playCardEffects(ev, card) {
 }
 function playCard(ev) {
   if (!canPlay(ev.what)) return;
-  if (ev.what.instance)
-    moveCardEv(ev, ev.what, gameState.playArea);
+  moveCardEv(ev, ev.what, gameState.playArea);
   if (ev.what.copyPasteCard) {
     selectCardEv(ev, turnState.cardsPlayed, target => {
       console.log("COPYPASTE", ev.what, target);
-      ev.what = makeCardCopyPaste(target, ev.what);
+      makeCardCopyPaste(target, ev.what);
       console.log("RESULT", ev.what);
       if (canPlay(ev.what)) playCardEffects(ev);
-    }); // TODO if there are no cards played this prevents rogue copy powers play at all currently
+    });
   } else {
     playCardEffects(ev);
   }
@@ -1100,7 +1094,7 @@ function makeDisplayBackImg(c) {
   return `<IMG class="card" id="${c.id}" src="images/back.png">`;
 }
 function makeDisplayPlayAreaImg(c) {
-  const gone = gameState.playArea.has(i => c.id === i.id) ? "" : " gone";
+  const gone = gameState.playArea.deck.includes(c) ? "" : " gone";
   return `<IMG class="card${gone}" id="${c.id}" src="${cardImageName(c)}">`;
 }
 function displayDecks() {
@@ -1272,11 +1266,12 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 GUI:
 Use new object selects and implement UI handling for them
 Show attached cards and deck counts
-Show hidden events / effect source
+Show hidden events
 Select setup screen
 
 ENGINE:
-remove card in play layer?
+Use Event class for all events
+Use deck.(locationN|n)ame instead of deck.id
 required villain/hero groups
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards

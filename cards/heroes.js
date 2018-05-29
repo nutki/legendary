@@ -38,7 +38,7 @@ addTemplates("HEROES", "Legendary", [
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
-    event: "GAIN", match: ev => isWound(ev.what), replace: ev => revealOrEv(ev, c => c.id === ev.source.id, () => pushEvents(ev.what))
+    event: "GAIN", match: ev => isWound(ev.what), replace: ev => revealOrEv(ev, [ ev.source ], () => pushEvents(ev.what))
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
@@ -64,7 +64,7 @@ addTemplates("HEROES", "Legendary", [
     match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
     after: ev => {
       const who = ev.source.location.owner;
-      chooseMayEv(ev, "Return to hand", mev => who.discard.limit(c => c.id === ev.source.id).each(c => moveCardEv(mev, c, who.hand)), who);
+      chooseMayEv(ev, "Return to hand", () => moveCardEv(ev, ev.source, who.hand), who);
     }
   }}),
 // ATTACK: 6+
@@ -120,7 +120,7 @@ addTemplates("HEROES", "Legendary", [
 // Each player may reveal another X-Men Hero. Each player who does draws a card.
 // COST: 5
   uc: makeHeroCard("Emma Frost", "Psychic Link", 5, u, 3, Color.INSTINCT, "X-Men", "", ev => eachPlayer(p => {
-    revealAndEv(ev, c => isTeam("X-Men")(c) && c.id !== ev.source.id, () => drawEv(ev, 1, p), p);
+    revealAndEv(ev, c => isTeam("X-Men")(c) && c !== ev.getSource(), () => drawEv(ev, 1, p), p);
   })),
 // RECRUIT: 0+
 // ATTACK: 5
