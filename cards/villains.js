@@ -138,7 +138,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Radiation", "Maestro", 6, 4, {
-    fight: ev => selectCardsNEv(ev, yourHeroes().limit(Color.STRENGTH), playerState.hand, sel => KOEv(ev, sel)) // TODO selectCardsNEv
+    fight: ev => selectObjectsEv(ev, "KO your heroes", yourHeroes().count(Color.STRENGTH), playerState.hand, sel => KOEv(ev, sel))
   })],
 // FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
 // ESCAPE: Same effect.

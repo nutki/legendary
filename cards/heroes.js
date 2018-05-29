@@ -33,7 +33,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 0+
 // You get +1 Attack for each color of Hero you have.
 // COST: 4
-  c2: makeHeroCard("Captain America", "Perfect Teamwork", 4, u, 0, Color.STRENGTH, "Avengers", "", ev => addRecruitEvent(ev, numColorsYouHave())),
+  c2: makeHeroCard("Captain America", "Perfect Teamwork", 4, u, 0, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, numColorsYouHave())),
 // ATTACK: 4
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6

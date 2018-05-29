@@ -238,7 +238,7 @@ let Event = function (ev, type, params) {
   } else for (let i in params) {
     this[i] = params[i];
   }
-  if (!this.func || typeof this.func !== "function") throw TypeError("No function in event");
+  if (!this.ui && (!this.func || typeof this.func !== "function")) throw TypeError("No function in event");
 };
 Event.prototype = {
   getSource: function () {
@@ -437,11 +437,18 @@ for (let i = 0; i < 5; i++) {
 }
 
 let gameSetup = {
+/* S01M01
   scheme: "Portals to the Dark Dimension",
   mastermind: "Dr. Doom",
   henchmen: ["Hand Ninjas"],
   villains: ["Brotherhood"],
   heroes: [ "Black Widow", "Cyclops", "Gambit" ],
+*/
+  scheme: "Unleash the Power of the Cosmic Cube",
+  mastermind: "Red Skull",
+  henchmen: ["Savage Land Mutates"],
+  villains: ["Radiation"],
+  heroes: [ "Black Widow", "Captain America", "Thor" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -560,7 +567,7 @@ function hasBystander(c) { return c.attachedCount('BYSTANDER') > 0; }
 function eachOtherPlayer(f) { let r = gameState.players.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
 function eachOtherPlayerVM(f) { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
 function eachPlayer(f) { if (f) gameState.players.forEach(f); return gameState.players; }
-function eachPlayerEv(ev, f) { eachPlayer(p => pushEvents({type: "EFFECT", who:p, func:f, parent:ev})); }
+function eachPlayerEv(ev, f) { eachPlayer(p => event(ev, "EFFECT", { who:p, func:f })); }
 function revealable(who = playerState) {
   // TODO: also artifacts and maybe MOoT
   if (who !== playerState) return who.hand.deck;
@@ -631,8 +638,7 @@ function joinQueue() {
 }
 function popEvent() {
   joinQueue();
-  return eventQueue.shift() || {
-    type:"TURN",
+  return eventQueue.shift() || new Event(gameState, "TURN", {
     recruit: 0,
     attack: 0,
     totalRecruit: 0,
@@ -640,9 +646,8 @@ function popEvent() {
     cardsDrawn: 0,
     modifiers: {},
     triggers: [],
-    parent:gameState,
     func: playTurn
-  };
+  });
 }
 function uiEvent() {
   joinQueue();
@@ -671,7 +676,7 @@ function canPlay(c) {
   throw TypeError(`unknown play cost: ${type}`);
 }
 function healCard(ev) {
-  pushEvents({ type: "EFFECT", source: ev.what, parent: ev, func: ev.what.heal });
+  event(ev, "EFFECT", { source: ev.what, func: ev.what.heal });
 }
 function getActions(ev) {
   let p = playerState.hand.limit(c => isPlayable(c) && canPlay(c)).map(e => (new Event(ev, "PLAY", { func: playCard, what: e })));
@@ -686,7 +691,7 @@ function getActions(ev) {
   if (gameState.officer.size && canRecruit(gameState.officer.top))
     p.push((new Event(ev, "RECRUIT", { func: buyCard, what: gameState.officer.top })));
   }
-  p = p.concat({type: "ENDOFTURN", parent:ev, confirm: p.length > 0, func: ev => ev.parent.endofturn = true});
+  p = p.concat(new Event(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
 }
 
@@ -721,7 +726,7 @@ function evilWinsEv(ev) { gameOverEv(ev, 'LOSS'); }
 function gameOverEv(ev, result) {
   let desc = result === "LOSS" ? "Evil Wins" : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
   textLog.log("Game Over: " + desc);
-  pushEvents({ parent: ev, type: "GAMEOVER", ui: true, result: result, desc: desc });
+  event(ev, "GAMEOVER", { ui: true, result: result, desc: desc });
 }
 function runOutEv(ev, deck) { event(ev, "RUNOUT", { what: deck, func: () => {} }); }
 function captureEv(ev, villain, what) {
@@ -749,7 +754,7 @@ function selectObjectsMinMaxEv(ev, desc, min, max, objects, effect1, effect0, si
     if (objects.length < min) min = objects.length;
     effect0 = effect0 || (() => {});
     effect1 = effect1 || (() => {});
-    pushEvents({ type: "SELECTOBJECTS", parent:ev, desc: desc, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
+    event(ev, "SELECTOBJECTS", { desc: desc, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
   }
 }
 function selectObjectsEv(ev, desc, num, objects, effect1, who) {
@@ -772,7 +777,7 @@ function selectCardOrEv(ev, cards, effect1, effect0, who) {
     if (effect0) effect0();
     return;
   }
-  pushEvents({ type: "SELECTCARD1", parent:ev, options: cards, ui: true, agent: who, result1: effect1 });
+  event(ev, "SELECTCARD1", { options: cards, ui: true, agent: who, result1: effect1 });
 }
 function selectCardEv(ev, cards, effect, who) { selectCardOrEv(ev, cards, effect, undefined, who); }
 function selectCardAndKOEv(ev, cards, who) { selectCardEv(ev, cards, sel => KOEv(ev, sel), who); }
@@ -783,7 +788,7 @@ function selectCardOptEv(ev, cards, effect1, effect0, who) {
     if (effect0) effect0();
     return;
   }
-  pushEvents({ type: "SELECTCARD01", parent:ev, options: cards, ui: true, agent: who, result1: effect1, result0: effect0 || (() => {}) });
+  event(ev, "SELECTCARD01", { options: cards, ui: true, agent: who, result1: effect1, result0: effect0 || (() => {}) });
 }
 function revealOrEv(ev, cond, effect, who) {
   who = who || playerState;
@@ -797,16 +802,16 @@ function revealAndEv(ev, cond, effect, who) {
 }
 function chooseOneEv(ev, desc) {
   let a = arguments;
-  let newev = { type: "SELECTEVENT", parent:ev, desc: desc, options: [], ui: true, agent: playerState };
+  let options = [];
   for (let i = 2; i < a.length; i += 2)
-    newev.options.push({ type: "EFFECT", parent:ev, func: a[i+1], name: a[i] });
-  pushEvents(newev);
+    options.push(new Event(ev, "EFFECT", { func: a[i+1], name: a[i] }));
+  pushEvents(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
 }
 function chooseMayEv(ev, desc, effect, agent) {
   agent = agent || playerState;
-  pushEvents({ type: "SELECTEVENT", parent:ev, desc, options: [
-      { type: "EFFECT", parent:ev, func: effect, name: "Yes" },
-      { type: "EFFECT", parent:ev, func: () => {}, name: "No" },
+  event(ev, "SELECTEVENT", { desc, options: [
+      new Event(ev, "EFFECT", { func: effect, name: "Yes" }),
+      new Event(ev, "EFFECT", { func: () => {}, name: "No" }),
   ], ui: true, agent });
 }
 function selectPlayerEv(ev, f, who) {
@@ -860,7 +865,7 @@ function playCardEffects(ev, card) {
     if (card.attack) addAttackEvent(ev, card.attack);
     if (card.recruit) addRecruitEvent(ev, card.recruit);
     for (let i = 0; card.effects && i < card.effects.length; i++) {
-      pushEvents( { type: "EFFECT", source: card, parent: ev, func: card.effects[i] } );
+      event(ev, "EFFECT",  { source: card, func: card.effects[i] } );
     }
     cont(ev, () => turnState.cardsPlayed.push(card));
   }});
@@ -921,7 +926,7 @@ function reshufflePlayerDeck() {
 }
 function playTwistEv(ev, what) { event(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev) {
-  pushEvents({ type: "EFFECT", source: gameState.scheme.top, parent: ev, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what });
+  event(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what });
   if (gameState.players.length === 1) 
     selectCardEv(ev, HQCards().limit(c => c.cost <= 6), function (sel) {
       if (gameState.advancedSolo)
@@ -936,13 +941,12 @@ function villainDraw(ev) {
   if (!c) {
   } else if (c.isVillain()) {
     moveCardEv(ev, c, gameState.cityEntry);
-    if (c.ambush) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.ambush });
+    if (c.ambush) event(ev, "EFFECT", { source: c, func: c.ambush });
   } else if (c.cardType === "MASTER STRIKE") {
     textLog.log("Master Strike!");
     moveCardEv(ev, c, gameState.ko);
-    pushEvents(gameState.mastermind.deck.map(function (m) { return {
-      type: "EFFECT", source: m, parent: ev, func: m.strike
-    }; }));
+    // TODO mastermind order
+    gameState.mastermind.each(m => event(ev, "EFFECT", { source: m, func: m.strike }));
     if (gameState.advancedSolo) villainDrawEv(ev);
   } else if (c.cardType === "SCHEME TWIST") {
     textLog.log("Scheme Twist!");
@@ -974,7 +978,7 @@ function villainEscape(ev) {
   }
   moveCardEv(ev, c, gameState.escaped);
   selectCardEv(ev, HQCards().limit(c => c.cost <= 6), s => KOEv(ev, s));
-  if (c.escape) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.escape });
+  if (c.escape) event(ev, "EFFECT", { source: c, func: c.escape });
 }
 function villainFight(ev) {
   // TODO Deal with extra costs
@@ -999,7 +1003,7 @@ function villainDefeat(ev) {
   // TODO choose move order
   if (b) b.each(function (bc) { rescueEv(ev, bc); });
   moveCardEv(ev, c, playerState.victory);
-  if (c.fight) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.fight });
+  if (c.fight) event(ev, "EFFECT", { source: c, func: c.fight });
 }
 function rescueEv(ev, what) {
   if (what && typeof what !== "number") event(ev, "RESCUE", { func: rescueBystander, what: what });
@@ -1010,7 +1014,7 @@ function rescueEv(ev, what) {
 function rescueBystander(ev) {
   let c = ev.what;
   moveCardEv(ev, c, playerState.victory);
-  if (c.rescue) pushEvents({ type: "EFFECT", source: c, parent: ev, func: c.rescue });
+  if (c.rescue) event(ev, "EFFECT", { source: c, func: c.rescue });
 }
 function addTurnTrigger(type, match, f) {
   const trigger = typeof f === "function" ? { after: f } : f;
@@ -1040,16 +1044,16 @@ function addTriggers(ev) {
   let newev = [];
   triggers.forEach(function(t) {
     if (t.trigger.before)
-      newev.push({type:"EFFECT", func:t.trigger.before, parent:ev, source:t.source });
+      newev.push(new Event(ev, "EFFECT", { func:t.trigger.before, source:t.source }));
   });
   newev.push(ev);
   triggers.forEach(function(t) {
     if (t.trigger.after)
-      newev.push({type:"EFFECT", func:t.trigger.after, parent:ev, source:t.source });
+      newev.push(new Event(ev, "EFFECT", { func:t.trigger.after, source:t.source }));
   });
   triggers.forEach(function(t) {
     if (t.trigger.replace)
-      newev = [{type:"EFFECT", func:t.trigger.replace, what:newev, parent:ev, source:t.source }];
+      newev = [ new Event(ev, "EFFECT", { func:t.trigger.replace, what:newev, source:t.source })];
   });
   return newev;
 }
@@ -1059,7 +1063,8 @@ function playTurn(ev) {
   villainDrawEv(ev);
   event(ev, "ACTIONS", ev => {
     if (!ev.endofturn) {
-      pushEvents({type:"SELECTEVENT",desc:"Play card or action",parent:ev,options:getActions(ev),ui:true},ev);
+      event(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), ui: true });
+      pushEvents(ev);
     }
   });
   event(ev, "CLEANUP", cleanUp);  
@@ -1128,7 +1133,7 @@ function displayDecks() {
   }
 }
 function eventSource(ev) {
-  const s = Event.prototype.getSource.call(ev);
+  const s = ev.getSource();
   return s instanceof Card ? makeDisplayCardImg(s) : "";
 }
 
@@ -1270,7 +1275,6 @@ Show hidden events
 Select setup screen
 
 ENGINE:
-Use Event class for all events
 Use deck.(locationN|n)ame instead of deck.id
 required villain/hero groups
 
