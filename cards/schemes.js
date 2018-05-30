@@ -1,5 +1,5 @@
 "use strict";
-/* global Color, gameState, isVillain, isBystander, HQCards, isHero, twistTemplate, villainIn */
+/* global Color, gameState, isVillain, isBystander, HQCards, isHero, twistTemplate, villainIn, evilWinsEv, isEnemy, CityCards, rescueBystander, turnState, eachPlayer, Card, playerState, villainOrMastermind, villainDrawEv */
 addTemplates("SCHEMES", "Legendary", [
 // SETUP: 8 Twists. Wound stack holds 6 Wounds per player.
 // EVILWINS: If the Wound stack runs out.
@@ -73,7 +73,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   addStatSet('isVillain', isHero, () => true);
   addStatSet('villainGroup', isHero, () => "Skrulls");
   addStatSet('fight', isHero, () => ev => gainEv(ev, ev.source));
-  for (let i = 0; i < 12; i++) moveCard(gameState.herodeck.top, gameState.villaindeck);
+  repeat(12, () => moveCard(gameState.herodeck.top, gameState.villaindeck));
   // TODO require Skrulls
   gameState.villaindeck.shuffle();
 }),
@@ -98,5 +98,149 @@ makeSchemeCard("Unleash the Power of the Cosmic Cube", { twists: 8 }, ev => {
   } else if (ev.nr === 8) { // Twist 8 Evil Wins!
     evilWinsEv(ev);
   }
+}),
+]);
+
+addTemplates("SCHEMES", "Dark City", [
+// SETUP: 8 Twists. Put a token on this Scheme to represent the baby, Hope Summers.
+// RULE: The Villain with the baby gets +4 Attack. If you defeat that Villain, rescue the baby to your Victory Pile (until the next Twist).
+// The baby is worth 6 VP at the end of the game. If a Villain escapes with the baby, stack a Twist next to the Mastermind and return the baby to this Scheme card.
+// EVILWINS: When there are 3 Twists stacked next to the Mastermind.
+makeSchemeCard("Capture Baby Hope", { twists: 8 }, ev => {
+  // Twist: If a Villain has the baby, that Villain escapes. Otherwise, the baby is captured by the closest Villain to the Villain Deck. (If there are no Villains, do nothing.)
+  const hope = gameState.scheme.hope;
+  const a = hope.location.attachedTo;
+  if (a instanceof Card && isVillain(a)) {
+    villainEscapeEv(ev, a);
+    attachCardEv(ev, ev.twist, gameState.mastermind, "TWIST");
+    attachCardEv(ev, hope, gameState.scheme, "BABYHOPE");
+    cont(ev, () => { if (gameState.mastermind.attachedCount("TWIST") >= 3) evilWinsEv(); });
+  } else CityCards().limit(isVillain).withLast(v => captureEv(ev, v, hope));
+}, [], () => {
+  const hopeTemplate = new Card("BABYHOPE");
+  hopeTemplate.varVP = () => 6;
+  gameState.scheme.hope = gameState.scheme.attachedCards("BABYHOPE").addNewCard(hopeTemplate); // TODO attachedDeck
+}),
+// SETUP: 8 Twists. 6 Heroes in the Hero Deck.
+// RULE: Whenever a Hero is KO'd from the HQ, turn that Hero face down on that HQ space, representing an Explosion on the Helicarrier.
+// When an HQ space has 6 Explosions, that space is Destroyed and can't hold Heroes anymore.
+// EVILWINS: When all HQ spaces are Destroyed or the Hero Deck runs out.
+makeSchemeCard("Detonate the Helicarrier", { twists: 8, heroes: 6 }, ev => {
+  // Twist: Stack this Twist next to the Scheme. Then for each Twist in that stack, KO the leftmost Hero in the HQ and immediately refill that space.
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
+  repeat(ev.nr, () => cont(ev, () => HQCards().limit(isHero).withFist(c => KOEv(ev, c))));
+}, [{
+  event: "KO",
+  match: ev => ev.what.location.isHQ,
+  before: ev => {
+    ev.hq = ev.parent.what.location;
+    ev.hq.explosion = (ev.hq.explosion || 0) + 1;
+    if (ev.hq.explosion === 6) ev.hq.isHQ = false;
+    if (!gameState.hq.has(l => l.isHQ)) evilWinsEv(ev);
+  },
+  after: ev => attachCardEv(ev, ev.parent.what, ev.state.hq, "EXPLOSION"),
+}, {
+  event: "RUNOUT",
+  match: ev => ev.what === "HERO",
+  after: evilWinsEv,
+}]),
+// SETUP: 8 Twists.
+// EVILWINS: When the number of non grey Heroes in the KO pile is 3 times the number of players.
+makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
+  // Twist: Each player reveals a [Strength] Hero or KOs the top card of their deck.
+  eachPlayer(p => revealOrEv(ev, Color.STRENGTH, ev => lookAtDeckEv(ev, 1, () => p.revealed.withLast(c => KOEv(ev, c)), p), p));
+}, [{
+  event: "KO",
+  after: ev => { if (gameState.ko.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 3 * gameState.players.size) evilWinsEv(ev); },
+}]),
+// SETUP: 8 Twists. Include 10 Maggia Goons as one of the Henchman Groups.
+// RULE: Goons also have the ability "Ambush: Play another card from the Villain Deck."
+// EVILWINS: When 5 Goons escape.
+makeSchemeCard("Organized Crime Wave", { twists: 8 }, ev => {
+  // Twist: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
+  CityCards().limit(gameState.isGoon).each(c => villainEscapeEv(ev, c));
+  eachPlayer(p => p.victory.limit(gameState.isGoon)).each(c => moveCardEv(ev, c, gameState.villaindeck));
+  cont(ev, () => gameState.villaindeck.shuffle());
+}, {
+  event: "ESCAPE",
+  after: ev => { if (gameState.escaped.count(gameState.isGoon) >= 5) evilWinsEv(ev); },
+}, () => {
+  gameState.isGoon = c => c.cardName === "Maggia Goons";
+  addStatSet('ambush', gameState.isGoon, () => villainDrawEv);
+  // TODO setup constraint = 10 goons
+}),
+// SETUP: 8 Twists. 24 Bystanders in the Hero Deck. (1 player: 12 Bystanders in the Hero Deck)
+// RULE: You may spend 2 Recruit to rescue a Bystander from the HQ.
+// EVILWINS: When the number of Bystanders KO'd and/or carried off is 4 times the number of players.
+makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
+  // Twist: KO all Bystanders in the HQ. Then each player reveals an [Instinct] Hero or KOs a Bystander from their Victory Pile.
+  HQCards().limit(isBystander).each(c => KOEv(ev, c));
+  eachPlayer(p => revealOrEv(ev, Color.INSTINCT, ev => selectCardEv(ev, p.victory.limit(isBystander), c => KOEv(ev, c), p), p));
+}, [{
+  event: "MOVECARD",
+  after: ev => { if (gameState.ko.count(isBystander) + gameState.escaped.count(isBystander) >= 4 * gameState.players.size) evilWinsEv(ev); }
+}], () => {
+  repeat(gameState.players.size === 1 ? 12 : 24, () => moveCard(gameState.bystanders.top, gameState.herodeck));
+  gameState.specialActions = (ev) => {
+    if (turnState.recruit < 2) return [];
+    return HQCards.limit(isBystander).each(c => new Event(ev, "EFFECT", ev => { turnState.recruit -= 2; rescueEv(ev, c); }));
+  };
+}),
+// SETUP: 8 Twists representing Plutonium. Add an extra Villain Group.
+// RULE: Each Villain gets +1 Attack for each Plutonium it has. When a Villain with any Plutonium is defeated, shuffle that Plutonium back into the Villain Deck.
+// EVILWINS: When 4 Plutonium have been carried off by Villains.
+makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: This Plutonium is captured by the closest Villain to the Villain Deck. If there are no Villains in the city, KO this Plutonium. Either way, play another card from the Villain Deck.
+  CityCards().limit(isVillain).withLast(v => captureEv(ev, v, ev.twist));
+  villainDrawEv(ev);
+}, [{
+  event: "ESCAPE",
+  after: ev => { if (gameState.escaped.count(c => c.cardType === "SCHEME TWIST") >= 4) evilWinsEv(ev); },
+}, {
+  event: "DEFEAT",
+  after: ev => {
+    let twist = playerState.victory.limit(c => c.cardType === "SCHEME TWIST");
+    if (twist.size) {
+      twist.each(t => moveCardEv(ev, t, gameState.villaindeck));
+      cont(ev, () => gameState.villaindeck.shuffle());
+    }
+  }
+}], () => {
+  addStatMod('defense', isVillain, c => c.attachedCards('BYSTANDER').count(c => c.cardType === "SCHEME TWIST"));
+}),
+// SETUP: 8 Twists. Villain Deck includes 14 extra Jean Grey cards and no Bystanders.
+// RULE: Each Jean Grey card counts as a "Goblin Queen" Villain. It's worth 4 VP. It has Attack equal to its Cost plus the number of Demon Goblins stacked next to the Scheme.
+// EVILWINS: When 4 Goblin Queen cards escape.
+makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ] }, ev => {
+  // Twist: Stack 5 Bystanders face down next to the Scheme. Bystanders stacked here are "Demon Goblin" Villains. They have 2 Attack. Players can fight these Demon Goblins to rescue them as Bystanders.
+  repeat(5, () => cont(ev, () => gameState.bystanders.withTop(b => attachCardEv(ev, b, gameState.scheme, "GOBLIN"))));
+}, [], () => {
+  gameState.isGoblinQueen = c => c.heroName === "Jean Grey";
+  gameState.scheme.attachedCount("GOBLIN").fightable = true; // TODO
+  gameState.herodeck.limit(gameState.isGoblinQueen).each(c => moveCard(c, gameState.villaindeck));
+  gameState.villaindeck.shuffle();
+  addStatSet('defense', gameState.isGoblinQueen, c => c.cost + gameState.scheme.attachedCount("GOBLIN"));
+  addStatSet('vp', gameState.isGoblinQueen, () => 4);
+  addStatSet('defense', isBystander, () => 2);
+  addStatSet('fight', isBystander, () => ev => rescueEv(ev, ev.source));
+  addStatSet('isVillain', gameState.isGoblinQueen, () => true);
+}),
+// SETUP: 8 Twists. Villain Deck includes 14 cards for an extra Hero and no Bystanders.
+// RULE: Whenever you play a Hero from the Villain Deck, that Hero is captured by the closest enemy to the Villain Deck.
+// Each Villain gets +2 Attack for each Hero it has. When you fight an enemy, gain all the Heroes captured by that enemy.
+// EVILWINS: 9 non grey Heroes are KO'd or carried off.
+makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ]  }, ev => {
+  // Twist: KO all Heroes captured by enemies. Then play another card from the Villain Deck.
+  villainOrMastermind().each(e => e.attachedCards("BYSTANDER").limit(isHero).each(h => KOEv(ev, h)));
+  villainDrawEv();
+}, [{
+  event: "ESCAPE",
+  after: ev => { if (gameState.escaped.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 9) evilWinsEv(ev); },
+}], () => {
+  addStatMod('defense', isVillain, c => 2 * c.attachedCards('BYSTANDER').count(isHero));
+  addStatSet('capturable', isHero, () => true);
+  addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source));
+  gameState.herodeck.limit(c => c.heroName === extraHero).each(c => moveCard(c, gameState.villaindeck)); // TODO extra hero
+  gameState.villaindeck.shuffle();
 }),
 ]);

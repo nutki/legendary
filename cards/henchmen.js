@@ -26,3 +26,18 @@ makeHenchmenCard("Sentinel", 3, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes())
 }),
 ]);
+
+addTemplates("HENCHMEN", "Dark City", [
+// {BRIBE}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4*
+makeHenchmenCard("Maggia Goons", 4, {
+  bribe: true,
+  fight: ev => selectCardAndKOEv(ev, yourHeroes())
+}),
+// FIGHT: Reveal a [Tech] Hero or KO one of your Heroes with an Attack icon.
+// ATTACK: 3
+makeHenchmenCard("Phalanx", 3, {
+  fight: ev => revealOrEv(ev, Color.TECH, () => selectCardAndKOEv(ev, yourHeroes().limit(c => c.printedAttack !== undefined))),
+}),
+]);

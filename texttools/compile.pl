@@ -75,7 +75,7 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       parse();
       my $attack = $_{ATTACK} =~ s/[^0-9]//gr;
       filterprint(qw(CARDNAME VP));
-      print "makeHenchenCard(\"$_{CARDNAME}\", $attack, {\n";
+      print "makeHenchmenCard(\"$_{CARDNAME}\", $attack, {\n";
       print "  fight: ev => { },\n" if $_{FIGHT};
       print "  ambush: ev => { },\n" if $_{AMBUSH};
       print "}),\n";
@@ -85,9 +85,9 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       parse();
       filterprint(qw(CARDNAME VP COPIES));
       $copies = $_{COPIES} * 1 || 1;
-      print "{ copies: $copies, card: makeBystanderCard(\"$_{CARDNAME}\"";
+      print "{ card: [ $copies, makeBystanderCard(\"$_{CARDNAME}\"";
       print ", ev => {}" if $_{RESCUE};
-      print ") },\n";
+      print ") ] },\n";
       $_{VP} == 1 || !defined($_{VP}) or die "VP is not 1: $_{VP}";
       checkimage($_{RESCUE} ? "bystanders" : "", $_{CARDNAME});
     } elsif ($type eq "HEROES") {

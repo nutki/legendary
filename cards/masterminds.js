@@ -70,3 +70,101 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   } ],
 ]),
 ]);
+
+addTemplates("MASTERMINDS", "Dark City", [
+// Four Horsemen Villains get +2 Attack
+// Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped
+makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
+// Each player reveals their hand and puts all their Heroes that cost 1 or more on top of their deck.
+}, [
+  [ "Apocalyptic Destruction", ev => {
+  // Each other player KOs two Heroes from their discard pile that each cost 1 or more.
+  } ],
+  [ "The End of All Things", ev => {
+  // Each other player reveals the top three cards of their deck, KOs each one of those cards that cost 1 or more, and puts the rest back in any order.
+  } ],
+  [ "Horsemen Are Drawing Nearer", ev => {
+  // Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.
+  } ],
+  [ "Immortal and Undefeated", ev => {
+  // If this is not the final Tactic, rescue six Bystanders and shuffle this Tactic back into the other Tactics.
+  } ],
+]),
+// {BRIBE}
+makeMastermindCard("Kingpin", 13, 6, "Streets of New York", ev => {
+// Each player reveals a Marvel Knights Hero or discards their hand and draws 5 cards.
+  eachPlayer(p => revealOrEv(ev, "Marvel Knights", () => { discardHandEv(ev, p); drawEv(ev, 5, p); }, p));
+}, [
+  [ "Call a Hit", ev => {
+  // Choose a Hero from each player's discard pile and KO it.
+    eachPlayer(p => selectCardEv(ev, p.discard, c => KOEv(ev, c)));
+  } ],
+  [ "Criminal Empire", ev => {
+  // If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
+    if (!ev.final) lookAtVillainDeckEv(ev, 3, gameState.villaindeck.revealed.limit(isVillain).each(c => villainDrawEv(ev, c)), true); // TODO lookAtVillainDeckEv and final
+  } ],
+  [ "Dirty Cops", ev => {
+  // Put a 0 Cost Hero from the KO pile on top of each other player's deck.
+    eachOtherPlayerVM(p => selectCardEv(ev, gameState.ko.limit(isHero).limit(c => !c.cost), c => moveCardEv(ev, c, p.deck)));
+  } ],
+  [ "Mob War", ev => {
+  // Each other player plays a Henchman Villain from their Victory Pile as if playing it from the Villain Deck.
+    eachOtherPlayerVM(p => selectCardEv(ev, p.victory.limit(isHenchman), c => villainDrawEv(ev, c), p)); // TODO isHenchmen
+  } ],
+], { bribe: true }),
+// Whenever a player gains a Wound, put it on top of that player's deck.
+makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
+// Each player reveals a Marvel Knights Hero or gains a Wound.
+  eachPlayer(p => revealOrEv(ev, "Marvel Knights", () => gainWoundEv(ev, p), p));
+}, [
+  [ "Damned If You Do...", ev => {
+  // Each other player KOs a Bystander from their Victory Pile or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOptEv(ev, p.victory.limit("Marvel Knights"), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Devilish Torment", ev => {
+  // Each other player puts all 0 Cost cards from their discard pile on top of their deck in any order.
+    let f = p => selectCardEv(ev, p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); f(p); }, p);
+    eachOtherPlayerVM(f);
+  } ],
+  [ "Pain Begets Pain", ev => {
+  // Choose any number of Wounds from your hand and discard pile. The player to your right gains them.
+  } ],
+  [ "The Price of Failure", ev => {
+  // Each other player without a Mastermind Tactic in their Victory Pile gains a Wound.
+  } ],
+]),
+// Mr. Sinister gets +1 Attack for each Bystander he has.
+makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
+// Mr. Sinister captures a Bystander. Then each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Mr. Sinister has.
+}, [
+  [ "Human Experimentation", ev => {
+  // Mr. Sinister captures Bystanders equal to the number of Villains in the city.
+  } ],
+  [ "Master Geneticist", ev => {
+  // Reveal the top seven cards of the Villain Deck. Mr. Sinister captures all of the Bystanders you revealed. Put the rest back in random order.
+  } ],
+  [ "Plans Within Plans", ev => {
+  // Mr. Sinister captures a Bystander for each Mr. Sinister Tactic in players' Victory Piles, including this Tactic.
+  } ],
+  [ "Telepathic Manipulation", ev => {
+  // Mr. Sinister captures a Bystander from each other player's Victory Pile.
+  } ],
+]),
+// Stryfe gets +1 Attack for each Master Strike stacked next to him. Each player reveals an X-Force Hero or discards a card at random.
+makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
+// Stack this Master Strike next to Stryfe.
+}, [
+  [ "Furious Wrath", ev => {
+  // Reveal the top six cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest back in random order.
+  } ],
+  [ "Psychic Torment", ev => {
+  // Look at the top five cards of your deck. Put one into your hand and discard the rest.
+  } ],
+  [ "Swift Vengeance", ev => {
+  // A Wound from the Wound Stack becomes a Master Strike that takes effect immediately.
+  } ],
+  [ "Tide of Retribution", ev => {
+  // Each other player reveals an X-Force Hero or gains a Wound.
+  } ],
+]),
+]);

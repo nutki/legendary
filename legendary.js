@@ -198,7 +198,7 @@ let Deck = function(name, faceup) {
 };
 Deck.prototype = {
   get size() { return this.deck.length; },
-  addNewCard: function(c, n) { for (let i = 0; i < (n || 1); i++) makeCardInPlay(c, this); },
+  addNewCard: function(c, n) { let r = undefined; for (let i = 0; i < (n || 1); i++) r = makeCardInPlay(c, this); return r; },
   _put: function(c) { this.deck.push(c); c.location = this; },
   _putBottom: function(c) { this.deck.unshift(c); c.location = this; },
   shuffle: function() { shuffleArray(this.deck, gameState.gameRand); },
@@ -229,6 +229,7 @@ Object.defineProperty(Array.prototype, 'first', { get: function() { return this[
 Object.defineProperty(Array.prototype, 'last', { get: function() { return this[this.size-1]; }, set: function(v) { return this[this.size - 1] = v; } });
 Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
 Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
+function repeat(n, f) { for (let i = 0; i < n; i++) f(i); }
 
 let Event = function (ev, type, params) {
   this.parent = ev;
@@ -400,7 +401,7 @@ gameState = {
     { // Shift city on entry.
       event: "MOVECARD",
       match: function (ev) { return ev.to.isCity && ev.to.size; },
-      before: function (ev) { let to = ev.parent.to; if (to.next) moveCardEv(ev, to.top, to.next); else event(ev, "ESCAPE", { what: to.top, func: villainEscape }); },
+      before: function (ev) { let to = ev.parent.to; if (to.next) moveCardEv(ev, to.top, to.next); else villainEscapeEv(ev, to.top); },
     },
     { // Win by defeating masterminds
       event: "DEFEAT",
@@ -616,6 +617,7 @@ function attachedCards(name, where) {
   if (!where.attached) where.attached = {};
   if (!where.attached[name])
     where.attached[name] = new Deck(where.id + '/' + name);
+  where.attached[name].attachedTo = where;
   return where.attached[name];
 }
 function attachedCount(name, where) {
@@ -691,6 +693,7 @@ function getActions(ev) {
   if (gameState.officer.size && canRecruit(gameState.officer.top))
     p.push((new Event(ev, "RECRUIT", { func: buyCard, what: gameState.officer.top })));
   }
+  if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   p = p.concat(new Event(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
 }
@@ -718,7 +721,7 @@ function discardEv(ev, card) { event(ev, "DISCARD", { what: card, func: ev => mo
 function discardHandEv(ev, who) { (who || playerState).hand.forEach(c => discardEv(ev, c)); }
 function drawIfEv(ev, cond, who) {
     let draw = false;
-    lookAtDeckEv(ev, 1, () => draw = cond(playerState.revealed.top), who);
+    lookAtDeckEv(ev, 1, () => draw = who.deck.revealed.has(cond), who);
     cont(ev, () => { if (draw) drawEv(ev, 1, who); });
 }
 function KOEv(ev, card) { event(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
@@ -966,6 +969,7 @@ function villainDraw(ev) {
     console.log("dont know what to do with", c);
   }
 }
+function villainEscapeEv(ev, what) { event(ev, "ESCAPE", { what, func: villainEscape }); }
 function villainEscape(ev) {
   let c = ev.what;
   let b = undefined;
@@ -1044,12 +1048,12 @@ function addTriggers(ev) {
   let newev = [];
   triggers.forEach(function(t) {
     if (t.trigger.before)
-      newev.push(new Event(ev, "EFFECT", { func:t.trigger.before, source:t.source }));
+      newev.push(t.state = new Event(ev, "EFFECT", { func:t.trigger.before, source:t.source }));
   });
   newev.push(ev);
   triggers.forEach(function(t) {
     if (t.trigger.after)
-      newev.push(new Event(ev, "EFFECT", { func:t.trigger.after, source:t.source }));
+      newev.push(new Event(ev, "EFFECT", { func: t.trigger.after, source: t.source, state: t.state }));
   });
   triggers.forEach(function(t) {
     if (t.trigger.replace)
@@ -1269,7 +1273,7 @@ function startApp() {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Use new object selects and implement UI handling for them
+Use new object selects, add description of existing card selections
 Show attached cards and deck counts
 Show hidden events
 Select setup screen
