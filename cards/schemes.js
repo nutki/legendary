@@ -17,7 +17,7 @@ makeSchemeCard("The Legacy Virus", { twists: 8, wounds: [ 6, 12, 18, 24, 30 ] },
 makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
   // Twist: Any Villain in the Bank captures 2 Bystanders. Then play the top card of the Villain Deck.
   villainIn('BANK').each(v => { captureEv(ev, v); captureEv(ev, v); });
-  drawVillainEv(ev);
+  ev.another = true;
 }, {
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isBystander) >= 8) evilWinsEv(ev); },

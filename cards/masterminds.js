@@ -29,15 +29,15 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
   // Defeat a Villain in the City for free.
   [ "Cruel Ruler", ev => selectCardEv(ev, CityCards().limit(isVillain), sel => defeatEv(ev, sel)) ],
   // KO up to four cards from your discard pile.
-  [ "Maniacal Tyrant", ev => selectCardsOptEv(ev, 4, playerState.discard, sel => KOEv(ev, sel)) ], // TODO selectCardsOpt
+  [ "Maniacal Tyrant", ev => selectObjectsMinMaxEv(ev, "KO up to 4 cards", 0, 4, playerState.discard, sel => KOEv(ev, sel)) ],
   // Each other player KOs a Villain from their Victory Pile.
   [ "Vanishing Illusions", ev => eachOtherPlayerVM(p => selectCardEv(ev, p.victory.limit(isVillain), sel => KOEv(ev, sel), p)) ],
   // Each other player KOs two Bystanders from their Victory Pile.
-  [ "Whispers and Lies", ev => eachOtherPlayerVM(p => selectCardsNEv(ev, 2, p.victory.limit(isBystander), sel => KOEv(ev, sel), p)) ],
+  [ "Whispers and Lies", ev => eachOtherPlayerVM(p => selectObjectsEv(ev, "KO 2 Bystanders", 2, p.victory.limit(isBystander), sel => KOEv(ev, sel), p)) ],
 ]),
 makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
 // Each player reveals an X-Men Hero or discards down to four cards.
-  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectCardsNEv(ev, p.hand.size - 4, p.hand, sel => discardEv(ev, sel), p), p));
+  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectCardsNEv(ev, p.hand.size - 4, p.hand, sel => discardEv(ev, sel), p), p)); // TODO
 }, [
   // Recruit an X-Men Hero from the HQ for free.
   [ "Bitter Captor", ev => selectCardEv(ev, HQCards().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],
@@ -47,7 +47,7 @@ makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
   } ],
   // Choose one of your X-Men Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
   [ "Electromagnetic Bubble", ev => {
-    selectCardEv(ev, yourHeroes().limit('X-Men'), sel => addTurnTrigger("CLEANUP", u, ev => moveCardEv(ev, sel, playerState.hand))); // TODO move instance instead
+    selectCardEv(ev, yourHeroes().limit('X-Men'), sel => addTurnTrigger("CLEANUP", u, ev => moveCardEv(ev, sel, playerState.hand)));
   } ],
   // For each of your X-Men Heroes, rescue a Bystander.
   [ "Xavier's Nemesis", ev => {

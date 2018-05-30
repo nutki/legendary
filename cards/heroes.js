@@ -171,9 +171,9 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 3
 // {POWER Tech} Choose one: each other player draws a card or each other player discards a card.
 // COST: 5
-  uc: makeHeroCard("Hawkeye", "Covering Fire", 5, u, 3, Color.TECH, "Avengers", "", ev => { if (superPower(Color.TECH)) selectOneEv(ev,
-    "Each other player draws a card", () => eachOtherPlayer(p => drawEv(ev, 1, p)),
-    "Each other player discards a card", () => eachOtherPlayer(p => pickDiscardEv(ev, p))
+  uc: makeHeroCard("Hawkeye", "Covering Fire", 5, u, 3, Color.TECH, "Avengers", "", ev => { if (superPower(Color.TECH)) chooseOneEv(ev, "Each other player",
+    "draws a card", () => eachOtherPlayer(p => drawEv(ev, 1, p)),
+    "discards a card", () => eachOtherPlayer(p => pickDiscardEv(ev, p))
   );}),
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.

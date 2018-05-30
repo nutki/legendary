@@ -444,12 +444,19 @@ let gameSetup = {
   henchmen: ["Hand Ninjas"],
   villains: ["Brotherhood"],
   heroes: [ "Black Widow", "Cyclops", "Gambit" ],
-*/
+
+   S01M02
   scheme: "Unleash the Power of the Cosmic Cube",
   mastermind: "Red Skull",
   henchmen: ["Savage Land Mutates"],
   villains: ["Radiation"],
   heroes: [ "Black Widow", "Captain America", "Thor" ],
+*/
+  scheme: "Midtown Bank Robbery",
+  mastermind: "Loki",
+  henchmen: ["Hand Ninjas"],
+  villains: ["Brotherhood"],
+  heroes: [ "Hawkeye", "Rogue", "Wolverine" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -808,7 +815,8 @@ function chooseOneEv(ev, desc) {
   let options = [];
   for (let i = 2; i < a.length; i += 2)
     options.push(new Event(ev, "EFFECT", { func: a[i+1], name: a[i] }));
-  pushEvents(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
+  console.log(options);
+  event(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
 }
 function chooseMayEv(ev, desc, effect, agent) {
   agent = agent || playerState;
@@ -929,14 +937,16 @@ function reshufflePlayerDeck() {
 }
 function playTwistEv(ev, what) { event(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev) {
-  event(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what });
-  if (gameState.players.length === 1) 
-    selectCardEv(ev, HQCards().limit(c => c.cost <= 6), function (sel) {
+  let e = event(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what });
+  cont(ev, () => {
+    if (gameState.players.length === 1) selectCardEv(ev, HQCards().limit(c => c.cost <= 6), function (sel) {
       if (gameState.advancedSolo)
         moveCardEv(ev, sel, gameState.herodeck, true);
       else
         KOEv(ev, sel);
     });
+    if (e.another) villainDrawEv(e);
+  });
 }
 function villainDrawEv(ev) { event(ev, "VILLAINDRAW", villainDraw); }
 function villainDraw(ev) {
