@@ -88,7 +88,7 @@ addTemplates("HEROES", "Legendary", [
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
   uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseMayEv(
-    "Discard hand", () => { discardHandEv(ev); drawEv(ev, 4); }
+    ev, "Discard hand", () => { discardHandEv(ev); drawEv(ev, 4); }
   ); }),
 // ATTACK: 6
 // You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.

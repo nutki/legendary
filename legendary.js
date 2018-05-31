@@ -84,7 +84,7 @@ function makeHeroCard(hero, name, cost, recruit, attack, color, team, flags, eff
   c.printedAttack = attack;
   c.cardName = name;
   c.heroName = hero;
-  c.color = color || Color.GRAY;
+  c.color = color;
   c.team = team;
   c.playable = true;
   c.flags = flags;
@@ -273,9 +273,9 @@ function findMastermindTemplate(name) { return findTemplate('MASTERMINDS', 'card
 function findSchemeTemplate(name) { return findTemplate('SCHEMES', 'cardName')(name); }
 function findBystanderTemplate(name) { return findTemplate('BYSTANDERS', 'set')(name); }
 let u = undefined;
-let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u);
-let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1);
-let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u);
+let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.");
+let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.");
+let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u, Color.GRAY, "S.H.I.E.L.D.");
 addTemplates("BYSTANDERS", "Legendary", [{ card: [ 30, makeBystanderCard() ] }]);
 let twistTemplate = new Card("SCHEME TWIST");
 let strikeTemplate = new Card("MASTER STRIKE");
@@ -451,12 +451,19 @@ let gameSetup = {
   henchmen: ["Savage Land Mutates"],
   villains: ["Radiation"],
   heroes: [ "Black Widow", "Captain America", "Thor" ],
-*/
+
+   S01M03
   scheme: "Midtown Bank Robbery",
   mastermind: "Loki",
   henchmen: ["Hand Ninjas"],
   villains: ["Brotherhood"],
   heroes: [ "Hawkeye", "Rogue", "Wolverine" ],
+*/
+  scheme: "Unleash the Power of the Cosmic Cube",
+  mastermind: "Dr. Doom",
+  henchmen: ["Savage Land Mutates"],
+  villains: ["Enemies of Asgard"],
+  heroes: [ "Deadpool", "Iron Man", "Wolverine" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -725,7 +732,7 @@ function recruitForFreeEv(ev, card, who) {
   event(ev, "RECRUIT", { func: buyCard, what: card, forFree: true });
 }
 function discardEv(ev, card) { event(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, ev.what.location.owner.discard) }); }
-function discardHandEv(ev, who) { (who || playerState).hand.forEach(c => discardEv(ev, c)); }
+function discardHandEv(ev, who) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev, cond, who) {
     let draw = false;
     lookAtDeckEv(ev, 1, () => draw = who.deck.revealed.has(cond), who);
@@ -826,7 +833,9 @@ function chooseMayEv(ev, desc, effect, agent) {
   ], ui: true, agent });
 }
 function selectPlayerEv(ev, f, who) {
-  selectObjectEv(ev, "Choose a Player", gameState.players, f, who);
+  if (gameState.players.length === 1) {
+    f(playerState);
+  } else selectObjectEv(ev, "Choose a Player", gameState.players, f, who); // TODO multiplayer
 }
 function pickDiscardEv(ev, who, agent) {
   who = who || playerState;
