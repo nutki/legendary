@@ -83,7 +83,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
-  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAtackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
+  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
