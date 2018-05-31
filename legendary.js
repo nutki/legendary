@@ -715,6 +715,7 @@ function getActions(ev) {
 function addAttackEvent(ev, c) { event(ev, "ADDATTACK", { func: ev => turnState.attack += ev.amount, amount: c }); }
 function addRecruitEvent(ev, c) { event(ev, "ADDRECRUIT", { func: ev => { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; }, amount: c }); }
 function moveCardEv(ev, what, where, bottom) {
+  if (!what.instance) return;
   event(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });
 }
 // Swaps contents of 2 city spaces
@@ -1127,37 +1128,32 @@ function makeDisplayPlayAreaImg(c) {
 }
 function displayDecks() {
   let divs = document.getElementsByClassName("deck");
-  let divByName = {};
-  for (let i = 0; i < divs.length; i++) {
-    divByName[divs[i].id] = {
-      div: divs[i],
-      fanout: divs[i].getAttribute("data-fanout"),
-      mode: divs[i].getAttribute("data-mode"),
-    };
-  }
   let list = Deck.prototype.deckList;
-  for (let i = 0; i < list.length; i++) {
-    let deck = list[i];
-    let div = divByName[deck.id];
-    if (!div) continue;
-    if (div.mode === "IMG") {
+  let deckById = {};
+  for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
+  for (let i = 0; i < divs.length; i++) {
+    let div = divs[i];
+    let deck = deckById[div.id];
+    let fanout = div.getAttribute("data-fanout");
+    let mode = div.getAttribute("data-mode");
+    if (mode === "IMG") {
       if (deck.id === "PLAYAREA") {
-        div.div.innerHTML = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
+        div.innerHTML = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
       } else if (!deck.faceup) {
-        div.div.innerHTML = deck.deck.map(makeDisplayBackImg).join('');
-      } else if (div.fanout) {
-        div.div.innerHTML = deck.deck.map(makeDisplayCardImg).join('');
+        div.innerHTML = deck.deck.map(makeDisplayBackImg).join('');
+      } else if (fanout) {
+        div.innerHTML = deck.deck.map(makeDisplayCardImg).join('');
       } else {
-        div.div.innerHTML = deck.size ? makeDisplayCardImg(deck.top) : '';
+        div.innerHTML = deck.size ? makeDisplayCardImg(deck.top) : '';
       }
     } else {
-      div.div.innerHTML = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+      div.innerHTML = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
     }
   }
 }
 function eventSource(ev) {
   const s = ev.getSource();
-  return s instanceof Card ? makeDisplayCardImg(s) : "";
+  return s instanceof Card ? `<IMG class="card" src="${cardImageName(c)}">` : "";
 }
 
 function displayGame(ev) {
