@@ -458,12 +458,19 @@ let gameSetup = {
   henchmen: ["Hand Ninjas"],
   villains: ["Brotherhood"],
   heroes: [ "Hawkeye", "Rogue", "Wolverine" ],
-*/
+
+   S02M04
   scheme: "Unleash the Power of the Cosmic Cube",
   mastermind: "Dr. Doom",
   henchmen: ["Savage Land Mutates"],
   villains: ["Enemies of Asgard"],
   heroes: [ "Deadpool", "Iron Man", "Wolverine" ],
+*/
+  scheme: "Portals to the Dark Dimension",
+  mastermind: "Dr. Doom",
+  henchmen: ["Sentinel"],
+  villains: ["Masters of Evil"],
+  heroes: [ "Cyclops", "Gambit", "Hawkeye" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -736,7 +743,8 @@ function discardEv(ev, card) { event(ev, "DISCARD", { what: card, func: ev => mo
 function discardHandEv(ev, who) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev, cond, who) {
     let draw = false;
-    lookAtDeckEv(ev, 1, () => draw = who.deck.revealed.has(cond), who);
+    who = who || playerState;
+    lookAtDeckEv(ev, 1, () => draw = who.revealed.has(cond), who);
     cont(ev, () => { if (draw) drawEv(ev, 1, who); });
 }
 function KOEv(ev, card) { event(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
@@ -1153,7 +1161,7 @@ function displayDecks() {
 }
 function eventSource(ev) {
   const s = ev.getSource();
-  return s instanceof Card ? `<IMG class="card" src="${cardImageName(c)}">` : "";
+  return s instanceof Card ? `<IMG class="card" src="${cardImageName(s)}">` : "";
 }
 
 function displayGame(ev) {

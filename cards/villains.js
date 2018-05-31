@@ -112,7 +112,7 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 2+
   [ 2, makeVillainCard("Masters of Evil", "Ultron", 6, 2, {
     escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
-    varVP: c => 2 + owned(c.location.owner).limit(Color.TECH)
+    varVP: c => 2 + owned(c.location.owner).count(Color.TECH)
   })],
 // FIGHT: If you fight Whirlwind on the Rooftops or Bridge, KO two of your Heroes.
 // ATTACK: 4
