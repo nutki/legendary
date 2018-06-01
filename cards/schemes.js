@@ -22,7 +22,7 @@ makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isBystander) >= 8) evilWinsEv(ev); },
 }, () => {
-  addStatMod('defense', isVillain, c => c.attachedCount('BYSTANDER'));
+  addStatMod('defense', isVillain, c => c.captured.count(isBystander));
 }),
 // SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
 // EVILWINS: If 12 Villains escape.
@@ -40,7 +40,7 @@ makeSchemeCard("Portals to the Dark Dimension", { twists: 7 }, ev => {
     evilWinsEv(ev);
   }
 }, {}, () => {
-  addStatMod('defense', isEnemy, c => c.location.attachedCount('DARK_PORTAL'));
+  addStatMod('defense', isEnemy, c => c.location.attached('DARK_PORTAL').size);
 }),
 // SETUP: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
 // RULE: Bystanders in the Villain Deck count as Killbot Villains, with Attack equal to the number of Twists next to this Scheme.
@@ -52,9 +52,9 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bytstand
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isBystander) >= 5) evilWinsEv(ev); },
 }, function () {
-  gameState.scheme.cardsAttached('TWIST').addNewCard(twistTemplate, 3);
+  gameState.scheme.attachedDeck('TWIST').addNewCard(twistTemplate, 3);
   // TODO implement these mods
-  addStatSet('defense', isBystander, () => gameState.scheme.attachedCount('TWIST'));
+  addStatSet('defense', isBystander, () => gameState.scheme.attached('TWIST').size);
   addStatSet('isVillain', isBystander, () => true);
   addStatSet('villainGroup', isHero, () => "Killbots");
 }),
@@ -63,7 +63,7 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bytstand
 // EVILWINS: If 6 Heroes get into the Escaped Villains pile.
 makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroes: 6, required: { villains: "Skrulls" } }, ev => {
   // Twist: The highest-cost Hero from the HQ moves into the Sewers as a Skrull Villain, as above.
-  selectCardEv(ev, HQCardsHighestCost(), sel => moveCardEv(ev, sel, gameState.cityByName('SEWERS')));
+  selectCardEv(ev, "Choose a Hero to become a Skull", HQCardsHighestCost(), sel => moveCardEv(ev, sel, gameState.cityByName('SEWERS')));
 }, {
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isHero) >= 6) evilWinsEv(ev); },
@@ -114,12 +114,12 @@ makeSchemeCard("Capture Baby Hope", { twists: 8 }, ev => {
     villainEscapeEv(ev, a);
     attachCardEv(ev, ev.twist, gameState.mastermind, "TWIST");
     attachCardEv(ev, hope, gameState.scheme, "BABYHOPE");
-    cont(ev, () => { if (gameState.mastermind.attachedCount("TWIST") >= 3) evilWinsEv(); });
+    cont(ev, () => { if (gameState.mastermind.attached("TWIST").size >= 3) evilWinsEv(); });
   } else CityCards().limit(isVillain).withLast(v => captureEv(ev, v, hope));
 }, [], () => {
   const hopeTemplate = new Card("BABYHOPE");
   hopeTemplate.varVP = () => 6;
-  gameState.scheme.hope = gameState.scheme.attachedCards("BABYHOPE").addNewCard(hopeTemplate); // TODO attachedDeck
+  gameState.scheme.hope = gameState.scheme.attachedDeck("BABYHOPE").addNewCard(hopeTemplate);
 }),
 // SETUP: 8 Twists. 6 Heroes in the Hero Deck.
 // RULE: Whenever a Hero is KO'd from the HQ, turn that Hero face down on that HQ space, representing an Explosion on the Helicarrier.
@@ -175,7 +175,7 @@ makeSchemeCard("Organized Crime Wave", { twists: 8 }, ev => {
 makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
   // Twist: KO all Bystanders in the HQ. Then each player reveals an [Instinct] Hero or KOs a Bystander from their Victory Pile.
   HQCards().limit(isBystander).each(c => KOEv(ev, c));
-  eachPlayer(p => revealOrEv(ev, Color.INSTINCT, ev => selectCardEv(ev, p.victory.limit(isBystander), c => KOEv(ev, c), p), p));
+  eachPlayer(p => revealOrEv(ev, Color.INSTINCT, ev => selectCardAndKOEv(ev, p.victory.limit(isBystander), p), p));
 }, [{
   event: "MOVECARD",
   after: ev => { if (gameState.ko.count(isBystander) + gameState.escaped.count(isBystander) >= 4 * gameState.players.size) evilWinsEv(ev); }
@@ -206,7 +206,7 @@ makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3
     }
   }
 }], () => {
-  addStatMod('defense', isVillain, c => c.attachedCards('BYSTANDER').count(c => c.cardType === "SCHEME TWIST"));
+  addStatMod('defense', isVillain, c => c.captured.count(c => c.cardType === "SCHEME TWIST"));
 }),
 // SETUP: 8 Twists. Villain Deck includes 14 extra Jean Grey cards and no Bystanders.
 // RULE: Each Jean Grey card counts as a "Goblin Queen" Villain. It's worth 4 VP. It has Attack equal to its Cost plus the number of Demon Goblins stacked next to the Scheme.
@@ -216,10 +216,10 @@ makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, 
   repeat(5, () => cont(ev, () => gameState.bystanders.withTop(b => attachCardEv(ev, b, gameState.scheme, "GOBLIN"))));
 }, [], () => {
   gameState.isGoblinQueen = c => c.heroName === "Jean Grey";
-  gameState.scheme.attachedCount("GOBLIN").fightable = true; // TODO
+  gameState.scheme.attachedDeck("GOBLIN").fightable = true; // TODO
   gameState.herodeck.limit(gameState.isGoblinQueen).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
-  addStatSet('defense', gameState.isGoblinQueen, c => c.cost + gameState.scheme.attachedCount("GOBLIN"));
+  addStatSet('defense', gameState.isGoblinQueen, c => c.cost + gameState.scheme.attached("GOBLIN").size);
   addStatSet('vp', gameState.isGoblinQueen, () => 4);
   addStatSet('defense', isBystander, () => 2);
   addStatSet('fight', isBystander, () => ev => rescueEv(ev, ev.source));
@@ -231,13 +231,13 @@ makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, 
 // EVILWINS: 9 non grey Heroes are KO'd or carried off.
 makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ]  }, ev => {
   // Twist: KO all Heroes captured by enemies. Then play another card from the Villain Deck.
-  villainOrMastermind().each(e => e.attachedCards("BYSTANDER").limit(isHero).each(h => KOEv(ev, h)));
+  villainOrMastermind().each(e => e.captured.limit(isHero).each(h => KOEv(ev, h)));
   villainDrawEv();
 }, [{
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 9) evilWinsEv(ev); },
 }], () => {
-  addStatMod('defense', isVillain, c => 2 * c.attachedCards('BYSTANDER').count(isHero));
+  addStatMod('defense', isVillain, c => 2 * c.captured.count(isHero));
   addStatSet('capturable', isHero, () => true);
   addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source));
   gameState.herodeck.limit(c => c.heroName === extraHero).each(c => moveCard(c, gameState.villaindeck)); // TODO extra hero

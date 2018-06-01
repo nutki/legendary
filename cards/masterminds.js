@@ -1,4 +1,5 @@
 "use strict";
+/* global Color, HQCards, gameState, CityCards, isVillain, playerState, isBystander, yourHeroes, u, isHero */
 addTemplates("MASTERMINDS", "Legendary", [
 makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   // Each player with exactly 6 cards in hand reveals a [Tech] Hero or puts 2 cards from their hand on top of their deck.
@@ -6,7 +7,7 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
 }, [
   // You may recruit a [Tech] or [Ranged] Hero from the HQ for free.
   [ "Dark Technology", ev => {
-    selectCardEv(ev, HQCards().limit(Color.BLACK | Color.BLUE), sel => recruitForFreeEv(ev, sel));
+    selectCardEv(ev, "Recruit a Hero for free", HQCards().limit(Color.BLACK | Color.BLUE), sel => recruitForFreeEv(ev, sel));
   } ],
   // Choose one: each other player draws a card or each other player discards a card.
   [ "Monarch's Decree", ev => {
@@ -27,36 +28,36 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
   eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p));
 }, [
   // Defeat a Villain in the City for free.
-  [ "Cruel Ruler", ev => selectCardEv(ev, CityCards().limit(isVillain), sel => defeatEv(ev, sel)) ],
+  [ "Cruel Ruler", ev => selectCardEv(ev, "Defeat a Villain", CityCards().limit(isVillain), sel => defeatEv(ev, sel)) ],
   // KO up to four cards from your discard pile.
   [ "Maniacal Tyrant", ev => selectObjectsMinMaxEv(ev, "KO up to 4 cards", 0, 4, playerState.discard, sel => KOEv(ev, sel)) ],
   // Each other player KOs a Villain from their Victory Pile.
-  [ "Vanishing Illusions", ev => eachOtherPlayerVM(p => selectCardEv(ev, p.victory.limit(isVillain), sel => KOEv(ev, sel), p)) ],
+  [ "Vanishing Illusions", ev => eachOtherPlayerVM(p => selectCardEv(ev, "KO a Villain", p.victory.limit(isVillain), sel => KOEv(ev, sel), p)) ],
   // Each other player KOs two Bystanders from their Victory Pile.
   [ "Whispers and Lies", ev => eachOtherPlayerVM(p => selectObjectsEv(ev, "KO 2 Bystanders", 2, p.victory.limit(isBystander), sel => KOEv(ev, sel), p)) ],
 ]),
 makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
 // Each player reveals an X-Men Hero or discards down to four cards.
-  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectCardsNEv(ev, p.hand.size - 4, p.hand, sel => discardEv(ev, sel), p), p)); // TODO
+  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 4, p.hand, sel => discardEv(ev, sel), p), p));
 }, [
   // Recruit an X-Men Hero from the HQ for free.
-  [ "Bitter Captor", ev => selectCardEv(ev, HQCards().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],
+  [ "Bitter Captor", ev => selectCardEv(ev, "Recruit an X-Men for free", HQCards().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],
   // Each other player reveals an X-Men Hero or gains two Wounds.
   [ "Crushing Shockwave", ev => {
     eachOtherPlayerVM(p => revealOrEv(ev, 'X-Men', () => { gainWoundEv(ev, p); gainWoundEv(ev, p); }, p));
   } ],
   // Choose one of your X-Men Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
   [ "Electromagnetic Bubble", ev => {
-    selectCardEv(ev, yourHeroes().limit('X-Men'), sel => addTurnTrigger("CLEANUP", u, ev => moveCardEv(ev, sel, playerState.hand)));
+    selectCardEv(ev, "Choose an X-Men", yourHeroes().limit('X-Men'), sel => addTurnTrigger("CLEANUP", u, ev => moveCardEv(ev, sel, playerState.hand)));
   } ],
   // For each of your X-Men Heroes, rescue a Bystander.
   [ "Xavier's Nemesis", ev => {
-    rescueEv(ev, youdHeroes().count("X-Men"));
+    rescueEv(ev, yourHeroes().count("X-Men"));
   } ],
 ]),
 makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
 // Each player KOs a Hero from their hand.
-  eachPlayer(p => selectCardEv(ev, p.hand.limit(isHero), sel => KOEv(ev, sel), p));
+  eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(isHero), p));
 }, [
   // You get +4 Recruit.
   [ "Endless Resources", ev => addRecruitEvent(ev, 4) ],
@@ -66,7 +67,7 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   [ "Negablast Grenades", ev => addAttackEvent(ev, 3) ],
   // Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
   [ "Ruthless Dictator", ev => {
-    lookAtDeckEv(ev, 3, () => { selectCardEv(ev, playerState.revealed, sel => KOEv(ev, sel)); selectCardEv(ev, playerState.revealed, sel => discardEv(ev, sel)); });
+    lookAtDeckEv(ev, 3, () => { selectCardEv(ev, "Choose a card to KO", playerState.revealed, sel => KOEv(ev, sel)); selectCardEv(ev, "Choose a card to discard", playerState.revealed, sel => discardEv(ev, sel)); });
   } ],
 ]),
 ]);
@@ -97,7 +98,7 @@ makeMastermindCard("Kingpin", 13, 6, "Streets of New York", ev => {
 }, [
   [ "Call a Hit", ev => {
   // Choose a Hero from each player's discard pile and KO it.
-    eachPlayer(p => selectCardEv(ev, p.discard, c => KOEv(ev, c)));
+    eachPlayer(p => selectCardAndKOEv(ev, p.discard));
   } ],
   [ "Criminal Empire", ev => {
   // If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
@@ -105,11 +106,11 @@ makeMastermindCard("Kingpin", 13, 6, "Streets of New York", ev => {
   } ],
   [ "Dirty Cops", ev => {
   // Put a 0 Cost Hero from the KO pile on top of each other player's deck.
-    eachOtherPlayerVM(p => selectCardEv(ev, gameState.ko.limit(isHero).limit(c => !c.cost), c => moveCardEv(ev, c, p.deck)));
+    eachOtherPlayerVM(p => selectCardEv(ev, `Choose a card to put on top of ${p.name}'s deck`, gameState.ko.limit(isHero).limit(c => !c.cost), c => moveCardEv(ev, c, p.deck)));
   } ],
   [ "Mob War", ev => {
   // Each other player plays a Henchman Villain from their Victory Pile as if playing it from the Villain Deck.
-    eachOtherPlayerVM(p => selectCardEv(ev, p.victory.limit(isHenchman), c => villainDrawEv(ev, c), p)); // TODO isHenchmen
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Henchman to play", p.victory.limit(isHenchman), c => villainDrawEv(ev, c), p)); // TODO isHenchmen
   } ],
 ], { bribe: true }),
 // Whenever a player gains a Wound, put it on top of that player's deck.
@@ -119,11 +120,11 @@ makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
 }, [
   [ "Damned If You Do...", ev => {
   // Each other player KOs a Bystander from their Victory Pile or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOptEv(ev, p.victory.limit("Marvel Knights"), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Bystander to KO", p.victory.limit("Marvel Knights"), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Devilish Torment", ev => {
   // Each other player puts all 0 Cost cards from their discard pile on top of their deck in any order.
-    let f = p => selectCardEv(ev, p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); f(p); }, p);
+    let f = p => selectCardEv(ev, "Put a card on top of your deck", p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); f(p); }, p);
     eachOtherPlayerVM(f);
   } ],
   [ "Pain Begets Pain", ev => {

@@ -21,7 +21,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 4
 // Defeat a Villain or Mastermind that has a Bystander.
 // COST: 7
-  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, villainOrMastermind().limit(hasBystander), sel => defeatEv(ev, sel))),
+  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, "Defeat an enemey", villainOrMastermind().limit(hasBystander), sel => defeatEv(ev, sel))),
 },
 {
   name: "Captain America",
@@ -79,7 +79,7 @@ addTemplates("HEROES", "Legendary", [
 // A Villain of your choice captures a Bystander.
 // COST: 3
 // FLAVOR: "Hey, Abomination makes a pretty good babysitter."
-  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, villains(), sel => captureEv(ev, sel))),
+  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, "Choose a Villain", villains(), sel => captureEv(ev, sel))),
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
@@ -97,7 +97,7 @@ addTemplates("HEROES", "Legendary", [
   ev => chooseMayEv(ev, "Gain a Wound", () => gainWoundEv(ev)),
   ev => {
     let selected = [];
-    eachPlayer(p => selectCardEv(ev, p.hand, sel => selected.push({ player: p, card: sel }), p));
+    eachPlayer(p => selectCardEv(ev, "Select a card to pass", p.hand, sel => selected.push({ player: p, card: sel }), p));
     cont(() => selected.forEach(i => moveCardEv(ev, i.card, i.player.left.hand)));
   }]),
 },
@@ -145,7 +145,7 @@ addTemplates("HEROES", "Legendary", [
 // COST: 3
   uc: makeHeroCard("Gambit", "Hypnotic Charm", 3, 2, u, Color.INSTINCT, "X-Men", "D", ev => eachPlayer(p => {
     if (p === playerState || superPower(Color.INSTINCT)) lookAtDeckEv(ev, 1, () => {
-      selectCardOptEv(ev, p.revealed, sel => discardEv(ev, sel));
+      selectCardOptEv(ev, "Select a card to discard", p.revealed, sel => discardEv(ev, sel));
     }, p, playerState);
   })),
 // ATTACK: 4+
@@ -241,7 +241,7 @@ addTemplates("HEROES", "Legendary", [
   uc: makeHeroCard("Nick Fury", "Legendary Commander", 6, u, 1, Color.STRENGTH, "S.H.I.E.L.D.", "G", ev => addAttackEvent(ev, superPower("S.H.I.E.L.D."))),
 // Defeat any Villain or Mastermind whose Attack is less than the number of S.H.I.E.L.D. Heroes in the KO pile.
 // COST: 8
-  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, villainOrMastermind().limit(v => v.defense < gameState.ko.count("S.H.I.E.L.D.")), sel => defeatEv(ev, sel))),
+  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, "Defeat a Villain", villainOrMastermind().limit(v => v.defense < gameState.ko.count("S.H.I.E.L.D.")), sel => defeatEv(ev, sel))),
 },
 {
   name: "Rogue",
@@ -264,7 +264,7 @@ addTemplates("HEROES", "Legendary", [
   ra: makeHeroCard("Rogue", "Steal Abilities", 8, u, 4, Color.STRENGTH, "X-Men", "", ev => {
     let revealed = [];
     eachPlayer(p => lookAtDeckEv(ev, 1, () => { revealed.push(p.revealed.top); discardEv(ev, p.revealed.top); }));
-    let playOne = () => selectCardEv(ev, revealed, sel => {
+    let playOne = () => selectCardEv(ev, "Choose a card to copy", revealed, sel => {
       playCopyEv(ev, sel);
       revealed = revealed.limit(c => c !== sel);
       if (revealed.length > 0) cont(ev, playOne);
@@ -311,10 +311,10 @@ addTemplates("HEROES", "Legendary", [
 // You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
 // COST: 6
   uc: makeHeroCard("Storm", "Spinning Cyclone", 6, u, 4, Color.COVERT, "X-Men", "", ev => {
-    selectCardOptEv(ev, CityCards().limit(isVillain), v => {
-      selectCardEv(ev, gameState.city.limit(l => l !== v.location), dest => {
+    selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
+      selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => {
         swapCardsEv(ev, v.location, dest);
-        v.attachedCards('BYSTANDER').each(c => rescueEv(ev, c));
+        v.captured.limit(isBystander).each(c => rescueEv(ev, c));
       });
     });
   }),

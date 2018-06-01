@@ -1,6 +1,5 @@
-/* global isHero, revealable */
-
 "use strict";
+/* global isHero, revealable, yourHeroes, Color, owned, playerState, handOrDiscard, isWound, gameState, HQCards */
 addTemplates("VILLAINS", "Legendary", [
 { name: "Brotherhood", cards: [
 // You can't defeat Blob unless you have an X-Men Hero.
@@ -40,7 +39,7 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 5
   [ 1, makeVillainCard("Enemies of Asgard", "Destroyer", 7, 5, {
     fight: ev => yourHeroes().limit("S.H.I.E.L.D.").forEach(c => KOEv(ev, c)),
-    escape: ev => eachPlayer(p => selectCardsNEv(ev, 2, yourHeroes(p), sel => KOEv(ev, sel), p)),
+    escape: ev => eachPlayer(p => selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(p), sel => KOEv(ev, sel), p)),
   })],
 // FIGHT: Draw three cards
 // ATTACK: 6
@@ -104,7 +103,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Masters of Evil", "Melter", 5, 3, {
-    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, ev => selectCardOptEv(ev, p.revealed, sel => KOEv(ev, sel)), p, playerState)),
+    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, ev => selectCardOptEv(ev, "Choose a card to KO", p.revealed, sel => KOEv(ev, sel)), p, playerState)),
   })],
 // Ultron is worth +1 VP for each [Tech] Hero you have among all your cards at the end of the game.
 // ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
@@ -118,7 +117,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Masters of Evil", "Whirlwind", 4, 2, {
-    fight: ev => { if(ev.where === "ROOFTOPS" || ev.where === "BRIDGE") selectCardsNEv(ev, 2, yourHeroes(), sel => KOEv(ev, sel)); },
+    fight: ev => { if(ev.where === "ROOFTOPS" || ev.where === "BRIDGE") selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), sel => KOEv(ev, sel)); },
   })],
 ]},
 { name: "Radiation", cards: [
@@ -156,7 +155,7 @@ addTemplates("VILLAINS", "Legendary", [
   [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
     fight: ev => {
       let selected = {};
-      eachPlayerEv(ev, ev => selectCardEv(ev, HQCards().limit(c => !(c in selected)), sel => selected[ev.who] = sel));
+      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !(c in selected)), sel => selected[ev.who] = sel));
       eachPlayerEv(ev, ev => gainEv(ev, selected[ev.who]));
     }
   })],
@@ -165,10 +164,10 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: *
 // VP: 4
   [ 1, makeVillainCard("Skrulls", "Skrull Queen Veranke", 0, 4, {
-    ambush: ev => selectCardEv(ev, HQCardsHighestCost(), sel => attachCardEv(ev, sel, ev.source, "SKRULL_CAPTURE")),
+    ambush: ev => selectCardEv(ev, "Choose a highest-cost Hero", HQCardsHighestCost(), sel => attachCardEv(ev, sel, ev.source, "SKRULL_CAPTURE")),
     // ambush: ev => HQCards().withHighest(c => c.cost, c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
-    fight: ev => ev.source.attachedCards("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
-    varDefense: c => c.attachedCards("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
+    fight: ev => ev.source.attached("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
+    varDefense: c => c.attached("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
   })],
 // AMBUSH: Put the rightmost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
 // FIGHT: Gain that Hero
@@ -176,14 +175,14 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 2
   [ 3, makeVillainCard("Skrulls", "Skrull Shapeshifters", 0, 2, {
     ambush: ev => HQCards().withLast(c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
-    fight: ev => ev.source.attachedCards("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
-    varDefense: c => c.attachedCards("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
+    fight: ev => ev.source.attached("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
+    varDefense: c => c.attached("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
   })],
 // FIGHT: Each player KOs one of their Heroes.
 // ATTACK: 4
 // VP: 2
   [ 3, makeVillainCard("Skrulls", "Super-Skrull", 4, 2, {
-    fight: ev => eachPlayer(p => selectCardEv(ev, revealable(p), sel => KOEv(ev, sel), p)),
+    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, revealable(p), p)),
   })],
 ]},
 { name: "Spider-Foes", cards: [
