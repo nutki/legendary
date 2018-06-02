@@ -153,8 +153,8 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 3
   [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
     fight: ev => {
-      let selected = {};
-      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !(c in selected)), sel => selected[ev.who] = sel));
+      let selected = new Map();
+      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !selected.has(c)), sel => selected.set(ev.who, sel)));
       eachPlayerEv(ev, ev => gainEv(ev, selected[ev.who]));
     }
   })],

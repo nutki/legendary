@@ -61,7 +61,7 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   // You get +4 Recruit.
   [ "Endless Resources", ev => addRecruitEvent(ev, 4) ],
   // Draw two cards. Then draw another card for each HYDRA Villain in your Victory Pile.
-  [ "HYDRA Conspiracy", ev => drawEv(ev, 2 + playerState.victory.limit(isGroup("HYDRA"))) ],
+  [ "HYDRA Conspiracy", ev => drawEv(ev, 2 + playerState.victory.count(isGroup("HYDRA"))) ],
   // You get +3 Attack.
   [ "Negablast Grenades", ev => addAttackEvent(ev, 3) ],
   // Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
