@@ -116,7 +116,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Masters of Evil", "Whirlwind", 4, 2, {
-    fight: ev => { if(ev.where === "ROOFTOPS" || ev.where === "BRIDGE") selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), sel => KOEv(ev, sel)); },
+    fight: ev => { if(ev.deckName === "ROOFTOPS" || ev.deckName === "BRIDGE") selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), sel => KOEv(ev, sel)); },
   })],
 ]},
 { name: "Radiation", cards: [
@@ -124,7 +124,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Radiation", "Abomination", 5, 3, {
-    fight: ev => { if(ev.where === "STREETS" || ev.where === "BRIDGE") rescueEv(ev, 3); },
+    fight: ev => { if(ev.deckName === "STREETS" || ev.deckName === "BRIDGE") rescueEv(ev, 3); },
   })],
 // AMBUSH: Play the top card of the Villain Deck.
 // ATTACK: 4
@@ -153,9 +153,9 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 3
   [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
     fight: ev => {
-      let selected = new Map();
-      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !selected.has(c)), sel => selected.set(ev.who, sel)));
-      eachPlayerEv(ev, ev => gainEv(ev, selected[ev.who]));
+      let selected: Card[] = [];
+      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !selected.includes(c)), sel => selected.push(sel)));
+      eachPlayerEv(ev, ev => gainEv(ev, selected.shift()));
     }
   })],
 // AMBUSH: Put the highest-cost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
@@ -201,7 +201,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 3
 // VP: 2
   [ 2, makeVillainCard("Spider-Foes", "The Lizard", 3, 2, {
-    fight: ev => { if(ev.where === "SEWERS") eachOtherPlayerVM(p => gainWoundEv(ev, p)); },
+    fight: ev => { if(ev.deckName === "SEWERS") eachOtherPlayerVM(p => gainWoundEv(ev, p)); },
   })],
 // You can't defeat Venom unless you have a [Covert] Hero.
 // ESCAPE: Each player gains a Wound.

@@ -7,7 +7,7 @@ makeSchemeCard("The Legacy Virus", { twists: 8, wounds: [ 6, 12, 18, 24, 30 ] },
   eachPlayer(p => revealOrEv(ev, Color.BLACK, () => gainWoundEv(ev, p), p));
 }, {
   event: "RUNOUT",
-  match: ev => ev.what === "WOUNDS",
+  match: ev => ev.deckName === "WOUNDS",
   after: evilWinsEv,
 }),
 // SETUP: 8 Twists. 12 total Bystanders in the Villain Deck.
@@ -38,7 +38,7 @@ makeSchemeCard("Portals to the Dark Dimension", { twists: 7 }, ev => {
   } else if (ev.nr === 7) { // Twist 7 Evil Wins!
     evilWinsEv(ev);
   }
-}, {}, () => {
+}, [], () => {
   addStatMod('defense', isEnemy, c => c.location.attached('DARK_PORTAL').size);
 }),
 // SETUP: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
@@ -83,7 +83,7 @@ makeSchemeCard("Super Hero Civil War", { twists: [ 8, 8, 8, 5, 5 ], heroes: [ 4,
   HQCards().limit(isHero).each(c => KOEv(ev, c));
 }, {
   event: "RUNOUT",
-  match: ev => ev.what === "HERO",
+  match: ev => ev.deckName === "HERO",
   after: evilWinsEv,
 }),
 // SETUP: 8 Twists.
@@ -132,22 +132,22 @@ makeSchemeCard("Detonate the Helicarrier", { twists: 8, heroes: 6 }, ev => {
   event: "KO",
   match: ev => ev.what.location.isHQ,
   before: ev => {
-    ev.hq = ev.parent.what.location;
-    ev.hq.explosion = (ev.hq.explosion || 0) + 1;
-    if (ev.hq.explosion === 6) ev.hq.isHQ = false;
+    ev.state.hq = ev.parent.what.location;
+    ev.state.hq.explosion = (ev.state.hq.explosion || 0) + 1;
+    if (ev.state.hq.explosion === 6) ev.state.hq.isHQ = false;
     if (!gameState.hq.has(l => l.isHQ)) evilWinsEv(ev);
   },
   after: ev => attachCardEv(ev, ev.parent.what, ev.state.hq, "EXPLOSION"),
 }, {
   event: "RUNOUT",
-  match: ev => ev.what === "HERO",
+  match: ev => ev.deckName === "HERO",
   after: evilWinsEv,
 }]),
 // SETUP: 8 Twists.
 // EVILWINS: When the number of non grey Heroes in the KO pile is 3 times the number of players.
 makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
   // Twist: Each player reveals a [Strength] Hero or KOs the top card of their deck.
-  eachPlayer(p => revealOrEv(ev, Color.STRENGTH, ev => lookAtDeckEv(ev, 1, () => p.revealed.withLast(c => KOEv(ev, c)), p), p));
+  eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => lookAtDeckEv(ev, 1, () => p.revealed.withLast(c => KOEv(ev, c)), p), p));
 }, [{
   event: "KO",
   after: ev => { if (gameState.ko.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 3 * gameState.players.size) evilWinsEv(ev); },
@@ -174,7 +174,7 @@ makeSchemeCard("Organized Crime Wave", { twists: 8 }, ev => {
 makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
   // Twist: KO all Bystanders in the HQ. Then each player reveals an [Instinct] Hero or KOs a Bystander from their Victory Pile.
   HQCards().limit(isBystander).each(c => KOEv(ev, c));
-  eachPlayer(p => revealOrEv(ev, Color.INSTINCT, ev => selectCardAndKOEv(ev, p.victory.limit(isBystander), p), p));
+  eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardAndKOEv(ev, p.victory.limit(isBystander), p), p));
 }, [{
   event: "MOVECARD",
   after: ev => { if (gameState.ko.count(isBystander) + gameState.escaped.count(isBystander) >= 4 * gameState.players.size) evilWinsEv(ev); }
