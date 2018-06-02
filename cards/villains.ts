@@ -1,0 +1,214 @@
+"use strict";
+addTemplates("VILLAINS", "Legendary", [
+{ name: "Brotherhood", cards: [
+// You can't defeat Blob unless you have an X-Men Hero.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Brotherhood", "Blob", 4, 2, {
+    fightCond: () => revealable().has("X-Men"),
+    // fightCost: ev => revealEv(ev, revealable().limit('X-Men')), TODO
+  })],
+// AMBUSH: Each player KOs two Heroes from their discard pile.
+// ESCAPE: Each player KOs two Heroes from their hand.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Brotherhood", "Juggernaut", 6, 4, {
+    ambush: ev => eachPlayer(p => selectObjectsEv(ev, "KO two heroes from discard", 2, p.discard.limit(isHero), sel => KOEv(ev, sel), p)),
+    escape: ev => eachPlayer(p => selectObjectsEv(ev, "KO two heroes from hand", 2, p.hand.limit(isHero), sel => KOEv(ev, sel), p)),
+  })],
+// ESCAPE: Mystique becomes a Scheme Twist that takes effect immediately.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Brotherhood", "Mystique", 5, 3, {
+    escape: ev => playTwistEv(ev, ev.source),
+  })],
+// FIGHT: Each player reveals an X-Men Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Brotherhood", "Sabretooth", 5, 3, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p), p)),
+  })],
+]},
+{ name: "Enemies of Asgard", cards: [
+// FIGHT: KO all your S.H.I.E.L.D. Heroes.
+// ESCAPE: Each player KOs two of their Heroes.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Enemies of Asgard", "Destroyer", 7, 5, {
+    fight: ev => yourHeroes().limit("S.H.I.E.L.D.").forEach(c => KOEv(ev, c)),
+    escape: ev => eachPlayer(p => selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(p), sel => KOEv(ev, sel), p)),
+  })],
+// FIGHT: Draw three cards
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Enemies of Asgard", "Enchantress", 6, 4, {
+    fight: ev => drawEv(ev, 3),
+  })],
+// FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 4
+// VP: 2
+  [ 3, makeVillainCard("Enemies of Asgard", "Frost Giant", 4, 2, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+  })],
+// AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+// FIGHT: Choose a player. That player KOs any number of Wounds from their hand and discard pile.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Enemies of Asgard", "Ymir, Frost Giant King", 6, 4, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    fight: ev => selectPlayerEv(ev, psel => selectObjectsOptEv(ev, "KO any Wounds", 999, handOrDiscard(psel).limit(isWound), sel => KOEv(ev, sel), psel)), // TODO Unlimited
+  })],
+]},
+{ name: "HYDRA", cards: [
+// FIGHT: Play the top two cards of the Villain Deck.
+// ATTACK: 4
+// VP: 3
+  [ 3, makeVillainCard("HYDRA", "Endless Armies of HYDRA", 4, 3, {
+    fight: ev => { villainDrawEv(ev); villainDrawEv(ev); },
+  })],
+// FIGHT: You may gain a S.H.I.E.L.D. Officer.
+// ATTACK: 3
+// VP: 1
+  [ 3, makeVillainCard("HYDRA", "HYDRA Kidnappers", 3, 1, {
+    fight: ev => chooseMayEv(ev, "Gain S.H.I.E.L.D. Officer", ev => { if (gameState.officer.top) gainEv(ev, gameState.officer.top); }),
+  })],
+// Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
+// ATTACK: 6
+// VP: 3*
+  [ 1, makeVillainCard("HYDRA", "Supreme HYDRA", 6, 3, {
+     varVP: c => 3 * c.location.count(isGroup("HYDRA")), 
+  })],
+// FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("HYDRA", "Viper", 5, 3, {
+    fight: ev => eachPlayer(p => { if (p.victory.count(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
+    escape: ev => eachPlayer(p => { if (p.victory.count(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
+  })],
+]},
+{ name: "Masters of Evil", cards: [
+// FIGHT: For each of your Avengers Heroes, rescue a Bystander.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Masters of Evil", "Baron Zemo", 6, 4, {
+    fight: ev => rescueEv(ev, yourHeroes().limit("Avengers").length),
+  })],
+// FIGHT: Each player reveals the top card of their deck. For each card, you choose to KO it or put it back.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Masters of Evil", "Melter", 5, 3, {
+    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, ev => selectCardOptEv(ev, "Choose a card to KO", p.revealed, sel => KOEv(ev, sel)), p, playerState)),
+  })],
+// Ultron is worth +1 VP for each [Tech] Hero you have among all your cards at the end of the game.
+// ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
+// ATTACK: 6
+// VP: 2+
+  [ 2, makeVillainCard("Masters of Evil", "Ultron", 6, 2, {
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
+    varVP: c => 2 + owned(c.location.owner).count(Color.TECH)
+  })],
+// FIGHT: If you fight Whirlwind on the Rooftops or Bridge, KO two of your Heroes.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Masters of Evil", "Whirlwind", 4, 2, {
+    fight: ev => { if(ev.where === "ROOFTOPS" || ev.where === "BRIDGE") selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), sel => KOEv(ev, sel)); },
+  })],
+]},
+{ name: "Radiation", cards: [
+// FIGHT: If you fight Abomination on the Streets or Bridge, rescue three Bystanders.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Radiation", "Abomination", 5, 3, {
+    fight: ev => { if(ev.where === "STREETS" || ev.where === "BRIDGE") rescueEv(ev, 3); },
+  })],
+// AMBUSH: Play the top card of the Villain Deck.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Radiation", "The Leader", 4, 2, {
+    ambush: ev => villainDrawEv(ev),
+  })],
+// FIGHT: For each of your [Strength] Heroes, KO one of your Heroes.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Radiation", "Maestro", 6, 4, {
+    fight: ev => selectObjectsEv(ev, "KO your heroes", yourHeroes().count(Color.STRENGTH), yourHeroes(), sel => KOEv(ev, sel))
+  })],
+// FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Radiation", "Zzzax", 5, 3, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+  })],
+]},
+{ name: "Skrulls", cards: [
+// FIGHT: Choose a Hero in the HQ for each player. Each player gains that Hero.
+// ATTACK: 8
+// VP: 3
+  [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
+    fight: ev => {
+      let selected = {};
+      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !(c in selected)), sel => selected[ev.who] = sel));
+      eachPlayerEv(ev, ev => gainEv(ev, selected[ev.who]));
+    }
+  })],
+// AMBUSH: Put the highest-cost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
+// FIGHT: Gain that Hero.
+// ATTACK: *
+// VP: 4
+  [ 1, makeVillainCard("Skrulls", "Skrull Queen Veranke", 0, 4, {
+    ambush: ev => selectCardEv(ev, "Choose a highest-cost Hero", HQCardsHighestCost(), sel => attachCardEv(ev, sel, ev.source, "SKRULL_CAPTURE")),
+    // ambush: ev => HQCards().withHighest(c => c.cost, c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
+    fight: ev => ev.source.attached("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
+    varDefense: c => c.attached("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
+  })],
+// AMBUSH: Put the rightmost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
+// FIGHT: Gain that Hero
+// ATTACK: *
+// VP: 2
+  [ 3, makeVillainCard("Skrulls", "Skrull Shapeshifters", 0, 2, {
+    ambush: ev => HQCards().withLast(c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
+    fight: ev => ev.source.attached("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
+    varDefense: c => c.attached("SKRULL_CAPTURE").reduce((a, c) => a + c.cost, 0),
+  })],
+// FIGHT: Each player KOs one of their Heroes.
+// ATTACK: 4
+// VP: 2
+  [ 3, makeVillainCard("Skrulls", "Super-Skrull", 4, 2, {
+    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, revealable(p), p)),
+  })],
+]},
+{ name: "Spider-Foes", cards: [
+// FIGHT: When you draw a new hand of cards at the end of this turn, draw eight cards instead of six.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Spider-Foes", "Doctor Octopus", 4, 2, {
+    fight: () => setEndDrawAmount(8),
+  })],
+// AMBUSH: Green Goblin captures a Bystander.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Spider-Foes", "Green Goblin", 6, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+  })],
+// FIGHT: If you fight the Lizard in the Sewers, each other player gains a Wound.
+// ATTACK: 3
+// VP: 2
+  [ 2, makeVillainCard("Spider-Foes", "The Lizard", 3, 2, {
+    fight: ev => { if(ev.where === "SEWERS") eachOtherPlayerVM(p => gainWoundEv(ev, p)); },
+  })],
+// You can't defeat Venom unless you have a [Covert] Hero.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Spider-Foes", "Venom", 5, 3, {
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+]},
+]);
