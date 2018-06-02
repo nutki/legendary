@@ -102,7 +102,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Masters of Evil", "Melter", 5, 3, {
-    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, ev => selectCardOptEv(ev, "Choose a card to KO", p.revealed, sel => KOEv(ev, sel)), p, playerState)),
+    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, ev => selectCardOptEv(ev, "Choose a card to KO", p.revealed.deck, sel => KOEv(ev, sel)), p, playerState)),
   })],
 // Ultron is worth +1 VP for each [Tech] Hero you have among all your cards at the end of the game.
 // ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.

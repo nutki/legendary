@@ -47,7 +47,7 @@ makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
   } ],
   // Choose one of your X-Men Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
   [ "Electromagnetic Bubble", ev => {
-    selectCardEv(ev, "Choose an X-Men", yourHeroes().limit('X-Men'), sel => addTurnTrigger("CLEANUP", u, ev => moveCardEv(ev, sel, playerState.hand)));
+    selectCardEv(ev, "Choose an X-Men", yourHeroes().limit('X-Men'), sel => addTurnTrigger("CLEANUP", undefined, ev => moveCardEv(ev, sel, playerState.hand)));
   } ],
   // For each of your X-Men Heroes, rescue a Bystander.
   [ "Xavier's Nemesis", ev => {
@@ -66,7 +66,7 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   [ "Negablast Grenades", ev => addAttackEvent(ev, 3) ],
   // Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
   [ "Ruthless Dictator", ev => {
-    lookAtDeckEv(ev, 3, () => { selectCardEv(ev, "Choose a card to KO", playerState.revealed, sel => KOEv(ev, sel)); selectCardEv(ev, "Choose a card to discard", playerState.revealed, sel => discardEv(ev, sel)); });
+    lookAtDeckEv(ev, 3, () => { selectCardEv(ev, "Choose a card to KO", playerState.revealed.deck, sel => KOEv(ev, sel)); selectCardEv(ev, "Choose a card to discard", playerState.revealed.deck, sel => discardEv(ev, sel)); });
   } ],
 ]),
 ]);
@@ -97,7 +97,7 @@ makeMastermindCard("Kingpin", 13, 6, "Streets of New York", ev => {
 }, [
   [ "Call a Hit", ev => {
   // Choose a Hero from each player's discard pile and KO it.
-    eachPlayer(p => selectCardAndKOEv(ev, p.discard));
+    eachPlayer(p => selectCardAndKOEv(ev, p.discard.deck));
   } ],
   [ "Criminal Empire", ev => {
   // If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
@@ -123,7 +123,7 @@ makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
   } ],
   [ "Devilish Torment", ev => {
   // Each other player puts all 0 Cost cards from their discard pile on top of their deck in any order.
-    let f = p => selectCardEv(ev, "Put a card on top of your deck", p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); f(p); }, p);
+    let f = (p: Player) => selectCardEv(ev, "Put a card on top of your deck", p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); f(p); }, p);
     eachOtherPlayerVM(f);
   } ],
   [ "Pain Begets Pain", ev => {

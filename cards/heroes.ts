@@ -76,25 +76,25 @@ addTemplates("HEROES", "Legendary", [
 // A Villain of your choice captures a Bystander.
 // COST: 3
 // FLAVOR: "Hey, Abomination makes a pretty good babysitter."
-  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, "Choose a Villain", villains(), sel => captureEv(ev, sel))),
+  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, undefined, "GFD", ev => selectCardEv(ev, "Choose a Villain", villains(), sel => captureEv(ev, sel))),
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
-  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
+  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, undefined, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
-  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseMayEv(
+  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, undefined, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseMayEv(
     ev, "Discard hand", () => { discardHandEv(ev); drawEv(ev, 4); }
   ); }),
 // ATTACK: 6
 // You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.
 // COST: 7
-  ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, u, "G", [
+  ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, undefined, "G", [
   ev => chooseMayEv(ev, "Gain a Wound", () => gainWoundEv(ev)),
   ev => {
-    let selected = [];
-    eachPlayer(p => selectCardEv(ev, "Select a card to pass", p.hand, sel => selected.push({ player: p, card: sel }), p));
+    let selected: {player: Player, card: Card}[] = [];
+    eachPlayer(p => selectCardEv(ev, "Select a card to pass", p.hand.deck, sel => selected.push({ player: p, card: sel }), p));
     cont(ev, () => selected.forEach(i => moveCardEv(ev, i.card, i.player.left.hand)));
   }]),
 },
@@ -124,7 +124,7 @@ addTemplates("HEROES", "Legendary", [
 // Whenever you defeat a Villain or Mastermind this turn, you get +3 Recruit.
 // COST: 7
 // FLAVOR: A secondary mutation allows Emma Frost to transform into pure diamond.
-  ra: makeHeroCard("Emma Frost", "Diamond Form", 7, 0, 5, Color.STRENGTH, "X-Men", "F", ev => addTurnTrigger("DEFEAT", u, () => addRecruitEvent(ev, 3))),
+  ra: makeHeroCard("Emma Frost", "Diamond Form", 7, 0, 5, Color.STRENGTH, "X-Men", "F", ev => addTurnTrigger("DEFEAT", undefined, () => addRecruitEvent(ev, 3))),
 },
 {
   name: "Gambit",
@@ -142,7 +142,7 @@ addTemplates("HEROES", "Legendary", [
 // COST: 3
   uc: makeHeroCard("Gambit", "Hypnotic Charm", 3, 2, u, Color.INSTINCT, "X-Men", "D", ev => eachPlayer(p => {
     if (p === playerState || superPower(Color.INSTINCT)) lookAtDeckEv(ev, 1, () => {
-      selectCardOptEv(ev, "Select a card to discard", p.revealed, sel => discardEv(ev, sel));
+      selectCardOptEv(ev, "Select a card to discard", p.revealed.deck, sel => discardEv(ev, sel));
     }, p, playerState);
   })),
 // ATTACK: 4+
@@ -175,7 +175,7 @@ addTemplates("HEROES", "Legendary", [
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
 // COST: 7
-  ra: makeHeroCard("Hawkeye", "Impossible Trick Shot", 7, u, 5, Color.TECH, "Avengers", "", ev => addTurnTrigger("DEFEAT", u, () => rescueEv(ev, 3))),
+  ra: makeHeroCard("Hawkeye", "Impossible Trick Shot", 7, u, 5, Color.TECH, "Avengers", "", ev => addTurnTrigger("DEFEAT", undefined, () => rescueEv(ev, 3))),
 },
 {
   name: "Hulk",
@@ -259,7 +259,7 @@ addTemplates("HEROES", "Legendary", [
 // Each player discards the top card of their deck. Play a copy of each of those cards.
 // COST: 8
   ra: makeHeroCard("Rogue", "Steal Abilities", 8, u, 4, Color.STRENGTH, "X-Men", "", ev => {
-    let revealed = [];
+    let revealed: Card[] = [];
     eachPlayer(p => lookAtDeckEv(ev, 1, () => { revealed.push(p.revealed.top); discardEv(ev, p.revealed.top); }));
     let playOne = () => selectCardEv(ev, "Choose a card to copy", revealed, sel => {
       playCopyEv(ev, sel);
