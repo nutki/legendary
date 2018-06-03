@@ -1082,15 +1082,15 @@ function revealAndEv(ev: Ev, cond: Filter<Card>, effect: () => void, who?: Playe
 function chooseOneEv(ev: Ev, desc: string, ...a: (string | ((ev: Ev) => void))[]): void {
   let options = [];
   for (let i = 0; i < a.length; i += 2)
-    options.push(new Ev(ev, "EFFECT", { func: a[i+1], name: a[i] }));
+    options.push(new Ev(ev, "EFFECT", { func: a[i+1], desc: a[i] }));
   console.log(options);
   pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
 }
 function chooseMayEv(ev: Ev, desc: string, effect: (ev: Ev) => void, agent?: Player) {
   agent = agent || playerState;
   pushEv(ev, "SELECTEVENT", { desc, options: [
-      new Ev(ev, "EFFECT", { func: effect, name: "Yes" }),
-      new Ev(ev, "EFFECT", { func: () => {}, name: "No" }),
+      new Ev(ev, "EFFECT", { func: effect, desc: "Yes" }),
+      new Ev(ev, "EFFECT", { func: () => {}, desc: "No" }),
   ], ui: true, agent });
 }
 function selectPlayerEv(ev: Ev, f: (p: Player) => void, who?: Player) {
