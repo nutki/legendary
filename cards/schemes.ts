@@ -158,7 +158,7 @@ makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
 makeSchemeCard("Organized Crime Wave", { twists: 8 }, ev => {
   // Twist: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
   CityCards().limit(ev.state.isGoon).each(c => villainEscapeEv(ev, c));
-  eachPlayer(p => p.victory.limit(ev.state.isGoon)).each(c => moveCardEv(ev, c, gameState.villaindeck));
+  eachPlayer(p => p.victory.limit(ev.state.isGoon).each(c => moveCardEv(ev, c, gameState.villaindeck)));
   cont(ev, () => gameState.villaindeck.shuffle());
 }, {
   event: "ESCAPE",
