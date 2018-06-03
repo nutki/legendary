@@ -1451,7 +1451,7 @@ function getEventName(ev: Ev): string {
   console.log("Unknown option", ev);
   return "Unknown option";
 }
-let clickActions = {};
+let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev): void {
   for (let node = ev.target; node; node = node.parentNode) {
     if (node.id) console.log(node.id);
@@ -1528,6 +1528,12 @@ function mainLoop(): void {
   }).join('<br>');
   Object.keys(clickActions).map(v => document.getElementById(v)).filter(e => e).forEach(e => {
     e.classList.add("select");
+    if (ev.desc) {
+      if (/\bKO\b/.test(ev.desc)) e.classList.add("selectko");
+      if ((/\bdiscard\b/i).test(ev.desc)) e.classList.add("selectdiscard");
+      if ((/\brecruit\b/i).test(ev.desc)) e.classList.add("selectrecruit");
+      if ((/\bdefeat\b/i).test(ev.desc)) e.classList.add("selectdefeat");
+    }
   });
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   document.getElementById("logContainer").innerHTML = `${undoLog.toString()}<br>${textLog.text}`;
