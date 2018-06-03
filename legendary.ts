@@ -1024,30 +1024,32 @@ function gainWoundEv(ev: Ev, who?: Player): void {
 }
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
 function pushEv(ev: Ev, name: string, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
-function selectObjectsMinMaxEv(ev: Ev, desc: string, min: number, max: number, objects: any, effect1: (o: any) => void, effect0?: () => void, simple?: boolean, who?: Player) {
-  if (objects instanceof Deck) objects = objects.deck;
-  who = who || playerState;
+function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0) {
     if (effect0) cont(ev, () => effect0());
   } else if (objects.length <= min && simple) {
     if (effect1) cont(ev, () => objects.forEach(effect1));
   } else {
     if (objects.length < min) min = objects.length;
+    if (max === undefined || max > objects.length) max = objects.length;
     effect0 = effect0 || (() => {});
     effect1 = effect1 || (() => {});
     pushEv(ev, "SELECTOBJECTS", { desc: desc, min:min, max:max, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
   }
 }
-function selectObjectsEv(ev: Ev, desc: string, num: number, objects: any, effect1: (o: any) => void, who?: Player) {
+function selectObjectsEv<T>(ev: Ev, desc: string, num: number, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv(ev, desc, num, num, objects, effect1, undefined, false, who);
 }
-function selectObjectsOptEv(ev: Ev, desc: string, num: number, objects: any, effect1: (o: any) => void, who?: Player) {
+function selectObjectsUpToEv<T>(ev: Ev, desc: string, num: number, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv(ev, desc, 0, num, objects, effect1, undefined, false, who);
 }
-function selectObjectEv(ev: Ev, desc: string, objects: any, effect1: (o: any) => void, who?: Player) {
+function selectObjectsAnyEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
+  selectObjectsMinMaxEv<T>(ev, desc, 0, undefined, objects, effect1, undefined, false, who);
+}
+function selectObjectEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv(ev, desc, 1, 1, objects, effect1, undefined, false, who);
 }
-function selectObjectOptEv(ev: Ev, desc: string, objects: any, effect1: (o: any) => void, who?: Player) {
+function selectObjectOptEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv(ev, desc, 0, 1, objects, effect1, undefined, false, who);
 }
 
@@ -1280,8 +1282,11 @@ function villainDefeat(ev: Ev): void {
   let deckName = c.location.id;
   let b = c.captured;
   c.attached("TACTICS").withLast(t => c = t);
+  // TODO according to https://boardgamegeek.com/article/19007319#19007319 defeat triggers would happen here
   // TODO choose move order
+  // TODO all the move effects should happen first
   b.each(bc => rescueEv(ev, bc));
+  // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
   if (c.fight) pushEv(ev, "EFFECT", { source: c, func: c.fight, deckName });
 }
@@ -1318,7 +1323,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: {}}[]
   return triggers;
 }
 function addTriggers(ev: Ev): Ev[] {
-  // TODO: more dynamic events (add generic { type:"TRIGGER", what:ev.type, when:"BEFORE" }), harder for replacement and steteful before/after triggers
+  // TODO: more dynamic events (add generic { type:"TRIGGER", what:ev.type, when:"BEFORE" }), harder for replacement and steteful before/after triggers - not sure what I meant here anymore
   // TODO: order triggers
   let triggers = findTriggers(ev);
   let newev = [];
@@ -1559,7 +1564,6 @@ Select setup screen
 
 ENGINE:
 Use deck.(locationN|n)ame instead of deck.id
-Attached cards API rework
 required villain/hero groups
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards

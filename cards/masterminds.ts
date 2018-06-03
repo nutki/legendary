@@ -29,7 +29,7 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
   // Defeat a Villain in the City for free.
   [ "Cruel Ruler", ev => selectCardEv(ev, "Defeat a Villain", CityCards().limit(isVillain), sel => defeatEv(ev, sel)) ],
   // KO up to four cards from your discard pile.
-  [ "Maniacal Tyrant", ev => selectObjectsMinMaxEv(ev, "KO up to 4 cards", 0, 4, playerState.discard, sel => KOEv(ev, sel)) ],
+  [ "Maniacal Tyrant", ev => selectObjectsUpToEv(ev, "KO up to 4 cards", 4, playerState.discard.deck, sel => KOEv(ev, sel)) ],
   // Each other player KOs a Villain from their Victory Pile.
   [ "Vanishing Illusions", ev => eachOtherPlayerVM(p => selectCardEv(ev, "KO a Villain", p.victory.limit(isVillain), sel => KOEv(ev, sel), p)) ],
   // Each other player KOs two Bystanders from their Victory Pile.
@@ -37,7 +37,7 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
 ]),
 makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
 // Each player reveals an X-Men Hero or discards down to four cards.
-  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 4, p.hand, sel => discardEv(ev, sel), p), p));
+  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 4, p.hand.deck, sel => discardEv(ev, sel), p), p));
 }, [
   // Recruit an X-Men Hero from the HQ for free.
   [ "Bitter Captor", ev => selectCardEv(ev, "Recruit an X-Men for free", HQCards().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],

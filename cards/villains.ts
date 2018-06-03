@@ -60,7 +60,7 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 4
   [ 2, makeVillainCard("Enemies of Asgard", "Ymir, Frost Giant King", 6, 4, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
-    fight: ev => selectPlayerEv(ev, psel => selectObjectsOptEv(ev, "KO any Wounds", 999, handOrDiscard(psel).limit(isWound), sel => KOEv(ev, sel), psel)), // TODO Unlimited
+    fight: ev => selectPlayerEv(ev, psel => selectObjectsAnyEv(ev, "KO any Wounds", handOrDiscard(psel).limit(isWound), sel => KOEv(ev, sel), psel)),
   })],
 ]},
 { name: "HYDRA", cards: [
