@@ -131,11 +131,11 @@ Card.prototype = {
   isPlayable: function () { return this.playable; },
   isHealable: function () { return this.cardType === "WOUND"; },
   isVillain: function () { return this.cardType === "VILLAIN"; },
-  isColor: function(c) { return (this.color & c) !== 0; },
-  isTeam: function(t) { return this.team === t; },
-  isGroup: function(t) { return this.villainGroup === t; },
-  attachedDeck: function (name) { return attachedDeck(name, this); },
-  attached: function (name) { return attachedCards(name, this); },
+  isColor: function(c: number) { return (this.color & c) !== 0; },
+  isTeam: function(t: string) { return this.team === t; },
+  isGroup: function(t: string) { return this.villainGroup === t; },
+  attachedDeck: function (name: string) { return attachedDeck(name, this); },
+  attached: function (name: string) { return attachedCards(name, this); },
   get captured() { return this.attached('CAPTURED'); },
 };
 let Color = {
@@ -414,7 +414,7 @@ interface EvParams {
   result0?: () => void
   result1?: (c: any) => void
 }
-let Ev = function (ev, type, params) {
+let Ev = function (ev: Ev, type: string, params) {
   this.parent = ev;
   this.type = type;
   if (typeof params === "function") {
@@ -502,7 +502,6 @@ interface Turn extends Ev {
   cardsPlayed: Card[]
   modifiers: Modifiers<any>
   triggers: Trigger[]
-  endofturn?: boolean
 }
 interface Trigger {
   event: string
@@ -545,7 +544,22 @@ let eventQueueNew: Ev[] = [];
 let turnState: Turn = undefined;
 let playerState: Player = undefined;
 let gameState: Game = undefined;
-const undoLog = {
+interface UndoLog {
+  actions: string[],
+  pos: number
+  init: () => void
+  replaying: boolean
+  read: () => string
+  readInt: () => number
+  readInts: () => number[]
+  write: (w: any) => void
+  undo: () => void
+  restart: () => void
+  newGame: () => void
+  toString: () => string
+  fromString: (s: string) => void
+}
+const undoLog: UndoLog = {
   actions: [],
   pos: 0,
   init: function () {
@@ -575,7 +589,7 @@ const undoLog = {
 };
 const textLog = {
   text: "",
-  log: function(s) { this.text += s + '<br>'; },
+  log: function(s: string): void { this.text += s + '<br>'; },
 };
 
 // State init
@@ -687,7 +701,17 @@ for (let i = 0; i < 5; i++) {
   if (i) gameState.city[i].next = gameState.city[i - 1];
 }
 
-let gameSetup = {
+interface Setup {
+  scheme: string,
+  mastermind: string
+  henchmen: (string | [string, number])[]
+  villains: string[]
+  heroes: string[]
+  bystanders: string[]
+  withOfficers: boolean
+  withWounds: boolean
+}
+let gameSetup: Setup = {
 /* S01M01
   scheme: "Portals to the Dark Dimension",
   mastermind: "Dr. Doom",
@@ -725,8 +749,8 @@ let gameSetup = {
   withOfficers: true,
   withWounds: true,
 };
-function getGameSetup(scheme, mastermind) {
-  let setup = {
+function getGameSetup(scheme: string, mastermind: string): Setup {
+  let setup: Setup = {
     scheme,
     mastermind,
     henchmen: [],
