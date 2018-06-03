@@ -1412,6 +1412,7 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   r += `<img class="cardface" src="${back ? 'images/back.png' : cardImageName(c)}">`
   if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
   if (c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
+  if (c.captured.size > 0) r += `<div class="capturedHint">${c.captured.size}</div>`
   r += `<div class="frame"></div></div>`;
   return r;
 }
@@ -1587,7 +1588,7 @@ function startApp(): void {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Show attached cards and deck counts
+Display popup decks
 Show hidden events
 Select setup screen
 
