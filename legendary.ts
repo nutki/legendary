@@ -1379,7 +1379,7 @@ function playTurn(ev: Turn) {
       pushEvents(ev);
     }
   });
-  pushEv(ev, "CLEANUP", cleanUp);  
+  pushEv(ev, "CLEANUP", cleanUp);
 }
 
 // GUI
@@ -1591,4 +1591,7 @@ Use deck.(locationN|n)ame instead of deck.id
 required villain/hero groups
 
 other sets base functions: artifacts, special bystanders, sidekicks, divided cards
+
+Sets
+
 */
