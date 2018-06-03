@@ -51,6 +51,7 @@ interface Card {
   color: number
   attack: number
   printedAttack: number
+  printedDefense: number
   recruit: number
   defense: number
   vp?: number
@@ -1404,15 +1405,19 @@ function makeDisplayCard(c: Card): string {
   }
   return res;
 }
-function makeDisplayCardImg(c: Card): string {
-  return `<IMG class="card" id="${c.id}" src="${cardImageName(c)}">`;
-}
-function makeDisplayBackImg(c: Card): string {
-  return `<IMG class="card" id="${c.id}" src="images/back.png">`;
+function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): string {
+  const extraClasses = gone ? " gone" : "";
+  let r = '';
+  r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
+  r += `<img class="cardface" src="${back ? 'images/back.png' : cardImageName(c)}">`
+  if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
+  if (c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
+  r += `<div class="frame"></div></div>`;
+  return r;
 }
 function makeDisplayPlayAreaImg(c: Card): string {
-  const gone = gameState.playArea.deck.includes(c) ? "" : " gone";
-  return `<IMG class="card${gone}" id="${c.id}" src="${cardImageName(c)}">`;
+  const gone = !gameState.playArea.deck.includes(c);;
+  return makeDisplayCardImg(c, false, gone);
 }
 function displayDecks(): void {
   let divs = document.getElementsByClassName("deck");
@@ -1428,9 +1433,9 @@ function displayDecks(): void {
       if (deck.id === "PLAYAREA") {
         div.innerHTML = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
       } else if (!deck.faceup) {
-        div.innerHTML = deck.deck.map(makeDisplayBackImg).join('');
+        div.innerHTML = deck.deck.map(c => makeDisplayCardImg(c, true)).join('');
       } else if (fanout) {
-        div.innerHTML = deck.deck.map(makeDisplayCardImg).join('');
+        div.innerHTML = deck.deck.map(c => makeDisplayCardImg(c)).join('');
       } else {
         div.innerHTML = deck.size ? makeDisplayCardImg(deck.top) : '';
       }
@@ -1441,7 +1446,7 @@ function displayDecks(): void {
 }
 function eventSource(ev: Ev): string {
   const s = ev.getSource();
-  return s instanceof Card ? `<IMG class="card" src="${cardImageName(s)}">` : "";
+  return s instanceof Card ? makeDisplayCardImg(s, false, false, false) : "";
 }
 
 function displayGame(ev: Ev): void {
