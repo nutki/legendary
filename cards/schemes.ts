@@ -71,7 +71,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   addStatSet('defense', isHero, c => c.cost + 2);
   addStatSet('isVillain', isHero, () => true);
   addStatSet('villainGroup', isHero, () => "Skrulls");
-  addStatSet('fight', isHero, () => ev => gainEv(ev, ev.source));
+  addStatSet('fight', isHero, () => (ev: Ev) => gainEv(ev, ev.source));
   repeat(12, () => moveCard(gameState.herodeck.top, gameState.villaindeck));
   // TODO require Skrulls
   gameState.villaindeck.shuffle();
@@ -203,6 +203,7 @@ makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3
       twist.each(t => moveCardEv(ev, t, gameState.villaindeck));
       cont(ev, () => gameState.villaindeck.shuffle());
     }
+    // playerState.victory.limit(isTwist).each(c => shuffleIntoEv(ev, c, gameState.villaindeck);
   }
 }], () => {
   addStatMod('defense', isVillain, c => c.captured.count(c => c.cardType === "SCHEME TWIST"));

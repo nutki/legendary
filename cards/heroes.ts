@@ -35,7 +35,9 @@ addTemplates("HEROES", "Legendary", [
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
-    event: "GAIN", match: ev => isWound(ev.what), replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing))
+    event: "GAIN",
+    match: (ev, source) => isWound(ev.what) && (<Card>source).location.owner === ev.who,
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev), () => pushEvents(ev.replacing), ev.source.location.owner)
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
@@ -371,5 +373,457 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
 // COST: 8
   ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", ev => addAttackEvent(ev, turnState.cardsDrawn)),
+},
+]);
+addTemplates("HEROES", "Dark City", [
+{
+  name: "Angel",
+  team: "X-Men",
+// RECRUIT: 2
+// When a card effect causes you to discard this card, rescue a Bystander and draw two cards.
+// COST: 4
+  c1: makeHeroCard("Angel", "Diving Catch", 4, 2, u, Color.STRENGTH, "X-Men", "D", [], { trigger: {
+    event: "DISCARD",
+    match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
+    after: ev => { rescueEv(ev); drawEv(ev, 2); }
+  }}),
+// Draw two cards, then discard a card.
+// COST: 3
+  c2: makeHeroCard("Angel", "High-Speed Chase", 3, u, u, Color.COVERT, "X-Men", "", [ ev => drawEv(ev, 2), ev => pickDiscardEv(ev) ]),
+// ATTACK: 2+
+// You may discard a card. You get + Attack equal to that card's Cost.
+// COST: 5
+  uc: makeHeroCard("Angel", "Drop Off a Friend", 5, u, 2, Color.INSTINCT, "X-Men", "D", ev => selectCardOptEv(ev, "Discard to gain Attack", playerState.hand.deck, c => addAttackEvent(ev, c.cost))),
+// ATTACK: 4
+// Discard any number of cards. Draw that many cards.
+// COST: 7
+  ra: makeHeroCard("Angel", "Strength of Spirit", 7, u, 4, Color.STRENGTH, "X-Men", "", ev => {
+    let count = 0;
+    selectObjectsAnyEv(ev, "Discard cards", playerState.hand.deck, c => { count++; discardEv(ev, c); });
+    cont(ev, () => drawEv(ev, count));
+  }),
+},
+{
+  name: "Bishop",
+  team: "X-Men",
+// RECRUIT: 0+
+// ATTACK: 2
+// Whenever a card you own is KO'd this turn, you get +2 Recruit.
+// COST: 3
+  c1: makeHeroCard("Bishop", "Absorb Energies", 3, 0, 2, Color.COVERT, "X-Men", "D", [], { trigger: {
+    event: "KO",
+    match: (ev, source) => ev.what.location.owner === (<Card>source).location.owner,
+    after: ev => addRecruitEvent(ev, 2)
+  }}),
+// Draw a card.
+// {POWER Covert} You may KO a card from your hand or discard pile.
+// COST: 2
+// GUN: 1
+  c2: makeHeroCard("Bishop", "Whatever the Cost", 2, u, u, Color.RANGED, "X-Men", "GD", [ ev => drawEv(ev, 1), ev => { if (superPower(Color.COVERT)) KOHandOrDiscardEv(ev); } ]),
+// ATTACK: 3+
+// {POWER Ranged Ranged} You get +3 Attack.
+// COST: 5
+// FLAVOR: Bishop absorbs energy, channeling it back into devastating blasts.
+  uc: makeHeroCard("Bishop", "Concussive Blast", 5, u, 3, Color.RANGED, "X-Men", "F", ev => { if (superPower(Color.RANGED, Color.RANGED)) addAttackEvent(ev, 3); }),
+// ATTACK: 4+
+// Discard the top four cards of your deck. You get + Attack equal to those cards' printed Attack.
+// {TEAMPOWER X-Men} KO any number of those cards.
+// COST: 7
+// GUN: 1
+  ra: makeHeroCard("Bishop", "Firepower From the Future", 7, u, 4, Color.TECH, "X-Men", "G", ev => {
+    lookAtDeckEv(ev, 4, () => {
+      addAttackEvent(ev, playerState.revealed.deck.sum(c => c.printedAttack || 0));
+      if (superPower("X-Men")) selectObjectsAnyEv(ev, "KO cards", playerState.revealed.deck, c => KOEv(ev, c));
+    });
+  }),
+},
+{
+  name: "Blade",
+  team: "Marvel Knights",
+// RECRUIT: 0+
+// ATTACK: 2
+// Whenever you defeat a Villain in the Sewers or Rooftops this turn, you get +2 Recruit.
+// COST: 4
+  c1: makeHeroCard("Blade", "Night Hunter", 4, 0, 2, Color.STRENGTH, "Marvel Knights", "GD", [], { trigger: {
+    event: "DEFEAT",
+    match: ev => ev.where.id === "SEWERS" || ev.where.id === "ROOFTOPS",
+    after: ev => addRecruitEvent(ev, 2),
+  }}),
+// ATTACK: 2
+// You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+// COST: 3
+  c2: makeHeroCard("Blade", "Stalk the Prey", 3, u, 2, Color.COVERT, "Marvel Knights", "GD", ev => {
+    selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjecent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    });
+  }),
+// ATTACK: 3
+// Whenever you defeat a Villain in the Sewers or Rooftops this turn, draw two cards.
+// COST: 6
+  uc: makeHeroCard("Blade", "Nowhere to Hide", 6, u, 3, Color.TECH, "Marvel Knights", "G", [], { trigger: {
+    event: "DEFEAT",
+    match: ev => ev.where.id === "SEWERS" || ev.where.id === "ROOFTOPS",
+    after: ev => drawEv(ev, 2),
+  }}),
+// ATTACK: 0+
+// You get +1 Attack for each Villain in your Victory Pile.
+// COST: 7
+  ra: makeHeroCard("Blade", "Vampiric Surge", 7, u, 0, Color.INSTINCT, "Marvel Knights", "G", ev => addAttackEvent(ev, playerState.victory.count(isVillain))),
+},
+{
+  name: "Cable",
+  team: "X-Force",
+// RECRUIT: 2
+// When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
+// COST: 3
+  c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger: {
+    event: "STRIKE",
+    before: ev => chooseMayEv(ev, "Discard to draw three extra cards", ev => { discardEv(ev, ev.source); turnState.endDrawMod += 3; }, ev.source.location.owner) // TODO does this work when not in hand and on other players turn?
+  }}),
+// ATTACK: 2+
+// You get +2 Attack only when fighting Masterminds.
+// COST: 4
+// GUN: 1
+  c2: makeHeroCard("Cable", "Strike at the Heart of Evil", 4, u, 2, Color.RANGED, "X-Force", "GD", ev => addAttackSpecialEv(ev, isMastermind, 2)), // TODO
+// ATTACK: 3+
+// <b>Teleport</b>
+// {TEAMPOWER X-Force} You get +1 Attack for each other X-Force Hero you played this turn.
+// COST: 6
+// GUN: 1
+  uc: makeHeroCard("Cable", "Rapid Response Force", 6, u, 3, Color.COVERT, "X-Force", "G", ev => addAttackEvent(ev, superPower("X-Force")), { teleport: true }),
+// ATTACK: 5+
+// KO any number of cards from your hand. You get +1 Attack for each card KO'd this way.
+// COST: 8
+// GUN: 1
+  ra: makeHeroCard("Cable", "Army of One", 8, u, 5, Color.TECH, "X-Force", "G", ev => selectObjectsAnyEv(ev, "KO cards", playerState.hand.deck, c => { KOEv(ev, c); addAttackEvent(ev, 1); })),
+},
+{
+  name: "Colossus",
+  team: "X-Force",
+// ATTACK: 3
+// You gain a Wound.
+// COST: 1
+// FLAVOR: When enemies get charged by a huge steel titan, that tends to occupy their attention.
+  c1: makeHeroCard("Colossus", "Draw Their Fire", 1, u, 3, Color.STRENGTH, "X-Force", "F", ev => gainWoundEv(ev)),
+// RECRUIT: 2
+// If you would gain a Wound, you may discard this card instead. If you do, draw two cards.
+// COST: 3
+  c2: makeHeroCard("Colossus", "Invulnerability", 3, 2, u, Color.STRENGTH, "X-Force", "D", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source) => isWound(ev.what) && ev.who === (<Card>source).location.owner,
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2), () => pushEvents(ev.replacing), ev.source.location.owner)
+  }}),
+// ATTACK: 4+
+// {POWER Strength} You get +2 Attack.
+// COST: 6
+// FLAVOR: No one expects an enormous metal brawler to take the stealthy approach.
+  uc: makeHeroCard("Colossus", "Silent Statue", 6, u, 4, Color.COVERT, "X-Force", "FD", ev => { if (superPower(Color.STRENGTH)) addAttackEvent(ev, 2); }),
+// ATTACK: 6
+// If another player would gain a Wound, you may reveal this card to gain that Wound and draw a card.
+// COST: 8
+  ra: makeHeroCard("Colossus", "Russian Heavy Tank", 8, u, 6, Color.STRENGTH, "X-Force", "", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source) => isWound(ev.what) && ev.who !== (<Card>source).location.owner,
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => { gainEv(ev, ev.parent.what); drawEv(ev); }, () => pushEvents(ev.replacing), ev.source.location.owner)
+  }}),
+},
+{
+  name: "Daredevil",
+  team: "Marvel Knights",
+// RECRUIT: 2
+// When you play Backflip, the next Hero you recruit this turn goes on top of your deck.
+// COST: 3
+  c1: makeHeroCard("Daredevil", "Backflip", 3, 2, u, Color.STRENGTH, "Marvel Knights", "D", ev => turnState.nextHeroRecruit = "DECK"),
+// ATTACK: 2+
+// Choose a number, then reveal the top card of your deck. If the card is that Cost, you get +2 Attack.
+// COST: 4
+  c2: makeHeroCard("Daredevil", "Radar Sense", 4, u, 2, Color.INSTINCT, "Marvel Knights", "D", ev => {
+    chooseCostEv(ev, n => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(c => c.cost === n).withTop(c => addAttackEvent(ev, 2))));
+  }),
+// ATTACK: 4
+// Choose a number, then reveal the top card of your deck. If the card is that Cost, draw it.
+// COST: 6
+  uc: makeHeroCard("Daredevil", "Blind Justice", 6, u, 4, Color.COVERT, "Marvel Knights", "", ev => chooseCostEv(ev, n => drawIfEv(ev, c => c.cost === n))),
+// ATTACK: 7
+// Choose a number, then reveal the top card of your deck. If the card is that Cost, draw it and repeat this process.
+// COST: 8
+  ra: makeHeroCard("Daredevil", "The Man Without Fear", 8, u, 7, Color.INSTINCT, "Marvel Knights", "", ev => {
+    let f = () => chooseCostEv(ev, n => drawIfEv(ev, c => c.cost === n, f)); f();
+  }),
+},
+{
+  name: "Domino",
+  team: "X-Force",
+// RECRUIT: 0+
+// ATTACK: 0+
+// Draw a card.
+// {TEAMPOWER X-Force} {VERSATILE 1}
+// COST: 1
+  c1: makeHeroCard("Domino", "Lucky Break", 1, 0, 0, Color.TECH, "X-Force", "G", [ ev => drawEv(ev, 1), ev => { if (superPower("X-Force")) versatileEv(ev, 1); } ]),
+// RECRUIT: 0+
+// ATTACK: 0+
+// {VERSATILE 2}
+// COST: 3
+// FLAVOR: With Domino's mutant probability powers, every day is the luckiest day of her life.
+  c2: makeHeroCard("Domino", "Ready for Anything", 3, 0, 0, Color.INSTINCT, "X-Force", "GFD", ev => versatileEv(ev, 2)),
+// RECRUIT: 0+
+// ATTACK: 0+
+// You may discard a card from your hand. If that card had a Recruit icon, you get +4 Recruit. If that card had an Attack icon, you get +4 Attack.
+// COST: 5
+  uc: makeHeroCard("Domino", "Specialized Ammunition", 5, 0, 0, Color.TECH, "X-Force", "G", ev => selectCardOptEv(ev, "Choose a card to KO", playerState.hand.deck, sel => {
+    discardEv(ev, sel);
+    if (sel.printedAttack !== undefined) addAttackEvent(ev, 4);
+    if (sel.printedRecruit !== undefined) addRecruitEvent(ev, 4);
+  })),
+// RECRUIT: 0+
+// ATTACK: 0+
+// {VERSATILE 5}
+// {TEAMPOWER X-Force} This card and each other {VERSATILE} ability you use for the rest of this turn produces both Recruit and Attack.
+// COST: 7
+  ra: makeHeroCard("Domino", "Against All Odds", 7, 0, 0, Color.COVERT, "X-Force", "G", [ ev => { if (superPower("X-Force")) turnState.versatileBoth = true; }, ev => versatileEv(ev, 5)]),
+},
+{
+  name: "Elektra",
+  team: "Marvel Knights",
+// ATTACK: 1+
+// If this is the first card you played this turn, you get +1 Attack.
+// COST: 1
+  c1: makeHeroCard("Elektra", "First Strike", 1, u, 1, Color.COVERT, "Marvel Knights", "", ev => { if (turnState.cardsPlayed.size === 0) addAttackEvent(ev, 1); }),
+// RECRUIT: 0+
+// Draw a card.
+// {POWER Covert} You get +2 Recruit.
+// COST: 2
+// FLAVOR: Zen is the absence of motion. Ninjitsu, the absence of stillness.
+  c2: makeHeroCard("Elektra", "Ninjitsu", 2, 0, u, Color.INSTINCT, "Marvel Knights", "FD", [ ev => drawEv(ev, 1), ev => { if (superPower(Color.COVERT)) addRecruitEvent(ev, 2); } ]),
+// ATTACK: 4+
+// You get +1 Attack for each Hero you played this turn that costs 1 or 2.
+// COST: 6
+  uc: makeHeroCard("Elektra", "Sai Blades", 6, u, 4, Color.INSTINCT, "Marvel Knights", "D", ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cost === 1 || c.cost === 2))),
+// RECRUIT: 5+
+// When you play Silent Meditation, the next Hero you recruit this turn goes into your hand.
+// {TEAMPOWER Marvel Knights} You get +2 Recruit.
+// COST: 7
+  ra: makeHeroCard("Elektra", "Silent Meditation", 7, 5, u, Color.INSTINCT, "Marvel Knights", "D", ev => {
+    turnState.nextHeroRecruit = "HAND";
+    if (superPower("Marvel Knights")) addRecruitEvent(ev, 2);
+  }),
+},
+{
+  name: "Forge",
+  team: "X-Force",
+// ATTACK: 2
+// {POWER Tech} Any Villain you fight in the Sewers this turn gets -2 Attack.
+// COST: 3
+// GUN: 1
+  c1: makeHeroCard("Forge", "Dirty Work", 3, u, 2, Color.TECH, "X-Force", "GD", ev => {
+    if (superPower(Color.TECH)) addTurnMod("defense", c => isVillain(c) && c.location.id === "SEWERS", -2);   
+  }),
+// RECRUIT: 2
+// {POWER Tech} You may discard a card. If you do, draw two cards.
+// COST: 4
+// GUN: 1
+  c2: makeHeroCard("Forge", "Reboot", 4, 2, u, Color.TECH, "X-Force", "GD", ev => {
+    selectCardEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev, 2); });
+  }),
+// RECRUIT: 0+
+// ATTACK: 0+
+// {VERSATILE 3}
+// COST: 5
+// FLAVOR: When Forge can't find the turret remote, he just takes a couple of spoons and builds a new one.
+  uc: makeHeroCard("Forge", "Overdrive", 5, 0, 0, Color.TECH, "X-Force", "F", ev => versatileEv(ev, 3)),
+// ATTACK: 5
+// {POWER Tech Tech} Defeat the Mastermind once for free.
+// COST: 7
+// FLAVOR: That's a BIG FREAKING GUN!!!!
+// GUN: 1
+  ra: makeHeroCard("Forge", "B.F.G.", 7, u, 5, Color.TECH, "X-Force", "GF", ev => {
+    if (superPower(Color.TECH, Color.TECH)) selectCardEv(ev, "Defeat a mastermind", gameState.mastermind.deck, sel => defeatEv(ev, sel));
+  }),
+},
+{
+  name: "Ghost Rider",
+  team: "Marvel Knights",
+// ATTACK: 2+
+// You may KO a Villain from your Victory Pile. If you do, you get +3 Attack.
+// COST: 5
+  c1: makeHeroCard("Ghost Rider", "Blazing Hellfire", 5, u, 2, Color.RANGED, "Marvel Knights", "D", ev => {
+    selectCardOptEv(ev, "KO a Villain", playerState.victory.limit(isVillain), c => { KOEv(ev, c); addAttackEvent(ev, 3); });
+  }),
+// RECRUIT: 2+
+// {TEAMPOWER Marvel Knights} You get +2 Recruit.
+// COST: 3
+// FLAVOR: Most motorcycles don't drive up walls. Most don't drive into your nightmares.
+  c2: makeHeroCard("Ghost Rider", "Hell on Wheels", 3, 2, u, Color.TECH, "Marvel Knights", "FD", ev => { if (superPower("Marvel Knights")) addRecruitEvent(ev, 2); }),
+// Draw a card.
+// {POWER Strength} Defeat a Villain of 3 Attack or less for free.
+// COST: 2
+  uc: makeHeroCard("Ghost Rider", "Infernal Chains", 2, u, u, Color.STRENGTH, "Marvel Knights", "D", [ ev => drawEv(ev, 1), ev => {
+    if (superPower(Color.TECH)) selectCardEv(ev, "Defeat a Villain", villains(), sel => defeatEv(ev, sel));
+  }]),
+// ATTACK: 3+
+// Each player KOs a Villain from their Victory Pile. You get +1 Attack for each Villain KO'd this way.
+// {TEAMPOWER Marvel Knights} Put one of those Villains into your Victory Pile.
+// COST: 8
+  ra: makeHeroCard("Ghost Rider", "Penance Stare", 8, u, 3, Color.RANGED, "Marvel Knights", "", ev => {
+    let koed: Card[] = [];
+    eachPlayer(p => selectCardEv(ev, "KO a Villain", p.victory.limit(isVillain), c => { KOEv(ev, c); koed.push(c); }, p));
+    if (superPower("Marvel Knights")) selectCardEv(ev, "Choose a Villain", koed, c => moveCardEv(ev, c, playerState.victory));
+  }),
+},
+{
+  name: "Iceman",
+  team: "X-Men",
+// RECRUIT: 0+
+// Draw a card.
+// {POWER Ranged} You get +1 Recruit for each other [Ranged] Hero you played this turn.
+// COST: 2
+  c1: makeHeroCard("Iceman", "Deep Freeze", 2, 0, u, Color.RANGED, "X-Men", "D", ev => drawEv(ev, 1)),
+// ATTACK: 2+
+// {POWER Ranged} You get +1 Attack for each other [Ranged] Hero you played this turn.
+// COST: 4
+  c2: makeHeroCard("Iceman", "Ice Slide", 4, u, 2, Color.RANGED, "X-Men", "D"),
+// ATTACK: 3
+// {POWER Ranged} Draw a card for each [Ranged] Hero you played this turn.
+// COST: 5
+  uc: makeHeroCard("Iceman", "Frost Spike Armor", 5, u, 3, Color.STRENGTH, "X-Men", ""),
+// ATTACK: 7
+// If a Villain, Master Strike, or Mastermind Tactic would cause you to gain any Wounds or discard any cards, you may reveal this card instead.
+// COST: 8
+  ra: makeHeroCard("Iceman", "Impenetrable Ice Wall", 8, u, 7, Color.RANGED, "X-Men", ""),
+},
+{
+  name: "Iron Fist",
+  team: "Marvel Knights",
+// RECRUIT: 0+
+// You get +1 Recruit for each Hero with a different Cost you have.
+// COST: 3
+  c1: makeHeroCard("Iron Fist", "Focus Chi", 3, 0, u, Color.INSTINCT, "Marvel Knights", ""),
+// ATTACK: 0+
+// You get +1 Attack for each Hero with a different Cost you have.
+// COST: 4
+  c2: makeHeroCard("Iron Fist", "Wield the Iron Fist", 4, u, 0, Color.STRENGTH, "Marvel Knights", ""),
+// RECRUIT: 0+
+// ATTACK: 0+
+// Draw a card.
+// {POWER Strength Strength} {VERSATILE 2}
+// COST: 1
+  uc: makeHeroCard("Iron Fist", "Ancient Legacy", 1, 0, 0, Color.STRENGTH, "Marvel Knights", "D", [ ev => drawEv(ev, 1), ev => { if (superPower(Color.STRENGTH, Color.STRENGTH)) versatileEv(ev, 2); } ]),
+// ATTACK: 8
+// Reveal cards from your deck until you have revealed two cards with the same Cost. Draw all the cards you revealed.
+// COST: 9
+  ra: makeHeroCard("Iron Fist", "Living Weapon", 9, u, 8, Color.STRENGTH, "Marvel Knights", ""),
+},
+{
+  name: "Jean Grey",
+  team: "X-Men",
+// ATTACK: 2
+// {TEAMPOWER X-Men} Rescue a Bystander.
+// COST: 3
+// FLAVOR: Amid violent chaos, a soundless voice leads to safety.
+  c1: makeHeroCard("Jean Grey", "Psychic Search", 3, u, 2, Color.RANGED, "X-Men", "FD", ev => { if (superPower("X-Men")) rescueEv(ev); }),
+// RECRUIT: 3+
+// Whenever you rescue a Bystander this turn, you get +1 Recruit.
+// COST: 5
+  c2: makeHeroCard("Jean Grey", "Read Your Thoughts", 5, 3, u, Color.COVERT, "X-Men", ""),
+// ATTACK: 4
+// Whenever you rescue a Bystander this turn, draw a card.
+// COST: 6
+  uc: makeHeroCard("Jean Grey", "Mind Over Matter", 6, u, 4, Color.COVERT, "X-Men", ""),
+// ATTACK: 5+
+// Whenever you rescue a Bystander this turn, you get +1 Attack.
+// {TEAMPOWER X-Men} Rescue a Bystander for each other X-Men Hero you played this turn.
+// COST: 7
+  ra: makeHeroCard("Jean Grey", "Telekinetic Mastery", 7, u, 5, Color.RANGED, "X-Men", ""),
+},
+{
+  name: "Nightcrawler",
+  team: "X-Men",
+// RECRUIT: 2
+// <b>Teleport</b>
+// COST: 3
+// FLAVOR: "Now you see me..." BAMF!"
+  c1: makeHeroCard("Nightcrawler", "Bamf!", 3, 2, u, Color.INSTINCT, "X-Men", "FD"),
+// ATTACK: 2
+// <b>Teleport</b>
+// COST: 4
+// FLAVOR: Sometimes it is best to hide now and fight later.
+  c2: makeHeroCard("Nightcrawler", "Blend Into Shadows", 4, u, 2, Color.COVERT, "X-Men", "FD"),
+// ATTACK: 3+
+// {POWER Covert Instinct} You get +3 Attack.
+// COST: 5
+// FLAVOR: Chivalry wears blue fur.
+  uc: makeHeroCard("Nightcrawler", "Swashbuckler", 5, u, 3, Color.INSTINCT, "X-Men", "F", ev => { if (superPower(Color.COVERT, Color.INSTINCT)) addAttackEvent(ev, 3); }),
+// ATTACK: 5
+// <b>Teleport</b>
+// When you play or <b>Teleport</b> this card, you may also <b>Teleport</b> up to three other cards from your hand.
+// COST: 7
+  ra: makeHeroCard("Nightcrawler", "Along for the Ride", 7, u, 5, Color.COVERT, "X-Men", ""),
+},
+{
+  name: "Professor X",
+  team: "X-Men",
+// RECRUIT: 2
+// You may put a Hero from the HQ on the bottom of the Hero Deck.
+// {POWER Instinct} You may KO a card from your hand or discard pile.
+// COST: 3
+// FLAVOR: "What do they call you? Wheels?"
+  c1: makeHeroCard("Professor X", "Class Dismissed", 3, 2, u, Color.INSTINCT, "X-Men", "FD", ev => { if (superPower(Color.INSTINCT)) KOHandOrDiscardEv(ev, undefined); }),
+// ATTACK: 1+
+// {TEAMPOWER X-Men} You get +2 Attack.
+// COST: 2
+// FLAVOR: In a plane of pure mental energy, Xavier's body is as powerful as his mind.
+  c2: makeHeroCard("Professor X", "Psionic Astral Form", 2, u, 1, Color.RANGED, "X-Men", "FD", ev => { if (superPower("X-Men")) addAttackEvent(ev, 2); }),
+// ATTACK: 3
+// Reveal the top card of the Villain Deck. If it's a Bystander, you may rescue it. If it's a Villain, you may fight it this turn.
+// COST: 5
+  uc: makeHeroCard("Professor X", "Telepathic Probe", 5, u, 3, Color.RANGED, "X-Men", ""),
+// ATTACK: 6
+// Whenever you defeat a Villain this turn, you may gain it. It becomes a grey Hero with no text that gives + Attack equal to its Attack. (You still get its VP.)
+// COST: 8
+  ra: makeHeroCard("Professor X", "Mind Control", 8, u, 6, Color.COVERT, "X-Men", ""),
+},
+{
+  name: "Punisher",
+  team: "Marvel Knights",
+// Reveal the top card of your deck. If it costs 0, KO it.
+// {POWER Tech} Draw a card.
+// COST: 2
+// FLAVOR: The Punisher always knows which cops are corrupt.
+  c1: makeHeroCard("Punisher", "Boom Goes the Dynamite", 2, u, u, Color.TECH, "Marvel Knights", "GFD", ev => { if (superPower(Color.TECH)) drawEv(ev, 1); }),
+// ATTACK: 2+
+// Reveal the top card of the Villain Deck. If it's a Villain, you get + Attack equal to its printed VP.
+// {POWER Tech Tech} You may defeat that Villain for free.
+// COST: 5
+  c2: makeHeroCard("Punisher", "Hail of Bullets", 5, u, 2, Color.TECH, "Marvel Knights", "GD"),
+// RECRUIT: 2+
+// {POWER Strength} Each other player reveals the top card of their deck. If that card costs 4 or more, discard it. You get +1 Recruit for each card discarded this way.
+// COST: 3
+  uc: makeHeroCard("Punisher", "Hostile Interrogation", 3, 2, u, Color.STRENGTH, "Marvel Knights", "GD"),
+// ATTACK: 4+
+// Reveal cards from the Hero Deck until you have revealed two cards with the same Cost. You get +1 Attack for each card revealed this way. Put them on the bottom of the Hero Deck in random order.
+// COST: 8
+  ra: makeHeroCard("Punisher", "The Punisher", 8, u, 4, Color.TECH, "Marvel Knights", "G"),
+},
+{
+  name: "Wolverine",
+  team: "X-Force",
+// ATTACK: 0+
+// Draw a card.
+// {POWER Instinct} You get +2 Attack.
+// COST: 2
+// FLAVOR: To avoid injury, it's best to keep a distance from Wolverine of at least 5,000 miles.
+  c1: makeHeroCard("Wolverine", "Animal Instincts", 2, u, 0, Color.INSTINCT, "X-Force", "FD", [ ev => drawEv(ev, 1), ev => { if (superPower(Color.INSTINCT)) addAttackEvent(ev, 2); } ]),
+// ATTACK: 2+
+// If you drew any extra cards this turn, you get +2 Attack.
+// COST: 4
+  c2: makeHeroCard("Wolverine", "Sudden Ambush", 4, u, 2, Color.COVERT, "X-Force", "D"),
+// Draw a card.
+// You may KO a card from your hand or discard pile.
+// COST: 4
+  uc: makeHeroCard("Wolverine", "No Mercy", 4, u, u, Color.STRENGTH, "X-Force", "", [ ev => drawEv(ev, 1), ev => KOHandOrDiscardEv(ev, undefined) ]),
+// ATTACK: 3
+// Count the number of extra cards you drew this turn. Draw that many cards.
+// COST: 7
+  ra: makeHeroCard("Wolverine", "Reckless Abandon", 7, u, 3, Color.COVERT, "X-Force", ""),
 },
 ]);

@@ -71,23 +71,42 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
 ]),
 ]);
 
+/*
+ * TODO
+ * lookAtVillainDeckEv
+ * mastermind modifiers
+ * mastermind tiggers
+ * mastermind wins (DONE evilWinsEv(ev, ev.source))
+ * leading
+ * mastermind - tacic link
+ * shuffleInto
+ * finalTactic (function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; })
+ * findVillainTemplate(ev.source.leading).cards.size
+ */
 addTemplates("MASTERMINDS", "Dark City", [
-// Four Horsemen Villains get +2 Attack
-// Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped
+// Four Horsemen Villains get +2 Attack // TODO addStatMod
+// Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped // TODO mastermind tiggers, ways to find villain group size
 makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
 // Each player reveals their hand and puts all their Heroes that cost 1 or more on top of their deck.
+  // TODO multiplayer reveal?
+  eachPlayer(p => p.hand.limit(c => c.cost >= 1).each(c => moveCardEv(ev, c, p.deck)));
 }, [
   [ "Apocalyptic Destruction", ev => {
   // Each other player KOs two Heroes from their discard pile that each cost 1 or more.
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "KO two Heroes", 2, p.discard.limit(c => c.cost >= 1), c => KOEv(ev, c), p));
   } ],
   [ "The End of All Things", ev => {
   // Each other player reveals the top three cards of their deck, KOs each one of those cards that cost 1 or more, and puts the rest back in any order.
+    eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => selectCardAndKOEv(ev, p.revealed.limit(c => c.cost >= 1), p), p));
   } ],
   [ "Horsemen Are Drawing Nearer", ev => {
   // Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.
+    // TODO multiplayer order?
+    // eachOtherPlayerVM(p => selectCardEv(ev, "Play a Villain", p.victory.limit(c => c.villainGroup == ev.source.mastermind.leading), c => villainDrawEv(ev, c), p)); TODO leadBy
   } ],
   [ "Immortal and Undefeated", ev => {
   // If this is not the final Tactic, rescue six Bystanders and shuffle this Tactic back into the other Tactics.
+    // if (!finalTactic(ev.source)) {rescueEv(ev, 6); shuffleIntoEv(ev, ev.source, ev.source.mastermind.attached("TACTICS"));} shuffleIntoEv = moveCardEv + cont(shuffle(to))
   } ],
 ]),
 // {BRIBE}
@@ -101,7 +120,7 @@ makeMastermindCard("Kingpin", 13, 6, "Streets of New York", ev => {
   } ],
   [ "Criminal Empire", ev => {
   // If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
-  //  if (!ev.final) lookAtVillainDeckEv(ev, 3, gameState.villaindeck.revealed.limit(isVillain).each(c => villainDrawEv(ev, c)), true); // TODO lookAtVillainDeckEv and final
+  //  if (!finalTactic(ev.source)) lookAtVillainDeckEv(ev, 3, gameState.villaindeck.revealed.limit(isVillain).each(c => villainDrawEv(ev, c)), true); // TODO lookAtVillainDeckEv
   } ],
   [ "Dirty Cops", ev => {
   // Put a 0 Cost Hero from the KO pile on top of each other player's deck.
@@ -109,10 +128,10 @@ makeMastermindCard("Kingpin", 13, 6, "Streets of New York", ev => {
   } ],
   [ "Mob War", ev => {
   // Each other player plays a Henchman Villain from their Victory Pile as if playing it from the Villain Deck.
-  //  eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Henchman to play", p.victory.limit(isHenchman), c => villainDrawEv(ev, c), p)); // TODO isHenchmen
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Henchman to play", p.victory.limit(isHenchman), c => villainDrawEv(ev, c), p));
   } ],
 ], { bribe: true }),
-// Whenever a player gains a Wound, put it on top of that player's deck.
+// Whenever a player gains a Wound, put it on top of that player's deck. // TODO mastermind triggers
 makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
 // Each player reveals a Marvel Knights Hero or gains a Wound.
   eachPlayer(p => revealOrEv(ev, "Marvel Knights", () => gainWoundEv(ev, p), p));
@@ -128,43 +147,65 @@ makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
   } ],
   [ "Pain Begets Pain", ev => {
   // Choose any number of Wounds from your hand and discard pile. The player to your right gains them.
+    selectObjectsAnyEv(ev, `Choose Wounds for ${playerState.right.name} to gain`, handOrDiscard(), c => gainEv(ev, c, playerState.right));
   } ],
   [ "The Price of Failure", ev => {
   // Each other player without a Mastermind Tactic in their Victory Pile gains a Wound.
+    eachOtherPlayerVM(p => { if (!p.victory.has(isTactic)) gainWoundEv(ev, p); });
   } ],
 ]),
 // Mr. Sinister gets +1 Attack for each Bystander he has.
 makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
 // Mr. Sinister captures a Bystander. Then each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Mr. Sinister has.
+  let sinister = ev.source;
+  captureEv(ev, sinister);
+  gameState.players.limit(p => p.hand.size === 6).each(p => revealOrEv(ev, Color.COVERT, () => selectObjectsEv(ev, "Select cards to discard", sinister.captured.count(isBystander), p.hand.deck, c => discardEv(ev, c)), p));
 }, [
   [ "Human Experimentation", ev => {
   // Mr. Sinister captures Bystanders equal to the number of Villains in the city.
+     repeat(CityCards().count(isVillain), () => captureEv(ev, <Card>ev.where.attachedTo));
   } ],
   [ "Master Geneticist", ev => {
   // Reveal the top seven cards of the Villain Deck. Mr. Sinister captures all of the Bystanders you revealed. Put the rest back in random order.
+    // lookAtVillainDeckEv(ev, 7, gameState.villaindeck.revealed.limit(isBystander).each(c => captureEv(ev, c)), true) TODO
   } ],
   [ "Plans Within Plans", ev => {
   // Mr. Sinister captures a Bystander for each Mr. Sinister Tactic in players' Victory Piles, including this Tactic.
+    repeat(gameState.players.sum(p => p.victory.count(c => ev.source.mastermind === c.mastermind)), () => captureEv(ev, ev.source.mastermind)); // TODO way to identify tactic owner
   } ],
   [ "Telepathic Manipulation", ev => {
   // Mr. Sinister captures a Bystander from each other player's Victory Pile.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Bystander", p.discard.deck, c => captureEv(ev, <Card>ev.where.attachedTo, c)));
   } ],
-]),
+], {
+  varDefense: c => c.printedDefense + c.captured.count(isBystander),
+}),
 // Stryfe gets +1 Attack for each Master Strike stacked next to him. Each player reveals an X-Force Hero or discards a card at random.
 makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
 // Stack this Master Strike next to Stryfe.
+  attachCardEv(ev, ev.what, ev.source, "STRIKE");
+  eachPlayer(p => revealOrEv(ev, "X-Force", () => p.deck.withRandom(c => discardEv(ev, c)), p));
 }, [
   [ "Furious Wrath", ev => {
   // Reveal the top six cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest back in random order.
+    // lookAtVillainDeckEv(ev, 6, gameState.villaindeck.revealed.limit(isStrike).each(c => playStrikeEv(ev, c)), true) TODO lookAtVillainDeckEv
   } ],
   [ "Psychic Torment", ev => {
   // Look at the top five cards of your deck. Put one into your hand and discard the rest.
+    lookAtDeckEv(ev, 5, ev => {
+      selectCardEv(ev, "Choose a card to put in your hand", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.hand));
+      cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
+    })
   } ],
   [ "Swift Vengeance", ev => {
   // A Wound from the Wound Stack becomes a Master Strike that takes effect immediately.
+    gameState.wounds.withTop(c => playStrikeEv(ev, c));
   } ],
   [ "Tide of Retribution", ev => {
   // Each other player reveals an X-Force Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, "X-Force", () => gainWoundEv(ev, p), p));
   } ],
-]),
+], {
+  varDefense: c => c.printedDefense + c.attached("STRIKE").size,
+}),
 ]);

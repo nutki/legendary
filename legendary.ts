@@ -51,13 +51,14 @@ interface Card {
   color: number
   attack: number
   printedAttack: number
+  printedRecruit: number
   printedDefense: number
   recruit: number
   defense: number
   vp?: number
   isPlayable?: () => boolean
   canPlay?: () => boolean
-  playCostType?: string
+  playCostType?: "DISCARD" | "TOPDECK"
   playCost?: number
   fightCond?: (c?: Card) => boolean
   isHealable: () => boolean
@@ -92,6 +93,10 @@ interface Card {
   villainGroup?: string
   cardName?: string
   mastermind?: Card
+  isHenchman?: boolean
+  hasTeleport?: () => boolean
+  teleport?: boolean
+  soaring?: boolean
 }
 interface VillainCardAbillities {
   ambush?: (ev: Ev) => void
@@ -101,14 +106,18 @@ interface VillainCardAbillities {
   varDefense?: (c: Card) => number
   fightCond?: (c?: Card) => boolean
   bribe?: boolean
+  isHenchman?: boolean
 }
 interface MastermindCardAbillities {
+  varDefense?: (c: Card) => number  
+  bribe?: boolean
 }
 interface HeroCardAbillities {
   trigger?: Trigger
   playCost?: number
   playCostType?: string
   copyPasteCard?: boolean
+  teleport?: boolean
 }
 let Card = function(t: string) {
   this.cardType = t;
@@ -135,6 +144,7 @@ Card.prototype = {
   isColor: function(c: number) { return (this.color & c) !== 0; },
   isTeam: function(t: string) { return this.team === t; },
   isGroup: function(t: string) { return this.villainGroup === t; },
+  hasTeleport: function () { return this.teleport; },
   attachedDeck: function (name: string) { return attachedDeck(name, this); },
   attached: function (name: string) { return attachedCards(name, this); },
   get captured() { return this.attached('CAPTURED'); },
@@ -214,7 +224,8 @@ function makeWoundCard(cond: (c: Card) => boolean, heal: (ev: Ev) => void, name?
   return c;
 }
 function makeHenchmenCard(name: string, defense: number, abilities: VillainCardAbillities) {
-  return makeVillainCard(undefined, name, defense, 1, abilities);
+  abilities.isHenchman = true;
+  return makeVillainCard(name, name, defense, 1, abilities);
 }
 function makeCardInPlay(c: Card, where: Deck, bottom?: boolean) {
   if (c.ctype === "P") throw TypeError("need card template");
@@ -287,6 +298,7 @@ interface Deck {
   withTop: (f: (c: Card) => void) => void
   withFirst: (f: (c: Card) => void) => void
   withLast: (f: (c: Card) => void) => void
+  withRandom: (f: (c: Card) => void) => void
   attachedDeck: (name: string) => Deck
   attached: (name: string) => Card[]
   _attached: {[name: string]:Deck}
@@ -325,6 +337,7 @@ Deck.prototype = {
   withTop: function(f: (c: Card) => void) { if (this.size !== 0) f(this.top); },
   withFirst: function(f: (c: Card) => void) { if (this.size !== 0) f(this.first); },
   withLast: function(f: (c: Card) => void) { if (this.size !== 0) f(this.last); },
+  withRandom: function (f: (c: Card) => void) {if (this.size !== 0) f(this.deck[gameState.gameRand.nextRange(0, this.size)]); },
   attachedDeck: function (name: string): Deck { return attachedDeck(name, this); },
   attached: function (name: string): Card[] { return attachedCards(name, this); },
   deckList: [],
@@ -334,11 +347,15 @@ interface Array<T> {
   size: number
   count: (f: Filter<T>) => number
   limit: (f: Filter<T>) => T[]
+  unique: (f: (c: T) => any) => T[]
   has: (f: Filter<T>) => boolean
   each: (f: (c: T) => void) => void
+  sum: (f: (c: T) => number) => number
+  merge: () => T
   withTop: (f: (c: T) => void) => void
   withFirst: (f: (c: T) => void) => void
   withLast: (f: (c: T) => void) => void
+  withRandom: (f: (c: T) => void) => void
   shuffle: () => void
 }
 Array.prototype.count = function (f) { return count(this, f); };
@@ -347,10 +364,14 @@ Array.prototype.shuffle = function () { shuffleArray(this, gameState.gameRand); 
 Array.prototype.limit = function (f) { return limit(this, f); };
 Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function (f) { return this.forEach(f); };
+Array.prototype.sum = function (f) { return this.map(f).reduce((a, v) => a + v, 0); };
+Array.prototype.merge = function () { return this.reduce((a, v) => a.concat(v), []); };
+Array.prototype.unique = function () { let m = new Set(); return this.filter(e => { let p = m.has(e); m.add(e); return p; }) }
 Object.defineProperty(Array.prototype, 'first', { get: function() { return this[0]; }, set: function(v) { return this[0] = v; } });
 Object.defineProperty(Array.prototype, 'last', { get: function() { return this[this.size-1]; }, set: function(v) { return this[this.size - 1] = v; } });
 Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
 Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
+Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[gameState.gameRand.nextRange(0, this.size)]); };
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
 interface Ev {
@@ -486,6 +507,7 @@ interface Player {
   discard: Deck
   victory: Deck
   revealed: Deck
+  teleported: Deck
   left: Player
   right: Player
   hand: Deck
@@ -503,6 +525,8 @@ interface Turn extends Ev {
   cardsPlayed: Card[]
   modifiers: Modifiers<any>
   triggers: Trigger[]
+  versatileBoth?: boolean
+  nextHeroRecruit?: "HAND" | "DECK" | "SOARING"
 }
 interface Trigger {
   event: string
@@ -607,6 +631,7 @@ playerState = {
   hand: new Deck('HAND0', true),
   victory: new Deck('VICTORY0', true),
   revealed: new Deck('REVEALED0', true),
+  teleported: new Deck('TELEPORT0', true),
   left: undefined,
   right: undefined,
 };
@@ -813,6 +838,10 @@ function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
 function isHero(c: Card): boolean { return c.cardType === "HERO"; }
 function isVillain(c: Card): boolean { return c.cardType === "VILLAIN"; }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
+function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
+function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
+function isTwist(c: Card): boolean { return c.cardType === "SCHEME TWIST"; }
+function isHenchman(c: Card): boolean { return c.isHenchman === true; }
 function isEnemy(c: Card): boolean { return isVillain(c) || isMastermind(c); }
 function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER"; }
 function isPlayable(c: Card): boolean { return c.isPlayable(); }
@@ -841,10 +870,20 @@ function soloVP(): number {
   return - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
 }
 function currentVP(p?: Player): number {
-  return owned(p).map(c => c.vp || 0).reduce((a, b) => a + b, 0) + soloVP();
+  return owned(p).sum(c => c.vp || 0) + soloVP();
 }
 function HQCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards(): Card[] { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
+function cityAdjecent(l: Deck): Deck[] {
+  let pos = gameState.city.indexOf(l);
+  let ret: Deck[] = [];
+  if (!l.isCity || pos < 0) return ret;
+  let c1 = gameState.city[pos - 1];
+  let c2 = gameState.city[pos + 1];
+  if (c1 && c1.isCity) ret.push(c1);
+  if (c2 && c2.isCity) ret.push(c2);
+  return ret;
+}
 function HQCardsHighestCost(): Card[] {
   let all = HQCards();
   let maxCost = 0;
@@ -864,10 +903,10 @@ function withCity(where: string, f: (d: Deck) => void) {
   gameState.city.limit(e => e.id === where).each(f);
 }
 function hasBystander(c: Card): boolean { return c.captured.has(isBystander); }
-function eachOtherPlayer(f: (p: Player) => void) { let r = gameState.players.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
-function eachOtherPlayerVM(f: (p: Player) => void ) { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
-function eachPlayer(f: (p: Player) => void) { if (f) gameState.players.forEach(f); return gameState.players; }
-function eachPlayerEv(ev: Ev, f: (p: Ev) => void) { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
+function eachOtherPlayer(f: (p: Player) => void): Player[] { let r = gameState.players.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
+function eachOtherPlayerVM(f: (p: Player) => void): Player[] { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
+function eachPlayer(f: (p: Player) => void): Player[] { if (f) gameState.players.forEach(f); return gameState.players; }
+function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
 function revealable(who = playerState) {
   // TODO: also artifacts and maybe MOoT
   if (who !== playerState) return who.hand.deck;
@@ -882,7 +921,16 @@ function numColorsYouHave() {
   return num;
 }
 
-function superPower(color: number | string): number { return count(turnState.cardsPlayed, color); }
+function superPower(...f: (number | string)[]): number {
+  if (f.length > 1) return f.count(c => superPower(c) < f.count(e => c === e)) === 0 ? 1 : 0;
+  return count(turnState.cardsPlayed, f[0]);
+}
+function versatileEv(ev: Ev, a: number): void {
+  if (turnState.versatileBoth) {
+    addRecruitEvent(ev, a);
+    addAttackEvent(ev, a);
+  } else chooseOneEv(ev, "Versatile is", "Recruit", ev => addRecruitEvent(ev, a), "Attack", ev => addAttackEvent(ev, a));
+}
 function addEndDrawMod(a: number): void { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a: number): void { turnState.endDrawAmount = a; }
 
@@ -899,6 +947,7 @@ function makeModFunc(value: number | ((c: Card) => number)): (c: Card, v?: numbe
 function addTurnMod(stat: string, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatMod(stat: string, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatSet<T>(stat: string, cond: (c: Card) => boolean, func: (c: Card, v?: T) => T) { addMod(gameState.modifiers, stat, cond, func); }
+function addTurnSet<T>(stat: string, cond: (c: Card) => boolean, func: (c: Card, v?: T) => T) { addMod(gameState.modifiers, stat, cond, func); }
 function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
   return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
@@ -981,8 +1030,12 @@ function canPlay(c: Card): boolean {
 function healCard(ev: Ev): void {
   pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.heal });
 }
+function teleportCard(ev: Ev): void {
+  moveCardEv(ev, ev.what, playerState.teleported);
+}
 function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => isPlayable(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
+  p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   if (!turnState.noRecruitOrFight) {
   // TODO any deck with recruitable
@@ -1001,6 +1054,12 @@ function getActions(ev: Ev): Ev[] {
 
 function addAttackEvent(ev: Ev, c: number): void { pushEv(ev, "ADDATTACK", { func: ev => turnState.attack += ev.amount, amount: c }); }
 function addRecruitEvent(ev: Ev, c: number): void { pushEv(ev, "ADDRECRUIT", { func: ev => { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; }, amount: c }); }
+function addAttackSpecialEv(ev: Ev, cond: (c: Card) => boolean, c: number) {
+  // TODO
+}
+function addRecruitSpecialEv(ev: Ev, cond: (c: Card) => boolean, c: number) {
+  // TODO
+}
 function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   if (!what.instance) return;
   pushEv(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });
@@ -1021,18 +1080,18 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
 }
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, ev.what.location.owner.discard) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
-function drawIfEv(ev: Ev, cond: Filter<Card>, who?: Player) {
+function drawIfEv(ev: Ev, cond: Filter<Card>, func?: () => void, who?: Player) {
     let draw = false;
     who = who || playerState;
     lookAtDeckEv(ev, 1, () => draw = who.revealed.has(cond), who);
-    cont(ev, () => { if (draw) drawEv(ev, 1, who); });
+    cont(ev, () => { if (draw) { drawEv(ev, 1, who); if (func) func(); } } );
 }
 function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
-function evilWinsEv(ev: Ev): void { gameOverEv(ev, 'LOSS'); }
-function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW") {
-  let desc = result === "LOSS" ? "Evil Wins" : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
+function evilWinsEv(ev: Ev, mastermind?: Card): void { gameOverEv(ev, 'LOSS', mastermind); }
+function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card) {
+  let desc = result === "LOSS" ? `${mastermind ? mastermind.cardName : "Evil"} Wins` : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
   textLog.log("Game Over: " + desc);
-  pushEv(ev, "GAMEOVER", { ui: true, result: result, desc: desc });
+  pushEv(ev, "GAMEOVER", { ui: true, result, desc, what: mastermind });
 }
 function runOutEv(ev: Ev, deck: string) { pushEv(ev, "RUNOUT", { deckName: deck, func: () => {} }); }
 function captureEv(ev: Ev, villain: Card, what?: Card) {
@@ -1120,6 +1179,11 @@ function chooseMayEv(ev: Ev, desc: string, effect: (ev: Ev) => void, agent?: Pla
       new Ev(ev, "EFFECT", { func: () => {}, desc: "No" }),
   ], ui: true, agent });
 }
+function chooseCostEv(ev: Ev, effect: (n: number) => void, min: number = 0, agent: Player = playerState) {
+  let options: Ev[] = [];
+  for (let i = min; i <= 9; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
+  pushEv(ev, "SELECTEVENT", { desc: "Choose a number", ui: true, agent, options });
+}
 function selectPlayerEv(ev: Ev, f: (p: Player) => void, who?: Player) {
   if (gameState.players.length === 1) {
     f(playerState);
@@ -1157,7 +1221,7 @@ function revealOne(ev: Ev, who: Player) {
     moveCardEv(ev, who.deck.top, who.revealed);
   }
 }
-function KOHandOrDiscardEv(ev: Ev, filter: Filter<Card>, func: (ev: Ev) => void) {
+function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (ev: Ev) => void) {
   let cards = handOrDiscard();
   if (filter) cards = cards.limit(filter);
   selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); cont(ev, func); });
@@ -1199,19 +1263,33 @@ function buyCard(ev: Ev): void {
     turnState.recruit -= ev.what.cost;
   }
   turnState.recruitedOrFought = true;
-  gainEv(ev, ev.what);
+  let where = turnState.nextHeroRecruit;
+  turnState.nextHeroRecruit = undefined;
+  if (where === "HAND") gainToHandEv(ev, ev.what);
+  else if (where === "DECK") gainToDeckEv(ev, ev.what);
+  else if (where === "SOARING" || ev.what.soaring) gainSoaringEv(ev, ev.what);
+  else gainEv(ev, ev.what);
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, where: who.discard });
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.discard });
 }
 function gainToHandEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, where: who.hand });;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.hand });;
+}
+function gainToDeckEv(ev: Ev, card: Card, who?: Player) {
+  who = who || playerState;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.deck });;
+}
+function gainSoaringEv(ev: Ev, card: Card, who?: Player) {
+  who = who || playerState;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.teleported });;
 }
 function cleanUp(ev: Ev): void {
   moveAll(playerState.hand, playerState.discard);
   moveAll(gameState.playArea, playerState.discard);
+  moveAll(playerState.teleported, playerState.hand);
   let drawAmount = (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0);
   drawEv(ev, drawAmount);
 }
@@ -1235,6 +1313,8 @@ function reshufflePlayerDeck(): void {
 }
 function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev: Ev): void {
+  textLog.log("Scheme Twist!");
+  moveCardEv(ev, ev.what, gameState.ko);
   let e = pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
   cont(ev, () => {
     if (gameState.players.length === 1) {
@@ -1244,22 +1324,25 @@ function playTwist(ev: Ev): void {
     if (e.another) villainDrawEv(e);
   });
 }
-function villainDrawEv(ev: Ev): void { pushEv(ev, "VILLAINDRAW", villainDraw); }
+function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStrike, what: what }); }
+function playStrike(ev: Ev) {
+  textLog.log("Master Strike!");
+  moveCardEv(ev, ev.what, gameState.ko);
+  // TODO mastermind order
+  gameState.mastermind.each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike, what: ev.what }));
+}
+function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
-  let c = gameState.villaindeck.top;
+  let c = ev.what || gameState.villaindeck.top;
+  ev.what = c;
   if (!c) {
   } else if (c.isVillain()) {
     moveCardEv(ev, c, gameState.cityEntry);
     if (c.ambush) pushEv(ev, "EFFECT", { source: c, func: c.ambush });
   } else if (c.cardType === "MASTER STRIKE") {
-    textLog.log("Master Strike!");
-    moveCardEv(ev, c, gameState.ko);
-    // TODO mastermind order
-    gameState.mastermind.each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike }));
-    if (gameState.advancedSolo) villainDrawEv(ev);
+    playStrikeEv(ev, c);
+    if (gameState.advancedSolo) villainDrawEv(ev); // TODO also on non villainDraw strikes?
   } else if (c.cardType === "SCHEME TWIST") {
-    textLog.log("Scheme Twist!");
-    moveCardEv(ev, c, gameState.ko);
     playTwistEv(ev, c);
   } else if (c.cardType === "BYSTANDER") {
     let i = gameState.cityEntry;
@@ -1300,11 +1383,10 @@ function villainFight(ev: Ev): void {
   defeatEv(ev, c);
 }
 function defeatEv(ev: Ev, c: Card) {
-  pushEv(ev, "DEFEAT", { func: villainDefeat, what: c });
+  pushEv(ev, "DEFEAT", { func: villainDefeat, what: c, where: c.location });
 }
 function villainDefeat(ev: Ev): void {
   let c = ev.what;
-  let deckName = c.location.id;
   let b = c.captured;
   c.attached("TACTICS").withLast(t => c = t);
   // TODO according to https://boardgamegeek.com/article/19007319#19007319 defeat triggers would happen here
@@ -1313,7 +1395,7 @@ function villainDefeat(ev: Ev): void {
   b.each(bc => rescueEv(ev, bc));
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
-  if (c.fight) pushEv(ev, "EFFECT", { source: c, func: c.fight, deckName });
+  if (c.fight) pushEv(ev, "EFFECT", {source: c, func: c.fight, where: ev.where });
 }
 function rescueEv(ev: Ev, what?: Card | number): void {
   if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what: what });
@@ -1391,7 +1473,7 @@ function imageName(path: string, name: string, subname?: string): string {
 }
 function cardImageName(card: Card): string {
   if (card.cardType === "HERO") return imageName("heroes", card.heroName, card.cardName);
-  if (card.cardType === "VILLAIN" && card.villainGroup === undefined) return imageName("henchmen", card.cardName);
+  if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card.cardName);
   if (card.cardType === "VILLAIN") return imageName("villains", card.villainGroup, card.cardName);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card.cardName);
   if (card.cardType === "TACTICS") return imageName("masterminds", card.mastermind.cardName, card.cardName);
@@ -1560,7 +1642,7 @@ function mainLoop(): void {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
     return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
-  }).join('<br>');
+  }).join('');
   Object.keys(clickActions).map(v => document.getElementById(v)).filter(e => e).forEach(e => {
     e.classList.add("select");
     if (ev.desc) {
