@@ -6,7 +6,7 @@ addTemplates("VILLAINS", "Legendary", [
 // VP: 2
   [ 2, makeVillainCard("Brotherhood", "Blob", 4, 2, {
     fightCond: () => revealable().has("X-Men"),
-    // fightCost: ev => revealEv(ev, revealable().limit('X-Men')), TODO
+    fightCost: ev => revealOrEv(ev, "X-Men", () => {}),
   })],
 // AMBUSH: Each player KOs two Heroes from their discard pile.
 // ESCAPE: Each player KOs two Heroes from their hand.
@@ -212,35 +212,32 @@ addTemplates("VILLAINS", "Legendary", [
   })],
 ]},
 ]);
-/*
- * TODO lookAtVillainDeck, fightCost, teleport statMod
- */
 addTemplates("VILLAINS", "Dark City", [
-{ name: " Emissaries of Evil", cards: [ // TODO
+{ name: " Emissaries of Evil", cards: [
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, play it.
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard(" Emissaries of Evil", "Egghead", 4, 2, {
-    ambush: ev => {}, // lookAtVillainDeckEv(ev, 1, c => c.limit(isVillain).each(c => drawVillainEv(ev, c)))
+    ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isVillain).each(c => villainDrawEv(ev, c)))
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Scheme Twist, play it.
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard(" Emissaries of Evil", "Electro", 6, 4, {
-    ambush: ev => {}, // lookAtVillainDeckEv(ev, 1, c => c.limit(isTwist).each(c => playTwistEv(ev, c)))
+    ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isTwist).each(c => playTwistEv(ev, c)))
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Bystander, Gladiator captures it.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard(" Emissaries of Evil", "Gladiator", 5, 3, {
-    ambush: ev => {}, // lookAtVillainDeckEv(ev, 1, c => c.limit(isBystander).each(c => captureEv(ev, ev.source, c)))
+    ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isBystander).each(c => captureEv(ev, ev.source, c)))
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Master Strike, each player gains a Wound.
 // ESCAPE: Each player gains a Wound.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard(" Emissaries of Evil", "Rhino", 5, 3, {
-    ambush: ev => {},// lookAtVillainDeckEv(ev, 1, c => c.limit(isStrike).each(c => eachPlayer(p => gainWoundEv(ev, p))))
+    ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isStrike).each(c => eachPlayer(p => gainWoundEv(ev, p)))),
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
 ]},
@@ -292,7 +289,7 @@ addTemplates("VILLAINS", "Dark City", [
 // ATTACK: 3+
 // VP: 3
   [ 2, makeVillainCard("Marauders", "Chimera", 3, 3, {
-    ambush: ev => {}, // TODO
+    ambush: ev => revealVillainDeckEv(ev, 3, r => r.limit(isBystander).each(c => captureEv(ev, ev.source, c))),
     varDefense: c => c.printedDefense + 3 * c.captured.count(isBystander)
   })],
 // Scalphunter gets +1 Attack for each Bystander he has.
@@ -334,8 +331,8 @@ addTemplates("VILLAINS", "Dark City", [
 // ATTACK: 0*
 // VP: 2
   [ 2, makeVillainCard("MLF", "Zero", 0, 2, {
-    fightCond: () => playerState.hand.count(c => c.cost === 0) >= 3
-    // fightCost: () => selectObjectsEv(ev, "Discard three cards", 3, playerState.hand.deck, c => KOEv(ev, c)) TODO fightCost
+    fightCond: () => playerState.hand.count(c => c.cost === 0) >= 3,
+    fightCost: ev => selectObjectsEv(ev, "Discard three cards", 3, playerState.hand.deck, c => KOEv(ev, c))
   })],
 ]},
 { name: "Streets of New York", cards: [
@@ -375,7 +372,7 @@ addTemplates("VILLAINS", "Dark City", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Underworld", "Azazel", 4, 2, {
-    fight: ev => selectCardEv(ev, "Give a card Teleport", playerState.hand.deck, c => addTurnSet('teleport', e => e === c, () => true)), // TODO
+    fight: ev => selectCardEv(ev, "Give a card Teleport", playerState.hand.deck, c => addTurnSet('teleport', e => e === c, () => true)),
   })],
 // AMBUSH: The player to your right reveals a Marvel Knights Hero or gains a Wound.
 // FIGHT: Same effect.

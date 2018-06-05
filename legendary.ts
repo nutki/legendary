@@ -53,6 +53,7 @@ interface Card {
   printedAttack: number
   printedRecruit: number
   printedDefense: number
+  printedVP: number
   recruit: number
   defense: number
   vp?: number
@@ -61,6 +62,7 @@ interface Card {
   playCostType?: "DISCARD" | "TOPDECK"
   playCost?: number
   fightCond?: (c?: Card) => boolean
+  fightCost?: (ev: Ev) => void
   isHealable: () => boolean
   healCond: () => boolean
   isGroup: (name: String) => boolean
@@ -91,6 +93,7 @@ interface Card {
   copyPasteCard?: boolean
   heroName?: string
   villainGroup?: string
+  leads?: string
   cardName?: string
   mastermind?: Card
   isHenchman?: boolean
@@ -105,15 +108,20 @@ interface VillainCardAbillities {
   varVP?: (c: Card) => number
   varDefense?: (c: Card) => number
   fightCond?: (c?: Card) => boolean
+  fightCost?: (ev: Ev) => void
   bribe?: boolean
   isHenchman?: boolean
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
   bribe?: boolean
+  init?: (c: Card) => void
+  trigger?: Trigger
+  triggers?: Trigger[]
 }
 interface HeroCardAbillities {
   trigger?: Trigger
+  triggers?: Trigger[]
   playCost?: number
   playCostType?: string
   copyPasteCard?: boolean
@@ -144,7 +152,7 @@ Card.prototype = {
   isColor: function(c: number) { return (this.color & c) !== 0; },
   isTeam: function(t: string) { return this.team === t; },
   isGroup: function(t: string) { return this.villainGroup === t; },
-  hasTeleport: function () { return this.teleport; },
+  hasTeleport: function () { return getModifiedStat(this, "teleport", this.teleport); },
   attachedDeck: function (name: string) { return attachedDeck(name, this); },
   attached: function (name: string) { return attachedCards(name, this); },
   get captured() { return this.attached('CAPTURED'); },
@@ -312,6 +320,7 @@ interface Deck {
   below?: Deck
   above?: Deck
   attachedTo?: Deck | Card
+  revealed?: Deck
 }
 let Deck = function(name: string, faceup?: boolean) {
   this.id = name;
@@ -519,6 +528,9 @@ interface Turn extends Ev {
   recruitedOrFought: boolean
   noRecruitOrFight: boolean
   totalRecruit: number
+  totalAttack: number
+  attackSpecial: { amount: number, cond: (c: Card) => boolean }[]
+  recruitSpecial: { amount: number, cond: (c: Card) => boolean }[]
   cardsDrawn: number
   endDrawMod: number
   endDrawAmount: number
@@ -646,7 +658,7 @@ gameState = {
   gameRand: undefined,
   playArea: new Deck('PLAYAREA', true),
   escaped: new Deck('ESCAPED'),
-  villaindeck: new Deck('VILLAIN', true),
+  villaindeck: new Deck('VILLAIN'),
   mastermind: new Deck('MASTERMIND', true),
   ko: new Deck('KO', true),
   herodeck: new Deck('HERO'),
@@ -718,6 +730,8 @@ if (undoLog.replaying) {
   undoLog.write(gameState.gameRand.state);
 }
 gameState.cityEntry = gameState.city[4];
+gameState.villaindeck.revealed = new Deck('VILLAIN_REVEALED', true);
+gameState.herodeck.revealed = new Deck('HERO_REVEALED', true);
 
 for (let i = 0; i < 5; i++) {
   gameState.hq[i].below = gameState.city[i];
@@ -827,9 +841,12 @@ gameState.villaindeck.shuffle();
   let tactics = gameState.mastermind.top.attachedDeck('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
+  tactics.each(t => t.mastermind = gameState.mastermind.top);
+  // TODO: fix mastermind.leads in solo
 }
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
+if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
 if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 }
 
@@ -839,6 +856,7 @@ function isHero(c: Card): boolean { return c.cardType === "HERO"; }
 function isVillain(c: Card): boolean { return c.cardType === "VILLAIN"; }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
 function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
+function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }
 function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
 function isTwist(c: Card): boolean { return c.cardType === "SCHEME TWIST"; }
 function isHenchman(c: Card): boolean { return c.isHenchman === true; }
@@ -1012,6 +1030,7 @@ function canRecruit(c: Card): boolean {
 function canFight(c: Card): boolean {
   if (c.fightCond && !c.fightCond(c)) return false;
   let a = turnState.attack;
+  a += turnState.attackSpecial.limit(a => a.cond(c)).sum(a => a.amount);
   if (c.bribe || turnState.attackWithRecruit) a += turnState.recruit;
   return a >= c.defense;
 }
@@ -1029,6 +1048,9 @@ function canPlay(c: Card): boolean {
 }
 function healCard(ev: Ev): void {
   pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.heal });
+}
+function teleportEv(ev: Ev, what: Card): void {
+  pushEv(ev, "TELEPORT", { func: teleportCard, what });
 }
 function teleportCard(ev: Ev): void {
   moveCardEv(ev, ev.what, playerState.teleported);
@@ -1052,17 +1074,27 @@ function getActions(ev: Ev): Ev[] {
   return p;
 }
 
-function addAttackEvent(ev: Ev, c: number): void { pushEv(ev, "ADDATTACK", { func: ev => turnState.attack += ev.amount, amount: c }); }
+function addAttackEvent(ev: Ev, c: number): void { pushEv(ev, "ADDATTACK", { func: ev => { turnState.attack += ev.amount; turnState.totalAttack += ev.amount; }, amount: c }); }
 function addRecruitEvent(ev: Ev, c: number): void { pushEv(ev, "ADDRECRUIT", { func: ev => { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; }, amount: c }); }
-function addAttackSpecialEv(ev: Ev, cond: (c: Card) => boolean, c: number) {
-  // TODO
+function addAttackSpecialEv(ev: Ev, cond: (c: Card) => boolean, amount: number) {
+  cont(ev, () => {
+    turnState.attackSpecial.push({ cond, amount });
+    turnState.totalAttack += amount;
+  });
 }
-function addRecruitSpecialEv(ev: Ev, cond: (c: Card) => boolean, c: number) {
-  // TODO
+function addRecruitSpecialEv(ev: Ev, cond: (c: Card) => boolean, amount: number) {
+  cont(ev, () => {
+    turnState.recruitSpecial.push({ cond, amount });
+    turnState.totalRecruit += amount;
+  });
 }
 function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   if (!what.instance) return;
   pushEv(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });
+}
+function shuffleIntoEv(ev: Ev, what: Card, where: Deck): void {
+  moveCardEv(ev, what, where);
+  cont(ev, () => where.shuffle());
 }
 // Swaps contents of 2 city spaces
 function swapCardsEv(ev: Ev, where1: Deck, where2: Deck) {
@@ -1080,11 +1112,11 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
 }
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, ev.what.location.owner.discard) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
-function drawIfEv(ev: Ev, cond: Filter<Card>, func?: () => void, who?: Player) {
+function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let draw = false;
     who = who || playerState;
     lookAtDeckEv(ev, 1, () => draw = who.revealed.has(cond), who);
-    cont(ev, () => { if (draw) { drawEv(ev, 1, who); if (func) func(); } } );
+    cont(ev, () => { if (draw) { drawEv(ev, 1, who); if (func) func(who.revealed.top); } } );
 }
 function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
 function evilWinsEv(ev: Ev, mastermind?: Card): void { gameOverEv(ev, 'LOSS', mastermind); }
@@ -1200,17 +1232,34 @@ function pickTopDeckEv(ev: Ev, who?: Player, agent?: Player) {
   const name = agent === who ? "your" : who.name + "'s";
   selectCardEv(ev, `Choose a card to put on top of ${name} deck`, who.hand.deck, sel => moveCardEv(ev, sel, who.deck), agent);
 }
+function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
+  if (src.size === 0) return;
+  if (src.size === 1) moveCardEv(ev, src.top, dst);
+  else selectCardEv(ev, "Choose a card to put back", src.deck, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst); }, agent);
+};
+function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean, bottom: boolean = false, agent: Player = playerState) {
+  if (amount === 0) return;
+  const dst = src.revealed;
+  let i = 0;
+  const f = typeof amount === "number" ? () => ++i < amount : amount
+  const d = () => src.withTop(c => { moveCardEv(ev, c, dst); if (f(dst.deck)) d(); } );
+  cont(ev, () => d());
+  cont(ev, () => action(dst.deck));
+  if (random) cont(ev, () => { dst.shuffle(); moveAll(src, dst, bottom); });
+  else cont(ev, () => cleanupRevealed(ev, dst, src, bottom, agent));
+}
+function revealVillainDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
+  revealDeckEv(ev, gameState.villaindeck, amount, action, random, bottom, agent);
+}
+function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
+  revealDeckEv(ev, gameState.villaindeck, amount, action, random, bottom, agent);
+}
 function lookAtDeckEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   who = who || playerState;
   agent = agent || who;
   for (let i = 0; i < amount; i++) cont(ev, ev => revealOne(ev, who));
   cont(ev, action);
-  let cleanupRevealed = () => {
-    if (who.revealed.size === 0) return;
-    if (who.revealed.size === 1) moveCardEv(ev, who.revealed.top, who.deck);
-    else selectCardEv(ev, "Choose a card to put back", who.revealed.deck, sel => { moveCardEv(ev, sel, who.deck); cleanupRevealed(); }, agent);
-  };
-  cont(ev, cleanupRevealed);
+  cont(ev, () => cleanupRevealed(ev, who.revealed, who.deck, false, agent));
 }
 function revealOne(ev: Ev, who: Player) {
   if (!who.deck.size && !who.discard.size) {
@@ -1371,15 +1420,22 @@ function villainEscape(ev: Ev): void {
   if (c.escape) pushEv(ev, "EFFECT", { source: c, func: c.escape });
 }
 function villainFight(ev: Ev): void {
-  // TODO Deal with extra costs
   let c = ev.what;
-  turnState.attack -= c.defense; // Use attack first
-  if (turnState.attack < 0) { // Asume bribe
+  let d = c.defense;
+  turnState.attackSpecial.limit(a => a.cond(c)).each(a => {
+    let n = Math.max(a.amount, d);
+    a.amount -= n;
+    d -= n;
+  });
+  let n = Math.max(turnState.attack, d);
+  turnState.attack -= n; // Use attack first
+  d -= n;
+  if (d > 0) { // Asume bribe
     // TODO Ask for spilt (optional)
-    turnState.recruit += turnState.attack;
-    turnState.attack = 0;
+    turnState.recruit -= d;
   }
   turnState.recruitedOrFought = true;
+  if (c.fightCost) cont(ev, c.fightCost);
   defeatEv(ev, c);
 }
 function defeatEv(ev: Ev, c: Card) {
@@ -1408,7 +1464,7 @@ function rescueBystander(ev: Ev): void {
   moveCardEv(ev, c, playerState.victory);
   if (c.rescue) pushEv(ev, "EFFECT", { source: c, func: c.rescue });
 }
-function addTurnTrigger(type: string, match: () => boolean, f: Trigger | ((ev: Ev) => void)) {
+function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: Trigger | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, after: f } : f;
   trigger.event = type;
   trigger.match = match || (() => true);
@@ -1421,10 +1477,13 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: {}}[]
   };
   let checkCardTrigger = (c: Card) => {
     if (c.trigger) checkTrigger(c)(c.trigger);
+    if (c.triggers) c.triggers.forEach(t => checkTrigger(c)(t))
   };
   gameState.triggers.forEach(checkTrigger(gameState));
   turnState.triggers.forEach(checkTrigger(turnState));
+  gameState.mastermind.each(checkCardTrigger);
   playerState.hand.each(checkCardTrigger);
+  // TODO other player's hand triggers
   playerState.revealed.each(checkCardTrigger);
   gameState.playArea.each(checkCardTrigger);
   return triggers;
