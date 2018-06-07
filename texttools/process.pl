@@ -45,6 +45,7 @@ while (<A>) {
       s!^(\[$class\])$!#CLASS: $1! && next;
       s!^($aff)$!#TEAM: $1! && next;
       s!^(Bribe|Feast)$!'{'.(uc$1).'}'!e && next;
+      s!^<b>Focus (\d+) Recruit -&gt;</b>!{FOCUS $1}! && next;
 
       s!^($aff): (.*)$!{TEAMPOWER $1} $2! && next;
       s!^\[($class)\]: (.*)$!{POWER $1} $2! && next;
