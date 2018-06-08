@@ -68,7 +68,6 @@ interface Card {
   isGroup: (name: String) => boolean
   isColor: (col: number) => boolean
   isTeam: (name: String) => boolean
-  isVillain: () => boolean
   instance: Card
   captured: Card[]
   attached: (name: string) => Card[]
@@ -92,6 +91,7 @@ interface Card {
   strike?: (ev: Ev) => void
   copyPasteCard?: boolean
   heroName?: string
+  printedVillainGroup?: string
   villainGroup?: string
   leads?: string
   cardName?: string
@@ -146,9 +146,11 @@ Card.prototype = {
     if (this.varVP) return this.varVP(this);
     return this.printedVP;
   },
+  get villainGroup() {
+   return getModifiedStat(this, "villainGroup", this.printedVillainGroup)
+  },
   isPlayable: function () { return this.playable; },
   isHealable: function () { return this.cardType === "WOUND"; },
-  isVillain: function () { return this.cardType === "VILLAIN"; },
   isColor: function(c: number) { return (this.color & c) !== 0; },
   isTeam: function(t: string) { return this.team === t; },
   isGroup: function(t: string) { return this.villainGroup === t; },
@@ -192,7 +194,7 @@ function makeVillainCard(group: string, name: string, defense: number, vp: numbe
   c.printedDefense = defense;
   c.printedVP = vp;
   c.cardName = name;
-  c.villainGroup = group;
+  c.printedVillainGroup = group;
   c.fightable = true;
   if (abilities) for (let i in abilities) c[i] = abilities[i];
   return c;
@@ -773,18 +775,25 @@ let gameSetup: Setup = {
   villains: ["Brotherhood"],
   heroes: [ "Hawkeye", "Rogue", "Wolverine" ],
 
-   S02M04
+   S01M04
   scheme: "Unleash the Power of the Cosmic Cube",
   mastermind: "Dr. Doom",
   henchmen: ["Savage Land Mutates"],
   villains: ["Enemies of Asgard"],
   heroes: [ "Deadpool", "Iron Man", "Wolverine" ],
-*/
+
+   S01M05
   scheme: "Portals to the Dark Dimension",
   mastermind: "Dr. Doom",
   henchmen: ["Sentinel"],
   villains: ["Masters of Evil"],
   heroes: [ "Cyclops", "Gambit", "Hawkeye" ],
+*/
+  scheme: "Secret Invasion of the Skrull Shapeshifters",
+  mastermind: "Red Skull",
+  henchmen: ["Hand Ninjas"],
+  villains: ["Skrulls"],
+  heroes: [ "Cyclops", "Gambit", "Hawkeye", "Rogue", "Black Widow" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -842,7 +851,9 @@ gameState.villaindeck.shuffle();
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
   tactics.each(t => t.mastermind = gameState.mastermind.top);
-  // TODO: fix mastermind.leads in solo
+    if (gameState.players.size === 1 &&
+      !gameSetup.villains.includes(mastermind.leads) &&
+      !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
 }
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
@@ -853,7 +864,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 // Card effects functions
 function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
 function isHero(c: Card): boolean { return c.cardType === "HERO"; }
-function isVillain(c: Card): boolean { return c.cardType === "VILLAIN"; }
+function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN"); }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
 function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
 function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }
@@ -1011,6 +1022,9 @@ function popEvent(): Ev {
   return eventQueue.shift() || new Ev(gameState, "TURN", {
     recruit: 0,
     attack: 0,
+    recruitSpecial: [],
+    attackSpecial: [],
+    totalAttach: 0,
     totalRecruit: 0,
     cardsPlayed: [],
     cardsDrawn: 0,
@@ -1140,6 +1154,17 @@ function gainWoundEv(ev: Ev, who?: Player): void {
 }
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
 function pushEv(ev: Ev, name: string, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
+type Handler = (ev: Ev) => void;
+function pushEffects(ev: Ev, c: Card, effectName: string, effects: Handler | Handler[], params: EvParams = {}) {
+  effects = getModifiedStat(c, effectName, effects);
+  function f(e: Handler): void {
+    let p = { source: c, func: e };
+    if (params) for (let i in params) p[i] = params[i];
+    pushEv(ev, "EFFECT", p);
+  }
+  if (!effects) return;
+  if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
+}
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0) {
     if (effect0) cont(ev, () => effect0());
@@ -1385,9 +1410,9 @@ function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
   ev.what = c;
   if (!c) {
-  } else if (c.isVillain()) {
+  } else if (isVillain(c)) {
     moveCardEv(ev, c, gameState.cityEntry);
-    if (c.ambush) pushEv(ev, "EFFECT", { source: c, func: c.ambush });
+    pushEffects(ev, c, 'ambush', c.ambush);
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
     if (gameState.advancedSolo) villainDrawEv(ev); // TODO also on non villainDraw strikes?
@@ -1418,16 +1443,17 @@ function villainEscape(ev: Ev): void {
   moveCardEv(ev, c, gameState.escaped);
   selectCardAndKOEv(ev, HQCards().limit(c => c.cost <= 6));
   if (c.escape) pushEv(ev, "EFFECT", { source: c, func: c.escape });
+  pushEffects(ev, c, "escape", c.escape);
 }
 function villainFight(ev: Ev): void {
   let c = ev.what;
   let d = c.defense;
   turnState.attackSpecial.limit(a => a.cond(c)).each(a => {
-    let n = Math.max(a.amount, d);
+    let n = Math.min(a.amount, d);
     a.amount -= n;
     d -= n;
   });
-  let n = Math.max(turnState.attack, d);
+  let n = Math.min(turnState.attack, d);
   turnState.attack -= n; // Use attack first
   d -= n;
   if (d > 0) { // Asume bribe
@@ -1451,7 +1477,7 @@ function villainDefeat(ev: Ev): void {
   b.each(bc => rescueEv(ev, bc));
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
-  if (c.fight) pushEv(ev, "EFFECT", {source: c, func: c.fight, where: ev.where });
+  pushEffects(ev, c, "fight", c.fight, { where: ev.where });
 }
 function rescueEv(ev: Ev, what?: Card | number): void {
   if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what: what });
@@ -1467,13 +1493,13 @@ function rescueBystander(ev: Ev): void {
 function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: Trigger | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, after: f } : f;
   trigger.event = type;
-  trigger.match = match || (() => true);
+  trigger.match = match;
   turnState.triggers.push(trigger);
 }
 function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: {}}[] {
   let triggers:{trigger: Trigger, source: Card|Ev}[] = [];
   let checkTrigger = (source: Ev | Card) => (t: Trigger) => {
-    if(t.event === ev.type && t.match(ev, source)) triggers.push({trigger:t, source:source});
+    if(t.event === ev.type && (!t.match || t.match(ev, source))) triggers.push({trigger:t, source:source});
   };
   let checkCardTrigger = (c: Card) => {
     if (c.trigger) checkTrigger(c)(c.trigger);

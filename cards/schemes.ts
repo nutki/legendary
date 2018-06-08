@@ -51,11 +51,11 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bytstand
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isBystander) >= 5) evilWinsEv(ev); },
 }, function () {
+  let isKillbot = (c: Card) => isBystander(c) && (c.location.isCity || c.location.id === "VILLAIN"); // TODO isCity => fightable?
   gameState.scheme.attachedDeck('TWIST').addNewCard(twistTemplate, 3);
-  // TODO implement these mods
-  addStatSet('defense', isBystander, () => gameState.scheme.attached('TWIST').size);
-  addStatSet('isVillain', isBystander, () => true);
-  addStatSet('villainGroup', isHero, () => "Killbots");
+  addStatSet('defense', isKillbot, () => gameState.scheme.attached('TWIST').size);
+  addStatSet('isVillain', isKillbot, () => true);
+  addStatSet('villainGroup', isKillbot, () => "Killbots");
 }),
 // SETUP: 8 Twists. 6 Heroes. Skrull Villain Group required. Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.
 // RULE: Heroes in the Villain Deck count as Skrull Villains with Attack equal to the Hero's Cost +2. If you defeat that Hero, you gain it.
@@ -67,11 +67,11 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isHero) >= 6) evilWinsEv(ev); },
 }, function () {
-  // TODO implement these mods
-  addStatSet('defense', isHero, c => c.cost + 2);
-  addStatSet('isVillain', isHero, () => true);
-  addStatSet('villainGroup', isHero, () => "Skrulls");
-  addStatSet('fight', isHero, () => (ev: Ev) => gainEv(ev, ev.source));
+  let isSkrull = (c: Card) => isHero(c) && (c.location.isCity || c.location.id === "VILLAIN");  // TODO isCity => fightable?
+  addStatSet('defense', isSkrull, c => c.cost + 2);
+  addStatSet('isVillain', isSkrull, () => true);
+  addStatSet('villainGroup', isSkrull, () => "Skrulls");
+  addStatSet('fight', isSkrull, () => (ev: Ev) => gainEv(ev, ev.source));
   repeat(12, () => moveCard(gameState.herodeck.top, gameState.villaindeck));
   // TODO require Skrulls
   gameState.villaindeck.shuffle();
