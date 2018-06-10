@@ -51,7 +51,7 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bytstand
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isBystander) >= 5) evilWinsEv(ev); },
 }, function () {
-  let isKillbot = (c: Card) => isBystander(c) && (c.location.isCity || c.location.id === "VILLAIN"); // TODO isCity => fightable?
+  let isKillbot = (c: Card) => isBystander(c) && (c.location && (c.location.isCity || c.location.id === "VILLAIN")); // TODO isCity => fightable?
   gameState.scheme.attachedDeck('TWIST').addNewCard(twistTemplate, 3);
   addStatSet('defense', isKillbot, () => gameState.scheme.attached('TWIST').size);
   addStatSet('isVillain', isKillbot, () => true);
@@ -67,7 +67,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   event: "ESCAPE",
   after: ev => { if (gameState.escaped.count(isHero) >= 6) evilWinsEv(ev); },
 }, function () {
-  let isSkrull = (c: Card) => isHero(c) && (c.location.isCity || c.location.id === "VILLAIN");  // TODO isCity => fightable?
+  let isSkrull = (c: Card) => isHero(c) && (c.location && (c.location.isCity || c.location.id === "VILLAIN"));  // TODO isCity => fightable?
   addStatSet('defense', isSkrull, c => c.cost + 2);
   addStatSet('isVillain', isSkrull, () => true);
   addStatSet('villainGroup', isSkrull, () => "Skrulls");
