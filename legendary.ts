@@ -659,7 +659,7 @@ gameState = {
   twistCount: 0,
   gameRand: undefined,
   playArea: new Deck('PLAYAREA', true),
-  escaped: new Deck('ESCAPED'),
+  escaped: new Deck('ESCAPED', true),
   villaindeck: new Deck('VILLAIN'),
   mastermind: new Deck('MASTERMIND', true),
   ko: new Deck('KO', true),
@@ -895,11 +895,10 @@ function owned(p: Player): Card[] {
   return p === playerState ? r.concat(gameState.playArea.deck) : r;
 }
 function soloVP(): number {
-  if (gameState.players.length > 1) return 0;
-  return - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
+  return gameState.players.sum(currentVP) - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
 }
 function currentVP(p?: Player): number {
-  return owned(p).sum(c => c.vp || 0) + soloVP();
+  return owned(p).sum(c => c.vp || 0);
 }
 function HQCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards(): Card[] { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
@@ -1578,7 +1577,7 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
   r += `<img class="cardface" src="${back ? 'images/back.png' : cardImageName(c)}">`
   if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
-  if (c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
+  if (!back && c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
   if (c.captured.size > 0) r += `<div class="capturedHint">${c.captured.size}</div>`
   r += `<div class="frame"></div></div>`;
   return r;
@@ -1594,22 +1593,32 @@ function displayDecks(): void {
   for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
   for (let i = 0; i < divs.length; i++) {
     let div = divs[i];
-    let deck = deckById[div.id];
+    let deck = deckById[div.getAttribute("data-id")];
     let fanout = div.getAttribute("data-fanout");
     let mode = div.getAttribute("data-mode");
+    let count = div.getAttribute("data-count");
+    let popup = div.getAttribute("data-popupid");
+    let html = '';
     if (mode === "IMG") {
       if (deck.id === "PLAYAREA") {
-        div.innerHTML = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
-      } else if (!deck.faceup) {
-        div.innerHTML = deck.deck.map(c => makeDisplayCardImg(c, true)).join('');
+        html = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
       } else if (fanout) {
-        div.innerHTML = deck.deck.map(c => makeDisplayCardImg(c)).join('');
+        html = deck.deck.map(c => makeDisplayCardImg(c, !deck.faceup)).reverse().join('');
       } else {
-        div.innerHTML = deck.size ? makeDisplayCardImg(deck.top) : '';
+        html = deck.size ? makeDisplayCardImg(deck.top, !deck.faceup, false, popup === null) : '';
+      }
+      if (count === "1") {
+      }
+      if (count === "VP") {
+        html += '<img class="vpcount" src="icons/VP.png">';
+        html += '<div class="deckcount vpcount">' + currentVP(playerState) + '</div>';
+      } else if (count) {
+        html += `<div class="deckcount"><span class="name">${count}</span><br>${deck.size}</div>`;
       }
     } else {
-      div.innerHTML = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+      html = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
     }
+    div.innerHTML = html;
   }
 }
 function eventSource(ev: Ev): string {
@@ -1622,7 +1631,7 @@ function displayGame(ev: Ev): void {
   document.getElementById("source").innerHTML = eventSource(ev);
   document.getElementById("recruit").innerHTML = turnState.recruit.toString();
   document.getElementById("attack").innerHTML = turnState.attack.toString();
-  document.getElementById("vp").innerHTML = currentVP().toString();
+  document.getElementById("vp").innerHTML = soloVP().toString();
 }
 
 // Main loop
@@ -1747,6 +1756,19 @@ function startGame(): void {
 function startApp(): void {
   undoLog.init();
   window.onclick = clickCard;
+  const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
+  popups.forEach(e => e.addEventListener("wheel", function(e) {
+    this.scrollLeft += (e.deltaY * 10);
+    e.preventDefault();
+  }));
+  const decks: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("deck"), 0);
+  decks.forEach(div => {
+    let popup = div.getAttribute("data-popupid");
+    if (popup) {
+      let e = document.getElementById(popup);
+      div.addEventListener("click", ev => e.classList.toggle("hidden"));
+    }
+  });
   document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
@@ -1755,11 +1777,12 @@ function startApp(): void {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Display popup decks
 Show hidden events
 Select setup screen
+auto popup decks
 
 ENGINE:
+set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 required villain/hero groups
 

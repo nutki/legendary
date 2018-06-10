@@ -18,13 +18,9 @@
   font-family: NumberFont;
   src: url(fonts/MatrixBoldSmallCaps.ttf);
 }
-body { background: #555 }
+body { background: #555; -moz-user-select: none }
 table { margin: 0; padding: 0; border: 0; }
-td { margin: 0; padding: 0; border: 0; height: 290px; }
-/*
-td { min-width: 270px; height: 375px; }
-table div.deck { height: 375px; }
-*/
+td { margin: 0; padding: 0; border: 0; }
 .number {
   color: white;
   font-family: NumberFont;
@@ -113,25 +109,100 @@ div.card div.capturedHint {
     padding: 0 10px;
     font-size: 35px;
 }
+.popup {
+  display: block;
+  position: absolute;
+  left: 200px;
+  top: 200px;
+  width: 1000px;
+  overflow: hidden;
+  height: 285px;
+  background: rgba(0,0,0,.5);
+  border: #000 2px solid;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+td {
+  position: relative;
+}
+table.d td { width: 210px; height: 285px; white-space: nowrap; }
+table.d td.w { width: 2000px; height: 285px; }
+div.deck {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+/*  transform: translate(-50%,-50%);*/
+}
+div.deck.small {
+  transform: scale(.5);
+  transform-origin: top left;
+}
+.tr.small { left: 50%; }
+.bl.small { top: 50%; }
+.br.small { top: 50%; left: 50%; }
+.deckcount {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  color: white;
+  font-family: NumberFont;
+  font-size: 120px;
+  text-align: center;
+  text-shadow:
+   -2.5px -2.5px 0 #000,
+    2.5px -2.5px 0 #000,
+   -2.5px  2.5px 0 #000,
+    2.5px  2.5px 0 #000,
+   -2.5px    0px 0 #000,
+    2.5px    0px 0 #000,
+      0px  2.5px 0 #000,
+      0px -2.5px 0 #000;
+}
+.deckcount span {
+  font-size: 60px;
+}
+.deckcount.vpcount {
+  font-size: 60px;
+}
+img.vpcount {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: 80px;
+}
+.hidden { visibility: hidden; }
+#popvictory { top: 20px;}
+#popdiscard { top: 330px;}
+#popdeck { top: 330px;}
 </style>
 </head>
 <body>
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
-<table><tr>
-<td><div class="deck" id="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
-<td><div class="deck" id="BRIDGE" data-mode="IMG"></div></td>
-<td><div class="deck" id="ROOFTOPS" data-mode="IMG"></div></td>
-<td><div class="deck" id="STREETS" data-mode="IMG"></div></td>
-<td><div class="deck" id="BANK" data-mode="IMG"></div></td>
-<td><div class="deck" id="SEWERS" data-mode="IMG"></div></td>
-<td><div class="deck" id="SCHEME" data-mode="IMG"></div></td>
+<table class="d"><tr>
+<td><div class="deck" data-id="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
+<td><div class="deck" data-id="BRIDGE" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="ROOFTOPS" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="STREETS" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="BANK" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="SEWERS" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="SCHEME" data-mode="IMG"></div></td>
 </tr><tr>
-<td><div class="deck" id="SHIELDOFFICER" data-mode="IMG"></div></td>
-<td><div class="deck" id="HQ1" data-mode="IMG"></div></td>
-<td><div class="deck" id="HQ2" data-mode="IMG"></div></td>
-<td><div class="deck" id="HQ3" data-mode="IMG"></div></td>
-<td><div class="deck" id="HQ4" data-mode="IMG"></div></td>
-<td><div class="deck" id="HQ5" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="SHIELDOFFICER" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="HQ1" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="HQ2" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="HQ3" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="HQ4" data-mode="IMG"></div></td>
+<td><div class="deck" data-id="HQ5" data-mode="IMG"></div></td>
+<td>
+  <div class="deck small" data-id="VILLAIN" data-mode="IMG" data-count="VILLAIN"></div>
+  <div class="deck small tr" data-id="ESCAPED" data-mode="IMG" data-count="ESCAPED" data-popupid="popescaped"></div>
+  <div class="deck small bl" data-id="KO" data-mode="IMG" data-count="KO" data-popupid="popko"></div>
+  <div class="deck small br" data-id="WOUNDS" data-mode="IMG" data-count="WOUNDS"></div>
+</td>
 <td><div id="source"></div></td>
 </tr></table>
 <img class="icon" src="icons/recruit.svg" width="50"><span class="number" id="recruit"></span>
@@ -139,24 +210,28 @@ div.card div.capturedHint {
 <img class="icon" src="icons/VP.png"><span class="number" id="vp"></span>
 <span id="message"></span>
 <span id="extraActions"></span>
-<table><tr>
-<td>
-</td>
-<td><div class="deck" id="PLAYAREA" data-fanout="1" data-mode="IMG"></div></td>
+<table class="d"><tr>
+<td class="w" colspan="2"><div class="deck" data-id="PLAYAREA" data-fanout="1" data-mode="IMG"></div></td>
 </tr><tr>
-<td colspan="2"><div class="deck" id="HAND0" data-fanout="1" data-mode="IMG"></div></td>
+<td>
+  <div class="deck small tr" data-id="DISCARD0" data-mode="IMG" data-count="DISCARD" data-popupid="popdiscard"></div>
+  <div class="deck small" data-id="DECK0" data-mode="IMG" data-count="DECK" data-popupid="popdeck"></div>
+  <div class="deck small bl" data-id="VICTORY0" data-mode="IMG" data-count="VP" data-popupid="popvictory"></div>
+</td>
+<td class="w"><div class="deck" data-id="HAND0" data-fanout="1" data-mode="IMG"></div></td>
 </tr></table>
-<div class="deck" id="DECK0" data-mode="count"></div>
-<div class="deck" id="DISCARD0" data-mode="popup"></div>
-<div class="deck" id="VICTORY0" data-mode="popup"></div>
-<div class="deck" id="REVEALED0" data-mode="popup"></div>
+<div class="popup hidden" id="popdiscard"><div class="deck" data-id="DISCARD0" data-mode="IMG" data-fanout="1"></div></div>
+<div class="popup hidden" id="popdeck"><div class="deck" data-id="REVEALED0" data-mode="IMG" data-fanout="1"></div></div>
+<div class="popup hidden" id="popvictory"><div class="deck" data-id="VICTORY0" data-mode="IMG" data-fanout="1"></div></div>
+<div class="popup hidden" id="popko"><div class="deck" data-id="KO" data-mode="IMG" data-fanout="1"></div></div>
+<div class="popup hidden" id="popescaped"><div class="deck" data-id="ESCAPED" data-mode="IMG" data-fanout="1"></div></div>
+<span class="deck" data-id="DECK0" data-mode="count"></span>
 <hr>
-<div class="deck" id="ESCAPED" data-mode="popup"></div>
-<div class="deck" id="VILLAIN" data-mode="count"></div>
-<div class="deck" id="KO" data-mode="popup"></div>
-<div class="deck" id="WOUNDS" data-mode="count"></div>
-<div class="deck" id="BYSTANDERS" data-mode="count"></div>
-<div class="deck" id="HERO" data-mode="count"></div>
+<span class="deck" data-id="VILLAIN" data-mode="count"></span>
+<hr>
+<span class="deck" data-id="BYSTANDERS" data-mode="count"></span>
+<hr>
+<span class="deck" data-id="HERO" data-mode="count"></span>
 <div id="logContainer"></div>
 </body>
 </html>
