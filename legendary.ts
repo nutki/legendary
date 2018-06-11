@@ -608,7 +608,7 @@ const undoLog: UndoLog = {
   get replaying() { return this.pos < this.actions.length; },
   read: function() { return this.actions[this.pos++]; },
   readInt: function() { return parseInt(this.read()); },
-  readInts: function() { return this.read().split(',').map(v => parseInt(v)); },
+  readInts: function() { return this.read().split(',').map(v => parseInt(v)); }, // TODO does not work for empty
   write: function(v) {
     const strValue = v.toString();
     this.actions[this.pos++] = strValue;
@@ -788,12 +788,25 @@ let gameSetup: Setup = {
   henchmen: ["Sentinel"],
   villains: ["Masters of Evil"],
   heroes: [ "Cyclops", "Gambit", "Hawkeye" ],
-*/
+
+   S01M06  
   scheme: "Secret Invasion of the Skrull Shapeshifters",
   mastermind: "Red Skull",
   henchmen: ["Hand Ninjas"],
   villains: ["Skrulls"],
   heroes: [ "Cyclops", "Gambit", "Hawkeye", "Rogue", "Black Widow" ],
+
+   S01M07
+  scheme: "Unleash the Power of the Cosmic Cube",
+  mastermind: "Loki",
+  henchmen: ["Savage Land Mutates"],
+  villains: ["Brotherhood"],
+*/
+  scheme: "Replace Earth's Leaders with Killbots",
+  mastermind: "Red Skull",
+  henchmen: ["Sentinel"],
+  villains: ["Radiation"],
+  heroes: [ "Rogue", "Nick Fury", "Black Widow" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
@@ -1165,7 +1178,7 @@ function pushEffects(ev: Ev, c: Card, effectName: string, effects: Handler | Han
   if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
 }
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
-  if (objects.length === 0) {
+  if (objects.length === 0 || max === 0) {
     if (effect0) cont(ev, () => effect0());
   } else if (objects.length <= min && simple) {
     if (effect1) cont(ev, () => objects.forEach(effect1));
@@ -1747,7 +1760,7 @@ function mainLoop(): void {
     }
   });
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
-  document.getElementById("logContainer").innerHTML = `${undoLog.toString()}<br>${textLog.text}`;
+  document.getElementById("logContainer").innerHTML = textLog.text;
 }
 function startGame(): void {
   initGameState();
