@@ -304,7 +304,7 @@ addTemplates("HEROES", "Legendary", [
 // Any Villain you fight on the Rooftops this turn gets -2 Attack.
 // COST: 4
   c2: makeHeroCard("Storm", "Lightning Bolt", 4, u, 2, Color.RANGED, "X-Men", "D", () => {
-    addTurnMod("defense", c => isVillain(c) && c.location.id === "ROOFTOPS", -2);
+    addTurnMod("defense", c => isVillain(c) && atLocation(c, "ROOFTOPS"), -2);
   }),
 // ATTACK: 4
 // You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
@@ -322,7 +322,7 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Ranged} The Mastermind gets -2 Attack this turn.
 // COST: 7
   ra: makeHeroCard("Storm", "Tidal Wave", 7, u, 5, Color.RANGED, "X-Men", "D", () => {
-    addTurnMod("defense", c => isVillain(c) && c.location.id === "BRIDGE", -2);
+    addTurnMod("defense", c => isVillain(c) && atLocation(c, "BRIDGE"), -2);
     if (superPower(Color.RANGED)) addTurnMod("defense", isMastermind, -2);
   }),
 },
@@ -444,7 +444,7 @@ addTemplates("HEROES", "Dark City", [
 // COST: 4
   c1: makeHeroCard("Blade", "Night Hunter", 4, 0, 2, Color.STRENGTH, "Marvel Knights", "GD", [], { trigger: {
     event: "DEFEAT",
-    match: ev => ev.where.id === "SEWERS" || ev.where.id === "ROOFTOPS",
+    match: ev => isLocation(ev.where, "SEWERS", "ROOFTOPS"),
     after: ev => addRecruitEvent(ev, 2),
   }}),
 // ATTACK: 2
@@ -460,7 +460,7 @@ addTemplates("HEROES", "Dark City", [
 // COST: 6
   uc: makeHeroCard("Blade", "Nowhere to Hide", 6, u, 3, Color.TECH, "Marvel Knights", "G", [], { trigger: {
     event: "DEFEAT",
-    match: ev => ev.where.id === "SEWERS" || ev.where.id === "ROOFTOPS",
+    match: ev => isLocation(ev.where, "SEWERS", "ROOFTOPS"),
     after: ev => drawEv(ev, 2),
   }}),
 // ATTACK: 0+
@@ -614,7 +614,7 @@ addTemplates("HEROES", "Dark City", [
 // COST: 3
 // GUN: 1
   c1: makeHeroCard("Forge", "Dirty Work", 3, u, 2, Color.TECH, "X-Force", "GD", ev => {
-    if (superPower(Color.TECH)) addTurnMod("defense", c => isVillain(c) && c.location.id === "SEWERS", -2);   
+    if (superPower(Color.TECH)) addTurnMod("defense", c => isVillain(c) && atLocation(c, "SEWERS"), -2);
   }),
 // RECRUIT: 2
 // {POWER Tech} You may discard a card. If you do, draw two cards.

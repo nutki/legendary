@@ -44,18 +44,19 @@ makeSchemeCard("Portals to the Dark Dimension", { twists: 7 }, ev => {
 // SETUP: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
 // RULE: Bystanders in the Villain Deck count as Killbot Villains, with Attack equal to the number of Twists next to this Scheme.
 // EVILWINS: If 5 "Killbots" escape.
-makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bytstanders: 18 }, ev => {
+makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bystanders: 18 }, ev => {
   // Twist: Put the Twist next to this Scheme.
   attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
 }, {
   event: "ESCAPE",
-  after: ev => { if (gameState.escaped.count(isBystander) >= 5) evilWinsEv(ev); },
+  after: ev => schemeProgressEv(ev, 5 - gameState.escaped.count(isBystander)),
 }, function () {
   let isKillbot = (c: Card) => isBystander(c) && (c.location && (c.location.isCity || c.location.id === "VILLAIN")); // TODO isCity => fightable?
   gameState.scheme.attachedDeck('TWIST').addNewCard(twistTemplate, 3);
   addStatSet('defense', isKillbot, () => gameState.scheme.attached('TWIST').size);
   addStatSet('isVillain', isKillbot, () => true);
   addStatSet('villainGroup', isKillbot, () => "Killbots");
+  gameState.schemeProgress = 5;
 }),
 // SETUP: 8 Twists. 6 Heroes. Skrull Villain Group required. Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.
 // RULE: Heroes in the Villain Deck count as Skrull Villains with Attack equal to the Hero's Cost +2. If you defeat that Hero, you gain it.

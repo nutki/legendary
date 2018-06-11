@@ -116,7 +116,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Masters of Evil", "Whirlwind", 4, 2, {
-    fight: ev => { if(ev.where.id === "ROOFTOPS" || ev.where.id === "BRIDGE") selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), sel => KOEv(ev, sel)); },
+    fight: ev => { if(isLocation(ev.where, "ROOFTOPS", "BRIDGE")) selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), sel => KOEv(ev, sel)); },
   })],
 ]},
 { name: "Radiation", cards: [
@@ -124,7 +124,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Radiation", "Abomination", 5, 3, {
-    fight: ev => { if(ev.where.id === "STREETS" || ev.where.id === "BRIDGE") rescueEv(ev, 3); },
+    fight: ev => { if(isLocation(ev.where, "STREETS", "BRIDGE")) rescueEv(ev, 3); },
   })],
 // AMBUSH: Play the top card of the Villain Deck.
 // ATTACK: 4
@@ -201,7 +201,7 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 3
 // VP: 2
   [ 2, makeVillainCard("Spider-Foes", "The Lizard", 3, 2, {
-    fight: ev => { if(ev.where.id === "SEWERS") eachOtherPlayerVM(p => gainWoundEv(ev, p)); },
+    fight: ev => { if(isLocation(ev.where, "SEWERS")) eachOtherPlayerVM(p => gainWoundEv(ev, p)); },
   })],
 // You can't defeat Venom unless you have a [Covert] Hero.
 // ESCAPE: Each player gains a Wound.
@@ -325,7 +325,7 @@ addTemplates("VILLAINS", "Dark City", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("MLF", "Wildside", 5, 3, {
-    fight: ev => { if (ev.where.id === "SEWERS" || ev.where.id === "BANK") selectObjectsEv(ev, "KO two Heroes", 2, yourHeroes(), c => KOEv(ev, c)); },
+    fight: ev => {if (isLocation(ev.where, "SEWERS", "BANK")) selectObjectsEv(ev, "KO two Heroes", 2, yourHeroes(), c => KOEv(ev, c)); },
   })],
 // To fight Zero, you must also discard three cards that cost 0.
 // ATTACK: 0*

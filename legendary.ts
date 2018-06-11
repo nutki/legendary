@@ -502,7 +502,7 @@ let woundTemplate = makeWoundCard(function (ev) {
   turnState.noRecruitOrFight = true;
 });
 
-function makeSchemeCard(name: string, counts, effect: (ev: Ev) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: any) => void) {
+function makeSchemeCard(name: string, counts: SetupParams, effect: (ev: Ev) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: any) => void) {
   let c = new Card('SCHEME');
   c.cardName = name;
   c.params = counts;
@@ -549,6 +549,16 @@ interface Trigger {
   replace?: (e: Ev) => void
   before?: (e: Ev) => void
 }
+type CityLocation = "SEWERS" | "STREETS" | "BANK" | "ROOFTOPS" | "BRIDGE";
+interface SetupParams {
+  vd_henchmen?: number[] | number,
+  vd_villain?: number[] | number,
+  vd_bystanders?: number[] | number,
+  heroes?: number[] | number,
+  wounds?: number[] | number,
+  twists?: number[] | number,
+  required?: any
+}
 interface Game extends Ev {
   gameRand: RNG
   nextId: number
@@ -565,7 +575,7 @@ interface Game extends Ev {
   bystanders: Deck
   hq: Deck[]
   city: Deck[]
-  params: { [name: string]: number[] | number }
+  params: SetupParams
   triggers: Trigger[]
   endDrawAmount: number
   modifiers: Modifiers<any>
@@ -577,6 +587,7 @@ interface Game extends Ev {
   specialActions?: (ev: Ev) => Ev[]
   extraTurn?: boolean
   schemeState: any
+  schemeProgress?: number
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -883,6 +894,7 @@ function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
 function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }
 function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
 function isTwist(c: Card): boolean { return c.cardType === "SCHEME TWIST"; }
+function isScheme(c: Card): boolean { return c.cardType === "SCHEME"; }
 function isHenchman(c: Card): boolean { return c.isHenchman === true; }
 function isEnemy(c: Card): boolean { return isVillain(c) || isMastermind(c); }
 function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER"; }
@@ -937,11 +949,17 @@ function villainOrMastermind(): Card[] {
 function villains(): Card[] {
   return CityCards().limit(isVillain);
 }
-function villainIn(where: string): Card[] {
+function villainIn(where: CityLocation): Card[] {
   return CityCards().limit(isVillain).limit(c => c.location.id === where);
 }
-function withCity(where: string, f: (d: Deck) => void) {
+function withCity(where: CityLocation, f: (d: Deck) => void) {
   gameState.city.limit(e => e.id === where).each(f);
+}
+function isLocation(where: Deck, ...locations: CityLocation[]) {
+  return locations.some(l => where.id === l);
+}
+function atLocation(what: Card, ...locations: CityLocation[]) {
+  return locations.some(l => what.location.id === l);
 }
 function hasBystander(c: Card): boolean { return c.captured.has(isBystander); }
 function eachOtherPlayer(f: (p: Player) => void): Player[] { let r = gameState.players.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
@@ -1150,6 +1168,13 @@ function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card) 
   let desc = result === "LOSS" ? `${mastermind ? mastermind.cardName : "Evil"} Wins` : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
   textLog.log("Game Over: " + desc);
   pushEv(ev, "GAMEOVER", { ui: true, result, desc, what: mastermind });
+}
+function schemeProgressEv(ev: Ev, amount: number) {
+  cont(ev, () => {
+    if (amount < 0) amount = 0;
+    gameState.schemeProgress = amount;
+    if (amount === 0) evilWinsEv(ev);
+  });
 }
 function runOutEv(ev: Ev, deck: string) { pushEv(ev, "RUNOUT", { deckName: deck, func: () => {} }); }
 function captureEv(ev: Ev, villain: Card, what?: Card) {
@@ -1590,6 +1615,8 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
   r += `<img class="cardface" src="${back ? 'images/back.png' : cardImageName(c)}">`
   if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
+  if (isScheme(c) && gameState.schemeProgress !== undefined)
+    r += `<div class="count">${gameState.schemeProgress}</div>`;
   if (!back && c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
   if (c.captured.size > 0) r += `<div class="capturedHint">${c.captured.size}</div>`
   r += `<div class="frame"></div></div>`;
