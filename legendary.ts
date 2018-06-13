@@ -1223,6 +1223,9 @@ function gainWoundEv(ev: Ev, who?: Player): void {
     if (gameState.wounds.top) gainEv(ev, gameState.wounds.top, who);
   });
 }
+function gainWoundToHandEv(ev: Ev, who: Player = playerState): void {
+  cont(ev, () => gameState.wounds.withTop(c => gainToHandEv(ev, c, who)));
+}
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
 function pushEv(ev: Ev, name: string, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
 type Handler = (ev: Ev) => void;

@@ -93,7 +93,7 @@ addTemplates("HEROES", "Legendary", [
 // You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.
 // COST: 7
   ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, undefined, "G", [
-  ev => chooseMayEv(ev, "Gain a Wound", () => gainWoundEv(ev)),
+  ev => chooseMayEv(ev, "Gain a Wound", () => gainWoundToHandEv(ev)),
   ev => {
     let selected: {player: Player, card: Card}[] = [];
     eachPlayer(p => selectCardEv(ev, "Select a card to pass", p.hand.deck, sel => selected.push({ player: p, card: sel }), p));
@@ -372,7 +372,7 @@ addTemplates("HEROES", "Legendary", [
 // Draw three cards.
 // {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
 // COST: 8
-  ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", ev => addAttackEvent(ev, turnState.cardsDrawn)),
+  ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", [ ev => drawEv(ev, 3), ev => addAttackEvent(ev, turnState.cardsDrawn) ]),
 },
 ]);
 addTemplates("HEROES", "Dark City", [
