@@ -79,6 +79,7 @@ interface Card {
   init?: (state: any) => void
   twist?: (ev: Ev) => void
   params?: {[param: string]:(number[] | number)}
+  required?: { heroes?: string, villains?: string, henchmen?:string }
   bribe?: boolean
   ambush?: (ev: Ev) => void
   fight?: (ev: Ev) => void
@@ -575,7 +576,6 @@ interface Game extends Ev {
   bystanders: Deck
   hq: Deck[]
   city: Deck[]
-  params: SetupParams
   triggers: Trigger[]
   endDrawAmount: number
   modifiers: Modifiers<any>
@@ -694,13 +694,6 @@ gameState = {
     new Deck("SEWERS", true),
   ],
   cityEntry: undefined,
-  params: {
-    vd_henchmen: [ 0, 1, 1, 2, 2 ],
-    vd_villain: [ 1, 2, 3, 3, 4 ],
-    vd_bystanders: [ 1, 2, 8, 8, 12 ],
-    heroes: [ 3, 5, 5, 5, 6 ],
-    wounds: 30,
-  },
   triggers: [
     { // Trigger RUNOUT events.
       event: "MOVECARD",
@@ -812,20 +805,46 @@ let gameSetup: Setup = {
   mastermind: "Loki",
   henchmen: ["Savage Land Mutates"],
   villains: ["Brotherhood"],
-*/
+
+   S01M08
   scheme: "Replace Earth's Leaders with Killbots",
   mastermind: "Red Skull",
   henchmen: ["Sentinel"],
   villains: ["Radiation"],
-  heroes: [ "Rogue", "Nick Fury", "Black Widow" ],
+
+   S01M09
+  scheme: "Secret Invasion of the Skrull Shapeshifters",
+  mastermind: "Loki",
+  henchmen: ["Sentinel"],
+  villains: ["Skrulls"],
+  heroes: [ "Black Widow", "Deadpool", "Iron Man", "Spider-Man", "Thor" ],
+*/
+  scheme: "Midtown Bank Robbery",
+  mastermind: "Magneto",
+  henchmen: ["Sentinel"],
+  villains: ["Skrulls"],
+  heroes: [ "Black Widow", "Deadpool", "Wolverine" ],
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
 };
-function getGameSetup(scheme: string, mastermind: string): Setup {
+function getParam(name: string, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
+  let defaults: SetupParams = {
+    vd_henchmen: [ 0, 1, 1, 2, 2 ],
+    vd_villain: [ 1, 2, 3, 3, 4 ],
+    vd_bystanders: [ 1, 2, 8, 8, 12 ],
+    heroes: [ 3, 5, 5, 5, 6 ],
+    wounds: 30,
+  };
+  let r = name in s.params ? s.params[name] : defaults[name];
+  return r instanceof Array ? [numPlayers - 1] : r;
+}
+function getGameSetup(schemeName: string, mastermindName: string, numPlayers: number = 1): Setup {
+  let scheme = findSchemeTemplate(schemeName);
+  let mastermind = findMastermindTemplate(mastermindName);
   let setup: Setup = {
-    scheme,
-    mastermind,
+    scheme: schemeName,
+    mastermind: mastermindName,
     henchmen: [],
     villains: [],
     heroes: [],
@@ -833,6 +852,26 @@ function getGameSetup(scheme: string, mastermind: string): Setup {
     withOfficers: undefined,
     withWounds: undefined,
   };
+  function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
+    let a: (string | ([string, number]))[]= setup[t];
+    let pos = a.findIndex(v => v === undefined);
+    if (pos >=0) a[pos] = name;
+  }
+  setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
+  setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
+  setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
+  if (numPlayers === 1) setup.henchmen.push([undefined, 3]);
+  if (numPlayers > 1) {
+    const leads = mastermind.leads;
+    if (findVillainTemplate(leads)) setRequired('villains', leads);
+    if (findHenchmanTemplate(leads)) setRequired('henchmen', leads);
+  }
+  const schemeReq = scheme.required;
+  if (schemeReq) {
+    if (schemeReq.heroes) setRequired('heroes', schemeReq.heroes);
+    if (schemeReq.villains) setRequired('villains', schemeReq.villains);
+    if (schemeReq.henchmen) setRequired('henchmen', schemeReq.henchmen);
+  }
   return setup;
 }
 // Init Scheme
@@ -1014,11 +1053,6 @@ function getModifiedStat<T>(c: Card, stat: string, value: T): T {
   return modifyStat(c, turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
 }
 // Game engine functions
-function getParam(name: string): number {
-  let s = gameState.scheme.top;
-  let r = name in s.params ? s.params[name] : gameState.params[name];
-  return r instanceof Array ? r[gameState.players.length - 1] : r;
-}
 function attachedDeck(name: string, where: Deck | Card) {
   if (!(where instanceof Deck || where instanceof Card)) {
     console.log("Need deck or card to attach to");
@@ -1479,7 +1513,6 @@ function villainEscape(ev: Ev): void {
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, p));
   moveCardEv(ev, c, gameState.escaped);
   selectCardAndKOEv(ev, HQCards().limit(c => c.cost <= 6));
-  if (c.escape) pushEv(ev, "EFFECT", { source: c, func: c.escape });
   pushEffects(ev, c, "escape", c.escape);
 }
 function villainFight(ev: Ev): void {
@@ -1781,7 +1814,7 @@ function mainLoop(): void {
     e.classList.add("select");
     if (ev.desc) {
       if (/\bKO\b/.test(ev.desc)) e.classList.add("selectko");
-      if ((/\bdiscard\b/i).test(ev.desc)) e.classList.add("selectdiscard");
+      if ((/\bdiscard\b/i).test(ev.desc) && !(/\bfrom discard\b/i).test(ev.desc)) e.classList.add("selectdiscard");
       if ((/\brecruit\b/i).test(ev.desc)) e.classList.add("selectrecruit");
       if ((/\bdefeat\b/i).test(ev.desc)) e.classList.add("selectdefeat");
     }
@@ -1822,6 +1855,8 @@ Select setup screen
 auto popup decks
 
 ENGINE:
+playArea owner
+separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 required villain/hero groups

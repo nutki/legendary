@@ -19,9 +19,10 @@ makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
   ev.another = true;
 }, {
   event: "ESCAPE",
-  after: ev => { if (gameState.escaped.count(isBystander) >= 8) evilWinsEv(ev); },
+  after: ev => schemeProgressEv(ev, 8 - gameState.escaped.count(isBystander)),
 }, () => {
   addStatMod('defense', isVillain, c => c.captured.count(isBystander));
+  gameState.schemeProgress = 8;
 }),
 // SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
 // EVILWINS: If 12 Villains escape.
@@ -66,7 +67,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   withCity("SEWERS", d => selectCardEv(ev, "Choose a Hero to become a Skull", HQCardsHighestCost(), sel => moveCardEv(ev, sel, d)));
 }, {
   event: "ESCAPE",
-  after: ev => { if (gameState.escaped.count(isHero) >= 6) evilWinsEv(ev); },
+  after: ev => schemeProgressEv(ev, 6 - gameState.escaped.count(isHero)),
 }, function () {
   let isSkrull = (c: Card) => isHero(c) && (c.location && (c.location.isCity || c.location.id === "VILLAIN"));  // TODO isCity => fightable?
   addStatSet('defense', isSkrull, c => c.cost + 2);
@@ -76,6 +77,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   repeat(12, () => moveCard(gameState.herodeck.top, gameState.villaindeck));
   // TODO require Skrulls
   gameState.villaindeck.shuffle();
+  gameState.schemeProgress = 6;
 }),
 // SETUP: For 2-3 players, use 8 Twists. For 4-5 players, use 5 Twists. If only 2 players, use only 4 Heroes in the Hero Deck.
 // EVILWINS: If the Hero Deck runs out.
@@ -212,7 +214,7 @@ makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3
 // SETUP: 8 Twists. Villain Deck includes 14 extra Jean Grey cards and no Bystanders.
 // RULE: Each Jean Grey card counts as a "Goblin Queen" Villain. It's worth 4 VP. It has Attack equal to its Cost plus the number of Demon Goblins stacked next to the Scheme.
 // EVILWINS: When 4 Goblin Queen cards escape.
-makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ] }, ev => {
+makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Jean Grey" } }, ev => {
   // Twist: Stack 5 Bystanders face down next to the Scheme. Bystanders stacked here are "Demon Goblin" Villains. They have 2 Attack. Players can fight these Demon Goblins to rescue them as Bystanders.
   repeat(5, () => cont(ev, () => gameState.bystanders.withTop(b => attachCardEv(ev, b, gameState.scheme, "GOBLIN"))));
 }, [], (s) => {
