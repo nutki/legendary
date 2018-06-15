@@ -1797,7 +1797,7 @@ function mainLoop(): void {
       extraActions.push({name: "Confirm", func: () => {
         let num = selected.count(s => s);
         if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
-        let indexes = selected.map((s, i) => s ? i : undefined).filter(i => i);
+        let indexes = selected.map((s, i) => s ? i : -1).filter(i => i >= 0);
         indexes.forEach(i => ev.result1(ev.options[i]));
         if (num === 0) ev.result0();
         undoLog.write(indexes.join(',')); mainLoop();
