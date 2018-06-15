@@ -36,8 +36,8 @@ addTemplates("HEROES", "Legendary", [
 // COST: 6
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && (<Card>source).location.owner === ev.who,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev), () => pushEvents(ev.replacing), ev.source.location.owner)
+    match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who,
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev), () => pushEvents(ev.replacing), owner(ev.source))
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
@@ -62,7 +62,7 @@ addTemplates("HEROES", "Legendary", [
     event: "DISCARD",
     match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
     after: ev => {
-      const who = ev.source.location.owner;
+      const who = owner(ev.source);
       chooseMayEv(ev, "Return to hand", () => moveCardEv(ev, ev.source, who.hand), who);
     }
   }}),
@@ -411,7 +411,7 @@ addTemplates("HEROES", "Dark City", [
 // Whenever a card you own is KO'd this turn, you get +2 Recruit.
 // COST: 3
   c1: makeHeroCard("Bishop", "Absorb Energies", 3, 0, 2, Color.COVERT, "X-Men", "D", ev => {
-    addTurnTrigger("KO", (ev) => ev.what.location.owner === playerState, ev => addRecruitEvent(ev, 2));
+    addTurnTrigger("KO", (ev) => owner(ev.what) === playerState, ev => addRecruitEvent(ev, 2));
   }),
 // Draw a card.
 // {POWER Covert} You may KO a card from your hand or discard pile.
@@ -476,7 +476,7 @@ addTemplates("HEROES", "Dark City", [
 // COST: 3
   c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger: {
     event: "STRIKE",
-    before: ev => chooseMayEv(ev, "Discard to draw three extra cards", ev => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, ev.source.location.owner)); }, ev.source.location.owner)
+    before: ev => chooseMayEv(ev, "Discard to draw three extra cards", ev => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source))); }, owner(ev.source))
   }}),
 // ATTACK: 2+
 // You get +2 Attack only when fighting Masterminds.
@@ -508,8 +508,8 @@ addTemplates("HEROES", "Dark City", [
 // COST: 3
   c2: makeHeroCard("Colossus", "Invulnerability", 3, 2, u, Color.STRENGTH, "X-Force", "D", [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && ev.who === (<Card>source).location.owner,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2), () => pushEvents(ev.replacing), ev.source.location.owner)
+    match: (ev, source) => isWound(ev.what) && ev.who === owner(<Card>source),
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2), () => pushEvents(ev.replacing), owner(ev.source))
   }}),
 // ATTACK: 4+
 // {POWER Strength} You get +2 Attack.
@@ -521,8 +521,8 @@ addTemplates("HEROES", "Dark City", [
 // COST: 8
   ra: makeHeroCard("Colossus", "Russian Heavy Tank", 8, u, 6, Color.STRENGTH, "X-Force", "", [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && ev.who !== (<Card>source).location.owner,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => { gainEv(ev, ev.parent.what, ev.source.location.owner); drawEv(ev); }, () => pushEvents(ev.replacing), ev.source.location.owner)
+    match: (ev, source) => isWound(ev.what) && ev.who !== owner(<Card>source),
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => { gainEv(ev, ev.parent.what, owner(ev.source)); drawEv(ev); }, () => pushEvents(ev.replacing), owner(ev.source))
   }}),
 },
 {
@@ -689,12 +689,12 @@ addTemplates("HEROES", "Dark City", [
 // COST: 8
   ra: makeHeroCard("Iceman", "Impenetrable Ice Wall", 8, u, 7, Color.RANGED, "X-Men", "", [], { triggers: [ {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && (<Card>source).location.owner === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
-    replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing), ev.source.location.owner)
+    match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
+    replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing), owner(ev.source))
   }, {
     event: "DISCARD",
-    match: (ev, source) => (<Card>source).location.owner === ev.what.location.owner && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
-    replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing), ev.source.location.owner)
+    match: (ev, source) => owner(<Card>source) === owner(ev.what) && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
+    replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing), owner(ev.source))
   }]}),
 },
 {

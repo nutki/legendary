@@ -518,6 +518,7 @@ interface Player {
   deck: Deck
   discard: Deck
   victory: Deck
+  playArea: Deck
   revealed: Deck
   teleported: Deck
   left: Player
@@ -564,7 +565,6 @@ interface Game extends Ev {
   gameRand: RNG
   nextId: number
   twistCount: number
-  playArea: Deck
   escaped: Deck
   villaindeck: Deck
   mastermind: Deck
@@ -655,12 +655,14 @@ playerState = {
   discard: new Deck('DISCARD0', true),
   hand: new Deck('HAND0', true),
   victory: new Deck('VICTORY0', true),
+  playArea: new Deck('PLAYAREA0', true),
   revealed: new Deck('REVEALED0', true),
   teleported: new Deck('TELEPORT0', true),
   left: undefined,
   right: undefined,
 };
 playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState.revealed.owner = playerState;
+playerState.playArea.owner = playerState;
 playerState.left = playerState.right = playerState;
 gameState = {
   type: "STATE",
@@ -669,7 +671,6 @@ gameState = {
   nextId: 0,
   twistCount: 0,
   gameRand: undefined,
-  playArea: new Deck('PLAYAREA', true),
   escaped: new Deck('ESCAPED', true),
   villaindeck: new Deck('VILLAIN'),
   mastermind: new Deck('MASTERMIND', true),
@@ -953,10 +954,13 @@ function handOrDiscard(p?: Player): Card[] {
   p = p || playerState;
   return p.hand.deck.concat(playerState.discard.deck);
 }
+function owner(c: Card): Player {
+  return c.location.owner;
+}
 function owned(p: Player): Card[] {
   p = p || playerState;
   let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed.deck, playerState.victory.deck);
-  return p === playerState ? r.concat(gameState.playArea.deck) : r;
+  return p === playerState ? r.concat(playerState.playArea.deck) : r;
 }
 function soloVP(): number {
   return gameState.players.sum(currentVP) - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
@@ -1008,7 +1012,7 @@ function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv
 function revealable(who = playerState) {
   // TODO: also artifacts and maybe MOoT
   if (who !== playerState) return who.hand.deck;
-  return who.hand.deck.concat(gameState.playArea.deck);
+  return who.hand.deck.concat(playerState.playArea.deck);
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
 function numColorsYouHave() {
@@ -1188,7 +1192,7 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, forFree: true });
 }
-function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, ev.what.location.owner.discard) }); }
+function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, owner(ev.what).discard) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let draw = false;
@@ -1393,7 +1397,7 @@ function playCardEffects(ev: Ev, card?: Card) {
 }
 function playCard(ev: Ev): void {
   if (!canPlay(ev.what)) return;
-  moveCardEv(ev, ev.what, gameState.playArea);
+  moveCardEv(ev, ev.what, playerState.playArea);
   if (ev.what.copyPasteCard) {
     selectCardEv(ev, "Choose a card to copy", turnState.cardsPlayed, target => {
       console.log("COPYPASTE", ev.what, target);
@@ -1436,7 +1440,7 @@ function gainSoaringEv(ev: Ev, card: Card, who?: Player) {
 }
 function cleanUp(ev: Ev): void {
   moveAll(playerState.hand, playerState.discard);
-  moveAll(gameState.playArea, playerState.discard);
+  moveAll(playerState.playArea, playerState.discard);
   moveAll(playerState.teleported, playerState.hand);
   let drawAmount = (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0);
   drawEv(ev, drawAmount);
@@ -1584,7 +1588,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: {}}[]
   playerState.hand.each(checkCardTrigger);
   // TODO other player's hand triggers
   playerState.revealed.each(checkCardTrigger);
-  gameState.playArea.each(checkCardTrigger);
+  playerState.playArea.each(checkCardTrigger);
   return triggers;
 }
 function addTriggers(ev: Ev): Ev[] {
@@ -1659,7 +1663,7 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   return r;
 }
 function makeDisplayPlayAreaImg(c: Card): string {
-  const gone = !gameState.playArea.deck.includes(c);;
+  const gone = !playerState.playArea.deck.includes(c);;
   return makeDisplayCardImg(c, false, gone);
 }
 function displayDecks(): void {
@@ -1676,7 +1680,7 @@ function displayDecks(): void {
     let popup = div.getAttribute("data-popupid");
     let html = '';
     if (mode === "IMG") {
-      if (deck.id === "PLAYAREA") {
+      if (deck.id === "PLAYAREA0") {
         html = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
       } else if (fanout) {
         html = deck.deck.map(c => makeDisplayCardImg(c, !deck.faceup)).reverse().join('');
@@ -1858,7 +1862,6 @@ Select setup screen
 auto popup decks
 
 ENGINE:
-playArea owner
 separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
