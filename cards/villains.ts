@@ -80,15 +80,15 @@ addTemplates("VILLAINS", "Legendary", [
 // ATTACK: 6
 // VP: 3*
   [ 1, makeVillainCard("HYDRA", "Supreme HYDRA", 6, 3, {
-     varVP: c => 3 * c.location.count(isGroup("HYDRA")), 
+    varVP: c => 3 * owner(c).victory.count(isGroup("HYDRA")),
   })],
 // FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
 // ESCAPE: Same effect.
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("HYDRA", "Viper", 5, 3, {
-    fight: ev => eachPlayer(p => { if (p.victory.count(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
-    escape: ev => eachPlayer(p => { if (p.victory.count(isGroup("HYDRA")) === 0) gainWoundEv(ev, p); }),
+    fight: ev => eachPlayer(p => { if (!p.victory.has(isGroup("HYDRA"))) gainWoundEv(ev, p); }),
+    escape: ev => eachPlayer(p => { if (!p.victory.has(isGroup("HYDRA"))) gainWoundEv(ev, p); }),
   })],
 ]},
 { name: "Masters of Evil", cards: [
@@ -397,7 +397,7 @@ addTemplates("VILLAINS", "Dark City", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Underworld", "Lilith, Daughter of Dracula", 5, 3, {
-    escape: ev => eachPlayer(p => { if (p.victory.count(c => c.cardName === "Dracula") === 0) gainWoundEv(ev, p); }),
+    escape: ev => eachPlayer(p => { if (!p.victory.has(c => c.cardName === "Dracula")) gainWoundEv(ev, p); }),
   })],
 ]},
 ]);
