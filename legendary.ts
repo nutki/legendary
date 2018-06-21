@@ -642,6 +642,63 @@ const textLog = {
   log: function(s: string): void { this.text += s + '<br>'; },
 };
 
+interface Setup {
+  scheme: string,
+  mastermind: string
+  henchmen: (string | [string, number])[]
+  villains: string[]
+  heroes: string[]
+  bystanders: string[]
+  withOfficers: boolean
+  withWounds: boolean
+}
+function getParam(name: string, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
+  let defaults: SetupParams = {
+    vd_henchmen: [ 0, 1, 1, 2, 2 ],
+    vd_villain: [ 1, 2, 3, 3, 4 ],
+    vd_bystanders: [ 1, 2, 8, 8, 12 ],
+    heroes: [ 3, 5, 5, 5, 6 ],
+    wounds: 30,
+  };
+  let r = name in s.params ? s.params[name] : defaults[name];
+  return r instanceof Array ? r[numPlayers - 1] : r;
+}
+function getGameSetup(schemeName: string, mastermindName: string, numPlayers: number = 1): Setup {
+  let scheme = findSchemeTemplate(schemeName);
+  let mastermind = findMastermindTemplate(mastermindName);
+  let setup: Setup = {
+    scheme: schemeName,
+    mastermind: mastermindName,
+    henchmen: [],
+    villains: [],
+    heroes: [],
+    bystanders: undefined,
+    withOfficers: undefined,
+    withWounds: undefined,
+  };
+  function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
+    let a: (string | ([string, number]))[]= setup[t];
+    if (a.includes(name)) return;
+    let pos = a.findIndex(v => v === undefined);
+    if (pos >=0) a[pos] = name;
+  }
+  setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
+  setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
+  setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
+  if (numPlayers === 1) setup.henchmen.push([undefined, 3]);
+  if (numPlayers > 1) {
+    const leads = mastermind.leads;
+    if (findVillainTemplate(leads)) setRequired('villains', leads);
+    if (findHenchmanTemplate(leads)) setRequired('henchmen', leads);
+  }
+  const schemeReq = <{ heroes?: string, villains?: string, henchmen?:string }>scheme.params.required;
+  if (schemeReq) {
+    if (schemeReq.heroes) setRequired('heroes', schemeReq.heroes);
+    if (schemeReq.villains) setRequired('villains', schemeReq.villains);
+    if (schemeReq.henchmen) setRequired('henchmen', schemeReq.henchmen);
+  }
+  return setup;
+}
 // State init
 function initGameState() {
 Deck.prototype.deckList = [];
@@ -748,16 +805,6 @@ for (let i = 0; i < 5; i++) {
   if (i) gameState.city[i].next = gameState.city[i - 1];
 }
 
-interface Setup {
-  scheme: string,
-  mastermind: string
-  henchmen: (string | [string, number])[]
-  villains: string[]
-  heroes: string[]
-  bystanders: string[]
-  withOfficers: boolean
-  withWounds: boolean
-}
 let gameSetup: Setup = {
 /* S01M01
   scheme: "Portals to the Dark Dimension",
@@ -829,52 +876,6 @@ let gameSetup: Setup = {
   withOfficers: true,
   withWounds: true,
 };
-function getParam(name: string, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
-  let defaults: SetupParams = {
-    vd_henchmen: [ 0, 1, 1, 2, 2 ],
-    vd_villain: [ 1, 2, 3, 3, 4 ],
-    vd_bystanders: [ 1, 2, 8, 8, 12 ],
-    heroes: [ 3, 5, 5, 5, 6 ],
-    wounds: 30,
-  };
-  let r = name in s.params ? s.params[name] : defaults[name];
-  return r instanceof Array ? [numPlayers - 1] : r;
-}
-function getGameSetup(schemeName: string, mastermindName: string, numPlayers: number = 1): Setup {
-  let scheme = findSchemeTemplate(schemeName);
-  let mastermind = findMastermindTemplate(mastermindName);
-  let setup: Setup = {
-    scheme: schemeName,
-    mastermind: mastermindName,
-    henchmen: [],
-    villains: [],
-    heroes: [],
-    bystanders: undefined,
-    withOfficers: undefined,
-    withWounds: undefined,
-  };
-  function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
-    let a: (string | ([string, number]))[]= setup[t];
-    let pos = a.findIndex(v => v === undefined);
-    if (pos >=0) a[pos] = name;
-  }
-  setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
-  setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
-  setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
-  if (numPlayers === 1) setup.henchmen.push([undefined, 3]);
-  if (numPlayers > 1) {
-    const leads = mastermind.leads;
-    if (findVillainTemplate(leads)) setRequired('villains', leads);
-    if (findHenchmanTemplate(leads)) setRequired('henchmen', leads);
-  }
-  const schemeReq = scheme.required;
-  if (schemeReq) {
-    if (schemeReq.heroes) setRequired('heroes', schemeReq.heroes);
-    if (schemeReq.villains) setRequired('villains', schemeReq.villains);
-    if (schemeReq.henchmen) setRequired('henchmen', schemeReq.henchmen);
-  }
-  return setup;
-}
 // Init Scheme
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
 if (gameState.scheme.top.triggers)
@@ -909,8 +910,7 @@ for (let i = 0; i < getParam('vd_bystanders'); i++)
 gameState.villaindeck.shuffle();
 // Init Mastermind
 {
-  let mastermind = findMastermindTemplate(gameSetup.mastermind);
-  gameState.mastermind.addNewCard(mastermind);
+  let mastermind = gameState.mastermind.addNewCard(findMastermindTemplate(gameSetup.mastermind));
   let tactics = gameState.mastermind.top.attachedDeck('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
@@ -1833,7 +1833,60 @@ function startGame(): void {
   initGameState();
   mainLoop();
 }
+function makeOptions(id: string, templateType: string, nameProp: string, current: string, f: (name: any) => boolean = () => true) {
+  const values = cardTemplates[templateType].filter(f);
+  const el = <HTMLSelectElement>document.getElementById(id);
+  el.addEventListener("change", setupChange);
+  if (values.length !== 1) el.add(document.createElement("option"));
+  let set = "Legendary";
+  values.forEach(s => {
+    if (s.set !== set) {
+      set = s.set;
+      const option = document.createElement("option");
+      option.text = `---- ${set} ----`;
+      option.disabled = true;
+      el.add(option);
+    }
+    const option = document.createElement("option");
+    option.text = s[nameProp];
+    if (current === s[nameProp]) option.selected = true;
+    el.add(option);
+  });
+}
+function makeSelects(id: string, templateType: string, nameProp: string, name: string, values: any[]) {
+  let selected = values.map((a, i) => {
+    let e = document.getElementById(id + i);
+    if (!e) return undefined;
+    return (<HTMLSelectElement>e).value;
+  });
+  document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join('');
+  values.forEach((name, i) => {
+    if (name instanceof Array) name = name[0];
+    console.log(id, name);
+    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n[nameProp] === name);
+  });
+}
+function setupChange(): void {
+  const pel = <HTMLSelectElement>document.getElementById("setup_players");
+  const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
+  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
+  console.log(pel.value, pel.selectedIndex);
+  console.log(sel.value, sel.selectedIndex);
+  console.log(mel.value, mel.selectedIndex);
+  if (!sel.value || !mel.value) return;
+  const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));
+  console.log(tmp);
+  makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
+  makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
+  makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
+}
+function setupInit(): void {
+  document.getElementById("setup_players").addEventListener("change", setupChange)
+  makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
+  makeOptions("setup_mastermind", "MASTERMINDS", "cardName", undefined);
+}
 function startApp(): void {
+  setupInit();
   undoLog.init();
   window.onclick = clickCard;
   const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
