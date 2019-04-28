@@ -614,7 +614,7 @@ const undoLog: UndoLog = {
   pos: 0,
   init: function () {
     this.pos = 0;
-    this.fromString(localStorage.legendaryLog);
+    this.fromString(localStorage.getItem('legendaryLog'));
   },
   get replaying() { return this.pos < this.actions.length; },
   read: function() { return this.actions[this.pos++]; },
@@ -623,7 +623,7 @@ const undoLog: UndoLog = {
   write: function(v) {
     const strValue = v.toString();
     this.actions[this.pos++] = strValue;
-    localStorage.legendaryLog = this.toString();
+    localStorage.setItem('legendaryLog', this.toString());
   },
   undo: function() { this.actions.pop(); this.pos = 0; },
   restart: function () { this.actions.splice(1); this.pos = 0; },
@@ -1859,7 +1859,7 @@ function makeSelects(id: string, templateType: string, nameProp: string, name: s
     if (!e) return undefined;
     return (<HTMLSelectElement>e).value;
   });
-  document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join('');
+  document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
   values.forEach((name, i) => {
     if (name instanceof Array) name = name[0];
     console.log(id, name);
