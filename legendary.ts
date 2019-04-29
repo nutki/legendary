@@ -595,8 +595,9 @@ let turnState: Turn = undefined;
 let playerState: Player = undefined;
 let gameState: Game = undefined;
 interface UndoLog {
-  actions: string[],
+  actions: string[]
   pos: number
+  gameSetup?: Setup
   init: () => void
   replaying: boolean
   read: () => string
@@ -609,12 +610,92 @@ interface UndoLog {
   toString: () => string
   fromString: (s: string) => void
 }
+const exampleGameSetup: Setup = {
+/* S01M01
+  scheme: "Portals to the Dark Dimension",
+  mastermind: "Dr. Doom",
+  henchmen: ["Hand Ninjas"],
+  villains: ["Brotherhood"],
+  heroes: [ "Black Widow", "Cyclops", "Gambit" ],
+
+   S01M02
+  scheme: "Unleash the Power of the Cosmic Cube",
+  mastermind: "Red Skull",
+  henchmen: ["Savage Land Mutates"],
+  villains: ["Radiation"],
+  heroes: [ "Black Widow", "Captain America", "Thor" ],
+
+   S01M03
+  scheme: "Midtown Bank Robbery",
+  mastermind: "Loki",
+  henchmen: ["Hand Ninjas"],
+  villains: ["Brotherhood"],
+  heroes: [ "Hawkeye", "Rogue", "Wolverine" ],
+
+   S01M04
+  scheme: "Unleash the Power of the Cosmic Cube",
+  mastermind: "Dr. Doom",
+  henchmen: ["Savage Land Mutates"],
+  villains: ["Enemies of Asgard"],
+  heroes: [ "Deadpool", "Iron Man", "Wolverine" ],
+
+   S01M05
+  scheme: "Portals to the Dark Dimension",
+  mastermind: "Dr. Doom",
+  henchmen: ["Sentinel"],
+  villains: ["Masters of Evil"],
+  heroes: [ "Cyclops", "Gambit", "Hawkeye" ],
+
+   S01M06  
+  scheme: "Secret Invasion of the Skrull Shapeshifters",
+  mastermind: "Red Skull",
+  henchmen: ["Hand Ninjas"],
+  villains: ["Skrulls"],
+  heroes: [ "Cyclops", "Gambit", "Hawkeye", "Rogue", "Black Widow" ],
+
+   S01M07
+  scheme: "Unleash the Power of the Cosmic Cube",
+  mastermind: "Loki",
+  henchmen: ["Savage Land Mutates"],
+  villains: ["Brotherhood"],
+
+   S01M08
+  scheme: "Replace Earth's Leaders with Killbots",
+  mastermind: "Red Skull",
+  henchmen: ["Sentinel"],
+  villains: ["Radiation"],
+
+   S01M09
+  scheme: "Secret Invasion of the Skrull Shapeshifters",
+  mastermind: "Loki",
+  henchmen: ["Sentinel"],
+  villains: ["Skrulls"],
+  heroes: [ "Black Widow", "Deadpool", "Iron Man", "Spider-Man", "Thor" ],
+*/
+  scheme: "Midtown Bank Robbery",
+  mastermind: "Magneto",
+  henchmen: ["Sentinel"],
+  villains: ["Skrulls"],
+  heroes: [ "Black Widow", "Deadpool", "Wolverine" ],
+  bystanders: ["Legendary"],
+  withOfficers: true,
+  withWounds: true,
+  numPlayers: 1,
+};
 const undoLog: UndoLog = {
   actions: [],
   pos: 0,
-  init: function () {
+  gameSetup: exampleGameSetup,
+  init: function (gameSetup?: Setup) {
     this.pos = 0;
-    this.fromString(localStorage.getItem('legendaryLog'));
+    if (gameSetup) {
+      this.actions = [];
+      this.gameSetup = gameSetup;
+      localStorage.setItem('legendarySetup', JSON.stringify(gameSetup));
+    } else {
+      this.fromString(localStorage.getItem('legendaryLog'));
+      this.gameSetup = JSON.parse(localStorage.getItem('legendarySetup'));
+    }
   },
   get replaying() { return this.pos < this.actions.length; },
   read: function() { return this.actions[this.pos++]; },
@@ -643,6 +724,7 @@ const textLog = {
 };
 
 interface Setup {
+  numPlayers: number,
   scheme: string,
   mastermind: string
   henchmen: (string | [string, number])[]
@@ -667,6 +749,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   let scheme = findSchemeTemplate(schemeName);
   let mastermind = findMastermindTemplate(mastermindName);
   let setup: Setup = {
+    numPlayers,
     scheme: schemeName,
     mastermind: mastermindName,
     henchmen: [],
@@ -700,7 +783,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   return setup;
 }
 // State init
-function initGameState() {
+function initGameState(gameSetup: Setup) {
 Deck.prototype.deckList = [];
 textLog.text = "";
 eventQueue = [];
@@ -805,77 +888,6 @@ for (let i = 0; i < 5; i++) {
   if (i) gameState.city[i].next = gameState.city[i - 1];
 }
 
-let gameSetup: Setup = {
-/* S01M01
-  scheme: "Portals to the Dark Dimension",
-  mastermind: "Dr. Doom",
-  henchmen: ["Hand Ninjas"],
-  villains: ["Brotherhood"],
-  heroes: [ "Black Widow", "Cyclops", "Gambit" ],
-
-   S01M02
-  scheme: "Unleash the Power of the Cosmic Cube",
-  mastermind: "Red Skull",
-  henchmen: ["Savage Land Mutates"],
-  villains: ["Radiation"],
-  heroes: [ "Black Widow", "Captain America", "Thor" ],
-
-   S01M03
-  scheme: "Midtown Bank Robbery",
-  mastermind: "Loki",
-  henchmen: ["Hand Ninjas"],
-  villains: ["Brotherhood"],
-  heroes: [ "Hawkeye", "Rogue", "Wolverine" ],
-
-   S01M04
-  scheme: "Unleash the Power of the Cosmic Cube",
-  mastermind: "Dr. Doom",
-  henchmen: ["Savage Land Mutates"],
-  villains: ["Enemies of Asgard"],
-  heroes: [ "Deadpool", "Iron Man", "Wolverine" ],
-
-   S01M05
-  scheme: "Portals to the Dark Dimension",
-  mastermind: "Dr. Doom",
-  henchmen: ["Sentinel"],
-  villains: ["Masters of Evil"],
-  heroes: [ "Cyclops", "Gambit", "Hawkeye" ],
-
-   S01M06  
-  scheme: "Secret Invasion of the Skrull Shapeshifters",
-  mastermind: "Red Skull",
-  henchmen: ["Hand Ninjas"],
-  villains: ["Skrulls"],
-  heroes: [ "Cyclops", "Gambit", "Hawkeye", "Rogue", "Black Widow" ],
-
-   S01M07
-  scheme: "Unleash the Power of the Cosmic Cube",
-  mastermind: "Loki",
-  henchmen: ["Savage Land Mutates"],
-  villains: ["Brotherhood"],
-
-   S01M08
-  scheme: "Replace Earth's Leaders with Killbots",
-  mastermind: "Red Skull",
-  henchmen: ["Sentinel"],
-  villains: ["Radiation"],
-
-   S01M09
-  scheme: "Secret Invasion of the Skrull Shapeshifters",
-  mastermind: "Loki",
-  henchmen: ["Sentinel"],
-  villains: ["Skrulls"],
-  heroes: [ "Black Widow", "Deadpool", "Iron Man", "Spider-Man", "Thor" ],
-*/
-  scheme: "Midtown Bank Robbery",
-  mastermind: "Magneto",
-  henchmen: ["Sentinel"],
-  villains: ["Skrulls"],
-  heroes: [ "Black Widow", "Deadpool", "Wolverine" ],
-  bystanders: ["Legendary"],
-  withOfficers: true,
-  withWounds: true,
-};
 // Init Scheme
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
 if (gameState.scheme.top.triggers)
@@ -1715,22 +1727,6 @@ function displayGame(ev: Ev): void {
 }
 
 // Main loop
-function mainLoopAuto(): void {
-  let count = 0;
-  function makeAction(): void {
-    count++;
-    let ev = popEvent();
-    while (!ev.ui) { ev.func(ev); ev = popEvent(); }
-    displayGame(ev);
-    ({
-      "SELECTEVENT": function () { pushEvents(ev.options[0]); },
-      "SELECTCARD1": function () { ev.result1(ev.options[0]); },
-      "SELECTCARD01": function () { ev.result1(ev.options[0]); },
-    }[ev.type] || ev.func)();
-    if (count < 500) setTimeout(makeAction, 200);
-  }
-  setTimeout(makeAction, 0);
-}
 function setMessage(msg: string): void {
   document.getElementById("message").innerHTML = msg;
 }
@@ -1830,7 +1826,7 @@ function mainLoop(): void {
   document.getElementById("logContainer").innerHTML = textLog.text;
 }
 function startGame(): void {
-  initGameState();
+  initGameState(undoLog.gameSetup);
   mainLoop();
 }
 function makeOptions(id: string, templateType: string, nameProp: string, current: string, f: (name: any) => boolean = () => true) {
@@ -1866,6 +1862,14 @@ function makeSelects(id: string, templateType: string, nameProp: string, name: s
     makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n[nameProp] === name);
   });
 }
+function getSelects(name: string, t: (string | [string, number])[]): boolean {
+  return t.map((old, i) => {
+    const v = (<HTMLSelectElement>document.getElementById(name + i)).value;
+    if (v === "") return false;
+    if (old instanceof Array) old[0] = v; else t[i] = v;
+    return true;
+  }).every(v => v);
+}
 function setupChange(): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
@@ -1879,14 +1883,42 @@ function setupChange(): void {
   makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
   makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
+  const s1 = getSelects("setup_heroes", tmp.heroes);
+  const s2 = getSelects("setup_villains", tmp.villains);
+  const s3 = getSelects("setup_henchmen", tmp.henchmen);
+  console.log(tmp);
 }
 function setupInit(): void {
   document.getElementById("setup_players").addEventListener("change", setupChange)
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
   makeOptions("setup_mastermind", "MASTERMINDS", "cardName", undefined);
 }
+function chooseSelects(name: string, values: string[]): void {
+  values.forEach((v, i) => {
+    const el = <HTMLSelectElement>document.getElementById(name + i);
+    el.value = v;
+  });
+}
+function setupSet(s: Setup): void {
+  const pel = <HTMLSelectElement>document.getElementById("setup_players");
+  const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
+  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
+  pel.value = s.numPlayers.toString();
+  sel.value = s.scheme;
+  mel.value = s.mastermind;
+  const tmp = getGameSetup(s.scheme, s.mastermind, s.numPlayers);
+  makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
+  makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
+  makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
+  chooseSelects("setup_heroes", s.heroes);
+  chooseSelects("setup_villains", s.villains);
+  chooseSelects("setup_henchmen", s.henchmen.map(v => v instanceof Array ? v[0] : v));  
+}
 function startApp(): void {
+  localStorage.setItem('legendarySetup', JSON.stringify(exampleGameSetup));
+  const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup'));
   setupInit();
+  setupSet(lastSetup);
   undoLog.init();
   window.onclick = clickCard;
   const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
