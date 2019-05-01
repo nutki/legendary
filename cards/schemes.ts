@@ -108,7 +108,7 @@ addTemplates("SCHEMES", "Dark City", [
 // RULE: The Villain with the baby gets +4 Attack. If you defeat that Villain, rescue the baby to your Victory Pile (until the next Twist).
 // The baby is worth 6 VP at the end of the game. If a Villain escapes with the baby, stack a Twist next to the Mastermind and return the baby to this Scheme card.
 // EVILWINS: When there are 3 Twists stacked next to the Mastermind.
-makeSchemeCard("Capture Baby Hope", { twists: 8 }, ev => {
+makeSchemeCard<{hope: Card}>("Capture Baby Hope", { twists: 8 }, ev => {
   // Twist: If a Villain has the baby, that Villain escapes. Otherwise, the baby is captured by the closest Villain to the Villain Deck. (If there are no Villains, do nothing.)
   const hope = ev.state.hope;
   const a = hope.location.attachedTo;
@@ -158,7 +158,7 @@ makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
 // SETUP: 8 Twists. Include 10 Maggia Goons as one of the Henchman Groups.
 // RULE: Goons also have the ability "Ambush: Play another card from the Villain Deck."
 // EVILWINS: When 5 Goons escape.
-makeSchemeCard("Organized Crime Wave", { twists: 8 }, ev => {
+makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists: 8 }, ev => {
   // Twist: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
   CityCards().limit(ev.state.isGoon).each(c => villainEscapeEv(ev, c));
   eachPlayer(p => p.victory.limit(ev.state.isGoon).each(c => moveCardEv(ev, c, gameState.villaindeck)));
@@ -214,7 +214,7 @@ makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3
 // SETUP: 8 Twists. Villain Deck includes 14 extra Jean Grey cards and no Bystanders.
 // RULE: Each Jean Grey card counts as a "Goblin Queen" Villain. It's worth 4 VP. It has Attack equal to its Cost plus the number of Demon Goblins stacked next to the Scheme.
 // EVILWINS: When 4 Goblin Queen cards escape.
-makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Jean Grey" } }, ev => {
+makeSchemeCard<{isGoblinQueen: (c: Card) => boolean}>("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Jean Grey" } }, ev => {
   // Twist: Stack 5 Bystanders face down next to the Scheme. Bystanders stacked here are "Demon Goblin" Villains. They have 2 Attack. Players can fight these Demon Goblins to rescue them as Bystanders.
   repeat(5, () => cont(ev, () => gameState.bystanders.withTop(b => attachCardEv(ev, b, gameState.scheme, "GOBLIN"))));
 }, [], (s) => {
@@ -241,7 +241,7 @@ makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 
   after: ev => { if (gameState.escaped.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 9) evilWinsEv(ev); },
 }], () => {
   addStatMod('defense', isVillain, c => 2 * c.captured.count(isHero));
-  addStatSet('capturable', isHero, () => true);
+  addStatSet('capturable', isHero, () => true); // TODO
   addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source));
   // gameState.herodeck.limit(c => c.heroName === extraHero).each(c => moveCard(c, gameState.villaindeck)); // TODO extra hero
   gameState.villaindeck.shuffle();

@@ -312,7 +312,7 @@ addTemplates("VILLAINS", "Dark City", [
 // ATTACK: 4*
 // VP: 4
   [ 2, makeVillainCard("MLF", "Forearm", 4, 4, {
-    fightCond: () => revealable().limit(isHero).unique(c => c.cardName).size >= 4
+    fightCond: () => revealable().limit(isHero).uniqueCount(c => c.cardName) >= 4
     // fightCost: TODO multiplayer reveal
   })],
 // ESCAPE: Reignfire becomes a Master Strike that takes effect immediately.

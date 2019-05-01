@@ -1,35 +1,34 @@
 "use strict";
 
 // Random Number Generator
-interface RNG {
-  nextInt: () => number
-  nextFloat: () => number
-  nextRange: (start: number, end: number) => number
-  choice: (a: any[]) => any
+class RNG {
+  m: number
+  a: number
+  c: number
   state: number
-}
-function RNG(seed?: number) {
+constructor(seed?: number) {
   this.m = 0x100000000;
   this.a = 1103515245;
   this.c = 12345;
   this.state = seed === undefined ? Math.floor(Math.random() * (this.m-1)) : seed;
 }
-RNG.prototype.nextInt = function(): number {
+nextInt(): number {
   this.state = (this.a * this.state + this.c) % this.m;
   return this.state;
 };
-RNG.prototype.nextFloat = function(): number {
+nextFloat(): number {
   return this.nextInt() / (this.m - 1);
 };
-RNG.prototype.nextRange = function(start: number, end: number) {
+nextRange(start: number, end: number): number {
   let rangeSize = end - start;
   let randomUnder1 = this.nextInt() / this.m;
   return start + Math.floor(randomUnder1 * rangeSize);
 };
-RNG.prototype.choice = function(array: any[]): any {
+choice<T>(array: T[]): T {
   return array[this.nextRange(0, array.length)];
 };
-let shuffleArray = function(a: any[], r: RNG): void {
+}
+function shuffleArray<T>(a: T[], r: RNG): void {
     let len = a.length;
     let i = len;
     while (i--) {
@@ -47,38 +46,25 @@ interface Card {
   ctype: string
   cardType: string
   location: Deck
-  cost: number
   color: number
-  attack: number
   printedAttack: number
   printedRecruit: number
   printedDefense: number
   printedVP: number
-  recruit: number
-  defense: number
-  vp?: number
-  isPlayable?: () => boolean
+  printedCost: number
   canPlay?: () => boolean
   playCostType?: "DISCARD" | "TOPDECK"
   playCost?: number
   fightCond?: (c?: Card) => boolean
   fightCost?: (ev: Ev) => void
-  isHealable: () => boolean
-  healCond: () => boolean
-  isGroup: (name: String) => boolean
-  isColor: (col: number) => boolean
-  isTeam: (name: String) => boolean
+  healCond?: () => boolean
   instance: Card
-  captured: Card[]
-  attached: (name: string) => Card[]
-  attachedDeck: (name: string) => Deck
   _attached: {[name: string]:Deck}
   tacticsTemplates?: Card[]
   triggers: Trigger[]
   trigger: Trigger
   init?: (state: any) => void
   twist?: (ev: Ev) => void
-  params?: {[param: string]:(number[] | number)}
   required?: { heroes?: string, villains?: string, henchmen?:string }
   bribe?: boolean
   ambush?: (ev: Ev) => void
@@ -93,14 +79,17 @@ interface Card {
   copyPasteCard?: boolean
   heroName?: string
   printedVillainGroup?: string
-  villainGroup?: string
   leads?: string
   cardName?: string
   mastermind?: Card
   isHenchman?: boolean
-  hasTeleport?: () => boolean
   teleport?: boolean
   soaring?: boolean
+  playable: boolean
+  fightable: boolean
+  team: string
+  flags?: string
+  params?: SetupParams
 }
 interface VillainCardAbillities {
   ambush?: (ev: Ev) => void
@@ -128,37 +117,37 @@ interface HeroCardAbillities {
   copyPasteCard?: boolean
   teleport?: boolean
 }
-let Card = function(t: string) {
-  this.cardType = t;
-};
-Card.prototype = {
-  get cost() { return this.printedCost || 0; },
-  get attack() { return this.printedAttack; },
-  get recruit() { return this.printedRecruit; },
+class Card {
+  constructor (t: string) {
+    this.cardType = t;
+  }
+  get cost() { return this.printedCost || 0; }
+  get attack() { return this.printedAttack; }
+  get recruit() { return this.printedRecruit; }
   get baseDefense() {
     if (this.varDefense) return this.varDefense(this);
     return this.printedDefense;
-  },
+  }
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
     return value < 0 ? 0 : value;
-  },
+  }
   get vp() {
     if (this.varVP) return this.varVP(this);
     return this.printedVP;
-  },
+  }
   get villainGroup() {
    return getModifiedStat(this, "villainGroup", this.printedVillainGroup)
-  },
-  isPlayable: function () { return this.playable; },
-  isHealable: function () { return this.cardType === "WOUND"; },
-  isColor: function(c: number) { return (this.color & c) !== 0; },
-  isTeam: function(t: string) { return this.team === t; },
-  isGroup: function(t: string) { return this.villainGroup === t; },
-  hasTeleport: function () { return getModifiedStat(this, "teleport", this.teleport); },
-  attachedDeck: function (name: string) { return attachedDeck(name, this); },
-  attached: function (name: string) { return attachedCards(name, this); },
-  get captured() { return this.attached('CAPTURED'); },
+  }
+  isPlayable() { return this.playable; }
+  isHealable() { return this.cardType === "WOUND"; }
+  isColor(c: number) { return (this.color & c) !== 0; }
+  isTeam(t: string) { return this.team === t; }
+  isGroup(t: string) { return this.villainGroup === t; }
+  hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
+  attachedDeck(name: string) { return attachedDeck(name, this); }
+  attached(name: string) { return attachedCards(name, this); }
+  get captured() { return this.attached('CAPTURED'); }
 };
 let Color = {
   RED:1,
@@ -187,7 +176,7 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   c.playable = true;
   c.flags = flags;
   c.effects = typeof effects === "function" ? [ effects ] : effects;
-  if (abilities) for (let i in abilities) c[i] = abilities[i];
+  if (abilities) Object.assign(c, abilities);
   return c;
 }
 function makeVillainCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
@@ -197,7 +186,7 @@ function makeVillainCard(group: string, name: string, defense: number, vp: numbe
   c.cardName = name;
   c.printedVillainGroup = group;
   c.fightable = true;
-  if (abilities) for (let i in abilities) c[i] = abilities[i];
+  if (abilities) Object.assign(c, abilities);
   return c;
 }
 function makeMastermindCard(name: string, defense: number, vp: number, leads: string, strike: (ev: Ev) => void, tactics: [string, (ev: Ev) => void][], abilities?: MastermindCardAbillities) {
@@ -217,7 +206,7 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
     t.mastermind = c;
     return t;
   });
-  if (abilities) for (let i in abilities) c[i] = abilities[i];
+  if (abilities) Object.assign(c, abilities);
   return c;
 }
 function makeBystanderCard(name?: string, rescue?: (ev: Ev) => void) {
@@ -227,7 +216,7 @@ function makeBystanderCard(name?: string, rescue?: (ev: Ev) => void) {
   c.rescue = rescue;
   return c;
 }
-function makeWoundCard(cond: (c: Card) => boolean, heal: (ev: Ev) => void, name?: string) {
+function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name?: string) {
   let c = new Card("WOUND");
   c.heal = heal;
   c.healCond = cond;
@@ -290,33 +279,12 @@ function moveAll(from: Deck, to: Deck, bottom?: boolean): void {
 }
 // Game primitives: Decks
 type Filter<T> = number | string | ((c: T) => boolean)
-interface Deck {
+class Deck {
   id: string
   owner: Player
-  constructor: (name: string, faceup?: boolean) => Deck
-  size: number
-  addNewCard: (c: Card, n?: number) => Card
-  shuffle: () => void
-  bottom: Card
-  top: Card
-  first: Card
-  last: Card
-  remove: (c: Card) => boolean
-  limit: (f: Filter<Card>) => Card[]
-  count: (f: Filter<Card>) => number
-  has: (f: Filter<Card>) => boolean
-  each: (f: (c: Card) => void) => void
-  withTop: (f: (c: Card) => void) => void
-  withFirst: (f: (c: Card) => void) => void
-  withLast: (f: (c: Card) => void) => void
-  withRandom: (f: (c: Card) => void) => void
-  attachedDeck: (name: string) => Deck
-  attached: (name: string) => Card[]
   _attached: {[name: string]:Deck}
   deck: Card[]
   faceup: boolean
-  _put: (c: Card) => void
-  _putBottom: (c: Card) => void
   isHQ?: boolean
   isCity?: boolean
   next?: Deck
@@ -324,42 +292,40 @@ interface Deck {
   above?: Deck
   attachedTo?: Deck | Card
   revealed?: Deck
-}
-let Deck = function(name: string, faceup?: boolean) {
+  constructor(name: string, faceup?: boolean) {
   this.id = name;
   this.deck = [];
   this.faceup = faceup === true;
-  Deck.prototype.deckList.push(this);
-};
-Deck.prototype = {
-  get size() { return this.deck.length; },
-  addNewCard: function(c: Card, n: number): Card { let r = undefined; for (let i = 0; i < (n || 1); i++) r = makeCardInPlay(c, this); return r; },
-  _put: function(c: Card) { this.deck.push(c); c.location = this; },
-  _putBottom: function(c: Card) { this.deck.unshift(c); c.location = this; },
-  shuffle: function() { shuffleArray(this.deck, gameState.gameRand); },
-  get bottom() { return this.deck[0]; },
-  get top() { return this.deck[this.deck.length - 1]; },
-  get first() { return this.deck[0]; },
-  get last() { return this.deck[this.deck.length - 1]; },
-  remove: function(c: Card): boolean { let p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; },
-  limit: function(c: Filter<Card>): Card[] { return limit(this.deck, c); },
-  count: function(c: Filter<Card>): number { return count(this.deck, c); },
-  has: function(c: Filter<Card>) { return count(this.deck, c) > 0; },
-  each: function(f: (c: Card) => void) { this.deck.forEach(f); },
-  withTop: function(f: (c: Card) => void) { if (this.size !== 0) f(this.top); },
-  withFirst: function(f: (c: Card) => void) { if (this.size !== 0) f(this.first); },
-  withLast: function(f: (c: Card) => void) { if (this.size !== 0) f(this.last); },
-  withRandom: function (f: (c: Card) => void) {if (this.size !== 0) f(this.deck[gameState.gameRand.nextRange(0, this.size)]); },
-  attachedDeck: function (name: string): Deck { return attachedDeck(name, this); },
-  attached: function (name: string): Card[] { return attachedCards(name, this); },
-  deckList: [],
+  Deck.deckList.push(this);
+  }
+  get size(): number { return this.deck.length; }
+  addNewCard(c: Card, n?: number): Card { let r = undefined; for (let i = 0; i < (n || 1); i++) r = makeCardInPlay(c, this); return r; }
+  _put(c: Card) { this.deck.push(c); c.location = this; }
+  _putBottom(c: Card) { this.deck.unshift(c); c.location = this; }
+  shuffle() { shuffleArray(this.deck, gameState.gameRand); }
+  get bottom(): Card { return this.deck[0]; }
+  get top(): Card { return this.deck[this.deck.length - 1]; }
+  get first(): Card { return this.deck[0]; }
+  get last(): Card { return this.deck[this.deck.length - 1]; }
+  remove(c: Card): boolean { let p = this.deck.indexOf(c); if (p >= 0) this.deck.splice(p, 1); return p >= 0; }
+  limit(c: Filter<Card>): Card[] { return limit(this.deck, c); }
+  count(c: Filter<Card>): number { return count(this.deck, c); }
+  has(c: Filter<Card>) { return count(this.deck, c) > 0; }
+  each(f: (c: Card) => void) { this.deck.forEach(f); }
+  withTop(f: (c: Card) => void) { if (this.size !== 0) f(this.top); }
+  withFirst(f: (c: Card) => void) { if (this.size !== 0) f(this.first); }
+  withLast(f: (c: Card) => void) { if (this.size !== 0) f(this.last); }
+  withRandom(f: (c: Card) => void) {if (this.size !== 0) f(this.deck[gameState.gameRand.nextRange(0, this.size)]); }
+  attachedDeck(name: string): Deck { return attachedDeck(name, this); }
+  attached(name: string): Card[] { return attachedCards(name, this); }
+  static deckList: Deck[] = []
 };
 
 interface Array<T> {
   size: number
   count: (f: Filter<T>) => number
   limit: (f: Filter<T>) => T[]
-  unique: (f: (c: T) => any) => T[]
+  uniqueCount: <U>(f: (c: T) => U) => number
   has: (f: Filter<T>) => boolean
   each: (f: (c: T) => void) => void
   sum: (f: (c: T) => number) => number
@@ -375,10 +341,10 @@ Object.defineProperty(Array.prototype, 'size', { get: function() { return this.l
 Array.prototype.shuffle = function () { shuffleArray(this, gameState.gameRand); };
 Array.prototype.limit = function (f) { return limit(this, f); };
 Array.prototype.has = function (f) { return count(this, f) > 0; };
-Array.prototype.each = function (f) { return this.forEach(f); };
-Array.prototype.sum = function (f) { return this.map(f).reduce((a, v) => a + v, 0); };
-Array.prototype.merge = function () { return this.reduce((a, v) => a.concat(v), []); };
-Array.prototype.unique = function () { let m = new Set(); return this.filter(e => { let p = m.has(e); m.add(e); return p; }) }
+Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U) { return this.forEach(f); };
+Array.prototype.sum = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => a + v, 0); };
+Array.prototype.merge = function <T>(this: Array<T>) { return this.reduce((a, v) => a.concat(v), []); };
+Array.prototype.uniqueCount = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return m.size; }
 Object.defineProperty(Array.prototype, 'first', { get: function() { return this[0]; }, set: function(v) { return this[0] = v; } });
 Object.defineProperty(Array.prototype, 'last', { get: function() { return this[this.size-1]; }, set: function(v) { return this[this.size - 1] = v; } });
 Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
@@ -386,11 +352,11 @@ Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
 Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[gameState.gameRand.nextRange(0, this.size)]); };
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
+type Option = Card | Ev;
 interface Ev {
   type: string
   desc?: string
   parent: Ev
-  getSource: () => Card
   source?: Card
   func?: (ev: Ev) => void
   what?: Card
@@ -407,12 +373,12 @@ interface Ev {
   endofturn?: boolean
   replacing?: Ev[]
   // ui events
-  options?: any[]
+  options?: Option[]
   min?: number
   max?: number
   ui?: boolean
   result0?: () => void
-  result1?: (c: any) => void
+  result1?: (c: Card) => void
   confirm?: boolean
   // RUNOUT
   deckName?: string
@@ -436,7 +402,7 @@ interface EvParams {
   bottom?: boolean
   forFree?: boolean
   villain?: Card
-  source?: Card
+  source?: Card | Ev
   ui?: boolean
   min?: number
   max?: number
@@ -447,28 +413,50 @@ interface EvParams {
   state?: any
   result0?: () => void
   result1?: (c: any) => void
+  replacing?: Ev[]
+  confirm?: boolean
 }
-let Ev = function (ev: Ev, type: string, params) {
+class Ev implements EvParams {
+  constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
   this.parent = ev;
   this.type = type;
   if (typeof params === "function") {
     this.func = params;
-  } else for (let i in params) {
-    this[i] = params[i];
-  }
+  } else Object.assign(this, params);
   if (!this.ui && (!this.func || typeof this.func !== "function")) throw TypeError("No function in event");
-};
-Ev.prototype = {
-  getSource: function () {
-    for (let ev = this; ev; ev = ev.parent) {
+  }
+  getSource() {
+    for (let ev: Ev = this; ev; ev = ev.parent) {
       if (ev.source) return ev.source;
     }
     return undefined;
-  },
+  }
 };
 
+interface Templates {
+  HEROES: {
+    set: string
+    team: string
+    name: string
+    c1: Card
+    c2: Card
+    uc: Card
+    ra: Card
+  }[]
+  HENCHMEN: Card[]
+  VILLAINS: {
+    set: string
+    cards: [number, Card][]
+  }[]
+  MASTERMINDS: Card[]
+  SCHEMES: Card[]
+  BYSTANDERS: {
+    set: string,
+    card: [number, Card]
+  }[]
+}
 // Card definitions
-let cardTemplates: {[type: string]:any[]} = {
+let cardTemplates: {[name: string]: any} = {
   HEROES: [],
   HENCHMEN: [],
   VILLAINS: [],
@@ -496,14 +484,14 @@ let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u, Colo
 addTemplates("BYSTANDERS", "Legendary", [{ card: [ 30, makeBystanderCard() ] }]);
 let twistTemplate = new Card("SCHEME TWIST");
 let strikeTemplate = new Card("MASTER STRIKE");
-let woundTemplate = makeWoundCard(function (ev) {
+let woundTemplate = makeWoundCard(function () {
   return !turnState.recruitedOrFought;
 }, function (ev) {
   playerState.hand.limit(isWound).forEach(function (w) { KOEv(ev, w); });
   turnState.noRecruitOrFight = true;
 });
 
-function makeSchemeCard(name: string, counts: SetupParams, effect: (ev: Ev) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: any) => void) {
+function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
   let c = new Card('SCHEME');
   c.cardName = name;
   c.params = counts;
@@ -539,7 +527,7 @@ interface Turn extends Ev {
   endDrawMod: number
   endDrawAmount: number
   cardsPlayed: Card[]
-  modifiers: Modifiers<any>
+  modifiers: Modifiers
   triggers: Trigger[]
   versatileBoth?: boolean
   nextHeroRecruit?: "HAND" | "DECK" | "SOARING"
@@ -578,7 +566,7 @@ interface Game extends Ev {
   city: Deck[]
   triggers: Trigger[]
   endDrawAmount: number
-  modifiers: Modifiers<any>
+  modifiers: Modifiers
   players: Player[]
   advancedSolo: boolean
   villainsEscaped: number
@@ -686,7 +674,7 @@ const undoLog: UndoLog = {
   actions: [],
   pos: 0,
   gameSetup: exampleGameSetup,
-  init: function (gameSetup?: Setup) {
+  init: function (this: UndoLog, gameSetup?: Setup) {
     this.pos = 0;
     if (gameSetup) {
       this.actions = [];
@@ -697,22 +685,22 @@ const undoLog: UndoLog = {
       this.gameSetup = JSON.parse(localStorage.getItem('legendarySetup'));
     }
   },
-  get replaying() { return this.pos < this.actions.length; },
-  read: function() { return this.actions[this.pos++]; },
-  readInt: function() { return parseInt(this.read()); },
-  readInts: function() { return this.read().split(',').map(v => parseInt(v)); }, // TODO does not work for empty
-  write: function(v) {
+  get replaying(this: UndoLog) { return this.pos < this.actions.length; },
+  read: function(this: UndoLog) { return this.actions[this.pos++]; },
+  readInt: function(this: UndoLog) { return parseInt(this.read()); },
+  readInts: function(this: UndoLog) { return this.read().split(',').map(v => parseInt(v)); }, // TODO does not work for empty
+  write: function(this: UndoLog, v) {
     const strValue = v.toString();
     this.actions[this.pos++] = strValue;
     localStorage.setItem('legendaryLog', this.toString());
   },
-  undo: function() { this.actions.pop(); this.pos = 0; },
-  restart: function () { this.actions.splice(1); this.pos = 0; },
-  newGame: function () { this.actions = []; this.pos = 0; },
-  toString: function () {
+  undo: function(this: UndoLog) { this.actions.pop(); this.pos = 0; },
+  restart: function (this: UndoLog) { this.actions.splice(1); this.pos = 0; },
+  newGame: function (this: UndoLog) { this.actions = []; this.pos = 0; },
+  toString: function (this: UndoLog) {
     return this.actions.map(v => v.length === 1 ? v : `[${v}]`).join('');
   },
-  fromString: function (input) {
+  fromString: function (this: UndoLog, input) {
     this.actions = [];
     if (input)
       this.actions = input.match(/\[.*?\]|./g).map(s => s.replace(/[\[\]]/g,''));
@@ -734,7 +722,7 @@ interface Setup {
   withOfficers: boolean
   withWounds: boolean
 }
-function getParam(name: string, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
+function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
     vd_henchmen: [ 0, 1, 1, 2, 2 ],
     vd_villain: [ 1, 2, 3, 3, 4 ],
@@ -784,7 +772,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
 }
 // State init
 function initGameState(gameSetup: Setup) {
-Deck.prototype.deckList = [];
+Deck.deckList = [];
 textLog.text = "";
 eventQueue = [];
 eventQueueNew = [];
@@ -914,7 +902,7 @@ gameSetup.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystander
 //// TODO sidekicks
 // Init villain deck
 gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h, 3));
-gameSetup.villains.map(findVillainTemplate).forEach(v => v.cards.forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
+gameSetup.villains.map(findVillainTemplate).forEach(v => (<[number, Card][]>v.cards).forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
 gameState.villaindeck.addNewCard(strikeTemplate, gameState.players.length === 1 && !gameState.advancedSolo ? 1 : 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
 for (let i = 0; i < getParam('vd_bystanders'); i++)
@@ -1043,29 +1031,46 @@ function versatileEv(ev: Ev, a: number): void {
   if (turnState.versatileBoth) {
     addRecruitEvent(ev, a);
     addAttackEvent(ev, a);
-  } else chooseOneEv(ev, "Versatile is", "Recruit", ev => addRecruitEvent(ev, a), "Attack", ev => addAttackEvent(ev, a));
+  } else chooseOneEv(ev, "Versatile is", ["Recruit", ev => addRecruitEvent(ev, a)], ["Attack", ev => addAttackEvent(ev, a)]);
 }
 function addEndDrawMod(a: number): void { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a: number): void { turnState.endDrawAmount = a; }
 
+interface ModifiableStats {
+  defense?: number
+  vp?: number
+  isHero?: boolean
+  isVillain?: boolean
+  villainGroup?: string
+  fight?: Handler | Handler[]
+  ambush?: Handler | Handler[]
+  capturable?: boolean
+  rescue?: Handler | Handler[]
+  escape?: Handler | Handler[]
+  teleport?: boolean
+}
+
+type NumericStat = 'defense' | 'vp';
+type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape';
 type Modifier<T> = {cond: (c: Card) => boolean, func: (c: Card, v?: T) => T};
-type Modifiers<T> = {[stat: string]:Modifier<T>[]};
-function addMod<T>(modifiers: Modifiers<T>, stat: string, cond: (c: Card) => boolean, func: (c: Card, v?: T) => T) {
+type Modifiers = {[stat in keyof ModifiableStats]:Modifier<ModifiableStats[stat]>[]};
+function addMod<T extends keyof ModifiableStats>(modifiers: Modifiers, stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) {
   if (!modifiers[stat]) modifiers[stat] = [];
-  modifiers[stat].push({ cond, func });
+  (<Modifier<ModifiableStats[T]>[]>(modifiers[stat])).push({ cond, func });
 }
 function makeModFunc(value: number | ((c: Card) => number)): (c: Card, v?: number) => number {
   if (typeof value === "number") return (c, v) => v + value;
   return (c, v) => v + value(c);
 }
-function addTurnMod(stat: string, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
-function addStatMod(stat: string, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
-function addStatSet<T>(stat: string, cond: (c: Card) => boolean, func: (c: Card, v?: T) => T) { addMod(gameState.modifiers, stat, cond, func); }
-function addTurnSet<T>(stat: string, cond: (c: Card) => boolean, func: (c: Card, v?: T) => T) { addMod(gameState.modifiers, stat, cond, func); }
+let xx: Modifiers = {};
+function addTurnMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
+function addStatMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
+function addStatSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(gameState.modifiers, stat, cond, func); }
+function addTurnSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(gameState.modifiers, stat, cond, func); }
 function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
   return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
-function getModifiedStat<T>(c: Card, stat: string, value: T): T {
+function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, value: ModifiableStats[T]): ModifiableStats[T] {
   return modifyStat(c, turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
 }
 // Game engine functions
@@ -1099,7 +1104,7 @@ function joinQueue(): void {
 }
 function popEvent(): Ev {
   joinQueue();
-  return eventQueue.shift() || new Ev(gameState, "TURN", {
+  return eventQueue.shift() || new Ev(gameState, "TURN", <EvParams>{
     recruit: 0,
     attack: 0,
     recruitSpecial: [],
@@ -1245,11 +1250,11 @@ function gainWoundToHandEv(ev: Ev, who: Player = playerState): void {
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
 function pushEv(ev: Ev, name: string, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
 type Handler = (ev: Ev) => void;
-function pushEffects(ev: Ev, c: Card, effectName: string, effects: Handler | Handler[], params: EvParams = {}) {
+function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler | Handler[], params: EvParams = {}) {
   effects = getModifiedStat(c, effectName, effects);
   function f(e: Handler): void {
     let p = { source: c, func: e };
-    if (params) for (let i in params) p[i] = params[i];
+    if (params) Object.assign(p, params);
     pushEv(ev, "EFFECT", p);
   }
   if (!effects) return;
@@ -1312,11 +1317,8 @@ function revealAndEv(ev: Ev, cond: Filter<Card>, effect: () => void, who?: Playe
   let cards = revealable(who).limit(cond);
   selectCardOptEv(ev, "Reveal a card", cards, effect, () => {}, who);
 }
-function chooseOneEv(ev: Ev, desc: string, ...a: (string | ((ev: Ev) => void))[]): void {
-  let options = [];
-  for (let i = 0; i < a.length; i += 2)
-    options.push(new Ev(ev, "EFFECT", { func: a[i+1], desc: a[i] }));
-  console.log(options);
+function chooseOneEv(ev: Ev, desc: string, ...a: [string, (ev: Ev) => void][]): void {
+  let options = a.map(o => new Ev(ev, "EFFECT", { func: o[1], desc: o[0] }));
   pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
 }
 function chooseMayEv(ev: Ev, desc: string, effect: (ev: Ev) => void, agent?: Player) {
@@ -1585,7 +1587,7 @@ function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => bo
   trigger.match = match;
   turnState.triggers.push(trigger);
 }
-function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: {}}[] {
+function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: object}[] {
   let triggers:{trigger: Trigger, source: Card|Ev}[] = [];
   let checkTrigger = (source: Ev | Card) => (t: Trigger) => {
     if(t.event === ev.type && (!t.match || t.match(ev, source))) triggers.push({trigger:t, source:source});
@@ -1607,10 +1609,10 @@ function addTriggers(ev: Ev): Ev[] {
   // TODO: more dynamic events (add generic { type:"TRIGGER", what:ev.type, when:"BEFORE" }), harder for replacement and steteful before/after triggers - not sure what I meant here anymore
   // TODO: order triggers
   let triggers = findTriggers(ev);
-  let newev = [];
+  let newev: Ev[] = [];
   triggers.forEach(function(t) {
     if (t.trigger.before) {
-      let state = t.trigger.after ? {} : undefined;
+      let state = t.trigger.after ? <object>{} : undefined;
       t.state = state;
       newev.push(new Ev(ev, "EFFECT", { func:t.trigger.before, source:t.source, state }));
     }
@@ -1680,7 +1682,7 @@ function makeDisplayPlayAreaImg(c: Card): string {
 }
 function displayDecks(): void {
   let divs = document.getElementsByClassName("deck");
-  let list = Deck.prototype.deckList;
+  let list = Deck.deckList;
   let deckById:{[id: string]:Deck} = {};
   for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
   for (let i = 0; i < divs.length; i++) {
@@ -1739,8 +1741,8 @@ function getEventName(ev: Ev): string {
   return "Unknown option";
 }
 let clickActions: {[id: string]:(() => void)} = {};
-function clickCard(ev): void {
-  for (let node = ev.target; node; node = node.parentNode) {
+function clickCard(ev: MouseEvent): void {
+  for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     if (node.id) console.log(node.id);
     if (node.id && clickActions[node.id]) {
       clickActions[node.id]();
@@ -1753,26 +1755,26 @@ function mainLoop(): void {
   clickActions = {};
   while (undoLog.replaying) {
   let ev = popEvent();
-  ({
-    "SELECTEVENT": function () { pushEvents(ev.options[undoLog.readInt() - 1]); },
-    "SELECTCARD1": function () { ev.result1(ev.options[undoLog.readInt() - 1]); },
+  ((<{[t: string]: (ev: Ev) => void}>{
+    "SELECTEVENT": () => pushEvents((<Ev[]>ev.options)[undoLog.readInt() - 1]),
+    "SELECTCARD1": () => ev.result1((<Card[]>ev.options)[undoLog.readInt() - 1]),
     "SELECTCARD01": function () {
       const v = undoLog.readInt();
-      v ? ev.result1(ev.options[v - 1]) : ev.result0();
+      v ? ev.result1((<Card[]>ev.options)[v - 1]) : ev.result0();
     },
     "SELECTOBJECTS": () => {
       const v = undoLog.readInts();
-      v.length ? v.forEach(o => ev.result1(ev.options[o])) : ev.result0();
+      v.length ? v.forEach(o => ev.result1((<Card[]>ev.options)[o])) : ev.result0();
     }
-  }[ev.type] || ev.func)(ev);
+  })[ev.type] || ev.func)(ev);
   }
   let ev = popEvent();
   while (!ev.ui) { ev.func(ev); ev = popEvent(); }
   displayGame(ev);
   console.log(">>> " + ev.type, ev);
-  ({
+  ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": function () {
-      ev.options.map((option, i) => {
+      (<Ev[]>ev.options).map((option, i) => {
         if (option.what && !clickActions[option.what.id]) {
           clickActions[option.what.id] = () => { pushEvents(option); undoLog.write(i + 1); mainLoop(); };
         } else {;
@@ -1781,15 +1783,16 @@ function mainLoop(): void {
       });
     },
     "SELECTCARD1": function () {
-      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
+      (<Card[]>ev.options).map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
     },
     "SELECTCARD01": function () {
-      ev.options.map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
+      (<Card[]>ev.options).map((option, i) => clickActions[option.id] = () => { ev.result1(option); undoLog.write(i + 1); mainLoop(); });
       extraActions = [{name: "None", func: () => { ev.result0(); undoLog.write(0); mainLoop(); }}];
     },
     "SELECTOBJECTS": function () {
       let selected = ev.options.map(() => false);
-      ev.options.map((option, i) => clickActions[option.id] = () => {
+      let options = <Card[]>ev.options;
+      options.map((option, i) => clickActions[option.id] = () => {
         selected[i] = !selected[i];
         let cl = document.getElementById(option.id).classList;
         if (selected[i]) cl.add('selected'); else cl.remove('selected');
@@ -1798,14 +1801,14 @@ function mainLoop(): void {
         let num = selected.count(s => s);
         if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
         let indexes = selected.map((s, i) => s ? i : -1).filter(i => i >= 0);
-        indexes.forEach(i => ev.result1(ev.options[i]));
+        indexes.forEach(i => ev.result1(options[i]));
         if (num === 0) ev.result0();
         undoLog.write(indexes.join(',')); mainLoop();
       }});
     },
     "GAMEOVER": function () {
     }
-  }[ev.type])(ev);
+  })[ev.type])(ev);
   setMessage(ev.desc || "");
   console.log("UI> " + ev.type, ev, clickActions, extraActions);
   let extraActionsHTML = extraActions.map((action, i) => {

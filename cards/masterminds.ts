@@ -11,8 +11,8 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   // Choose one: each other player draws a card or each other player discards a card.
   [ "Monarch's Decree", ev => {
       chooseOneEv(ev, "Each other player",
-      "draws a card", ev => eachOtherPlayerVM(p => drawEv(ev, 1, p)),
-      "discards a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, p))
+      ["draws a card", ev => eachOtherPlayerVM(p => drawEv(ev, 1, p))],
+      ["discards a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, p))]
       );
   } ],
   // Take another turn after this one.
@@ -99,11 +99,11 @@ makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
 ], { init: m => {
   const f = (c: Card) => c.villainGroup === m.leads;
   addStatMod('defense', f, 2);
-  let groupSize = gameState.villaindeck.limit(f).unique(c => c.cardName).size;
+  let groupSize = gameState.villaindeck.limit(f).uniqueCount(c => c.cardName);
   gameState.triggers.push({
     event: "ESCAPE",
     match: ev => ev.what.villainGroup === m.leads,
-    after: ev => { if (gameState.escaped.limit(f).unique(c => c.cardName).size === groupSize) evilWinsEv(ev, m) }
+    after: ev => { if (gameState.escaped.limit(f).uniqueCount(c => c.cardName) === groupSize) evilWinsEv(ev, m) }
   })
 }}),
 // {BRIBE}

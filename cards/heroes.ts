@@ -171,8 +171,8 @@ addTemplates("HEROES", "Legendary", [
 // {POWER Tech} Choose one: each other player draws a card or each other player discards a card.
 // COST: 5
   uc: makeHeroCard("Hawkeye", "Covering Fire", 5, u, 3, Color.TECH, "Avengers", "", ev => { if (superPower(Color.TECH)) chooseOneEv(ev, "Each other player",
-    "draws a card", () => eachOtherPlayer(p => drawEv(ev, 1, p)),
-    "discards a card", () => eachOtherPlayer(p => pickDiscardEv(ev, p))
+    ["draws a card", () => eachOtherPlayer(p => drawEv(ev, 1, p))],
+    ["discards a card", () => eachOtherPlayer(p => pickDiscardEv(ev, p))]
   );}),
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
@@ -703,11 +703,11 @@ addTemplates("HEROES", "Dark City", [
 // RECRUIT: 0+
 // You get +1 Recruit for each Hero with a different Cost you have.
 // COST: 3
-  c1: makeHeroCard("Iron Fist", "Focus Chi", 3, 0, u, Color.INSTINCT, "Marvel Knights", "", ev => addRecruitEvent(ev, yourHeroes().unique(c => c.cost).size)),
+  c1: makeHeroCard("Iron Fist", "Focus Chi", 3, 0, u, Color.INSTINCT, "Marvel Knights", "", ev => addRecruitEvent(ev, yourHeroes().uniqueCount(c => c.cost))),
 // ATTACK: 0+
 // You get +1 Attack for each Hero with a different Cost you have.
 // COST: 4
-  c2: makeHeroCard("Iron Fist", "Wield the Iron Fist", 4, u, 0, Color.STRENGTH, "Marvel Knights", "", ev => addAttackEvent(ev, yourHeroes().unique(c => c.cost).size)),
+  c2: makeHeroCard("Iron Fist", "Wield the Iron Fist", 4, u, 0, Color.STRENGTH, "Marvel Knights", "", ev => addAttackEvent(ev, yourHeroes().uniqueCount(c => c.cost))),
 // RECRUIT: 0+
 // ATTACK: 0+
 // Draw a card.
@@ -830,7 +830,7 @@ addTemplates("HEROES", "Dark City", [
 // Reveal cards from the Hero Deck until you have revealed two cards with the same Cost. You get +1 Attack for each card revealed this way. Put them on the bottom of the Hero Deck in random order.
 // COST: 8
   ra: makeHeroCard("Punisher", "The Punisher", 8, u, 4, Color.TECH, "Marvel Knights", "G", ev => {
-    revealHeroDeckEv(ev, r => r.unique(c => c.cost).size < r.size, r => addAttackEvent(ev, r.size), true, true);
+    revealHeroDeckEv(ev, r => r.uniqueCount(c => c.cost) < r.size, r => addAttackEvent(ev, r.size), true, true);
   }),
 },
 {
