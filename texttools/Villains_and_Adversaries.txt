@@ -1844,6 +1844,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 <b>Trap!</b>
 <b>By End of Turn:</b> Have no Hellfire Villains in the city.
 <b>Or Suffer:</b> This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+#VP: 3
 
 #SUBNAME: Emma Frost (White Queen)
 #COPIES: 2
@@ -1881,6 +1882,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #AMBUSH: A Villain captures a Bystander.
 <b>By End of Turn:</b> Have no Bystanders in each city captured by Villains.
 <b>Or Suffer:</b> After you draw your new hand at end of turn, each player discards down to four cards each. ????
+#VP: 3
 
 #SUBNAME: Minor Domo
 #COPIES: 2
@@ -1918,6 +1920,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 <b>Trap!</b>
 <b>By End of Turn:</b> Recruit two Heroes.
 <b>Or Suffer:</b> This Trap enters the city as a 3 Attack "Animatronic Killer Clown" Token Villain that captures a <b>Human Shield</b>.
+#VP: 2
 
 #SUBNAME: Guillotine Rollercoaster
 #COPIES: 1
@@ -1960,6 +1963,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4
 ---------
+#CLASS: [Instinct]
 <b>X-Gene</b> [Instinct]: The next Hero you recruit from the HQ has Soaring Flight.
 #ATTACK: 2
 
@@ -1968,6 +1972,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 ---------
+#CLASS: [Tech]
 <b>X-Gene</b> [Tech]: You may KO a card from your hand or discard pile.
 #ATTACK: 2
 
@@ -1977,6 +1982,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 7
 ---------
+#CLASS: [Ranged]
 <b>X-Gene</b> [Ranged]: Return a [Ranged] Hero from your discard pile to your hand.
 #ATTACK: 3
 
@@ -1985,6 +1991,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 ---------
+#CLASS: [Strength]
 <b>X-Gene</b> [Strength]: Draw a card.
 #ATTACK: 2
 
@@ -1994,6 +2001,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4+
 ---------
+#CLASS: [Covert]
 <b>X-Gene</b> [Covert]: Rescue a Bystander.
 #ATTACK: 2
 
@@ -2056,6 +2064,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 <b>Trap!</b>
 <b>By End of Turn:</b> You may pay 3 Recruit. If you do, shuffle this Trap back into the Villain Deck, then play a card from the Villain Deck.
 <b>Or Suffer:</b> This Trap becomes a Scheme Twist that takes effect immediately.
+#VP: 0
 
 #SUBNAME: Selene
 #COPIES: 2
@@ -2168,6 +2177,359 @@ Villain --- Shi'ar Imperial Guard
 #ATTACK: 5+
 #VP: 5
 
+
+#EXPANSION: Champions
+
+#CARDNAME: Monsters Unleashed
+
+#SUBNAME: Goom
+#COPIES: 1
+#AMBUSH: Goom captures a Bystander.
+#FIGHT: KO one of your Heroes.
+#VP: 4
+#ATTACK: 6
+
+#SUBNAME: Groot from Planet X
+#COPIES: 1
+<b>Size-Changing</b>: [Strength], [Covert]
+#FIGHT: Two Bystanders from the Bystander Stack enter the city as 3 Attack "Splintered Half-Groot" Villains. When you fight one, rescue it as a Bystander.
+#ATTACK: 6*
+#VP: 2
+
+#SUBNAME: Monsteroso
+#COPIES: 1
+<b>Size-Changing</b>: [Strength], [Instinct]
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw an extra card.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Orrgo
+#COPIES: 1
+You can't fight Orrgo unless you have already defeated another Villain this turn.
+#ATTACK: 2*
+#VP: 2
+
+#SUBNAME: Sporr
+#COPIES: 1
+<b>Size-Changing</b>: [Tech], [Ranged]
+#FIGHT: A Hero in the HQ gains <b>Size-Changing</b>: [Tech] Recruit this turn.
+#ATTACK: 7*
+#VP: 3
+
+#SUBNAME: Tim Boo Ba
+#COPIES: 1
+<b>Size-Changing</b>: [Strength], [Instinct], [Covert], [Tech], [Ranged]
+#FIGHT: All Heroes currently in the HQ cost 1 less this turn.
+#ATTACK: 12*
+#VP: 5
+
+#SUBNAME: Trull the Unhuman
+#COPIES: 1
+<b>Size-Changing</b>: [Covert], [Tech]
+#AMBUSH: Trull captures a Bystander. Then <b>Demolish</b> each player.
+#ATTACK: 8*
+#VP: 4
+#FLAVOR: Why yes, that is an alien entity possessing the world's most terrifying steam shovel.
+
+#SUBNAME: Zzutak
+#COPIES: 1
+<b>Size-Changing</b>: [Ranged], [Instinct]
+#ESCAPE: <b>Demolish</b> each player.
+#ATTACK: 9*
+#VP: 5
+
+
+#CARDNAME: Wrecking Crew
+
+#SUBNAME: Bulldozer
+#COPIES: 2
+#AMBUSH: Bulldozer moves an extra space forward. If this pushes any Villains forward, <b>Demolish</b> each player.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Piledriver
+#COPIES: 2
+#FIGHT: KO one of your Heroes.
+#ESCAPE: <b>Demolish</b> each player.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Thunderball
+#COPIES: 2
+#FIGHT: If you fight THunderball in the Sewers or Bank, <b>Demolish</b> each other player.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: The Wrecker
+#COPIES: 2
+#AMBUSH: For each Wrecking Crew Villain in the city, (including this one), <b>Demolish</b> each player.
+#ATTACK: 7
+#VP: 5
+
+
+#EXPANSION: World War Hulk
+
+#CARDNAME: Aspects of the Void
+
+#SUBNAME: Black Anti-Hurricane
+#COPIES: 2
+#FIGHT: Each player simultaneously puts a card from their discard pile into the discard pile of the player to their right.
+#ESCAPE: Same effect.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Demonform
+#COPIES: 1
+#FIGHT: <b>Feast</b>. If Demonform feasts on a non-grey Hero, gain a Hero from the HQ of that cost or less.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Infini-Tendrils
+#COPIES: 1
+<b>Wounded Fury
+Ambush</b>: Infini-Tendrils captures a Bystander.
+#ATTACK: 6+
+#VP: 3
+
+#SUBNAME: Psychotic Break
+#COPIES: 1
+<b>Trap!
+Ambush</b>: Play another card from the Villain Deck.
+<b>By End of Turn</b>: Defeat a Villain.
+<b>Or Suffer</b>: <i>(After you draw your new hand)</i> Psychotic Break becomes a Master Strike that takes effect immediately.
+#VP: 2
+
+#SUBNAME: Shadow Man
+#COPIES: 2
+#FIGHT: You get +2 Recruit.
+#ATTACK: 5
+#VP: 3
+#FLAVOR: Some briefly think the Shadow Man is the heroic Sentry. The thought doesn't last long.
+
+#CARDNAME: Code Red
+
+#SUBNAME: Caught Red-Handed
+#COPIES: 1
+<b>Trap!
+By End of Turn</b>: Recruit a [Covert] Hero or recruit any two Heroes.
+<b>Or Suffer</b>: <i>(After you draw your new hand)</i> Each player reveals a [Covert] Hero or gains a Wound.
+#VP: 3
+
+#SUBNAME: Crimson Dynamo
+#COPIES: 2
+#FIGHT: Choose a [Covert] Hero in the HQ. It costs 2 less this turn.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Elektra, Red Blades
+#COPIES: 2
+#FIGHT: If you played a [Covert] Hero this turn, KO one of your Heroes.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Punisher, Red Dot Sniper
+#COPIES: 1
+#FIGHT: Reveal the top card of your deck. If it costs 0, KO it. If it's [Covert], draw it.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Red She-Hulk
+#COPIES: 1
+<b>Wounded Fury
+Fight</b>: Each player reveals a [Covert] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: Thundra
+#COPIES: 1
+Thundra gets +2 Attack if there are any number of [Covert] Heroes in the HQ.
+#AMBUSH: Put each non-[Covert] Hero from the HQ on the bottom of the Hero Deck.
+#ATTACK: 4+
+#VP: 3
+
+
+#CARDNAME: Illuminati
+
+#SUBNAME: Black Bolt
+#COPIES: 2
+During your turn, any number of times, you may discard a card that has no rules text to give Black Bolt -2 Attack this turn.
+#ESCAPE: Each player discards a card with no rules text.
+#ATTACK: 13*
+#VP: 5
+
+#SUBNAME: Dr. Strange
+#COPIES: 2
+#AMBUSH: Each player who can't <b>Outwit</b> Dr. Strange discards a card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Dr. Strange, Possessed by Zom
+#COPIES: 1
+This Villain gets +1 Attack for each Bystander in the city.
+#AMBUSH: This Villain captures 3 Bystanders.
+#ATTACK: 5+
+#VP: 3
+
+#SUBNAME: Enchant the Hulk
+#COPIES: 1
+<b>Trap!
+By End of Turn</b>: Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
+<b>Or Suffer</b>: <i>(After you draw your new hand)</i> <b>Cross-Dimensional Hulk Rampage
+VP</b>: 4
+
+#SUBNAME:  Hulkbuster Iron Man
+#COPIES: 2
+Hulkbuster Iron Man gets +3 Attack unless you <b>Outwit</b> him.
+#ESCAPE: <b>Cross-Dimensional Illuminati Rampage
+Attack</b>: 6+
+#VP: 4
+
+
+#CARDNAME: Intelligencia
+
+#SUBNAME: Battle of Wits
+#COPIES: 2
+<b>Trap!
+By the End of the Turn</b>: <b>Outwit</b> this trap.
+<b>Or Suffer</b>: <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
+#VP: 3
+
+#SUBNAME: Cosmic Hulk Robot
+#COPIES: 2
+<b>Wounded Fury
+Ambush</b>: Each player who can't <b>Outwit</b> Cosmic Hulk Robot gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Doc Samson
+#COPIES: 2
+Doc Samson has +4 Attack unless you <b>Outwit</b> him.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: The Leader, Gamma Fiend
+#COPIES: 2
+#AMBUSH: If you can't <b>Outwit</b> the Leader, play the top card of the Villain Deck.
+#FIGHT: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Sakaar Imperial Guard
+
+#SUBNAME: Gladiators' Colosseum
+#COPIES: 1
+<b>Trap!
+By the End of the Turn</b>: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
+<b>Or Suffer</b>: <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
+#VP: 4
+
+#SUBNAME: Great Devil Corker
+#COPIES: 2
+#FIGHT: Look at the top three cards of your deck. Put them back in any order. Then <b>Feast</b>.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Headman Charr
+#COPIES: 2
+During your turn, Headman Charr gets +1 Attack for each Villain in your Victory Pile.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 2+
+#VP: 2
+
+#SUBNAME: Lieutenant Caiera
+#COPIES: 1
+#FIGHT: If you <b>Outwit</b> Lieutenant Caiera draw two cards.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Primus Vand
+#COPIES: 2
+Primus Vand gets +1 Attack for each Villain next to him. 
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 3
+
+
+#CARDNAME: U-Foes
+
+#SUBNAME: Ironclad
+#COPIES: 1
+#FIGHT: Each player reveals a [Strength] Hero of KO's a Hero that costs 1 or more from their discard pile.
+#ESCAPE: Same effect.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Vapor
+#COPIES: 2
+#FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Vector
+#COPIES: 2
+#FIGHT: Each player who reveals an [Instinct] Hero draws a card.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Unidentified Flying U-Foes
+#COPIES: 1
+<b>Trap!
+By End of Turn</b>: Discard a [Tech] Hero or discard three cards.
+<b>Or Suffer</b>: Play two extra cards from the Villain Deck next turn.
+#VP: 3
+
+#SUBNAME: X-Ray
+#COPIES: 2
+#FIGHT: Each player who reveals a [Ranged] Hero may KO a card from their discard pile.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Warbound
+
+#SUBNAME: Elloe Kaifi
+#COPIES: 1
+#FIGHT: Draw a card. Another player of your choice also draws a card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Hiroim
+#COPIES: 1
+#FIGHT: KO a card from the HQ. Each player reveals their hand and KO's a card with that same cost.
+#ESCAPE: Same effect.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Korg
+#COPIES: 1
+#AMBUSH: KO a Hero from the HQ. Each player reveals their hand and discards a card with that same cost.
+#ESCAPE: Same effect.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Miek The Unhived
+#COPIES: 2
+#FIGHT: Look at the top two cards of your deck. Put them back on the top and/or bottom. Then <b>Feast</b>.
+#ATTACK: 5
+#VP: 3
+
+<i>No-Name, Brood Queen</i> )2 copies)
+<b>Wounded Fury
+Fight</b>: <b>Feast</b>. If this feasts on a non-grey Hero, draw two cards.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Warbound Rescue
+#COPIES: 1
+<b>Trap!
+By End of Turn</b>: Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
+<b>Or Suffer</b>: Each player gains a Wound.
+#VP: 7
 
 
 
