@@ -152,20 +152,18 @@ This Villain gets +1 Attack for each Bystander in the KO pile.
 #EXPANSION: 3D
 
 #CARDNAME: Circus of Crime
-#COPIES: 10
 #FIGHT: Reveal the top card of your deck. If it costs 0, KO it. Otherwise, draw it.
 #ATTACK: 3
 #VP: 1
 
 #CARDNAME: Spider Slayer
-#COPIES: 10
 #FIGHT: Reveal the top two cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 #ATTACK: 3
 #VP: 1
 
 
 
-== World War Hulk == 
+#EXPANSION: World War Hulk
 
 #CARDNAME: Cytoplasm Spikes
 #FIGHT: <b>Feast</b>. If Cytoplasm Spikes feasts on a non-grey Hero, you get +2 Recruit.
@@ -177,9 +175,32 @@ This Villain gets +1 Attack for each Bystander in the KO pile.
 #ATTACK: 3
 #VP: 1
 
-
 #CARDNAME: Sakaaran Hivelings
-#FIGHT: Look at the top card of your deck. Put it back on the top of bottom. Then <b>Feast</b>.
+#FIGHT: Look at the top card of your deck. Put it back on the top or bottom. Then <b>Feast</b>.
+#ATTACK: 3
+#VP: 1
+
+
+
+#EXPANSION: Marvel Studios Phase 1
+
+#CARDNAME: Hammer Drone Army
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: HYDRA Pilots
+#FIGHT: You get +1 Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: HYDRA Spies
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw an extra card.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Ten Rings Fanatics
+#FIGHT: Look at the top two cards of your deck. KO one of them and put the other back.
 #ATTACK: 3
 #VP: 1
 

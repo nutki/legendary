@@ -82,6 +82,7 @@
 #FIGHT: Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
 
 
+
 #EXPANSION: Dark City
 
 #CARDNAME: Apocalypse
@@ -190,6 +191,7 @@ Stryfe gets +1 Attack for each Master Strike stacked next to him. Each player re
 #FIGHT: Each other player reveals an X-Force Hero or gains a Wound.
 
 
+
 #EXPANSION: Fantastic Four
 
 #CARDNAME: Galactus
@@ -235,6 +237,7 @@ Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
 #FIGHT: You get +6 Recruit usable only to recruit Heroes in the HQ space under the Streets.
 
 
+
 #EXPANSION: Paint the Town Red
 
 #CARDNAME: Carnage
@@ -278,6 +281,7 @@ If Carnage feasts on a 0-cost Hero this way, each other player KOs a Bystander f
 
 #TACTIC: Mists of Deception
 #FIGHT: If this is not the final Tactic, reveal the top five cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest on the bottom of that deck in random order.
+
 
 
 #EXPANSION: Villains
@@ -363,6 +367,7 @@ Command Strike: Choose the two highest-cost Allies in the Lair. Stack them next 
 #FIGHT: Each other player reveals a Brotherhood Ally or gains a Bindings.
 
 
+
 #EXPANSION: Guardians of the Galaxy
 
 #CARDNAME: Supreme Intelligence of the Kree
@@ -406,6 +411,7 @@ Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any play
 #FIGHT: Each other player reveals their hand and discards all cards with the same card name as any card in Thanos' Bound Souls pile.
 
 
+
 #EXPANSION: Fear Itself
 
 #CARDNAME: Uru-Enchanted Iron Man
@@ -426,6 +432,7 @@ Command Strike: Demolish each player. Then stack this Strike next to Iron Man. U
 
 #TACTIC: Repulsor Coils
 #FIGHT: Each other player reveals a [Tech] ally or gains a Bindings.
+
 
 
 #EXPANSION: Secret Wars Volume 1
@@ -512,6 +519,7 @@ Zombie Green Goblin gets +1 Attack for each Hero in the KO pile that costs 7 or 
 
 #TACTIC: Reign of Terror
 #FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
+
 
 
 #EXPANSION: Secret Wars Volume 2
@@ -604,6 +612,7 @@ Spider-Queen gets +1 Attack for each Bystander in the Escape pile.
 #FIGHT: Each other player reveals a Spider-Friend Hero or puts a Bystander from their Victory Pile into the Escape pile.
 
 
+
 #EXPANSION: Captain America 75th Anniversary
 
 #CARDNAME: Arnim Zola
@@ -646,6 +655,7 @@ Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron
 
 #TACTIC: Prisoners of War
 #FIGHT: Each other player reveals an Avengers Hero or chooses a Bystander from their Victory Pile, and you rescue that Bystander.
+
 
 
 #EXPANSION: Civil War
@@ -755,6 +765,7 @@ Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
 #FIGHT: Put all Heroes from the HQ on the bottom of the Hero Deck in random order.
 
 
+
 #EXPANSION: Deadpool
 
 #CARDNAME: Evil Deadpool
@@ -797,6 +808,7 @@ Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
 #FIGHT: Rescue a Bystander for each "Bounty on Your Head" on other players.
 
 
+
 #EXPANSION: Noir
 
 #CARDNAME: Charles Xavier
@@ -819,7 +831,6 @@ Charles Xavier gets +1 Attack for each Bystander in the HQ and city.
 #FIGHT: Each other player puts a random Bystander from their Victory Pile onto a Hero in the HQ as a <b>Hidden Witness</b>.
 
 
-
 #CARDNAME: The Goblin, Underworld Boss
 #START: The Goblin captures 2 <b>Hidden Witnesses</b>.
 #LEADS: Goblin's Freak Show
@@ -838,6 +849,7 @@ Charles Xavier gets +1 Attack for each Bystander in the HQ and city.
 
 #TACTIC: Blind Loyalty
 #FIGHT: <b>Investigate</b> the Villain Deck for a Goblin's Freak Show Villain and put it into your Victory Pile.
+
 
 
 #EXPANSION: X-Men
@@ -869,7 +881,6 @@ Charles Xavier gets +1 Attack for each Bystander in the HQ and city.
 #FIGHT: Arcade and each Murderworld Villain in the city capture two Human Shields.
 
 
-
 #CARDNAME: Dark Phoenix
 #LEADS: Hellfire Club
 #STRIKE: KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck.
@@ -897,16 +908,15 @@ Dark Phoenix Wins: When the Hero Deck is empty.
 #FIGHT: Each other player gains two 0-cost cards from the KO pile.
 
 
-
 #CARDNAME: Deathbird
-Deathbird gets +1 Attack for each Shi'ar Villain in teh city and Escape Pile.
+Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
 #LEADS: Shi'ar Imperial Guard and a Shi'ar Henchmen Group.
 #STRIKE: If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
 #ATTACK: 8+
 #VP: 6
 
 #CARDNAME: Epic Deathbird
-Deathbird gets +2 Attack for each Shi'ar Villain in teh city and Escape Pile.
+Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
 #LEADS: Shi'ar Imperial Guard and a Shi'ar Henchmen Group.
 #STRIKE: If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
 #ATTACK: 8+
@@ -923,7 +933,6 @@ Deathbird gets +2 Attack for each Shi'ar Villain in teh city and Escape Pile.
 
 #TACTIC: Shi'ar Master Spies
 #FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "<b>Escape</b>: This card becomes a Scheme Twist that takes effect immediately."
-
 
 
 #CARDNAME: Mojo
@@ -954,7 +963,6 @@ All Bystanders in Victory Piles are worth 4 VP.
 #FIGHT: Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a HUman Shield.
 
 
-
 #CARDNAME: Onslaught
 Each player's hand size is 1 less.
 #LEADS: Dark Descendants
@@ -982,7 +990,6 @@ Each player's hand size is 1 less.
 #FIGHT: Onslaught Dominates four 0-cost Heroes from the KO pile. The next time a player fights Onslaught, KO those 0-cost Heroes.
 
 
-
 #CARDNAME: Shadow King
 #LEADS: Shadow-X
 #STRIKE: KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
@@ -1007,6 +1014,7 @@ Each player's hand size is 1 less.
 
 #TACTIC: Telepathic Betrayal
 #FIGHT: If the "Betrayal of the Shadow" Trap is in any Victory Pile or the KO pile, put it on top of the Villain Deck.
+
 
 
 #EXPANSION: Spider-Man Homecoming
@@ -1040,7 +1048,6 @@ Each player's hand size is 1 less.
 #FIGHT: <b>Danger Sense 3</b>. Put all Henchmen Villains revealed this way into your Victory Pile, then do their "Fight" abilities.
 
 
-
 #TACTIC: Vulture
 <b>Striker</b>
 #LEADS: Vulture Tech
@@ -1066,6 +1073,7 @@ Each player's hand size is 1 less.
 
 #TACTIC: Winged Assault
 #FIGHT: Put two "Winged Assault" Wounds from under the HQ into each other player's discard pile.
+
 
 
 #EXPANSION: Champions
@@ -1123,6 +1131,7 @@ As killer clowns go, Pagliacci is not one you want to find under your bed.
 
 #TACTIC: Jester of a Twisted Opera
 #FIGHT: Each other player may KO a card from their discard pile that costs 1 or more. <b>Demolish</b> each of those players who does not.
+
 
 
 #EXPANSION: World War Hulk
@@ -1292,17 +1301,17 @@ The Red King <b>Transforms</b>.
 
 #CARDNAME: The Void <span style="color: #FF0000;">(Mastermind, Transformed)</span>
 <b>Wounded Fury</b>
-#STRIKE: <b>Feast</b> on each player. If this feasts on a player's grey Hero, that player gains a Wound. 
+#STRIKE: <b>Feast</b> on each player. If this feasts on a player's grey Hero, that player gains a Wound.
 The Void <b>Transforms</b>.
 #ATTACK: 11+
 #VP: 6
 
 #TACTIC: Pacifying Light
-#FIGHT: Each other player reveals their hand and discard two cards with Recruit icons. 
+#FIGHT: Each other player reveals their hand and discard two cards with Recruit icons.
 This Mastermind <b>Transforms</b>.
 
 #TACTIC: Power of a Million Exploding Suns
-#FIGHT: Put all Heroes from the HQ on the bottom of the Hero Deck. Each other player reveals their hand and discards each card with the same card name as any of those cards. 
+#FIGHT: Put all Heroes from the HQ on the bottom of the Hero Deck. Each other player reveals their hand and discards each card with the same card name as any of those cards.
 This Mastermind <b>Transforms</b>.
 
 #TACTIC: Reflexive Teleportation
@@ -1312,6 +1321,188 @@ This Mastermind <b>Transforms</b>.
 #TACTIC: Repressed Darkness
 #FIGHT: Each other player reveals a [Ranged] Hero or plays an Aspects of the Void Villain from their Victory Pile as if playing it from the Villain Deck.
 This Mastermind <b>Transforms</b>.
+
+
+
+#EXPANSION: Marvel Studios Phase 1
+
+#CARDNAME: Iron Monger
+
+<b>Bank Conqueror 4</b>
+<b> Always Leads:</b> Iron Foes
+#STRIKE: If there is a Villain in the Bank, each player gains a Wound. Otherwise, put this Master Strike into the Bank as a 6 Attack “StaneTech Weaponry” Villain worth 4VP.
+<b>Attack:</b> 9+
+<b>VP:</b> 5
+
+#TACTIC: Hostile Takeover
+#FIGHT: If there are no Villains in the bank, reveal the top card of the Villain Deck. If it’s a Villain, it enters the Bank.
+
+#TACTIC: Overloaded Arsenal 
+#FIGHT: Each other player reveals a [Tech] Hero or gains a Wound. Then each other player reveals a [Ranged] Hero or gains a Wound.
+
+#TACTIC: Sonic Stunner
+#FIGHT: Each other player reveals a [Tech] Hero or discards down to 4 cards.
+
+#TACTIC: Unexpected Betrayal 
+#FIGHT: If the Bank is empty, the player on your right chooses a Villain from their Victory Pile. That Villain enters the Bank.[/q]
+
+
+#CARDNAME: Loki
+
+#LEADS: Enemies of Asgard
+#STRIKE: Each player reveals a [Strength] Hero or gains a Wound
+#ATTACK: 10
+#VP: 5
+
+#TACTIC: Cruel Ruler
+#FIGHT: Defeat a Villain in the City for free.
+
+#TACTIC: Maniacal Tyrant
+#FIGHT: KO up to four cards from your discard pile.
+
+#TACTIC: Vanishing Illusions
+#FIGHT: Each other player KOs a Villain from their Victory Pile.
+
+#TACTIC: Whispers and Lies
+#FIGHT: Each other player KOs two Bystanders from their Victory Pile.
+
+
+#CARDNAME: Red Skull
+
+#LEADS: HYDRA
+#STRIKE: Each player KOs a Hero from their hand.
+#ATTACK: 7
+#VP: 5
+
+#TACTIC: Endless Resources
+#FIGHT: You get +4 Recruit.
+
+#TACTIC: HYDRA Conspiracy
+#FIGHT: Draw two cards. Then draw another card for each HYDRA Villain in your Victory Pile.
+
+#TACTIC: Negablast Grenades
+#FIGHT: You get +3 Attack.
+
+#TACTIC: Ruthless Dictator
+#FIGHT: Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
+
+
+
+#EXPANSION: Ant-Man
+
+#CARDNAME: Ultron
+
+#LEADS: Ultron's Legacy
+#STRIKE: Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Empowered</b> by each color in his Threat Analysis pile.
+#ATTACK: 9+
+#VP: 6
+
+#CARDNAME: Epic Ultron
+
+#LEADS: Ultron's Legacy
+#STRIKE: Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Arrogant Blindspot
+#FIGHT: You may gain a Hero from Ultron's Threat Analysis pile.
+
+#TACTIC: Paralyzing Encephalo-Ray
+#FIGHT: Each other player reveals their hand and discards each card that has the same card name as any card in Ultron's Threat Analysis pile.
+
+#TACTIC: Predictive Analysis
+#FIGHT: Put the top three cards of the Hero Deck into Ultron's Threat Analysis pile.
+
+#TACTIC: Self-Repairing Legions
+#FIGHT: Each other player in turn reveals a [Tech] Hero or puts an Ultron's Legacy Villain from the Victory Pile into an empty city space.
+
+
+#CARDNAME: Morgana Le Fay
+
+<b>Chivalrous Duel</b>
+#LEADS: Queen's Vengeance
+#STRIKE: Each player in turn reveals a [Covert] Hero or gains a 0-cost Hero or Wound from the KO pile.
+#ATTACK: 7*
+#VP: 6
+
+
+#CARDNAME: Epic Morgan Le Fay
+
+<b>Chivalrous Duel</b>
+#LEADS: Queen's Vengeance
+#STRIKE: Each player in turn gains a Wound, then gains a 0-cost Hero from the KO pile.
+#ATTACK: 9*
+#VP: 6
+
+#TACTIC: Reverse the Flow of Time
+#FIGHT: For the rest of the game, players take turns in the opposite order around the table.
+
+#TACTIC: Sorcerous Blasts
+#FIGHT: Each other player discards a [Covert] Hero or gains a Wound.
+
+#TACTIC: Stolen Tomes of Merlin
+#FIGHT: You get +4 Recruit usable only for recruiting [Covert] and/or [Ranged] Heroes.
+
+#TACTIC: Transmogrify
+#FIGHT: Each other player in turn KOs a non-grey Hero from their discard pile, then gains a card from the KO pile that has a lower cost.
+
+
+
+#EXPANSION: Venom
+
+#CARDNAME: Hybrid
+If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
+#LEADS: Life Foundation
+#STRIKE: A Villain from the city <b>Symbiote Bonds</b> with Hybrid, If Hybrid was already bonded, then each player gains a Wound instead.
+<b>Attack:</b> 6
+<b>VP:</b> 6
+
+#CARDNAME: Epic Hybrid
+If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
+#LEADS: Life Foundation
+#STRIKE: The highest Attack unbonded Villain from the city and/or Escape Pile <b>Symbiote Bonds</b> with Hybrid. If no new bond could occur, then each player gains a Wound instead.
+<b>Attack:</b> 8
+<b>VP:</b> 6
+
+Alien Awakening
+#FIGHT: If this is not the final tactic, a Henchman Villain from any Victory Pile <b>Symbiote Bonds</b> with Hybrid.
+
+Escaped Monstrosity
+#FIGHT: If this is not the final Tactic, a Villain from the city or Escape Pile <b>Symbiote Bonds</b> with Hybrid.
+
+Life Foundation Research
+#FIGHT: You get +1 Recruit for each Life Foundation Villain in your Victory Pile.
+
+Symbiotic Call
+#FIGHT: If this is not the final Tactic, reveal the top four cards of the Villain Deck. A Henchman Villain you revealed <b>Symbiote Bonds</b> with Hybrid. Put the rest back in any order.
+
+
+#CARDNAME: Poison Thanos
+Poison Thanos gets +1 Attack for each different cost among cards in his "Poisoned Souls" pile.
+#LEADS: Poisons
+#STRIKE: Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Poisoned Souls: pile.
+<b>Attack:</b> 12+
+<b>VP:</b> 7
+
+#CARDNAME: Epic Poison Thanos
+Poison Thanos gets +2 Attack for each different cost among cards in his "Poisoned Souls" pile.
+#LEADS: Poisons
+#STRIKE: Each player reveals their hand and puts half (round up) of their non-grey Heroes net to Thanos in a "Poisoned Souls" pile. Each player that lost no Heroes this way gains a Wound.
+<b>Attack:</b> 13+
+<b>VP:</b> 7
+
+Desperate Rescue
+#FIGHT: You may gain a Hero from Poison Thanos' "Poisoned Souls" pile.
+
+Poisoned Loyalties
+#FIGHT: Each other player puts a Poisons card from their discard pile into Poison Thanos' "Poisoned Souls" pile.
+
+Searing Poisons
+#FIGHT: Each other player discards a Poisons card from their hand or gains a Wound.
+
+Soul Seize
+#FIGHT: Put all Heroes that cost 5 or more from the HQ into Poison Thanos' "Poisoned Souls" pile.
+
 
 
 

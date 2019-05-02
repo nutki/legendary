@@ -260,3 +260,30 @@ This Bystander is worth +1 VP for each Hero you have that costs 7 or more among 
 #CARDNAME: Damage Control
 #RESCUE: reveal the top two cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 #VP: 1
+
+
+#EXPANSION: Marvel Studios Phase 1
+
+#CARDNAME: Bystander
+#COPIES: 30
+#VP: 1
+
+#CARDNAME: Happy Hogan
+#COPIES: 3
+#RESCUE: you may KO a Wound from your hand or from any player's discard pile.
+#VP: 1
+
+#CARDNAME: Jane Foster
+#COPIES: 3
+#RESCUE: you may KO one of your Heroes or a Hero from your discard pile.
+#VP: 1
+
+#CARDNAME: Peggy Carter
+#COPIES: 3
+#RESCUE: draw a card.
+#VP: 1
+
+#CARDNAME: Pepper Potts
+#COPIES: 3
+#RESCUE: you get +2 Recruit, usable only to recruit Heroes in the HQ space under the Bank.
+#VP: 1

@@ -18,7 +18,7 @@
 #TWIST: Play the top 2 cards of the Villain Deck.
 #EVILWINS: If 12 Villains escape.
 
-#CARDNAME: Portals to Dark Dimension
+#CARDNAME: Portals to the Dark Dimension
 #SETUP: 7 Twists. Each Twist is a Dark Portal.
 #TWISTNR: NR[1] Put the Dark Portal above the Mastermind. The Mastermind gets +1 Attack.
 #TWISTNR: NR[2-6] Put the Dark Portal in the leftmost city space that doesn't yet have a Dark Portal. Villains in that city space get +1 Attack.
@@ -171,7 +171,7 @@ You can't fight the Mastermind unless you have a Bystander in your Victory Pile 
 #SETUP: 8 Twists. Put the Thor Adversary next to this Plot.
 #TWIST: If Thor is in the city, he overruns. Otherwise, Thor enters the Bridge from wherever he is, and Thor guards 3 Bystanders.
 #RULE: Whenever Thor overruns, stack a Plot Twist from the KO pile next to this Plot as a "Triumph of Asgard."
-#EVILWINS: When there are 3 Triumphs of Asgard next to this plot.
+#EVILWINS: When there are 3 Triumphs of Asgard next to this Plot.
 
 #CARDNAME: Crush HYDRA
 #SETUP: 8 Twists.
@@ -524,7 +524,7 @@ During your turns, you may spend 4 Attack any number of times to play an additio
 #TWISTNR: NR[6] Evil wins!
 
 #CARDNAME: Mutant-Hunting Super Sentinels
-#SETUP: 9 Twists. Include 10 Sentinels as extra Henchmen (or substitute another Henchman groom.)
+#SETUP: 9 Twists. Include 10 Sentinels as extra Henchmen (or substitute another Henchman group.)
 #TWIST: Stack this Twist next to the Scheme as a "Sentinel Upgrade." Shuffle all Sentinels from players' Victory Piles into the Villain Deck. Play another card from the Villain Deck.
 #RULE: All Sentinels get +1 Attack for each Sentinel Upgrade next to the Scheme.
 #EVILWINS: When 3 Sentinels have Escaped.
@@ -543,7 +543,6 @@ During your turns, you may spend 4 Attack any number of times to play an additio
 #SETUP: 8 Twists.
 #TWIST: Trap! By End of Turn: You may pay 2 Recruit. If you do, shuffle this Twist back into the Villain Deck, then play a card from the Villain Deck. Or Suffer: Stack this Twist next to the scheme as an "Airborne Neurotoxin."
 #EVILWINS: When there are 5 Airborne Neurotoxins.
-
 
 
 
@@ -601,6 +600,7 @@ During your turns, you may spend 4 Attack any number of times to play an additio
 #EVILWINS: When 20 non-grey Heroes are KO'd.
 
 
+
 #EXPANSION: World War Hulk
 
 #CARDNAME: Break the Planet Asunder
@@ -646,6 +646,110 @@ During your turns, you may spend 4 Attack any number of times to play an additio
 #RULE: When you defeat all of a Mastermind's Tactics, KO its face card and a random Lurking Mastermind enters play.
 #TWISTNR: NR[1-8] Swap the current Mastermind with a random Lurking Mastermind.
 #TWISTNR: NR[9] Evil Wins!
+
+
+
+#EXPANSION: Marvel Studios Phase 1
+
+#CARDNAME: Asgard Under Siege
+#SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
+#TWIST: Play the top 2 cards of the Villain Deck.
+#EVILWINS: If 12 Villains escape.
+
+#CARDNAME: Destroy the Cities of Earth!
+#SETUP: 8 Twists. 12 Bystanders in the Villain Deck.
+#RULE: Each Villain gets +1 Attack for each Bystander it has.
+#TWIST: Any Villain in the Bank captures 2 Bystanders. Then play the top card of the Villain Deck.
+#EVILWINS: When 8 Bystanders are carried away by escaping Villains.
+
+#CARDNAME: Enslave Minds with the Chitauri Scepter
+#SETUP: 8 Twists. 6 Heroes. Chitauri Villain Group required. Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.
+#RULE: Heroes in the Villain Deck count as "Enslaved" Villains with Attack equal to the Hero's Cost +2. If you defeat that Hero, you gain it.
+#TWIST: The highest-cost Hero from the HQ moves into the Sewers as an "Enslaved" Villain, as above.
+#EVILWINS: If 6 Heroes get into the Escaped Villains pile.
+
+#CARDNAME: Invade Asgard
+#SETUP: 7 Twists. Each Twist is a Dark Portal.
+#TWISTNR: NR[1] Put the Dark Portal above the Mastermind. The Mastermind gets +1 Attack.
+#TWISTNR: NR[2-6] Put the Dark Portal in the leftmost city space that doesn't yet have a Dark Portal. Villains in that city space get +1 Attack.
+#TWISTNR: NR[7] Evil Wins!
+
+#CARDNAME: Radioactive Palladium Poisoning
+#SETUP: 8 Twists. Wound stack holds 6 Wounds per player.
+#TWIST: Each player reveals a [Tech] Hero or gains a Wound.
+#EVILWINS: If the Wound stack runs out.
+
+#CARDNAME: Replace Earth's Leaders with HYDRA
+#SETUP: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
+#RULE: Bystanders in the Villain Deck count as "Infiltrator" Villains, with Attack equal to the number of Twists next to this Scheme.
+#TWIST: Put the Twist next to this Scheme.
+#EVILWINS: If 5 "Infiltrators" escape.
+
+#CARDNAME: Super Hero Civil War
+#SETUP: 2: Use 4 Heroes in the Hero Deck. 2-3 players: 8 Twists. 4-5 players: 5 Twists.
+#TWIST: KO all the Heroes in the HQ.
+#EVILWINS: If the Hero Deck runs out.
+
+#CARDNAME: Unleash the Power of the Cosmic Cube
+#SETUP: 8 Twists.
+#TWIST: Put the Twist next to this Scheme.
+#TWISTNR: NR[5-6] Each player gains a Wound.
+#TWISTNR: NR[7] Each player gains 3 Wounds.
+#TWISTNR: NR[8] Evil Wins!
+
+
+
+#EXPANSION: Ant-Man
+
+#CARDNAME: Age of Ultron
+#SETUP: 11 Twists. 4-5 Players: Add another Hero.
+#TWIST: Put the top card of the Hero Deck next to the Scheme in an "Evolution" Pile. Then this Twist enters the city as an "Evolved Ultron" Villain.
+#RULE: Evolved Ultrons have 4 Attack and are <b>Empowered</b> by each color in the Evolution pile. They're worth 6VP.
+#EVILWINS: When 7 Evolved Ultrons are in the city and/or Escape Pile.[/q]
+
+#CARDNAME: Pull Earth into Medieval Times
+#SETUP: 9 Twists.
+#TWISTNR: NR[1-6] Until the start of your next turn, all Villains and Mastermind everywhere have <b>Chivalrous Duel</b>.
+#TWISTNR: NR[7-9] Each player puts a Villains from the Victory Pile into the Escape Pile.
+#EVILWINS: When 3 Villains per player have escaped.
+
+#CARDNAME: Transform Commuters into Giant Ants
+#SETUP: Twists equal to the number of players plus 6.
+#TWIST: STack this Twist next to the Scheme. Then for each Twist in that stack, put a Bystander face down next to the Mastermind as a 2A "Giant Ant" Villain. When you fight one, rescue it as a Bystander.
+#EVILWINS: When ther are 10 Giant Ants next to the Mastermind.
+
+#CARDNAME: Trap Heroes in the Microverse
+#SETUP: 11 Twists. Add all 14 cards for and extra Hero the Villain Deck.
+#RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
+#TWIST: Play two cards from the Villain Deck.
+#EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+
+
+
+#EXPANSION: Venom
+
+#CARDNAME: Invasion of the Venom Symbiotes
+#SETUP: 8 Twists. Add an extra Henchman Group.
+#TWIST: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush:</b> This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
+#EVILWINS: When the Escape Pile has 3 cards per player, or the Villain Deck runs out.
+
+#CARDNAME: Maximum Carnage
+#SETUP: 10 Twists. Wound Stack has 6 Wounds per player.
+#TWIST: Stack this Twist next to the Scheme. If the Streets are empty, put a Bystander there as a "Possessed Psychotic" Villain. If the Streets weren't empty, each player gains a Wound.
+#RULE: "Possessed Psychotics" have Attack equal to the number of Twists next to the Scheme. When you fight one, rescue it as a Bystander.
+#EVILWINS: When there are 6 Bystanders in the Escape Pile or the Wound Stack runs out.
+
+#CARDNAME: Paralyzing Venom
+#SETUP: 6 Twists. All Bystanders are also "Biochemists."
+#TWIST: Each player Kos a Biochemist from their Victory Pile or discards down to 4 cards in hand.
+#TWISTNR: NR[6] Evil Wins!
+
+#CARDNAME: Symbiotic Absorption
+#SETUP: 11 Twists. Set aside a second "Drained" Mastermind and its 4 Tactics, out of play. Add its "Always Leads" Villains as an extra Villain Group.
+#TWISTNR: NR[1-4] Shuffle one of the Drained Mastermind's Tactics into the main Mastermind's Tactics.
+#TWISTNR: NR[6, 8, 10] The Mastermind uses this Twist to copy the Master Strike ability of the Drained Mastermind.
+#TWISTNR: NR[11] Evil Wins!
+#RULE: If Tactics or Master Strikes mention the Drained Mastermind, use the main Mastermind instead.
 
 
 

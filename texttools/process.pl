@@ -36,7 +36,7 @@ while (<A>) {
     s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?)</b>!'{'.(uc$1).'}'!ge;
     my @lines = split m!<br />!;
     for (@lines) {
-      s!^== (.*?) ==$!#EXPANSION: $1! && next;
+      s!^== (.*?) ==.*!#EXPANSION: $1! && next;
       s!^Cost: ?(.*?)$!#COST: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;

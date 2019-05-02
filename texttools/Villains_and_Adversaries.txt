@@ -203,9 +203,10 @@ You can't defeat Venom unless you have a [Covert] Hero.
 #VP: 3
 
 
+
 #EXPANSION: Dark City
 
-#CARDNAME:  Emissaries of Evil
+#CARDNAME: Emissaries of Evil
 
 #SUBNAME: Egghead
 #COPIES: 2
@@ -381,6 +382,7 @@ To fight Zero, you must also discard three cards that cost 0.
 #VP: 3
 
 
+
 #EXPANSION: Fantastic Four
 
 #CARDNAME: Heralds of Galactus
@@ -444,6 +446,7 @@ Burrow
 Burrow
 #ATTACK: 4
 #VP: 2
+
 
 
 #EXPANSION: Paint the Town Red
@@ -520,6 +523,7 @@ Sandman's Attack is twice the number of Villains in the city.
 #ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
 #ATTACK: 4
 #VP: 2
+
 
 
 #EXPANSION: Villains
@@ -762,6 +766,7 @@ X-Treme Attack. To Fight Cyclops, you must also discard a card.
 Overrun: Each player reveals a Brotherhood Ally or discards a card.
 
 
+
 #EXPANSION: Guardians of the Galaxy
 
 #CARDNAME: Kree Starforce
@@ -863,6 +868,7 @@ Artifact - When you play this Artifact, take another turn after this one. Use th
 #VP: 0
 
 
+
 #EXPANSION: Fear Itself
 
 #CARDNAME: The Mighty
@@ -926,6 +932,7 @@ Fight or Fail: Draw two cards.
 Overrun: Each player reveals an [Instinct] Ally or gains a Bindings. Then put Wolverine on top of the Adversary Deck.
 #ATTACK: 5*
 #VP: 6
+
 
 
 #EXPANSION: Secret Wars Volume 1
@@ -1071,7 +1078,6 @@ You get +1 Attack for each color of Hero you have
 {TELEPORT}
 #RECRUIT: 2
 
-
 #SUBNAME: Ultimate Thor
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
@@ -1081,7 +1087,6 @@ You get +1 Attack for each color of Hero you have
 #CLASS: [Ranged]
 {POWER Ranged} You get +3 Attack.
 #ATTACK: 3+
-
 
 #SUBNAME: Ultimate Wasp
 #COPIES: 2
@@ -1147,6 +1152,7 @@ You get +1 Attack for each color of Hero you have
 #FIGHT: Reveal the top card of your deck. If it costs 2 or less, KO it.
 #ATTACK: 4
 #VP: 2
+
 
 
 #EXPANSION: Secret Wars Volume 2
@@ -1322,7 +1328,6 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 {POWER Tech} Draw a card.
 #ATTACK: 2
 
-
 #SUBNAME: '92 Jubilee
 #COPIES: 3
 #FIGHT: Gain this as a Hero.
@@ -1349,6 +1354,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #ATTACK: 2
 
 
+
 #EXPANSION: Captain America 75th Anniversary
 
 #CARDNAME: Zola's Creations
@@ -1356,7 +1362,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #SUBNAME: Captain Zolandia
 #COPIES: 2
 Abomination
-#FIGHT: You get +1 for each Hero Class you have.
+#FIGHT: You get +1 Recruit for each Hero Class you have.
 #ATTACK: 6+
 #VP: 5
 
@@ -1414,6 +1420,7 @@ To fight Primus, you must also discard a card that costs 2, 3, 5, or 7.
 #ESCAPE: Same effect.
 #ATTACK: 5
 #VP: 3
+
 
 
 #EXPANSION: Civil War
@@ -1632,6 +1639,7 @@ Size-Changing: Tech
 #VP: 3
 
 
+
 #EXPANSION: Deadpool
 
 #CARDNAME: Deadpool's "Friends"
@@ -1703,6 +1711,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 #ESCAPE: Same effect. Then, shuffle me back into the Villain Deck so I can kick your ass again!
 #ATTACK: 7+
 #VP: 6
+
 
 
 #EXPANSION: Noir
@@ -1793,6 +1802,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 #FIGHT: KO a Hero from the HQ. <b>Investigate</b> the Hero Deck for a card to put in that emptied HQ space.
 #ATTACK: 4
 #VP: 2
+
 
 
 #EXPANSION: X-Men
@@ -2178,6 +2188,7 @@ Villain --- Shi'ar Imperial Guard
 #VP: 5
 
 
+
 #EXPANSION: Champions
 
 #CARDNAME: Monsters Unleashed
@@ -2212,7 +2223,7 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 #SUBNAME: Sporr
 #COPIES: 1
 <b>Size-Changing</b>: [Tech], [Ranged]
-#FIGHT: A Hero in the HQ gains <b>Size-Changing</b>: [Tech] Recruit this turn.
+#FIGHT: A Hero in the HQ gains <b>Size-Changing</b>: [Tech], [Ranged] Recruit this turn.
 #ATTACK: 7*
 #VP: 3
 
@@ -2267,6 +2278,7 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 #VP: 5
 
 
+
 #EXPANSION: World War Hulk
 
 #CARDNAME: Aspects of the Void
@@ -2285,7 +2297,7 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 #VP: 5
 
 #SUBNAME: Infini-Tendrils
-#COPIES: 1
+#COPIES: 2
 <b>Wounded Fury
 Ambush</b>: Infini-Tendrils captures a Bystander.
 #ATTACK: 6+
@@ -2305,6 +2317,7 @@ Ambush</b>: Play another card from the Villain Deck.
 #ATTACK: 5
 #VP: 3
 #FLAVOR: Some briefly think the Shadow Man is the heroic Sentry. The thought doesn't last long.
+
 
 #CARDNAME: Code Red
 
@@ -2371,7 +2384,7 @@ This Villain gets +1 Attack for each Bystander in the city.
 #ATTACK: 5+
 #VP: 3
 
-#SUBNAME: Enchant the Hulk
+#SUBNAME: Enchain the Hulk
 #COPIES: 1
 <b>Trap!
 By End of Turn</b>: Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
@@ -2448,7 +2461,7 @@ During your turn, Headman Charr gets +1 Attack for each Villain in your Victory 
 
 #SUBNAME: Primus Vand
 #COPIES: 2
-Primus Vand gets +1 Attack for each Villain next to him. 
+Primus Vand gets +1 Attack for each Villain next to him.
 #FIGHT: KO one of your Heroes.
 #ATTACK: 3+
 #VP: 3
@@ -2530,6 +2543,402 @@ Fight</b>: <b>Feast</b>. If this feasts on a non-grey Hero, draw two cards.
 By End of Turn</b>: Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
 <b>Or Suffer</b>: Each player gains a Wound.
 #VP: 7
+
+
+
+#EXPANSION: Marvel Studios Phase 1
+
+#CARDNAME: Chitauri
+
+#SUBNAME: Chitauri Soldier
+#COPIES: 2
+<b>Rooftops Conqueror 2</b>
+#AMBUSH: Chitauri Soldier captures a Bystander.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Chitauri Commander
+#COPIES: 2
+<b>Rooftops Conqueror 2</b>
+#AMBUSH: (After this enters the city) If the rooftops are empty, reveal the top card of the villain deck.  If it's a villain, that villain enters the rooftops.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Chitauri Leviathan
+#COPIES: 2
+<b>Rooftops Conqueror 2</b>
+#FIGHT: Each player with no Bystanders in their Victory Pile gains a wound.
+#ESCAPE: Same effect.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Chitauri Chariot
+#COPIES: 2
+<b>Rooftops Conqueror 2</b>
+#AMBUSH: (After this enters the city) If the rooftops are empty, move this Villain there.
+#ATTACK: 4+
+#VP: 3
+
+
+#CARDNAME: Enemies of Asgard
+
+#SUBNAME: Destroyer
+#COPIES: 1
+#FIGHT: KO all your S.H.I.E.L.D. Heroes.
+#ESCAPE: Each player KOs two of their Heroes.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Enchantress
+#COPIES: 2
+#FIGHT: Draw three cards
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Frost Giant
+#COPIES: 3
+#FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Ymir, Frost Giant King
+#COPIES: 2
+#AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+#FIGHT: Choose a player. That player KOs any number of Wounds from their hand and discard pile.
+#ATTACK: 6
+#VP: 4
+
+
+#CARDNAME: Gamma Hunters
+
+#SUBNAME: Sonic Cannon
+#COPIES: 2
+#AMBUSH: Each Player discards two cards, then draws a card.
+#ESCAPE: Same Effect
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Lt. Gen “Thunderbolt” Ross
+#COPIES: 2
+#AMBUSH: 
+Each Player reveals their hand. Each player with any [Strength] cards must discard one of them or gain a wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Abomination, Raging Monster
+#COPIES: 2
+<b>Streets Conqueror 3</b>
+#AMBUSH: (After this enters the city.) If the streets are empty, move another villain from any city space to the streets.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Fighter Jet
+#COPIES: 2
+<b>Streets Conqueror 2</b>
+#FIGHT: KO one of your heroes.
+#ATTACK: 3+
+#VP: 2
+
+
+#CARDNAME: HYDRA
+
+#SUBNAME: Endless Armies of HYDRA
+#COPIES: 3
+#FIGHT: Play the top two cards of the Villain Deck.
+#ATTACK: 4
+#VP: 3
+
+#SUBNAME: HYDRA Kidnappers
+#COPIES: 3
+#FIGHT: You may gain a S.H.I.E.L.D. Officer.
+#ATTACK: 3
+#VP: 1
+
+#SUBNAME: Supreme HYDRA
+#COPIES: 1
+Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
+#ATTACK: 6
+#VP: 3*
+
+#SUBNAME: Viper
+#COPIES: 1
+#FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Iron Foes
+
+#SUBNAME: Hammer Drone Marine
+#COPIES: 2
+#FIGHT: Look at the top three cards of your deck. KO one of them and put the rest back in any order.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Raza, Ten Rings Leader
+#COPIES: 2
+Raza gets +1 Attack for each Bystander he has.
+#AMBUSH: Raza captures a Bystander from the Bystander stack and a random Bystander from each player’s Victory Pile.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Whiplash
+#COPIES: 2
+#FIGHT: Each player reveals a [Tech] hero or gains a wound.
+<b>Escape: </b> Same effect.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Justin Hammer
+#COPIES: 2
+<b> Bank Conqueror 2</b>
+#FIGHT: You get +2 Recruit usable only to recruit heroes in the HQ space under the bank.
+#ATTACK: 3+
+#VP: 2
+
+
+
+#EXPANSION: Ant-Man
+
+#CARDNAME: Ultron's Legacy
+
+#SUBNAME: Ultron Roboticks
+#COPIES: 1
+<b>Microscopic Size-chaning:</b> [Tech] [Tech] [Tech]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Original Ultron-1
+#COPIES: 1
+<b>Empowered</b> by [Ranged]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Legions of Ultron
+#COPIES: 1
+<b>Empowered</b> by [Tech]
+#FIGHT: Draw a card.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Alkhema
+#COPIES: 1
+<b>Empowered</b> by [Instinct]
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Ultron-Pym
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Tech] [Tech] [Tech] [Tech] [Tech]
+#FIGHT: A Hero in the HQ with no <b>Size-Changing</b> abilites gains <b>Size-Changing</b>: [Tech] this turn.
+#ATTACK: 6*
+#VP: 3
+
+#SUBNAME: Future Ultron Prime
+#COPIES: 1
+<b>Double Empowered</b> by [Tech]
+#AMBUSH: Put all non-[Tech] Heroes from the HQ on the bottom of the Hero Deck.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Brutish Ultron-14
+#COPIES: 1
+<b>Empowered</b> by [Strength]
+#FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Crimson Cowl
+#COPIES: 1
+<b>Empowered</b> by [Covert]
+#AMBUSH: Crimson Cowl captures a Bystander.
+#ATTACK: 5+
+#VP: 4
+
+
+#CARDNAME: Queen's Vengeance
+
+#SUBNAME: Daystar
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Ranged] [Ranged] [Ranged] [Ranged] [Ranged]
+#FIGHT: Reveal the top card of your deck. You may KO it.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Blackbird
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3*
+#VP: 3
+
+#SUBNAME: Gigantus
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Strength] [Strength] [Strength] [Strength] [Strength]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 7*
+#VP: 4
+
+#SUBNAME: Iron Knight
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
+#ATTACK: 4*
+#VP: 4
+
+#SUBNAME: Yoeman America
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#FIGHT: You get +1 Recruit for each color of Hero you have (including grey).
+#ATTACK: 5*
+#VP: 5
+
+#SUBNAME: Star-Knight
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 3*
+#VP: 3
+
+#SUBNAME: Pixie
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Covert] [Covert] [Covert] [Covert].
+#FIGHT: Reveal a [Covert] Hero or play another card from the Villain Deck.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Mordred the Evil
+#COPIES: 1
+#FIGHT: Choose a card in your discard pile. The player to your right gains it.
+#ESCAPE: Each player simultaneously does that same effect.
+#ATTACK: 5
+#VP: 3
+
+
+
+#EXPANSION: Venom
+
+#CARDNAME: Life Foundation
+
+#SUBNAME: Agony
+#COPIES: 1
+#AMBUSH: Reveal the top three cards of the Villain Deck. A Villain you revealed <b>Symbiote Bonds</b> with Agony. Put the rest back in any order.
+#ESCAPE: Each player reveals a [Covert]  Hero or gains a Wound.
+#ATTACK: 3
+#VP: 3
+
+#SUBNAME: Dr. Carlton Drake
+#COPIES: 1
+#FIGHT: Each [Instinct] and [Tech] Hero currently in the HQ costs 1 less this turn.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Lasher
+#COPIES: 2
+#AMBUSH: A Henchman Villain from your Victory Pile <b>Symbiote Bonds</b> with Lasher.
+#ATTACK: 2
+#VP: 2
+
+#SUBNAME: Phage
+#COPIES: 1
+#AMBUSH: A Villain from the Escape Pile or your Victory Pile <b>Symbiote Bonds</b> with Phage.
+#ATTACK: 3
+#VP: 3
+
+#SUBNAME: Riot
+#COPIES: 2
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, it <b>Symbiote Bonds</b> with Riot.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2
+#VP: 2
+
+#SUBNAME: Scream
+#COPIES: 1
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Henchman or Life Foundation Villain, it <b>Symbiote Bonds</b> with Scream.
+#ATTACK: 4
+#VP: 4
+
+
+#CARDNAME: Poisons
+
+#SUBNAME: Poison Captain America
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 4
+-----------------
+#CLASS: [Instinct]
+You get +1 Attack for each color of Hero you have. (including [Instinct] and grey)
+#ATTACK: 0+
+
+
+#SUBNAME: Poison Dr. Octopus
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Bank. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 3
+-----------------
+#CLASS: [Tech]
+Draw a card.
+#ATTACK: 1
+
+#SUBNAME: Poison Hulk
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Henchman Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 5
+-----------------
+#CLASS: [Strength]
+{POWER Strength} You get +2 Attack.
+#ATTACK: 2+
+
+
+#SUBNAME: Poison Sabretooth
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Streets. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 4
+-----------------
+#CLASS: [Instinct]
+{POWER Instinct} Look at the top card of your deck. You may KO it.
+#ATTACK: 2
+
+#SUBNAME: Poison Scarlet Witch
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 3
+-----------------
+#CLASS: [Covert]
+Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is even.)
+#ATTACK: 2
+
+#SUBNAME: Poison Spider-Man
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 2
+-----------------
+#CLASS: [Covert]
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+#ATTACK: 2
+
+#SUBNAME: Poison Storm
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Villain on the Rooftops or Bridge. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 3
+-----------------
+#CLASS: [Ranged]
+{POWER Ranged} You get +2 Attack usable only against the Mastermind.
+#ATTACK: 2+
+
+#SUBNAME: Symbiotic Armor
+#COPIES: 1
+#AMBUSH: This Symbiote Bonds with the Mastermind. When you fight the Mastermind, defeat Symbiotic Armor and KO one of your Heroes instead of taking a Tactic.
+#ATTACK: 1
+#VP: 6
+
 
 
 

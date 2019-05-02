@@ -18,6 +18,9 @@
 14 Spider-Man Homecoming
 15 Champions
 16 World War Hulk
+-- Marvel Studios Phase 1
+17 Ant-Man
+18 Venom
 END
 %n = (
 'h' => 'Heroes_and_Allies',

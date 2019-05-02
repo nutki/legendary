@@ -170,7 +170,6 @@ Whenever you defeat a Villain or Mastermind this turn, you get +3 Recruit.
 #FLAVOR: A secondary mutation allows Emma Frost to transform into pure diamond.
 
 
-
 #CARDNAME: Gambit
 #TEAM: X-Men
 
@@ -1666,7 +1665,7 @@ You get +1 Attack for each other card you played this turn that costs 4 or more.
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 4
-To play this card,  you must discard a card from your hand.
+To play this card, you must discard a card from your hand.
 #COST: 5
 #FLAVOR: Move it or lose it.
 
@@ -1732,7 +1731,7 @@ Choose an Adversary. If there are no empty city spaces adjacent to that Adversar
 #SUBNAME: Hunt Down
 #COPIES: 3
 #CLASS: [Strength]
-#RECRUIT: 2+
+#ATTACK: 2+
 Choose an Adversary and a direction. Move that Adversary as many adjacent, empty spaces as you can in that direction. You get +1 Attack for each space it moved.
 #COST: 5
 
@@ -2251,7 +2250,7 @@ When you throw this, you get +3 Attack, usable only against Adversaries on the B
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 5
-{TEAMPOWER Foes of Asgard} Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each  of those players' hands and put them into your hand.
+{TEAMPOWER Foes of Asgard} Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each of those players' hands and put them into your hand.
 #COST: 7
 
 
@@ -2706,7 +2705,7 @@ Reveal your hand. You get +5 Attack if you haven't played any S.H.I.E.L.D. or HY
 #CARDNAME: Proxima Midnight
 #TEAM: Cabal
 
-#SUBNAME: Inspiration through Power
+#SUBNAME: Inspiration Through Power
 #COPIES: 5
 [Instinct], [Covert]
 #RECRUIT: 1
@@ -2904,7 +2903,6 @@ For each other card you played this turn with a Attack icon, you get +1 Attack.
 #ATTACK: 2
 <b>Spectrum</b>: Draw a card.
 #COST: 3
-#FLAVOR: 
 #FLAVOR: A Quiver of Thunderbolts is quite unorthodox but totally awesome.
 
 #SUBNAME: Warlord of Open Spaces
@@ -2948,6 +2946,7 @@ If it's empty, then the hero in the HQ space under it costs 3 less this turn.
 [Strength], [Tech]
 #ATTACK: 2+
 For each other [Strength] card you played this turn, you get +1 Attack.
+For each other [Tech] card you played this turn, you get +1 Attack.
 #COST: 6
 
 #SUBNAME: Multi-Variable Smackulus
@@ -3197,7 +3196,7 @@ Gain a Hero that was KO'd this turn.
 #COST: 6
 #FLAVOR: The Phoenix is a cosmic force of great life or limitless destruction.
 
-#SUBNAME: Destruction is Creation
+#SUBNAME: Destruction Is Creation
 #COPIES: 1
 #CLASS: [Ranged]
 #ATTACK: 4
@@ -3212,7 +3211,7 @@ KO up to three cards from your hand. Draw that many cards.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
-When a card effect causes you to discard this card, <b>Teleport</b> it instead. If it is not your turn, set it aside and add it to your hand at the end of this turn.
+When a card effect causes you to discard this card, if it is your turn, <b>Teleport</b> it instead. If it is not your turn, set it aside and add it to your hand at the end of this turn.
 #COST: 3
 #FLAVOR: Hit-and-run tactics.
 
@@ -3318,28 +3317,28 @@ Any time you are shuffling your deck with this card in it, you may set this card
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 2
-{POWER Covert} Once this turn, you may fight the top card of the bystander deck as if it were a 3 Attack Demon Villain with "Fight: KO one of your heroes."
+{POWER Covert} Once this turn, you may fight the top card of the Bystander Stack as if it were a 3 Attack Demon Villain with "Fight: KO one of your heroes."
 #COST: 3
 
 #SUBNAME: Steel Interception
 #COPIES: 5
 [Strength], [Covert]
 #ATTACK: 2
-If a player would gain a wound, you may discard this card instead. If you do, draw two cards.
+If a player would gain a Wound, you may discard this card instead. If you do, draw two cards.
 #COST: 4
 
 #SUBNAME: Possessed by the Soulsword
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 3+
-{POWER Strength} <b>Cross-Dimensional Colossus Rampage</b>: You get +2 Attack if at least one other player didn't reveal a Colossus card.
+{POWER Strength} <b>Cross-Dimensional Colossus Rampage</b>. You get +2 Attack if at least one other player didn't reveal a Colossus card.
 #COST: 6
 
-#SUBNAME: Rescue my Family from Hell
+#SUBNAME: Rescue My Family from Hell
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 5
-{TEAMPOWER X-Men} You may gain an X-Men hero from the HQ or the KO pile to your hand.
+{TEAMPOWER X-Men} You may gain an X-Men Hero from the HQ or the KO pile to your hand.
 #COST: 7
 #FLAVOR: Every year, Colossus leads a team of X-Men into the Inferno to rescue his sister, Magik.
 
@@ -3476,7 +3475,6 @@ KO up to two S.H.I.E.L.D. Heroes from your hand and/or discard pile.
 #ATTACK: 4
 Once per turn, if a player would gain a Wound, you may reveal this card and rescue a Bystander instead.
 #COST: 6
-#FLAVOR: 
 
 #SUBNAME: Star-Spangled Hero
 #COPIES: 1
@@ -4176,8 +4174,8 @@ You may move a Villain to an adjacent empty city space.
 
 #SUBNAME: King & Queen of Wakanda
 #COPIES: 1
-Storm & Black Panther
 #CLASS: [Tech]
+Storm & Black Panther
 #ATTACK: 5
 Reveal any number of multi-class cards from your hand. Gain that many sidekicks.
 #COST: 7
@@ -4223,7 +4221,7 @@ If an Ambush effect would occur, you may discard this card to cancel that effect
 #RECRUIT: 0+
 #ATTACK: 0+
 Recruit a Hero from the HQ for free.
-{TEAMPOWER Avengers} You get that Heroes printed Recruit and Attack.
+{TEAMPOWER Avengers} You get that Hero's printed Recruit and Attack.
 #COST: 7
 
 
@@ -4410,7 +4408,7 @@ Reveal the top card of your deck. If it's HYDRA or S.H.I.E.L.D., draw it.
 #FLAVOR: "At first I thought HYDRA was a facial moisturizer."
 #GUN: 1
 
-#SUBNAME: How do I Get Out of Here??
+#SUBNAME: How Do I Get Out of Here??
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 4
@@ -4436,7 +4434,7 @@ If you have a Wound in your hand or discard pile, KO it at you get +1 Attack. Ot
 #ATTACK: 2 1/2+
 #COST: 4
 
-#SUBNAME: Nighttime is the Right Time
+#SUBNAME: Nighttime Is the Right Time
 #COPIES: 5
 #CLASS: [Tech]
 #RECRUIT: 0+
@@ -4565,8 +4563,7 @@ Draw a card.
 #COST: 5
 #FLAVOR: Wait, isn't shooting electricity underwater a terrible idea?
 
-#SUBNAME: PhD in Oceanography
-#COPIES: 1
+<i>PhD in Oceanography (1 copy)</i>
 #CLASS: [Tech]
 You may KO a card from your hand or discard pile.
 {TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.
@@ -4597,7 +4594,6 @@ Choose a Hero Class. <b>Investigate</b> for a card of that Hero Class.
 #ATTACK: 1
 #COST: 4
 #FLAVOR: Specialties include: Medicine, Prisons, Detective Work, Advertising, and Everything Else.
-
 
 #SUBNAME: Identical Twin Brother
 #COPIES: 3
@@ -4709,8 +4705,7 @@ You get +1 Recruit for each other card you played this turn that costs 4 or more
 #COST: 4
 #FLAVOR: The deeper he digs, the bigger the conspiracy becomes.
 
-#SUBNAME: Unbreakable Cage
-#COPIES: 3
+Unbreakable Cage (3 copies)
 #CLASS: [Strength]
 Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
 #ATTACK: 4
@@ -5372,7 +5367,6 @@ KO all Wounds you gained this turn.
 #FLAVOR: Many people don't understand why Iron Man would need a bodyguard. They haven't met Happy.
 
 
-
 #CARDNAME: High-Tech Spider-Man
 #TEAM: Spider Friends
 
@@ -5667,7 +5661,7 @@ Draw a card.
 If you have a Wound in your hand or discard pile, KO it and you get +2 Attack. Otherwise, gain a Wound.
 #COST: 5*
 
-#SUBNAME: Smartest Man in the World
+#SUBNAME: 7th Smartest Man in the World
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 5+
@@ -5713,7 +5707,9 @@ Whenever you recruit a Hero this turn, you get +2 Attack.
 #COST: 9*
 
 
+
 #EXPANSION: World War Hulk
+
 
 #CARDNAME: Amadeus Cho
 Champions
@@ -5729,7 +5725,6 @@ Champions
 #SUBNAME: Gamma-Draining Nanites
 #COPIES: 5
 #CLASS: [Tech]
-#RECRUIT: 3
 Draw a card.
 Then, if you drew two cards this turn, Transform this into Like Totally Smart Hulk.
 #COST: 3
@@ -5758,7 +5753,6 @@ You get +1 Attack for each different cost of Hero you have.
 Whenever you use an <b>Outwit</b> ability this turn, you may use it an extra time.
 <b>Outwit</b>: Look at the top card of your deck. KO it or put it back.
 #COST: 8
-
 
 
 #CARDNAME: Bruce Banner
@@ -5803,7 +5797,6 @@ Cost 5
 #COST: 7
 
 
-
 #CARDNAME: Caiera
 Warbound
 
@@ -5827,7 +5820,7 @@ Warbound
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 2
-<b>Outwit</b>: You may a card from your hand or discard pile.
+<b>Outwit</b>: You may KO a card from your hand or discard pile.
 #COST: 6
 #FLAVOR: Her deeds earned the respect of all Sakaar.
 
@@ -5845,7 +5838,6 @@ If there are at least 3 Heroes per player in the KO pile, <b>Transform</b> this 
 Double the Attack you have.
 #COST: 7
 #FLAVOR: The Red King betrayed her, causing the plague of Cytoplasm Spikes that destroyed her people.
-
 
 
 #CARDNAME: Gladiator Hulk
@@ -5893,7 +5885,6 @@ You get double Attack from each Smash this turn.
 #COST: 8
 
 
-
 #CARDNAME: Hiroim
 Warbound
 
@@ -5935,7 +5926,6 @@ Choose one: Rescue three Bystanders, or defeat any Villain or Mastermind whose A
 #COST: 7
 
 
-
 #CARDNAME: Hulkbuster Iron Man
 #TEAM: Avengers
 
@@ -5965,7 +5955,7 @@ Draw a card.
 #FLAVOR: Tony Stark has specialized suits for many occasions. This one is specialized for may concussions.
 
 <span style="color: #FF0000;">Transformed</span>
-#SUBNAME: Ultrama-Massive Armor
+#SUBNAME: Ultra-Massive Armor
 #COPIES: 3
 #CLASS: [Tech]
 #ATTACK: 0+
@@ -5980,7 +5970,6 @@ Draw two cards.
 #ATTACK: 5+
 You get +2 Attack for each other [Tech] and/or [Strength] card you played this turn.
 #COST: 8
-
 
 
 #CARDNAME: Joe Fixit, Grey Hulk
@@ -6017,13 +6006,12 @@ Choose a Villain in your Victory Pile, You get + Attack equal to it's printed VP
 #COST: 6
 #FLAVOR: "Once I was the strongest there is. Now I'm everything there is."
 
-#SUBNAME: Hulk Ruins This Town
+#SUBNAME: Hulk Runs This Town
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 4
 You can spend any combination of Recruit and Attack to fight the Mastermind this turn.
 #COST: 7
-
 
 
 #CARDNAME: Korg
@@ -6047,8 +6035,9 @@ Draw a card.
 
 #SUBNAME: Forged By Fire
 #COPIES: 3
+#CLASS: [Strength]
 #RECRUIT: 2
-{POWER Strength Strength} <b>Transform</b> this into Lord of Granite.
+{POWER Strength} <b>Transform</b> this into Lord of Granite.
 #COST: 3
 #FLAVOR: After a while, it gets hard to tell if you're being hit by fist-sized rocks or rock-sized fists.
 
@@ -6068,7 +6057,6 @@ Draw a card.
 #ATTACK: 0+
 Put all cards from the HQ on the bottom of the Hero Deck in random order. You get their total printed Attack.
 #COST: 8
-
 
 
 #CARDNAME: Miek, The Unhived
@@ -6111,7 +6099,6 @@ You may <b>Feast.</b> Then, if a card with an Attack icon was KO'd from your dec
 #ATTACK: 6
 Look at the top three cards of your deck and put them back in any order. Then you may <b>Feast</b>.
 #COST: 8
-
 
 
 #CARDNAME: Namora
@@ -6157,7 +6144,6 @@ If you <b>Smash</b> a 0-cost Hero this way, KO it.
 #COST: 7
 
 
-
 #CARDNAME: No-Name, Brood Queen
 Warbound
 
@@ -6199,7 +6185,6 @@ Draw a card.
 #ATTACK: 4+
 Look at the top card of your deck. Then <b>Feast</b> up to three times. You get +2 Attack for each non-grey Hero that was KO'd from you deck this turn.
 #COST: 8
-
 
 
 #CARDNAME: Rick Jones
@@ -6260,7 +6245,6 @@ Count the number of different printed VP values in your Victory Pile. Draw that 
 #COST: 9
 
 
-
 #CARDNAME: Sentry
 #TEAM: Avengers
 
@@ -6297,6 +6281,7 @@ Reveal the top card of your deck. If it costs 1 or more, <b>Transform</b> this i
 #SUBNAME: The Void Unchained
 #COPIES: 3
 #CLASS: [Covert]
+#TEAM: (Unaffiliated)
 #ATTACK: 3
 Reveal the top card of your deck. If it costs 0, then <b>Feast</b>. Otherwise, <b>Transform</b> this into Mournful Sentinel and put it in your discard pile.
 #COST: 5
@@ -6307,7 +6292,6 @@ Reveal the top card of your deck. If it costs 0, then <b>Feast</b>. Otherwise, <
 #ATTACK: 0+
 Reveal the top five cards of the Hero Deck, gain their total printed Attack, and put them on the bottom of that deck. If this card makes 12 Attack or more, then <b>Transform</b> this card into The Void Mastermind and add it to the game at the start of the next turn with one random Tactic.
 #COST: 8
-
 
 
 #CARDNAME: She-Hulk
@@ -6354,7 +6338,6 @@ For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, pu
 #COST: 8
 
 
-
 #CARDNAME: Skaar, Son Of Hulk
 #TEAM: Avengers
 
@@ -6398,6 +6381,618 @@ For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, pu
 <b>Wounded Fury</b>
 Then, you may KO any number of Wounds from your hand and/or discard pile, then draw that many cards.
 #COST: 8
+
+
+
+#EXPANSION: Marvel Studios Phase 1
+
+
+#CARDNAME: Black Widow
+#TEAM: Avengers
+
+#SUBNAME: Dangerous Rescue
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+{POWER Covert} You may KO a card from your hand or discard pile. If you do, rescue a Bystander.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Mission Accomplished
+#COPIES: 5
+#CLASS: [Tech]
+Draw a card.
+{POWER Tech} Rescue a Bystander.
+#COST: 2
+#GUN: 1
+
+#SUBNAME: Covert Operation
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 0+
+You get +1 Attack for each Bystander in your Victory pile.
+#COST: 4
+
+#SUBNAME: Silent Sniper
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4
+Defeat a Villain or Mastermind that has a Bystander.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Captain America
+#TEAM: Avengers
+
+#SUBNAME: Avengers Assemble!
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+You get +1 Recruit for each color of Hero you have.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Perfect Teamwork
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+You get +1 Attack for each color of Hero you have.
+#COST: 4
+
+#SUBNAME: Diving Block
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 4
+If you would gain a Wound, you may reveal this card and draw a card instead.
+#COST: 6
+
+#SUBNAME: A Day Unlike Any Other
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 3+
+{TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
+#COST: 7
+
+
+#CARDNAME: Hawkeye
+#TEAM: Avengers
+
+#SUBNAME: Quick Draw
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1
+Draw a card.
+#COST: 3
+
+#SUBNAME: Team Player
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{TEAMPOWER Avengers} You get +1 Attack.
+#COST: 4
+#FLAVOR: "You line 'em up, and I'll knock 'em down..."
+
+#SUBNAME: Covering Fire
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+{POWER Tech} Choose one: each other player draws a card or each other player discards a card.
+#COST: 5
+
+#SUBNAME: Impossible Trick Shot
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
+#COST: 7
+
+
+#CARDNAME: Hulk
+#TEAM: Avengers
+
+#SUBNAME: Growing Anger
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+{POWER Strength} You get +1 Attack.
+#COST: 3
+
+#SUBNAME: Unstoppable Hulk
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+You may KO a Wound from your hand or discard pile. If you do, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: Crazed Rampage
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4
+Each player gains a Wound.
+#COST: 5
+
+#SUBNAME: Hulk Smash!
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+{POWER Strength} You get +5 Attack.
+#COST: 8
+
+
+#CARDNAME: Iron Man
+#TEAM: Avengers
+
+#SUBNAME: Endless Invention
+#COPIES: 5
+#CLASS: [Tech]
+Draw a card.
+{POWER Tech} Draw another card.
+#COST: 3
+
+#SUBNAME: Repulsor Rays
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} You get +1 Attack.
+#COST: 3
+#FLAVOR: Repulsor ray technology has many peaceful applications. This is not one of them.
+
+#SUBNAME: Arc Reactor
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3+
+{POWER Tech} You get +1 Attack for each other [Tech] Hero you played this turn.
+#COST: 5
+
+#SUBNAME: Quantum Breakthrough
+#COPIES: 1
+#CLASS: [Tech]
+Draw two cards.
+{POWER Tech} Draw two more cards.
+#COST: 7
+
+
+#CARDNAME: Nick Fury
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Battlefield Promotion
+#COPIES: 5
+#CLASS: [Covert]
+You may KO a S.H.I.E.L.D. Hero from your hand or discard pile. If you do, you may gain a S.H.I.E.L.D. Officer to your hand.
+#COST: 4
+
+#SUBNAME: High-Tech Weaponry
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{POWER Tech} You get +1 Attack.
+#COST: 3
+
+#SUBNAME: Legendary Commander
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 1+
+You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
+#COST: 6
+#GUN: 1
+
+#SUBNAME: Pure Fury
+#COPIES: 1
+#CLASS: [Tech]
+Defeat any Villain or Mastermind whose Attack is less than the number of S.H.I.E.L.D. Heroes in the KO pile.
+#COST: 8
+#GUN: 1
+
+
+#CARDNAME: Thor
+#TEAM: Avengers
+
+#SUBNAME: Odinson
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2+
+{POWER Strength} You get +2 Recruit.
+#COST: 3
+#FLAVOR: Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.
+
+#SUBNAME: Surge of Power
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+#ATTACK: 0+
+If you made 8 or more Recruit this turn, you get +3 Attack.
+#COST: 4
+
+#SUBNAME: Call Lightning
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3+
+{POWER Ranged} You get +3 Attack.
+#COST: 6
+
+#SUBNAME: God of Thunder
+#COPIES: 1
+#CLASS: [Ranged]
+#RECRUIT: 5
+#ATTACK: 0+
+You can use Recruit as Attack this turn.
+#COST: 8
+
+
+
+#EXPANSION: Ant-Man
+
+
+#CARDNAME: Ant-Man
+#TEAM: Avengers
+
+#SUBNAME: Ride the Ants
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1
+<b>Size-changing:</b> [Tech]
+Draw a card.
+#COST: 4*
+#FLAVOR: Some consider Hank Pym an antihero.
+
+#SUBNAME: Risky Science
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+<b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech]
+{POWER Tech} You may discard a card. If you do, draw a card.
+#COST: 5*
+
+#SUBNAME: Giant Ego
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+<b>Size-changing:</b> [Tech]
+You get +1 Attack for each extra card you drew this turn.
+#COST: 6*
+
+#SUBNAME: Pym Particles
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+<b>Microscopic Size-changing:</b> [Tech] [Tech] [Tech] [Tech] [Tech]
+A hero in the HQ without <b>Size-changing</b> abilities gain <b>Size-Chaning</b>: [Tech] this turn.
+#COST: 9*
+
+
+#CARDNAME: Wasp
+#TEAM: Avengers
+
+#SUBNAME: Bio-Electric Sting
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1+
+<b>Microscopic Size-Changing</b>: [Covert] [Covert]
+{POWER Covert} You get +2 Attack.
+#COST: 3*
+#FLAVOR: Nobody likes being stung by a bug. Especially when the sting is 30,000 volts.
+
+#SUBNAME: Tiny Winged Justice
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+<b>Size-changing:</b> [Covert]
+<span style="background-color: #FF0000;"><span style="color: #FFFFFF;">Covert</span>:</span> Draw a card.
+#COST: 4*
+#FLAVOR: Crushing victories arrive in small packages.
+
+#SUBNAME: Swarm Tactics
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+<b>Size-changing:</b> [Covert]
+You get +1 Attack for each card you recruited this turn.
+#COST: 6*
+
+#SUBNAME: Founding Avenger
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+<b>Microscopic Size-chaning:</b> [Covert] [Covert] [Covert] [Covert] [Covert]
+{TEAMPOWER Avengers} You get +1 Attack for each other Avengers card you played this turn.
+#COST: 9*
+
+
+#CARDNAME: Jocasta
+#TEAM: Avengers
+
+#SUBNAME: Creation of Ultron
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{POWER Tech} You get <b>Empowered</b> by [Tech].
+#COST: 3
+#FLAVOR: Former bride of Ultron. Programmed by Ant-Man with the memories of Wasp. Let's just say family reunions are complicated.
+
+#SUBNAME: Reprocess
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2+
+If your discard pile is empty, you get +2 Recruit. Otherwise, shuffle your discard pile into your deck.
+#COST: 4
+
+#SUBNAME: Holographic Image Inducer
+#COPIES: 3
+#CLASS: [Tech]
+<b>Size-changing:</b> [Tech]
+Draw two cards.
+#COST: 6°
+#FLAVOR: Holograms allow Jocasta to appear human, as she searches for her own humanity.
+
+#SUBNAME: Electromagnetic Eyebeams
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+If your discard pile is empty, you get +2 Attack. Otherwise shuffle your discard pile into your deck.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Wonder Man
+#TEAM: Avengers
+
+#SUBNAME: One-Hit Wonder
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+Chose one: Draw a card, or you get <b>Empowered</b> by [Strength].
+#COST: 2
+#FLAVOR: Arms dealer. Stunt man, Movie star. Master of Evil. Avenger. Maybe he'll star in his own biopic.
+
+#SUBNAME: Ionic Energy
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+You may put a card from the HQ on the bottom of the Hero Deck.
+{POWER Ranged} You get <b>Empowered</b> by [Ranged].
+#COST: 4
+
+#SUBNAME: Absorb Ambient Power
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 0+
+#ATTACK: 0+
+Put a card from the HQ on the bottom of the Hero Deck. If that card had a Recruit icon, you get +3 Recruit. If that card had an Attack icon, you get +3 Attack. (if both, get both).
+#COST: 5
+
+#SUBNAME: 8th Wonder of the World
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+<b>Size-changing</b> [Strength]
+Choose any number of cards from the HQ. Put them on the bottom of the Hero Deck. Then you get <b>Empowered</b> by [Ranged] and [Strength].
+#COST: 8*
+
+
+#CARDNAME: Black Knight
+#TEAM: Avengers
+
+#SUBNAME: Amulet of Avalon
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get <b>Empowered</b> by the color of your choice.
+#COST: 3
+#FLAVOR: The amulet summons whatever boon he chooses. Sword of Light, Shield of Night, Mystical Armor, or Flying Steed.
+
+#SUBNAME: Defend the Weak
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{POWER Strength} Return a 0-cost card from your discard pile to your hand.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Flying Steed
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
+#COST: 6
+
+#SUBNAME: The Ebony Blade
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
+#COST: 7
+
+
+
+#EXPANSION: Venom
+
+
+#CARDNAME: Carnage
+Venomverse
+
+#SUBNAME: Rending Claws
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+<b>Excessive Violence:</b> Draw a card.
+#COST: 3
+#FLAVOR: One good gaping wound deserves another.
+
+#SUBNAME: Carnivore
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 0+
+<b>Digest 4:</b> Draw two cards.
+<b>Indigestion:</b> You get +2 Recruit.
+#COST: 4
+#FLAVOR: He'd be willing to eat a Groot salad too.
+
+#SUBNAME: Gruesome Feast
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+<b>Excessive Violence:</b>
+Reveal the top card of your deck. You may KO it.
+#COST: 6
+
+#SUBNAME: Feast or Famine
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 6
+<b>Excessive Violence:</b> Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
+#COST: 8
+
+
+#CARDNAME: Venom
+Venomverse
+
+#SUBNAME: Devouring Drool
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Digest 3:</b> You get +2 Attack.
+<b>Indigestion:</b> You get +2 Recruit.
+{POWER Instinct} Instead, you get both.
+#COST: 3
+
+#SUBNAME: Razor Teeth
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 2
+<b>Excessive Violence:</b> You get +2 Recruit.
+#COST: 4
+#FLAVOR: The face that launched a thousand nightmares.
+
+#SUBNAME: Symbiotic Adaptation
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Choose one:</b>
+- You get +1 Recruit for each other card you played this turn with a Recruit icon.
+- Or you get +1 Attack for each other card you played this turn with an Attack icon.
+#COST: 6
+
+#SUBNAME: Insatiable Hunger
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Digest 8:</b> KO a card from your Victory Pile. You get +6 Attack.
+<b>Indigestion:</b> KO a card from your hand or discard pile. You get +6 Recruit.
+Venomverse Venomverse: Instead, do both.
+#COST: 8
+
+
+#CARDNAME: Venom Rocket
+Venomverse
+
+#SUBNAME: Hungry for Action
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+<b>Digest 3:</b> You may discard a card. If you do, draw a card.
+#COST: 3
+#FLAVOR: And thirsty for vengeance.
+#GUN: 1
+
+#SUBNAME: Spring the Trap
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+If a Master Strike or Villain that has an Ambush ability was played this turn, you get +1 Attack.
+#COST: 4
+#FLAVOR: No one expects a symbiote-bonded Rocket Raccoon.
+
+#SUBNAME: Serious Overkill
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2
+<b>Excessive Violence:</b> You may KO a card from your hand or discard pile.
+#COST: 5
+
+#SUBNAME: Ultimate Survivor
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+When a Master Strike is played, before it takes effect, you may put Ultimate Survivor from your hand on top of your deck. If you do, you may put any card from the HQ into your hand.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Venomized Dr. Strange
+Venomverse
+
+#SUBNAME: Cauldron of the Cosmos
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 1
+<b>Digest 2:</b> Draw a card.
+#COST: 2
+#FLAVOR: Through it, he scried other symbiotes across the dimensions.
+
+#SUBNAME: See Future Timelines
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} Reveal the top card of your deck. If it costs 0, discard it and you get +2 Attack.
+#COST: 4
+
+#SUBNAME: Complete the Grand Ritual
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 4+
+If you played a 4-cost card and a 2-cost card this turn, you get +2 Attack.
+#COST: 6
+
+#SUBNAME: Crystal of Kadavus
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4
+Reveal the top three cards of your deck. Draw on of them, discard one, and KO one.
+Venomverse Venomverse: Do this ability again.
+#COST: 8
+
+
+#CARDNAME: Venompool
+Venomverse
+
+#SUBNAME: Digest That Chimichanga
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+<b>Digest 2:</b> You get +2 Attack.
+<b>Indigestion:</b> "Rescue" a Bystander.
+{POWER Strength} Instead, you get both.
+#COST: 2
+
+#SUBNAME: Shenanigans
+#COPIES: 5
+#CLASS: [Tech]
+Draw two cards. But you can't draw any more cards until the end of this turn.
+#COST: 3
+#FLAVOR: "I mean some of those turns can just take forever."
+#GUN: 1
+
+#SUBNAME: Can I Get a Little Gratitude
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3
+Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extra time.
+<b>Excessive Violence:</b> "Rescue" a Bystander.
+#COST: 5
+
+#SUBNAME: Play to the Crowd
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+<b>Digest 7:</b> You get +1 Attack for each two Bystanders in your Victory Pile.
+<b>Indigestion:</b> "Rescue" two Bystanders.
+Venomverse Venomverse: Instead, do both (in order).
+#COST: 7
 
 
 
