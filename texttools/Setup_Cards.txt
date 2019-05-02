@@ -1,0 +1,24 @@
+
+
+#EXPANSION: Legendary
+
+#CARDNAME: S.H.I.E.L.D. Officer
+#SUBNAME: Maria Hill
+#COPIES: 30
+#TEAM: S.H.I.E.L.D.
+#RECRUIT: 2
+#COST: 3
+#GUN: 1
+
+
+#EXPANSION: Villains
+
+#CARDNAME: Madame HYDRA
+#SUBNAME: Viper
+#COPIES: 15
+#TEAM: HYDRA
+#RECRUIT: 2
+{DODGE}
+To play this card, you must discard a card from your hand.
+#COST: 3
+#GUN: 1

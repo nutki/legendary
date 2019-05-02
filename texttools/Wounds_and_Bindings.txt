@@ -1,0 +1,50 @@
+
+
+#EXPANSION: Legendary
+
+#CARDNAME: Wound
+#COPIES: 30
+#HEAL: If you don't recruit any Heroes or defeat any Villains on your turn, you may KO all the Wounds from your hand.
+
+
+#EXPANSION: Villains
+
+#CARDNAME: Bindings
+#COPIES: 30
+#HEAL: If you don't recruit any Allies or defeat any Adversaries or Commanders on your turn, you may KO a Bindings from your hand.  If you do, the player to your right gains all the other Bindings from your hand.
+
+
+#EXPANSION: Civil War
+
+#CARDNAME: Blinding Flash
+#COPIES: 2
+#HEAL: You may discard a card and have each other player discard a card. If you do, KO this Wound.
+
+#CARDNAME: Blunt Force Trauma
+#COPIES: 2
+#HEAL: You may spend 5 Attack. If you do, KO this Wound.
+
+#CARDNAME: Corrosive Webbing
+#COPIES: 2
+#HEAL: You may KO this Wound. If you do, gain another Wound.
+
+#CARDNAME: Fatal Blow
+#COPIES: 2
+#HEAL: You may KO a Hero that costs 1 or more from your hand or discard pile. If you do, KO this Wound.
+
+#CARDNAME: Psychic Trauma
+#COPIES: 2
+#HEAL: You may spend 5 Recruit. If you do, KO this Wound.
+
+#CARDNAME: Spreading Nanovirus
+#COPIES: 3
+#HEAL: You may have the player on your left gain this Wound.
+
+#CARDNAME: Subdermal Tracker
+#COPIES: 2
+#HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
+
+
+
+
+
