@@ -197,32 +197,6 @@ Draw a card.
 #COST: 3
 
 
-#EXPANSION: World War Hulk
-
-#CARDNAME: Actor
-#COPIES: 1
-#RESCUE: choose a Hero in the HQ that costs 4 or less. You get its printed Recruit and Attack.
-#VP: 1
-
-
-#CARDNAME: Animal Trainer
-#COPIES: 1
-#RESCUE: each [Instinct] and/or [Covert] Hero currently in the HQ costs 1 less this turn.
-#VP: 1
-
-
-#CARDNAME: Tourist Couple
-#COPIES: 1
-#RESCUE: you get +1 Recruit if the Rooftops are empty and +1 Recruit if the Bridge is empty.
-#VP: 1
-
-
-#CARDNAME: Triage Nurse
-#COPIES: 1
-#RESCUE: look at the top three cards of your deck. KO one, discard one, and put one back.
-#VP: 1
-
-
 #EXPANSION: 3D
 
 #CARDNAME: Bulldozer Driver
