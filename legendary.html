@@ -178,11 +178,22 @@ img.vpcount {
 #popvictory { top: 20px;}
 #popdiscard { top: 330px;}
 #popdeck { top: 330px;}
+tr.cityscape td:first-child:before {
+    content: "";
+    position: absolute;
+    width: 1055px;
+    height: 285px;
+    z-index: -1;
+    top: 0;
+    left: 211px;
+    background: url('images/cityscape.png');
+    background-size: 1055px 286px;
+}
 </style>
 </head>
 <body>
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
-<table class="d"><tr>
+<table class="d"><tr class="cityscape">
 <td><div class="deck" data-id="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
 <td><div class="deck" data-id="BRIDGE" data-mode="IMG"></div></td>
 <td><div class="deck" data-id="ROOFTOPS" data-mode="IMG"></div></td>
