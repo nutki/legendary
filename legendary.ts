@@ -1765,9 +1765,10 @@ function getEventName(ev: Ev): string {
 let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev: MouseEvent): void {
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
-    if (node.id) console.log(node.id);
-    if (node.id && clickActions[node.id]) {
-      clickActions[node.id]();
+    const id = node.id || (node.getAttribute && node.getAttribute('data-id'));
+    if (id) console.log(id);
+    if (id && clickActions[id]) {
+      clickActions[id]();
       return;
     }
   }
