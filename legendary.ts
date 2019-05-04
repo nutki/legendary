@@ -1758,7 +1758,7 @@ function setMessage(msg: string): void {
 function getEventName(ev: Ev): string {
   if (ev.type === "ENDOFTURN") return "End Turn";
   if (ev.desc) return ev.desc;
-  if (ev.what) return `${ev.type} ${ev.what}`;
+  if (ev.what) return `${ev.type} ${ev.what.cardName}`;
   console.log("Unknown option", ev);
   return "Unknown option";
 }
