@@ -90,6 +90,7 @@ interface Card {
   team: string
   flags?: string
   params?: SetupParams
+  set?: string
 }
 interface VillainCardAbillities {
   ambush?: (ev: Ev) => void
@@ -435,7 +436,7 @@ class Ev implements EvParams {
 
 interface Templates {
   HEROES: {
-    set: string
+    set?: string
     team: string
     name: string
     c1: Card
@@ -445,18 +446,19 @@ interface Templates {
   }[]
   HENCHMEN: Card[]
   VILLAINS: {
-    set: string
+    set?: string
+    name: string
     cards: [number, Card][]
   }[]
   MASTERMINDS: Card[]
   SCHEMES: Card[]
   BYSTANDERS: {
-    set: string,
+    set?: string,
     card: [number, Card]
   }[]
 }
 // Card definitions
-let cardTemplates: {[name: string]: any} = {
+let cardTemplates: Templates = {
   HEROES: [],
   HENCHMEN: [],
   VILLAINS: [],
@@ -464,24 +466,41 @@ let cardTemplates: {[name: string]: any} = {
   SCHEMES: [],
   BYSTANDERS: [],
 };
-function addTemplates(type: string, set: string, templates: any[]) {
+function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS', set: string, templates: Card[]) {
   templates.forEach(t => {
     t.set = set;
     cardTemplates[type].push(t);
   });
 }
-function findTemplate(type: string, attr: string): (name: string) => any { return name => cardTemplates[type].filter(t => t[attr] === name)[0]; }
-function findHeroTemplate(name: string) { return findTemplate('HEROES', 'name')(name); }
-function findHenchmanTemplate(name: string) { return findTemplate('HENCHMEN', 'cardName')(name); }
-function findVillainTemplate(name: string) { return findTemplate('VILLAINS', 'name')(name); }
-function findMastermindTemplate(name: string): Card { return findTemplate('MASTERMINDS', 'cardName')(name); }
-function findSchemeTemplate(name: string): Card { return findTemplate('SCHEMES', 'cardName')(name); }
-function findBystanderTemplate(name: string) { return findTemplate('BYSTANDERS', 'set')(name); }
+function addHeroTemplates(set: string, templates: Templates['HEROES']) {
+  templates.forEach(t => {
+    t.set = t.c1.set = t.c2.set = t.uc.set = t.ra.set = set;
+    cardTemplates.HEROES.push(t);
+  });
+}
+function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
+  templates.forEach(t => {
+    t.set = set;
+    t.cards.forEach(c => c[1].set = set);
+    cardTemplates.VILLAINS.push(t);
+  });
+}
+function addBystanderTemplates(set: string, templates: Templates['BYSTANDERS']) {
+  templates.forEach(t => {
+    t.set = t.card[1].set = set;
+    cardTemplates.BYSTANDERS.push(t);
+  });
+}
+function findHeroTemplate(name: string) {return cardTemplates.HEROES.filter(t => t.name === name)[0]; }
+function findHenchmanTemplate(name: string): Card { return cardTemplates.HENCHMEN.filter(t => t.cardName === name)[0]; }
+function findVillainTemplate(name: string) { return cardTemplates.VILLAINS.filter(t => t.name === name)[0]; }
+function findMastermindTemplate(name: string): Card { return cardTemplates.MASTERMINDS.filter(t => t.cardName === name)[0]; }
+function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.cardName === name)[0]; }
+function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.set === name)[0]; }
 let u: number = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.");
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.");
 let officerTemplate = makeHeroCard('MARIA HILL', 'SHIELD OFFICER', 3, 2, u, Color.GRAY, "S.H.I.E.L.D.");
-addTemplates("BYSTANDERS", "Legendary", [{ card: [ 30, makeBystanderCard() ] }]);
 let twistTemplate = new Card("SCHEME TWIST");
 let strikeTemplate = new Card("MASTER STRIKE");
 let woundTemplate = makeWoundCard(function () {
@@ -1646,8 +1665,7 @@ function imageName(path: string, card: Card, subname?: string): string {
   if (!name) name = subname;
   else if (subname !== undefined) name = subname + "_" + name;
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
-//  if (card.set !== 'Legendary') path += '/' + card.set;
-  if (subname === 'Angel') path = 'Dark City/' + path;
+  if (card.set && card.set !== 'Legendary') path = card.set + '/' + path;
   return "images/" + path + "/" + name + ".png";
 }
 function cardImageName(card: Card): string {

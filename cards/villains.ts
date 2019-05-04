@@ -1,5 +1,5 @@
 "use strict";
-addTemplates("VILLAINS", "Legendary", [
+addVillainTemplates("Legendary", [
 { name: "Brotherhood", cards: [
 // You can't defeat Blob unless you have an X-Men Hero.
 // ATTACK: 4
@@ -212,7 +212,7 @@ addTemplates("VILLAINS", "Legendary", [
   })],
 ]},
 ]);
-addTemplates("VILLAINS", "Dark City", [
+addVillainTemplates("Dark City", [
 { name: " Emissaries of Evil", cards: [
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, play it.
 // ATTACK: 4

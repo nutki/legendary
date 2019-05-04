@@ -1,5 +1,5 @@
 "use strict";
-addTemplates("HEROES", "Legendary", [
+addHeroTemplates("Legendary", [
 {
   name: "Black Widow",
   team: "Avengers",
@@ -375,7 +375,7 @@ addTemplates("HEROES", "Legendary", [
   ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", [ ev => drawEv(ev, 3), ev => addAttackEvent(ev, turnState.cardsDrawn) ]),
 },
 ]);
-addTemplates("HEROES", "Dark City", [
+addHeroTemplates("Dark City", [
 {
   name: "Angel",
   team: "X-Men",
@@ -393,7 +393,7 @@ addTemplates("HEROES", "Dark City", [
 // ATTACK: 2+
 // You may discard a card. You get + Attack equal to that card's Cost.
 // COST: 5
-  uc: makeHeroCard("Angel", "Drop Off a Friend", 5, u, 2, Color.INSTINCT, "X-Men", "D", ev => selectCardOptEv(ev, "Discard to gain Attack", playerState.hand.deck, c => addAttackEvent(ev, c.cost))),
+  uc: makeHeroCard("Angel", "Drop Off a Friend", 5, u, 2, Color.INSTINCT, "X-Men", "D", ev => selectCardOptEv(ev, "Discard to gain Attack", playerState.hand.deck, c => { discardEv(ev, c); addAttackEvent(ev, c.cost); })),
 // ATTACK: 4
 // Discard any number of cards. Draw that many cards.
 // COST: 7

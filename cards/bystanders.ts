@@ -1,6 +1,6 @@
 "use strict";
-addTemplates("BYSTANDERS", "Legendary", [{ card: [ 30, makeBystanderCard() ] }]);
-addTemplates("BYSTANDERS", "Dark City", [
+addBystanderTemplates("Legendary", [{ card: [ 30, makeBystanderCard() ] }]);
+addBystanderTemplates("Dark City", [
 // RESCUE: draw a card.
 { card: [ 4, makeBystanderCard("News Reporter", ev => drawEv(ev)) ] },
 // RESCUE: you may KO a Wound from your hand or from any player's discard pile.
