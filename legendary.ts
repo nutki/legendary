@@ -586,7 +586,7 @@ interface UndoLog {
   actions: string[]
   pos: number
   gameSetup?: Setup
-  init: () => void
+  init: (setup?: Setup) => void
   replaying: boolean
   read: () => string
   readInt: () => number
@@ -715,7 +715,7 @@ interface Setup {
   numPlayers: number,
   scheme: string,
   mastermind: string
-  henchmen: (string | [string, number])[]
+  henchmen: string[]
   villains: string[]
   heroes: string[]
   bystanders: string[]
@@ -724,7 +724,7 @@ interface Setup {
 }
 function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
-    vd_henchmen: [ 0, 1, 1, 2, 2 ],
+    vd_henchmen: [ 1, 1, 1, 2, 2 ],
     vd_villain: [ 1, 2, 3, 3, 4 ],
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
     heroes: [ 3, 5, 5, 5, 6 ],
@@ -756,7 +756,6 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
   setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
   setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
-  if (numPlayers === 1) setup.henchmen.push([undefined, 3]);
   if (numPlayers > 1) {
     const leads = mastermind.leads;
     if (findVillainTemplate(leads)) setRequired('villains', leads);
@@ -901,7 +900,7 @@ if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('w
 gameSetup.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
 //// TODO sidekicks
 // Init villain deck
-gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h, 3));
+gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h, gameState.players.size === 1 ? 3 : 10));
 gameSetup.villains.map(findVillainTemplate).forEach(v => (<[number, Card][]>v.cards).forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
 gameState.villaindeck.addNewCard(strikeTemplate, gameState.players.length === 1 && !gameState.advancedSolo ? 1 : 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
@@ -1642,19 +1641,23 @@ function playTurn(ev: Turn) {
 }
 
 // GUI
-function imageName(path: string, name: string, subname?: string): string {
-  if (subname !== undefined) name += "_" + subname;
+function imageName(path: string, card: Card, subname?: string): string {
+  let name = card.cardName;
+  if (!name) name = subname;
+  else if (subname !== undefined) name = subname + "_" + name;
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
+//  if (card.set !== 'Legendary') path += '/' + card.set;
+  if (subname === 'Angel') path = 'Dark City/' + path;
   return "images/" + path + "/" + name + ".png";
 }
 function cardImageName(card: Card): string {
-  if (card.cardType === "HERO") return imageName("heroes", card.heroName, card.cardName);
-  if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card.cardName);
-  if (card.cardType === "VILLAIN") return imageName("villains", card.villainGroup, card.cardName);
-  if (card.cardType === "MASTERMIND") return imageName("masterminds", card.cardName);
-  if (card.cardType === "TACTICS") return imageName("masterminds", card.mastermind.cardName, card.cardName);
-  if (card.cardType === "SCHEME") return imageName("schemes", card.cardName);
-  return imageName("", card.cardType);
+  if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
+  if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
+  if (card.cardType === "VILLAIN") return imageName("villains", card, card.villainGroup);
+  if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
+  if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermind.cardName);
+  if (card.cardType === "SCHEME") return imageName("schemes", card);
+  return imageName("", card, card.cardType);
 }
 function makeDisplayCard(c: Card): string {
   let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
@@ -1852,7 +1855,7 @@ function makeOptions(id: string, templateType: string, nameProp: string, current
     el.add(option);
   });
 }
-function makeSelects(id: string, templateType: string, nameProp: string, name: string, values: any[]) {
+function makeSelects(id: string, templateType: string, nameProp: string, name: string, values: string[]) {
   let selected = values.map((a, i) => {
     let e = document.getElementById(id + i);
     if (!e) return undefined;
@@ -1860,19 +1863,19 @@ function makeSelects(id: string, templateType: string, nameProp: string, name: s
   });
   document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
   values.forEach((name, i) => {
-    if (name instanceof Array) name = name[0];
     console.log(id, name);
     makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n[nameProp] === name);
   });
 }
-function getSelects(name: string, t: (string | [string, number])[]): boolean {
+function getSelects(name: string, t: string[]): boolean {
   return t.map((old, i) => {
     const v = (<HTMLSelectElement>document.getElementById(name + i)).value;
     if (v === "") return false;
-    if (old instanceof Array) old[0] = v; else t[i] = v;
+    t[i] = v;
     return true;
   }).every(v => v);
 }
+let globalFormSetup: Setup;
 function setupChange(): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
@@ -1881,7 +1884,7 @@ function setupChange(): void {
   console.log(sel.value, sel.selectedIndex);
   console.log(mel.value, mel.selectedIndex);
   if (!sel.value || !mel.value) return;
-  const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));
+  const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
   console.log(tmp);
   makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
@@ -1889,7 +1892,11 @@ function setupChange(): void {
   const s1 = getSelects("setup_heroes", tmp.heroes);
   const s2 = getSelects("setup_villains", tmp.villains);
   const s3 = getSelects("setup_henchmen", tmp.henchmen);
-  console.log(tmp);
+  tmp.bystanders = ["Legendary"];
+  tmp.withOfficers = true;
+  tmp.withWounds = true;
+  console.log(tmp, s1, s2, s3);
+  globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
 }
 function setupInit(): void {
   document.getElementById("setup_players").addEventListener("change", setupChange)
@@ -1915,11 +1922,11 @@ function setupSet(s: Setup): void {
   makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
   chooseSelects("setup_heroes", s.heroes);
   chooseSelects("setup_villains", s.villains);
-  chooseSelects("setup_henchmen", s.henchmen.map(v => v instanceof Array ? v[0] : v));  
+  chooseSelects("setup_henchmen", s.henchmen);
+  globalFormSetup = s
 }
 function startApp(): void {
-  localStorage.setItem('legendarySetup', JSON.stringify(exampleGameSetup));
-  const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup'));
+  const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup')) || exampleGameSetup;
   setupInit();
   setupSet(lastSetup);
   undoLog.init();
@@ -1940,6 +1947,7 @@ function startApp(): void {
   document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
+  document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
   startGame();
 }
 document.addEventListener('DOMContentLoaded', startApp, false);
