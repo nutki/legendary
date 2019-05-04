@@ -1408,7 +1408,7 @@ function revealOne(ev: Ev, who: Player) {
 function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (ev: Ev) => void) {
   let cards = handOrDiscard();
   if (filter) cards = cards.limit(filter);
-  selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); cont(ev, func); });
+  selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, func); });
 }
 
 
@@ -1654,9 +1654,10 @@ function playTurn(ev: Turn) {
     if (!ev.endofturn) {
       pushEv(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), ui: true });
       pushEvents(ev);
+    } else {
+      pushEv(ev, "CLEANUP", cleanUp);
     }
   });
-  pushEv(ev, "CLEANUP", cleanUp);
 }
 
 // GUI
