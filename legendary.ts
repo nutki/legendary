@@ -331,7 +331,6 @@ interface Array<T> {
   each: (f: (c: T) => void) => void
   sum: (f: (c: T) => number) => number
   merge: () => T
-  withTop: (f: (c: T) => void) => void
   withFirst: (f: (c: T) => void) => void
   withLast: (f: (c: T) => void) => void
   withRandom: (f: (c: T) => void) => void

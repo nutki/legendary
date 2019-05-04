@@ -281,7 +281,7 @@ addVillainTemplates("Dark City", [
 // ATTACK: 4+
 // VP: 2
   [ 2, makeVillainCard("Marauders", "Blockbuster", 4, 2, {
-    ambush: ev => villainIn("BANK").withTop(c => { captureEv(ev, c); captureEv(ev, ev.source); }),
+    ambush: ev => villainIn("BANK").withFirst(c => { captureEv(ev, c); captureEv(ev, ev.source); }),
     varDefense: c => c.printedDefense + 2 * c.captured.count(isBystander)
   })],
 // Chimera gets +3 Attack for each Bystander she has.

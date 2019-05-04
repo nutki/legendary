@@ -537,7 +537,7 @@ addHeroTemplates("Dark City", [
 // Choose a number, then reveal the top card of your deck. If the card is that Cost, you get +2 Attack.
 // COST: 4
   c2: makeHeroCard("Daredevil", "Radar Sense", 4, u, 2, Color.INSTINCT, "Marvel Knights", "D", ev => {
-    chooseCostEv(ev, n => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(c => c.cost === n).withTop(c => addAttackEvent(ev, 2))));
+    chooseCostEv(ev, n => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(c => c.cost === n).withFirst(c => addAttackEvent(ev, 2))));
   }),
 // ATTACK: 4
 // Choose a number, then reveal the top card of your deck. If the card is that Cost, draw it.
