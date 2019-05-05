@@ -747,7 +747,10 @@ addHeroTemplates("Dark City", [
 // Whenever you rescue a Bystander this turn, you get +1 Attack.
 // {TEAMPOWER X-Men} Rescue a Bystander for each other X-Men Hero you played this turn.
 // COST: 7
-  ra: makeHeroCard("Jean Grey", "Telekinetic Mastery", 7, u, 5, Color.RANGED, "X-Men", "", [ ev => addTurnTrigger("RESCUE", ev => isBystander(ev.what), ev => addRecruitEvent(ev, 1)), ev => rescueEv(ev, superPower("X-Men")) ]),
+  ra: makeHeroCard("Jean Grey", "Telekinetic Mastery", 7, u, 5, Color.RANGED, "X-Men", "", [
+    ev => addTurnTrigger("RESCUE", ev => isBystander(ev.what), ev => addAttackEvent(ev, 1)),
+    ev => cont(ev, () => rescueEv(ev, superPower("X-Men")))
+   ]),
 },
 {
   name: "Nightcrawler",
@@ -822,6 +825,7 @@ addHeroTemplates("Dark City", [
 // COST: 5
   c2: makeHeroCard("Punisher", "Hail of Bullets", 5, u, 2, Color.TECH, "Marvel Knights", "GD", ev => {
     revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => addAttackEvent(ev, c.printedVP)));
+    // TODO superPower
   }),
 // RECRUIT: 2+
 // {POWER Strength} Each other player reveals the top card of their deck. If that card costs 4 or more, discard it. You get +1 Recruit for each card discarded this way.
@@ -835,7 +839,7 @@ addHeroTemplates("Dark City", [
 // Reveal cards from the Hero Deck until you have revealed two cards with the same Cost. You get +1 Attack for each card revealed this way. Put them on the bottom of the Hero Deck in random order.
 // COST: 8
   ra: makeHeroCard("Punisher", "The Punisher", 8, u, 4, Color.TECH, "Marvel Knights", "G", ev => {
-    revealHeroDeckEv(ev, r => r.uniqueCount(c => c.cost) < r.size, r => addAttackEvent(ev, r.size), true, true);
+    revealHeroDeckEv(ev, r => r.uniqueCount(c => c.cost) < r.size, r => addAttackEvent(ev, r.size), true, true); // TODO cleanupRevealed
   }),
 },
 {

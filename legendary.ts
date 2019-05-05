@@ -1972,11 +1972,21 @@ function startApp(): void {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Show hidden events
+Show hidden events (card revealing)
 Select setup screen
 auto popup decks
+close popup decks on action
+show multiple actions (play/teleport)
+separate config screen
+highlight deck selection
+multiplayer play areas
+idicators of actionable locations in hidden decks
+scrollable cards played and hand
+"scenarios"
 
 ENGINE:
+fix replacement effect (cannot pushEvent ev.replacing)
+remodel triggers to attach on resolution not queuing
 separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
