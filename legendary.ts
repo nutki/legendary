@@ -91,6 +91,7 @@ interface Card {
   flags?: string
   params?: SetupParams
   set?: string
+  templateId?: string
 }
 interface VillainCardAbillities {
   ambush?: (ev: Ev) => void
@@ -436,6 +437,7 @@ class Ev implements EvParams {
 interface Templates {
   HEROES: {
     set?: string
+    templateId?: string
     team: string
     name: string
     c1: Card
@@ -446,13 +448,15 @@ interface Templates {
   HENCHMEN: Card[]
   VILLAINS: {
     set?: string
+    templateId?: string
     name: string
     cards: [number, Card][]
   }[]
   MASTERMINDS: Card[]
   SCHEMES: Card[]
   BYSTANDERS: {
-    set?: string,
+    set?: string
+    templateId?: string
     card: [number, Card]
   }[]
 }
@@ -468,34 +472,38 @@ let cardTemplates: Templates = {
 function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS', set: string, templates: Card[]) {
   templates.forEach(t => {
     t.set = set;
+    t.templateId = t.cardName;
     cardTemplates[type].push(t);
   });
 }
 function addHeroTemplates(set: string, templates: Templates['HEROES']) {
   templates.forEach(t => {
     t.set = t.c1.set = t.c2.set = t.uc.set = t.ra.set = set;
+    t.templateId = t.name;
+    if (findHeroTemplate(t.templateId)) t.templateId += '@' + set;
     cardTemplates.HEROES.push(t);
   });
 }
 function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
   templates.forEach(t => {
     t.set = set;
+    t.templateId = t.name;
     t.cards.forEach(c => c[1].set = set);
     cardTemplates.VILLAINS.push(t);
   });
 }
 function addBystanderTemplates(set: string, templates: Templates['BYSTANDERS']) {
   templates.forEach(t => {
-    t.set = t.card[1].set = set;
+    t.set = t.card[1].set = t.templateId = set;
     cardTemplates.BYSTANDERS.push(t);
   });
 }
-function findHeroTemplate(name: string) {return cardTemplates.HEROES.filter(t => t.name === name)[0]; }
-function findHenchmanTemplate(name: string): Card { return cardTemplates.HENCHMEN.filter(t => t.cardName === name)[0]; }
-function findVillainTemplate(name: string) { return cardTemplates.VILLAINS.filter(t => t.name === name)[0]; }
-function findMastermindTemplate(name: string): Card { return cardTemplates.MASTERMINDS.filter(t => t.cardName === name)[0]; }
-function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.cardName === name)[0]; }
-function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.set === name)[0]; }
+function findHeroTemplate(name: string) { return cardTemplates.HEROES.filter(t => t.templateId === name)[0]; }
+function findHenchmanTemplate(name: string): Card { return cardTemplates.HENCHMEN.filter(t => t.templateId === name)[0]; }
+function findVillainTemplate(name: string) { return cardTemplates.VILLAINS.filter(t => t.templateId === name)[0]; }
+function findMastermindTemplate(name: string): Card { return cardTemplates.MASTERMINDS.filter(t => t.templateId === name)[0]; }
+function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.templateId === name)[0]; }
+function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.templateId === name)[0]; }
 let u: number = undefined;
 let sa = makeHeroCard('HERO', 'SHIELD AGENT',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.");
 let sb = makeHeroCard('HERO', 'SHIELD TROOPER', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.");
@@ -1870,7 +1878,8 @@ function makeOptions(id: string, templateType: string, nameProp: string, current
     }
     const option = document.createElement("option");
     option.text = s[nameProp];
-    if (current === s[nameProp]) option.selected = true;
+    option.value = s.templateId;
+    if (current === s.templateId) option.selected = true;
     el.add(option);
   });
 }
@@ -1883,7 +1892,7 @@ function makeSelects(id: string, templateType: string, nameProp: string, name: s
   document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
   values.forEach((name, i) => {
     console.log(id, name);
-    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n[nameProp] === name);
+    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.tamplateId === name);
   });
 }
 function getSelects(name: string, t: string[]): boolean {
