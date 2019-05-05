@@ -1386,17 +1386,17 @@ function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolea
   const dst = src.revealed;
   let i = 0;
   const f = typeof amount === "number" ? () => ++i < amount : amount
-  const d = () => src.withTop(c => { moveCardEv(ev, c, dst); if (f(dst.deck)) d(); } );
-  cont(ev, () => d());
+  const d = () => src.withTop(c => { moveCardEv(ev, c, dst); cont(ev, () => f(dst.deck) && d()); } );
+  cont(ev, d);
   cont(ev, () => action(dst.deck));
-  if (random) cont(ev, () => { dst.shuffle(); moveAll(src, dst, bottom); });
+  if (random) cont(ev, () => { dst.shuffle(); moveAll(dst, src, bottom); });
   else cont(ev, () => cleanupRevealed(ev, dst, src, bottom, agent));
 }
 function revealVillainDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   revealDeckEv(ev, gameState.villaindeck, amount, action, random, bottom, agent);
 }
 function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
-  revealDeckEv(ev, gameState.villaindeck, amount, action, random, bottom, agent);
+  revealDeckEv(ev, gameState.herodeck, amount, action, random, bottom, agent);
 }
 function lookAtDeckEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   who = who || playerState;

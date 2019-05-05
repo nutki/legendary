@@ -824,8 +824,10 @@ addHeroTemplates("Dark City", [
 // {POWER Tech Tech} You may defeat that Villain for free.
 // COST: 5
   c2: makeHeroCard("Punisher", "Hail of Bullets", 5, u, 2, Color.TECH, "Marvel Knights", "GD", ev => {
-    revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => addAttackEvent(ev, c.printedVP)));
-    // TODO superPower
+    revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => {
+      addAttackEvent(ev, c.printedVP);
+      if (superPower(Color.TECH, Color.TECH)) chooseOneEv(ev, "Defeat the revealed villain", [ "No", () => {} ], [ "Yes", () => defeatEv(ev, c) ]);
+     }));
   }),
 // RECRUIT: 2+
 // {POWER Strength} Each other player reveals the top card of their deck. If that card costs 4 or more, discard it. You get +1 Recruit for each card discarded this way.
@@ -839,7 +841,7 @@ addHeroTemplates("Dark City", [
 // Reveal cards from the Hero Deck until you have revealed two cards with the same Cost. You get +1 Attack for each card revealed this way. Put them on the bottom of the Hero Deck in random order.
 // COST: 8
   ra: makeHeroCard("Punisher", "The Punisher", 8, u, 4, Color.TECH, "Marvel Knights", "G", ev => {
-    revealHeroDeckEv(ev, r => r.uniqueCount(c => c.cost) < r.size, r => addAttackEvent(ev, r.size), true, true); // TODO cleanupRevealed
+    revealHeroDeckEv(ev, r => r.uniqueCount(c => c.cost) === r.size, r => addAttackEvent(ev, r.size), true, true);
   }),
 },
 {
