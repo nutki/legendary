@@ -567,7 +567,7 @@ interface Trigger {
 }
 type CityLocation = "SEWERS" | "STREETS" | "BANK" | "ROOFTOPS" | "BRIDGE";
 interface SetupParams {
-  vd_henchmen?: number[] | number,
+  vd_henchmen_counts?: number[][]
   vd_villain?: number[] | number,
   vd_bystanders?: number[] | number,
   heroes?: number[] | number,
@@ -750,7 +750,6 @@ interface Setup {
 }
 function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
-    vd_henchmen: [ 1, 1, 1, 2, 2 ],
     vd_villain: [ 1, 2, 3, 3, 4 ],
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
     heroes: [ 3, 5, 5, 5, 6 ],
@@ -758,6 +757,9 @@ function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPl
   };
   let r = name in s.params ? s.params[name] : defaults[name];
   return r instanceof Array ? r[numPlayers - 1] : r;
+}
+function getHenchmenCounts(s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length) {
+  return (s.params.vd_henchmen_counts || [[3], [10], [10], [10, 10], [10, 10]])[numPlayers - 1]
 }
 function getGameSetup(schemeName: string, mastermindName: string, numPlayers: number = 1): Setup {
   let scheme = findSchemeTemplate(schemeName);
@@ -781,7 +783,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   }
   setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
   setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
-  setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
+  setup.henchmen = Array(getHenchmenCounts(scheme, numPlayers).length).fill(undefined);
   if (numPlayers > 1) {
     const leads = mastermind.leads;
     if (findVillainTemplate(leads)) setRequired('villains', leads);
@@ -926,7 +928,7 @@ if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('w
 gameSetup.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
 //// TODO sidekicks
 // Init villain deck
-gameSetup.henchmen.map(findHenchmanTemplate).forEach(h => gameState.villaindeck.addNewCard(h, gameState.players.size === 1 ? 3 : 10));
+gameSetup.henchmen.map(findHenchmanTemplate).forEach((h, i) => gameState.villaindeck.addNewCard(h, getHenchmenCounts()[i]));
 gameSetup.villains.map(findVillainTemplate).forEach(v => (<[number, Card][]>v.cards).forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
 gameState.villaindeck.addNewCard(strikeTemplate, gameState.players.length === 1 && !gameState.advancedSolo ? 1 : 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));

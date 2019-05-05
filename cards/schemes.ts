@@ -26,9 +26,13 @@ makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
 }),
 // SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
 // EVILWINS: If 12 Villains escape.
-makeSchemeCard("Negative Zone Prison Breakout", { twists: 8, vd_henchmen: [ 1, 2, 2, 3, 3 ]  }, ev => {
+// Single player version based on https://boardgamegeek.com/thread/1567774/negative-zone-prison-break-out-advanced-solo
+makeSchemeCard("Negative Zone Prison Breakout", { twists: 8, vd_henchmen_counts: [ [10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], vd_villain: [ 2, 2, 3, 3, 4 ]  }, ev => {
   // Twist: Play the top 2 cards of the Villain Deck.
   villainDrawEv(ev); villainDrawEv(ev);
+}, {
+  event: "ESCAPE",
+  after: ev => schemeProgressEv(ev, (gameState.players.length === 1 ? 8 : 12) - gameState.escaped.count(isVillain)),
 }),
 // SETUP: 7 Twists. Each Twist is a Dark Portal.
 makeSchemeCard("Portals to the Dark Dimension", { twists: 7 }, ev => {
