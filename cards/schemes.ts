@@ -85,6 +85,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
 }),
 // SETUP: For 2-3 players, use 8 Twists. For 4-5 players, use 5 Twists. If only 2 players, use only 4 Heroes in the Hero Deck.
 // EVILWINS: If the Hero Deck runs out.
+// Single player based on https://boardgamegeek.com/thread/1127095/single-player-superhero-civil-war
 makeSchemeCard("Super Hero Civil War", { twists: [ 8, 8, 8, 5, 5 ], heroes: [ 4, 4, 5, 5, 6 ]}, ev => {
   // Twist: KO all the Heroes in the HQ.
   HQCards().limit(isHero).each(c => KOEv(ev, c));
