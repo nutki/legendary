@@ -569,7 +569,7 @@ addHeroTemplates("Dark City", [
 // ATTACK: 0+
 // You may discard a card from your hand. If that card had a Recruit icon, you get +4 Recruit. If that card had an Attack icon, you get +4 Attack.
 // COST: 5
-  uc: makeHeroCard("Domino", "Specialized Ammunition", 5, 0, 0, Color.TECH, "X-Force", "G", ev => selectCardOptEv(ev, "Choose a card to KO", playerState.hand.deck, sel => {
+  uc: makeHeroCard("Domino", "Specialized Ammunition", 5, 0, 0, Color.TECH, "X-Force", "G", ev => selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, sel => {
     discardEv(ev, sel);
     if (sel.printedAttack !== undefined) addAttackEvent(ev, 4);
     if (sel.printedRecruit !== undefined) addRecruitEvent(ev, 4);
@@ -622,7 +622,7 @@ addHeroTemplates("Dark City", [
 // COST: 4
 // GUN: 1
   c2: makeHeroCard("Forge", "Reboot", 4, 2, u, Color.TECH, "X-Force", "GD", ev => {
-    selectCardEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev, 2); });
+    if (superPower(Color.TECH)) selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev, 2); });
   }),
 // RECRUIT: 0+
 // ATTACK: 0+
@@ -657,7 +657,7 @@ addHeroTemplates("Dark City", [
 // {POWER Strength} Defeat a Villain of 3 Attack or less for free.
 // COST: 2
   uc: makeHeroCard("Ghost Rider", "Infernal Chains", 2, u, u, Color.STRENGTH, "Marvel Knights", "D", [ ev => drawEv(ev, 1), ev => {
-    if (superPower(Color.TECH)) selectCardEv(ev, "Defeat a Villain", villains(), sel => defeatEv(ev, sel));
+    if (superPower(Color.STRENGTH)) selectCardEv(ev, "Defeat a Villain", villains().limit(c => c.defense <= 3), sel => defeatEv(ev, sel));
   }]),
 // ATTACK: 3+
 // Each player KOs a Villain from their Victory Pile. You get +1 Attack for each Villain KO'd this way.
@@ -666,7 +666,10 @@ addHeroTemplates("Dark City", [
   ra: makeHeroCard("Ghost Rider", "Penance Stare", 8, u, 3, Color.RANGED, "Marvel Knights", "", ev => {
     let koed: Card[] = [];
     eachPlayer(p => selectCardEv(ev, "KO a Villain", p.victory.limit(isVillain), c => { KOEv(ev, c); koed.push(c); }, p));
-    if (superPower("Marvel Knights")) selectCardEv(ev, "Choose a Villain", koed, c => moveCardEv(ev, c, playerState.victory));
+    cont(ev, () => {
+      addAttackEvent(ev, koed.length);
+      if (superPower("Marvel Knights")) selectCardEv(ev, "Choose a Villain", koed, c => moveCardEv(ev, c, playerState.victory));
+    });
   }),
 },
 {
@@ -720,7 +723,8 @@ addHeroTemplates("Dark City", [
 // COST: 9
   ra: makeHeroCard("Iron Fist", "Living Weapon", 9, u, 8, Color.STRENGTH, "Marvel Knights", "", ev => {
     let costs: boolean[] = [];
-    let f = () =>drawIfEv(ev, () => true, (c) => { let p = costs[c.cost]; costs[c.cost] = true; if (!p) f(); } );
+    let f = () => drawIfEv(ev, () => true, (c) => { let p = costs[c.cost]; costs[c.cost] = true; if (!p) f(); } );
+    f();
   }),
 },
 {

@@ -1229,10 +1229,10 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, owner(ev.what).discard) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
-    let draw = false;
+    let card: Card;
     who = who || playerState;
-    lookAtDeckEv(ev, 1, () => draw = who.revealed.has(cond), who);
-    cont(ev, () => { if (draw) { drawEv(ev, 1, who); if (func) func(who.revealed.top); } } );
+    lookAtDeckEv(ev, 1, () => card = who.revealed.limit(cond)[0], who);
+    cont(ev, () => { if (card) { drawEv(ev, 1, who); if (func) func(card); } } );
 }
 function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
 function evilWinsEv(ev: Ev, mastermind?: Card): void { gameOverEv(ev, 'LOSS', mastermind); }
