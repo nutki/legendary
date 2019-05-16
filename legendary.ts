@@ -85,8 +85,6 @@ interface Card {
   isHenchman?: boolean
   teleport?: boolean
   soaring?: boolean
-  playable: boolean
-  fightable: boolean
   team: string
   flags?: string
   params?: SetupParams
@@ -124,7 +122,7 @@ class Card {
     this.cardType = t;
   }
   get cost() { return this.printedCost || 0; }
-  get attack() { return this.printedAttack; }
+  get attack() { return getModifiedStat(this, 'attack', this.printedAttack); }
   get recruit() { return this.printedRecruit; }
   get baseDefense() {
     if (this.varDefense) return this.varDefense(this);
@@ -141,9 +139,8 @@ class Card {
   get villainGroup() {
    return getModifiedStat(this, "villainGroup", this.printedVillainGroup)
   }
-  isPlayable() { return this.playable; }
   isHealable() { return this.cardType === "WOUND"; }
-  isColor(c: number) { return (this.color & c) !== 0; }
+  isColor(c: number) { return (getModifiedStat(this, 'color', this.color) & c) !== 0; }
   isTeam(t: string) { return this.team === t; }
   isGroup(t: string) { return this.villainGroup === t; }
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
@@ -175,7 +172,6 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   c.heroName = hero;
   c.color = color;
   c.team = team;
-  c.playable = true;
   c.flags = flags;
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   if (abilities) Object.assign(c, abilities);
@@ -187,7 +183,6 @@ function makeVillainCard(group: string, name: string, defense: number, vp: numbe
   c.printedVP = vp;
   c.cardName = name;
   c.printedVillainGroup = group;
-  c.fightable = true;
   if (abilities) Object.assign(c, abilities);
   return c;
 }
@@ -197,7 +192,6 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
   c.printedVP = vp;
   c.cardName = name;
   c.leads = leads;
-  c.fightable = true;
   c.strike = strike;
   c.tacticsTemplates = tactics.map(function (e) {
     let t = new Card("TACTICS");
@@ -954,7 +948,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 
 // Card effects functions
 function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
-function isHero(c: Card): boolean { return c.cardType === "HERO"; }
+function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardType === "HERO"); }
 function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN"); }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
 function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
@@ -965,11 +959,13 @@ function isScheme(c: Card): boolean { return c.cardType === "SCHEME"; }
 function isHenchman(c: Card): boolean { return c.isHenchman === true; }
 function isEnemy(c: Card): boolean { return isVillain(c) || isMastermind(c); }
 function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER"; }
-function isPlayable(c: Card): boolean { return c.isPlayable(); }
 function isHealable(c: Card): boolean { return c.isHealable(); }
 function isColor(col: number): (c: Card) => boolean { return function (c) { return c.isColor(col); }; }
 function isTeam(team: string): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
 function isGroup(group: string): (c: Card) => boolean { return c => c.isGroup(group); }
+function isFightable(c: Card): boolean {
+  return getModifiedStat(c, 'isFightable', c.location.isCity);
+}
 function limit(cards: Card[], cond: Filter<Card>): Card[] {
   if (cards instanceof Deck) throw new TypeError();
   if (cond === undefined) return cards;
@@ -984,16 +980,25 @@ function handOrDiscard(p?: Player): Card[] {
 function owner(c: Card): Player {
   return c.location.owner;
 }
-function owned(p: Player): Card[] {
-  p = p || playerState;
-  let r = p.hand.deck.concat(playerState.discard.deck, playerState.deck.deck, playerState.revealed.deck, playerState.victory.deck);
-  return p === playerState ? r.concat(playerState.playArea.deck) : r;
+function owned(p: Player = playerState): Card[] {
+  return [
+    ...p.hand.deck,
+    ...p.discard.deck,
+    ...p.deck.deck,
+    ...p.revealed.deck,
+    ...p.victory.deck,
+    ...p.teleported.deck,
+    ...p.playArea.deck,
+  ];
 }
 function soloVP(): number {
   return gameState.players.sum(currentVP) - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
 }
 function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
+}
+function FightableCards(): Card[] {
+  return [...CityCards(), gameState.villaindeck.top].filter(c => c && isFightable(c));
 }
 function HQCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards(): Card[] { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
@@ -1043,11 +1048,9 @@ function revealable(who = playerState) {
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
 function numColorsYouHave() {
-  let all = 0;
-  let num = 0;
-  yourHeroes(playerState).forEach(c => { all = all | c.color; });
-  for (let i = 1; i <= Color.MAX; i *= 2) if (all & i) num++;
-  return num;
+  const heroes = yourHeroes(playerState);
+  const colors = [Color.RED, Color.YELLOW, Color.BLACK, Color.BLUE, Color.GREEN, Color.GRAY];
+  return colors.count(color => heroes.some(hero => hero.isColor(color)));
 }
 
 function superPower(...f: (number | string)[]): number {
@@ -1075,6 +1078,9 @@ interface ModifiableStats {
   rescue?: Handler | Handler[]
   escape?: Handler | Handler[]
   teleport?: boolean
+  color?: number
+  attack?: number
+  isFightable?: boolean
 }
 
 type NumericStat = 'defense' | 'vp';
@@ -1089,7 +1095,6 @@ function makeModFunc(value: number | ((c: Card) => number)): (c: Card, v?: numbe
   if (typeof value === "number") return (c, v) => v + value;
   return (c, v) => v + value(c);
 }
-let xx: Modifiers = {};
 function addTurnMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(gameState.modifiers, stat, cond, func); }
@@ -1182,14 +1187,14 @@ function teleportCard(ev: Ev): void {
   moveCardEv(ev, ev.what, playerState.teleported);
 }
 function getActions(ev: Ev): Ev[] {
-  let p = playerState.hand.limit(c => isPlayable(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
+  let p = playerState.hand.limit(c => isHero(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   if (!turnState.noRecruitOrFight) {
   // TODO any deck with recruitable
   p = p.concat(HQCards().limit(canRecruit).map(d => (new Ev(ev, "RECRUIT", { func: buyCard, what: d }))));
   // TODO any deck with fightable
-  p = p.concat(CityCards().limit(canFight).map(d => (new Ev(ev, "FIGHT", { func: villainFight, what: d }))));
+  p = p.concat(FightableCards().limit(canFight).map(d => (new Ev(ev, "FIGHT", { func: villainFight, what: d }))));
   if (gameState.mastermind.size && gameState.mastermind.top.attached('TACTICS').size && canFight(gameState.mastermind.top))
     p.push((new Ev(ev, "FIGHT", { func: villainFight, what: gameState.mastermind.top })));
   if (gameState.officer.size && canRecruit(gameState.officer.top))
@@ -1994,6 +1999,7 @@ multiplayer play areas
 idicators of actionable locations in hidden decks
 scrollable cards played and hand
 "scenarios"
+top villain deck card select (prof x uncommon)
 
 ENGINE:
 fix replacement effect (cannot pushEvent ev.replacing)

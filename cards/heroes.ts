@@ -802,11 +802,27 @@ addHeroTemplates("Dark City", [
 // ATTACK: 3
 // Reveal the top card of the Villain Deck. If it's a Bystander, you may rescue it. If it's a Villain, you may fight it this turn.
 // COST: 5
-  uc: makeHeroCard("Professor X", "Telepathic Probe", 5, u, 3, Color.RANGED, "X-Men", ""), // TODO
+  uc: makeHeroCard("Professor X", "Telepathic Probe", 5, u, 3, Color.RANGED, "X-Men", "", ev => revealVillainDeckEv(ev, 1, r => {
+    r.limit(isBystander).each(c => chooseMayEv(ev, "Rescue the bystander", () => rescueEv(ev, c)));
+    r.limit(isVillain).each(c => {
+      addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+    });
+  })),
 // ATTACK: 6
 // Whenever you defeat a Villain this turn, you may gain it. It becomes a grey Hero with no text that gives + Attack equal to its Attack. (You still get its VP.)
 // COST: 8
-  ra: makeHeroCard("Professor X", "Mind Control", 8, u, 6, Color.COVERT, "X-Men", ""), // TODO
+  ra: makeHeroCard("Professor X", "Mind Control", 8, u, 6, Color.COVERT, "X-Men", "", [], { trigger: {
+    event: "DEFEAT",
+    match: ev => isVillain(ev.what),
+    after: ev => chooseMayEv(ev, "Gain villain as a Hero", () => {
+      const target = ev.parent.what;
+      const isTarget = (c: Card) => c === target;
+      addStatSet('color', isTarget, () => Color.GRAY);
+      addStatSet('isHero', isTarget, () => true);
+      addStatSet('attack', isTarget, c => c.baseDefense);
+      gainEv(ev, target);
+    })
+  }}),
 },
 {
   name: "Punisher",
@@ -826,7 +842,7 @@ addHeroTemplates("Dark City", [
   c2: makeHeroCard("Punisher", "Hail of Bullets", 5, u, 2, Color.TECH, "Marvel Knights", "GD", ev => {
     revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => {
       addAttackEvent(ev, c.printedVP);
-      if (superPower(Color.TECH, Color.TECH)) chooseOneEv(ev, "Defeat the revealed villain", [ "No", () => {} ], [ "Yes", () => defeatEv(ev, c) ]);
+      if (superPower(Color.TECH, Color.TECH)) chooseMayEv(ev, "Defeat the revealed villain", () => defeatEv(ev, c));
      }));
   }),
 // RECRUIT: 2+
