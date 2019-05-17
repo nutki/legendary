@@ -25,9 +25,9 @@ sub autopower {
     my $effect = undef;
     my $cond = undef;
     my $wrap = undef;
-    s/^{POWER (.*?)} *// and $cond = "if (superPower(".(join', ',map{"Color.".uc}split" ",$1)."))";
-    s/^{TEAMPOWER (.*?)} *// and $cond = "if (superPower(\"$1\"))";
-    s/^<b>Spectrum<.b>: *// and $cond = "if (spectrumPower())";
+    s/^{POWER (.*?)} *// and $cond = "superPower(".(join', ',map{"Color.".uc}split" ",$1).")";
+    s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split" ",$1).")";
+    s/^<b>Spectrum<.b>: *// and $cond = "spectrumPower()";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, ev => XXX)";
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
@@ -39,7 +39,7 @@ sub autopower {
     /^{VERSATILE (\d+)}$/ and $effect = "versatileEv(ev, $1)";
 
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
-    $effect = "{ $cond $effect; }" if $cond && $effect;
+    $effect = "$cond && $effect" if $cond && $effect;
     push @r, $effect if $effect;
     #print "$_\n" if !$effect;
   }
