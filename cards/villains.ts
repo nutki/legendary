@@ -213,30 +213,30 @@ addVillainTemplates("Legendary", [
 ]},
 ]);
 addVillainTemplates("Dark City", [
-{ name: " Emissaries of Evil", cards: [
+{ name: "Emissaries of Evil", cards: [
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, play it.
 // ATTACK: 4
 // VP: 2
-  [ 2, makeVillainCard(" Emissaries of Evil", "Egghead", 4, 2, {
+  [ 2, makeVillainCard("Emissaries of Evil", "Egghead", 4, 2, {
     ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isVillain).each(c => villainDrawEv(ev, c)))
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Scheme Twist, play it.
 // ATTACK: 6
 // VP: 4
-  [ 2, makeVillainCard(" Emissaries of Evil", "Electro", 6, 4, {
+  [ 2, makeVillainCard("Emissaries of Evil", "Electro", 6, 4, {
     ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isTwist).each(c => playTwistEv(ev, c)))
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Bystander, Gladiator captures it.
 // ATTACK: 5
 // VP: 3
-  [ 2, makeVillainCard(" Emissaries of Evil", "Gladiator", 5, 3, {
+  [ 2, makeVillainCard("Emissaries of Evil", "Gladiator", 5, 3, {
     ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isBystander).each(c => captureEv(ev, ev.source, c)))
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Master Strike, each player gains a Wound.
 // ESCAPE: Each player gains a Wound.
 // ATTACK: 5
 // VP: 3
-  [ 2, makeVillainCard(" Emissaries of Evil", "Rhino", 5, 3, {
+  [ 2, makeVillainCard("Emissaries of Evil", "Rhino", 5, 3, {
     ambush: ev => revealVillainDeckEv(ev, 1, c => c.limit(isStrike).each(c => eachPlayer(p => gainWoundEv(ev, p)))),
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
@@ -332,7 +332,7 @@ addVillainTemplates("Dark City", [
 // VP: 2
   [ 2, makeVillainCard("MLF", "Zero", 0, 2, {
     fightCond: () => playerState.hand.count(c => c.cost === 0) >= 3,
-    fightCost: ev => selectObjectsEv(ev, "Discard three cards", 3, playerState.hand.deck, c => KOEv(ev, c))
+    fightCost: ev => selectObjectsEv(ev, "Discard three cards", 3, playerState.hand.deck.filter(c => c.cost === 0), c => KOEv(ev, c))
   })],
 ]},
 { name: "Streets of New York", cards: [
@@ -397,7 +397,7 @@ addVillainTemplates("Dark City", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Underworld", "Lilith, Daughter of Dracula", 5, 3, {
-    escape: ev => eachPlayer(p => { if (!p.victory.has(c => c.cardName === "Dracula")) gainWoundEv(ev, p); }),
+    escape: ev => eachPlayer(p => p.victory.has(c => c.cardName === "Dracula") || gainWoundEv(ev, p)),
   })],
 ]},
 ]);
