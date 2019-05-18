@@ -502,7 +502,7 @@ addHeroTemplates("Dark City", [
 // COST: 3
   c2: makeHeroCard("Colossus", "Invulnerability", 3, 2, u, Color.STRENGTH, "X-Force", "D", [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && ev.who === owner(<Card>source),
+    match: (ev, source: Card) => isWound(ev.what) && ev.who === owner(source) && source.location === ev.who.hand,
     replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
       discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
     }, () => pushEvents(ev.replacing), owner(ev.source))
