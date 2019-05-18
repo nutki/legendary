@@ -451,7 +451,7 @@ interface Templates {
   BYSTANDERS: {
     set?: string
     templateId?: string
-    card: [number, Card]
+    cards: [number, Card][]
   }[]
 }
 // Card definitions
@@ -486,10 +486,12 @@ function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
     cardTemplates.VILLAINS.push(t);
   });
 }
-function addBystanderTemplates(set: string, templates: Templates['BYSTANDERS']) {
-  templates.forEach(t => {
-    t.set = t.card[1].set = t.templateId = set;
-    cardTemplates.BYSTANDERS.push(t);
+function addBystanderTemplates(set: string, cards: [number, Card][]) {
+  cards.forEach(c => c[1].set = set);
+  cardTemplates.BYSTANDERS.push({
+    templateId: set,
+    set,
+    cards,
   });
 }
 function findHeroTemplate(name: string) { return cardTemplates.HEROES.filter(t => t.templateId === name)[0]; }
@@ -919,7 +921,9 @@ gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 // Init auxiliary decks
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
-gameSetup.bystanders.map(findBystanderTemplate).forEach(c => gameState.bystanders.addNewCard(c.card[1], c.card[0]));
+console.log("BYS", gameSetup.bystanders)
+gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
+gameState.bystanders.shuffle();
 //// TODO sidekicks
 // Init villain deck
 gameSetup.henchmen.map(findHenchmanTemplate).forEach((h, i) => gameState.villaindeck.addNewCard(h, getHenchmenCounts()[i]));
@@ -1037,9 +1041,9 @@ function atLocation(what: Card, ...locations: CityLocation[]) {
   return locations.some(l => what.location.id === l);
 }
 function hasBystander(c: Card): boolean { return c.captured.has(isBystander); }
-function eachOtherPlayer(f: (p: Player) => void): Player[] { let r = gameState.players.filter(function (e) { return e !== playerState; }); if (f) r.forEach(f); return r; }
-function eachOtherPlayerVM(f: (p: Player) => void): Player[] { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
-function eachPlayer(f: (p: Player) => void): Player[] { if (f) gameState.players.forEach(f); return gameState.players; }
+function eachOtherPlayer<T>(f: (p: Player) => T): T[] { return gameState.players.filter(e => e !== playerState).map(f); }
+function eachOtherPlayerVM<T>(f: (p: Player) => T): T[] { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
+function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); }
 function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
 function revealable(who = playerState) {
   // TODO: also artifacts and maybe MOoT
@@ -1602,16 +1606,19 @@ function villainDefeat(ev: Ev): void {
   moveCardEv(ev, c, playerState.victory);
   pushEffects(ev, c, "fight", c.fight, { where: ev.where });
 }
-function rescueEv(ev: Ev, what?: Card | number): void {
-  if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what: what });
+function rescueByEv(ev: Ev, who: Player, what?: Card | number): void {
+  if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what, who });
   else for (let i = 0; i < (what || 1); i++) cont(ev, () => {
-    if (gameState.bystanders.top) pushEv(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top });
+    if (gameState.bystanders.top) pushEv(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top, who });
   });
+}
+function rescueEv(ev: Ev, what?: Card | number): void {
+  rescueByEv(ev, playerState, what);
 }
 function rescueBystander(ev: Ev): void {
   let c = ev.what;
   moveCardEv(ev, c, playerState.victory);
-  if (c.rescue) pushEv(ev, "EFFECT", { source: c, func: c.rescue });
+  if (c.rescue) pushEv(ev, "EFFECT", { source: c, func: c.rescue, who: ev.who });
 }
 function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: Trigger | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, after: f } : f;
@@ -1690,6 +1697,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermind.cardName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
+  if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
   return imageName("", card, card.cardType);
 }
 function makeDisplayCard(c: Card): string {
@@ -1927,7 +1935,7 @@ function setupChange(): void {
   const s1 = getSelects("setup_heroes", tmp.heroes);
   const s2 = getSelects("setup_villains", tmp.villains);
   const s3 = getSelects("setup_henchmen", tmp.henchmen);
-  tmp.bystanders = ["Legendary"];
+  tmp.bystanders = ["Legendary", "Dark City"];
   tmp.withOfficers = true;
   tmp.withWounds = true;
   console.log(tmp, s1, s2, s3);
@@ -2000,6 +2008,7 @@ idicators of actionable locations in hidden decks
 scrollable cards played and hand
 "scenarios"
 top villain deck card select (prof x uncommon)
+bystander mutli-select
 
 ENGINE:
 fix replacement effect (cannot pushEvent ev.replacing)
@@ -2009,7 +2018,7 @@ set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 required villain/hero groups
 
-other sets base functions: artifacts, special bystanders, sidekicks, divided cards
+other sets base functions: artifacts, sidekicks, divided cards
 
 Sets
 

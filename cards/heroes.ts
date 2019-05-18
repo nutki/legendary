@@ -385,7 +385,7 @@ addHeroTemplates("Dark City", [
   c1: makeHeroCard("Angel", "Diving Catch", 4, 2, u, Color.STRENGTH, "X-Men", "D", [], { trigger: {
     event: "DISCARD",
     match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
-    after: ev => { rescueEv(ev); drawEv(ev, 2); }
+    after: ev => { rescueByEv(ev, owner(ev.source)); drawEv(ev, 2, owner(ev.source)); }
   }}),
 // Draw two cards, then discard a card.
 // COST: 3
@@ -443,11 +443,7 @@ addHeroTemplates("Dark City", [
 // ATTACK: 2
 // Whenever you defeat a Villain in the Sewers or Rooftops this turn, you get +2 Recruit.
 // COST: 4
-  c1: makeHeroCard("Blade", "Night Hunter", 4, 0, 2, Color.STRENGTH, "Marvel Knights", "GD", [], { trigger: {
-    event: "DEFEAT",
-    match: ev => isLocation(ev.where, "SEWERS", "ROOFTOPS"),
-    after: ev => addRecruitEvent(ev, 2),
-  }}),
+  c1: makeHeroCard("Blade", "Night Hunter", 4, 0, 2, Color.STRENGTH, "Marvel Knights", "GD", ev => addTurnTrigger("DEFEAT", ev => isLocation(ev.where, "SEWERS", "ROOFTOPS"), ev => addRecruitEvent(ev, 2))),
 // ATTACK: 2
 // You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
 // COST: 3
@@ -459,11 +455,7 @@ addHeroTemplates("Dark City", [
 // ATTACK: 3
 // Whenever you defeat a Villain in the Sewers or Rooftops this turn, draw two cards.
 // COST: 6
-  uc: makeHeroCard("Blade", "Nowhere to Hide", 6, u, 3, Color.TECH, "Marvel Knights", "G", [], { trigger: {
-    event: "DEFEAT",
-    match: ev => isLocation(ev.where, "SEWERS", "ROOFTOPS"),
-    after: ev => drawEv(ev, 2),
-  }}),
+  uc: makeHeroCard("Blade", "Nowhere to Hide", 6, u, 3, Color.TECH, "Marvel Knights", "G", ev => addTurnTrigger("DEFEAT", ev => isLocation(ev.where, "SEWERS", "ROOFTOPS"), ev => drawEv(ev, 2))),
 // ATTACK: 0+
 // You get +1 Attack for each Villain in your Victory Pile.
 // COST: 7
@@ -477,6 +469,7 @@ addHeroTemplates("Dark City", [
 // COST: 3
   c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger: {
     event: "STRIKE",
+    match: (ev, source: Card) => source.location === owner(source).hand,
     before: ev => chooseMayEv(ev, "Discard to draw three extra cards", ev => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source))); }, owner(ev.source))
   }}),
 // ATTACK: 2+
@@ -510,7 +503,9 @@ addHeroTemplates("Dark City", [
   c2: makeHeroCard("Colossus", "Invulnerability", 3, 2, u, Color.STRENGTH, "X-Force", "D", [], { trigger: {
     event: "GAIN",
     match: (ev, source) => isWound(ev.what) && ev.who === owner(<Card>source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2), () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
+      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
+    }, () => pushEvents(ev.replacing), owner(ev.source))
   }}),
 // ATTACK: 4+
 // {POWER Strength} You get +2 Attack.
@@ -523,7 +518,9 @@ addHeroTemplates("Dark City", [
   ra: makeHeroCard("Colossus", "Russian Heavy Tank", 8, u, 6, Color.STRENGTH, "X-Force", "", [], { trigger: {
     event: "GAIN",
     match: (ev, source) => isWound(ev.what) && ev.who !== owner(<Card>source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => { gainEv(ev, ev.parent.what, owner(ev.source)); drawEv(ev); }, () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+      gainEv(ev, ev.parent.what, owner(ev.source)); drawEv(ev, 1, owner(ev.source));
+    }, () => pushEvents(ev.replacing), owner(ev.source))
   }}),
 },
 {
@@ -811,18 +808,16 @@ addHeroTemplates("Dark City", [
 // ATTACK: 6
 // Whenever you defeat a Villain this turn, you may gain it. It becomes a grey Hero with no text that gives + Attack equal to its Attack. (You still get its VP.)
 // COST: 8
-  ra: makeHeroCard("Professor X", "Mind Control", 8, u, 6, Color.COVERT, "X-Men", "", [], { trigger: {
-    event: "DEFEAT",
-    match: ev => isVillain(ev.what),
-    after: ev => chooseMayEv(ev, "Gain villain as a Hero", () => {
+  ra: makeHeroCard("Professor X", "Mind Control", 8, u, 6, Color.COVERT, "X-Men", "", ev =>
+    addTurnTrigger("DEFEAT", ev => isVillain(ev.what), ev => chooseMayEv(ev, "Gain villain as a Hero", () => {
       const target = ev.parent.what;
       const isTarget = (c: Card) => c === target;
       addStatSet('color', isTarget, () => Color.GRAY);
       addStatSet('isHero', isTarget, () => true);
       addStatSet('attack', isTarget, c => c.baseDefense);
       gainEv(ev, target);
-    })
-  }}),
+    }))
+  ),
 },
 {
   name: "Punisher",
