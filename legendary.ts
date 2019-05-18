@@ -467,6 +467,7 @@ function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS', set: string,
   templates.forEach(t => {
     t.set = set;
     t.templateId = t.cardName;
+    if (t.tacticsTemplates) t.tacticsTemplates.forEach(tt => tt.set = set);
     cardTemplates[type].push(t);
   });
 }
@@ -1107,7 +1108,7 @@ function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
   return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
 function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, value: ModifiableStats[T]): ModifiableStats[T] {
-  return modifyStat(c, turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
+  return modifyStat(c, turnState && turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
 }
 // Game engine functions
 function attachedDeck(name: string, where: Deck | Card) {

@@ -85,7 +85,7 @@ makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
   } ],
   [ "The End of All Things", ev => {
   // Each other player reveals the top three cards of their deck, KOs each one of those cards that cost 1 or more, and puts the rest back in any order.
-    eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => selectCardAndKOEv(ev, p.revealed.limit(c => c.cost >= 1), p), p));
+    eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => p.revealed.limit(c => c.cost >= 1).each(c => KOEv(ev, c)), p));
   } ],
   [ "Horsemen Are Drawing Nearer", ev => {
   // Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.

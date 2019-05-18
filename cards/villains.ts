@@ -263,8 +263,8 @@ addVillainTemplates("Dark City", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Four Horsemen", "Pestilence", 5, 3, {
-    fight: ev => eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => p.hand.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)), // TODO multiplayer reveal
-    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 3, ev => p.hand.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)),
+    fight: ev => eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => p.revealed.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)), // TODO multiplayer reveal
+    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 3, ev => p.revealed.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)),
   })],
 // FIGHT: Each other player reveals an [Instinct] Hero or gains a Wound.
 // ESCAPE: Each player does that same effect.
