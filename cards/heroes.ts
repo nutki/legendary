@@ -470,7 +470,7 @@ addHeroTemplates("Dark City", [
   c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger: {
     event: "STRIKE",
     match: (ev, source: Card) => source.location === owner(source).hand,
-    before: ev => chooseMayEv(ev, "Discard to draw three extra cards", ev => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source))); }, owner(ev.source))
+    before: ev => chooseMayEv(ev, "Discard to draw three extra cards", () => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source))); }, owner(ev.source))
   }}),
 // ATTACK: 2+
 // You get +2 Attack only when fighting Masterminds.
