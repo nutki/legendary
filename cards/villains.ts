@@ -297,7 +297,7 @@ addVillainTemplates("Dark City", [
 // ATTACK: 4+
 // VP: 2
   [ 2, makeVillainCard("Marauders", "Scalphunter", 4, 2, {
-    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a Bystander for Scalphunter", p.victory.deck, c => captureEv(ev, ev.source, c), p)),
+    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a Bystander for Scalphunter", p.victory.deck.limit(isBystander), c => captureEv(ev, ev.source, c), p)),
     varDefense: c => c.printedDefense + c.captured.count(isBystander)
   })],
 // FIGHT: Each player discards all the cards in their hand, then draws as many cards as they discarded.
