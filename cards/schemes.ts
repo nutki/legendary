@@ -142,18 +142,21 @@ makeSchemeCard("Detonate the Helicarrier", { twists: 8, heroes: 6 }, ev => {
 }, [{
   event: "KO",
   match: ev => ev.what.location.isHQ,
-  before: ev => {
-    ev.state.hq = ev.parent.what.location;
-    ev.state.hq.explosion = (ev.state.hq.explosion || 0) + 1;
-    if (ev.state.hq.explosion === 6) ev.state.hq.isHQ = false;
-    if (!gameState.hq.has(l => l.isHQ)) evilWinsEv(ev);
+  replace: ev => {
+    attachCardEv(ev, ev.parent.what, ev.parent.what.location, "EXPLOSION");
+    cont(ev, () => schemeProgressEv(ev, gameState.hq.count(d => d.attachedDeck("EXPLOSION").size < 6)));
   },
-  after: ev => attachCardEv(ev, ev.parent.what, ev.state.hq, "EXPLOSION"),
 }, {
   event: "RUNOUT",
   match: ev => ev.deckName === "HERO",
   after: evilWinsEv,
-}]),
+}, {
+  event: "MOVECARD",
+  match: ev => ev.to.isHQ && ev.to.attachedDeck("EXPLOSION").size >= 6,
+  replace: () => {},
+}], () => {
+  gameState.schemeProgress = gameState.hq.size;
+}),
 // SETUP: 8 Twists.
 // EVILWINS: When the number of non grey Heroes in the KO pile is 3 times the number of players.
 makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
