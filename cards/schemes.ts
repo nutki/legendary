@@ -121,12 +121,15 @@ makeSchemeCard<{hope: Card}>("Capture Baby Hope", { twists: 8 }, ev => {
     villainEscapeEv(ev, a);
     attachCardEv(ev, ev.twist, gameState.mastermind, "TWIST");
     attachCardEv(ev, hope, gameState.scheme, "BABYHOPE");
-    cont(ev, () => { if (gameState.mastermind.attached("TWIST").size >= 3) evilWinsEv(ev); });
+    cont(ev, () => schemeProgressEv(ev, 3 - gameState.mastermind.attached("TWIST").size));
   } else CityCards().limit(isVillain).withLast(v => captureEv(ev, v, hope));
 }, [], (s) => {
   const hopeTemplate = new Card("BABYHOPE");
   hopeTemplate.varVP = () => 6;
+  hopeTemplate.set = "Dark City";
   s.hope = gameState.scheme.attachedDeck("BABYHOPE").addNewCard(hopeTemplate);
+  addStatMod('defense', isVillain, v => v.captured.count(c => c.cardType === "BABYHOPE") * 4);
+  gameState.schemeProgress = 3;
 }),
 // SETUP: 8 Twists. 6 Heroes in the Hero Deck.
 // RULE: Whenever a Hero is KO'd from the HQ, turn that Hero face down on that HQ space, representing an Explosion on the Helicarrier.

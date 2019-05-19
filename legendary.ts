@@ -348,7 +348,7 @@ Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[gameStat
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
 type Option = Card | Ev;
-interface Ev {
+interface Ev<TSchemeState = any> {
   type: string
   desc?: string
   parent: Ev
@@ -381,7 +381,7 @@ interface Ev {
   twist?: Card
   nr?: number
   another?: boolean
-  state?: any
+  state?: TSchemeState
 }
 interface EvParams {
   where?: Deck
@@ -514,7 +514,7 @@ let woundTemplate = makeWoundCard(function () {
   turnState.noRecruitOrFight = true;
 });
 
-function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
+function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
   let c = new Card('SCHEME');
   c.cardName = name;
   c.params = counts;
