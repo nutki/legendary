@@ -212,19 +212,13 @@ makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3
   villainDrawEv(ev);
 }, [{
   event: "ESCAPE",
-  after: ev => { if (gameState.escaped.count(c => c.cardType === "SCHEME TWIST") >= 4) evilWinsEv(ev); },
+  after: ev => schemeProgressEv(ev, 4 - gameState.escaped.count(isTwist)),
 }, {
   event: "DEFEAT",
-  after: ev => {
-    let twist = playerState.victory.limit(c => c.cardType === "SCHEME TWIST");
-    if (twist.size) {
-      twist.each(t => moveCardEv(ev, t, gameState.villaindeck));
-      cont(ev, () => gameState.villaindeck.shuffle());
-    }
-    // playerState.victory.limit(isTwist).each(c => shuffleIntoEv(ev, c, gameState.villaindeck);
-  }
+  before: ev => ev.parent.what.captured.limit(isTwist).each(c => shuffleIntoEv(ev, c, gameState.villaindeck)),
 }], () => {
-  addStatMod('defense', isVillain, c => c.captured.count(c => c.cardType === "SCHEME TWIST"));
+  addStatMod('defense', isVillain, c => c.captured.count(isTwist));
+  gameState.schemeProgress = 4;
 }),
 // SETUP: 8 Twists. Villain Deck includes 14 extra Jean Grey cards and no Bystanders.
 // RULE: Each Jean Grey card counts as a "Goblin Queen" Villain. It's worth 4 VP. It has Attack equal to its Cost plus the number of Demon Goblins stacked next to the Scheme.

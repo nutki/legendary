@@ -1197,7 +1197,7 @@ function getActions(ev: Ev): Ev[] {
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   if (!turnState.noRecruitOrFight) {
   // TODO any deck with recruitable
-  p = p.concat(HQCards().limit(canRecruit).map(d => (new Ev(ev, "RECRUIT", { func: buyCard, what: d }))));
+  p = p.concat(HQCards().limit(isHero).limit(canRecruit).map(d => (new Ev(ev, "RECRUIT", { func: buyCard, what: d }))));
   // TODO any deck with fightable
   p = p.concat(FightableCards().limit(canFight).map(d => (new Ev(ev, "FIGHT", { func: villainFight, what: d }))));
   if (gameState.mastermind.size && gameState.mastermind.top.attached('TACTICS').size && canFight(gameState.mastermind.top))
