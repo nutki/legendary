@@ -178,7 +178,7 @@ makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists:
   cont(ev, () => gameState.villaindeck.shuffle());
 }, {
   event: "ESCAPE",
-    after: ev => schemeProgressEv(ev, 5 - gameState.escaped.count(gameState.schemeState.isGoon)),
+  after: ev => schemeProgressEv(ev, 5 - gameState.escaped.count(gameState.schemeState.isGoon)),
 }, (s) => {
   s.isGoon = c => c.cardName === "Maggia Goons";
   addStatSet('ambush', s.isGoon, () => villainDrawEv);
@@ -193,12 +193,14 @@ makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
   eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardAndKOEv(ev, p.victory.limit(isBystander), p), p));
 }, [{
   event: "MOVECARD",
-  after: ev => { if (gameState.ko.count(isBystander) + gameState.escaped.count(isBystander) >= 4 * gameState.players.size) evilWinsEv(ev); }
+  after: ev => schemeProgressEv(ev, 4 * gameState.players.size - gameState.ko.count(isBystander) - gameState.escaped.count(isBystander))
 }], () => {
+  gameState.schemeProgress = 4 * gameState.players.size;
   repeat(gameState.players.size === 1 ? 12 : 24, () => moveCard(gameState.bystanders.top, gameState.herodeck));
+  gameState.herodeck.shuffle();
   gameState.specialActions = (ev) => {
     if (turnState.recruit < 2) return [];
-    return HQCards().limit(isBystander).map(c => new Ev(ev, "EFFECT", ev => { turnState.recruit -= 2; rescueEv(ev, c); }));
+    return HQCards().limit(isBystander).map(c => new Ev(ev, "PAYTORESCUE", { what: c, func: ev => { turnState.recruit -= 2; rescueEv(ev, ev.what); }}));
   };
 }),
 // SETUP: 8 Twists representing Plutonium. Add an extra Villain Group.
