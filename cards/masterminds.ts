@@ -160,23 +160,23 @@ makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
 // Mr. Sinister captures a Bystander. Then each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Mr. Sinister has.
   let sinister = ev.source;
   captureEv(ev, sinister);
-  gameState.players.limit(p => p.hand.size === 6).each(p => revealOrEv(ev, Color.COVERT, () => selectObjectsEv(ev, "Select cards to discard", sinister.captured.count(isBystander), p.hand.deck, c => discardEv(ev, c)), p));
+  cont(ev, () => eachPlayer(p => p.hand.size === 6 && revealOrEv(ev, Color.COVERT, () => selectObjectsEv(ev, "Select cards to discard", sinister.captured.count(isBystander), p.hand.deck, c => discardEv(ev, c)), p)));
 }, [
   [ "Human Experimentation", ev => {
   // Mr. Sinister captures Bystanders equal to the number of Villains in the city.
-     repeat(CityCards().count(isVillain), () => captureEv(ev, <Card>ev.where.attachedTo));
+    captureEv(ev, ev.source.mastermind, CityCards().count(isVillain));
   } ],
   [ "Master Geneticist", ev => {
   // Reveal the top seven cards of the Villain Deck. Mr. Sinister captures all of the Bystanders you revealed. Put the rest back in random order.
-    revealVillainDeckEv(ev, 7, r => r.limit(isBystander).each(c => captureEv(ev, c)));
+    revealVillainDeckEv(ev, 7, r => r.limit(isBystander).each(c => captureEv(ev, ev.source.mastermind, c)));
   } ],
   [ "Plans Within Plans", ev => {
   // Mr. Sinister captures a Bystander for each Mr. Sinister Tactic in players' Victory Piles, including this Tactic.
-    repeat(gameState.players.sum(p => p.victory.count(c => ev.source.mastermind === c.mastermind)), () => captureEv(ev, ev.source.mastermind));
+    captureEv(ev, ev.source.mastermind, gameState.players.sum(p => p.victory.count(c => ev.source.mastermind === c.mastermind)));
   } ],
   [ "Telepathic Manipulation", ev => {
   // Mr. Sinister captures a Bystander from each other player's Victory Pile.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Bystander", p.discard.deck, c => captureEv(ev, <Card>ev.where.attachedTo, c)));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => captureEv(ev, ev.source.mastermind, c)));
   } ],
 ], {
   varDefense: c => c.printedDefense + c.captured.count(isBystander),

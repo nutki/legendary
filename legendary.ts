@@ -1269,9 +1269,9 @@ function schemeProgressEv(ev: Ev, amount: number) {
   });
 }
 function runOutEv(ev: Ev, deck: string) { pushEv(ev, "RUNOUT", { deckName: deck, func: () => {} }); }
-function captureEv(ev: Ev, villain: Card, what?: Card) {
-  if (what) pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: what, villain: villain });
-  else cont(ev, () => {
+function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {
+  if (what && typeof what !== "number") pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: what, villain: villain });
+  else for (let i = 0; i < what; i++) cont(ev, () => {
     if (gameState.bystanders.top) pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: gameState.bystanders.top, villain: villain });
   });
 }
@@ -1496,9 +1496,9 @@ function cleanUp(ev: Ev): void {
   let drawAmount = (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0);
   drawEv(ev, drawAmount);
 }
-function drawEv(ev: Ev, amount?: number, who?: Player) {
-  for (let i = 0; i < (amount || 1); i++)
-    pushEv(ev, "DRAW", { func: drawOne, who: who || playerState});
+function drawEv(ev: Ev, amount: number = 1, who: Player = playerState) {
+  for (let i = 0; i < amount; i++)
+    pushEv(ev, "DRAW", { func: drawOne, who });
 }
 function drawOne(ev: Ev): void {
   if (!ev.who.deck.size && !ev.who.discard.size) {
@@ -1607,9 +1607,9 @@ function villainDefeat(ev: Ev): void {
   moveCardEv(ev, c, playerState.victory);
   pushEffects(ev, c, "fight", c.fight, { where: ev.where });
 }
-function rescueByEv(ev: Ev, who: Player, what?: Card | number): void {
+function rescueByEv(ev: Ev, who: Player, what: Card | number = 1): void {
   if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what, who });
-  else for (let i = 0; i < (what || 1); i++) cont(ev, () => {
+  else for (let i = 0; i < what; i++) cont(ev, () => {
     if (gameState.bystanders.top) pushEv(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top, who });
   });
 }
