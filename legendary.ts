@@ -133,8 +133,8 @@ class Card {
     return value < 0 ? 0 : value;
   }
   get vp() {
-    if (this.varVP) return this.varVP(this);
-    return this.printedVP;
+    const baseVP = this.varVP ? this.varVP(this) : this.printedVP;
+    return getModifiedStat(this, 'vp', baseVP);
   }
   get villainGroup() {
    return getModifiedStat(this, "villainGroup", this.printedVillainGroup)
@@ -918,7 +918,6 @@ gameSetup.heroes.map(findHeroTemplate).forEach(h => {
   gameState.herodeck.addNewCard(h.ra);
 });
 gameState.herodeck.shuffle();
-gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 // Init auxiliary decks
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
@@ -949,6 +948,8 @@ gameState.villaindeck.shuffle();
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
 if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
+// Populate HQ
+gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 }
 
 // Card effects functions
@@ -1701,12 +1702,17 @@ function cardImageName(card: Card): string {
   if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
   return imageName("", card, card.cardType);
 }
-function makeDisplayCard(c: Card): string {
-  let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
+function makeDisplayAttached(c: Deck | Card) {
+  let res = '';
   if (c._attached) for (let i in c._attached) if (c._attached[i].size) {
     res += ' [ ' + i + ': ' + c._attached[i].deck.map(makeDisplayCard).join(' ') + ' ]';
   }
   return res;
+}
+
+function makeDisplayCard(c: Card): string {
+  let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
+  return res + makeDisplayAttached(c);
 }
 function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): string {
   const extraClasses = gone ? " gone" : "";
@@ -1755,7 +1761,7 @@ function displayDecks(): void {
         html += `<div class="deckcount"><span class="name">${count}</span><br>${deck.size}</div>`;
       }
     } else {
-      html = deck.id + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+      html = deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ');
     }
     div.innerHTML = html;
   }
