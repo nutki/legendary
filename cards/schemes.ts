@@ -226,16 +226,25 @@ makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3
 makeSchemeCard<{isGoblinQueen: (c: Card) => boolean}>("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Jean Grey" } }, ev => {
   // Twist: Stack 5 Bystanders face down next to the Scheme. Bystanders stacked here are "Demon Goblin" Villains. They have 2 Attack. Players can fight these Demon Goblins to rescue them as Bystanders.
   repeat(5, () => cont(ev, () => gameState.bystanders.withTop(b => attachCardEv(ev, b, gameState.scheme, "GOBLIN"))));
-}, [], (s) => {
+}, [{
+  event: "ESCAPE",
+  after: ev => schemeProgressEv(ev, 4 - gameState.escaped.count(gameState.schemeState.isGoblinQueen)),
+}], (s) => {
+  const demonGoblins = gameState.scheme.attachedDeck("GOBLIN");
   s.isGoblinQueen = c => c.heroName === "Jean Grey";
-  // gameState.scheme.attachedDeck("GOBLIN").fightable = true; // TODO
+  const isDemonGoblin = (c: Card) => c.location === demonGoblins;
   gameState.herodeck.limit(s.isGoblinQueen).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
-  addStatSet('defense', s.isGoblinQueen, c => c.cost + gameState.scheme.attached("GOBLIN").size);
+  addStatSet('defense', s.isGoblinQueen, c => c.cost + demonGoblins.size);
   addStatSet('vp', s.isGoblinQueen, () => 4);
-  addStatSet('defense', isBystander, () => 2);
-  addStatSet('fight', isBystander, () => ev => rescueEv(ev, ev.source));
+  addStatSet('defense', isDemonGoblin, () => 2);
+  addStatSet('fight', isDemonGoblin, () => ev => rescueEv(ev, ev.source));
   addStatSet('isVillain', s.isGoblinQueen, () => true);
+  gameState.schemeProgress = 4;
+  gameState.specialActions = (ev) => {
+    const what = demonGoblins.top;
+    return what && canFight(what) ? [ new Ev(ev, "FIGHT", { func: villainFight, what }) ] : [];
+  };
 }),
 // SETUP: 8 Twists. Villain Deck includes 14 cards for an extra Hero and no Bystanders.
 // RULE: Whenever you play a Hero from the Villain Deck, that Hero is captured by the closest enemy to the Villain Deck.
