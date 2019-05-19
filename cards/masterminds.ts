@@ -135,16 +135,16 @@ makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
 }, [
   [ "Damned If You Do...", ev => {
   // Each other player KOs a Bystander from their Victory Pile or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Bystander to KO", p.victory.limit("Marvel Knights"), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Devilish Torment", ev => {
   // Each other player puts all 0 Cost cards from their discard pile on top of their deck in any order.
-    let f = (p: Player) => selectCardEv(ev, "Put a card on top of your deck", p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); f(p); }, p);
+    const f = (p: Player) => selectCardEv(ev, "Put a card on top of your deck", p.discard.limit(c => !c.cost), c => { moveCardEv(ev, c, p.deck); cont(ev, () => f(p)); }, p);
     eachOtherPlayerVM(f);
   } ],
   [ "Pain Begets Pain", ev => {
   // Choose any number of Wounds from your hand and discard pile. The player to your right gains them.
-    selectObjectsAnyEv(ev, `Choose Wounds for ${playerState.right.name} to gain`, handOrDiscard(), c => gainEv(ev, c, playerState.right));
+    selectObjectsAnyEv(ev, `Choose Wounds for ${playerState.right.name} to gain`, handOrDiscard().limit(isWound), c => gainEv(ev, c, playerState.right));
   } ],
   [ "The Price of Failure", ev => {
   // Each other player without a Mastermind Tactic in their Victory Pile gains a Wound.
@@ -153,7 +153,7 @@ makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
 ], { trigger: {
   event: "GAIN",
   match: ev => isWound(ev.what) && ev.where !== ev.who.deck,
-  after: (ev) => gainEv(ev, ev.parent.what, ev.parent.who)
+  replace: (ev) => gainToDeckEv(ev, ev.parent.what, ev.parent.who)
 }}),
 // Mr. Sinister gets +1 Attack for each Bystander he has.
 makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {

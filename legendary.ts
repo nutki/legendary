@@ -1103,7 +1103,7 @@ function makeModFunc(value: number | ((c: Card) => number)): (c: Card, v?: numbe
 function addTurnMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(gameState.modifiers, stat, cond, func); }
-function addTurnSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(gameState.modifiers, stat, cond, func); }
+function addTurnSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(turnState.modifiers, stat, cond, func); }
 function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
   return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
