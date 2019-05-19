@@ -711,7 +711,10 @@ const undoLog: UndoLog = {
   get replaying(this: UndoLog) { return this.pos < this.actions.length; },
   read: function(this: UndoLog) { return this.actions[this.pos++]; },
   readInt: function(this: UndoLog) { return parseInt(this.read()); },
-  readInts: function(this: UndoLog) { return this.read().split(',').map(v => parseInt(v)); }, // TODO does not work for empty
+  readInts: function(this: UndoLog) {
+    const v = this.read();
+    return v.length ? v.split(',').map(v => parseInt(v)) : [];
+  },
   write: function(this: UndoLog, v) {
     const strValue = v.toString();
     this.actions[this.pos++] = strValue;
