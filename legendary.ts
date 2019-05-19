@@ -773,10 +773,10 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     withWounds: undefined,
   };
   function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
-    let a: (string | ([string, number]))[]= setup[t];
+    const a = setup[t];
     if (a.includes(name)) return;
     let pos = a.findIndex(v => v === undefined);
-    if (pos >=0) a[pos] = name;
+    if (pos >= 0) a[pos] = name;
   }
   setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
   setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
@@ -1908,7 +1908,7 @@ function makeSelects(id: string, templateType: string, nameProp: string, name: s
   document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
   values.forEach((name, i) => {
     console.log(id, name);
-    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.tamplateId === name);
+    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.templateId === name);
   });
 }
 function getSelects(name: string, t: string[]): boolean {

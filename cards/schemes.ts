@@ -164,23 +164,25 @@ makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
   eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => lookAtDeckEv(ev, 1, () => p.revealed.withLast(c => KOEv(ev, c)), p), p));
 }, [{
   event: "KO",
-  after: ev => { if (gameState.ko.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 3 * gameState.players.size) evilWinsEv(ev); },
-}]),
+  after: ev => schemeProgressEv(ev, 3 * gameState.players.size - gameState.ko.count(c => isHero(c) && !isColor(Color.GRAY)(c))),
+}], () => {
+  gameState.schemeProgress = gameState.players.size * 3;
+}),
 // SETUP: 8 Twists. Include 10 Maggia Goons as one of the Henchman Groups.
 // RULE: Goons also have the ability "Ambush: Play another card from the Villain Deck."
 // EVILWINS: When 5 Goons escape.
-makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists: 8 }, ev => {
+makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: "Maggia Goons" } }, ev => {
   // Twist: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
   CityCards().limit(ev.state.isGoon).each(c => villainEscapeEv(ev, c));
   eachPlayer(p => p.victory.limit(ev.state.isGoon).each(c => moveCardEv(ev, c, gameState.villaindeck)));
   cont(ev, () => gameState.villaindeck.shuffle());
 }, {
   event: "ESCAPE",
-  after: ev => { if (gameState.escaped.count(ev.state.isGoon) >= 5) evilWinsEv(ev); },
+    after: ev => schemeProgressEv(ev, 5 - gameState.escaped.count(gameState.schemeState.isGoon)),
 }, (s) => {
   s.isGoon = c => c.cardName === "Maggia Goons";
   addStatSet('ambush', s.isGoon, () => villainDrawEv);
-  // TODO setup constraint = 10 goons
+  gameState.schemeProgress = 5;
 }),
 // SETUP: 8 Twists. 24 Bystanders in the Hero Deck. (1 player: 12 Bystanders in the Hero Deck)
 // RULE: You may spend 2 Recruit to rescue a Bystander from the HQ.
