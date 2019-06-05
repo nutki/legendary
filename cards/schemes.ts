@@ -256,12 +256,13 @@ makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 
   villainDrawEv(ev);
 }, [{
   event: "ESCAPE",
-  after: ev => { if (gameState.escaped.count(c => isHero(c) && !isColor(Color.GRAY)(c)) >= 9) evilWinsEv(ev); },
+  after: ev => schemeProgressEv(ev, 9 - gameState.escaped.count(c => isHero(c) && !isColor(Color.GRAY)(c))),
 }], () => {
   addStatMod('defense', isVillain, c => 2 * c.captured.count(isHero));
   addStatSet('capturable', isHero, () => true); // TODO
   addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source));
   // gameState.herodeck.limit(c => c.heroName === extraHero).each(c => moveCard(c, gameState.villaindeck)); // TODO extra hero
   gameState.villaindeck.shuffle();
+  gameState.schemeProgress = 9;
 }),
 ]);
