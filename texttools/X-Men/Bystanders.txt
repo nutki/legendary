@@ -1,0 +1,92 @@
+
+#CARDNAME: Cypher
+#CLASS: [Tech]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+Look at the top two cards of your deck. Draw one and discard the other.
+#COST: 2
+
+#CARDNAME: Heartless Computer Scientist
+#CLASS: [Tech]
+#RESCUE: gain it as a Hero.
+------------
+{POWER Tech} You may KO a card from your hand or discard pile.
+#RECRUIT: 2
+#COST: 3
+
+#CARDNAME: Karma
+#CLASS: [Covert]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+Reveal the top card of the Hero Deck. You get +Attack equal to its printed Attack.
+#ATTACK: 0+
+#COST: 3
+
+#CARDNAME: Magik
+#CLASS: [Ranged]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+Teleport (Instead of playing this card, you may set it aside. At the end of the turn, add it to your hand as an extra card.)
+#ATTACK: 2
+#COST: 4
+
+#CARDNAME: Magma
+#CLASS: [Ranged]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+Chose one: Draw a card or you get +2 Attack.
+#ATTACK: 0+
+#COST: 3
+
+#CARDNAME: Martial Arts Master
+#CLASS: [Instinct]
+#RESCUE: gain it as a Hero.
+------------
+Draw a card.
+#ATTACK: 1
+#COST: 3
+
+#CARDNAME: Mirage
+#CLASS: [Covert]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+Draw a card.
+#RECRUIT: 1
+#COST: 3
+
+#CARDNAME: Sunspot
+#TEAM: X-Men
+#CLASS: [Strength]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+{POWER Strength} You get +1 Attack.
+2+ Attack.
+#COST: 3
+
+#CARDNAME: Warlock
+#CLASS: [Tech]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+{POWER Tech} Draw a card.
+#ATTACK: 2
+#COST: 3
+
+#CARDNAME: Wolfsbane
+#TEAM: X-Men
+#CLASS: [Instinct]
+--- New Mutants
+#RESCUE: gain it as a Hero.
+------------
+<b>Berserk</b>, <b>Berserk</b>, <b>Berserk</b>
+#ATTACK: 0+
+#COST: 3
+
+
+

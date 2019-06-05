@@ -1,0 +1,6 @@
+
+#CARDNAME: Detective Wolverine
+#RESCUE: <b>Investigate</b> the Villain Deck for a Villain worth 1 VP and put it in your Victory Pile.
+
+
+

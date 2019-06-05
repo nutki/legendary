@@ -1,0 +1,50 @@
+
+#CARDNAME: Asgard Under Siege
+#SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
+#TWIST: Play the top 2 cards of the Villain Deck.
+#EVILWINS: If 12 Villains escape.
+
+#CARDNAME: Destroy the Cities of Earth!
+#SETUP: 8 Twists. 12 Bystanders in the Villain Deck.
+#RULE: Each Villain gets +1 Attack for each Bystander it has.
+#TWIST: Any Villain in the Bank captures 2 Bystanders. Then play the top card of the Villain Deck.
+#EVILWINS: When 8 Bystanders are carried away by escaping Villains.
+
+#CARDNAME: Enslave Minds with the Chitauri Scepter
+#SETUP: 8 Twists. 6 Heroes. Chitauri Villain Group required. Shuffle 12 random Heroes from the Hero Deck into the Villain Deck.
+#RULE: Heroes in the Villain Deck count as "Enslaved" Villains with Attack equal to the Hero's Cost +2. If you defeat that Hero, you gain it.
+#TWIST: The highest-cost Hero from the HQ moves into the Sewers as an "Enslaved" Villain, as above.
+#EVILWINS: If 6 Heroes get into the Escaped Villains pile.
+
+#CARDNAME: Invade Asgard
+#SETUP: 7 Twists. Each Twist is a Dark Portal.
+#TWISTNR: NR[1] Put the Dark Portal above the Mastermind. The Mastermind gets +1 Attack.
+#TWISTNR: NR[2-6] Put the Dark Portal in the leftmost city space that doesn't yet have a Dark Portal. Villains in that city space get +1 Attack.
+#TWISTNR: NR[7] Evil Wins!
+
+#CARDNAME: Radioactive Palladium Poisoning
+#SETUP: 8 Twists. Wound stack holds 6 Wounds per player.
+#TWIST: Each player reveals a [Tech] Hero or gains a Wound.
+#EVILWINS: If the Wound stack runs out.
+
+#CARDNAME: Replace Earth's Leaders with HYDRA
+#SETUP: 5 Twists. 3 additional Twists next to this Scheme. 18 total Bystanders in the Villain Deck.
+#RULE: Bystanders in the Villain Deck count as "Infiltrator" Villains, with Attack equal to the number of Twists next to this Scheme.
+#TWIST: Put the Twist next to this Scheme.
+#EVILWINS: If 5 "Infiltrators" escape.
+
+#CARDNAME: Super Hero Civil War
+#SETUP: 2: Use 4 Heroes in the Hero Deck. 2-3 players: 8 Twists. 4-5 players: 5 Twists.
+#TWIST: KO all the Heroes in the HQ.
+#EVILWINS: If the Hero Deck runs out.
+
+#CARDNAME: Unleash the Power of the Cosmic Cube
+#SETUP: 8 Twists.
+#TWIST: Put the Twist next to this Scheme.
+#TWISTNR: NR[5-6] Each player gains a Wound.
+#TWISTNR: NR[7] Each player gains 3 Wounds.
+#TWISTNR: NR[8] Evil Wins!
+
+
+
+

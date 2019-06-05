@@ -1,0 +1,719 @@
+
+#CARDNAME: Captain America, Secret Avenger
+#TEAM: Avengers
+
+#SUBNAME: Bold Leadership
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 0+
+You get +1 Recruit for each Hero Class you have.
+#COST: 2
+#FLAVOR: The essence of America is not law, but justice.
+
+#SUBNAME: Inspire a Nation/Inspire a Man
+#COPIES: 5
+<b>Divided</b>
+<i>Inspire a Nation (Captain America, Secret Avenger: Avengers)</i>
+#CLASS: [Strength]
+Gain a Sidekick.
+#COST: 3
+-----------------
+<i>Inspire a Man (Captain America, Secret Avenger: Avengers)</i>
+#CLASS: [Instinct]
+#ATTACK: 2
+#COST: 3
+
+#SUBNAME: Secret Avengers Assemble!
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 2+
+You get +1 Attack for each Sidekick and other Avengers Hero you played this turn.
+#COST: 5
+
+#SUBNAME: Freedom Never Dies
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5
+Whenever you play a Sidekick or another Avengers Hero this turn set that card aside. At the end of your turn, put those cards on the bottom of your deck in random order before you draw your new hand.
+#COST: 7
+
+
+#CARDNAME: Cloak & Dagger
+Avengers/Marvel Knights
+
+#SUBNAME: Above/Below
+#COPIES: 5
+<b>Divided</b>
+<i>Above (Cloak: Avengers)</i>
+#CLASS: [Covert]
+#ATTACK: 2
+#COST: 3
+-----------------
+<i>Below (Dagger: Marvel Knights)</i>
+#CLASS: [Ranged]
+#RECRUIT: 0+
+You get +3 Recruit usable only to recruit Heroes in the HQ space under the Sewers.
+#COST: 3
+
+#SUBNAME: Flee/Fight
+#COPIES: 5
+<b>Divided</b>
+<i>Flee (Cloak: Avengers)</i>
+#CLASS: [Covert]
+#RECRUIT: 2+
+<b>Phasing</b>
+{POWER Covert} You get +1 Recruit.
+#COST: 4
+-----------------
+<i>Fight (Dagger: Marvel Knights)</i>
+#CLASS: [Ranged]
+#ATTACK: 2+
+<b>Phasing</b>
+{POWER Ranged} You get +1 Attack.
+#COST: 4
+
+#SUBNAME: Darkness/Light
+#COPIES: 3
+<b>Divided</b>
+<i>Darkness (Cloak: Avengers)</i>
+#CLASS: [Covert]
+#ATTACK: 3
+{POWER Covert} Reveal the top card of your deck. If it costs 0, KO it.
+#COST: 6
+-----------------
+<i>Light (Dagger: Marvel Knights)</i>
+#CLASS: [Ranged]
+#RECRUIT: 3
+{POWER Ranged} Reveal the top card of your deck. If it costs 1 or more, draw it.
+#COST: 6
+
+#SUBNAME: Penumbra
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4
+Whenever you play a <b>Divided</b> card this turn: play both sides as if they were two different cards.
+#COST: 7
+
+
+#CARDNAME: Daredevil
+#TEAM: Avengers
+
+#SUBNAME: Dual Existence
+#COPIES: 5
+#CLASS: [Instinct]
+Look at the top two cards of your deck. Draw one and put the other back.
+#COST: 2
+#FLAVOR: In the Civil War, Danny Rand secretly donned Daredevil's costume and his mission.
+
+#SUBNAME: Roundhouse Side Kick
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Choose a number, then reveal the top card of your deck. If that card is that cost, gain a Sidekick.
+#COST: 4
+#FLAVOR: Iron Fist skill in the Daredevil uniform.
+
+#SUBNAME: Hidden Identity/Revealed Identity
+#COPIES: 3
+<b>Divided</b>
+<i>Hidden Identity (Daredevil: Avengers)</i>
+#CLASS: [Instinct]
+#RECRUIT: 3
+The next Hero you recruit this turn goes on top of your deck.
+#COST: 6
+-----------------
+<i>Revealed Identity (Iron Fist: Marvel Knights)</i>
+#CLASS: [Strength]
+#ATTACK: 0+
+You get +1 Attack for each different cost of Hero you have.
+#COST: 6
+
+#SUBNAME: Master of Martial Arts
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+{TEAMPOWER Avengers} Discard the top two cards of your deck. If they have different costs, you get +2 Attack, then repeat this process.
+#COST: 8
+
+
+#CARDNAME: Falcon
+#TEAM: Avengers
+
+#SUBNAME: Rapid Reinforcements
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2+
+Put a Hero from the HQ on the bottom of the Hero Deck.
+{POWER Tech} If that Hero had a Recruit icon, you get +1 Recruit.
+#COST: 3
+
+#SUBNAME: Talk with Birds/Squawk Back
+#COPIES: 5
+<b>Divided</b>
+<i>Talk with Birds (Falcon: Avengers)</i>
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Ranged} Gain a Sidekick.
+#COST: 4
+-----------------
+<i>Squawk Back (Redwing: Avengers)</i>
+#CLASS: [Instinct]
+Look at the top three cards of your deck. Draw one. Put the rest back in any order.
+#COST: 4
+
+#SUBNAME: Scout the Battlefield
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 0+
+You get +1 Attack for each card in the HQ with an Attack icon.
+#COST: 6
+#FLAVOR: He likes to get a bird's eye view.
+
+#SUBNAME: Fly in a Friend
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 4+
+{TEAMPOWER Avengers} You get +Attack equal to the printed Attack of a Hero in the HQ.
+#COST: 7
+
+
+#CARDNAME: Goliath
+#TEAM: Avengers
+
+#SUBNAME: Brilliant Biochemist/Massive Warrior
+#COPIES: 5
+<b>Divided</b>
+<i>Brilliant Biochemist</i>
+#CLASS: [Tech]
+#RECRUIT: 2
+<b>Size-Changing</b>: [Tech]
+#COST: 4*
+-----------------
+<i>Massive Warrior</i>
+#CLASS: [Strength]
+#ATTACK: 2
+<b>Size-Changing</b>: [Strength]
+#COST: 4*
+
+#SUBNAME: Growth Industry
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+<b>Size-Changing</b>: [Tech]
+{POWER Tech} Draw a card
+#COST: 5*
+#FLAVOR: Science keeps Goliath at the height of his power.
+
+#SUBNAME: Being Big is Best
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+<b>Size-Changing</b>: [Strength]
+You get +1 for each other card you played this turn that costs 4 or more.
+#COST: 6*
+
+#SUBNAME: Enormous Implications
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 0+
+<b>Size-Changing</b>: [Strength]
+You get +Attack equal to the cost of another card you played this turn.
+#COST: 8
+
+
+#CARDNAME: Hercules
+#TEAM: Avengers
+
+#SUBNAME: Crowd Favorite
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+{POWER Instinct} Whenever you defeat a Villain this turn, rescue a Bystander.
+#COST: 4
+#FLAVOR: Nothing attracts fans like a Greek demigod of legend.
+
+#SUBNAME: Manly Dullard/Boy Genius
+#COPIES: 5
+<b>Divided</b>
+<i>Manly Dullard (Hercules: Avengers)</i>
+#CLASS: [Strength]
+#ATTACK: 3
+To play this, you must discard a card from your hand.
+#COST: 3
+-----------------
+<i>Boy Genius (Amadeus Cho: Unaffiliated)</i>
+#CLASS: [Tech]
+Draw a card.
+#COST: 3
+
+#SUBNAME: Prince of Power
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 3
+{POWER Strength} Reveal the top card of your deck. If it costs 0, KO it.
+#COST: 5
+#FLAVOR: His strength is exceeded only by his ego.
+
+#SUBNAME: Son of Zeus
+#COPIES: 1
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+Rescue a Bystander. Then, you get +1 Attack for each Bystander in your Victory Pile.
+{TEAMPOWER Avengers} You get +1 Recruit for each Bystander in your Victory Pile.
+#COST: 7
+
+
+#CARDNAME: Hulkling
+#TEAM: Avengers
+
+#SUBNAME: Cellular Regeneration
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+<b>Size-Changing</b>: [Strength]
+You may KO a Wound from your hand or discard pile. If you do, you get +1 Attack.
+#COST: 5*
+
+#SUBNAME: Half-Kree/Half-Skrull
+#COPIES: 5
+<b>Divided</b>
+<i>Half-Kree</i>
+#CLASS: [Strength]
+#RECRUIT: 3
+<b>Size-Changing</b>: [Strength]
+Gain a Wound.
+#COST: 4*
+-----------------
+<i>Half-Skrull</i>
+#CLASS: [Covert]
+#ATTACK: 2
+<b>Size-Changing</b>: [Covert]
+#COST: 4*
+
+#SUBNAME: Impersonate
+#COPIES: 3
+#CLASS: [Covert]
+<b>Size-Changing</b>: [Covert]
+Play this card as a copy of another Hero you played this turn. This card is both [Covert] and the class and color you copy.
+#COST: 6*
+#GUN: 1
+
+#SUBNAME: Enormous Shapeshifter
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+<b>Size-Changing</b>: [Covert]
+{POWER Covert} You get +4 Attack.
+#COST: 8*
+#FLAVOR: Hulkling can shift into any form...but he prefers the big green classic.
+#GUN: 1
+
+
+#CARDNAME: Luke Cage
+#TEAM: Avengers
+
+#SUBNAME: Take a Bullet for the Team
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 1
+#ATTACK: 1
+If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+#COST: 4
+
+#SUBNAME: Cautious/Reckless
+#COPIES: 5
+<b>Divided</b>
+<i>Cautious (Luke Cage: Avengers)</i>
+#CLASS: [Strength]
+#ATTACK: 2
+#COST: 3
+-----------------
+<i>Reckless (Jessica Jones: Marvel Knights)</i>
+#CLASS: [Instinct]
+#ATTACK: 3
+Gain a Wound.
+#COST: 3
+
+#SUBNAME: Sweet Christmas
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3
+{POWER Instinct} Look at the top three cards of your deck. Discard them all or put them back in any order.
+#COST: 5
+
+#SUBNAME: Unbreakable Skin
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 6
+{TEAMPOWER Avengers} <b>Fortify</b> the Wound Stack. While it's fortified, players can't gain Wounds. At the beginning of your next turn, put this card in your discard pile.
+#COST: 8
+
+
+#CARDNAME: Patriot
+#TEAM: Avengers
+
+#SUBNAME: Intuitive Tactician
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get +1 Attack for each Hero Name among your non-S.H.I.E.L.D. Heroes.
+#COST: 3
+#FLAVOR: If Cap and Iron Man's Avengers destroy each other, the Young Avengers will be ready.
+
+#SUBNAME: New Generation of Heroes
+#COPIES: 5
+#CLASS: [Strength]
+You get +1 Recruit for each Hero Name among your non-S.H.I.E.L.D. Heroes.
+#COST: 2
+
+#SUBNAME: Incredible Effort/Effortless
+#COPIES: 3
+<b>Divided</b>
+<i>Incredible Effort (Patriot: Avengers)</i>
+#CLASS: [Covert]
+#ATTACK: 1+
+{POWER Covert} You get +3 Attack
+#COST: 5
+-----------------
+<i>Effortless (Hawkeye: Avengers)</i>
+#CLASS: [Tech]
+#RECRUIT: 3
+#COST: 5
+#FLAVOR: Using Clint's original bow, Kate Bishop is bestowed the Hawkeye mantle.
+
+#SUBNAME: Lead the Young Avengers
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 3
+Reveal the top three cards of your deck. If you revealed at least three different Hero Names this way, draw those three cards. Otherwise, put them back in any order.
+#COST: 8
+
+
+#CARDNAME: Peter Parker
+#TEAM: Avengers
+
+#SUBNAME: Conflicted Loyalties
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1
+#ATTACK: 1
+{POWER Tech} Reveal the top card of your deck. If it costs 2 or less, draw it.
+#COST: 2
+#FLAVOR: "I'll fight for the good guys! Wait, which side is that?"
+
+#SUBNAME: Spider-Man Unmasked
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1
+Gain a Sidekick.
+{POWER Instinct} Put that Sidekick on top of your deck.
+#COST: 2
+#FLAVOR: Obeying Iron Man, Spider-Man showed his face to the whole country...and lived to regret it.
+
+#SUBNAME: Protect My Family/Hot Bowl of Soup
+#COPIES: 3
+<b>Divided</b>
+<i>Protect My Family (Peter Parker: Avengers)</i>
+#CLASS: [Tech]
+#ATTACK: 1
+Rescue a Bystander.
+#COST: 2
+-----------------
+<i>Hot Bowl of Soup (Aunt May: Spider-Friends)</i>
+#CLASS: [Instinct]
+#RECRUIT: 1
+You may KO a Wound from your hand or discard pile.
+#COST: 2
+
+#SUBNAME: Reluctant Celebrity
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 2+
+{POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
+#COST: 2
+
+
+#CARDNAME: Speedball
+#TEAM: New Warriors
+
+#SUBNAME: Bounce Around
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+{POWER Covert} If there are any Bystanders in the city or KO pile, you get +2 Attack.
+#COST: 4
+#FLAVOR: The more people Speedball can bounce from, the faster he goes.
+
+#SUBNAME: Reckless Rescue Attempt
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+{POWER Ranged} Reveal the top card of the Villain Deck. If it's a Villain, rescue a Bystander. Otherwise, KO a Bystander from the Bystander Deck.
+#COST: 3
+
+#SUBNAME: Double Down/Bubble Up
+#COPIES: 3
+<b>Divided</b>
+<i>Double Down (Speedball: New Warriors)</i>
+#CLASS: [Ranged]
+Draw two cards.
+#COST: 5
+-----------------
+<i>Bubble Up (Namorita: New Warriors)</i>
+#CLASS: [Covert]
+#ATTACK: 0+
+You get +3 Attack usable only against Villains on the Bridge or against the Mastermind.
+#COST: 5
+
+#SUBNAME: Kinetic Force Field
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5
+If a Master Strike would occur, you may reveal this card to KO that Master Strike, cancel its effects, and draw a card.
+#COST: 7
+
+
+#CARDNAME: Stature
+#TEAM: Avengers
+
+#SUBNAME: Shrink to Nothing
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 0+
+<b>Size-Changing</b>: [Tech]
+Draw a card.
+{POWER Tech} You get +1 Attack.
+#COST: 2*
+#FLAVOR: "What's smaller than a micron? Let's find out...."
+
+#SUBNAME: Crush Ants/Crush File Sizes
+#COPIES: 5
+<b>Divided</b>
+<i>Crush Ants (Stature: Avengers)</i>
+#CLASS: [Strength]
+#ATTACK: 2
+<b>Size-Changing</b>: [Strength]
+{POWER Strength} Defeat a Villain that has 3 Attack or less.
+#COST: 5*
+-----------------
+<i>Crush File Sizes (Iron Lad: Avengers)</i>
+#CLASS: [Tech]
+#RECRUIT: 2
+<b>Size-Changing</b>: [Tech]
+{POWER Tech} Draw a card.
+#COST: 5*
+
+#SUBNAME: Growing Confidence
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+<b>Size-Changing</b>: [Strength]
+{POWER Strength} You get +1 Attack for each Villain in your Victory Pile that has a printed Attack 3 or less.
+#COST: 6*
+#FLAVOR: Ant-Man's daughter grew up pretty fast.
+
+#SUBNAME: Trample the Tiny
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5
+<b>Size-Changing</b>: [Strength]
+{POWER Strength} Defeat each Villain that has 4 Attack or less.
+#COST: 8*
+#GUN: 1
+
+
+#CARDNAME: Storm & Black Panther
+X-Men/Avengers
+
+#SUBNAME: Gathering Rain Clouds/Gathering Clues
+#COPIES: 5
+<b>Divided</b>
+<i>Gathering Rain Clouds (Storm: X-Men)</i>
+#CLASS: [Ranged]
+#RECRUIT: 1
+{POWER Ranged} Draw a card.
+#COST: 2
+-----------------
+<i>Gathering Clues (Black Panther: Avengers)</i>
+#CLASS: [Instinct]
+#ATTACK: 1
+{POWER Instinct} Draw a card.
+#COST: 2
+
+#SUBNAME: Lightning Strike/Pouncing Strike
+#COPIES: 5
+<b>Divided</b>
+<i>Lightning Strike (Storm: X-Men)</i>
+#CLASS: [Ranged]
+#ATTACK: 2
+Any Villain you fight on the Rooftops this turn gets -1 Attack.
+#COST: 3
+-----------------
+<i>Pouncing Strike (Black Panther: Avengers)</i>
+#CLASS: [Instinct]
+#RECRUIT: 2
+You may move a Villain to an adjacent empty city space.
+#COST: 3
+
+#SUBNAME: Tsunami of Water/Tsunami of Justice
+#COPIES: 3
+<b>Divided</b>
+<i>Tsunami of Water (Storm: X-Men)</i>
+#CLASS: [Ranged]
+#ATTACK: 3
+{POWER Ranged} You get +2 attack usable only against the Mastermind.
+#COST: 5
+-----------------
+<i>Tsunami of Justice (Black Panther: Avengers)</i>
+#CLASS: [Covert]
+#ATTACK: 3
+{POWER Covert} You may KO a card from your hand or discard pile.
+#COST: 5
+#GUN: 1
+
+#SUBNAME: King & Queen of Wakanda
+#COPIES: 1
+#CLASS: [Tech]
+Storm & Black Panther
+#ATTACK: 5
+Reveal any number of multi-class cards from your hand. Gain that many sidekicks.
+#COST: 7
+
+
+#CARDNAME: Tigra
+#TEAM: Avengers
+
+#SUBNAME: Friendship/Ferocity
+#COPIES: 5
+<b>Divided</b>
+<i>Friendship (Tigra: Avengers)</i>
+#CLASS: [Covert]
+#RECRUIT: 1
+{POWER Covert} Gain a Sidekick.
+#COST: 2
+-----------------
+<i>Ferocity (Tigra: Avengers)</i>
+#CLASS: [Instinct]
+#ATTACK: 1
+{POWER Instinct} Draw a card.
+#COST: 2
+
+#SUBNAME: Supernatural Senses
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+Look at the top card of your deck. Discard it or put it back.
+{POWER Instinct Instinct} You may KO the card you discarded this way.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Can't Surprise a Cat
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+If an Ambush effect would occur, you may discard this card to cancel that effect and draw two cards.
+#COST: 5
+
+#SUBNAME: Mystic Talisman
+#COPIES: 1
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 0+
+Recruit a Hero from the HQ for free.
+{TEAMPOWER Avengers} You get that Hero's printed Recruit and Attack.
+#COST: 7
+
+
+#CARDNAME: Vision
+#TEAM: Avengers
+
+#SUBNAME: Solar Energy
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1+
+<b>Phasing</b>
+{POWER Ranged} You get +2 Attack.
+#COST: 3
+#FLAVOR: You can't always touch the Vision, but he can always reach you.
+
+#SUBNAME: Through Solid Objects
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+<b>Phasing</b>
+Choose a Hero Class. Reveal the top card of your deck. If it's the Hero class you named, then draw it.
+#COST: 4
+
+#SUBNAME: Lighter than Air/Harder than Diamond
+#COPIES: 3
+<b>Divided</b>
+<i>Lighter than Air (Vision: Avengers)</i>
+#CLASS: [Ranged]
+#RECRUIT: 3
+<b>Size-Changing</b>: [Ranged]
+<b>Phasing</b>
+#COST: 6*
+-----------------
+<i>Harder than Diamond (Vision: Avengers)</i>
+#CLASS: [Tech]
+#ATTACK: 3
+<b>Size-Changing</b>: [Tech]
+<b>Phasing</b>
+#COST: 6*
+
+#SUBNAME: Insubstantial Accomplishments
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+<b>Phasing</b>
+When you play this, you may swap a card from your hand with the top two cards of your deck.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Wiccan
+#TEAM: Avengers
+
+#SUBNAME: Astral Projection
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+<b>Phasing</b>
+Choose a number, and then reveal the top card of your deck. If that card is that cost, then you get +1 Attack.
+#COST: 4
+
+#SUBNAME: Sorcerous Illusions
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 1+
+<b>Phasing</b>
+{POWER Covert} You get +2 Recruit.
+#COST: 2
+#FLAVOR: Wiccan inherited his magic from his mother Scarlet Witch...and perhaps her madness.
+
+#SUBNAME: Supersonic Spells/Supersonic Speed
+#COPIES: 3
+<b>Divided</b>
+<i>Supersonic Spells (Wiccan: Avengers)</i>
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Ranged} Draw a card.
+#COST: 4
+-----------------
+<i>Supersonic Speed (Speed: Avengers)</i>
+#CLASS: [Covert]
+Draw a card.
+{POWER Covert} Draw another card.
+#COST: 4
+
+#SUBNAME: Clairvoyance
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 3
+Choose a number, and then reveal the top card of your deck. If that card is that cost, draw it and draw another card.
+#COST: 7
+
+
+
+

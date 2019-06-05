@@ -1,0 +1,15 @@
+
+#CARDNAME: Mandroid
+This gets +1 Attack for each other Mandroid in your Victory Pile.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2+
+#VP: 1
+
+#CARDNAME: Cape-Killers
+S.H.I.E.L.D. Clearance
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 3*
+#VP: 1
+
+
+

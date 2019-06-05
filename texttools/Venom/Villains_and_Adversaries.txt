@@ -1,0 +1,118 @@
+
+#CARDNAME: Life Foundation
+
+#SUBNAME: Agony
+#COPIES: 1
+#AMBUSH: Reveal the top three cards of the Villain Deck. A Villain you revealed <b>Symbiote Bonds</b> with Agony. Put the rest back in any order.
+#ESCAPE: Each player reveals a [Covert]  Hero or gains a Wound.
+#ATTACK: 3
+#VP: 3
+
+#SUBNAME: Dr. Carlton Drake
+#COPIES: 1
+#FIGHT: Each [Instinct] and [Tech] Hero currently in the HQ costs 1 less this turn.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Lasher
+#COPIES: 2
+#AMBUSH: A Henchman Villain from your Victory Pile <b>Symbiote Bonds</b> with Lasher.
+#ATTACK: 2
+#VP: 2
+
+#SUBNAME: Phage
+#COPIES: 1
+#AMBUSH: A Villain from the Escape Pile or your Victory Pile <b>Symbiote Bonds</b> with Phage.
+#ATTACK: 3
+#VP: 3
+
+#SUBNAME: Riot
+#COPIES: 2
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, it <b>Symbiote Bonds</b> with Riot.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2
+#VP: 2
+
+#SUBNAME: Scream
+#COPIES: 1
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Henchman or Life Foundation Villain, it <b>Symbiote Bonds</b> with Scream.
+#ATTACK: 4
+#VP: 4
+
+
+#CARDNAME: Poisons
+
+#SUBNAME: Poison Captain America
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 4
+-----------------
+#CLASS: [Instinct]
+You get +1 Attack for each color of Hero you have. (including [Instinct] and grey)
+#ATTACK: 0+
+
+
+#SUBNAME: Poison Dr. Octopus
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Bank. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 3
+-----------------
+#CLASS: [Tech]
+Draw a card.
+#ATTACK: 1
+
+#SUBNAME: Poison Hulk
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Henchman Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 5
+-----------------
+#CLASS: [Strength]
+{POWER Strength} You get +2 Attack.
+#ATTACK: 2+
+
+
+#SUBNAME: Poison Sabretooth
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Streets. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 4
+-----------------
+#CLASS: [Instinct]
+{POWER Instinct} Look at the top card of your deck. You may KO it.
+#ATTACK: 2
+
+#SUBNAME: Poison Scarlet Witch
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 3
+-----------------
+#CLASS: [Covert]
+Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is even.)
+#ATTACK: 2
+
+#SUBNAME: Poison Spider-Man
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 2
+-----------------
+#CLASS: [Covert]
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+#ATTACK: 2
+
+#SUBNAME: Poison Storm
+#COPIES: 1
+#FIGHT: This <b>Symbiote Bonds</b> with a Villain on the Rooftops or Bridge. If already bonded or unable to bond, gain this as a Hero instead.
+#ATTACK: 3
+-----------------
+#CLASS: [Ranged]
+{POWER Ranged} You get +2 Attack usable only against the Mastermind.
+#ATTACK: 2+
+
+#SUBNAME: Symbiotic Armor
+#COPIES: 1
+#AMBUSH: This Symbiote Bonds with the Mastermind. When you fight the Mastermind, defeat Symbiotic Armor and KO one of your Heroes instead of taking a Tactic.
+#ATTACK: 1
+#VP: 6
+
+
+
+

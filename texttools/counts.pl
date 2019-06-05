@@ -31,19 +31,16 @@ END
 'b' => 'Bystanders'
 );
 
-for $c (qw(h v m hm s b)) {
-open A, "$n{$c}.txt";
-while (<A>) {
-$exp = $1 if /^#EXPANSION: (.*)/;
-$total{$c}++, ${$c}{$exp}++ if /^#CARDNAME/;
-}
-close A;
-}
-
 print " HE   V   M   H   S   B";
 for(@exps) {
- /.../;
- $e = $';
+ $e = substr($_,3);
+ for $c (qw(h v m hm s b)) {
+  open A, "$e/$n{$c}.txt";
+  while (<A>) {
+   $total{$c}++, ${$c}{$e}++ if /^#CARDNAME/;
+  }
+  close A;
+ }
  printf "%3d %3d %3d %3d %3d %3d $_\n", $h{$e}, $v{$e}, $m{$e}, $hm{$e}, $s{$e}, $b{$e};
 }
 printf "%3d %3d %3d %3d %3d %3d $_\n", $total{'h'}, $total{'v'}, $total{'m'}, $total{'hm'}, $total{'s'}, $total{'b'};

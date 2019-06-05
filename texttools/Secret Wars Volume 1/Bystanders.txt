@@ -1,0 +1,8 @@
+
+#CARDNAME: Banker
+#COPIES: 3
+#RESCUE: you get +2 Recruit, usable only to recruit Heroes in the HQ space under the Bank.
+#VP: 1
+
+
+

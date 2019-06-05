@@ -1,0 +1,84 @@
+
+#CARDNAME: Dr. Strange
+
+#LEADS: Defenders.
+Command Strike: Reveal the top three cards of the Adversary Deck. Put the Adversary you revealed with the highest printed Attack on top of that deck. Then play a Plot Twist from among the cards you revealed. Then put the rest of those cards on the bottom of that deck in random order.
+#ATTACK: 8
+#VP: 6
+
+#TACTIC: Book of the Vishanti
+#FIGHT: Each other player reveals a [Covert] Ally or discards all the cards in their hand, then draws as many cards as they discarded.
+
+#TACTIC: Crimson Bands of Cyttorak
+#FIGHT: Each other player reveals their hand, then gains a Bindings for each non-grey Ally that player has.
+
+#TACTIC: Eye of Agamotto
+#FIGHT: Reveal cards from the Ally Deck equal to the number of players. Put one of those cards into each player's discard pile.
+
+#TACTIC: Winds of Watoomb
+#FIGHT: After you draw a new hand of cards at the end of this turn, each player simultaneously passes a non-grey Ally from their hand to the hand of the player on their left.
+
+
+#CARDNAME: Nick Fury
+
+#LEADS: Avengers.
+Command Strike: Stack this Strike next to Nick Fury. Then demolish each player once for each Strike stacked here.
+#ATTACK: 9
+#VP: 6
+
+#TACTIC: Bounty on Fury's Head
+#FIGHT: KO any number of your Hydra Allies. For each Ally you KO'd this way, you may gain a Madame HYDRA.
+
+#TACTIC: Purge Hydra
+#FIGHT: Each other player reveals their hand and discards two Hydra Allies.
+
+#TACTIC: The Avengers Initiative
+#FIGHT: Each other player reveals a [Tech] Ally or chooses an Avengers Adversary from their Victory Pile and it enters the Bridge.
+
+#TACTIC: Total Fury
+#FIGHT: Defeat an Adversary whose Attack is less than the number of Hydra Allies in the KO pile.
+
+
+#CARDNAME: Odin
+
+#LEADS: Asgardian Warriors.
+Odin gets +1 Attack for each Asgardian Warrior in the city and in the Overrun Pile.
+Command Strike: Each player puts an Asgardian Warrior from their Victory Pile into an empty city space. Any player who cannot do so gains a Bindings.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Divine Justice
+#FIGHT: Each other player with a Bindings in their discard pile gains another Bindings.
+
+#TACTIC: Might of Valhalla
+#FIGHT: Draw a card for each Asgardian Warrior in your Victory Pile.
+
+#TACTIC: Riches of Asgard
+#FIGHT: You get +1 Recruit for each Asgardian Warrior in your Victory Pile.
+
+#TACTIC: Ride of the Valkyries
+#FIGHT: Each other player reveals a Foes of Asgard Ally or discards a card for each Asgardian Warrior in the Overrun Pile.
+
+
+#CARDNAME: Professor X
+
+#LEADS: X-men First Class.
+Command Strike: Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
+#ATTACK: 8
+#VP: 6
+
+#TACTIC: Cerebro Device
+#FIGHT: Reveal the top three cards of the Adversary Deck. Play any Adversaries you revealed that have "X-Treme Attack". Put the rest back in random order.
+
+#TACTIC: Mental Dominance
+#FIGHT: Stack the top three cards of the Ally Deck next to Professor X in random order as "Telepathic Pawns."
+
+#TACTIC: Mightiest Mutant Mind
+#FIGHT: Each other player reveals a Brotherhood Ally or stacks a non-grey Ally from their hand next to Professor X as a "Telepathic Pawn."
+
+#TACTIC: Telepathic Imprisonment
+#FIGHT: Each other player reveals a Brotherhood Ally or gains a Bindings.
+
+
+
+

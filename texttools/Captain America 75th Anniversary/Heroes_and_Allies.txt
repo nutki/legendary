@@ -1,0 +1,187 @@
+
+#CARDNAME: Agent X-13
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Sniper Squad
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 1
+#ATTACK: 1
+S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.: <b>Woman Out of Time</b>
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Paramilitary Ops
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn that costs 1 or more.
+#COST: 4
+#FLAVOR: WWII demonstrated the need for the paramilitary organizations that eventually became S.H.I.E.L.D.
+#GUN: 1
+
+#SUBNAME: Spy Network
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 0+
+Choose one: Gain a S.H.I.E.L.D. Officer, or you get +2 Attack.
+{POWER Covert} <b>Woman Out of Time</b>.
+#COST: 4
+
+#SUBNAME: Mobilize for War
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 4+
+KO up to two S.H.I.E.L.D. Heroes from your hand and/or discard pile.
+<b>Savior</b>: For each card KO'd this way, you get +1 Attack.
+#COST: 7
+
+
+#CARDNAME: Captain America (Falcon)
+#TEAM: Avengers
+
+#SUBNAME: Aerial Catch
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} Rescue a Bystander.
+#COST: 3
+#FLAVOR: People saved by his midair rescues call him an Angel, but that name's already taken.
+
+#SUBNAME: Winged Salvation
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+<b>Savior</b>: You get +2 Attack.
+#COST: 4
+#FLAVOR: "Saving people doesn't distract from the mission. It is the mission."
+
+#SUBNAME: Flying Shield Block
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 4
+Once per turn, if a player would gain a Wound, you may reveal this card and rescue a Bystander instead.
+#COST: 6
+
+#SUBNAME: Star-Spangled Hero
+#COPIES: 1
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 0+
+You get +2 Attack for each Hero Class you have.
+<b>Savior</b>: You get +2 Recruit for each Hero Class you have.
+#COST: 7
+
+
+#CARDNAME: Captain America 1941
+#TEAM: Avengers
+
+#SUBNAME: Devoted Patriot
+#COPIES: 5
+#CLASS: [Strength]
+Draw a card.
+{POWER Strength} <b>Man Out of Time</b>
+#COST: 3
+#FLAVOR: "With luck, HYDRA will be a distant memory by 1942."
+
+#SUBNAME: Storm the Beachhead
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 0+
+You get +1 Attack for each Hero class you have.
+<b>Man Out of Time</b>.
+#COST: 5
+
+#SUBNAME: Liberate the Prisoners
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+{TEAMPOWER Avengers} Rescue a Bystander
+#COST: 6
+#FLAVOR: "The one you save today saves you tomorrow."
+
+#SUBNAME: Punch Evil in the Face
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+<b>Savior</b>: <b>Man Out of Time</b>
+#COST: 8
+#FLAVOR: 75 years later, Cap is still finding villainous faces calling out to be punched.
+
+
+#CARDNAME: Steve Rogers, Director of S.H.I.E.L.D.
+#TEAM: S.H.I.E.L.D.
+#GUN: 1
+
+#SUBNAME: International Strike Force
+#COPIES: 5
+#CLASS: [Strength]
+You get +1 Recruit for each Hero Class you have.
+<b>Savior</b>: You get +1 Attack for each Hero Class you have.
+#COST: 3
+
+#SUBNAME: Reassign to Civilian Duty
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.: You may KO a S.H.I.E.L.D. Hero that you played this turn. If you do, rescue a Bystander.
+#COST: 5
+#FLAVOR: This ain't no desk job.
+
+#SUBNAME: Shadow of Wars Past
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+<b>Savior</b>: <b>Man Out of Time</b>
+#COST: 4
+#FLAVOR: Captain America often sees history repeat itself.
+
+#SUBNAME: Save the World
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+Rescue a Bystander
+<b>Savior</b>: You get +3 Attack.
+#COST: 8
+
+
+#CARDNAME: Winter Soldier
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Bionic Arm
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2
+{POWER Tech} <b>Man Out of Time</b>.
+#COST: 3
+#FLAVOR: Bucky's bionic arm was one of the many "gifts" given to him by the KGB.
+
+#SUBNAME: Sniper Nest
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1
+Draw a card.
+{POWER Tech} <b>Man Out of Time</b>
+#COST: 4
+#FLAVOR: Bucky has had 75 years of cryogenic sleep to practice staying still.
+#GUN: 1
+
+#SUBNAME: KGB Training
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3+
+If you played at least 7 other cards this turn you get +2 Attack.
+#COST: 5
+#GUN: 1
+
+#SUBNAME: 2&gt;4
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+A Hero in your hand gains <b>Man Out of Time</b> this turn.
+{POWER Tech} Another Hero in your hand gains <b>Man Out of Time</b> this turn.
+#COST: 7
+
+
+
+

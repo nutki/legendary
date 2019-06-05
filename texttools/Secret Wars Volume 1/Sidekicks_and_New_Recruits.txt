@@ -1,0 +1,9 @@
+
+#CARDNAME: Sidekick
+#COPIES: 15
+You may return this card to the Sidekick Stack. If you do, draw two cards.
+<i>(You can only recruit up to once Sidekick each turn, using Recruit.)</i>
+#COST: 2
+
+
+

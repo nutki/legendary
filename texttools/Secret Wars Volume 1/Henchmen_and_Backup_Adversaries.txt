@@ -1,0 +1,23 @@
+
+#CARDNAME: Ghost Racers
+#AMBUSH: Rise of the Living Dead
+#FIGHT: Reveal a [Covert] Hero or KO one of your Heroes with an Attack icon.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: M.O.D.O.K.s
+#FIGHT: KO a Hero from your discard pile or the HQ. If that Hero has a Recruit icon, you get +1 Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Thor Corps
+#FIGHT: Gain this as a Hero.
+#ATTACK: 3
+-----
+Team: Avengers
+Class: [Strength]/[Ranged]
+#RECRUIT: 2+
+{POWER Strength Ranged} You get +1 Recruit.
+
+
+

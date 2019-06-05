@@ -1,0 +1,483 @@
+
+#CARDNAME: Apocalyptic Kitty Pryde
+#TEAM: X-Men
+
+#SUBNAME: Phase Out
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+{POWER Covert} You may KO a card from your hand or discard pile. If you do, you get +1 Attack.
+#COST: 4
+
+#SUBNAME: Infiltrate HQ
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+You may put a Hero from the HQ on the bottom of the Hero Deck. The Hero that replaces it in the HQ costs 1 less during this turn.
+#COST: 3
+
+#SUBNAME: Disrupt Circuits
+#COPIES: 3
+[Covert], [Tech]
+#ATTACK: 2+
+You get +1 Attack for each [Tech] Hero in the HQ.
+#COST: 5
+#FLAVOR: Kitty goes through a lot of toasters.
+
+#SUBNAME: Untouchable
+#COPIES: 1
+#CLASS: [Covert]
+#RECRUIT: 5
+When any player defeats a Villain or Mastermind with a "Fight" effect, you may discard this card to cancel that fight effect. If you do, draw three cards.
+#COST: 7
+
+
+#CARDNAME: Black Bolt
+#TEAM: Illuminati
+
+#SUBNAME: Destructive Whisper
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+You get +1 Attack if you reveal four cards with no rules text.
+#COST: 3
+#FLAVOR: Black Bolt's voice is so destructive that even a whisper can destroy an entire city.
+
+#SUBNAME: Speak No Words
+#COPIES: 5
+[Covert], [Ranged]
+#RECRUIT: 2
+#ATTACK: 1
+#COST: 4
+
+#SUBNAME: Silence is Golden
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 4+
+Choose a card you played this turn with no rules text. You get its Recruit and Attack again.
+#COST: 6
+
+#SUBNAME: Hypersonic Scream
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 3
+For each card with no rules text you played this turn, draw a card.
+#COST: 8
+
+
+#CARDNAME: Black Panther
+#TEAM: Illuminati
+
+#SUBNAME: Catlike Reflexes
+#COPIES: 5
+[Instinct], [Covert]
+#RECRUIT: 1
+Draw a card.
+#COST: 3
+#FLAVOR: King T'Challa is a doctor of physics, a master diplomat, and a genius inventor. But sometimes he just likes kicking bad guys in the face.
+
+#SUBNAME: Multifaceted Genius
+#COPIES: 5
+[Strength], [Tech]
+#ATTACK: 2+
+You get +1 Attack for each other multicolored card you played this turn.
+#COST: 4
+#FLAVOR: Some people excel at one specific thing. Black Panther excels at almost everything.
+
+#SUBNAME: Stalk the Urban Jungle
+#COPIES: 3
+[Strength], [Covert]
+#ATTACK: 4
+Whenever you defeat a Villain on the Rooftops or Streets this turn, you may KO one of your cards or a card from your discard pile.
+#COST: 6
+#GUN: 1
+
+#SUBNAME: King of Wakanda
+#COPIES: 1
+[Instinct], [Tech]
+Gain three sidekicks.
+{TEAMPOWER Illuminati} Put them on top of your deck.
+#COST: 7
+
+
+#CARDNAME: Captain Marvel
+#TEAM: Avengers
+
+#SUBNAME: Absorb Energies
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2+
+{POWER Ranged} For each other [Ranged] Hero you have played this turn, you get +1 Recruit.
+#COST: 3
+#FLAVOR: Carol Danvers soaks up energy to empower her physical strength and photonic blasts.
+
+#SUBNAME: Supersonic Flight
+#COPIES: 5
+[Strength], [Ranged]
+#ATTACK: 1
+Draw a card.
+#COST: 3
+#FLAVOR: Once a captain in the Air Force, Carol Danvers has re-emerged from Ms. Marvel to Captain Marvel.
+
+#SUBNAME: Marvelous Strength
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{POWER Strength} For each other [Strength] Hero you have played this turn, you get +1 Attack.
+#COST: 5
+#GUN: 1
+
+#SUBNAME: Cosmic Energies
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+{POWER Ranged Ranged Strength Strength} You get +6 Attack.
+#COST: 7
+#FLAVOR: You've heard of the power of the sun, right?
+
+
+#CARDNAME: Dr. Strange
+#TEAM: Illuminati
+
+#SUBNAME: Cloak of Levitation
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Ranged} Reveal the top card of your deck. Draw it or <b>Teleport</b> it.
+#COST: 4
+#FLAVOR: "By the Hoary Hosts of Hoggoth!"
+
+#SUBNAME: Trust Me, I'm a Doctor 
+#COPIES: 5
+[Instinct], [Ranged]
+#RECRUIT: 1+
+{TEAMPOWER Illuminati} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
+#COST: 2
+
+#SUBNAME: Fight the Future
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3+
+{POWER Instinct} Reveal the top card of the Villain Deck. If it's a Villain, you get +2 Attack and may fight that Villain this turn.
+#COST: 5
+
+#SUBNAME: Sorcerer Supreme
+#COPIES: 1
+#CLASS: [Covert]
+Reveal the top three cards of your deck. Draw any number of them and <b>Teleport</b> the rest.
+#COST: 7
+
+
+#CARDNAME: Lady Thor
+#TEAM: Avengers
+
+#SUBNAME: Mysterious Origin
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+Once per turn, if you made at least 6 Recruit this turn, draw a card.
+#COST: 3
+
+#SUBNAME: Chosen by Asgard
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+#ATTACK: 0+
+Once per turn, if you made at least 6 Recruit this turn, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: Heir to the Hammer
+#COPIES: 3
+[Strength], [Ranged]
+#ATTACK: 4+
+{POWER Ranged Strength} You get +2 Attack.
+#COST: 6
+#FLAVOR: If Mjolnir deems her worthy, who would dare argue?
+
+#SUBNAME: Living Thunderstorm
+#COPIES: 1
+#CLASS: [Strength]
+#RECRUIT: 4
+#ATTACK: 0+
+One per turn, if you made at least 6 Recruit this turn, you get +6 Attack.
+#COST: 8
+#FLAVOR: Very few can wield Mjolnir. Even fewer can withstand a hit from it.
+
+
+#CARDNAME: Magik
+#TEAM: X-Men
+
+#SUBNAME: Rally the New Mutants
+#COPIES: 5
+#CLASS: [Covert]
+Gain a Sidekick.
+{POWER Covert} Gain another Sidekick.
+#COST: 2
+#FLAVOR: It's easy to gather a group when you can summon them through sorcerous portals.
+
+#SUBNAME: Travel through Limbo
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1+
+<b>Teleport</b>
+{POWER Ranged} You get +2 Attack.
+#COST: 3
+#FLAVOR: Any distance is two steps away when those two steps are through a hell dimension.
+
+#SUBNAME: Dimensional Portal
+#COPIES: 3
+[Covert], [Ranged]
+#ATTACK: 2+
+<b>Teleport</b>
+For each Sidekick you played this turn, you get +1 Attack.
+#COST: 5
+
+#SUBNAME: Wield the Soulsword
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 2+
+<b>Teleport</b>
+Choose a Villain or Mastermind in your Victory Pile. You get +Attack equal to its printed VP.
+#COST: 7
+
+
+#CARDNAME: Maximus
+#TEAM: Cabal
+
+#SUBNAME: Mental Domination
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{POWER Covert} Defeat a Henchman Villain for free.
+#COST: 3
+#FLAVOR: As a gifted inventor, Maximus often creates devices to enhance his telepathic abilities.
+
+#SUBNAME: Enslave the Will
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+{POWER Tech} Whenever you defeat a Villain this turn, you gain a Sidekick.
+#COST: 4
+#FLAVOR: Someday, Maximus will use his mind control powers to amass an army large enough to overthrow his brother, Black Bolt.
+
+#SUBNAME: Pieces on a Chessboard
+#COPIES: 3
+[Covert], [Tech]
+#ATTACK: 3
+You may have a Henchman Villain from your Victory Pile enter the city. If you do, draw a card.
+#COST: 5
+
+#SUBNAME: Inhuman Mastery
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+Each other player reveals a [Tech] hero or chooses a Henchman Villain from their Victory Pile. You defeat all those Henchmen for free.
+{TEAMPOWER Cabal} You get +1 Attack for each Henchman you defeated this turn.
+#COST: 7
+
+
+#CARDNAME: Namor, the Sub-Mariner
+#TEAM: Cabal
+
+#SUBNAME: Lead the Armies of Atlantis
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} Gain a Sidekick.
+#COST: 3
+
+#SUBNAME: Ruler of the Seas
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+{POWER Strength} You get +2, usable only against Villains on the Bridge or the Mastermind.
+#COST: 4
+#FLAVOR: Namor is lord of two-thirds of the Earth: all the watery bits.
+
+#SUBNAME: Feed the Sharks
+#COPIES: 3
+[Strength], [Instinct]
+#ATTACK: 2
+You may KO a card from your hand or discard pile. If you do, draw a card.
+#COST: 6
+
+#SUBNAME: Imperius Rex
+#COPIES: 1
+#CLASS: [Strength]
+Defeat a Villain for free.
+{POWER Instinct Instinct Strength Strength} Instead, defeat the Mastermind once for free.
+#COST: 7
+
+
+#CARDNAME: Old Man Logan
+#TEAM: X-Men
+
+#SUBNAME: Last Survivor
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+{POWER Instinct} You may KO a card from your hand or discard pile. If you KO a wound this way, draw a card.
+#COST: 3
+
+#SUBNAME: Loner
+#COPIES: 5
+[Instinct], [Covert]
+#ATTACK: 2+
+If you don't recruit any heroes this turn, you get +2 Attack.
+#COST: 5
+#FLAVOR: In this parallel dimension, all the Heroes are dead, and now the world has been carved up by Villains.
+
+#SUBNAME: Rage Out
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3+
+{POWER Instinct} <b>Cross-Dimensional Wolverine Rampage</b>. For each other player who gained a Wound this way, you get +1 Attack.
+#COST: 6
+
+#SUBNAME: No More Heroes
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5+
+Reveal your hand. You get +5 Attack if you haven't played any S.H.I.E.L.D. or HYDRA cards this turn and don't have any in your hand.
+#COST: 7
+
+
+#CARDNAME: Proxima Midnight
+#TEAM: Cabal
+
+#SUBNAME: Inspiration Through Power
+#COPIES: 5
+[Instinct], [Covert]
+#RECRUIT: 1
+#ATTACK: 1
+#COST: 2
+
+#SUBNAME: Master Combatant
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+If the most recent Hero you have played this turn has a Recruit icon, you get +2 Recruit. If it has an Attack icon, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: General of the Black Order
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 3
+{POWER Instinct} You get +3 Recruit.
+#COST: 5
+#FLAVOR: Proxima rose through the ranks of Thanos' army with brutal effectiveness.
+
+#SUBNAME: Supernova Spear
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 4+
+#ATTACK: 4+
+{POWER Covert} You get +4 Recruit and +4 Attack.
+#COST: 8
+
+
+#CARDNAME: Superior Iron Man
+#TEAM: Illuminati
+
+#SUBNAME: Armor Upgrades
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1+
+{POWER Tech} You get +2 Attack.
+#COST: 2
+#FLAVOR: Stark Technology is improving exponentially.
+
+#SUBNAME: Optimized Technology
+#COPIES: 5
+[Tech], [Ranged]
+#ATTACK: 2
+Draw a card.
+#COST: 5
+#FLAVOR: Tony Stark uses his new psionically-controlled Endo-Sym armor to back up his claims of "Superiority."
+
+#SUBNAME: Superior to Others
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 2
+{POWER Ranged} Look at the top two cards of your deck. If one of them has a higher cost than the other, draw it. Put the rest back in any order.
+#COST: 3
+
+#SUBNAME: #Humblebrag
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+Draw a card for each other player who has fewer cards in their Victory Pile than you.
+#COST: 8
+
+
+#CARDNAME: Thanos
+#TEAM: Cabal
+
+#SUBNAME: Revel in Destruction 
+#COPIES: 5
+[Strength], [Ranged]
+#RECRUIT: 2+
+{TEAMPOWER Cabal} KO a Bystander from the Bystander Stack. Then, you get +1 Recruit for every three Bystanders in the KO pile.
+#COST: 3
+
+#SUBNAME: Transdimensional Overlord
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+<b>Teleport</b>
+You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.
+#COST: 5
+
+#SUBNAME: Galactic Domination
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 4
+{POWER Ranged} Each other player reveals a [Ranged] Hero or chooses a Bystander from their Victory Pile. You "rescue" those bystanders.
+#COST: 6
+
+#SUBNAME: Utter Annihilation
+#COPIES: 1
+#CLASS: [Ranged]
+KO six Bystanders from the Bystander Stack. Then, defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in the KO pile.
+#COST: 8
+
+
+#CARDNAME: Ultimate Spider-Man
+#TEAM: Spider Friends
+
+#SUBNAME: Marvel Team-Up
+#COPIES: 5
+[Strength], [Instinct]
+Gain a Sidekick.
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+#COST: 2
+
+#SUBNAME: Leaping Spider
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+{POWER Strength} You get +2 Attack.
+#COST: 2
+
+#SUBNAME: Web-Slinger
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 0+
+You get +2 Attack usable only against the Mastermind or Villains on the Rooftops or Bridge.
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+#COST: 2
+
+#SUBNAME: Hero from Another Dimension
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+You get +2 Attack for each other card you have played this turn that costs 1 or 2.
+#COST: 2
+
+
+
+

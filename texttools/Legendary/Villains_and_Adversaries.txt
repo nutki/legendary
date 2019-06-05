@@ -1,0 +1,203 @@
+
+#CARDNAME: Brotherhood
+
+#SUBNAME: Blob
+#COPIES: 2
+You can't defeat Blob unless you have an X-Men Hero.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Juggernaut
+#COPIES: 2
+#AMBUSH: Each player KOs two Heroes from their discard pile.
+#ESCAPE: Each player KOs two Heroes from their hand.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Mystique
+#COPIES: 2
+#ESCAPE: Mystique becomes a Scheme Twist that takes effect immediately.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Sabretooth
+#COPIES: 2
+#FIGHT: Each player reveals an X-Men Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Enemies of Asgard
+
+#SUBNAME: Destroyer
+#COPIES: 1
+#FIGHT: KO all your S.H.I.E.L.D. Heroes.
+#ESCAPE: Each player KOs two of their Heroes.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Enchantress
+#COPIES: 2
+#FIGHT: Draw three cards
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Frost Giant
+#COPIES: 3
+#FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Ymir, Frost Giant King
+#COPIES: 2
+#AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+#FIGHT: Choose a player. That player KOs any number of Wounds from their hand and discard pile.
+#ATTACK: 6
+#VP: 4
+
+
+#CARDNAME: HYDRA
+
+#SUBNAME: Endless Armies of HYDRA
+#COPIES: 3
+#FIGHT: Play the top two cards of the Villain Deck.
+#ATTACK: 4
+#VP: 3
+
+#SUBNAME: HYDRA Kidnappers
+#COPIES: 3
+#FIGHT: You may gain a S.H.I.E.L.D. Officer.
+#ATTACK: 3
+#VP: 1
+
+#SUBNAME: Supreme HYDRA
+#COPIES: 1
+Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
+#ATTACK: 6
+#VP: 3*
+
+#SUBNAME: Viper
+#COPIES: 1
+#FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Masters of Evil
+
+#SUBNAME: Baron Zemo
+#COPIES: 2
+#FIGHT: For each of your Avengers Heroes, rescue a Bystander.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Melter
+#COPIES: 2
+#FIGHT: Each player reveals the top card of their deck. For each card, you choose to KO it or put it back.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Ultron
+#COPIES: 2
+Ultron is worth +1 VP for each [Tech] Hero you have among all your cards at the end of the game.
+#ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
+#ATTACK: 6
+#VP: 2+
+
+#SUBNAME: Whirlwind
+#COPIES: 2
+#FIGHT: If you fight Whirlwind on the Rooftops or Bridge, KO two of your Heroes.
+#ATTACK: 4
+#VP: 2
+
+
+#CARDNAME: Radiation
+
+#SUBNAME: Abomination
+#COPIES: 2
+#FIGHT: If you fight Abomination on the Streets or Bridge, rescue three Bystanders.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: The Leader
+#COPIES: 2
+#AMBUSH: Play the top card of the Villain Deck.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Maestro
+#COPIES: 2
+#FIGHT: For each of your [Strength] Heroes, KO one of your Heroes.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Zzzax
+#COPIES: 2
+#FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Skrulls
+
+#SUBNAME: Paibok the Power Skrull
+#COPIES: 1
+#FIGHT: Choose a Hero in the HQ for each player. Each player gains that Hero.
+#ATTACK: 8
+#VP: 3
+
+#SUBNAME: Skrull Queen Veranke
+#COPIES: 1
+#AMBUSH: Put the highest-cost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
+#FIGHT: Gain that Hero.
+#ATTACK: *
+#VP: 4
+
+#SUBNAME: Skrull Shapeshifters
+#COPIES: 3
+#AMBUSH: Put the rightmost Hero from the HQ under this Villain. This Villain's Attack is equal to that Hero's Cost.
+#FIGHT: Gain that Hero
+#ATTACK: *
+#VP: 2
+
+#SUBNAME: Super-Skrull
+#COPIES: 3
+#FIGHT: Each player KOs one of their Heroes.
+#ATTACK: 4
+#VP: 2
+
+
+#CARDNAME: Spider-Foes
+
+#SUBNAME: Doctor Octopus
+#COPIES: 2
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw eight cards instead of six.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Green Goblin
+#COPIES: 2
+#AMBUSH: Green Goblin captures a Bystander.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: The Lizard
+#COPIES: 2
+#FIGHT: If you fight the Lizard in the Sewers, each other player gains a Wound.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Venom
+#COPIES: 2
+You can't defeat Venom unless you have a [Covert] Hero.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5
+#VP: 3
+
+
+
+

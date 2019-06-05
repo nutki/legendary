@@ -1,0 +1,165 @@
+
+#CARDNAME: Arcade
+#START: Arcade captures 5 Human Shields.
+#LEADS: Murderworld
+#STRIKE: Arcade captures a random Bystander from each player's Victory Pile as a Human Shield. Each player who didn't have a Bystander gains a Wound instead.
+#ATTACK: 3*
+#VP: 5
+
+#CARDNAME: Epic Arcade
+#START: Arcade captures 8 Human Shields. Play a random Horror.
+#LEADS: Murderworld
+#STRIKE: Arcade captures two random Bystanders from each player's Victory Pile as a Human Shield. Each player who didn't have two Bystanders gains a Wound instead.
+#ATTACK: 4*
+#VP: 5
+
+#TACTIC: I Love a Parade!
+#FIGHT: Arcade captures two Human Shields. Play an extra card from the Villain Deck next turn.
+
+#TACTIC: I Need an Audience
+#FIGHT: Arcade captures Human Shields equal to the number of Villains in the city.
+
+#TACTIC: Roulette Wheel of Death
+#FIGHT: Arcade captures a random Bystander as a Human Shield from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
+
+#TACTIC: Welcome to my Theme Park!
+#FIGHT: Arcade and each Murderworld Villain in the city capture two Human Shields.
+
+
+#CARDNAME: Dark Phoenix
+#LEADS: Hellfire Club
+#STRIKE: KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck.
+Dark Phoenix Wins: When the Hero Deck is empty.
+#ATTACK: 13
+#VP: 7
+
+#CARDNAME: Epic Dark Phoenix
+#LEADS: Hellfire Club
+#STRIKE: KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck. Then, each player plays a Hellfire Club card from their victory Pile. Next, play a random Horror.
+Dark Phoenix Wins: When the Hero Deck is empty.
+#ATTACK: 15
+#VP: 7
+
+#TACTIC: Burn the World to Ashes
+#FIGHT: Each other player discards each card from their hand that has the same name as any card in the KO pile.
+
+#TACTIC: Consume an Entire Galaxy
+#FIGHT: Each other player chooses a card from their discard pile that costs 1 or more and KOs it.
+
+#TACTIC: Fiery Reincarnation
+#FIGHT: Gain a Hero from the KO pile that costs 7 or more.
+
+#TACTIC: Worship Me as a God
+#FIGHT: Each other player gains two 0-cost cards from the KO pile.
+
+
+#CARDNAME: Deathbird
+Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
+#LEADS: Shi'ar Imperial Guard and a Shi'ar Henchmen Group.
+#STRIKE: If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
+#ATTACK: 8+
+#VP: 6
+
+#CARDNAME: Epic Deathbird
+Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
+#LEADS: Shi'ar Imperial Guard and a Shi'ar Henchmen Group.
+#STRIKE: If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
+#ATTACK: 8+
+#VP: 6
+
+#TACTIC: Shi'ar Elite Bodyguards
+#FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "<b>Escape</b>: Shuffle this card back into Deathbird's Mastermind Tactics as another Tactic."
+
+#TACTIC: Shi'ar Extermination Legion
+#FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is: "<b>Escape</b>: Each player discards two cards."
+
+#TACTIC: Shi'ar Hovertake Battalion
+#FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is: "<b>Escape</b>: Each player gains a Wound."
+
+#TACTIC: Shi'ar Master Spies
+#FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "<b>Escape</b>: This card becomes a Scheme Twist that takes effect immediately."
+
+
+#CARDNAME: Mojo
+#START: Mojo captures 3 Human Shields. All Bystanders in Victory Piles are worth 3 VP.
+#LEADS: Mojoverse
+#STRIKE: Mojo captures a Human Shield. Each player reveals a [Tech] Hero or discards a card at random.
+#ATTACK: 6*
+#VP: 5
+
+#CARDNAME: Epic Mojo
+#START: Mojo captures 6 Human Shields. Play a random Horror.
+All Bystanders in Victory Piles are worth 4 VP.
+#LEADS: Mojoverse
+#STRIKE: Mojo and each Mojoverse Villain capture a Human Shield. Each player reveals a [Tech] Hero or discards down to 4 cards each.
+#ATTACK: 7*
+#VP: 5
+
+#TACTIC: Billions of TV Viewers
+#FIGHT: Each player reveals a [Tech] Hero or chooses a random Bystander from their Victory Pile. Mojo captures those Bystanders as Human Shields.
+
+#TACTIC: Brain-Melting TV Marathon
+#FIGHT: Each other player without a Mojo Tactic in their Victory Pile gains a Wound.
+
+#TACTIC: Cross-Dimensional Marketing
+#FIGHT: You get +1 Recruit for each Bystander in your Victory Pile. Mojo captures a Human Shield.
+
+#TACTIC: Mojo Branding Opportunity
+#FIGHT: Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a HUman Shield.
+
+
+#CARDNAME: Onslaught
+Each player's hand size is 1 less.
+#LEADS: Dark Descendants
+#STRIKE: KO all Heroes Dominated by Onslaught. Then each player reveals their hand and chooses one of their non-grey Heroes. Onslaught Dominates those Heroes.
+#ATTACK: 10+
+#VP: 7
+
+#CARDNAME: Epic Onslaught
+Each player's hand size is 1 less.
+#LEADS: Dark Descendants
+#STRIKE: KO all Heroes Dominated by Onslaught. Then each player reveals their hand and chooses two of their non-grey Heroes. Onslaught Dominates those Heroes. Then play a random Horror.
+#ATTACK: 12+
+#VP: 7
+
+#TACTIC: Godlike Psionic Entity
+#FIGHT: Onslaught Dominates all five Heroes from the HQ.
+
+#TACTIC: Sins of X-Men Past
+#FIGHT: Each other player reveals the top six cards of their deck and chooses an X-Men Hero revealed this way. Onslaught Dominates those Heroes. Put the rest back in random order.
+
+#TACTIC: Xavier and Magneto Combined
+#FIGHT: Reveal the top three cards of the Hero Deck. Onslaught Dominates all the X-Men and Brotherhood Heroes you revealed. Put the rest back in random order.
+
+#TACTIC: Worldwide Mental Control
+#FIGHT: Onslaught Dominates four 0-cost Heroes from the KO pile. The next time a player fights Onslaught, KO those 0-cost Heroes.
+
+
+#CARDNAME: Shadow King
+#LEADS: Shadow-X
+#STRIKE: KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+#ATTACK: 7+
+#VP: 6
+
+#CARDNAME: Epic Shadow King
+#START: Play two random Horrors.
+#LEADS: Shadow-X
+#STRIKE: KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Fiend of the Astral Plane
+#FIGHT: Each other player reveals their hand and shuffles two cards with Recruit icons from their hand back into their deck.
+
+#TACTIC: Poison their Minds
+#FIGHT: Each other player reveals their hand and chooses one of their non-grey Heroes. Shadow King Dominates those Heroes.
+
+#TACTIC: Psychic Seduction
+#FIGHT: Shadow King Dominates each Hero that costs 5 or less from the HQ.
+
+#TACTIC: Telepathic Betrayal
+#FIGHT: If the "Betrayal of the Shadow" Trap is in any Victory Pile or the KO pile, put it on top of the Villain Deck.
+
+
+
+

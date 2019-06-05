@@ -1,0 +1,14 @@
+
+#CARDNAME: Maggia Goons
+{BRIBE}
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4*
+#VP: 1
+
+#CARDNAME: Phalanx
+#FIGHT: Reveal a [Tech] Hero or KO one of your Heroes with an Attack icon.
+#ATTACK: 3
+#VP: 1
+
+
+

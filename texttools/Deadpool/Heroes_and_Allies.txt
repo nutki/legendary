@@ -1,0 +1,187 @@
+
+#CARDNAME: Bob, Agent of HYDRA
+#TEAM: HYDRA
+
+#SUBNAME: Bullets Flying, Bob Hiding
+#COPIES: 5
+#CLASS: [Covert]
+<b>Excessive Violence</b>: Draw a card.
+#RECRUIT: 2 1/2
+#COST: 3
+#FLAVOR: "When I'm involved in excessive violence, I'm usually the victim!"
+#GUN: 1
+
+#SUBNAME: HYDRA Half-Wit
+#COPIES: 5
+#CLASS: [Tech]
+Reveal the top card of your deck. If it's HYDRA or S.H.I.E.L.D., draw it.
+#ATTACK: 1 1/2
+#COST: 2
+#FLAVOR: "At first I thought HYDRA was a facial moisturizer."
+#GUN: 1
+
+#SUBNAME: How Do I Get Out of Here??
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 4
+{POWER Covert} Look at the top card of another player's deck. Ask them a yes or no question about it. If they guess right, then they draw that card. If not, then you draw a card.
+#COST: 6
+
+#SUBNAME: Epic Middle Manager
+#COPIES: 1
+#CLASS: [Covert]
+<b>Excessive Violence</b>: KO up to two HYDRA and/or S.H.I.E.L.D. Heroes from your discard pile. Draw a card for each Hero KO'd this way.
+#ATTACK: 5
+#COST: 8
+#GUN: 1
+
+
+#CARDNAME: Deadpool
+#TEAM: Mercs for Money
+
+#SUBNAME: It'll Grow Back
+#COPIES: 5
+#CLASS: [Instinct]
+If you have a Wound in your hand or discard pile, KO it at you get +1 Attack. Otherwise, gain a Wound. These days, getting wounded mostly just pisses me off.
+#ATTACK: 2 1/2+
+#COST: 4
+
+#SUBNAME: Nighttime Is the Right Time
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+If it's between 8 p.m. and midnight, you get +2 Attack. Otherwise, you get +2 Recruit.
+{POWER Tech} Screw it, just take both!
+#COST: 3
+#FLAVOR: "...for Pillow Fights and Gun Fights! Wait, which one is this again?"
+
+#SUBNAME: Running Commentary
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3 1/2+
+You get +1/2 Attack for each other card with flavor text you played this turn. Now maybe you'll stop telling me to shut up.
+#COST: 5
+#FLAVOR: You also get another +13 Attack, but this doesn't count because it's flavor text.
+
+#SUBNAME: Deadpool Rage!
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5
+<b>Excessive Violence:</b> Take another turn after this one. But don't use this ability more than once per game - trilogies are stupid.
+#COST: 7
+#FLAVOR: Hey Wolverine! I've had a breakthrough!
+
+
+#CARDNAME: Slapstick
+#TEAM: Mercs for Money
+
+#SUBNAME: Napoleon Complex
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2+
+{POWER Ranged} If any other players are taller than you, draw a card. If any other players are shorter than you, you get +1 Recruit. If both, get both!
+#COST: 4
+#FLAVOR: For an ultra-violent, goofball, living cartoon, Slapstick has some serious issues.
+
+#SUBNAME: Saturday Morning Harpoons
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2 1/2
+<b>Excessive Violence:</b> Rescue a Bystander.
+#COST: 3
+#FLAVOR: And they say cartoons are too violent these days.
+
+#SUBNAME: Surprise Chainsaw
+#COPIES: 3
+#CLASS: [Strength]
+<b>Excessive Violence</b>: When you have a new hand of cards at the end of this turn, draw an extra card.
+#ATTACK: 4 1/2
+#COST: 6
+#FLAVOR: This card's a little hacky.
+
+#SUBNAME: Electroplasmic Insanity
+#COPIES: 1
+#CLASS: [Ranged]
+<b>Excessive Violence</b>: Recruit a Hero from the HQ for free. Then, you may shuffle your discard pile into your deck.
+#ATTACK: 5
+#COST: 8
+
+
+#CARDNAME: Solo
+#TEAM: Mercs for Money
+#GUN: 1
+
+#SUBNAME: Half-Cocked
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1 1/2
+#ATTACK: 1 1/2
+#COST: 2
+#FLAVOR: Two halves make a bullet whole. Also, you're a bulletwhole.
+
+#SUBNAME: Merc's Gotta Get Paid
+#COPIES: 5
+#CLASS: [Instinct]
+Excessive Violence: You get +1 Recruit.
+#RECRUIT: 0+
+#ATTACK: 2 1/2
+#COST: 3
+#FLAVOR: Mercenary - (noun) - one who converts carnage into cash.
+
+#SUBNAME: Guns on My Guns
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3 1/2
+{POWER Tech} Does the top card of your deck have a gun in the art? If so, draw that gun!
+#COST: 5
+#FLAVOR: Who can make me a gun that shoots our little guns?
+
+#SUBNAME: Cut in Half
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 2 1/2
+Choose a Villalin. Cut its Attack in half this turn.
+{TEAMPOWER Mercs for Money} Cut the Mastermind's Attack in half for one fight this turn.
+#COST: 7
+#FLAVOR: So 11 becomes 5 1/2. This is like 4th grade math - Try to keep up.
+
+
+#CARDNAME: Stingray
+#TEAM: Mercs for Money
+
+#SUBNAME: Deck Chairs on the Titanic
+#COPIES: 5
+#CLASS: [Tech]
+Draw a card.
+You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+#ATTACK: 1 1/2
+#COST: 4
+
+#SUBNAME: Superpowered Swimsuit
+#COPIES: 5
+#CLASS: [Tech]
+Draw a card.
+{POWER Tech} You get +2 Attack, usable only against Villains in the Sewers or Bridge or the Mastermind.
+#ATTACK: 1/2+
+#COST: 2
+#FLAVOR: Breathing underwater is the best superpower, if you don't count any other superpowers.
+
+#SUBNAME: Sting of the Stingray's Sting
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 3
+<b>Excessive Violence:</b> You may KO one of your cards or a card from your discard pile.
+#COST: 5
+#FLAVOR: Wait, isn't shooting electricity underwater a terrible idea?
+
+<i>PhD in Oceanography (1 copy)</i>
+#CLASS: [Tech]
+You may KO a card from your hand or discard pile.
+{TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.
+#ATTACK: 4+
+#COST: 8
+
+
+
+

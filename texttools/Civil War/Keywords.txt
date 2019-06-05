@@ -1,0 +1,36 @@
+
+<b>Divided</b>
+Matching the theme of division and duality, Civil War introduces "Divided Cards," which have two miniature cards printed on the same card.
+* You recruit a Divided Card from the HQ as normal by paying its cost. Each side of a Divided Card shows the same cost. (If it costs "3" on each side, you pay only 3 Recruit, not 6.)
+* When you play a Divided Card, you choose which side to play. You generate all the Recruit, Attack, and special abilities of that side as normal. You ignore the other side, as if it doesn't exist.
+* Each side of a Divided Card has a different Hero Class, like [Strength] or [Ranged]. You can play the [Strength] side to get ready to use a Superpower Ability that triggers on [Strength] cards later in your turn.
+* Different sides of Divided Cards often let you choose between Recruit, Attack, drawing cards, and other effects. Choose carefully which side to play!
+* While a Divided Card is in your hand or the HQ, it counts as all its Hero Classes, Teams and Hero Names. But once you play it, the card only counts as the side you chose.
+* When sorting and setting up, always use the Hero Name on the left side of a Divided Card.
+* A Divided Card is one card, not two. So if you have to "discard two cards," "draw two cards," or count the number of cards in your hand, a Divided Card only counts as one card.
+
+<b>Size-Changing</b>
+This keyword represents Heroes and Villains using superpowers to massively change their size.
+* Some Hero cards say, "Size-Changing: [Covert]." This means "You can recruit this card for 2 Recruit less if you played a [Covert] card this turn."
+* Likewise, some Villain cards say, "Size-Changing: [Tech]." This means "You can fight this Villain for 2 Attack less if you played a [Tech] card this turn."
+* Some Divided Cards say "Size-Changing: [Tech]" on one side and "Size-Changing: [Strength]" on the other side. You can recruit either side of the card with its own Size-Changing discount, but you can't get both discounts at once.
+
+<b>Phasing</b>
+This keyword represents Heroes becoming insubstantial and moving through solid objects.
+* During your turn, if a card with Phasing is in your hand, you may swap it with the top card of your deck.
+* This lets you get a different card instead, save a crucial Phasing card for the next turn, or set up a combo that cares about the top card of your deck.
+* Swapping cards this way isn't "playing a card" or "drawing a card," so it doesn't count for other abilities that trigger on those things.
+
+<b>Fortify</b>
+This keyword represents Villains setting up nasty traps for the players.
+* Some Villains say things like "Escape: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought."
+* Put this Villain on or near the specified place. While it's there, it has the listed effect. Any player can fight that Villain as normal to end that Fortify effect and put that Villain into their Victory Pile.
+* If a card would fortify a place, don't do anything if there's already a Villain fortifying that place.
+
+<b>S.H.I.E.L.D. Clearance</b>
+This keyword represents pro-registration S.H.I.E.L.D. forces that can be only defeated with the help of S.H.I.E.L.D. information.
+* If a Villain says "S.H.I.E.L.D. Clearance," then you must discard a S.H.I.E.L.D. Hero as an additional cost to fight that Villain.
+* Likewise, if a Mastermind has "Double S.H.I.E.L.D. Clearance," then you must discard two S.H.I.E.L.D. Heroes each time you fight them.
+* If you are playing with HYDRA Heroes, you may discard them instead of S.H.I.E.L.D. Heroes.
+
+

@@ -1,0 +1,27 @@
+
+#CARDNAME: Age of Ultron
+#SETUP: 11 Twists. 4-5 Players: Add another Hero.
+#TWIST: Put the top card of the Hero Deck next to the Scheme in an "Evolution" Pile. Then this Twist enters the city as an "Evolved Ultron" Villain.
+#RULE: Evolved Ultrons have 4 Attack and are <b>Empowered</b> by each color in the Evolution pile. They're worth 6VP.
+#EVILWINS: When 7 Evolved Ultrons are in the city and/or Escape Pile.[/q]
+
+#CARDNAME: Pull Earth into Medieval Times
+#SETUP: 9 Twists.
+#TWISTNR: NR[1-6] Until the start of your next turn, all Villains and Mastermind everywhere have <b>Chivalrous Duel</b>.
+#TWISTNR: NR[7-9] Each player puts a Villains from the Victory Pile into the Escape Pile.
+#EVILWINS: When 3 Villains per player have escaped.
+
+#CARDNAME: Transform Commuters into Giant Ants
+#SETUP: Twists equal to the number of players plus 6.
+#TWIST: STack this Twist next to the Scheme. Then for each Twist in that stack, put a Bystander face down next to the Mastermind as a 2A "Giant Ant" Villain. When you fight one, rescue it as a Bystander.
+#EVILWINS: When ther are 10 Giant Ants next to the Mastermind.
+
+#CARDNAME: Trap Heroes in the Microverse
+#SETUP: 11 Twists. Add all 14 cards for and extra Hero the Villain Deck.
+#RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
+#TWIST: Play two cards from the Villain Deck.
+#EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+
+
+
+

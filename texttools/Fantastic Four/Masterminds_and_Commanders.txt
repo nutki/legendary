@@ -1,0 +1,46 @@
+
+#CARDNAME: Galactus
+
+Cosmic Threat: [Strength] [Instinct] [Covert] [Tech] [Ranged]
+#LEADS: Heralds of Galactus
+#STRIKE: Destroy the city space closest to Galactus. Any Villain there escapes. Put this Master Strike there.
+Galactus Wins: When the city is destroyed.
+#ATTACK: 20*
+#VP: 7
+
+#TACTIC: Cosmic Entity
+#FIGHT: Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then draws that many cards.
+
+#TACTIC: Force of Eternity
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw six extra cards, then discard six cards.
+
+#TACTIC: Panicked Mobs
+#FIGHT: Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then rescues that many Bystanders.
+
+#TACTIC: Sunder the Earth
+#FIGHT: Each other player KOs all Heroes from their discard pile with the same card name as a Hero in the HQ.
+
+
+#CARDNAME: Mole Man
+
+Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
+#LEADS: Subterranea
+#STRIKE: All Subterranea Villains in the city escape. If any Villains escaped this way, each player gains a Wound.
+#ATTACK: 7+
+#VP: 6
+
+#TACTIC: Dig to Freedom
+#FIGHT: Each other player chooses a Subterranea Villain in their Victory Pile and puts it into the Escaped Villains pile.
+
+#TACTIC: Master of Monsters
+#FIGHT: If this is not the final Tactic, reveal the top six cards of the Villain Deck. Play all the Subterranea Villains you revealed. Put the rest on the bottom of the Villain Deck in random order.
+
+#TACTIC: Secret Tunnel
+#FIGHT: You get +6 Attack usable only against Villains in the Streets.
+
+#TACTIC: Underground Riches
+#FIGHT: You get +6 Recruit usable only to recruit Heroes in the HQ space under the Streets.
+
+
+
+

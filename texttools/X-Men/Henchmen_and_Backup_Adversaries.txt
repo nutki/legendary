@@ -1,0 +1,30 @@
+
+#CARDNAME: The Brood
+This Villain gets +1 Attack for each Bystander in the KO pile.
+#FIGHT: KO one of your Heroes. Then KO a Bystander from the Bystander Stack.
+#ATTACK: 1+
+#VP: 1
+
+#CARDNAME: Hellfire Cult
+#FIGHT: Reveal the top card of your deck. If it costs 0, KO it. Otherwise, you get +1 Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Sapien League
+#FIGHT: KO one of your Heroes. Then, reveal the top card of the Villain Deck. If it's a Henchman Villain, play it.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Shi'ar Death Commandos
+#AMBUSH: The Villain captures a Human Shield.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2*
+#VP: 1
+
+#CARDNAME: Shi'ar Patrol Craft
+#FIGHT: The next Hero you recruit this turn has {SOARING FLIGHT}.
+#ATTACK: 3
+#VP: 1
+
+
+

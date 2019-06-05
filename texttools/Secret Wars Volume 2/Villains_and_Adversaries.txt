@@ -1,0 +1,200 @@
+
+#CARDNAME: Deadpool's Secret Secret Wars
+
+#SUBNAME: Deadpool
+#COPIES: 1
+<i>5th Circle of Kung-Fu</i>
+#FIGHT: <b>Fateful Resurrection</b>
+#ESCAPE: Deadpool ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Each player reveals a Hero with an odd-numbered cost or gains a Wound." <i>(0 is even).</i>
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Doop
+#COPIES: 2
+You can't fight Doop if there is a Villain in an adjacent city space.
+#ATTACK: 2*
+#VP: 2
+
+#SUBNAME: Howard the Duck
+#COPIES: 2
+#AMBUSH: Howard the Duck captures <i>(the heart of)</i> a Bystander.
+<i>7th Circle of Quack-Fu</i>
+#ATTACK: 1+
+#VP: 4
+
+#SUBNAME: Pink Sphinx
+#COPIES: 3
+#FIGHT: <b>Spectrum:</b> KO one of your Heroes.
+#ATTACK: 4
+#VP: 2
+
+
+#CARDNAME: Guardians of Knowhere
+
+#SUBNAME: Angela
+#COPIES: 1
+#FIGHT: <b>Fateful Resurrection</b>
+#ESCAPE: Angela ascends to become a new Mastermind. She gains the ability, "<b>Master Strike:</b> Each player KOs a Hero from their discard pile that costs 1 or more."
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Drax the Destroyer
+#COPIES: 2
+#FIGHT: Reveal the top card of your deck. KO it or put it back. <b>Fateful Resurrection.</b>
+#ATTACK: 5
+#VP: 4
+
+#SUBNAME: Gamora
+#COPIES: 1
+#AMBUSH: <b>Charge</b> one space.
+#FIGHT: <i>(After this goes to your victory pile.)</i> <b>Patrol the Sewers:</b> If it's empty, each other player gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Groot
+#COPIES: 2
+#FIGHT: <b>Fateful Resurrection.</b> If Groot resurrects this way, then he becomes Tiny Dancing Groot with Attack 1 and no abilities for the rest of the turn.
+#ATTACK: 5
+#VP: 4
+
+#SUBNAME: Rocket Raccoon
+#COPIES: 2
+#FIGHT: <i>(After this goes to your Victory Pile.)</i> <b>Patrol the Bank:</b> If it's empty, draw a card. If it's not empty, KO one of your Heroes.
+#ATTACK: 4
+#VP: 2
+
+
+#CARDNAME: K'un-lun
+
+#SUBNAME: Laughing Skull
+#COPIES: 2
+<b>5th Circle of Kung-Fu</b>
+#ESCAPE: Each player reveals a Hero that costs 5 or more, or they discard a card.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Rand K'ai
+#COPIES: 2
+<b>6th Circle of Kung-Fu</b>
+#ESCAPE: Each player reveals a Hero that costs 6 or more, or they gain a wound.
+#ATTACK: 6+
+#VP: 6
+
+#SUBNAME: Razor Fist
+#COPIES: 2
+<b>3rd Circle of Kung-Fu</b>
+#FIGHT: For each of your Heroes that costs 3, KO one of your Heroes.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Red Sai
+#COPIES: 2
+<b>4th Circle of Kung-Fu</b>
+#FIGHT: Draw a card for each of your Heroes that costs 4.
+#ATTACK: 4+
+#VP: 4
+
+
+#CARDNAME: Monster Metropolis
+
+#SUBNAME: Bug, Shiklah's Dragon
+#COPIES: 2
+#FIGHT: KO a card from your discard pile. <b>Fateful Resurrection</b>
+#ATTACK: 4
+#VP: 3
+
+#SUBNAME: Ghost Deadpool
+#COPIES: 2
+#FIGHT: <b>Fateful Resurrection</b>. Then, <b>Cross-Dimensional Deadpool Rampage</b>
+#ESCAPE: <b>Cross-Dimensional Deadpool Rampage</b>
+#ATTACK: 5
+#VP: 5
+
+#SUBNAME: Man-Thing
+#COPIES: 2
+#AMBUSH: Each Monster Metropolis Villain captures a Bystander.
+#FIGHT: <b>Fateful Resurrection</b>
+#ATTACK: 5
+#VP: 4
+
+#SUBNAME: Marcus Symbiote Centaur
+#COPIES: 2
+#AMBUSH: <b>Charge</b> two spaces.
+When in the Sewers, Rooftops or Bridge, he is in "wolf form" and gets +3 Attack.
+#ATTACK: 3+
+#VP: 3
+
+
+#CARDNAME: Utopolis
+
+#SUBNAME: Doctor Spectrum
+#COPIES: 3
+#AMBUSH: <b>Charge</b> one space.
+#FIGHT: <b>Spectrum:</b> KO a card from your discard pile. <b>Escape:</b> Each player who doesn't have <b>Spectrum</b> discards a card.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Nighthawk
+#COPIES: 2
+While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
+#ESCAPE: Nighthawk becomes a Scheme Twist that takes effect immediately.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Warrior Woman
+#COPIES: 1
+#AMBUSH: <b>Charge</b> one space.
+#ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike:</b> <b>Patrol the Bank:</b> If there's a Villain there, each player discards a card with a Recruit icon."
+#ATTACK: 8
+#VP: 6
+
+#SUBNAME: Whizzer
+#COPIES: 2
+#AMBUSH: <b>Charge</b> three spaces.
+<i>Fight</i> <i>(After he goes to your victory pile.)</i> <b>Patrol the Bridge:</b> If there's a Villain there, each other player gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: X-Men '92
+
+#SUBNAME: '92 Beast
+#COPIES: 2
+#AMBUSH: Charge one space.
+#FIGHT: Gain this as a Hero.
+#ATTACK: 5
+-----------------
+#CLASS: [Strength]
+{POWER Tech} Draw a card.
+#ATTACK: 2
+
+#SUBNAME: '92 Jubilee
+#COPIES: 3
+#FIGHT: Gain this as a Hero.
+#ATTACK: 4
+-----------------
+#CLASS: [Ranged]
+<i>Spectrum:</i> You get +2 Attack.
+#ATTACK: 2+
+
+#SUBNAME: '92 Professor X
+#COPIES: 1
+#ESCAPE: '92 Professor X ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Stack the two heroes from the HQ with the highest cost next to '92 Professor X. He gets +1 Attack for each Hero stacked there. Players can recruit the top card of the stack."
+#ATTACK: 8+
+#VP: 6
+
+#SUBNAME: '92 Wolverine
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ESCAPE: <b>Cross-Dimensional Wolverine Rampage</b>
+#ATTACK: 7
+-----------------
+#CLASS: [Instinct]
+{POWER Instinct} Draw two cards.
+#ATTACK: 2
+
+
+
+

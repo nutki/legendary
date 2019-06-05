@@ -1,0 +1,23 @@
+
+#CARDNAME: Uru-Enchanted Iron Man
+
+#LEADS: The Mighty.
+Command Strike: Demolish each player. Then stack this Strike next to Iron Man. Uru-Enchanted Iron Man has an Uru-Enchanted Weapon for each Strike stacked here.
+#ATTACK: 7*
+#VP: 6
+
+#TACTIC: Armor of the Destroyer
+#FIGHT: For each [Tech] Ally you have, demolish each other player.
+
+#TACTIC: Pepper Potts in Rescue Armor
+#FIGHT: A Bystander from the Bystander Stack becomes a Command Strike that takes effect immediately.
+
+#TACTIC: Quantum Inventions
+#FIGHT: Draw two cards. Then, if you reveal a [Tech] card, draw two more cards.
+
+#TACTIC: Repulsor Coils
+#FIGHT: Each other player reveals a [Tech] ally or gains a Bindings.
+
+
+
+

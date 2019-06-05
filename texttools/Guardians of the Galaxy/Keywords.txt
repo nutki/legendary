@@ -1,0 +1,7 @@
+
+<b>Artifact</b>: When you gain a Hero Artifact, put it in your discard pile like any other Hero card. When you draw that Artifact later in the game, you may play it in front of you and use its effects, usually once one each of your turns. This means you "control" that Artifact. At the end of your turn, when you discard all the cards you played that turn, the Artifacts you control stay in.
+If a card effect during any player's turn asks you to "Reveal a Ranged Hero," you may reveal a Ranged Hero Artifact you control. Card effects that say "your Heroes" or "Heroes you have" include Hero Artifacts you control as well.
+However, you only "played" an Artifact on the turn you put it out, so it only activates Superpower Abilities on the turn you play the Artifact, not every turn of the game.
+If a card effect like Rogue, Chameleon, or Star-Lord would let you "copy" an Artifact card, then you can use that Artifact's "Once per turn" ability once, and there is no other effect.
+
+

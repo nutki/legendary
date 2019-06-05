@@ -1,0 +1,181 @@
+
+#CARDNAME: Human Torch
+#TEAM: Fantastic Four
+
+#SUBNAME: Call for Backup
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2+
+You may KO a Wound from your hand or discard pile. If you do, you get +1 Recruit.
+#COST: 3
+#FLAVOR: The Fantastic Four has access to all sorts of communications; Johnny prefers his own methods.
+
+#SUBNAME: Hothead
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 4
+You gain a Wound.
+#COST: 4
+#FLAVOR: "I like to know my limits. So I can break them."
+
+#SUBNAME: Flame On!
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 4+
+{FOCUS 6} You get +4 Attack.
+#COST: 6
+
+#SUBNAME: Nova Flame
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 6+
+{TEAMPOWER Fantastic Four} You get +1 Attack for each city space that contains a Villain.
+#COST: 8
+
+
+#CARDNAME: Invisible Woman
+#TEAM: Fantastic Four
+
+#SUBNAME: Disappearing Act
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{FOCUS 2} You may KO a card from your hand or discard pile.
+#COST: 4
+#FLAVOR: "Now you see it...Now you don't!"
+
+#SUBNAME: Four of a Kind
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+If you played any other cards that cost 4 this turn, you get +2 Attack.
+#COST: 4
+#FLAVOR: A family that plays together stays together.
+
+#SUBNAME: Unseen Rescue
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+{FOCUS 2} Rescue a Bystander. You may only use this ability up to four times this turn.
+#COST: 4
+#FLAVOR: "If seeing is believing, you are not going to believe this."
+
+#SUBNAME: Invisible Barrier
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 5
+If an ambush effect would occur, you may reveal this card and draw two cards instead.
+#COST: 7
+
+
+#CARDNAME: Mr. Fantastic
+#TEAM: Fantastic Four
+
+#SUBNAME: Twisting Equations
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+{FOCUS 2} When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 3
+#FLAVOR: "I consider the laws of physics more like guidelines."
+
+#SUBNAME: Unstable Molecules
+#COPIES: 5
+#CLASS: [Tech]
+Draw two cards.
+#COST: 5
+#FLAVOR: Reed Richards has an idea for a new costume material, but it's a stretch.
+
+#SUBNAME: One Gigantic Hand
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 1+
+{TEAMPOWER Fantastic Four} You get +1 Attack for each card in your hand.
+#COST: 5
+#FLAVOR: "Most of my career is thinking. Then there's this."
+
+#SUBNAME: Ultimate Nullifier
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+If an Enemy you fight this turn would have a fight effect, you may cancel that effect instead.
+{FOCUS 1} You get +1 Attack usable only against the Mastermind.
+#COST: 7
+
+
+#CARDNAME: Silver Surfer
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Epic Destiny
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{FOCUS 6} Defeat a Villain of 5 Attack or 6 Attack.
+#COST: 4
+#FLAVOR: "Master? Galactus had been my master! You - are but - a flea!"
+#GUN: 1
+
+#SUBNAME: Warp Speed
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{FOCUS 2} Draw a card.
+#COST: 3
+#FLAVOR: "Engage!"
+
+#SUBNAME: The Power Cosmic
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 3
+#ATTACK: 0+
+{FOCUS 9} You get +9 Attack.
+#COST: 6
+#FLAVOR: As a Herald, Surfer selected many planets for the Devourer of Worlds, until Earth taught him compassion.
+
+#SUBNAME: Energy Surge
+#COPIES: 1
+#CLASS: [Ranged]
+Double the Recruit you have.
+#COST: 7
+#FLAVOR: Finding extra power is not a problem for the Silver Surfer. His power is immeasurable.
+
+
+#CARDNAME: Thing
+#TEAM: Fantastic Four
+
+#SUBNAME: It Started on Yancy Street
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2+
+{TEAMPOWER Fantastic Four} You get +2 Recruit.
+#COST: 3
+#FLAVOR: Yancy Street is Thing's turf. Trespass at your own risk.
+
+#SUBNAME: Knuckle Sandwich
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 3
+#ATTACK: 0+
+{FOCUS 3} You get +2 Attack.
+#COST: 5
+#FLAVOR: Recipe prep time: 3 seconds. Serves: 20
+
+#SUBNAME: Crime Stopper
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4
+Whenever you defeat a Villain in the Bank this turn, rescue a Bystander.
+{FOCUS 1} Move a Villain to an adjacent city space. If another Villain is already there, swap them.
+#COST: 6
+
+#SUBNAME: It's Clobberin' Time!
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+{POWER Strength} You get +3 Attack for each other [Strength] card you played this turn.
+#COST: 8
+#FLAVOR: Thing doesn't wear a watch, but he's happy to tell you what time it is.
+
+
+
+

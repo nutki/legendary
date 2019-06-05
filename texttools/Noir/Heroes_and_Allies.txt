@@ -1,0 +1,184 @@
+
+#CARDNAME: Angel Noir
+#TEAM: X-Men
+
+#SUBNAME: Impetuous Dive
+#COPIES: 5
+#CLASS: [Instinct]
+{POWER Instinct} You get +1 Attack.
+#ATTACK: 2+
+#COST: 3
+#FLAVOR: "Legends tell of a Cape of Mercury that enables a man to fly. Until I find it, I'll just jump and hope for the best."
+#GUN: 1
+
+#SUBNAME: Multitalented
+#COPIES: 5
+#CLASS: [Strength]
+Choose a Hero Class. <b>Investigate</b> for a card of that Hero Class.
+#RECRUIT: 1
+#ATTACK: 1
+#COST: 4
+#FLAVOR: Specialties include: Medicine, Prisons, Detective Work, Advertising, and Everything Else.
+
+#SUBNAME: Identical Twin Brother
+#COPIES: 3
+#CLASS: [Instinct]
+You get the printed Recruit and Attack of a Hero in the HQ. Then put that Hero on the bottom of the Hero Deck.
+#RECRUIT: 0+
+#ATTACK: 0+
+#COST: 5
+
+#SUBNAME: Missing Person Case
+#COPIES: 1
+#CLASS: [Covert]
+<b>Investigate</b> the Hero Deck for any card and put that card in your hand.
+#ATTACK: 3
+#COST: 8
+
+
+#CARDNAME: Daredevil Noir
+#TEAM: Marvel Knights
+
+#SUBNAME: Balancing Act
+#COPIES: 5
+#CLASS: [Covert]
+The next Hero you recruit this turn goes on top of your deck.
+#RECRUIT: 1
+#ATTACK: 1
+#COST: 3
+#FLAVOR: A body balanced on a single muscle. A city balanced on a single man.
+
+#SUBNAME: Listen for Heartbeats
+#COPIES: 5
+#CLASS: [Instinct]
+Choose a number 1 or more. <b>Investigate</b> for a card of that cost.
+#ATTACK: 2
+#COST: 4
+#FLAVOR: "Hearing hearts a block away is easy. The tough part is discerning whose is whose."
+#GUN: 1
+
+#SUBNAME: Discover the Bodies
+#COPIES: 3
+#CLASS: [Covert]
+{POWER Covert} <b>Investigate</b> for a card that costs 0. KO that card.
+#RECRUIT: 3
+#COST: 5
+#FLAVOR: "By the time I found them, they were already dead."
+
+#SUBNAME: Hitting Rock Bottom
+#COPIES: 1
+#CLASS: [Instinct]
+Discard a card from the top or bottom of your deck. If it costs 0, you get +1 Attack and repeat this process. If your deck runs out, stop.
+#ATTACK: 3+
+#COST: 7
+
+
+#CARDNAME: Iron Man Noir
+#TEAM: Avengers
+
+#SUBNAME: Steam-Powered Arsenal
+#COPIES: 5
+#CLASS: [Ranged]
+To play this, you must put another card from your hand on top of your deck.
+#ATTACK: 3
+#COST: 3
+#FLAVOR: "Water is the key to creation ... and destruction."
+#GUN: 1
+
+#SUBNAME: Mechanized Plate-Mail
+#COPIES: 5
+#CLASS: [Tech]
+<b>Investigate</b> for a [Tech] card.
+#RECRUIT: 2
+#COST: 4
+#FLAVOR: "The best way to test a new invention is to let HYDRA shoot it with automatic weapons."
+#GUN: 1
+
+#SUBNAME: Learn from Enemies
+#COPIES: 3
+#CLASS: [Tech]
+{POWER Tech} You may use the "Fight" ability of a Villain worth 1 VP in your Victory Pile.
+#ATTACK: 3
+#COST: 6
+
+#SUBNAME: Adventurers Assemble!
+#COPIES: 1
+#CLASS: [Tech]
+Whenever you <b>Investigate</b> this turn, look a three cards instead of two.
+Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
+#ATTACK: 4
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Luke Cage Noir
+#TEAM: Marvel Knights
+
+#SUBNAME: Private Investigations
+#COPIES: 5
+#CLASS: [Covert]
+<b>Investigate</b> for a card that costs 4 or more.
+#ATTACK: 2
+#COST: 4
+#FLAVOR: He doesn't stop until he clears his name ... or dies trying.
+
+#SUBNAME: Follow Big Leads
+#COPIES: 5
+#CLASS: [Strength]
+You get +1 Recruit for each other card you played this turn that costs 4 or more.
+#RECRUIT: 2+
+#COST: 4
+#FLAVOR: The deeper he digs, the bigger the conspiracy becomes.
+
+Unbreakable Cage (3 copies)
+#CLASS: [Strength]
+Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
+#ATTACK: 4
+#COST: 6
+
+#SUBNAME: Weight of the World (1 copy)
+#COPIES: 1
+#CLASS: [Strength]
+You get +2 Attack for each other card you played this turn that costs 4 or more.
+#ATTACK: 5+
+#COST: 8
+
+
+#CARDNAME: Spider-Man Noir
+#TEAM: Spider Friends
+
+#SUBNAME: Gumshoe's Revolver
+#COPIES: 5
+#CLASS: [Tech]
+<b>Investigate</b> for a card that costs 2 or less.
+#ATTACK: 1
+#COST: 2
+#FLAVOR: Stealth goes a long way, but some mysteries can only be unraveled with cold steel.
+#GUN: 1
+
+#SUBNAME: Webs of Darkness
+#COPIES: 5
+#CLASS: [Ranged]
+{POWER Ranged} You get 2+ Attack.
+#ATTACK: 1+
+#COST: 2
+#FLAVOR: Spiders from a cursed totem gave Peter Parker dark powers to match his shadowed mission.
+
+#SUBNAME: Solve the Crime
+#COPIES: 3
+#CLASS: [Instinct]
+{POWER Instinct} <b>Investigate</b> the Bystander Stack for a Bystander and rescue it.
+#ATTACK: 2
+#COST: 2
+#FLAVOR: "Who murdered Uncle Ben?"
+
+#SUBNAME: Spider-Totem's Chosen
+#COPIES: 1
+#CLASS: [Strength]
+{TEAMPOWER Spider Friends} <b>Investigate</b> each player's deck for a card that costs 2 or less, play a copy of that card, then put it into their discard pile.
+#ATTACK: 1
+#COST: 2
+
+
+
+

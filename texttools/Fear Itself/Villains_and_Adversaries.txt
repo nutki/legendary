@@ -1,0 +1,66 @@
+
+#CARDNAME: The Mighty
+
+#SUBNAME: Black Widow
+#COPIES: 1
+2 Uru-Enchanted Weapons
+Fight or Fail: If her Uru-Enchanted Weapons revealed any Bystanders, kidnap them.
+#ATTACK: 3*
+#VP: 4
+
+#SUBNAME: Dr. Strange
+#COPIES: 1
+Uru-Enchanted Weapon
+#AMBUSH: Reveal the top three cards of the Adversary Deck. Put the Adversary you revealed with the highest printed VP on top of that deck. Put the rest on the bottom of that deck in random order.
+Fight or Fail: You get +2 Recruit.
+#ATTACK: 5*
+#VP: 4
+
+#SUBNAME: Hawkeye
+#COPIES: 1
+Uru-Enchanted Weapon
+Fight or Fail: Choose one: Each other player draws a card, or each other player discards a card.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Iron Fist
+#COPIES: 1
+Uru-Enchanted Weapon
+If his Uru-Enchanted Weapon revealed an Adversary, KO one of your Allies.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Ms. Marvel
+#COPIES: 1
+Uru-Enchanted Weapon
+Fight or Fail: If her Uru-Enchanted Weapon revealed a Command Strike or Plot Twist, play it.
+Overrun: Each player reveals a [Ranged] Ally or gains a Bindings.
+#ATTACK: 4*
+#VP: 3
+
+#SUBNAME: Red She-Hulk
+#COPIES: 1
+Uru-Enchanted Weapon
+Fight or Fail: If her Uru-Enchanted Weapon revealed an Adversary, put that Adversary into your Victory Pile.
+#ATTACK: 4*
+#VP: 2
+
+#SUBNAME: Spider-Man
+#COPIES: 1
+2 Uru-Enchanted Weapons
+Fight or Fail: Play all the cards revealed by his Uru-Enchanted Weapon that are worth 2 VP or less.
+Overrun: Each player gains a Bindings.
+#ATTACK: 2*
+#VP: 3
+
+#SUBNAME: Wolverine
+#COPIES: 1
+2 Uru-Enchanted Weapons
+Fight or Fail: Draw two cards.
+Overrun: Each player reveals an [Instinct] Ally or gains a Bindings. Then put Wolverine on top of the Adversary Deck.
+#ATTACK: 5*
+#VP: 6
+
+
+
+

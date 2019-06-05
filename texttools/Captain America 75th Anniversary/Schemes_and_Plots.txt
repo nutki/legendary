@@ -1,0 +1,35 @@
+
+#CARDNAME: Brainwash the Military
+#SETUP: 7 Twists. Add 12 S.H.I.E.L.D. Officers to the Villain Deck.
+#RULE: S.H.I.E.L.D. Officers in the Villain Deck are Villains. Their Attack is 3 plus the number of Twists stacked next to this Scheme. When you defeat a S.H.I.E.L.D. Officer, gain it as a Hero.
+#TWISTNR: NR[1-6] Stack this Twists next to the Scheme as a "Traitor Battalion." Play another card from the Villain Deck.
+#TWISTNR: NR[7] All S.H.I.E.L.D. Officers in the city escape.
+#EVILWINS: When 5 S.H.I.E.L.D. Officers escape.
+
+#CARDNAME: Change the Outcome of WWII
+#SETUP: 7 Twists. Add an extra Villain Group.
+#TWIST: The Axis invades a new country. Put all Villains and Bystanders from the city on the bottom of the Villain Deck. The number of city spaces changes. Play 2 cards from the Villain Deck. If any Villains escape this country, stack a Twist next to the scheme as a "conquered capital."
+#TWISTNR: NR[1] Poland: 4 spaces.
+#TWISTNR: NR[2] France: 3 spaces.
+#TWISTNR: NR[3] USSR: 6 spaces.
+#TWISTNR: NR[4] England: 3 spaces.
+#TWISTNR: NR[5] USA: 5 spaces.
+#TWISTNR: NR[6] Australia: 2 spaces.
+#TWISTNR: NR[7] Switzerland: 1 space.
+#EVILWINS: When 3 capitals are conquered.
+
+#CARDNAME: Go Back in Time to Slay Heroes' Ancestors
+#SETUP: 9 Twists. 8 Heroes in Hero deck.
+#TWIST: Put a Hero form the HQ next to the Scheme, "Purged from the Timestream."
+#RULE: Whenever a Hero is in the HQ whose Hero Name has been Purged from the Timestream, KO that Hero.
+#EVILWINS: When the Hero Deck runs out.
+
+#CARDNAME: The Unbreakable Enigma Code
+#SETUP: 6 Twists.
+#TWISTNR: NR[1-5] Put a card from the Hero Deck face down next to the scheme as part of the "Enigma Code." Mix up those cards face-down.
+#TWISTNR: NR[6] Evil Wins!
+#RULE: Whenever you fight a Villain, you may pay 1 Recruit to look at one of the face-down Enigma Cards. When you fight the Mastermind, first guess the color of each Enigma card, and then reveal them. If you guessed them right, fight the Mastermind as normal. If not, your turn ends, and mix up the Enigma cards face-down.
+
+
+
+

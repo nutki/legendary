@@ -1,0 +1,595 @@
+
+#CARDNAME: Angel
+#TEAM: X-Men
+
+#SUBNAME: Diving Catch
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+When a card effect causes you to discard this card, rescue a Bystander and draw two cards.
+#COST: 4
+
+#SUBNAME: High-Speed Chase
+#COPIES: 5
+#CLASS: [Covert]
+Draw two cards, then discard a card.
+#COST: 3
+
+#SUBNAME: Drop Off a Friend
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2+
+You may discard a card. You get + Attack equal to that card's Cost.
+#COST: 5
+
+#SUBNAME: Strength of Spirit
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4
+Discard any number of cards. Draw that many cards.
+#COST: 7
+
+
+#CARDNAME: Bishop
+#TEAM: X-Men
+
+#SUBNAME: Absorb Energies
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 2
+Whenever a card you own is KO'd this turn, you get +2 Recruit.
+#COST: 3
+
+#SUBNAME: Whatever the Cost
+#COPIES: 5
+#CLASS: [Ranged]
+Draw a card.
+{POWER Covert} You may KO a card from your hand or discard pile.
+#COST: 2
+#GUN: 1
+
+#SUBNAME: Concussive Blast
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3+
+{POWER Ranged Ranged} You get +3 Attack.
+#COST: 5
+#FLAVOR: Bishop absorbs energy, channeling it back into devastating blasts.
+
+#SUBNAME: Firepower From the Future
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+Discard the top four cards of your deck. You get + Attack equal to those cards' printed Attack.
+{TEAMPOWER X-Men} KO any number of those cards.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Blade
+#TEAM: Marvel Knights
+#GUN: 1
+
+#SUBNAME: Night Hunter
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 2
+Whenever you defeat a Villain in the Sewers or Rooftops this turn, you get +2 Recruit.
+#COST: 4
+
+#SUBNAME: Stalk the Prey
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+#COST: 3
+
+#SUBNAME: Nowhere to Hide
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+Whenever you defeat a Villain in the Sewers or Rooftops this turn, draw two cards.
+#COST: 6
+
+#SUBNAME: Vampiric Surge
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get +1 Attack for each Villain in your Victory Pile.
+#COST: 7
+
+
+#CARDNAME: Cable
+#TEAM: X-Force
+
+#SUBNAME: Disaster Survivalist
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
+#COST: 3
+
+#SUBNAME: Strike at the Heart of Evil
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+You get +2 Attack only when fighting Masterminds.
+#COST: 4
+#GUN: 1
+
+#SUBNAME: Rapid Response Force
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3+
+<b>Teleport</b>
+{TEAMPOWER X-Force} You get +1 Attack for each other X-Force Hero you played this turn.
+#COST: 6
+#GUN: 1
+
+#SUBNAME: Army of One
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5+
+KO any number of cards from your hand. You get +1 Attack for each card KO'd this way.
+#COST: 8
+#GUN: 1
+
+
+#CARDNAME: Colossus
+#TEAM: X-Force
+
+#SUBNAME: Draw Their Fire
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 3
+You gain a Wound.
+#COST: 1
+#FLAVOR: When enemies get charged by a huge steel titan, that tends to occupy their attention.
+
+#SUBNAME: Invulnerability
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+If you would gain a Wound, you may discard this card instead. If you do, draw two cards.
+#COST: 3
+
+#SUBNAME: Silent Statue
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 4+
+{POWER Strength} You get +2 Attack.
+#COST: 6
+#FLAVOR: No one expects an enormous metal brawler to take the stealthy approach.
+
+#SUBNAME: Russian Heavy Tank
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 6
+If another player would gain a Wound, you may reveal this card to gain that Wound and draw a card.
+#COST: 8
+
+
+#CARDNAME: Daredevil
+#TEAM: Marvel Knights
+
+#SUBNAME: Backflip
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+When you play Backflip, the next Hero you recruit this turn goes on top of your deck.
+#COST: 3
+
+#SUBNAME: Radar Sense
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+Choose a number, then reveal the top card of your deck. If the card is that Cost, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: Blind Justice
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 4
+Choose a number, then reveal the top card of your deck. If the card is that Cost, draw it.
+#COST: 6
+
+#SUBNAME: The Man Without Fear
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 7
+Choose a number, then reveal the top card of your deck. If the card is that Cost, draw it and repeat this process.
+#COST: 8
+
+
+#CARDNAME: Domino
+#TEAM: X-Force
+#GUN: 1
+
+#SUBNAME: Lucky Break
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+Draw a card.
+{TEAMPOWER X-Force} {VERSATILE 1}
+#COST: 1
+
+#SUBNAME: Ready for Anything
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 2}
+#COST: 3
+#FLAVOR: With Domino's mutant probability powers, every day is the luckiest day of her life.
+
+#SUBNAME: Specialized Ammunition
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+You may discard a card from your hand. If that card had a Recruit icon, you get +4 Recruit. If that card had an Attack icon, you get +4 Attack.
+#COST: 5
+
+#SUBNAME: Against All Odds
+#COPIES: 1
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 5}
+{TEAMPOWER X-Force} This card and each other {VERSATILE} ability you use for the rest of this turn produces both Recruit and Attack.
+#COST: 7
+
+
+#CARDNAME: Elektra
+#TEAM: Marvel Knights
+
+#SUBNAME: First Strike
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1+
+If this is the first card you played this turn, you get +1 Attack.
+#COST: 1
+
+#SUBNAME: Ninjitsu
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+Draw a card.
+{POWER Covert} You get +2 Recruit.
+#COST: 2
+#FLAVOR: Zen is the absence of motion. Ninjitsu, the absence of stillness.
+
+#SUBNAME: Sai Blades
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 4+
+You get +1 Attack for each Hero you played this turn that costs 1 or 2.
+#COST: 6
+
+#SUBNAME: Silent Meditation
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 5+
+When you play Silent Meditation, the next Hero you recruit this turn goes into your hand.
+{TEAMPOWER Marvel Knights} You get +2 Recruit.
+#COST: 7
+
+
+#CARDNAME: Forge
+#TEAM: X-Force
+
+#SUBNAME: Dirty Work
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+{POWER Tech} Any Villain you fight in the Sewers this turn gets -2 Attack.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Reboot
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+{POWER Tech} You may discard a card. If you do, draw two cards.
+#COST: 4
+#GUN: 1
+
+#SUBNAME: Overdrive
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 3}
+#COST: 5
+#FLAVOR: When Forge can't find the turret remote, he just takes a couple of spoons and builds a new one.
+
+#SUBNAME: B.F.G.
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+{POWER Tech Tech} Defeat the Mastermind once for free.
+#COST: 7
+#FLAVOR: That's a BIG FREAKING GUN!!!!
+#GUN: 1
+
+
+#CARDNAME: Ghost Rider
+#TEAM: Marvel Knights
+
+#SUBNAME: Blazing Hellfire
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+You may KO a Villain from your Victory Pile. If you do, you get +3 Attack.
+#COST: 5
+
+#SUBNAME: Hell on Wheels
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2+
+{TEAMPOWER Marvel Knights} You get +2 Recruit.
+#COST: 3
+#FLAVOR: Most motorcycles don't drive up walls. Most don't drive into your nightmares.
+
+#SUBNAME: Infernal Chains
+#COPIES: 3
+#CLASS: [Strength]
+Draw a card.
+{POWER Strength} Defeat a Villain of 3 Attack or less for free.
+#COST: 2
+
+#SUBNAME: Penance Stare
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 3+
+Each player KOs a Villain from their Victory Pile. You get +1 Attack for each Villain KO'd this way.
+{TEAMPOWER Marvel Knights} Put one of those Villains into your Victory Pile.
+#COST: 8
+
+
+#CARDNAME: Iceman
+#TEAM: X-Men
+
+#SUBNAME: Deep Freeze
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 0+
+Draw a card.
+{POWER Ranged} You get +1 Recruit for each other [Ranged] Hero you played this turn.
+#COST: 2
+
+#SUBNAME: Ice Slide
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} You get +1 Attack for each other [Ranged] Hero you played this turn.
+#COST: 4
+
+#SUBNAME: Frost Spike Armor
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3
+{POWER Ranged} Draw a card for each [Ranged] Hero you played this turn.
+#COST: 5
+
+#SUBNAME: Impenetrable Ice Wall
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 7
+If a Villain, Master Strike, or Mastermind Tactic would cause you to gain any Wounds or discard any cards, you may reveal this card instead.
+#COST: 8
+
+
+#CARDNAME: Iron Fist
+#TEAM: Marvel Knights
+
+#SUBNAME: Focus Chi
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+You get +1 Recruit for each Hero with a different Cost you have.
+#COST: 3
+
+#SUBNAME: Wield the Iron Fist
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+You get +1 Attack for each Hero with a different Cost you have.
+#COST: 4
+
+#SUBNAME: Ancient Legacy
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+Draw a card.
+{POWER Strength Strength} {VERSATILE 2}
+#COST: 1
+
+#SUBNAME: Living Weapon
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 8
+Reveal cards from your deck until you have revealed two cards with the same Cost. Draw all the cards you revealed.
+#COST: 9
+
+
+#CARDNAME: Jean Grey
+#TEAM: X-Men
+
+#SUBNAME: Psychic Search
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{TEAMPOWER X-Men} Rescue a Bystander.
+#COST: 3
+#FLAVOR: Amid violent chaos, a soundless voice leads to safety.
+
+#SUBNAME: Read Your Thoughts
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 3+
+Whenever you rescue a Bystander this turn, you get +1 Recruit.
+#COST: 5
+
+#SUBNAME: Mind Over Matter
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 4
+Whenever you rescue a Bystander this turn, draw a card.
+#COST: 6
+
+#SUBNAME: Telekinetic Mastery
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+Whenever you rescue a Bystander this turn, you get +1 Attack.
+{TEAMPOWER X-Men} Rescue a Bystander for each other X-Men Hero you played this turn.
+#COST: 7
+
+
+#CARDNAME: Nightcrawler
+#TEAM: X-Men
+
+#SUBNAME: Bamf!
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+<b>Teleport</b>
+#COST: 3
+#FLAVOR: "Now you see me..." BAMF!"
+
+#SUBNAME: Blend Into Shadows
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+<b>Teleport</b>
+#COST: 4
+#FLAVOR: Sometimes it is best to hide now and fight later.
+
+#SUBNAME: Swashbuckler
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3+
+{POWER Covert Instinct} You get +3 Attack.
+#COST: 5
+#FLAVOR: Chivalry wears blue fur.
+
+#SUBNAME: Along for the Ride
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 5
+<b>Teleport</b>
+When you play or <b>Teleport</b> this card, you may also <b>Teleport</b> up to three other cards from your hand.
+#COST: 7
+
+
+#CARDNAME: Professor X
+#TEAM: X-Men
+
+#SUBNAME: Class Dismissed
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+You may put a Hero from the HQ on the bottom of the Hero Deck.
+{POWER Instinct} You may KO a card from your hand or discard pile.
+#COST: 3
+#FLAVOR: "What do they call you? Wheels?"
+
+#SUBNAME: Psionic Astral Form
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1+
+{TEAMPOWER X-Men} You get +2 Attack.
+#COST: 2
+#FLAVOR: In a plane of pure mental energy, Xavier's body is as powerful as his mind.
+
+#SUBNAME: Telepathic Probe
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3
+Reveal the top card of the Villain Deck. If it's a Bystander, you may rescue it. If it's a Villain, you may fight it this turn.
+#COST: 5
+
+#SUBNAME: Mind Control
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 6
+Whenever you defeat a Villain this turn, you may gain it. It becomes a grey Hero with no text that gives + Attack equal to its Attack. (You still get its VP.)
+#COST: 8
+
+
+#CARDNAME: Punisher
+#TEAM: Marvel Knights
+#GUN: 1
+
+#SUBNAME: Boom Goes the Dynamite
+#COPIES: 5
+#CLASS: [Tech]
+Reveal the top card of your deck. If it costs 0, KO it.
+{POWER Tech} Draw a card.
+#COST: 2
+#FLAVOR: The Punisher always knows which cops are corrupt.
+
+#SUBNAME: Hail of Bullets
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+Reveal the top card of the Villain Deck. If it's a Villain, you get + Attack equal to its printed VP.
+{POWER Tech Tech} You may defeat that Villain for free.
+#COST: 5
+
+#SUBNAME: Hostile Interrogation
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 2+
+{POWER Strength} Each other player reveals the top card of their deck. If that card costs 4 or more, discard it. You get +1 Recruit for each card discarded this way.
+#COST: 3
+
+#SUBNAME: The Punisher
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+Reveal cards from the Hero Deck until you have revealed two cards with the same Cost. You get +1 Attack for each card revealed this way. Put them on the bottom of the Hero Deck in random order.
+#COST: 8
+
+
+#CARDNAME: Wolverine
+#TEAM: X-Force
+
+#SUBNAME: Animal Instincts
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 0+
+Draw a card.
+{POWER Instinct} You get +2 Attack.
+#COST: 2
+#FLAVOR: To avoid injury, it's best to keep a distance from Wolverine of at least 5,000 miles.
+
+#SUBNAME: Sudden Ambush
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+If you drew any extra cards this turn, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: No Mercy
+#COPIES: 3
+#CLASS: [Strength]
+Draw a card.
+You may KO a card from your hand or discard pile.
+#COST: 4
+
+#SUBNAME: Reckless Abandon
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 3
+Count the number of extra cards you drew this turn. Draw that many cards.
+#COST: 7
+
+
+
+

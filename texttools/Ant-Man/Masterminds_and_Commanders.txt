@@ -1,0 +1,60 @@
+
+#CARDNAME: Ultron
+
+#LEADS: Ultron's Legacy
+#STRIKE: Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Empowered</b> by each color in his Threat Analysis pile.
+#ATTACK: 9+
+#VP: 6
+
+#CARDNAME: Epic Ultron
+
+#LEADS: Ultron's Legacy
+#STRIKE: Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Arrogant Blindspot
+#FIGHT: You may gain a Hero from Ultron's Threat Analysis pile.
+
+#TACTIC: Paralyzing Encephalo-Ray
+#FIGHT: Each other player reveals their hand and discards each card that has the same card name as any card in Ultron's Threat Analysis pile.
+
+#TACTIC: Predictive Analysis
+#FIGHT: Put the top three cards of the Hero Deck into Ultron's Threat Analysis pile.
+
+#TACTIC: Self-Repairing Legions
+#FIGHT: Each other player in turn reveals a [Tech] Hero or puts an Ultron's Legacy Villain from the Victory Pile into an empty city space.
+
+
+#CARDNAME: Morgana Le Fay
+
+<b>Chivalrous Duel</b>
+#LEADS: Queen's Vengeance
+#STRIKE: Each player in turn reveals a [Covert] Hero or gains a 0-cost Hero or Wound from the KO pile.
+#ATTACK: 7*
+#VP: 6
+
+
+#CARDNAME: Epic Morgan Le Fay
+
+<b>Chivalrous Duel</b>
+#LEADS: Queen's Vengeance
+#STRIKE: Each player in turn gains a Wound, then gains a 0-cost Hero from the KO pile.
+#ATTACK: 9*
+#VP: 6
+
+#TACTIC: Reverse the Flow of Time
+#FIGHT: For the rest of the game, players take turns in the opposite order around the table.
+
+#TACTIC: Sorcerous Blasts
+#FIGHT: Each other player discards a [Covert] Hero or gains a Wound.
+
+#TACTIC: Stolen Tomes of Merlin
+#FIGHT: You get +4 Recruit usable only for recruiting [Covert] and/or [Ranged] Heroes.
+
+#TACTIC: Transmogrify
+#FIGHT: Each other player in turn KOs a non-grey Hero from their discard pile, then gains a card from the KO pile that has a lower cost.
+
+
+
+

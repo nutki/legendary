@@ -1,0 +1,19 @@
+
+#CARDNAME: Cytoplasm Spikes
+#FIGHT: <b>Feast</b>. If Cytoplasm Spikes feasts on a non-grey Hero, you get +2 Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Death's Heads
+#FIGHT: If you <b>Outwit</b> these Death's Heads, KO one of your cards that costs 0.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Sakaaran Hivelings
+#FIGHT: Look at the top card of your deck. Put it back on the top or bottom. Then <b>Feast</b>.
+#ATTACK: 3
+#VP: 1
+
+
+
+

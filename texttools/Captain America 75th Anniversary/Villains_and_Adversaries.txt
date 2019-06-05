@@ -1,0 +1,68 @@
+
+#CARDNAME: Zola's Creations
+
+#SUBNAME: Captain Zolandia
+#COPIES: 2
+Abomination
+#FIGHT: You get +1 Recruit for each Hero Class you have.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: Doughboy
+#COPIES: 2
+Abomination
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Man-Fish
+#COPIES: 2
+Abomination
+#FIGHT: If you fought Man-Fish in the Sewers or Bridge, then each other player gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Primus
+#COPIES: 2
+To fight Primus, you must also discard a card that costs 2, 3, 5, or 7.
+#ESCAPE: each player discards a Hero that costs 2, 3, 5, or 7.
+#ATTACK: 3*
+#VP: 3
+
+
+#CARDNAME: Masters of Evil (WWII)
+
+#SUBNAME: Black Knight
+#COPIES: 2
+#AMBUSH: Black Knight captures a Bystander.
+#FIGHT: Savior: KO one of your Heroes.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Executioner
+#COPIES: 2
+#AMBUSH: Executioner captures a Bystander
+#FIGHT: Savior: Draw a card.
+#ESCAPE: KO a Bystander from each player's Victory Pile.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Melter (WWII)
+#COPIES: 2
+#AMBUSH: Melter captures a Bystander.
+#FIGHT: Savior: Each player reveals the top card of their deck. For each card, you choose to KO it or put it back.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Radioactive Man
+#COPIES: 2
+#AMBUSH: Radioactive Man captures a Bystander.
+#FIGHT: Each player who is not a Savior gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+
+

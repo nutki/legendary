@@ -7,10 +7,9 @@
   MASTERMINDS => "Masterminds_and_Commanders.txt",
   SCHEMES => "Schemes_and_Plots.txt",
 );
-my ($type, @exp) = @ARGV;
+my ($type, $exp) = @ARGV;
 my $file = $input{$type};
-$exp{$_}=1 for @exp;
-open A, $file;
+open A, "<$exp/$file";
 undef $/;
 $_ = <A>;
 close A;
@@ -46,11 +45,7 @@ sub autopower {
   my $all = join', ',map"ev => $_",@r;
   @r ? @r > 1 ? ", [ $all ]" : ", $all" : "";
 }
-while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
-  #print "$1 ".length$2,"\n";
-  $content = $2;
-  $expansion = $1;
-  next if @exp && !$exp{$1};
+  $content = $_;
   #print length$content, "\n";
   $content =~ s/^\n+//;
   @items = map{s/\n+$/\n/r}split /^(?=#CARDNAME)/m, $content;
@@ -64,13 +59,7 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
     my $f = join'|',@_;
     print s!^// ($f):.*\n!!mgr;
   }
-  sub checkimage {
-    my $dir = shift @_;
-    my $name = join' ',@_;
-    $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".png";
-    print STDERR "no image: $imagename\n" unless -f "../images/$imagename";
-  }
-  print "addTemplates(\"$type\", \"$expansion\", [\n";
+  print "addTemplates(\"$type\", \"$exp\", [\n";
   for (@items) {
     if ($type eq "HENCHMEN") {
       parse();
@@ -81,7 +70,6 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       print "  ambush: ev => { },\n" if $_{AMBUSH};
       print "}),\n";
       $_{VP} == 1 || $_{FIGHT} eq "Gain this as a Hero." or die "VP is not 1: $_{VP}";
-      checkimage("henchmen", $_{CARDNAME});
     } elsif ($type eq "BYSTANDERS") {
       parse();
       filterprint(qw(CARDNAME VP COPIES));
@@ -90,7 +78,6 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       print ", ev => {}" if $_{RESCUE};
       print ") ] },\n";
       $_{VP} == 1 || !defined($_{VP}) or die "VP is not 1: $_{VP}";
-      checkimage($_{RESCUE} ? "bystanders" : "", $_{CARDNAME});
     } elsif ($type eq "HEROES") {
       ($_, my @subitems) = split/^\n+/m;
       parse();
@@ -121,7 +108,6 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         $flags .= 'F' if $_{FLAVOR};
         $flags .= 'D' if /2/ || $heroname =~ /2/;
         print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam, \"$flags\"$autopower),\n";
-        checkimage("heroes", $heroname, $_{SUBNAME});
       }
       print "},\n";
     } elsif ($type eq "MASTERMINDS") {
@@ -136,14 +122,12 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       print "makeMastermindCard(\"$mastermindname\", $defense, $vp, \"$leads\", ev => {\n";
       print "// $_{STRIKE}\n";
       print "}, [\n";
-      checkimage("masterminds", $mastermindname);
       for (@subitems) {
         parse();
         filterprint(qw(TACTIC FIGHT));
         print "  [ \"$_{TACTIC}\", ev => {\n";
         print "  // $_{FIGHT}\n";
         print "  } ],\n";
-        checkimage("masterminds", $mastermindname, $_{TACTIC});
       }
       print "]),\n";
     } elsif ($type eq "VILLAINS") {
@@ -164,7 +148,6 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
         print "    fight: ev => {},\n" if $_{FIGHT};
         print "    escape: ev => {},\n" if $_{ESCAPE};
         print "  })],\n";
-        checkimage("villains", $groupname, $_{SUBNAME});
       }
       print "]},\n";
       $copies == 8 or die "Group $groupname has $copies";
@@ -203,4 +186,3 @@ while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
     }
   }
   print "]);\n";
-}

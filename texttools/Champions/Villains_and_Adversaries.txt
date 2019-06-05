@@ -1,0 +1,90 @@
+
+#CARDNAME: Monsters Unleashed
+
+#SUBNAME: Goom
+#COPIES: 1
+#AMBUSH: Goom captures a Bystander.
+#FIGHT: KO one of your Heroes.
+#VP: 4
+#ATTACK: 6
+
+#SUBNAME: Groot from Planet X
+#COPIES: 1
+<b>Size-Changing</b>: [Strength], [Covert]
+#FIGHT: Two Bystanders from the Bystander Stack enter the city as 3 Attack "Splintered Half-Groot" Villains. When you fight one, rescue it as a Bystander.
+#ATTACK: 6*
+#VP: 2
+
+#SUBNAME: Monsteroso
+#COPIES: 1
+<b>Size-Changing</b>: [Strength], [Instinct]
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw an extra card.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Orrgo
+#COPIES: 1
+You can't fight Orrgo unless you have already defeated another Villain this turn.
+#ATTACK: 2*
+#VP: 2
+
+#SUBNAME: Sporr
+#COPIES: 1
+<b>Size-Changing</b>: [Tech], [Ranged]
+#FIGHT: A Hero in the HQ gains <b>Size-Changing</b>: [Tech], [Ranged] Recruit this turn.
+#ATTACK: 7*
+#VP: 3
+
+#SUBNAME: Tim Boo Ba
+#COPIES: 1
+<b>Size-Changing</b>: [Strength], [Instinct], [Covert], [Tech], [Ranged]
+#FIGHT: All Heroes currently in the HQ cost 1 less this turn.
+#ATTACK: 12*
+#VP: 5
+
+#SUBNAME: Trull the Unhuman
+#COPIES: 1
+<b>Size-Changing</b>: [Covert], [Tech]
+#AMBUSH: Trull captures a Bystander. Then <b>Demolish</b> each player.
+#ATTACK: 8*
+#VP: 4
+#FLAVOR: Why yes, that is an alien entity possessing the world's most terrifying steam shovel.
+
+#SUBNAME: Zzutak
+#COPIES: 1
+<b>Size-Changing</b>: [Ranged], [Instinct]
+#ESCAPE: <b>Demolish</b> each player.
+#ATTACK: 9*
+#VP: 5
+
+
+#CARDNAME: Wrecking Crew
+
+#SUBNAME: Bulldozer
+#COPIES: 2
+#AMBUSH: Bulldozer moves an extra space forward. If this pushes any Villains forward, <b>Demolish</b> each player.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Piledriver
+#COPIES: 2
+#FIGHT: KO one of your Heroes.
+#ESCAPE: <b>Demolish</b> each player.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Thunderball
+#COPIES: 2
+#FIGHT: If you fight THunderball in the Sewers or Bank, <b>Demolish</b> each other player.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: The Wrecker
+#COPIES: 2
+#AMBUSH: For each Wrecking Crew Villain in the city, (including this one), <b>Demolish</b> each player.
+#ATTACK: 7
+#VP: 5
+
+
+
+

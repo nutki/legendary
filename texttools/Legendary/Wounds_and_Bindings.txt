@@ -1,0 +1,7 @@
+
+#CARDNAME: Wound
+#COPIES: 30
+#HEAL: If you don't recruit any Heroes or defeat any Villains on your turn, you may KO all the Wounds from your hand.
+
+
+

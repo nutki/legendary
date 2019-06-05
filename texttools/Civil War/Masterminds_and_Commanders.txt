@@ -1,0 +1,108 @@
+
+#CARDNAME: Authoritarian Iron Man
+
+#LEADS: Superhuman Registration Act
+#STRIKE: Authoritarian Iron Man fortifies the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space.
+Villains in that space get +3 Attack.
+#ATTACK: 12
+#VP: 6
+
+#TACTIC: Armada of Armors
+#FIGHT: You get +6 Recruit usable only to recruit Ranged and/or Tech Heroes.
+
+#TACTIC: Freeze Domestic Assets
+#FIGHT: Each other player reveals their hand and discards all their cards with Recruit icons.
+
+#TACTIC: Man the Fortifications
+#FIGHT: Reveal the top card of the Villain Deck. If it's a Villain, it enters the city space that Authoritarian Iron Man is fortifying.
+
+#TACTIC: Recall to Service
+#FIGHT: The Villain with the highest printed Attack in the Escape Pile enters the city space that Authoritarian Iron Man is fortifying.
+
+
+#CARDNAME: Baron Helmut Zemo
+
+Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
+#LEADS: Thunderbolts
+#STRIKE: Each player KOs a Villain from their Victory Pile. Any player who cannot do so gains a Wound.
+#ATTACK: 16*
+#VP: 6
+
+#TACTIC: Blasted Henchmen!
+#FIGHT: Each other player reveals a Tech Hero or KOs a Villain from their Victory Pile.
+
+#TACTIC: Cursed Dynasty
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
+
+#TACTIC: Endless Minions
+#FIGHT: Each other player reveals a Tech Hero or chooses a Villain from their Victory Pile and it enters the city.
+
+#TACTIC: Revenge for My Father
+#FIGHT: Each other player reveals their hand. Each player who revealed an Avengers Hero gains a Wound.
+
+
+#CARDNAME: Maria Hill, Director of S.H.I.E.L.D.
+
+Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.H.I.E.L.D. Elite or Officers in the city.
+#LEADS: S.H.I.E.L.D. Elite.
+#STRIKE: Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
+#ATTACK: 7*
+#VP: 6
+
+#TACTIC: Crash the Helicarrier
+#FIGHT: KO any number of your S.H.I.E.L.D. Heroes.
+
+#TACTIC: Declare Martial Law
+#FIGHT: Put a S.H.I.E.L.D. Officer into each empty city space as 3 Attack Villains. When you fight them, gain them as Heroes.
+
+#TACTIC: Evacuation Code Epsilon
+#FIGHT: Each other player reveals their hand and discards a S.H.I.E.L.D. card.
+
+#TACTIC: Rapid Response Team
+#FIGHT: Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
+
+
+#CARDNAME: Misty Knight
+
+{BRIBE}
+#LEADS: Heroes for Hire
+#STRIKE: Each player reveals 4 cards with Recruit icons or gains a Wound.
+#ATTACK: 14*
+#VP: 6
+
+#TACTIC: Bionic Repulsor Field
+#FIGHT: Each other player reveals a Marvel Knight Hero or puts two cards from their hand on top of the deck.
+
+#TACTIC: Cyborg Detective
+#FIGHT: Reveal the top three cards of the Villain Deck. Put them back in any order.
+
+#TACTIC: Trusted Bodyguard
+#FIGHT: Going clockwise, the fist other player with Colleen Wing in their Victory Pile rescues 5 Bystanders and returns Colleen Wing to play fortifying Misty Knight.
+
+#TACTIC: Vibranium Cyber Arm
+#FIGHT: Each other player reveals a Marvel Knight Hero or gains a Wound.
+
+
+#CARDNAME: Ragnarok
+
+Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
+#LEADS: Registration Enforcers
+#STRIKE: Each player says "zero" or "not zero." Then, each player discards all their cards with that cost.
+#ATTACK: 6+
+#VP: 6
+
+#TACTIC: Electrical Charge
+#FIGHT: Count how many Ranged Heroes you have. Draw that many cards.
+
+#TACTIC: God of Cyborg Thunder
+#FIGHT: You can spend Recruit as Attack this turn.
+
+#TACTIC: Hammer Goliath
+#FIGHT: KO each Hero from the HQ that costs 7 or more.
+
+#TACTIC: Unnatural Storm Clouds
+#FIGHT: Put all Heroes from the HQ on the bottom of the Hero Deck in random order.
+
+
+
+

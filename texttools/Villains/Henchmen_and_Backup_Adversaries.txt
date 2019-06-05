@@ -1,0 +1,23 @@
+
+#CARDNAME: Asgardian Warriors
+#FIGHT: Draw a card.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Cops
+#FIGHT: Gain a New Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Multiple Man
+#FIGHT: KO one of your Allies for each other Multiple Man in your Victory Pile.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: S.H.I.E.L.D. Assault Squad
+#FIGHT: Discard the top card of your deck. Then KO an Ally from your discard pile.
+#ATTACK: 3
+#VP: 1
+
+
+

@@ -1,0 +1,179 @@
+
+#CARDNAME: Emissaries of Evil
+
+#SUBNAME: Egghead
+#COPIES: 2
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, play it.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Electro
+#COPIES: 2
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Scheme Twist, play it.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Gladiator
+#COPIES: 2
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Bystander, Gladiator captures it.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Rhino
+#COPIES: 2
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Master Strike, each player gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Four Horsemen
+
+#SUBNAME: Death
+#COPIES: 2
+#FIGHT: Each other player reveals their hand and KOs one of their Heroes that costs 1 or more.
+#ESCAPE: Each player does that same effect.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Famine
+#COPIES: 2
+#FIGHT: Each other player reveals an [Instinct] Hero or discards a card.
+#ESCAPE: Each player does that same effect.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Pestilence
+#COPIES: 2
+#FIGHT: Each other player reveals the top three cards of their deck, discards each of those cards that costs 1 or more, and puts the rest back in any order.
+#ESCAPE: Each player does that same effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: War
+#COPIES: 2
+#FIGHT: Each other player reveals an [Instinct] Hero or gains a Wound.
+#ESCAPE: Each player does that same effect.
+#ATTACK: 6
+#VP: 4
+
+
+#CARDNAME: Marauders
+
+#SUBNAME: Blockbuster
+#COPIES: 2
+Blockbuster gets +2 Attack for each Bystander he has.
+#AMBUSH: If there is a Villain in the Bank that Villain and Blockbuster each capture a Bystander.
+#ATTACK: 4+
+#VP: 2
+
+#SUBNAME: Chimera
+#COPIES: 2
+Chimera gets +3 Attack for each Bystander she has.
+#AMBUSH: Reveal the top three cards of the Villain Deck. Chimera captures all the Bystander cards you revealed. Put the rest back in random order.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Scalphunter
+#COPIES: 2
+Scalphunter gets +1 Attack for each Bystander he has.
+#AMBUSH: Each player chooses a Bystander from their Victory Pile. Scalphunter captures those Bystanders.
+#ATTACK: 4+
+#VP: 2
+
+#SUBNAME: Vertigo
+#COPIES: 2
+#FIGHT: Each player discards all the cards in their hand, then draws as many cards as they discarded.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: MLF
+
+#SUBNAME: Forearm
+#COPIES: 2
+To fight Forearm, you must also reveal four Hero cards with different card names.
+#ATTACK: 4*
+#VP: 4
+
+#SUBNAME: Reignfire
+#COPIES: 2
+#ESCAPE: Reignfire becomes a Master Strike that takes effect immediately.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Wildside
+#COPIES: 2
+#FIGHT: If you fight Wildside in the Sewers or Bank, KO two of your Heroes.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Zero
+#COPIES: 2
+To fight Zero, you must also discard three cards that cost 0.
+#ATTACK: 0*
+#VP: 2
+
+
+#CARDNAME: Streets of New York
+
+#SUBNAME: Bullseye
+#COPIES: 2
+#FIGHT: KO one of your Heroes with a Recruit icon and one of your Heroes with an Attack icon.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Hammerhead
+#COPIES: 2
+{BRIBE}
+#FIGHT: KO one of your Heroes with a Recruit icon.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Jigsaw
+#COPIES: 2
+#AMBUSH: Each player discards three cards, then draws two cards.
+{BRIBE}
+#ATTACK: 11*
+#VP: 5
+
+#SUBNAME: Tombstone
+#COPIES: 2
+{BRIBE}
+#ESCAPE: Each player reveals a [Strength] Hero or gains a Wound.
+#ATTACK: 8*
+#VP: 4
+
+
+#CARDNAME: Underworld
+
+#SUBNAME: Azazel
+#COPIES: 2
+#FIGHT: A card in your hand gains Teleport this turn.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Blackheart
+#COPIES: 2
+#AMBUSH: The player to your right reveals a Marvel Knights Hero or gains a Wound.
+#FIGHT: Same effect.
+#ESCAPE: Same effect.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Dracula
+#COPIES: 2
+#AMBUSH: Dracula captures the top card of the Hero Deck. Dracula gets + Attack equal to that card's Cost.
+#FIGHT: Gain that card.
+#ATTACK: 3+
+#VP: 4
+
+#SUBNAME: Lilith, Daughter of Dracula
+#COPIES: 2
+#ESCAPE: Each player without Dracula in their Victory Pile gains a Wound.
+#ATTACK: 5
+#VP: 3
+
+
+
+

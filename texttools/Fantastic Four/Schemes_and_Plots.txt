@@ -1,0 +1,25 @@
+
+#CARDNAME: Bathe the Earth in Cosmic Rays
+#SETUP: 6 Twists.
+#TWIST: Each player in turn does the following: Reveal your hand. KO one of your non-grey Heroes. Choose a Hero from the HQ with the same or lower cost and put it into your hand.
+#EVILWINS: When the number of non-grey Heroes in the KO pile is six times the number of players.
+
+#CARDNAME: Flood the Planet with Melted Glaciers
+#SETUP: 8 Twists.
+#TWIST: Stack the Twist next to the Scheme as "Rising Waters." Then KO each Hero from the HQ whose cost is less than or equal to the number of Rising Waters in that stack.
+#EVILWINS: When 20 non-grey Heroes are KO'd.
+
+#CARDNAME: Invincible Force Field
+#SETUP: 7 Twists.
+#TWIST: Stack this Twist next to the Mastermind as a "Force Field."
+#RULE: To fight the Mastermind, you must also spend 1 Recruit or 1 Attack for each Force Field next to them.
+#TWISTNR: NR[7] Evil Wins!
+
+#CARDNAME: Pull Reality Into the Negative Zone
+#SETUP: 8 Twists.
+#TWISTNR: NR[2, 4, and 6] Until the next Twist, Enemies cost Recruit to fight and Heroes cost Attack to recruit.
+#TWISTNR: NR[7] Evil Wins!
+
+
+
+

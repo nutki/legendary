@@ -1,0 +1,77 @@
+
+#CARDNAME: Maximum Carnage
+
+#SUBNAME: Carrion
+#COPIES: 2
+{FEAST}
+Whenever Carrion feasts on a Hero that costs 1 or more, put Carrion back in the city space where he was.
+#ATTACK: 4
+#VP: 3
+
+#SUBNAME: Demogoblin
+#COPIES: 2
+#AMBUSH: Demogoblin captures a Bystander.
+{FEAST}
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Doppelganger
+#COPIES: 2
+Doppelganger's Attack is equal to the Cost of the Hero in the HQ space under him.
+{FEAST}
+#ATTACK: *
+#VP: 3
+
+#SUBNAME: Shriek
+#COPIES: 2
+{FEAST}
+When Shriek feasts on a 0-cost Hero, each other player gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 6
+#VP: 4
+
+
+#CARDNAME: Sinister Six
+
+#SUBNAME: Chameleon
+#COPIES: 1
+#FIGHT: Copy the effects of the Hero in the HQ space under Chameleon, including its Recruit and Attack.
+#ATTACK: 6
+#VP: 2
+
+#SUBNAME: Hobgoblin
+#COPIES: 1
+#AMBUSH: Each Sinister Six Villain captures a Bystander.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Kraven the Hunter
+#COPIES: 1
+Kraven's Attack is equal to the Cost of the highest-cost Hero in the HQ.
+#ESCAPE: (After you do the normal escape KO) KO a Hero from the HQ with the highest cost.
+#ATTACK: *
+#VP: 4
+
+#SUBNAME: Sandman
+#COPIES: 1
+Sandman's Attack is twice the number of Villains in the city.
+#ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+#ATTACK: *
+#VP: 4
+
+#SUBNAME: Shocker
+#COPIES: 2
+#AMBUSH: Each player reveals an [Instinct] Hero or discards a card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Vulture
+#COPIES: 2
+#AMBUSH: (After Vulture enters the city) If there is a Villain on the Rooftops or Bridge, swap Vulture with one of those Villains.
+#ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+#ATTACK: 4
+#VP: 2
+
+
+
+

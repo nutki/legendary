@@ -1,0 +1,32 @@
+
+#CARDNAME: Bulldozer Driver
+#COPIES: ?
+#RESCUE: you may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+#VP: 1
+
+
+#CARDNAME: Double Agent Of S.H.I.E.L.D.
+#COPIES: ?
+#RESCUE: play a copy of one of your S.H.I.E.L.D. Heroes or HYDRA allies.
+#VP: 1
+
+
+#CARDNAME: Fortune Teller
+#COPIES: ?
+#RESCUE: guess "zero" or "not zero." Then reveal the top card of your deck and check its cost. If you guessed right, draw that card.
+#VP: 1
+
+
+#CARDNAME: Photographer
+#COPIES: ?
+This Bystander is worth +1 VP for each Hero you have that costs 7 or more among all your cards at the end of the game.
+#VP: 1
+
+
+#CARDNAME: Stan Lee
+#COPIES: ?
+#RESCUE: say a Hero name. Then reveal the top three cards of your deck. Put one of those cards with that exact Hero name into your hand. Put the rest back in any order.
+#VP: 1
+
+
+

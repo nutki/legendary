@@ -1,0 +1,74 @@
+
+#CARDNAME: Deadpool's "Friends"
+
+#SUBNAME: Blind Al and Deuce
+#COPIES: 2
+<b>Revenge for Deadpool's "Friends"</b>
+To fight Blind Al, you also gotta drop a Deuce <i>(discard a card with a "2" printed anywhere on it)</i>. Deuce is her dog, obviously.
+#ESCAPE: Everybody drop a Deuce.
+#ATTACK: 2+
+#VP: 3
+
+#SUBNAME: Sluggo
+#COPIES: 2
+<b>Revenge for Deadpool's "Friends"</b>
+#FIGHT: <b>Excessive Violence:</b> Gain the Hero from the HQ with the lowest cost <i>(or tied for lowest)</i>.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Taskmaster
+#COPIES: 2
+#AMBUSH: Taskmaster captures a Bystander.
+During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost Hero you played this turn.
+#ATTACK: 3+
+#VP: 4
+#FLAVOR: They call it Photographic Reflexes: I can copy any fighting move I've ever seen. And I've seen Howard the Duck."
+
+#SUBNAME: Weasel
+#COPIES: 2
+<b>Revenge for Deadpool's "Friends"</b>
+#AMBUSH: Each player simultaneously passes a card from their hand to the player on their left.
+#FIGHT: Same effect.
+#ATTACK: 4+
+#VP: 3
+
+
+#CARDNAME: Evil Deadpool Corpse
+
+#SUBNAME: D.E.A.D.P.O.O.L.
+#COPIES: 2
+<b>Revenge for Evil Deadpool Corpse</b>
+#FIGHT: Excessive Violence: KO one of your Heroes. Remind them that if they were better at hero-ing, these accidents wouldn't happen.
+#ATTACK: 4+
+#VP: 3
+#FLAVOR: Destructive Engine of Assassination Despite Panpygoptosis Obsessed with Opponent Liquidation.
+
+#SUBNAME: The Deadpool Kid
+#COPIES: 2
+<b>Revenge for Evil Deadpool Corpse</b>
+#ESCAPE: Old West Shootout. Each player reveals the top card of their deck. KO the card with the highest cost (or tied for highest.)
+#ATTACK: 5+
+#VP: 4
+#FLAVOR: If you're going to lose an 8-coster, distract the other players and cheat, varmint!
+
+#SUBNAME: Ultimate Deadpool
+#COPIES: 2
+<b>Revenge for Evil Deadpool Corpse</b>
+#FIGHT: Excessive Violence: Draw a card for each "Ultimate" in the HQ. You know, those totally kickass cards that cost 7 or more.
+#ESCAPE: KO all Ultimates from the HQ.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Wolverinepool
+#COPIES: 2
+<b>Revenge for Evil Deadpool Corpse</b>
+#AMBUSH: Each player reveals a card with an odd-numbered cost or gains a Wound. Ya know, the number 0 is pretty weird, but it's not odd.
+#FIGHT: Same effect.
+#ESCAPE: Same effect. Then, shuffle me back into the Villain Deck so I can kick your ass again!
+#ATTACK: 7+
+#VP: 6
+
+
+
+

@@ -1,0 +1,69 @@
+
+#CARDNAME: Howard the Duck
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Traveling Companion
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+Reveal the top card of the Bystander Deck. If it's a special Bystander, rescue it. Otherwise, put it on the bottom of that deck.
+#COST: 3
+
+#SUBNAME: Rebel Without a Cause
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Reveal the top card of your deck if it Costs 0 or has no team icon, draw it.
+#COST: 4
+
+#SUBNAME: Right Place, Wrong Time
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3+
+You get +1 Attack for each other Hero you played this turn with no team icon.
+#COST: 5
+
+#SUBNAME: Interplanetary Visitor
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
+#COST: 7
+
+
+#CARDNAME: Man-Thing
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Form from Ooze
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+<b>Teleport</b>
+You get +2 Attack usable only against villains in the Sewers or the Mastermind.
+#COST: 2
+
+#SUBNAME: Burn the Fearful
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+Choose a Villain or Mastermind. If there are no other Villains adjacent to it, it gets -1 Attack this turn.
+#COST: 4
+
+#SUBNAME: Travel the Nexus of Realities
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 3
+<b>Teleport</b>
+You may move a Villain to another city space. If another Villain is already there, swap them.
+#COST: 5
+
+#SUBNAME: Eternity of Solitude
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+{POWER Strength} You get +1 Attack for each empty city space.
+#COST: 7
+
+
+
+

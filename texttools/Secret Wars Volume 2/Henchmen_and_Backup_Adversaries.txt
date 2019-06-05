@@ -1,0 +1,21 @@
+
+#CARDNAME: Khonshu Guardians
+While in the Sewers, Rooftops or Bridge, this is in "wolf form" and gets +2 Attack.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Magma Men
+#FIGHT: KO one of your Heroes.
+#CARDNAME: Fateful Resurrection
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Spider-Infected
+#AMBUSH: This captures a Bystander.
+#FIGHT: The next Hero you gain this turn has Wall-Crawl.
+#ATTACK: 3
+#VP: 1
+
+
+

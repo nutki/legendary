@@ -1,0 +1,46 @@
+
+#CARDNAME: Carnage
+
+#LEADS: Maximum Carnage
+#STRIKE: Feast on each player. Whenever this Master Strike feasts on a player's 0-cost Hero, that player gains a Wound.
+#ATTACK: 9
+#VP: 6
+
+#TACTIC: Drooling Jaws
+#FIGHT: Each player reveals the top card of their deck. Then Carnage feasts on the player of your choice.
+
+#TACTIC: Endless Hunger
+{FEAST}
+If Carnage feasts on a 0-cost Hero this way, repeat this process.
+
+#TACTIC: Feed Me
+{FEAST}
+You get + Recruit equal to the Cost of the card Carnage feasts on.
+
+#TACTIC: Om Nom Nom
+{FEAST}
+If Carnage feasts on a 0-cost Hero this way, each other player KOs a Bystander from their Victory Pile.
+
+
+#CARDNAME: Mysterio
+
+#LEADS: Sinister Six
+#STRIKE: Shuffle this Master Strike into Mysterio's face down Mastermind Tactics. That card becomes a Mastermind Tactic worth 6 VP.
+#ATTACK: 8
+#VP: 6
+
+#TACTIC: Blurring Images
+#FIGHT: You get +1 Recruit for each Mastermind Tactic Mysterio has left after this one.
+
+#TACTIC: Captive Audience
+#FIGHT: Rescue a Bystander for each Mastermind Tactic Mysterio has left after this one.
+
+#TACTIC: Master of Illusions
+#FIGHT: If this is not the final Tactic, shuffle a Master Strike Tactic from each other player's Victory Pile back into Mysterio's Mastermind Tactics.
+
+#TACTIC: Mists of Deception
+#FIGHT: If this is not the final Tactic, reveal the top five cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest on the bottom of that deck in random order.
+
+
+
+

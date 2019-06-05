@@ -1,0 +1,58 @@
+
+#CARDNAME: Fin Fang Foom
+<b>Size-Changing</b>: [Strength], [Instinct], [Covert], [Tech], [Ranged]
+#LEADS: Monsters Unleashed
+#STRIKE: <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile.
+#ATTACK: 20*
+#VP: 7
+
+#CARDNAME: Epic Fin Fang Foom
+<b>Size-Changing</b>: [Strength], [Instinct], [Covert], [Tech], [Ranged]
+#LEADS: Monsters Unleashed
+#STRIKE: <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile. KO all the Heroes <b>Demolished</b> this way.
+#ATTACK: 24*
+#VP: 7
+
+#TACTIC: Alien Dragon Technology
+#FIGHT: A Hero in the HQ gets <b>Size-Changing</b>: [Strength], [Instinct], [Covert], [Tech], [Ranged] this turn.
+
+#TACTIC: Flammable Acid Breath
+#FIGHT: KO the top card of the Hero Deck. Then each other player KOs a Hero of that Hero class from their discard pile ([Strength] [Instinct] [Covert] [Tech] [Ranged]).
+
+#TACTIC: Multipronged Assault
+#FIGHT: Each other player reveals at least 3 Hero Classes ([Strength] [Instinct] [Covert] [Tech] [Ranged]) or gains a Wound.
+
+#TACTIC: Supersonic Dive Attack
+#FIGHT: KO the top card of the Hero Deck. Then each other player reveals their hand and discards a Hero of that Hero Class ([Strength] [Instinct] [Covert] [Tech] [Ranged]).
+
+
+#CARDNAME: Pagliacci
+#LEADS: Wrecking Crew
+<b>Master Strike 1, 5</b>: This card becomes a Scheme Twist that takes effect immediately.
+<b>Master Strike 2, 3, 4</b>: <b>Demolish</b> each player.
+#ATTACK: 9
+#VP: 6
+
+#CARDNAME: Epic Pagliacci
+#LEADS: Wrecking Crew
+<b>Master Strike 1, 3, 5</b>: This card becomes a Scheme Twist that takes effect immediately.
+<b>Master Strike 2, 4</b>: <b>Demolish</b> each player.
+#ATTACK: 11
+#VP: 6
+
+#TACTIC: Commedia Dell'Morte
+#FIGHT: Each other player may gain two Wounds. <b>Demolish</b> each of those players who does not.
+
+#TACTIC: Creative Assassin
+#FIGHT: You get {VERSATILE 3}.
+As killer clowns go, Pagliacci is not one you want to find under your bed.
+
+#TACTIC: Insane Clown Has a Posse
+#FIGHT: Each other player may KO a Wrecking Crew Villain from their Victory Pile. <b>Demolish</b> each of those players who does not.
+
+#TACTIC: Jester of a Twisted Opera
+#FIGHT: Each other player may KO a card from their discard pile that costs 1 or more. <b>Demolish</b> each of those players who does not.
+
+
+
+

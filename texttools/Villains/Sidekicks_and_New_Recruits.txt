@@ -1,0 +1,9 @@
+
+#CARDNAME: New Recruit
+#COPIES: 15
+#ATTACK: 1
+Return this card to the New Recruit Stack. Draw a card. (You still get this New Recruit's Attack.)
+#COST: 2
+
+
+

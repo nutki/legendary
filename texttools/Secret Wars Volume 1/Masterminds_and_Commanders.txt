@@ -1,0 +1,87 @@
+
+#CARDNAME: Madelyne Pryor, Goblin Queen
+
+Bystanders captured by Madelyne are "Demon Goblin" Villains with 2 Attack. You can fight them to rescue them as Bystanders. You can't fight her while she has any Demon Goblins.
+#LEADS: Limbo
+#STRIKE: Madelyne captures 4 Bystanders. If she already had any Bystanders before that, then each player gains a Wound.
+#ATTACK: 10*
+#VP: 6
+
+#TACTIC: City of Demon Goblins
+#FIGHT: Madelyne captures five Bystanders.
+
+#TACTIC: Corrupted Clone of Jean Grey
+#FIGHT: Each other player reveals an X-Men Hero or gains a Wound.
+
+#TACTIC: Everyone's a Demon on the Inside
+#FIGHT: Madelyne captures a Bystander from each other player's Victory Pile.
+
+#TACTIC: Gather the Harvest
+#FIGHT: For each Limbo Villain in the city and/or Escape Pile, Madelyne captures a Bystander.
+
+
+#CARDNAME: Nimrod, Super Sentinel
+
+You can't fight Nimrod unless you made at least 6 Recruit this turn.
+#LEADS: Sentinel Territories
+#STRIKE: Each player who does not reveal a [Tech] Hero must choose Recruit or Attack, then discard all their cards with that icon.
+#ATTACK: 6*
+#VP: 6
+
+#TACTIC: Adapt and Destroy
+#FIGHT: Choose Recruit or Attack. Each other player reveals their hand and discards a card with that icon.
+
+#TACTIC: Detect Mutation
+#FIGHT: Choose Recruit or Attack. Then, reveal the top card of your deck. If that card has that icon, draw it and repeat this process.
+
+#TACTIC: Scatter the Mutants
+#FIGHT: Choose Recruit or Attack. Put all Heroes from the HQ with that icon on the bottom of the Hero Deck.
+
+#TACTIC: Teleport and Incarcerate
+#FIGHT: Choose Recruit or Attack. Then, reveal the top card of that Hero Deck. If that card has that icon, gain that card, and Teleport it.
+
+
+#CARDNAME: Wasteland Hulk
+
+Wasteland Hulk gets +3 Attack for each of his Mastermind Tactics among all players' Victory Piles.
+#LEADS: Wasteland
+#STRIKE: Cross-Dimensional Hulk Rampage
+#ATTACK: 7+
+#VP: 6
+
+#TACTIC: Brutal Beating
+#FIGHT: Each other player counts the number of Wounds in their discard pile, then discards that many cards.
+
+#TACTIC: Memories of Pain
+#FIGHT: Each other player puts two Wounds from their discard pile on top of their deck.
+
+#TACTIC: Radioactive Regeneration
+#FIGHT: KO up to two Wounds from your hand and/or discard pile.
+
+#TACTIC: Revert to Bruce Banner
+#FIGHT: You gain a [Tech] Hero from the HQ for free.
+
+
+#CARDNAME: Zombie Green Goblin
+
+Zombie Green Goblin gets +1 Attack for each Hero in the KO pile that costs 7 or more.
+#LEADS: The Deadlands
+#STRIKE: Rise of the Living Dead. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
+#ATTACK: 11+
+#VP: 6
+
+#TACTIC: Army of Cadavers
+#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "Rise of the Living Dead."
+
+#TACTIC: The Hungry Dead
+#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "Rise of the Living Dead".
+
+#TACTIC: Love To Have You For Dinner
+#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
+
+#TACTIC: Reign of Terror
+#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
+
+
+
+

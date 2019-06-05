@@ -1,0 +1,44 @@
+
+#CARDNAME: Supreme Intelligence of the Kree
+
+#LEADS: Kree Starforce
+#STRIKE: The Supreme Intelligence gains a Shard. Then each player reveals their hand and discards each with cost equal to, and cost one higher than, the number of Shards on the Supreme Intelligence.
+#ATTACK: 9
+#VP: 6
+
+#TACTIC: Combined Knowledge of All Kree
+#FIGHT: The Supreme Intelligence gains a Shard for each Kree Villain in the city and/or the Escape Pile.
+
+#TACTIC: Cosmic Omniscience
+#FIGHT: The Supreme Intelligence gains a Shard for each Master Strike in the KO pile.
+
+#TACTIC: Countermeasure Protocols
+#FIGHT: The Supreme Intelligence gains a Shard for each Mastermind Tactic (including this one) in any player's Victory Pile.
+
+#TACTIC: Guide Kree Evolution
+#FIGHT: The Supreme Intelligence and Kree Villains in the city each gain a Shard.
+
+
+#CARDNAME: Thanos
+
+#LEADS: Infinity Gems
+Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any player.
+#STRIKE: Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Bound Souls" pile.
+#ATTACK: 24
+#VP: 7
+
+#TACTIC: Centuries of Envy
+#FIGHT: Each other player discards an Infinity Gem Artifact card they control.
+
+#TACTIC: God of Death
+#FIGHT: Each other player reveals their hand and gains a Wound for each card that player has with the same card name as any card in Thanos' Bound Souls pile.
+
+#TACTIC: Keeper of Souls
+#FIGHT: Gain a Hero from Thanos' Bound Souls pile. Then each other player puts a non-grey Hero from their discard pile into Thanos' Bound Souls pile.
+
+#TACTIC: The Mad Titan
+#FIGHT: Each other player reveals their hand and discards all cards with the same card name as any card in Thanos' Bound Souls pile.
+
+
+
+

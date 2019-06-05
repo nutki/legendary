@@ -1,0 +1,102 @@
+
+#CARDNAME: Kree Starforce
+
+#SUBNAME: Captain Atlas
+#COPIES: 1
+Captain Atlas gets +1 Attack for each Shard on the Mastermind.
+#ESCAPE: Each player loses a Shard. Each player that cannot do so gains a Wound.
+#ATTACK: 6+
+#VP: 4
+
+#SUBNAME: Demon Druid
+#COPIES: 1
+#AMBUSH: Another Villain in the city gains two Shards.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Dr. Minerva
+#COPIES: 1
+#AMBUSH: Each Kree Villain in the city gains a Shard (including this Villain).
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Korath the Pursuer
+#COPIES: 1
+#AMBUSH: Each player may draw a card. Korath gains a Shard for each card drawn this way.
+#ESCAPE: If Korath had any Shards, each player gains a Wound.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Ronan the Accuser
+#COPIES: 1
+#AMBUSH: Each player simultaneously points their finger to accuse another player. Each player who was accused the most gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Shatterax
+#COPIES: 1
+#FIGHT: Put a Shard on each Hero in the HQ. When a player gains that Hero, they gain that Shard. If that Hero leaves the HQ some other way, return that Shard to the supply.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Supremor
+#COPIES: 2
+#AMBUSH: Supremor and the Mastermind each gain a Shard.
+#ATTACK: 3
+#VP: 2
+
+
+#CARDNAME: Infinity Gems
+
+#SUBNAME: Mind Gem
+#COPIES: 1
+#AMBUSH: Mind Gem gains a Shard for each Scheme Twist in the KO pile and/or stacked next to the Scheme.
+#FIGHT: Put this into your discard pile as an Artifact.
+Artifact - Once per turn, you get +2 Recruit.
+#ATTACK: 6
+#VP: 0
+
+#SUBNAME: Power Gem
+#COPIES: 1
+#AMBUSH: Power Gem gains a Shard for each Master Strike in the KO pile and/or stacked next to the Mastermind.
+#FIGHT: Put this into your discard pile as an Artifact.
+Artifact - Once per turn, you get +2 Attack.
+#ATTACK: 7
+#VP: 0
+
+#SUBNAME: Reality Gem
+#COPIES: 2
+#AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
+#FIGHT: Put this into your discard pile as an Artifact.
+Artifact - Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
+#ATTACK: 5
+#VP: 0
+
+#SUBNAME: Soul Gem
+#COPIES: 1
+#AMBUSH: Soul Gem gains a Shard for each Villain in the city.
+#FIGHT: Put this into your discard pile as an Artifact.
+Artifact - Whenever you defeat a Villain, put a Shard on Soul Gem from the supply. Once per turn, you get + Attack equal to the number of Shards on Soul Gem.
+#ATTACK: 6
+#VP: 0
+
+#SUBNAME: Space Gem
+#COPIES: 2
+#AMBUSH: Space Gem gains a Shard for each empty space in the city.
+#FIGHT: Put this into your discard pile as an Artifact.
+Artifact - Once per turn, you may move a Villain to another city space. If another Villain is already there, swap them. If you moved any Villains this way, gain a Shard.
+#ATTACK: 5
+#VP: 0
+
+#SUBNAME: Time Gem
+#COPIES: 1
+#AMBUSH: Play another card from the Villain Deck. Time Gem gains Shards equal to that card's printed Victory Points.
+#FIGHT: Put this into your discard pile as an Artifact.
+Artifact - When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
+#ATTACK: 6
+#VP: 0
+
+
+
+

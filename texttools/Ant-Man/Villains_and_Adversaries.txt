@@ -1,0 +1,122 @@
+
+#CARDNAME: Ultron's Legacy
+
+#SUBNAME: Ultron Roboticks
+#COPIES: 1
+<b>Microscopic Size-chaning:</b> [Tech] [Tech] [Tech]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Original Ultron-1
+#COPIES: 1
+<b>Empowered</b> by [Ranged]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Legions of Ultron
+#COPIES: 1
+<b>Empowered</b> by [Tech]
+#FIGHT: Draw a card.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Alkhema
+#COPIES: 1
+<b>Empowered</b> by [Instinct]
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Ultron-Pym
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Tech] [Tech] [Tech] [Tech] [Tech]
+#FIGHT: A Hero in the HQ with no <b>Size-Changing</b> abilites gains <b>Size-Changing</b>: [Tech] this turn.
+#ATTACK: 6*
+#VP: 3
+
+#SUBNAME: Future Ultron Prime
+#COPIES: 1
+<b>Double Empowered</b> by [Tech]
+#AMBUSH: Put all non-[Tech] Heroes from the HQ on the bottom of the Hero Deck.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Brutish Ultron-14
+#COPIES: 1
+<b>Empowered</b> by [Strength]
+#FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Crimson Cowl
+#COPIES: 1
+<b>Empowered</b> by [Covert]
+#AMBUSH: Crimson Cowl captures a Bystander.
+#ATTACK: 5+
+#VP: 4
+
+
+#CARDNAME: Queen's Vengeance
+
+#SUBNAME: Daystar
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Ranged] [Ranged] [Ranged] [Ranged] [Ranged]
+#FIGHT: Reveal the top card of your deck. You may KO it.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Blackbird
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3*
+#VP: 3
+
+#SUBNAME: Gigantus
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Strength] [Strength] [Strength] [Strength] [Strength]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 7*
+#VP: 4
+
+#SUBNAME: Iron Knight
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
+#ATTACK: 4*
+#VP: 4
+
+#SUBNAME: Yoeman America
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#FIGHT: You get +1 Recruit for each color of Hero you have (including grey).
+#ATTACK: 5*
+#VP: 5
+
+#SUBNAME: Star-Knight
+#COPIES: 1
+<b>Chivalrous Duel</b>
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 3*
+#VP: 3
+
+#SUBNAME: Pixie
+#COPIES: 1
+<b>Microscopic Size-Changing:</b> [Covert] [Covert] [Covert] [Covert].
+#FIGHT: Reveal a [Covert] Hero or play another card from the Villain Deck.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Mordred the Evil
+#COPIES: 1
+#FIGHT: Choose a card in your discard pile. The player to your right gains it.
+#ESCAPE: Each player simultaneously does that same effect.
+#ATTACK: 5
+#VP: 3
+
+
+
+

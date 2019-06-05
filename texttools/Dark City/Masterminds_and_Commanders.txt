@@ -1,0 +1,109 @@
+
+#CARDNAME: Apocalypse
+
+#LEADS: Four Horsemen
+Four Horsemen Villains get +2 Attack
+Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped
+#STRIKE: Each player reveals their hand and puts all their Heroes that cost 1 or more on top of their deck.
+#ATTACK: 12
+#VP: 6
+
+#TACTIC: Apocalyptic Destruction
+#FIGHT: Each other player KOs two Heroes from their discard pile that each cost 1 or more.
+
+#TACTIC: The End of All Things
+#FIGHT: Each other player reveals the top three cards of their deck, KOs each one of those cards that cost 1 or more, and puts the rest back in any order.
+
+#TACTIC: Horsemen Are Drawing Nearer
+#FIGHT: Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.
+
+#TACTIC: Immortal and Undefeated
+#FIGHT: If this is not the final Tactic, rescue six Bystanders and shuffle this Tactic back into the other Tactics.
+
+
+#CARDNAME: Kingpin
+
+{BRIBE}
+#LEADS: Streets of New York
+#STRIKE: Each player reveals a Marvel Knights Hero or discards their hand and draws 5 cards.
+#ATTACK: 13*
+#VP: 6
+
+#TACTIC: Call a Hit
+#FIGHT: Choose a Hero from each player's discard pile and KO it.
+
+#TACTIC: Criminal Empire
+#FIGHT: If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
+
+#TACTIC: Dirty Cops
+#FIGHT: Put a 0 Cost Hero from the KO pile on top of each other player's deck.
+
+#TACTIC: Mob War
+#FIGHT: Each other player plays a Henchman Villain from their Victory Pile as if playing it from the Villain Deck.
+
+
+#CARDNAME: Mephisto
+
+Whenever a player gains a Wound, put it on top of that player's deck.
+#LEADS: Underworld
+#STRIKE: Each player reveals a Marvel Knights Hero or gains a Wound.
+#ATTACK: 10
+#VP: 6
+
+#TACTIC: Damned If You Do...
+#FIGHT: Each other player KOs a Bystander from their Victory Pile or gains a Wound.
+
+#TACTIC: Devilish Torment
+#FIGHT: Each other player puts all 0 Cost cards from their discard pile on top of their deck in any order.
+
+#TACTIC: Pain Begets Pain
+#FIGHT: Choose any number of Wounds from your hand and discard pile. The player to your right gains them.
+
+#TACTIC: The Price of Failure
+#FIGHT: Each other player without a Mastermind Tactic in their Victory Pile gains a Wound.
+
+
+#CARDNAME: Mr. Sinister
+
+Mr. Sinister gets +1 Attack for each Bystander he has.
+#LEADS: Marauders
+#STRIKE: Mr. Sinister captures a Bystander. Then each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Mr. Sinister has.
+#ATTACK: 8
+#VP: 6
+
+#TACTIC: Human Experimentation
+#FIGHT: Mr. Sinister captures Bystanders equal to the number of Villains in the city.
+
+#TACTIC: Master Geneticist
+#FIGHT: Reveal the top seven cards of the Villain Deck. Mr. Sinister captures all of the Bystanders you revealed. Put the rest back in random order.
+
+#TACTIC: Plans Within Plans
+#FIGHT: Mr. Sinister captures a Bystander for each Mr. Sinister Tactic in players' Victory Piles, including this Tactic.
+
+#TACTIC: Telepathic Manipulation
+#FIGHT: Mr. Sinister captures a Bystander from each other player's Victory Pile.
+
+
+#CARDNAME: Stryfe
+
+#LEADS: MLF
+#STRIKE: Stack this Master Strike next to Stryfe.
+Stryfe gets +1 Attack for each Master Strike stacked next to him. Each player reveals an X-Force Hero or discards a card at random.
+#ATTACK: 7
+#VP: 6
+
+#TACTIC: Furious Wrath
+#FIGHT: Reveal the top six cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest back in random order.
+
+#TACTIC: Psychic Torment
+#FIGHT: Look at the top five cards of your deck. Put one into your hand and discard the rest.
+
+#TACTIC: Swift Vengeance
+#FIGHT: A Wound from the Wound Stack becomes a Master Strike that takes effect immediately.
+
+#TACTIC: Tide of Retribution
+#FIGHT: Each other player reveals an X-Force Hero or gains a Wound.
+
+
+
+

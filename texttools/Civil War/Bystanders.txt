@@ -1,0 +1,13 @@
+
+#CARDNAME: Aspiring Hero
+#COPIES: 4
+#RESCUE: gain a Sidekick.
+#VP: 1
+
+#CARDNAME: Comic Shop Keeper
+#COPIES: 3
+#RESCUE: reveal the top three cards of the Hero Deck. The player of your choice gains one of them that costs 3 or less. Put the rest back in any order.
+#VP: 1
+
+
+

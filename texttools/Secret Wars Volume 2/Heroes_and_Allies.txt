@@ -1,0 +1,571 @@
+
+#CARDNAME: Agent Venom
+#TEAM: Spider Friends
+
+#SUBNAME: Multi-Gun 
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1+
+#ATTACK: 1+
+<b>Spectrum</b>: You get +1 Recruit and +1 Attack.
+#COST: 2
+#FLAVOR: His weapons are as versatile as Venom himself.
+#GUN: 1
+
+#SUBNAME: Government Payroll
+#COPIES: 5
+[Strength], [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Wall-Crawl</b>
+<b>Patrol the Bank</b>: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack.
+#COST: 3
+
+#SUBNAME: Big Slimeportunity
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 2
+#ATTACK: 2
+<b>Wall-Crawl</b>
+<b>Patrol the Sewers</b>: If it's empty, draw a card.
+#COST: 6
+#FLAVOR: Flash Thompson combines elite military training with Venom symbiote.
+
+#SUBNAME: Shapeshifting Symbiote
+#COPIES: 1
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Wall-Crawl</b>
+For each other card you played this turn with a Recruit icon, you get +1 Recruit.
+For each other card you played this turn with a Attack icon, you get +1 Attack.
+(If another card has both Recruit and Attack, you get both bonuses.)
+#COST: 7
+
+
+#CARDNAME: Arkon the Magnificent
+#TEAM: (Unaffiliated)
+
+#SUBNAME: All-Terrain Barbarian
+#COPIES: 5
+[Strength], [Covert]
+#RECRUIT: 2+
+<b>Wall-Crawl</b>
+<b>Patrol the Sewers</b>: If it's empty, you get +1 Recruit.
+#COST: 3
+#FLAVOR: Even beneath the surface, Arkon conquers them all.
+
+#SUBNAME: Quiver of Thunderbolts
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+<b>Spectrum</b>: Draw a card.
+#COST: 3
+#FLAVOR: A Quiver of Thunderbolts is quite unorthodox but totally awesome.
+
+#SUBNAME: Warlord of Open Spaces
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3+
+<b>Patrol two adjacent city spaces</b>:
+If they're both empty, you get +1 Attack.
+#COST: 5
+
+#SUBNAME: Lord of Dragons
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Patrol the Rooftops</b>: If it's empty, you get +4 Recruit and +4 Attack. If it's not, defeat the Villain there for free.
+#COST: 7
+
+
+#CARDNAME: Beast
+#TEAM: Illuminati
+
+#SUBNAME: Balanced Attack
+#COPIES: 5
+[Strength], [Tech]
+#ATTACK: 2
+Reveal the top card of your deck. If it's [Tech] or [Strength], draw it.
+#COST: 3
+#FLAVOR: If you can balance yourself upside-down, you will turn your foes upside-down with a balanced attack.
+
+#SUBNAME: Upside-down Thinking
+#COPIES: 5
+[Strength], [Tech]
+<b>Wall-Crawl</b>
+<b>Patrol any city space</b>:
+If it's empty, then the hero in the HQ space under it costs 3 less this turn.
+#COST: 4
+
+#SUBNAME: Doctor of Beatdown
+#COPIES: 3
+[Strength], [Tech]
+#ATTACK: 2+
+For each other [Strength] card you played this turn, you get +1 Attack.
+For each other [Tech] card you played this turn, you get +1 Attack.
+#COST: 6
+
+#SUBNAME: Multi-Variable Smackulus
+#COPIES: 1
+[Strength], [Tech]
+#ATTACK: 4
+{POWER Strength Strength Tech Tech} Draw three cards.
+#COST: 8
+#FLAVOR: If I calculate the precise rotational torque, I find I'm really thrashing you with considerable force.
+
+
+#CARDNAME: Black Swan
+#TEAM: Cabal
+
+#SUBNAME: Apocalyptic Vision
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} Reveal the top card of the Villain Deck. If it's a Scheme Twist, you get +2 Attack. Otherwise, put it back on the top or bottom.
+#COST: 3
+
+#SUBNAME:  Witness the End
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} You may KO a card from your hand or discard pile. If you do, draw a card.
+#COST: 5
+#FLAVOR: Black Swan foretold the Incursions that destroyed the old universe.
+
+#SUBNAME: Dark Foretelling
+#COPIES: 3
+[Instinct], [Ranged]
+#ATTACK: 4
+Reveal the top three cards of the Villain Deck. Rescue any Bystanders you revealed, then put the rest back in any order.
+#COST: 6
+
+#SUBNAME: Telepathic Control
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+Reveal the top five cards of the Villain Deck. You get + Attack equal to the printed Victory Point of one of those cards. Put them back in any order.
+{TEAMPOWER Cabal} Instead, you get + Attack for two of those cards.
+#COST: 7
+
+
+#CARDNAME: The Captain and the Devil 
+#TEAM: Avengers
+
+#SUBNAME: Jurassic America 
+#COPIES: 5
+[Strength], [Tech]
+#RECRUIT: 1+
+<b>Spectrum</b>: you get +2 Recruit.
+#COST: 2
+#FLAVOR: When you gotta go, you gotta go.
+
+#SUBNAME: Patriotic Chomp
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+<b>Spectrum</b>: You get +2 Attack.
+#COST: 4
+#FLAVOR: The Captain and The Devil must journey through a sea of angry Hulks in the Battleworld region known as "Greenland."
+
+#SUBNAME:  Feeding Grounds
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+<b>Patrol the Streets</b>: If it's empty, you may KO a card from your hand or discard pile.
+#COST: 6
+#FLAVOR: Captain America and Devil Dinosaur...Unlikely brothers in arms.
+
+#SUBNAME: Dino-Roar of Triumph
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 6
+Whenever you defeat a Villain this turn, each Villain and Mastermind adjacent to it gets -2 Attack this turn.
+#COST: 8
+
+
+#CARDNAME: Captain Britain
+#TEAM: Illuminati
+
+#SUBNAME: Combined Strength
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+You get +1 Attack for each different team icon among your heroes.
+#COST: 4
+#FLAVOR: It's wise to respect 400 years of British history...Especially when it's punching you in the face.
+
+#SUBNAME: Transatlantic Savior
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 0+
+You get +1 Recruit for each different team icon among your heroes.
+#COST: 3
+
+#SUBNAME: Raise the Union Jack
+#COPIES: 3
+[Strength], [Covert]
+#ATTACK: 2
+<b>Patrol the Rooftops</b>: If it's empty, reveal the top two cards of your deck. If they have different team icons, draw them. Otherwise, put them back in any order.
+#COST: 5
+
+#SUBNAME: Lead the Captain Britain Corps
+#COPIES: 1
+#CLASS: [Strength]
+When you draw a new hand of cards at the end of this turn, draw three extra cards.
+#COST: 7
+
+
+#CARDNAME: Corvus Glaive
+#TEAM: Cabal
+
+#SUBNAME: Culling Blade
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+KO a Bystander from the Bystander Deck. If it's a Special Bystander, you may use its Rescue effect.
+#COST: 3
+#FLAVOR: A sculptor with a scalpel...A rather enormous scalpel.
+
+#SUBNAME: Let None Escape You
+#COPIES: 5
+[Strength], [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Patrol the Escape Pile</b>: If there are none Bystanders in it, you get +2 Attack. Otherwise, you get +2 Recruit.
+#COST: 2
+#FLAVOR: Thanos' most trusted general...And his most cruel.
+
+#SUBNAME: Rictus Grin
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{TEAMPOWER Cabal} KO a Bystander from the Bystander Stack. Then, you get +1 Attack for every four Bystanders in the KO Pile.
+#COST: 6
+#GUN: 1
+
+#SUBNAME: Atom-Splitting Glaive
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 6+
+{TEAMPOWER Cabal} You may KO a Bystander from the Escape Pile and from each player's Victory Pile. You get +1 Attack for each Bystander KO'd this way.
+#COST: 8
+
+
+#CARDNAME: Dr. Punisher, Soldier Supreme 
+#TEAM: Marvel Knights
+
+#SUBNAME: Sweep the Streets of Trash
+#COPIES: 5
+[Tech], [Ranged]
+#RECRUIT: 1
+<b>Patrol the Streets</b>: If it's empty, draw a card.
+#COST: 2
+#FLAVOR: This mashup cleans the trash up.
+#GUN: 1
+
+#SUBNAME: You're a Slow Learner
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{POWER Tech} Reveal the top card of your deck. If it costs 0, KO it and you get +1 Attack.
+#COST: 4
+
+#SUBNAME: Ice Magic
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+Reveal the top card of the Villain Deck. If it's a Villain, you may fight it this turn.
+{POWER Ranged Ranged} You get +Attack equal to that Villain's printed VP value.
+#COST: 3
+
+#SUBNAME: Calm Before the Storm
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+<b>Patrol every city space</b>:
+For each space that's empty, you get +1 Attack.
+#COST: 7
+#FLAVOR: It's quiet. Too quiet.
+#GUN: 1
+
+
+#CARDNAME: Elsa Bloodstone
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Bloodstone Pendant
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2+
+<b>Spectrum</b>: You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
+#COST: 5
+
+#SUBNAME: Monster Hunter
+#COPIES: 5
+[Covert], [Tech]
+#ATTACK: 2
+<b>Patrol the Sewers</b>: If it's empty, rescue a Bystander.
+#COST: 3
+#FLAVOR: Elsa knows a lot of lore about various dark creatures, but most of it boils down to where to stab them.
+#GUN: 1
+
+#SUBNAME: Defend the S.H.I.E.L.D. Wall
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 0+
+<b>Wall-Crawl</b>
+You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
+#COST: 6
+#FLAVOR: As commander of the wall, Elsa must hold back the Deadlands Hordes.
+#GUN: 1
+
+#SUBNAME: Prodigy of Ulysses Bloodstone
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 6+
+<b>Spectrum</b>: You get +3 Attack.
+#COST: 8
+#FLAVOR: Elsa's father threw her at monsters before she could walk, training her relentlessly to become the perfect weapon.
+
+
+#CARDNAME: Phoenix Force Cyclops 
+#TEAM: X-Men
+
+#SUBNAME: Burn Out
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+You may KO this card. If you do, you gain +2 Attack.
+#COST: 4
+#FLAVOR: Like Jean Grey before him, Cyclops became the vessel for the godlike Phoenix entity.
+
+#SUBNAME: Reincarnate
+#COPIES: 5
+#CLASS: [Covert]
+KO this card. Gain a hero from the S.H.I.E.L.D. Office stack or HQ that costs 4 or less and put it into your hand.
+#COST: 3
+
+#SUBNAME: Rise from the Ashes
+#COPIES: 3
+[Instinct], [Ranged]
+#ATTACK: 3
+Gain a Hero that was KO'd this turn.
+#COST: 6
+#FLAVOR: The Phoenix is a cosmic force of great life or limitless destruction.
+
+#SUBNAME: Destruction Is Creation
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4
+KO up to three cards from your hand. Draw that many cards.
+#COST: 8
+
+
+#CARDNAME: Ruby Summers
+#TEAM: X-Men
+
+#SUBNAME: Guerrilla Warfare
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+When a card effect causes you to discard this card, if it is your turn, <b>Teleport</b> it instead. If it is not your turn, set it aside and add it to your hand at the end of this turn.
+#COST: 3
+#FLAVOR: Hit-and-run tactics.
+
+#SUBNAME: Heir to Legends
+#COPIES: 5
+[Strength], [Ranged]
+#RECRUIT: 2
+#ATTACK: 2
+To play this card, you must discard a card from your hand.
+#COST: 5
+#FLAVOR: The alternate-reality daughter of Cyclops and Emma Frost, Ruby, combines both their powers.
+
+#SUBNAME: Form of Solid Ruby
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 4
+{TEAMPOWER X-Men} Whenever you defeat a villain or mastermind this turn, you get +2 Recruit.
+#COST: 6
+#FLAVOR: While Emma turned into solid diamond, Ruby turns into - well, you can probably guess.
+
+#SUBNAME: Extinction Blast
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 10
+To play this card, you must discard three cards from your hand.
+#COST: 8
+
+
+#CARDNAME: Shang-Chi 
+#TEAM: Marvel Knights
+
+#SUBNAME: Shuffling Footwork 
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} You may shuffle your discard pile into your deck.
+#COST: 3
+
+#SUBNAME: Acrobatic Kung-Fu
+#COPIES: 5
+[Instinct], [Covert]
+#ATTACK: 2+
+<b>Wall-Crawl</b>
+<b>Patrol the Rooftops</b>: If it's empty, you get +1 Attack.
+#COST: 4
+
+#SUBNAME: Seek the Empty Mind
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3+
+<b>Patrol your discard pile</b>: If it's empty, you get +2 Attack.
+#COST: 5
+
+#SUBNAME: Muscle Memory
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+<b>Wall-Crawl</b>
+Any time you are shuffling your deck with this card in it, you may set this card aside and put it on top of your deck at the end of the shuffle.
+#COST: 7
+
+
+#CARDNAME: Silk
+#TEAM: Spider Friends
+
+#SUBNAME: Long-Range Spider-Sense 
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+<b>Spectrum</b>: Reveal the top card of your deck. If it costs 2 or less, draw it.
+#COST: 2
+#FLAVOR: Cindy Moon was bitten by the same radioactive spider as Peter Parker.
+
+#SUBNAME: Cascading Maneuver
+#COPIES: 5
+[Strength], [Instinct]
+#ATTACK: 1
+<b>Wall-Crawl</b>
+<b>Spectrum</b>: Draw a card.
+#COST: 2
+
+#SUBNAME: Silk Stalking
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 1
+{TEAMPOWER Spider Friends} Reveal the top card of your deck. If it costs 0, KO it. If it costs 1 or 2, draw it.
+#COST: 2
+
+#SUBNAME: Borrowed Cloaking Device
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 1
+<b>Wall-Crawl</b>
+<b>Spectrum</b>: Reveal the top four cards of your deck. Put any combination of those cards with a total cost of 2 or less into your hand. But the rest back in any order.
+#COST: 2
+
+
+#CARDNAME: Soulsword Colossus
+#TEAM: X-Men
+
+#SUBNAME: Invade the Inferno
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{POWER Covert} Once this turn, you may fight the top card of the Bystander Stack as if it were a 3 Attack Demon Villain with "Fight: KO one of your heroes."
+#COST: 3
+
+#SUBNAME: Steel Interception
+#COPIES: 5
+[Strength], [Covert]
+#ATTACK: 2
+If a player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+#COST: 4
+
+#SUBNAME: Possessed by the Soulsword
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{POWER Strength} <b>Cross-Dimensional Colossus Rampage</b>. You get +2 Attack if at least one other player didn't reveal a Colossus card.
+#COST: 6
+
+#SUBNAME: Rescue My Family from Hell
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+{TEAMPOWER X-Men} You may gain an X-Men Hero from the HQ or the KO pile to your hand.
+#COST: 7
+#FLAVOR: Every year, Colossus leads a team of X-Men into the Inferno to rescue his sister, Magik.
+
+
+#CARDNAME: Spider-Gwen
+#TEAM: Spider Friends
+
+#SUBNAME: Fateful Bridge
+#COPIES: 5
+[Instinct], [Tech]
+#ATTACK: 2
+<b>Patrol the Bridge</b>: If it's empty, reveal the top card of your deck. If that card costs 2 or less, draw it.
+#COST: 2
+
+#SUBNAME: Save the Day
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1+
+<b>Patrol the Rooftops</b>: If it's empty, rescue a Bystander, and then you get +1 Attack for every two Bystanders in your Victory Pile.
+#COST: 2
+
+#SUBNAME: First Adventure
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 1+
+<b>Wall-Crawl</b>
+<b>Patrol the Bank</b>: If it's empty, you get +1 Attack.
+<b>Patrol your Victory Pile</b>: If it's empty, you get +1 Attack.
+#COST: 2
+
+#SUBNAME: Intertwining Webs
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+<b>Wall-Crawl</b>
+Reveal the top three cards of your deck, then put them back in any order. You get +1 Attack for each card you revealed that costs 2 or less.
+#COST: 2
+
+
+#CARDNAME: Time-Traveling Jean Grey 
+#TEAM: X-Men
+
+#SUBNAME: Throw Over the Railing
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+{POWER Covert} Choose a Villain on the Rooftops or Bridge. It gets -2 Attack this turn.
+#COST: 3
+
+#SUBNAME: Bridge to a Better Future
+#COPIES: 5
+#CLASS: [Instinct]
+<b>Patrol the Bridge</b>: If it's empty, then when you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 4
+
+#SUBNAME: Telekinesis
+#COPIES: 3
+[Covert], [Ranged]
+#ATTACK: 3
+You may move a villain to an adjacent city space. If another Villain is already there, swap them.
+#COST: 5
+
+#SUBNAME: Change History
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 5
+{TEAMPOWER X-Men} <b>Patrol any city space</b>: If it's empty, gain the hero in the HQ space under it. Put that hero on top of your deck.
+#COST: 7
+
+
+
+

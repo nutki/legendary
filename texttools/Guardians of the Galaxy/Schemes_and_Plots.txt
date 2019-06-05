@@ -1,0 +1,27 @@
+
+#CARDNAME: Forge the Infinity Gauntlet
+#SETUP: 8 Twists. Always include the Infinity Gems Villain Group.
+#TWIST: Starting to your left and going clockwise, the first player with an Infinity Gem Artifact card in play or in their discard pile chooses on of those Infinity Gems to enter the city. Then put a Shard on each Infinity Gem in the city.
+#EVILWINS: When 6 Infinity Gem Villains are in the city and/or the Escape Pile.
+#EVILWINS: When a player controls 4 Infinity Gem Artifacts, that player is corrupted by power. That player wins, Evil wins, and all other players lose.
+
+#CARDNAME: Intergalactic Kree Nega-Bomb
+#SETUP: 8 Twists. Make a face down 'Nega-Bomb Deck' of 6 Bystanders.
+#TWIST: Shuffle this Twist into the Nega-Bomb Deck. Then reveal a random card from that deck. If it's a Bystander, rescue it. If it's a Twist, KO it, KO all Heroes from the HQ, and each player gains a Wound.
+#EVILWINS: When 16 non-grey Heroes are in the KO pile.
+
+#CARDNAME: The Kree-Skrull War
+#SETUP: 8 Twists. Always include Kree Starforce and Skrull Villain Groups.
+#TWISTNR: NR[1-7] All Kree and Skrulls escape from the city. Then, if there are more Kree than Skrulls in the Escape Pile, stack this Twist next to the Mastermind as a Kree Conquest. If there are more Skrulls than Kree in the Escape Pile, stack this Twist next to the Villain Deck as a Skrull Conquest.
+#TWISTNR: NR[8] Stack this Twist on the side with the most Conquests.
+#EVILWINS: When there are 4 Kree Conquests or 4 Skrull Conquests.
+
+#CARDNAME: Unite the Shards
+#SETUP: 30 Shards in the supply. Twists equal to the number of players plus 5.
+#TWIST: Stack this Twist next to the Scheme. Then for each Twist in that stack, the Mastermind gains a Shard.
+#RULE: During your turn, any number of times, you may spend 2 Recruit to gain one of the Mastermind's Shards.
+#EVILWINS: When the Mastermind has 10 Shards or when there are no more Shards in the supply.
+
+
+
+

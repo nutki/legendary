@@ -1,0 +1,45 @@
+
+#CARDNAME: Arnim Zola
+
+Ultimate Abomination
+#LEADS: Zola's Creations
+#STRIKE: For each Hero in the HQ that has less than 2 printed Attack, put that Hero on the bottom of the Hero Deck, and each player discards a card of that Hero's cost.
+#ATTACK: 6+
+#VP: 6
+
+#TACTIC: Dominate the Weak
+#FIGHT: The player of your choice gains a Hero from the HQ that has less than 2 printed Attack.
+
+#TACTIC: Computer-Uploaded Genius
+#FIGHT: Each other player reveals a [Tech] Hero or discards a card.
+
+#TACTIC: Pet Projects
+#FIGHT: Each other player reveals a Zola's Creations Villain from their Victory Pile or gains a Wound.
+
+#TACTIC: Crush Pacifist Resistance
+#FIGHT: KO up to two of your Heroes that have less than 2 printed Attack.
+
+
+#CARDNAME: Baron Heinrich Zemo
+
+Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron Zemo gets +9 Attack unless you are a Savior.
+#LEADS: Masters of Evil (WWII)
+#STRIKE: Each player KOs a Bystander from their Victory Pile. Any player who cannot do so gains a Wound.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Fallen Idols
+#FIGHT: Each other player that is not a Savior discards a card.
+
+#TACTIC: Finding Zemo
+#FIGHT: Reveal the top five cards of the Villain Deck. If you revealed any Bystanders, KO them and each other player gains a Wound. Put the rest back in random order.
+
+#TACTIC: Hatred for the Avengers
+#FIGHT: For each of your Avengers Heroes, rescue a Bystander.
+
+#TACTIC: Prisoners of War
+#FIGHT: Each other player reveals an Avengers Hero or chooses a Bystander from their Victory Pile, and you rescue that Bystander.
+
+
+
+

@@ -1,0 +1,217 @@
+
+#CARDNAME: CSA Special Marshals
+
+#SUBNAME: Bullseye
+#COPIES: 2
+#FIGHT: KO one of your heroes with a Recruit icon.
+#ESCAPE: Each player KOs one of their Heroes that has printed Attack of 2 or more.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Moonstone
+#COPIES: 2
+#FIGHT: Each other player discards two cards, and then draws a card.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Penance
+#COPIES: 2
+Penance gets +1 Attack for each Villain in your Victory Pile.
+#ATTACK: 2+
+#VP: 3
+
+#SUBNAME: Venom
+#COPIES: 2
+Size-Changing: Covert
+#ESCAPE: Fortify the Bystander Stack. While it's fortified, if a Bystander would be rescued from there, KO that Bystander instead.
+#ATTACK: 7*
+#VP: 4
+
+
+#CARDNAME: Great Lakes Avengers
+
+#SUBNAME: Big Bertha
+#COPIES: 2
+Size-Changing: Strength
+#FIGHT: Each player reveals a Strength Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 7*
+#VP: 4
+
+#SUBNAME: Flatman
+#COPIES: 2
+Size-Changing: Covert
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Mr. Immortal
+#COPIES: 2
+#FIGHT: Reveal the top card of the Villain Deck. If it's a Villain or Bystander, Mr. Immortal reenters the Sewers.
+#ATTACK: 2
+#VP: 2
+
+#SUBNAME: Squirrel Girl
+#COPIES: 2
+You can't fight Squirrel Girl if you played more than one card this turn.
+#ESCAPE: Fortify the Sidekick Stack. While it's fortified, Sidekicks can't be recruited or gained.
+#ATTACK: 3*
+#VP: 2
+
+
+#CARDNAME: Heroes for Hire
+
+#SUBNAME: Colleen Wing
+#COPIES: 2
+{BRIBE}
+#ESCAPE: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought.
+#ATTACK: 9*
+#VP: 5
+
+#SUBNAME: Humbug
+#COPIES: 2
+{BRIBE}
+#FIGHT: KO one of your Heroes.
+#ATTACK: 5*
+#VP: 3
+
+#SUBNAME: Shang-Chi
+#COPIES: 2
+{BRIBE}
+#FIGHT: If you have any cards in your discard pile, then shuffle them into your deck, and Shang-Chi reenters the Sewers.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Tarantula
+#COPIES: 2
+{BRIBE}
+#FIGHT: Each player discards two cards or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 7*
+#VP: 5
+
+
+#CARDNAME: Registration Enforcers
+
+#SUBNAME: Blade
+#COPIES: 2
+#FIGHT: If you fight Blade in the Sewers or Rooftops, you get +2 Recruit.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Captain Marvel
+#COPIES: 2
+#FIGHT: Each player swaps a card from their hand with the top card of their deck.
+#ESCAPE: Each player swaps their hand with the top four cards of their deck.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Deadpool
+#COPIES: 2
+#AMBUSH: Each player reveals a card that costs 5 or discards down to 5 cards.
+#FIGHT: Same effect.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 5
+
+#SUBNAME: Micromax
+#COPIES: 2
+Size-Changing: Instinct
+#FIGHT: KO one of your Heroes.
+#ATTACK: 6*
+#VP: 3
+
+
+#CARDNAME: S.H.I.E.L.D. Elite
+
+#SUBNAME: Agent Eric Marshall
+#COPIES: 2
+S.H.I.E.L.D. Clearance
+#AMBUSH: A S.H.I.E.L.D. Officer enters the city as a 3 Attack Villain. When you fight it, gain it as a Hero.
+#ATTACK: 1*
+#VP: 2
+
+#SUBNAME: Agent Gabe Jones
+#COPIES: 2
+S.H.I.E.L.D. Clearance
+#FIGHT: A S.H.I.E.L.D. Officer enters the city as a 3 Attack Villain. When you fight it, gain it as a Hero.
+#ATTACK: 2*
+#VP: 2
+
+#SUBNAME: Dum Dum Dugan
+#COPIES: 2
+S.H.I.E.L.D. Clearance
+#FIGHT: Each player with no S.H.I.E.L.D. Officers in their discard pile gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 4*
+#VP: 3
+
+#SUBNAME: Sharon Carter, Agent 13
+#COPIES: 2
+S.H.I.E.L.D. Clearance
+#ESCAPE: Fortify the S.H.I.E.L.D. Officer stack. While it's fortified, whenever any number of S.H.I.E.L.D. Officers become Villains, an extra one becomes a Villain.
+#ATTACK: 6*
+#VP: 5
+
+
+#CARDNAME: Superhuman Registration Act
+
+#SUBNAME: Iron Spider
+#COPIES: 2
+#AMBUSH: Fortify your deck. While Iron Spider fortifies a players deck, that player draws one fewer card at the end of their turn.
+#FIGHT: Reveal the top card of the Villain Deck. If that card is worth 2 VP or less, Iron Spider fortifies the deck of the player on your left.
+#ATTACK: 2
+#VP: 3
+
+#SUBNAME: Ms. Marvel
+#COPIES: 2
+#ESCAPE: Fortify an HQ space. While its fortified, Heroes can't be gained from that space.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: She-Hulk
+#COPIES: 2
+Size-Changing: Strength
+#ESCAPE: Fortify the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.
+#ATTACK: 8*
+#VP: 5
+
+#SUBNAME: Yellowjacket
+#COPIES: 2
+Size-Changing: Tech
+#ESCAPE: Fortify the Hero Deck. While it's fortified, whenever a Hero in the HQ costs 7 or more, KO that Hero.
+#ATTACK: 7*
+#VP: 4
+
+
+#CARDNAME: Thunderbolts
+
+#SUBNAME: Fixer
+#COPIES: 2
+#FIGHT: Look at the top three cards of your deck. KO one and put the rest back in any order.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Mach-IV
+#COPIES: 2
+#FIGHT: Each player reveals a Tech Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Radioactive Man
+#COPIES: 2
+#ESCAPE: Fortify the Wound Stack. While it's fortified, whenever a player gains a Wound, that player gains an extra Wound.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Songbird
+#COPIES: 2
+#FIGHT: Each player without another Thunderbolts Villain in their Victory Pile gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+
+
+

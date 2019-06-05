@@ -1,0 +1,48 @@
+
+#CARDNAME: Alien Brood Encounters
+#SETUP: 8 Twists. Add 10 Brood as extra Henchmen. No Bystanders in Villain Deck.
+#RULE: Cards are played from the Villain Deck face-down. You may spend 1 Attack to "scan" a face-down card in the city, turning it face-up and doing any Ambush effect, Twist, Trap, or Master Strike. If a face-down card would escape, scan it, and then it escapes if it's a Villain.
+#TWIST: The player on your right gains this Twist as a "Brood Infection." When drawn, they KO it and gain 2 Wounds.
+#EVILWINS: When 3 Villains per player have escaped.
+
+#CARDNAME: Anti-Mutant Hatred
+#SETUP: 11 Twists. 30 Wounds.
+#TWIST: Put this Twist into your discard pile as an "Angry Mob."
+#RULE: At the start of your turn, for each Angry Mob in your hand, the player on your right gains a Wound and gains that Angry Mob.
+#EVILWINS: When the Wound Stack or Villain Deck runs out.
+
+#CARDNAME: The Dark Phoenix Saga
+#SETUP: 10 Twists. Include Hellfire Club as one of the Villain Groups. Add 14 Jean Grey Hero cards to the Villain Deck.
+#RULE: Jean Grey cards in the Villain Deck are Villains with attack equal to their cost, "Ambush: Play another Villain card" and "Fight: Gain this as a Hero."
+#TWIST: Shuffle all Jean Grey cards from the KO pile and from all players' hands and discard piles into the Villain Deck.
+#EVILWINS: When 5 Jean Grey cards have escaped.
+
+#CARDNAME: Horror of Horrors
+#SETUP: 6 Twists
+#TWISTNR: NR[1-5] Play a random Horror.
+#TWISTNR: NR[6] Evil wins!
+
+#CARDNAME: Mutant-Hunting Super Sentinels
+#SETUP: 9 Twists. Include 10 Sentinels as extra Henchmen (or substitute another Henchman group.)
+#TWIST: Stack this Twist next to the Scheme as a "Sentinel Upgrade." Shuffle all Sentinels from players' Victory Piles into the Villain Deck. Play another card from the Villain Deck.
+#RULE: All Sentinels get +1 Attack for each Sentinel Upgrade next to the Scheme.
+#EVILWINS: When 3 Sentinels have Escaped.
+
+#CARDNAME: Nuclear Armageddon
+#SETUP: 5 Twists
+#TWIST: Destroy the city space closest to the Mastermind. Any Villain There escapes. Put this Twist there.
+#EVILWINS: When the city is destroyed.
+
+#CARDNAME: Televised Deathtraps of Mojoworld
+#SETUP: 11 Twists. 6 Wounds per player in Wound Stack.
+#TWIST: Stack this Twist next to the Scheme as a "Deathtrap.' This turn, you may pay 1 Attack for each Deathtrap stacked there. If you don't, each player gains a Wound.
+#EVILWINS: When the Wound Stack or Villain Deck runs out.
+
+#CARDNAME: X-Men Danger Room Goes Berserk
+#SETUP: 8 Twists.
+#TWIST: Trap! By End of Turn: You may pay 2 Recruit. If you do, shuffle this Twist back into the Villain Deck, then play a card from the Villain Deck. Or Suffer: Stack this Twist next to the scheme as an "Airborne Neurotoxin."
+#EVILWINS: When there are 5 Airborne Neurotoxins.
+
+
+
+

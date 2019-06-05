@@ -1,0 +1,518 @@
+
+#CARDNAME: Bullseye
+#TEAM: Crime Syndicate
+
+#SUBNAME: Everything's A Weapon
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Instinct} Draw a card.
+#COST: 3
+#FLAVOR: "And for my next trick..."
+
+#SUBNAME: Fulfill The Contract
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+{DODGE}
+Choose an Adversary Group. You get +1 Recruit for each Adversary in your Victory Pile from that Adversary Group.
+#COST: 2
+
+#SUBNAME: Specialist Assassin
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+Choose an Adversary. It gets -1 Attack for each Adversary in your Victory Pile from that Adversary Group.
+#COST: 6
+
+#SUBNAME: Perfect Aim
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+You get +5 Attack for each Commander Tactic in your Victory Pile.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Dr. Octopus
+#TEAM: Sinister Six
+
+#SUBNAME: Brilliant Research
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+{POWER Tech} When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 3
+
+#SUBNAME: Crazed Experiments
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+Draw a card.
+#COST: 5
+#FLAVOR: "It worked! Hahahahaha!"
+
+#SUBNAME: Eighth Time's a Charm
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4+
+If this is the eighth card you played this turn, you get +2 Attack.
+#COST: 6
+#FLAVOR: If at first you don't succeed...
+
+#SUBNAME: Octo-Pulverize
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 0+
+Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don't shuffle). Then you get +1 Attack for each card you discarded this turn.
+#COST: 8
+
+
+#CARDNAME: Electro
+#TEAM: Sinister Six
+
+#SUBNAME: Electroshock Therapy
+#COPIES: 5
+#CLASS: [Ranged]
+{DODGE}
+Reveal the top card of your deck. You may KO it.
+#COST: 2
+#FLAVOR: "I'm not really all that shocked to see you go"
+
+#SUBNAME: Shocking Robbery
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 0+
+{DODGE}
+You get +3 Attack usable only against Adversaries in the Bank.
+{POWER Ranged} Instead you may get +3 Attack usable only against the Commander.
+#COST: 3
+
+#SUBNAME: Supercharge
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2+
+You get +1 Attack for each card you discarded this turn.
+#COST: 5
+#FLAVOR: Unlimited Power!
+
+#SUBNAME: Anti-Matter
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4
+All Adversaries and the Commander get -1 Attack this turn.
+Sinister Six, Sinister Six: Same Effect
+#COST: 7
+
+
+#CARDNAME: Enchantress
+#TEAM: Foes of Asgard
+
+#SUBNAME: Enchant the Senses
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Ranged} Whenever you defeat an Adversary this turn, you gain a New Recruit.
+#COST: 3
+
+#SUBNAME: Soul Sacrifice
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 1+
+You may KO a card from your hand or discard pile. You get + Recruit equal to that card's Cost.
+#COST: 4
+
+#SUBNAME: Irresistible Bribe
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 3
+Choose an Adversary. You can spend any combination of Recruit and Attack to fight that Adversary this turn.
+{POWER Covert Covert} You can also spend any combination of Recruit and Attack to fight the Commander this turn.
+#COST: 6
+
+#SUBNAME: Unending Anguish
+#COPIES: 1
+#CLASS: [Covert]
+Draw three cards.
+{TEAMPOWER Foes of Asgard} Then put Unending Anguish on the bottom of your deck.
+#COST: 7
+
+
+#CARDNAME: Green Goblin
+#TEAM: Sinister Six
+
+#SUBNAME: Goblin Glider
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+{DODGE}
+When you play or {DODGE} with this card, another HYDRA Ally in your hand gains {DODGE} this turn.
+#COST: 4
+
+#SUBNAME: Pumpkin Bombs
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1+
+{DODGE}
+If you discarded any cards this turn, you get +2 Attack.
+#COST: 3
+
+#SUBNAME: Unstable Kidnapper
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 3
+{DODGE}
+If you discarded any cards this turn, kidnap a Bystander.
+#COST: 5
+
+#SUBNAME: Experimental Goblin Serum
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+Return from your discard pile to your hand all the cards you discarded this turn.
+#COST: 7
+
+
+#CARDNAME: Juggernaut
+#TEAM: Brotherhood
+
+#SUBNAME: Crimson Gem of Cyttorak
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2+
+{POWER Strength} Each other player reveals the top card of their deck, and if it costs 1, 2, or 3, discards it. You get +1 Recruit for each card discarded this way.
+#COST: 4
+
+#SUBNAME: Size Matters
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+You get +1 Attack for each other card you played this turn that costs 4 or more.
+#COST: 4
+
+#SUBNAME: Runaway Train
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4
+To play this card, you must discard a card from your hand.
+#COST: 5
+#FLAVOR: Move it or lose it.
+
+#SUBNAME: Unstoppable Force
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+Choose one: Each player KOs two cards from their hand, or each player KOs two cards from their discard pile. Then you get +1 Attack for each non-grey Ally KO'd this turn.
+#COST: 8
+
+
+#CARDNAME: Kingpin
+#TEAM: Crime Syndicate
+
+#SUBNAME: Pull the Strings
+#COPIES: 5
+#CLASS: [Covert]
+Whenever a card effect causes you to gain a New Recruit this turn, put that New Recruit into your hand. Gain a New Recruit.
+#COST: 3
+
+#SUBNAME: Recruitment Day
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{POWER Strength} Gain a New Recruit.
+#COST: 3
+#FLAVOR: "Anyone else want to punch Daredevil in the face?"
+
+#SUBNAME: Import Illegal Weapons
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3+
+You get +1 Attack for each New Recruit you played this turn.
+#COST: 5
+
+#SUBNAME: Endless Underlings
+#COPIES: 1
+#CLASS: [Strength]
+Crime Syndicate, Crime Syndicate: If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
+#COST: 8
+
+
+#CARDNAME: Kraven
+#TEAM: Sinister Six
+
+#SUBNAME: Ceaseless Tracker
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 1+
+{DODGE}
+{TEAMPOWER Sinister Six} You get +2 Recruit.
+#COST: 2
+#FLAVOR: Sometimes it's not best to go it alone.
+
+#SUBNAME: Corner the Prey
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Choose an Adversary. If there are no empty city spaces adjacent to that Adversary, it gets -1 Attack this turn.
+#COST: 4
+#GUN: 1
+
+#SUBNAME: Hunt Down
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+Choose an Adversary and a direction. Move that Adversary as many adjacent, empty spaces as you can in that direction. You get +1 Attack for each space it moved.
+#COST: 5
+
+#SUBNAME: He's the Best Around
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get + Attack equal to the Cost of the highest-cost Ally in the Lair.
+#COST: 8
+#FLAVOR: No one's gonna ever keep him down.
+
+
+#CARDNAME: Loki
+#TEAM: Foes of Asgard
+
+#SUBNAME: All Humans Are Expendable
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+{POWER Covert} You may KO a card from your hand or discard pile. If you do, gain a New Recruit.
+#COST: 3
+
+#SUBNAME: Illusionary Bindings 
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2+
+{POWER Ranged} Each other player reveals a [Ranged] Ally or gains a Bindings. If any number of players gained a Bindings this way, you get +1 Recruit.
+#COST: 4
+
+#SUBNAME: Father of Lies
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+Look at the top two cards of another player's deck. Without revealing those cards, call one of them "Good" and one "Bad." That player puts one of those cards into their discard pile and the other into your discard pile.
+#COST: 5
+
+#SUBNAME: God of Mischief
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 6
+Each player reveals a Foes of Asgard Ally or reveals their hand. For each player that revealed their hand, you may swap a card from that hand with a card in the Lair of the same cost.
+#COST: 8
+
+
+#CARDNAME: Magneto
+#TEAM: Brotherhood
+
+#SUBNAME: Magnetic Levitation
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1+
+{DODGE}
+You may choose a Bindings from your hand or discard pile and have another player gain that Bindings. If you do, you get +2 Attack.
+#COST: 3
+
+#SUBNAME: Mutants Will Rule
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2+
+{DODGE}
+{POWER Strength} Choose a player. That player reveals a Brotherhood Ally or gains a Bindings. If a Bindings is gained this way, you get +1 Recruit.
+#COST: 4
+
+#SUBNAME: Weapons From Scrap Metal
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3
+If you discarded any cards this turn, draw a card.
+#COST: 5
+#FLAVOR: One person's trash is another person's high velocity projectile weapon.
+
+#SUBNAME: Master of Magnetism
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4+
+{TEAMPOWER Brotherhood} For each other Brotherhood Ally you played this turn, choose a player to gain a Bindings. Then you get +2 Attack for each Bindings gained this turn.
+#COST: 7
+
+
+#CARDNAME: Mysterio
+#TEAM: Sinister Six
+
+#SUBNAME: Psychedelic Mist
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1+
+{DODGE}
+{POWER Covert} You get +2 Attack.
+#COST: 2
+#FLAVOR: Mysterio is at his best when the mist rolls in.
+
+#SUBNAME: Shifting Decoy
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 0+
+Put a card from the lair on the bottom of the Ally Deck. If that card had a Recruit icon, you get +2 Recruit. If that card had an Attack icon, you get +2 Attack.
+#COST: 3
+
+#SUBNAME: Holographic Illusion
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 0+
+You get +1 Attack for each color of Ally in the Lair.
+#COST: 5
+
+#SUBNAME: False Reflection
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+Put a card from the Lair on the bottom of the Ally Deck. You get + Recruit equal to that card's printed Recruit and + Attack equal to its printed Attack.
+{TEAMPOWER Sinister Six} Then, for each other Sinister Six Ally you played this turn, do the same effect. (Use a different Ally from the Lair each time.)
+#COST: 7
+
+
+#CARDNAME: Mystique
+#TEAM: Brotherhood
+
+#SUBNAME: Hidden Weapons
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{POWER Instinct Tech} You get +3 Attack.
+#COST: 4
+#FLAVOR: Mystique is definitely a dual threat.
+#GUN: 1
+
+#SUBNAME: Show Your True Colors
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{DODGE}
+As you play this card, you may choose a class. This card is that class instead of [Covert] this turn.
+#COST: 3
+
+#SUBNAME: Turn the Tide
+#COPIES: 3
+#CLASS: [Instinct]
+Reveal the top card of the Ally Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Ally Deck.
+#COST: 4
+
+#SUBNAME: Spy Games
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+Reveal the top five cards of the Ally Deck. You get + Attack equal to their total printed Attack. Then put them back in any order.
+#COST: 7
+
+
+#CARDNAME: Sabretooth
+#TEAM: Brotherhood
+
+#SUBNAME: Leap of the Tiger
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+Reveal the top card of your deck, then put it back on top of your deck or into your discard pile. If that card was an [Instinct] Ally, you get +2 Attack.
+#COST: 3
+
+#SUBNAME: Take One for the Team
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 1
+Reveal the top card of your deck. If it's a Brotherhood Ally, you may draw it. Otherwise, you may KO it.
+#COST: 4
+
+#SUBNAME: Stealthy Predator
+#COPIES: 3
+#CLASS: [Covert]
+Reveal the top three cards of your deck. Draw one of them, discard one, and put the other back on top of your deck.
+#COST: 2
+
+#SUBNAME: Upper Hand
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+Each player reveals a [Instinct] Ally or reveals the top card of their deck. Choose any number of those revealed top cards to be KO'd.
+{POWER Instinct} You get +1 Attack for each card KO'd this turn.
+#COST: 7
+
+
+#CARDNAME: Ultron
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Army of Ultrons
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+{DODGE}
+Reveal a HYDRA card from your hand. That card is [Tech] instead of its normal color this turn.
+#COST: 3
+
+#SUBNAME: Encephalo-Ray
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 0+
+{DODGE}
+{POWER Tech} You get +1 Attack for each other [Tech] Ally you played this turn.
+#COST: 2
+
+#SUBNAME: Genetic Experimentation
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+{POWER Tech} Kidnap a Bystander for each other [Tech] Ally you played this turn.
+#COST: 6
+
+#SUBNAME: Molecular Rearrangement
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5+
+Each other player reveals a [Tech] Ally or discards their hand. Each player who discarded their hand this way draws 5 cards.
+{POWER Tech} You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.
+#COST: 8
+
+
+#CARDNAME: Venom
+#TEAM: Sinister Six
+
+#SUBNAME: Devour
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.
+#COST: 4
+#FLAVOR: Feeding Time!
+
+#SUBNAME: Symbiote Takeover
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{POWER Strength} Kidnap a Bystander.
+#COST: 3
+#FLAVOR: "Where do you think you're going?"
+
+#SUBNAME: Horrify the Populace
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4
+Each Adversary with a 4 Attack or more guards a Bystander.
+#COST: 6
+
+#SUBNAME: Ravenous Greed
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 5
+Each other player reveals an [Instinct] Ally or KOs a Bystander from their Victory Pile.
+{POWER Instinct} Kidnap all Bystanders that were KO'd this turn. Then you get +1 Recruit for each Bystander you kidnapped this turn.
+#COST: 7
+
+
+
+

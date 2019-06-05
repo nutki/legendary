@@ -1,0 +1,67 @@
+
+#CARDNAME: Salvagers
+
+#SUBNAME: Hybrid Alien Tech
+#COPIES: 2
+<b>Striker</b>
+#FIGHT: KO one of your 0-cost Heroes.
+#ESCAPE: The current player reveals a Ranged Hero or gains a 0-cost Hero from the KO pile.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Shocker #1
+#COPIES: 2
+<b>Striker</b>
+#ESCAPE: Each player reveals an Instinct Hero or discards a card.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Shocker #2
+#COPIES: 2
+#AMBUSH: Each player reveals their hand and discards all cards with the same card name as a card in the HQ.
+#ESCAPE: <i>(After the normal HQ KO for this escaping)</i> Same effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Tinkerer
+#COPIES: 2
+#FIGHT: You get +1 Recruit for each Tech Hero in the HQ.
+#ESCAPE: Each player reveals a Tech Hero or gains a Wound.
+#ATTACK: 4
+#VP: 2
+
+
+#CARDNAME: Vulture Tech
+
+#SUBNAME: Chitauri Weapon Assault
+#COPIES: 2
+<b>Striker</b>
+#FIGHT: KO one of your Heroes with a Recruit icon.
+#ESCAPE: Each player discards a card with a Recruit icon.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: High Tech Helmet
+#COPIES: 2
+<b>Striker</b>
+#FIGHT: Danger Sense 3
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Razor Talons
+#COPIES: 2
+<b>Striker</b>
+#FIGHT: The next Hero you gain this turn has Wall Crawl.
+#VP: 2
+#ATTACK: 2+
+
+#SUBNAME: Turbine Powered
+#COPIES: 2
+<b>Striker</b>
+#AMBUSH: Turbine Powered captures a Bystander. Then move this Villain to the Rooftops. If there's already a Villain there, swap them.
+#ATTACK: 5+
+#VP: 5
+
+
+
+

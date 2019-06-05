@@ -1,0 +1,59 @@
+
+#CARDNAME: Adrian Toomes
+<b>Double Striker</b>
+#LEADS: Salvagers
+#STRIKE: Starting from the Sewers, each Villain in the city uses its "Escape" ability.
+#ATTACK: 5+
+#VP: 6
+
+#CARDNAME: Epic Adrian Toomes
+<b>Triple Striker</b>
+#LEADS: Salvagers
+#STRIKE: Starting from the Sewers, each Villain in the city uses its "Ambush" ability, then its "Escape" ability.
+#ATTACK: 5+
+#VP: 6
+
+#TACTIC: Don't Interfere
+#FIGHT: <b>Danger Sense 4</b>. If this revealed any Bystanders, rescue them.
+
+#TACTIC: More Harm than Good
+#FIGHT: Each other player discards a Spider Friends Hero or gains a Wound.
+#FLAVOR: "Don't mess with me. Because I will kill you and everyone you care about."
+
+#TACTIC: Take Everything
+#FIGHT: You may put a card from your discard pile on top of your deck.
+#FLAVOR: "The world's changed. Time we change with it."
+
+#TACTIC: The World's Changed
+#FIGHT: <b>Danger Sense 3</b>. Put all Henchmen Villains revealed this way into your Victory Pile, then do their "Fight" abilities.
+
+
+#TACTIC: Vulture
+<b>Striker</b>
+#LEADS: Vulture Tech
+#STRIKE: Put a Wound from the Wound Stack below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space.
+#ATTACK: 8+
+#VP: 6
+
+#TACTIC: Epic Vulture
+<b>Striker</b>
+#LEADS: Vulture Tech
+#STRIKE: Put a Wound from the Wound Stack or KO pile below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space, putting it on top of their deck.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Bird of Prey
+#FIGHT: Each other player discards a Spider Friends Hero or discards two cards.
+
+#TACTIC: Lurking Shadow
+#FIGHT: <b>Danger Sense 2</b>. If the Rooftops are empty, a Villain you revealed enters the Rooftops.
+
+#TACTIC: Mid Air Heist
+#FIGHT: You get +5 Recruit usable only to recruit [Tech] Heroes.
+
+#TACTIC: Winged Assault
+#FIGHT: Put two "Winged Assault" Wounds from under the HQ into each other player's discard pile.
+
+
+
+

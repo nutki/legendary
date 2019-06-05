@@ -1,0 +1,64 @@
+
+#CARDNAME: Iron Monger
+
+<b>Bank Conqueror 4</b>
+<b> Always Leads:</b> Iron Foes
+#STRIKE: If there is a Villain in the Bank, each player gains a Wound. Otherwise, put this Master Strike into the Bank as a 6 Attack “StaneTech Weaponry” Villain worth 4VP.
+<b>Attack:</b> 9+
+<b>VP:</b> 5
+
+#TACTIC: Hostile Takeover
+#FIGHT: If there are no Villains in the bank, reveal the top card of the Villain Deck. If it’s a Villain, it enters the Bank.
+
+#TACTIC: Overloaded Arsenal 
+#FIGHT: Each other player reveals a [Tech] Hero or gains a Wound. Then each other player reveals a [Ranged] Hero or gains a Wound.
+
+#TACTIC: Sonic Stunner
+#FIGHT: Each other player reveals a [Tech] Hero or discards down to 4 cards.
+
+#TACTIC: Unexpected Betrayal 
+#FIGHT: If the Bank is empty, the player on your right chooses a Villain from their Victory Pile. That Villain enters the Bank.[/q]
+
+
+#CARDNAME: Loki
+
+#LEADS: Enemies of Asgard
+#STRIKE: Each player reveals a [Strength] Hero or gains a Wound
+#ATTACK: 10
+#VP: 5
+
+#TACTIC: Cruel Ruler
+#FIGHT: Defeat a Villain in the City for free.
+
+#TACTIC: Maniacal Tyrant
+#FIGHT: KO up to four cards from your discard pile.
+
+#TACTIC: Vanishing Illusions
+#FIGHT: Each other player KOs a Villain from their Victory Pile.
+
+#TACTIC: Whispers and Lies
+#FIGHT: Each other player KOs two Bystanders from their Victory Pile.
+
+
+#CARDNAME: Red Skull
+
+#LEADS: HYDRA
+#STRIKE: Each player KOs a Hero from their hand.
+#ATTACK: 7
+#VP: 5
+
+#TACTIC: Endless Resources
+#FIGHT: You get +4 Recruit.
+
+#TACTIC: HYDRA Conspiracy
+#FIGHT: Draw two cards. Then draw another card for each HYDRA Villain in your Victory Pile.
+
+#TACTIC: Negablast Grenades
+#FIGHT: You get +3 Attack.
+
+#TACTIC: Ruthless Dictator
+#FIGHT: Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
+
+
+
+

@@ -1,0 +1,23 @@
+
+#CARDNAME: Hammer Drone Army
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: HYDRA Pilots
+#FIGHT: You get +1 Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: HYDRA Spies
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw an extra card.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Ten Rings Fanatics
+#FIGHT: Look at the top two cards of your deck. KO one of them and put the other back.
+#ATTACK: 3
+#VP: 1
+
+
+

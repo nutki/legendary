@@ -1,0 +1,20 @@
+
+#CARDNAME: News Reporter
+#COPIES: 4
+#RESCUE: draw a card.
+#VP: 1
+
+
+#CARDNAME: Paramedic
+#COPIES: 3
+#RESCUE: you may KO a Wound from your hand or from any player's discard pile.
+#VP: 1
+
+
+#CARDNAME: Radiation Scientist
+#COPIES: 4
+#RESCUE: you may KO one of your Heroes or a Hero from your discard pile.
+#VP: 1
+
+
+

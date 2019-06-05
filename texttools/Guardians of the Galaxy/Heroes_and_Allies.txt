@@ -1,0 +1,168 @@
+
+#CARDNAME: Drax the Destroyer
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Knives of the Hunter
+#COPIES: 5
+#CLASS: [Strength]
+<b>Artifact -</b>
+Once per turn, you get +1 Attack.
+#COST: 3
+
+#SUBNAME: Interstellar Tracker
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+Look at the top card of your deck. Discard it or put it back.
+{POWER Instinct} You may KO the card you discarded this way.
+#COST: 3
+
+#SUBNAME: The Destroyer
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 4
+{TEAMPOWER Guardians of the Galaxy} Each other player reveals an [Instinct] Hero or discards an <b>Artifact</b> they control. For each <b>Artifact</b> discarded this way, you gain a Shard.
+#COST: 6
+
+#SUBNAME: Avatar of Destruction
+#COPIES: 1
+#CLASS: [Instinct]
+Double the Attack you have.
+#COST: 7
+
+
+#CARDNAME: Gamora
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Bounty Hunter
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+A Villain gains a Shard.
+#COST: 2
+
+#SUBNAME: Deadliest Woman in the Universe
+#COPIES: 5
+#CLASS: [Instinct]
+Gain two Shards.
+{POWER Covert} Gain another Shard.
+#COST: 3
+
+#SUBNAME: Galactic Assassin
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+A Villain of your choice gets no Attack from Shards this turn.
+{POWER Covert Covert} The Mastermind gets no Attack from Shards this turn.
+#COST: 5
+#GUN: 1
+
+#SUBNAME: Godslayer Blade
+#COPIES: 1
+#CLASS: [Covert]
+<b>Artifact -</b>
+Once per turn, gain two Shards. Once per turn, you may spend 5 Shards to get +10 Attack.
+#COST: 8
+
+
+#CARDNAME: Groot
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Prune the Growths
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2
+{POWER Strength} You may KO a card from your hand or discard pile. If you do, gain a Shard.
+#COST: 4
+
+#SUBNAME: Surviving Sprig
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 1
+When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 3
+
+#SUBNAME: Groot and Branches
+#COPIES: 3
+#CLASS: [Covert]
+Gain two Shards. You may spend Shards to get Recruit this turn.
+{POWER Covert} You may choose another player. That player gains a Shard.
+#COST: 4
+
+#SUBNAME: I Am Groot
+#COPIES: 1
+#CLASS: [Strength]
+#RECRUIT: 5
+When you recruit your next Hero this turn, you gain Shards equal to that Hero's cost.
+#COST: 8
+
+
+#CARDNAME: Rocket Raccoon
+#TEAM: Guardians of the Galaxy
+#GUN: 1
+
+#SUBNAME: Gritty Scavenger
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+You may discard a card. If you do, draw a card.
+#COST: 3
+
+#SUBNAME: Trigger Happy
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{TEAMPOWER Guardians of the Galaxy} You gain a Shard for each other Guardians of the Galaxy Hero you played this turn.
+#COST: 4
+
+#SUBNAME: Incoming Detector
+#COPIES: 3
+#CLASS: [Instinct]
+<b>Artifact -</b>
+Whenever a Master Strike or Villain's Ambush ability is completed, you may gain a Shard.
+#COST: 4
+
+#SUBNAME: Vengeance is Rocket
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5+
+{POWER Tech} You get +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind.
+#COST: 7
+
+
+#CARDNAME: Star-Lord
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Element Guns
+#COPIES: 5
+#CLASS: [Ranged]
+<b>Artifact -</b>
+Once per turn, gain a Shard.
+#COST: 4
+#GUN: 1
+
+#SUBNAME: Legendary Outlaw
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+Choose an <b>Artifact</b> any player controls with a "once per turn" ability. Play a copy of one of those abilities.
+#COST: 4
+
+#SUBNAME: Implanted Memory Chip
+#COPIES: 3
+#CLASS: [Tech]
+<b>Artifact -</b>
+Once per turn, draw a card.
+#COST: 6
+
+#SUBNAME: Sentient Starship
+#COPIES: 1
+#CLASS: [Ranged]
+<b>Artifact -</b>
+Once per turn, gain a Shard for each <b>Artifact</b> you control.
+#COST: 8
+#GUN: 1
+
+
+
+

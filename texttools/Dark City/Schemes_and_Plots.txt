@@ -1,0 +1,51 @@
+
+#CARDNAME: Capture Baby Hope
+#SETUP: 8 Twists. Put a token on this Scheme to represent the baby, Hope Summers.
+#TWIST: If a Villain has the baby, that Villain escapes. Otherwise, the baby is captured by the closest Villain to the Villain Deck. (If there are no Villains, do nothing.)
+#RULE: The Villain with the baby gets +4 Attack. If you defeat that Villain, rescue the baby to your Victory Pile (until the next Twist). The baby is worth 6 VP at the end of the game. If a Villain escapes with the baby, stack a Twist next to the Mastermind and return the baby to this Scheme card.
+#EVILWINS: When there are 3 Twists stacked next to the Mastermind.
+
+#CARDNAME: Detonate the Helicarrier
+#SETUP: 8 Twists. 6 Heroes in the Hero Deck.
+#RULE: Whenever a Hero is KO'd from the HQ, turn that Hero face down on that HQ space, representing an Explosion on the Helicarrier. When an HQ space has 6 Explosions, that space is Destroyed and can't hold Heroes anymore.
+#TWIST: Stack this Twist next to the Scheme. Then for each Twist in that stack, KO the leftmost Hero in the HQ and immediately refill that space.
+#EVILWINS: When all HQ spaces are Destroyed or the Hero Deck runs out.
+
+#CARDNAME: Massive Earthquake Generator
+#SETUP: 8 Twists.
+#TWIST: Each player reveals a [Strength] Hero or KOs the top card of their deck.
+#EVILWINS: When the number of non grey Heroes in the KO pile is 3 times the number of players.
+
+#CARDNAME: Organized Crime Wave
+#SETUP: 8 Twists. Include 10 Maggia Goons as one of the Henchman Groups.
+#RULE: Goons also have the ability "Ambush: Play another card from the Villain Deck."
+#TWIST: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
+#EVILWINS: When 5 Goons escape.
+
+#CARDNAME: Save Humanity
+#SETUP: 8 Twists. 24 Bystanders in the Hero Deck. (1 player: 12 Bystanders in the Hero Deck)
+#RULE: You may spend 2 Recruit to rescue a Bystander from the HQ.
+#TWIST: KO all Bystanders in the HQ. Then each player reveals an [Instinct] Hero or KOs a Bystander from their Victory Pile.
+#EVILWINS: When the number of Bystanders KO'd and/or carried off is 4 times the number of players.
+
+#CARDNAME: Steal the Weaponized Plutonium
+#SETUP: 8 Twists representing Plutonium. Add an extra Villain Group.
+#TWIST: This Plutonium is captured by the closest Villain to the Villain Deck. If there are no Villains in the city, KO this Plutonium. Either way, play another card from the Villain Deck.
+#RULE: Each Villain gets +1 Attack for each Plutonium it has. When a Villain with any Plutonium is defeated, shuffle that Plutonium back into the Villain Deck.
+#EVILWINS: When 4 Plutonium have been carried off by Villains.
+
+#CARDNAME: Transform Citizens Into Demons
+#SETUP: 8 Twists. Villain Deck includes 14 extra Jean Grey cards and no Bystanders.
+#TWIST: Stack 5 Bystanders face down next to the Scheme. Bystanders stacked here are "Demon Goblin" Villains. They have 2 Attack. Players can fight these Demon Goblins to rescue them as Bystanders.
+#RULE: Each Jean Grey card counts as a "Goblin Queen" Villain. It's worth 4 VP. It has Attack equal to its Cost plus the number of Demon Goblins stacked next to the Scheme.
+#EVILWINS: When 4 Goblin Queen cards escape.
+
+#CARDNAME: X-Cutioner's Song
+#SETUP: 8 Twists. Villain Deck includes 14 cards for an extra Hero and no Bystanders.
+#RULE: Whenever you play a Hero from the Villain Deck, that Hero is captured by the closest enemy to the Villain Deck. Each Villain gets +2 Attack for each Hero it has. When you fight an enemy, gain all the Heroes captured by that enemy.
+#TWIST: KO all Heroes captured by enemies. Then play another card from the Villain Deck.
+#EVILWINS: 9 non grey Heroes are KO'd or carried off.
+
+
+
+

@@ -1,0 +1,183 @@
+
+#CARDNAME: Happy Hogan
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Head of Security
+#COPIES: 5
+#CLASS: [Instinct]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+KO all Wounds you gained this turn.
+#RECRUIT: 2
+#COST: 3
+
+#SUBNAME: Watchful Eye
+#COPIES: 5
+#CLASS: [Instinct]
+{POWER Instinct} <b>Danger Sense 2</b>. If this revealed any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile.
+#ATTACK: 2+
+#COST: 4
+
+#SUBNAME: Loyal Friend
+#COPIES: 3
+#CLASS: [Tech]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Striker</b>
+#ATTACK: 0+
+#COST: 5
+#FLAVOR: "Don't I look happy to you?"
+
+#SUBNAME: Asset Management
+#COPIES: 1
+#CLASS: [Instinct]
+<b>Double Striker</b>
+#ATTACK: 0+
+#COST: 5
+#FLAVOR: Many people don't understand why Iron Man would need a bodyguard. They haven't met Happy.
+
+
+#CARDNAME: High-Tech Spider-Man
+#TEAM: Spider Friends
+
+#SUBNAME: Advanced Targeting System
+#COPIES: 5
+#CLASS: [Covert]
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+{POWER Covert} Draw a card.
+#COST: 2
+
+#SUBNAME: Recon Drone Connection
+#COPIES: 5
+#CLASS: [Tech]
+Wall-Crawl
+<b>Danger Sense 3</b>
+#ATTACK: 0+
+#COST: 2
+
+#SUBNAME: Spider-Grip
+#COPIES: 3
+#CLASS: [Tech]
+Wall-Crawl
+{POWER Tech} Choose two Villains in adjacent city spaces. Each of them gets -1 Attack this turn.
+#ATTACK: 2
+#COST: 2
+
+#SUBNAME: Friendly Neighborhood ...
+#COPIES: 1
+#CLASS: [Tech]
+Wall-Crawl
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+You get +3 Attack usable only against the Mastermind or Villains on the Rooftops or Streets.
+#ATTACK: 0+
+#COST: 2
+
+
+#CARDNAME: Peter's Allies
+#TEAM: Spider Friends
+
+#SUBNAME: Michelle
+#COPIES: 5
+#CLASS: [Covert]
+You may choose a Villain or Mastermind. You can fight it using only Recruit this turn.
+#RECRUIT: 2
+#COST: 3
+
+#SUBNAME: Ned
+#COPIES: 5
+#CLASS: [Covert]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+{POWER Covert} You get +2 Recruit
+#RECRUIT: 1+
+#COST: 2
+
+#SUBNAME: Liz
+#COPIES: 3
+#CLASS: [Instinct]
+Whenever you <span style="color: #CC0000;"><b>Coordinate</b></span> a card to another player, you may reveal this to draw two cards instead of one.
+#RECRUIT: 4
+#COST: 6
+
+#SUBNAME: May Parker
+#COPIES: 1
+#CLASS: [Covert]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+{TEAMPOWER Spider Friends} Each Villain gets -2 Attack this turn. The next time you fight the Mastermind this turn, it gets -2 Attack.
+#RECRUIT: 5
+#COST: 7
+
+
+#CARDNAME: Peter Parker, Homecoming
+#TEAM: Spider Friends
+
+#SUBNAME: Avenger in Training
+#COPIES: 5
+#CLASS: [Instinct]
+Wall-Crawl
+{POWER Instinct} <b>Danger Sense 1</b>. If this revealed a Villain, you may fight it.
+#ATTACK: 2+
+#COST: 2
+
+#SUBNAME: Heightened Senses
+#COPIES: 5
+#CLASS: [Covert]
+<b>Danger Sense 2</b>
+Reveal the top card of your deck. If it costs 2 or less, draw it.
+#COST: 2
+
+#SUBNAME: Homemade Web-Shooters
+#COPIES: 3
+#CLASS: [Tech]
+Wall-Crawl
+{POWER Tech} <b>Danger Sense 1</b>. If this revealed a Bystander, rescue it.
+#ATTACK: 2+
+#COST: 2
+
+#SUBNAME: Something is Happening
+#COPIES: 1
+#CLASS: [Strength]
+Wall-Crawl
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Danger Sense 4</b>
+If this revealed any Scheme Twists, you may shuffle the Villain Deck.
+#ATTACK: 0+
+#COST: 2
+
+
+#CARDNAME: Tony Stark
+#TEAM: Avengers
+
+#SUBNAME: Genius, Billionaire ...
+#COPIES: 5
+#CLASS: [Tech]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+#RECRUIT: 1
+#ATTACK: 1
+#COST: 2
+#FLAVOR: "Just don't do anything I would do. And definitely don't do anything I wouldn't do. There's a little grey area in there, and that's where you operate."
+
+#SUBNAME: Stay Out of Trouble
+#COPIES: 5
+#CLASS: [Tech]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+{POWER Tech} <b>Danger Sense 2</b>
+#ATTACK: 2+
+#COST: 4
+#FLAVOR: I know you want to save the world, but you're not ready yet.
+
+#SUBNAME: Little Grey Area
+#COPIES: 3
+#CLASS: [Ranged]
+{TEAMPOWER Avengers} <b>Danger Sense 1</b>. If this revealed a Villain, then Villains from that same Villain Group get -1 Attack this turn.
+#ATTACK: 3+
+#COST: 5
+
+#SUBNAME: As Usual, I Did All the Work
+#COPIES: 1
+#CLASS: [Ranged]
+<span style="color: #CC0000;"><b>Coordinate</b></span>
+If another player accepts this <span style="color: #CC0000;"><b>Coordinate</b></span>, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
+#ATTACK: 5
+#COST: 7
+
+
+
+

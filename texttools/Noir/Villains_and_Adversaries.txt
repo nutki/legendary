@@ -1,0 +1,91 @@
+
+#CARDNAME: Goblin's Freak Show
+
+#SUBNAME: Vulture, Carnival Cannibal
+#COPIES: 2
+#AMBUSH: The Vulture captures 2 <b>Hidden Witnesses</b>.
+#FIGHT: Each other player KOs a Bystander from their Victory Pile or gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5*
+#VP: 3
+
+#SUBNAME: The Chameleon
+#COPIES: 2
+#AMBUSH: Chameleon captures a <b>Hidden Witness</b>.
+#FIGHT: Reveal the top card of the Villain Deck. If it's a Villain, it enters the city space where the Chameleon was.
+#ATTACK: 4*
+#VP: 2
+
+#SUBNAME: Kraven, Animal Trainer
+#COPIES: 1
+#AMBUSH: For each Hero in the HQ that costs 7 or more, Kraven captures a <b>Hidden Witness</b>. Kraven's Attack is equal to the cost of the highest-cost card in the HQ.
+#ATTACK: *
+#VP: 3
+
+#SUBNAME: Ox
+#COPIES: 1
+#AMBUSH: Each other player reveals a Strength Hero or Ox captures a random Bystander from their Victory Pile as a <b>Hidden Witness</b>.
+#ATTACK: 5*
+#VP: 3
+
+#SUBNAME: Montana
+#COPIES: 1
+#AMBUSH: Each Goblin's Freak Show Villain captures a <b>Hidden Witness</b>.
+#ATTACK: 4*
+#VP: 2
+
+#SUBNAME: Fancy Dan
+#COPIES: 1
+#AMBUSH: Fancy Dan captures 3 <b>Hidden Witnesses</b>.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 1*
+#VP: 2
+
+
+#CARDNAME: X-Men Noir
+
+#SUBNAME: Bobby "Iceman" Drake
+#COPIES: 1
+#FIGHT: <b>Investigate</b> for a card with a Recruit icon.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Comrade Rasputin, Steel Wall
+#COPIES: 2
+#FIGHT: <b>Investigate</b> for a Hero that costs 0 and KO it.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Henry "Beast" McCoy
+#COPIES: 1
+#FIGHT: <b>Investigate</b> for any card that's Tech or Strength.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Jean Grey Noir
+#COPIES: 1
+#FIGHT: When you draw a new hand of cards at the end of your turn, <b>Investigate</b> for an extra card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Scott "Cyclops" Summers
+#COPIES: 1
+#ESCAPE: Each player <b>Investigates</b> their deck for a card that costs 1 or more and KOs it. Players reveal the cards they investigated.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Warden Emma Frost
+#COPIES: 1
+#ESCAPE: <b>Investigate</b> the Villain Deck for a Scheme Twist and play it. Reveal all the cards you <b>Investigated</b>.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Ororo Munroe, Storm-Tossed
+#COPIES: 1
+#FIGHT: KO a Hero from the HQ. <b>Investigate</b> the Hero Deck for a card to put in that emptied HQ space.
+#ATTACK: 4
+#VP: 2
+
+
+
+

@@ -1,0 +1,10 @@
+
+#CARDNAME: Madame HYDRA
+#SUBNAME: Viper
+#COPIES: 15
+#TEAM: HYDRA
+#RECRUIT: 2
+{DODGE}
+To play this card, you must discard a card from your hand.
+#COST: 3
+

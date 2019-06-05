@@ -1,0 +1,27 @@
+
+#CARDNAME: Invasion of the Venom Symbiotes
+#SETUP: 8 Twists. Add an extra Henchman Group.
+#TWIST: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush:</b> This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
+#EVILWINS: When the Escape Pile has 3 cards per player, or the Villain Deck runs out.
+
+#CARDNAME: Maximum Carnage
+#SETUP: 10 Twists. Wound Stack has 6 Wounds per player.
+#TWIST: Stack this Twist next to the Scheme. If the Streets are empty, put a Bystander there as a "Possessed Psychotic" Villain. If the Streets weren't empty, each player gains a Wound.
+#RULE: "Possessed Psychotics" have Attack equal to the number of Twists next to the Scheme. When you fight one, rescue it as a Bystander.
+#EVILWINS: When there are 6 Bystanders in the Escape Pile or the Wound Stack runs out.
+
+#CARDNAME: Paralyzing Venom
+#SETUP: 6 Twists. All Bystanders are also "Biochemists."
+#TWIST: Each player Kos a Biochemist from their Victory Pile or discards down to 4 cards in hand.
+#TWISTNR: NR[6] Evil Wins!
+
+#CARDNAME: Symbiotic Absorption
+#SETUP: 11 Twists. Set aside a second "Drained" Mastermind and its 4 Tactics, out of play. Add its "Always Leads" Villains as an extra Villain Group.
+#TWISTNR: NR[1-4] Shuffle one of the Drained Mastermind's Tactics into the main Mastermind's Tactics.
+#TWISTNR: NR[6, 8, 10] The Mastermind uses this Twist to copy the Master Strike ability of the Drained Mastermind.
+#TWISTNR: NR[11] Evil Wins!
+#RULE: If Tactics or Master Strikes mention the Drained Mastermind, use the main Mastermind instead.
+
+
+
+

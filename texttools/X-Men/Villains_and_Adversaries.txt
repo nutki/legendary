@@ -1,0 +1,317 @@
+
+#CARDNAME: Dark Descendants
+
+#SUBNAME: Fatale
+#COPIES: 2
+#FIGHT: KO one of your Heroes.
+#ESCAPE: The Mastermind Dominates the top card of the Hero Deck.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Havok, Brainwashed
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ESCAPE: Havok becomes a Hero Dominated by the Mastermind.
+#ATTACK: 6
+---------
+#TEAM: X-Men
+#CLASS: [Ranged]
+<b>X-Gene</b> [Ranged]: You get +2 Attack.
+#ATTACK: 2+
+
+#SUBNAME: Nemesis
+#COPIES: 1
+#AMBUSH: Each player reveals their hand and chooses one of their non-grey Heroes. Nemesis Dominates those Heroes.
+#ATTACK: 5
+#VP: 5
+
+#SUBNAME: Psychic Subjugation
+#COPIES: 1
+<b>Trap!</b>
+<b>By End of Turn:</b> Recruit the left-most and right-most Heroes in the HQ.
+<b>Or Suffer:</b> Each of those Heroes you didn't recruit enters the city as a Villain with Attack equal to that Hero's cost. When you fight one, you gain it.
+#VP: 3
+
+#SUBNAME: Random
+#COPIES: 2
+#AMBUSH: Random Dominates the top card of the Hero Deck. Then, each player reveals their hand and chooses one of their Heroes with that same cost. Random Dominates those Heroes.
+#ATTACK: 4+
+#VP: 3
+
+
+#CARDNAME: Hellfire Club
+
+#SUBNAME: Corrupt the Phoenix Force
+#COPIES: 1
+<b>Trap!</b>
+<b>By End of Turn:</b> Have no Hellfire Villains in the city.
+<b>Or Suffer:</b> This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+#VP: 3
+
+#SUBNAME: Emma Frost (White Queen)
+#COPIES: 2
+#AMBUSH: Each player chooses an X-Men Hero from their discard pile. Emma Frost Dominates those Heroes.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Harry Leland (Black Bishop)
+#COPIES: 2
+#AMBUSH: Heroes cost 1 more to recruit this turn.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+#FLAVOR: Increasing his opponents' mass to 20,000 pounds puts a real weight on their shoulders.
+
+#SUBNAME: Mastermind (Jason Wyngarde)
+#COPIES: 1
+#AMBUSH: The Villain ascends to become a new Mastermind. He gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Mastermind dominates the revealed Hero with the highest cost (and tied for highest.)
+#ATTACK: 8+
+#VP: 6
+
+#SUBNAME: Sebastian Shaw (Black King)
+#COPIES: 2
+Sebastian Shaw has +1 Attack for each card you've played from your hand this turn.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 3+
+#VP: 4
+
+
+#CARDNAME: Mojoverse
+
+#SUBNAME: Mindwarping TV Broadcast
+#COPIES: 1
+<b>Trap!</b>
+#AMBUSH: A Villain captures a Bystander.
+<b>By End of Turn:</b> Have no Bystanders in each city captured by Villains.
+<b>Or Suffer:</b> After you draw your new hand at end of turn, each player discards down to four cards each. ????
+#VP: 3
+
+#SUBNAME: Minor Domo
+#COPIES: 2
+#AMBUSH: Minor Domo captures 2 <b>Human Shields</b>.
+#ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) ????.
+2* Attack
+#VP: 2
+
+#SUBNAME: Major Domo
+#COPIES: 2
+#AMBUSH: Major Domo captures a <b>Human Shield</b>.
+#ESCAPE: Each player simultaneously reveals a card from their hand. Whoever reveals the highest-costing card (or tied for highest) gains a Wound.
+4* Attack
+#VP: 3
+
+#SUBNAME: Spiral
+#COPIES: 1
+#AMBUSH: Each player reveals a [Covert] Hero or discards their hand. Each player who discarded their hand this way draws 5 cards.
+#ESCAPE: Same effect.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Warwolves
+#COPIES: 2
+#AMBUSH: These Warwolves capture a <b>Human Shield</b>.
+#FIGHT: KO one of your Heroes.
+3* Attack
+#VP: 2
+
+
+#CARDNAME: Murderworld
+
+#SUBNAME: Animatronic Killer Clowns
+#COPIES: 2
+<b>Trap!</b>
+<b>By End of Turn:</b> Recruit two Heroes.
+<b>Or Suffer:</b> This Trap enters the city as a 3 Attack "Animatronic Killer Clown" Token Villain that captures a <b>Human Shield</b>.
+#VP: 2
+
+#SUBNAME: Guillotine Rollercoaster
+#COPIES: 1
+<b>Trap!</b>
+<b>By End of Turn:</b> Have at least four different costs of Heroes in the HQ.
+<b>Or Suffer:</b> After you draw your new hand at the end of this turn, each palyer reveals their hand and discards each card with the same cost as the cards in the HQ.
+#VP: 3
+
+#SUBNAME: Miss Locke
+#COPIES: 2
+#AMBUSH: Miss Locke captures 2 <b>Human Shields</b>. Then reveal the top card of the Villain Deck. If it's a Trap or Master Strike, play it.
+#ATTACK: 2*
+#VP: 2
+
+#SUBNAME: Monstrous Pinball Machine
+#COPIES: 1
+<b>Trap!</b>
+<b>By End of Turn:</b> Pay any amount of Recruit. Then you must reveal the top card of the Hero Deck. If you paid enough, recruit that Hero and put this Trap in your Victory Pile.
+<b>Or Suffer:</b> KO that Hero. Play two extra cards from the Villain Deck next turn.
+#VP: 3
+
+#SUBNAME: Sulfuric Acid Water Slide
+#COPIES: 2
+<b>Trap!</b>
+#AMBUSH: Play another card from the Villain Deck.
+<b>By End of Turn:</b> Have no Villains in the Sewers.
+<b>Or Suffer:</b> Each player gains a Wound.
+#VP: 2
+
+
+#CARDNAME: Shadow-X
+
+#SUBNAME: Betrayal of the Shadow
+#COPIES: 1
+<b>By End of Turn:</b> You may pay 6 Recruit.
+<b>Or Suffer:</b> Each player reveals their hand. Then, each player chooses a Shadow-X card from their hand or discard pile to enter the city as a Villain.
+
+#SUBNAME: Dark Angel
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ATTACK: 4
+---------
+#CLASS: [Instinct]
+<b>X-Gene</b> [Instinct]: The next Hero you recruit from the HQ has Soaring Flight.
+#ATTACK: 2
+
+#SUBNAME: Dark Beast
+#COPIES: 1
+#FIGHT: Gain this as a Hero.
+#ATTACK: 5
+---------
+#CLASS: [Tech]
+<b>X-Gene</b> [Tech]: You may KO a card from your hand or discard pile.
+#ATTACK: 2
+
+#SUBNAME: Dark Cyclops
+#COPIES: 1
+#AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
+#FIGHT: Gain this as a Hero.
+#ATTACK: 7
+---------
+#CLASS: [Ranged]
+<b>X-Gene</b> [Ranged]: Return a [Ranged] Hero from your discard pile to your hand.
+#ATTACK: 3
+
+#SUBNAME: Dark Iceman
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ATTACK: 5
+---------
+#CLASS: [Strength]
+<b>X-Gene</b> [Strength]: Draw a card.
+#ATTACK: 2
+
+#SUBNAME: Dark Marvel Girl
+#COPIES: 1
+#AMBUSH: Dark Marvel Girl Dominates each X-Men Hero that costs 4 or less from the HQ.
+#FIGHT: Gain this as a Hero.
+#ATTACK: 4+
+---------
+#CLASS: [Covert]
+<b>X-Gene</b> [Covert]: Rescue a Bystander.
+#ATTACK: 2
+
+
+#CARDNAME: Shi'ar Imperial Guard
+
+#SUBNAME: Blackthorn
+#COPIES: 2
+#FIGHT: If you fought Blackthorn in the Sewers or Streets, each other player gains a Wound.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Gladiator
+#COPIES: 1
+#AMBUSH: Each player discards an X-Men Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Oracle
+#COPIES: 2
+#AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle Dominates those Heroes.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Shi'ar Trial by Combat
+#COPIES: 1
+<b>Trap!</b>
+#AMBUSH: If the Bridge is empty, reveal the top card of the Villain Deck. If it's a Villain, put it on the Bridge.
+<b>By End of Turn:</b> Have no Villains on the Bridge.
+<b>Or Suffer:</b> After you draw a new hand at end of turn, each player KOs a non-grey Hero from their discard pile.
+#VP: 2
+
+#SUBNAME: Smasher
+#COPIES: 2
+#AMBUSH: Each player reveals a [Strength] Hero or discards a card.
+#FIGHT: KO a card from your discard pile.
+#ATTACK: 5
+#VP: 3
+
+
+#CARDNAME: Sisterhood of Mutants
+
+#SUBNAME: Lady Deathstrike
+#COPIES: 2
+#FIGHT: KO one of your Heroes.
+#ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Lady Mastermind
+#COPIES: 1
+#AMBUSH: This Villain ascends to become a new Mastermind. She gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Lady Mastermind Dominates the revealed Hero with the lowest cost (and tied for lowest.)
+#ATTACK: 7+
+#VP: 5
+
+#SUBNAME: Resurrect Madelyne Pryor
+#COPIES: 1
+<b>Trap!</b>
+<b>By End of Turn:</b> You may pay 3 Recruit. If you do, shuffle this Trap back into the Villain Deck, then play a card from the Villain Deck.
+<b>Or Suffer:</b> This Trap becomes a Scheme Twist that takes effect immediately.
+#VP: 0
+
+#SUBNAME: Selene
+#COPIES: 2
+#AMBUSH: Selene Dominates all of the 0-cost Heroes from the KO pile.
+#FIGHT: KO all the Heroes Dominated by Selene.
+#ESCAPE: Put one Hero Dominated by Selene into each player's discard pile.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Typhoid Mary
+#COPIES: 2
+#AMBUSH: Each player reveals their hand and chooses a 3-cost Hero from it. Typhoid Mary Dominates those Heroes.
+#ATTACK: 3+
+#VP: 3
+
+
+#CARDNAME: Token Villains
+
+#SUBNAME: Animatronic Killer Clown
+#COPIES: 2
+Villain --- Murderworld
+#AMBUSH: Animatronic Killer Clown captures a Human Shield.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Master Plan
+#COPIES: 1
+Mastermind
+<b>Master Strike:</b> Each player reveals a [Tech] Hero or gains a Wound.
+#ATTACK: 9
+#VP: 5
+
+#SUBNAME: Phoenix Force
+#COPIES: 1
+Villain --- Hellfire Club
+#AMBUSH: Phoenix Force Dominates all of the Heroes in the HQ that cost 6 or less.
+#ATTACK: 6
+#VP: 3
+
+#SUBNAME: Shi'ar Battlecruiser
+#COPIES: 5
+Villain --- Shi'ar Imperial Guard
+#ATTACK: 7
+#VP: 5
+
+
+
+

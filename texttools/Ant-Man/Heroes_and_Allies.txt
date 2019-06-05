@@ -1,0 +1,184 @@
+
+
+#CARDNAME: Ant-Man
+#TEAM: Avengers
+
+#SUBNAME: Ride the Ants
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1
+<b>Size-changing:</b> [Tech]
+Draw a card.
+#COST: 4*
+#FLAVOR: Some consider Hank Pym an antihero.
+
+#SUBNAME: Risky Science
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+<b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech]
+{POWER Tech} You may discard a card. If you do, draw a card.
+#COST: 5*
+
+#SUBNAME: Giant Ego
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+<b>Size-changing:</b> [Tech]
+You get +1 Attack for each extra card you drew this turn.
+#COST: 6*
+
+#SUBNAME: Pym Particles
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+<b>Microscopic Size-changing:</b> [Tech] [Tech] [Tech] [Tech] [Tech]
+A hero in the HQ without <b>Size-changing</b> abilities gain <b>Size-Chaning</b>: [Tech] this turn.
+#COST: 9*
+
+
+#CARDNAME: Wasp
+#TEAM: Avengers
+
+#SUBNAME: Bio-Electric Sting
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1+
+<b>Microscopic Size-Changing</b>: [Covert] [Covert]
+{POWER Covert} You get +2 Attack.
+#COST: 3*
+#FLAVOR: Nobody likes being stung by a bug. Especially when the sting is 30,000 volts.
+
+#SUBNAME: Tiny Winged Justice
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+<b>Size-changing:</b> [Covert]
+<span style="background-color: #FF0000;"><span style="color: #FFFFFF;">Covert</span>:</span> Draw a card.
+#COST: 4*
+#FLAVOR: Crushing victories arrive in small packages.
+
+#SUBNAME: Swarm Tactics
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+<b>Size-changing:</b> [Covert]
+You get +1 Attack for each card you recruited this turn.
+#COST: 6*
+
+#SUBNAME: Founding Avenger
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+<b>Microscopic Size-chaning:</b> [Covert] [Covert] [Covert] [Covert] [Covert]
+{TEAMPOWER Avengers} You get +1 Attack for each other Avengers card you played this turn.
+#COST: 9*
+
+
+#CARDNAME: Jocasta
+#TEAM: Avengers
+
+#SUBNAME: Creation of Ultron
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{POWER Tech} You get <b>Empowered</b> by [Tech].
+#COST: 3
+#FLAVOR: Former bride of Ultron. Programmed by Ant-Man with the memories of Wasp. Let's just say family reunions are complicated.
+
+#SUBNAME: Reprocess
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2+
+If your discard pile is empty, you get +2 Recruit. Otherwise, shuffle your discard pile into your deck.
+#COST: 4
+
+#SUBNAME: Holographic Image Inducer
+#COPIES: 3
+#CLASS: [Tech]
+<b>Size-changing:</b> [Tech]
+Draw two cards.
+#COST: 6°
+#FLAVOR: Holograms allow Jocasta to appear human, as she searches for her own humanity.
+
+#SUBNAME: Electromagnetic Eyebeams
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+If your discard pile is empty, you get +2 Attack. Otherwise shuffle your discard pile into your deck.
+#COST: 7
+#GUN: 1
+
+
+#CARDNAME: Wonder Man
+#TEAM: Avengers
+
+#SUBNAME: One-Hit Wonder
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+Chose one: Draw a card, or you get <b>Empowered</b> by [Strength].
+#COST: 2
+#FLAVOR: Arms dealer. Stunt man, Movie star. Master of Evil. Avenger. Maybe he'll star in his own biopic.
+
+#SUBNAME: Ionic Energy
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+You may put a card from the HQ on the bottom of the Hero Deck.
+{POWER Ranged} You get <b>Empowered</b> by [Ranged].
+#COST: 4
+
+#SUBNAME: Absorb Ambient Power
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 0+
+#ATTACK: 0+
+Put a card from the HQ on the bottom of the Hero Deck. If that card had a Recruit icon, you get +3 Recruit. If that card had an Attack icon, you get +3 Attack. (if both, get both).
+#COST: 5
+
+#SUBNAME: 8th Wonder of the World
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+<b>Size-changing</b> [Strength]
+Choose any number of cards from the HQ. Put them on the bottom of the Hero Deck. Then you get <b>Empowered</b> by [Ranged] and [Strength].
+#COST: 8*
+
+
+#CARDNAME: Black Knight
+#TEAM: Avengers
+
+#SUBNAME: Amulet of Avalon
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get <b>Empowered</b> by the color of your choice.
+#COST: 3
+#FLAVOR: The amulet summons whatever boon he chooses. Sword of Light, Shield of Night, Mystical Armor, or Flying Steed.
+
+#SUBNAME: Defend the Weak
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{POWER Strength} Return a 0-cost card from your discard pile to your hand.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Flying Steed
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
+#COST: 6
+
+#SUBNAME: The Ebony Blade
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 0+
+You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
+#COST: 7
+
+
+
+

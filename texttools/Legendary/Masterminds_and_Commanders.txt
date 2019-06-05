@@ -1,0 +1,83 @@
+
+#CARDNAME: Dr. Doom
+
+#LEADS: Doombot Legion
+#STRIKE: Each player with exactly 6 cards in hand reveals a [Tech] Hero or puts 2 cards from their hand on top of their deck.
+#ATTACK: 9
+#VP: 5
+
+#TACTIC: Dark Technology
+#FIGHT: You may recruit a [Tech] or [Ranged] Hero from the HQ for free.
+
+#TACTIC: Monarch's Decree
+#FIGHT: Choose one: each other player draws a card or each other player discards a card.
+
+#TACTIC: Secrets of Time Travel
+#FIGHT: Take another turn after this one.
+
+#TACTIC: Treasures of Latveria
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw three extra cards.
+
+
+#CARDNAME: Loki
+
+#LEADS: Enemies of Asgard
+#STRIKE: Each player reveals a [Strength] Hero or gains a Wound
+#ATTACK: 10
+#VP: 5
+
+#TACTIC: Cruel Ruler
+#FIGHT: Defeat a Villain in the City for free.
+
+#TACTIC: Maniacal Tyrant
+#FIGHT: KO up to four cards from your discard pile.
+
+#TACTIC: Vanishing Illusions
+#FIGHT: Each other player KOs a Villain from their Victory Pile.
+
+#TACTIC: Whispers and Lies
+#FIGHT: Each other player KOs two Bystanders from their Victory Pile.
+
+
+#CARDNAME: Magneto
+
+#LEADS: Brotherhood
+#STRIKE: Each player reveals an X-Men Hero or discards down to four cards.
+#ATTACK: 8
+#VP: 5
+
+#TACTIC: Bitter Captor
+#FIGHT: Recruit an X-Men Hero from the HQ for free.
+
+#TACTIC: Crushing Shockwave
+#FIGHT: Each other player reveals an X-Men Hero or gains two Wounds.
+
+#TACTIC: Electromagnetic Bubble
+#FIGHT: Choose one of your X-Men Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
+
+#TACTIC: Xavier's Nemesis
+#FIGHT: For each of your X-Men Heroes, rescue a Bystander.
+
+
+#CARDNAME: Red Skull
+
+#LEADS: HYDRA
+#STRIKE: Each player KOs a Hero from their hand.
+#ATTACK: 7
+#VP: 5
+
+#TACTIC: Endless Resources
+#FIGHT: You get +4 Recruit.
+
+#TACTIC: HYDRA Conspiracy
+#FIGHT: Draw two cards. Then draw another card for each HYDRA Villain in your Victory Pile.
+
+#TACTIC: Negablast Grenades
+#FIGHT: You get +3 Attack.
+
+#TACTIC: Ruthless Dictator
+#FIGHT: Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
+
+
+
+

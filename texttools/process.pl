@@ -100,8 +100,11 @@ while (<A>) {
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm
     }
     print "$name";
-    open B,">$name";
-    print B $_;
-    close B;
+    while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
+      mkdir $1 unless -e $1;
+      open B,">$1/$name";
+      print B $2;
+      close B;
+    }
   }
 }

@@ -1,0 +1,31 @@
+
+#CARDNAME: Bystander
+#COPIES: 30
+#VP: 1
+
+
+#CARDNAME: Computer Hacker
+#COPIES: 3
+#RESCUE: draw an extra card when you draw a new hand at the end of your turn.
+#VP: 1
+
+
+#CARDNAME: Engineer
+#COPIES: 3
+#RESCUE: reveal the top card of your deck. If it costs 0 - KO it.
+#VP: 1
+
+
+#CARDNAME: Public Speaker
+#COPIES: 3
+#RESCUE: gain 1 recruit.
+#VP: 1
+
+
+#CARDNAME: Rockstar
+#COPIES: 3
+#RESCUE: kidnap another Bystander.
+#VP: 1
+
+
+

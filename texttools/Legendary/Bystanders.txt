@@ -1,0 +1,7 @@
+
+#CARDNAME: Bystander
+#COPIES: 30
+#VP: 1
+
+
+

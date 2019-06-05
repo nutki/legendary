@@ -1,0 +1,28 @@
+
+#CARDNAME: The Clone Saga
+#SETUP: 8 Twists.
+#TWIST: Each player reveals two non-grey Heroes with the same card name or discards down to 3 cards.
+#EVILWINS: When 2 Villains with the same card name have escaped or the Villain Deck runs out.
+
+#CARDNAME: Invade the Daily Bugle News HQ
+#SETUP: 8 Twists. Add 6 extra Henchmen from a single Henchman Group to the Hero Deck.
+#RULE: You can fight Villains in the HQ.
+#TWIST: KO a Hero from the HQ. Put the highest-Attack Villain from the city into that HQ space.
+#EVILWINS: When there are 5 Villains in the HQ.
+
+#CARDNAME: Splice Humans with Spider DNA
+#SETUP: 8 Twists. Include Sinister Six as one of the Villain Groups.
+#RULE: Sinister Six Villains get +3 Attack. All Hero cards have Wall-Crawl.
+#TWIST: Each player puts a Sinister Six Villain from their Victory Pile on top of the Villain Deck. No matter how many players did so, play a single card from the Villain Deck.
+#EVILWINS: When 6 Sinister Six Villains have escaped or the Villain Deck runs out.
+
+#CARDNAME: Weave a Web of Lies
+#SETUP: 7 Twists.
+#RULE: Whenever you defeat a Villain, you may pay 1 Recruit. If you do, rescue a Bystander.
+You can't fight the Mastermind unless you have a Bystander in your Victory Pile for each Twist next to the Mastermind.
+#TWIST: Stack this Twist next to the Mastermind.
+#TWISTNR: NR[7] Evil Wins!
+
+
+
+

@@ -1,0 +1,220 @@
+
+#CARDNAME: The Deadlands
+
+#SUBNAME: Zombie Baron Zemo
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#FIGHT: For each of your Avengers Heroes, rescue a Bystander.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Zombie Loki
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#ESCAPE: Loki ascends to become a new Mastermind. He gains the ability, <b>"Master Strike:</b> Each player reveals a [Strength]  Hero or gains a Wound."
+#ATTACK: 8
+#VP: 6
+
+#SUBNAME: Zombie Madame Hydra
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#FIGHT: KO one of your <span style="background-color: #AAAAAA;"><span style="color: #FFFFFF;">S.H.I.E.L.D.</span></span> Heroes or <span style="background-color: #AAAAAA;"><span style="color: #FFFFFF;">HYDRA</span></span> Allies.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Zombie Mr. Sinister
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#ESCAPE: Sinister ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Sinister captures a Bystander. Then, each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Sinister has."
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Zombie M.O.D.O.K.
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#FIGHT: KO one of your heroes with a Recruit icon.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Zombie Mysterio
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#ESCAPE: Shuffle this card into the Mastermind's face-down Tactics. It becomes a Mastermind Tactic that says "<b>Fight:</b> Draw two cards."
+#ATTACK: 6
+#VP: 6
+
+#SUBNAME: Zombie Thanos
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+#ESCAPE: Thanos ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Each player reveals their hand and KOs one of their non-grey Heroes."
+#ATTACK: 9
+#VP: 6
+
+#SUBNAME: Zombie Venom
+#COPIES: 1
+#AMBUSH: <b>Rise of the Living Dead</b>
+You can't defeat Zombie Venom unless you have a [Covert] Hero.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 5*
+#VP: 3
+
+
+#CARDNAME: Domain of Apocalypse
+
+#SUBNAME: Apocalyptic Blink
+#COPIES: 3
+#FIGHT: Reveal the top card of your deck. Draw it or <b>Teleport</b> it.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Apocalyptic Magneto
+#COPIES: 1
+#FIGHT: Gain an X-Men Hero from the HQ for free.
+#ESCAPE: Magneto ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Each player reveals an X-Men Hero or discards down to four cards."
+#ATTACK: 8
+#VP: 6
+
+#SUBNAME: Apocalyptic Rogue
+#COPIES: 2
+#FIGHT: Reveal the top card of the Hero deck. The player of your choice gains it.
+#ESCAPE: Reveal the top card of the Hero deck. Each player reveals their hand and discards a card of that class.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Apocalyptic Weapon X
+#COPIES: 2
+#FIGHT: KO one of your heroes.
+#ESCAPE: <b>Cross-Dimensional Wolverine Rampage</b>
+#ATTACK: 7
+#VP: 5
+
+
+#CARDNAME: Limbo
+
+#SUBNAME: Inferno Colossus
+#COPIES: 2
+#AMBUSH: The Mastermind captures a Bystander.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Inferno Cyclops
+#COPIES: 2
+#AMBUSH: Inferno Cyclops captures a Bystander.
+#ESCAPE: The Mastermind captures all the Bystanders this Villain had.
+<i>(Players still discard for the Bystander being carried away.)</i>
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Inferno Darkchilde
+#COPIES: 2
+#FIGHT: Reveal the top card of your deck. KO it or <b>Teleport</b> it.
+#ESCAPE: Each player <b>Teleports</b> a random card from their hand.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Inferno Nightcrawler
+#COPIES: 2
+#FIGHT: Up to two cards in your hand that have a Recruit icon gain <b>Teleport</b> this turn.
+#ATTACK: 4
+#VP: 2
+
+
+#CARDNAME: Manhattan (Earth-1610)
+
+#SUBNAME: Ultimate Captain America
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ATTACK: 6
+-----------------
+#CLASS: [Strength]
+You get +1 Attack for each color of Hero you have
+#ATTACK: 0+
+
+#SUBNAME: Ultimate Captain Marvel
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ATTACK: 4
+-----------------
+#CLASS: [Ranged]
+{TELEPORT}
+#RECRUIT: 2
+
+#SUBNAME: Ultimate Thor
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ESCAPE: <b>Cross-Dimensional Thor Rampage</b>
+#ATTACK: 7
+-----------------
+#CLASS: [Ranged]
+{POWER Ranged} You get +3 Attack.
+#ATTACK: 3+
+
+#SUBNAME: Ultimate Wasp
+#COPIES: 2
+#FIGHT: Gain this as a Hero.
+#ATTACK: 5
+-----------------
+#CLASS: [Covert]
+{POWER Covert} You get +2 Attack.
+#ATTACK: 2+
+
+
+#CARDNAME: Sentinel Territories
+
+#SUBNAME: Colossus of Future Past
+#COPIES: 2
+#FIGHT: <i>Colossus changes the future:</i> Don't play a Villain card at the beginning of next turn.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Kate Pryde of Future Past
+#COPIES: 2
+#FIGHT: You get +1 Recruit. Then, <i>Kate Pryde alters the future:</i> At the beginning of the next player's turn, that player gets +1 Recruit.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Rachel Summers of Future Past
+#COPIES: 2
+#FIGHT: <i>Rachel Summers alters the future:</i> During the next player's turn, all Villains and the Mastermind get -1 Attack. <b>Escape:</b> This turn, All Villains and the Mastermind get +1 Attack.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Wolverine of Future Past
+#COPIES: 2
+#FIGHT: <i>Wolverine alters the future:</i> At the start of the next player's turn, you draw a card, and that player draws a card.
+#ESCAPE: <b>Cross-Dimensional Wolverine Rampage</b>
+#ATTACK: 7
+#VP: 5
+
+
+#CARDNAME: Wasteland
+
+#SUBNAME: The Hulk Gang
+#COPIES: 3
+#FIGHT: <b>Cross-Dimensional Hulk Rampage</b> <b>Escape:</b> Same effect.
+#ATTACK: 5 <b>VP:</b> 3
+
+#SUBNAME: Wasteland Kingpin
+#COPIES: 1
+#SUBNAME: Bribe
+#COPIES: 2
+#ESCAPE: Kingpin ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Each player reveals an [Instinct] Hero or discards their hand and draws 5 cards."
+#ATTACK: 11*
+#VP: 6
+
+#SUBNAME: Wasteland Hawkeye
+#COPIES: 2
+#AMBUSH: Wasteland Hawkeye captures a Bystander. <b>Fight:</b> Choose one: Each other player draws a card, or each other player discards a card.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Wasteland Spider-Girl
+#COPIES: 2
+#FIGHT: Reveal the top card of your deck. If it costs 2 or less, KO it.
+#ATTACK: 4
+#VP: 2
+
+
+
+

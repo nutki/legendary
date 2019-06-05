@@ -1,0 +1,196 @@
+
+#CARDNAME: Gwenpool
+Champions
+
+#SUBNAME: Come On, Nobody Reads Card Names
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 1}
+{POWER Covert} Instead, {VERSATILE 3}.
+#COST: 2
+#FLAVOR: And don't even get me started on flavor text.
+
+#SUBNAME: I'll Rescue You If I Feel Like It
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+Reveal the top card of the Bystander Deck. If it's a Special Bystander, rescue it. Otherwise, put it on the bottom of that deck.
+#COST: 3
+
+#SUBNAME: I Heard Keywords Are Powerful
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2
+<b>Size-Changing</b>: [Instinct]
+{POWER Instinct} Draw a card.
+<b>Cheering Crowds</b>
+#COST: 6*
+
+#SUBNAME: I'm the Best at Board Games
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+<b>Demolish</b> each other player. For each player that discards a card this way, draw a card.
+#COST: 7
+
+
+#CARDNAME: Ms. Marvel
+Champions
+
+#SUBNAME: Long Arm of the Law
+#COPIES: 5
+#CLASS: [Covert]
+<b>Size-Changing</b>: [Covert]
+Draw a card.
+{POWER Covert} Rescue a Bystander.
+#COST: 3*
+
+#SUBNAME: Big Impact
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Size-Changing</b>: [Strength]
+{VERSATILE 2}
+#COST: 4*
+
+#SUBNAME: Need to Stretch My Legs
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+<b>Size-Changing</b>: [Covert]
+Champions: You may KO a card from your hand or discard pile.
+<b>Cheering Crowds</b>
+#COST: 6*
+
+#SUBNAME: Rising Hope
+#COPIES: 1
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Size-Changing</b>: [Strength], [Covert]
+{VERSATILE 4}
+<b>Cheering Crowds</b>
+#COST: 9*
+
+
+#CARDNAME: Nova
+Champions
+
+#SUBNAME: Space Cop
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 1}
+Champions: Rescue a Bystander.
+#COST: 2
+#FLAVOR: Solar systems are variable. Saving people is the constant.
+
+#SUBNAME: Interstellar Hero
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 2}
+<b>Cheering Crowds</b>
+#COST: 4
+#FLAVOR: "The best part about being Nova-famous is I can take off my helmet and nobody knows it's me."
+
+#SUBNAME: Holographic Projection
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 0+
+#ATTACK: 2+
+{POWER Ranged} {VERSATILE 3}
+#COST: 5
+#FLAVOR: The Nova Force can be channeled to virtually any purpose.
+
+#SUBNAME: Growing Nova Force
+#COPIES: 1
+#CLASS: [Ranged]
+#RECRUIT: 0+
+#ATTACK: 0+
+<b>Size-Changing</b>: [Ranged], [Strength]
+For each other card you played this turn with a Recruit icon, you get +1 Recruit. For each other card you played this turn with an Attack icon, you get +1 Attack.
+#COST: 9*
+
+
+#CARDNAME: Totally Awesome Hulk
+Champions
+
+#SUBNAME: Beloved Behemoth
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2
+<b>Size-Changing</b>: [Strength]
+{POWER Strength} The first time you defeat a Villain this turn, rescue a Bystander.
+#COST: 4*
+
+#SUBNAME: Incredible Mind, Awesome Body
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1
+<b>Size-Changing</b>: [Tech]
+Draw a card.
+<b>Cheering Crowds</b>
+#COST: 4*
+
+#SUBNAME: Growing Pains
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+<b>Size-Changing</b>: [Strength]
+If you have a Wound in your hand or discard pile, KO it and you get +2 Attack. Otherwise, gain a Wound.
+#COST: 5*
+
+#SUBNAME: 7th Smartest Man in the World
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5+
+<b>Size-Changing</b>: [Tech], [Strength]
+You get +1 Attack for each extra card you drew this turn.
+#COST: 9*
+
+
+#CARDNAME: Viv Vision
+Champions
+
+#SUBNAME: Walking Wi-Fi
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+{POWER Tech} Whenever you recruit a Hero from the HQ this turn, rescue a Bystander.
+#COST: 3
+
+#SUBNAME: Expanding Neural Network
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+<b>Size-Changing</b>: [Tech]
+{POWER Tech} When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 4*
+
+#SUBNAME: Crowdsourcing
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 0+
+#ATTACK: 0+
+{VERSATILE 3}
+<b>Cheering Crowds</b>
+#COST: 6
+
+#SUBNAME: Alter Molecular Density
+#COPIES: 1
+#CLASS: [Tech]
+#RECRUIT: 5
+#ATTACK: 0+
+<b>Size-Changing</b>: [Tech], [Ranged]
+Whenever you recruit a Hero this turn, you get +2 Attack.
+#COST: 9*
+
+
+
+

@@ -1,0 +1,27 @@
+
+#CARDNAME: Find the Split Personality Killer
+#SETUP: 8 Twists.
+#TWISTNR: NR[1-5] Shuffle 3 Bystanders from the Bystander Stack and the top card of the Hero Deck face down next to this Scheme as a deck of "Murder Suspects."
+#RULE: Whenever you defeat a Villain, you may pay 1 Attack extra to <b>Investigate</b> the Murder Suspects for a Bystander and rescue it.
+#TWISTNR: NR[6] Each player writes down their guess for which Hero Name is the Split Personality Killer. Reveal the entire Murder Suspects Deck. The Hero Name with the most cards in the Murder Suspect Deck (or tied for most) is the Split Personality Killer. Each player who guessed right wins. All other players lose.
+
+#CARDNAME: Silence the Witnesses
+#SETUP: 6 Twists.
+#TWIST: This Scheme captures 3 <b>Hidden Witnesses</b>. If it already had any <b>Hidden Witnesses</b>, put those into the Escape Pile.
+#EVILWINS: When 6 Bystanders are in the Escape Pile.
+
+#CARDNAME: Five Families of Crime
+#SETUP: 8 Twists. Add two extra Villain Groups. Split the Villain Deck into 5 shuffled decks, one above each city space.
+#RULE: Each Villain Deck uses its own city of one city space. Each turn, you choose which Villain Deck plays a card.
+#TWIST: Play two cards from a Villain Deck.
+#EVILWINS: When 8 Villains escape or all Villain Decks run out.
+
+#CARDNAME: Hidden Heart of Darkness
+#SETUP: 8 Twists. Shuffle the Mastermind Tactics into the Villain Deck as Villains.
+#RULE: If there are no Tactics in the city, you can win the game by fighting the Mastermind card.
+#TWIST: Each player shuffles a Tactic from their victory pile into the Villain Deck. Any player who did so draws two cards. Then, <b>Investigate</b> the Villain Deck for a Tactic and that Tactic enters the city. Reveal all the cards you <b>Investigated</b>.
+#EVILWINS: When 2 Tactics escape.
+
+
+
+

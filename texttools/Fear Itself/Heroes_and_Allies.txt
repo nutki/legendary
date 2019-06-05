@@ -1,0 +1,202 @@
+
+#CARDNAME: Greithoth, Breaker of Wills
+#TEAM: Foes of Asgard
+
+#SUBNAME: Mace of Chains
+#COPIES: 5
+#CLASS: [Instinct]
+<b>Thrown Artifact</b>
+When you throw this, you get +2 Recruit.
+#COST: 3
+#FLAVOR: When Absorbing Man seized the Mace, he was reborn as Greithoth, body and soul.
+
+#SUBNAME: Absorb Metal
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1+
+If you control an <b>Artifact</b>, you get +2 Attack.
+#COST: 3
+
+#SUBNAME: Break the Will to Resist
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{POWER Covert} Each player discards the bottom card of their deck. For each non-grey card discard this way, you get +1 Attack.
+#COST: 5
+
+#SUBNAME: Body of Uru
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+You get +Attack equal to the total number of <b>Artifact</b>s controlled by players and <b>Artifact</b>s the Lair.
+#COST: 7
+
+
+#CARDNAME: Kuurth, Breaker of Stone
+#TEAM: Foes of Asgard
+
+#SUBNAME: Unstoppable Sledge
+#COPIES: 5
+#CLASS: [Ranged]
+<b>Thrown Artifact</b>
+When you throw this, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: Reach for Power
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2+
+Reveal the top or bottom card of your deck. If it costs 4 or more, you get +2 Recruit.
+#COST: 4
+
+#SUBNAME: Contest of Strength
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{TEAMPOWER Foes of Asgard} Discard the top card of any player's deck. Then reveal the top or bottom card of your deck. If the card you revealed has an equal or higher cost, you get +2 Attack.
+#COST: 5
+
+#SUBNAME: Break Every Bone
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 0+
+Reveal a card from your hand, the top card of your deck, and the bottom card of your deck. You get +Attack equal to their total costs.
+#COST: 7
+
+
+#CARDNAME: Nerkkod, Breaker of Oceans
+#TEAM: Foes of Asgard
+
+#SUBNAME: Pull of the Tides
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+You may move an Adversary to an adjacent city space. If another Adversary is already there, swap them.
+#COST: 3
+
+#SUBNAME: Feed My Undersea Legions
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Whenever you defeat an Adversary on the Bridge this turn, you may KO one of your cards or a card from your discard pile. If you do, gain a New Recruit.
+#COST: 4
+#FLAVOR: "It's feeding time!"
+
+#SUBNAME: Cudgel of the Deep
+#COPIES: 3
+#CLASS: [Ranged]
+<b>Thrown Artifact</b>
+When you throw this, you get +3 Attack, usable only against Adversaries on the Bridge or the Commander.
+#COST: 5
+
+#SUBNAME: Break Their Loyalties
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+{TEAMPOWER Foes of Asgard} Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each of those players' hands and put them into your hand.
+#COST: 7
+
+
+#CARDNAME: Nul, Breaker of Worlds
+#TEAM: Foes of Asgard
+
+#SUBNAME: Demolition Derby
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{POWER Strength} Choose a player and <b>Demolish</b> them. If that player discards a card this way, draw a card.
+#COST: 3
+
+#SUBNAME: Otherworldly Mace
+#COPIES: 5
+#CLASS: [Instinct]
+<b>Thrown Artifact</b>
+When you throw this, you get +2 Attack for each [Strength] Ally you played this turn.
+#COST: 4
+
+#SUBNAME: Nul Smash!
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4
+Say "NUL SMASH!" Then each player slaps a palm on the table. The last other player to slap a palm on the table gains a Bindings.
+#COST: 6
+
+#SUBNAME: Break the World
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 6
+KO up to two cards from your hand and/or discard pile. For each Bindings you KO this way, <b>demolish</b> each other player.
+#COST: 8
+
+
+#CARDNAME: Skadi
+#TEAM: HYDRA
+
+#SUBNAME: Dark Prophecy
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+{POWER Tech} gain a Madame HYDRA.
+#COST: 3
+#FLAVOR: The daughter of the Red Skull will fulfill his final dream.
+
+#SUBNAME: Ancient Oath of HYDRA
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1
+You may discard a HYDRA Ally. If you do, draw two cards.
+#COST: 5
+#FLAVOR: Skadi hails HYDRA. Immortal HYDRA. Whenever she cuts off a limb, two more take its place.
+
+#SUBNAME: Hammer of the Serpent
+#COPIES: 3
+#CLASS: [Strength]
+<b>Thrown Artifact</b>
+When you throw this, you get +2 Attack for each card you discarded this turn.
+#COST: 5
+
+#SUBNAME: War Banner of HYDRA
+#COPIES: 1
+#CLASS: [Covert]
+<b>Thrown Artifact</b>
+When you throw this, you get +1 Attack for each other HYDRA card you played this turn.
+#COST: 7
+
+
+#CARDNAME: Skirn, Breaker of Men
+#TEAM: Foes of Asgard
+
+#SUBNAME: Towering Leader
+#COPIES: 5
+#CLASS: [Instinct]
+Gain two New Recruits.
+{POWER Instinct} Gain a third New Recruit.
+#COST: 3
+#FLAVOR: It's easy to look up to a leader like Skirn. About 50 feet up.
+
+#SUBNAME: Underhanded Dealings
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Look at the bottom card of your deck. Discard it or put it back.
+{POWER Covert} Draw a card from the bottom of your deck.
+#COST: 4
+
+#SUBNAME: Titanic Bludgeon
+#COPIES: 3
+#CLASS: [Ranged]
+<b>Thrown Artifact</b>
+When you throw this, you get +1 Attack for each card you've drawn this turn.
+#COST: 2
+
+#SUBNAME: Break Your Hopes
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4
+Each player reveals a [Covert] Ally or discards a card. For each card discarded this way, you draw a card.
+#COST: 7
+#GUN: 1
+
+
+
+

@@ -1,0 +1,28 @@
+
+#CARDNAME: Distract the Hero
+#SETUP: 8 Twists. Use at least one Spider Friends Hero.
+#TWIST: If you get any Victory Points this turn, put this Twist on the bottom of the Villain Deck. Otherwise, stack this Twist next to the Scheme as a Villainous Interruption.
+#EVILWINS: When there have been 5 Villainous Interruptions.
+
+#CARDNAME: Explosion at the Washington Monument
+#SETUP: 8 Twists. Shuffle 18 Bystanders and 14 Wounds, then deal them evenly into eight decks. Put these decks in a row, as Floors of the Washington Monument.
+#RULE: Whenever you fight a Villain, you may reveal any face-down card from any Floor. If it's a Bystander, rescue it. If it's a Wound, put it back face-up.
+#TWIST: KO the topmost Floor of the Washington Monument. You gain one of the Wounds KO'd this way.
+#EVILWINS: When 10 Bystanders are in the KO pile and/or Escape Pile, or all Floors are KO'd.
+
+#CARDNAME: Ferry Disaster
+#SETUP: 9 Twists. Put the Bystander Stack above the Sewers as the "Ferry."
+#TWISTNR: NR[1-4] If there's a Villain in the city space below the Ferry, KO 2 Bystanders from the Ferry. Whether you KO'd or not, the Ferry moves one space left.
+#TWISTNR: NR[5-8] Same effect, but it moves right.
+#TWISTNR: NR[9] KO half the Bystanders from the Bystander deck, rounding up.
+#EVILWINS: When 7 Bystanders are in the KO pile and/or Escape Pile.
+
+#CARDNAME: Scavenge Alien Weaponry
+#SETUP: 7 Twists. Add an extra Henchmen Group of 10 cards as Smugglers.
+#RULE: Smugglers have Striker.
+#TWIST: Play two cards from the Villain Deck.
+#EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+
+
+
+
