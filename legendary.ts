@@ -382,6 +382,7 @@ interface Ev<TSchemeState = any> {
   nr?: number
   another?: boolean
   state?: TSchemeState
+  cost?: ActionCost
 }
 interface EvParams {
   where?: Deck
@@ -410,6 +411,7 @@ interface EvParams {
   result1?: (c: any) => void
   replacing?: Ev[]
   confirm?: boolean
+  cost?: ActionCost
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
@@ -1090,6 +1092,12 @@ interface ModifiableStats {
   color?: number
   attack?: number
   isFightable?: boolean
+  attackAttackCost?: number
+  attackRecruitCost?: number
+  attackEitherCost?: number
+  recruitAttackCost?: number
+  recruitRecruitCost?: number
+  recruitEitherCost?: number
 }
 
 type NumericStat = 'defense' | 'vp';
@@ -1104,8 +1112,8 @@ function makeModFunc(value: number | ((c: Card) => number)): (c: Card, v?: numbe
   if (typeof value === "number") return (c, v) => v + value;
   return (c, v) => v + value(c);
 }
-function addTurnMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
-function addStatMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card, v?: number) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
+function addTurnMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card) => number)) { addMod(turnState.modifiers, stat, cond, makeModFunc(value)); }
+function addStatMod(stat: NumericStat, cond: (c: Card) => boolean, value: number | ((c: Card) => number)) { addMod(gameState.modifiers, stat, cond, makeModFunc(value)); }
 function addStatSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(gameState.modifiers, stat, cond, func); }
 function addTurnSet<T extends keyof ModifiableStats>(stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) { addMod(turnState.modifiers, stat, cond, func); }
 function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
@@ -1164,6 +1172,77 @@ function uiEvent(): boolean {
   return eventQueue[0] && eventQueue[0].ui;
 }
 
+interface ActionCost {
+  recruit?: number;
+  attack?: number;
+  either?: number;
+  cond?: (c: Card) => boolean;
+}
+function modifyActionCost(ac: ActionCost, c: Card, actionType: 'ATTACK' | 'RECRUIT'): ActionCost {
+  return {
+    attack: getModifiedStat(c, actionType === 'ATTACK' ? 'attackAttackCost' : 'recruitAttackCost', ac.attack || 0),
+    recruit: getModifiedStat(c, actionType === 'ATTACK' ? 'attackRecruitCost' : 'recruitRecruitCost', ac.recruit || 0),
+    either: getModifiedStat(c, actionType === 'ATTACK' ? 'attackEitherCost' : 'recruitEitherCost', ac.either || 0),
+  }
+}
+function getRecruitCost(c: Card): ActionCost {
+  return modifyActionCost({ recruit: c.cost }, c, 'RECRUIT');
+}
+function getFightCost(c: Card): ActionCost {
+  return modifyActionCost(c.bribe || turnState.attackWithRecruit ? { either: c.defense } : { attack: c.defense }, c, 'ATTACK');
+}
+function canPayCost(action: Ev) {
+  const cost = action.cost;
+  if (!cost) return true;
+  if (cost.cond && !cost.cond(action.what)) return false;
+  let usableRecruit = turnState.recruit;
+  let usableAttack = turnState.attack;
+  if (action.type === 'RECRUIT')
+    usableRecruit += turnState.recruitSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
+  if (action.type === 'FIGHT')
+    usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
+  return usableRecruit >= cost.recruit && usableAttack >= cost.attack &&
+    usableRecruit + usableRecruit > cost.recruit + cost.attack + cost.either;
+}
+function payCost(action: Ev) {
+  function payMin(a: { amount: number }, amount: number) {
+    const n = Math.min(a.amount, amount);
+    a.amount -= n;
+    return n;
+  }
+  const cost = action.cost;
+  if (!cost) return true;
+  let attackToPay = cost.attack;
+  let recruitToPay = cost.recruit;
+  let eitherToPay = cost.either;
+  if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
+    attackToPay -= payMin(a, attackToPay);
+    eitherToPay -= payMin(a, eitherToPay);
+  });
+  if (action.type === 'RECRUIT') turnState.recruitSpecial.limit(a => a.cond(action.what)).each(a => {
+    recruitToPay -= payMin(a, recruitToPay);
+    eitherToPay -= payMin(a, eitherToPay);
+  });
+  if (turnState.recruit < recruitToPay || turnState.attack < attackToPay) return false;
+  turnState.recruit -= recruitToPay;
+  turnState.attack -= attackToPay;
+  if (!eitherToPay) return true;
+  if (turnState.recruit + turnState.attack < eitherToPay) return false;
+  if (!turnState.recruit) { turnState.attack -= eitherToPay; return true; }
+  if (!turnState.attack) { turnState.recruit -= eitherToPay; return true; }
+  const maxAttack = Math.min(eitherToPay, turnState.attack);
+  const minAttack = Math.max(eitherToPay - turnState.recruit, 0);
+  chooseNumberEv(action, "Spend attack", minAttack, maxAttack, (amount) => {
+    turnState.attack -= amount;
+    turnState.recruit -= eitherToPay - amount;
+  });
+}
+function recruitCardActionEv(ev: Ev, c: Card) {
+  return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
+}
+function focusActionEv(ev: Ev, cost: number, effect: (ev: Ev) => void) {
+  return new Ev(ev, 'FOCUS', { what: ev.source, func: effect, cost: { recruit: cost } });
+}
 function canRecruit(c: Card): boolean {
   return turnState.recruit >= c.cost;
 }
@@ -1294,7 +1373,7 @@ type Handler = (ev: Ev) => void;
 function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler | Handler[], params: EvParams = {}) {
   effects = getModifiedStat(c, effectName, effects);
   function f(e: Handler): void {
-    let p = { source: c, func: e };
+    let p = { source: c, func: e, effectName };
     if (params) Object.assign(p, params);
     pushEv(ev, "EFFECT", p);
   }
@@ -1370,9 +1449,12 @@ function chooseMayEv(ev: Ev, desc: string, effect: (ev: Ev) => void, agent?: Pla
   ], ui: true, agent });
 }
 function chooseCostEv(ev: Ev, effect: (n: number) => void, min: number = 0, agent: Player = playerState) {
+  chooseNumberEv(ev, "Choose cost", min, 9, effect, agent);
+}
+function chooseNumberEv(ev: Ev, desc: string, min: number, max: number, effect: (n: number) => void, agent: Player = playerState) {
   let options: Ev[] = [];
-  for (let i = min; i <= 9; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
-  pushEv(ev, "SELECTEVENT", { desc: "Choose a number", ui: true, agent, options });
+  for (let i = min; i <= max; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
+  pushEv(ev, "SELECTEVENT", { desc, ui: true, agent, options });
 }
 function selectPlayerEv(ev: Ev, f: (p: Player) => void, who?: Player) {
   if (gameState.players.length === 1) {
@@ -1625,10 +1707,8 @@ function rescueBystander(ev: Ev): void {
   moveCardEv(ev, c, playerState.victory);
   if (c.rescue) pushEv(ev, "EFFECT", { source: c, func: c.rescue, who: ev.who });
 }
-function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: Trigger | ((ev: Ev) => void)) {
-  const trigger: Trigger = typeof f === "function" ? { event: type, after: f } : f;
-  trigger.event = type;
-  trigger.match = match;
+function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
+  const trigger: Trigger = typeof f === "function" ? { event: type, match, after: f } : { event: type, match, ...f };
   turnState.triggers.push(trigger);
 }
 function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: object}[] {
