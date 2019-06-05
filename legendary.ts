@@ -67,9 +67,9 @@ interface Card {
   twist?: (ev: Ev) => void
   required?: { heroes?: string, villains?: string, henchmen?:string }
   bribe?: boolean
-  ambush?: (ev: Ev) => void
-  fight?: (ev: Ev) => void
-  escape?: (ev: Ev) => void
+  ambush?: Handler | Handler[]
+  fight?: Handler | Handler[]
+  escape?: Handler | Handler[]
   varVP?: (c: Card) => number
   varDefense?: (c: Card) => number
   rescue?: (ev: Ev) => void
@@ -92,9 +92,9 @@ interface Card {
   templateId?: string
 }
 interface VillainCardAbillities {
-  ambush?: (ev: Ev) => void
-  fight?: (ev: Ev) => void
-  escape?: (ev: Ev) => void
+  ambush?: Handler | Handler[]
+  fight?: Handler | Handler[]
+  escape?: Handler | Handler[]
   varVP?: (c: Card) => number
   varDefense?: (c: Card) => number
   fightCond?: (c?: Card) => boolean
@@ -383,6 +383,7 @@ interface Ev<TSchemeState = any> {
   another?: boolean
   state?: TSchemeState
   cost?: ActionCost
+  effectName?: EffectStat
 }
 interface EvParams {
   where?: Deck
@@ -412,6 +413,7 @@ interface EvParams {
   replacing?: Ev[]
   confirm?: boolean
   cost?: ActionCost
+  effectName?: EffectStat
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
