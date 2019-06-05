@@ -37,7 +37,7 @@ addHeroTemplates("Legendary", [
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
     event: "GAIN",
     match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev), () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 1, owner(ev.source)), () => pushEvents(ev.replacing), owner(ev.source))
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
