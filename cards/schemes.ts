@@ -259,9 +259,9 @@ makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 
   after: ev => schemeProgressEv(ev, 9 - gameState.escaped.count(c => isHero(c) && !isColor(Color.GRAY)(c))),
 }], () => {
   addStatMod('defense', isVillain, c => 2 * c.captured.count(isHero));
-  addStatSet('capturable', isHero, () => true); // TODO
-  addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source));
-  // gameState.herodeck.limit(c => c.heroName === extraHero).each(c => moveCard(c, gameState.villaindeck)); // TODO extra hero
+  // addStatSet('capturable', isHero, () => true); // Hardcoded
+  addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source)); // TODO this should not be a rescue action
+  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
   gameState.schemeProgress = 9;
 }),

@@ -603,6 +603,7 @@ interface Game extends Ev {
   extraTurn?: boolean
   schemeState: any
   schemeProgress?: number
+  gameSetup: Setup
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -752,6 +753,10 @@ interface Setup {
   withOfficers: boolean
   withWounds: boolean
 }
+function extraHeroName(n: number = 1) {
+  const h = gameState.gameSetup.heroes;
+  return h[h.length - n];
+}
 function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
     vd_villain: [ 1, 2, 3, 3, 4 ],
@@ -888,6 +893,7 @@ gameState = {
   villainsEscaped: 0,
   bystandersCarried: 0,
   schemeState: {},
+  gameSetup,
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -1088,7 +1094,7 @@ interface ModifiableStats {
   fight?: Handler | Handler[]
   ambush?: Handler | Handler[]
   capturable?: boolean
-  rescue?: Handler | Handler[]
+  rescue?: Handler
   escape?: Handler | Handler[]
   teleport?: boolean
   color?: number
@@ -1635,7 +1641,7 @@ function villainDraw(ev: Ev): void {
     if (gameState.advancedSolo) villainDrawEv(ev); // TODO also on non villainDraw strikes?
   } else if (c.cardType === "SCHEME TWIST") {
     playTwistEv(ev, c);
-  } else if (c.cardType === "BYSTANDER") {
+  } else if (c.cardType === "BYSTANDER" || c.cardType === "HERO") { // only X-Cutioner's Song puts non villain heroes in the Villain Deck
     let i = gameState.cityEntry;
     while (i && !i.size) i = i.next;
     if (!i) i = gameState.mastermind;
@@ -1707,7 +1713,8 @@ function rescueEv(ev: Ev, what?: Card | number): void {
 function rescueBystander(ev: Ev): void {
   let c = ev.what;
   moveCardEv(ev, c, playerState.victory);
-  if (c.rescue) pushEv(ev, "EFFECT", { source: c, func: c.rescue, who: ev.who });
+  const rescue = getModifiedStat(c, 'rescue', c.rescue);
+  if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
 }
 function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, match, after: f } : { event: type, match, ...f };
