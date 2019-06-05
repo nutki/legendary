@@ -1,0 +1,112 @@
+https://docs.google.com/spreadsheets/d/1R_p2y4PY8ZGeE_2xzo0hiMQ0WALO4soTYM2c8tP1tRw/edit#gid=0
+
+Match 1 - Due Sunday night, 2014-05-25
+
+Mastermind: Apocalypse
+Scheme: Unleash the Power of the Cosmic Cube
+Villain Group: Streets of New York
+Henchmen: Hand Ninjas
+Hero 1: Angel
+Heroes 2 & 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 19 turns
+
+Match 2 - Due Sunday night, 2014-06-01
+
+Mastermind: Mr. Sinister
+Scheme: Midtown Bank Robbery
+Villain Group: Four Horsemen
+Henchmen: Phalanx
+Hero 1: Iceman
+Hero 2: Colossus
+Hero 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 12 Bystanders
+Maximum Winning Turn Count: 23 turns
+
+Match 3 - Due Sunday night, 2014-06-08
+
+Mastermind: Stryfe
+Scheme: Invincible Force Field
+Villain Group: Radiation
+Henchmen: Doombot Legion
+Hero 1: Iron Man
+Hero 2: Blade
+Hero 3: Silver Surfer
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 7 Twists, 1 Bystander
+Maximum Winning Turn Count: 16 turns
+
+Match 4 - Due Sunday night, 2014-06-15
+
+Mastermind: Mole Man
+Scheme: Replace Earth's Leaders with Killbots
+Villain Group: Subterranea
+Henchmen: Maggia Goons
+Hero 1: Cable
+Heroes 2 & 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 5 Twists, 18 Bystanders (Killbots)
+Maximum Winning Turn Count: 34 turns
+
+Match 5 - Due Sunday night, 2014-06-22
+
+Mastermind: Mephisto
+Scheme: Bathe Earth in Cosmic Rays
+Villain Group: Brotherhood
+Henchmen: Savage Land Mutates
+Hero 1: Gambit
+Hero 2: Hulk
+Hero 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 6 Twists, 1 Bystander
+Maximum Winning Turn Count: 18 turns
+
+Match 6 - Due Sunday night, 2014-06-29
+
+Mastermind: Galactus
+Scheme: Secret Invasion of the Skrull Shapeshifters
+Villain Group: Skrulls
+Henchmen: Sentinels
+Hero 1: Daredevil
+Hero 2: Emma Frost
+Hero 3: Nightcrawler
+Hero 4: Thing
+Hero 5: Human Torch
+Hero 6: Punisher
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander, 12 Heroes
+Maximum Winning Turn Count: 32 turns
+
+Match 7 - Due Sunday night, 2014-07-06
+
+Mastermind: Magneto
+Scheme: X-Cutioner's Song
+Villain Group: Marauders
+Henchmen: Maggia Goons
+Hero in the Villain Deck: Iron Fist
+Hero 1: Ghost Rider
+Heroes 2 & 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 14 Heroes
+Maximum Winning Turn Count: 25 turns
+
+Match 8 - Due Sunday night, 2014-07-13
+
+Mastermind: Kingpin
+Scheme: Capture Baby Hope
+Villain Group: Heralds of Galactus
+Henchmen: Phalanx
+Hero 1: Thor
+Hero 2: Invisible Woman
+Hero 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 20 turns
+
+Match 9 - Due Sunday night, 2014-07-20
+
+Mastermind: Dr. Doom
+Scheme: Steal The Weaponized Plutonium
+Villain Group 1: Enemies of Asgard
+Villain Group 2: MLF
+Henchmen: Doombot Legion
+Hero 1: Black Widow
+Hero 2: Captain America
+Hero 3: Cyclops
+Villain Deck Composition: 16 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 21 turns
+Note: At the end of the match, only count the Scheme Twists that are NOT in the Villain Deck. That would include any KO'd Scheme Twists, any Scheme Twists carried off by Escaped Villains, and any Scheme Twists held by Villains in City spaces. Do not count Scheme Twists that have been shuffled back into the Villain deck and are still in the Villain deck at the end of the match.
