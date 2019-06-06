@@ -266,3 +266,59 @@ makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 
   gameState.schemeProgress = 9;
 }),
 ]);
+
+addTemplates("SCHEMES", "Fantastic Four", [
+// SETUP: 6 Twists.
+// EVILWINS: When the number of non-grey Heroes in the KO pile is six times the number of players.
+makeSchemeCard("Bathe the Earth in Cosmic Rays", { twists: 6 }, ev => {
+  // Twist: Each player in turn does the following: Reveal your hand. KO one of your non-grey Heroes. Choose a Hero from the HQ with the same or lower cost and put it into your hand.
+  eachPlayer(p => selectCardEv(ev, "Select non-grey Hero", p.hand.limit(isNonGrayHero), c => {
+    KOEv(ev, c);
+    selectCardEv(ev, "Select hero to put in hand", HQCards().limit(h => h.cost <= c.cost), c => moveCardEv(ev, c, p.hand), p);
+  }, p))
+}, [{
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.ko,
+  after: ev => schemeProgressEv(ev, 6 * gameState.players.size - gameState.ko.count(isNonGrayHero)),
+}]),
+// SETUP: 8 Twists.
+// EVILWINS: When 20 non-grey Heroes are KO'd.
+makeSchemeCard("Flood the Planet with Melted Glaciers", { twists: 8 }, ev => {
+  // Twist: Stack the Twist next to the Scheme as "Rising Waters." Then KO each Hero from the HQ whose cost is less than or equal to the number of Rising Waters in that stack.
+  attachCardEv(ev, ev.twist, gameState.scheme, "WATERS");
+  cont(ev, () => {
+    const waterLevel = gameState.scheme.attached("WATERS").size;
+    HQCards().limit(isHero).limit(c => c.cost <= waterLevel).each(c => KOEv(ev, c));
+  });
+}, [{
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.ko,
+  after: ev => schemeProgressEv(ev, 20 - gameState.ko.count(isNonGrayHero)),
+}]),
+// SETUP: 7 Twists.
+// RULE: To fight the Mastermind, you must also spend 1 Recruit or 1 Attack for each Force Field next to them.
+makeSchemeCard("Invincible Force Field", { twists: 7 }, ev => {
+  // Twist: Stack this Twist next to the Mastermind as a "Force Field."
+  attachCardEv(ev, ev.twist, gameState.mastermind, "FORCEFIELD");
+  // Twist 7 Evil Wins!
+  schemeProgressEv(ev, 7 - ev.nr);
+}, [], () => {
+  addStatMod('fightCostEither', isMastermind, () => gameState.scheme.attached("FORCEFIELD").size);
+}),
+// SETUP: 8 Twists.
+makeSchemeCard<{nr: number}>("Pull Reality Into the Negative Zone", { twists: 8 }, ev => {
+  ev.state.nr = ev.nr
+  if (ev.nr === 2 || ev.nr === 4 || ev.nr === 6) {
+    // Twist 2, 4, and 6 Until the next Twist, Enemies cost Recruit to fight and Heroes cost Attack to recruit.
+  } else if (ev.nr === 7) {
+    // Twist 7 Evil Wins!
+  schemeProgressEv(ev, 7 - ev.nr);
+  }
+}, [], s => {
+  const neg = s.nr === 2 || s.nr === 4 || s.nr === 6;
+  addStatSet('fightCostAttack', undefined, c => neg ? 0 : c.defense);
+  addStatSet('fightCostRecruit', undefined, c => neg ? c.defense : 0);
+  addStatSet('recruitCostAttack', undefined, c => neg ? c.cost : 0);
+  addStatSet('recruitCostRecruit', undefined, c => neg ? 0 : c.cost);
+}),
+]);
