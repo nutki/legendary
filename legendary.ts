@@ -559,6 +559,7 @@ interface Turn extends Ev {
   versatileBoth?: boolean
   nextHeroRecruit?: "HAND" | "DECK" | "SOARING"
   turnActions?: Ev[]
+  perTurn?: Map<string, number>
 }
 interface Trigger {
   event: string
@@ -1254,8 +1255,23 @@ function payCost(action: Ev) {
 function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
 }
-function focusActionEv(ev: Ev, cost: number, effect: (ev: Ev) => void) {
-  return new Ev(ev, 'FOCUS', { what: ev.source, func: effect, cost: { recruit: cost } });
+function countPerTurn(c: Card) {
+  if (!turnState.perTurn) return 0;
+  return turnState.perTurn.get(c.id) || 0;
+}
+function incPerTurn(c: Card) {
+  if (!turnState.perTurn) return turnState.perTurn = new Map();
+  turnState.perTurn.set(c.id, 1 + (turnState.perTurn.get(c.id) || 0));
+}
+function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?: number) {
+  let func = effect;
+  const cost: ActionCost = { recruit };
+  const what = ev.source;
+  if (limit) {
+    cost.cond = () => countPerTurn(what) < limit;
+    func = ev => { incPerTurn(what); effect(ev); };
+  }
+  return new Ev(ev, 'FOCUS', { what, func, cost });
 }
 function canRecruit(c: Card): boolean {
   return turnState.recruit >= c.cost;

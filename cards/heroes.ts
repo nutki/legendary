@@ -879,7 +879,7 @@ addHeroTemplates("Dark City", [
 },
 ]);
 function setFocusEv(ev: Ev, cost: number, f: Handler, limit?: number) {
-  addTurnAction(focusActionEv(ev, cost, f));
+  addTurnAction(focusActionEv(ev, cost, f, limit));
 }
 addHeroTemplates("Fantastic Four", [
 {
