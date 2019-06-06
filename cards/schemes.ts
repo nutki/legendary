@@ -303,22 +303,25 @@ makeSchemeCard("Invincible Force Field", { twists: 7 }, ev => {
   // Twist 7 Evil Wins!
   schemeProgressEv(ev, 7 - ev.nr);
 }, [], () => {
-  addStatMod('fightCostEither', isMastermind, () => gameState.scheme.attached("FORCEFIELD").size);
+  addStatSet('fightCost', isMastermind, (c, { either, ...rest }) => ({ either: either + gameState.scheme.attached("FORCEFIELD").size, ...rest}));
 }),
 // SETUP: 8 Twists.
-makeSchemeCard<{nr: number}>("Pull Reality Into the Negative Zone", { twists: 8 }, ev => {
-  ev.state.nr = ev.nr
-  if (ev.nr === 2 || ev.nr === 4 || ev.nr === 6) {
-    // Twist 2, 4, and 6 Until the next Twist, Enemies cost Recruit to fight and Heroes cost Attack to recruit.
-  } else if (ev.nr === 7) {
-    // Twist 7 Evil Wins!
+makeSchemeCard<{neg: boolean}>("Pull Reality Into the Negative Zone", { twists: 8 }, ev => {
+  // Twist 2, 4, and 6 Until the next Twist, Enemies cost Recruit to fight and Heroes cost Attack to recruit.
+  ev.state.neg = ev.nr === 2 || ev.nr === 4 || ev.nr === 6;
+  // Twist 7 Evil Wins!
   schemeProgressEv(ev, 7 - ev.nr);
-  }
 }, [], s => {
-  const neg = s.nr === 2 || s.nr === 4 || s.nr === 6;
-  addStatSet('fightCostAttack', undefined, c => neg ? 0 : c.defense);
-  addStatSet('fightCostRecruit', undefined, c => neg ? c.defense : 0);
-  addStatSet('recruitCostAttack', undefined, c => neg ? c.cost : 0);
-  addStatSet('recruitCostRecruit', undefined, c => neg ? 0 : c.cost);
+  s.neg = false;
+  addStatSet('fightCost', undefined, (c, base) => s.neg ? {
+    either: base.either,
+    attack: base.recruit,
+    rectuit: base.attack,
+  } : base);
+  addStatSet('recruitCost', undefined, (c, base) => s.neg ? {
+    either: base.either,
+    attack: base.recruit,
+    rectuit: base.attack,
+  } : base);
 }),
 ]);

@@ -1114,15 +1114,11 @@ interface ModifiableStats {
   color?: number
   attack?: number
   isFightable?: boolean
-  fightCostAttack?: number
-  fightCostRecruit?: number
-  fightCostEither?: number
-  recruitCostAttack?: number
-  recruitCostRecruit?: number
-  recruitCostEither?: number
+  fightCost?: ActionCost
+  recruitCost?: ActionCost
 }
 
-type NumericStat = 'defense' | 'vp' | 'fightCostEither';
+type NumericStat = 'defense' | 'vp';
 type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape';
 type Modifier<T> = {cond: (c: Card) => boolean, func: (c: Card, v?: T) => T};
 type Modifiers = {[stat in keyof ModifiableStats]:Modifier<ModifiableStats[stat]>[]};
@@ -1201,18 +1197,11 @@ interface ActionCost {
   either?: number;
   cond?: (c: Card) => boolean;
 }
-function modifyActionCost(ac: ActionCost, c: Card, actionType: 'FIGHT' | 'RECRUIT'): ActionCost {
-  return {
-    attack: getModifiedStat(c, actionType === 'FIGHT' ? 'fightCostAttack' : 'recruitCostAttack', ac.attack || 0),
-    recruit: getModifiedStat(c, actionType === 'FIGHT' ? 'fightCostRecruit' : 'recruitCostRecruit', ac.recruit || 0),
-    either: getModifiedStat(c, actionType === 'FIGHT' ? 'fightCostEither' : 'recruitCostEither', ac.either || 0),
-  }
-}
 function getRecruitCost(c: Card): ActionCost {
-  return modifyActionCost({ recruit: c.cost }, c, 'RECRUIT');
+  return getModifiedStat(c, 'recruitCost', { recruit: c.cost });
 }
 function getFightCost(c: Card): ActionCost {
-  return modifyActionCost(c.bribe || turnState.attackWithRecruit ? { either: c.defense } : { attack: c.defense }, c, 'FIGHT');
+  return getModifiedStat(c, 'fightCost', (c.bribe || turnState.attackWithRecruit ? { either: c.defense } : { attack: c.defense }));
 }
 function canPayCost(action: Ev) {
   const cost = action.cost;
