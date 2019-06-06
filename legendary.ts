@@ -1344,6 +1344,10 @@ function addRecruitSpecialEv(ev: Ev, cond: (c: Card) => boolean, amount: number)
     turnState.totalRecruit += amount;
   });
 }
+function doubleRecruitEv(ev: Ev) {
+  addRecruitEvent(ev, turnState.recruit);
+  turnState.recruitSpecial.each(r => addRecruitSpecialEv(ev, r.cond, r.amount));
+}
 function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   if (!what.instance) return;
   pushEv(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });

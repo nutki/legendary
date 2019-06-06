@@ -980,7 +980,7 @@ addHeroTemplates("Fantastic Four", [
 // Double the Recruit you have.
 // COST: 7
 // FLAVOR: Finding extra power is not a problem for the Silver Surfer. His power is immeasurable.
-  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, undefined, "F", ev => addRecruitEvent(ev, turnState.recruit)), // TODO recruit special
+  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, undefined, "F", ev => doubleRecruitEvent(ev)),
 },
 {
   name: "Thing",
