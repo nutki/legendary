@@ -90,6 +90,7 @@ interface Card {
   params?: SetupParams
   set?: string
   templateId?: string
+  cardActions?: ((c: Card, ev: Ev) => Ev)[]
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -101,6 +102,7 @@ interface VillainCardAbillities {
   fightCost?: (ev: Ev) => void
   bribe?: boolean
   isHenchman?: boolean
+  cardActions?: ((c: Card, ev: Ev) => Ev)[]
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -108,6 +110,7 @@ interface MastermindCardAbillities {
   init?: (c: Card) => void
   trigger?: Trigger
   triggers?: Trigger[]
+  cardActions?: ((c: Card, ev: Ev) => Ev)[]
 }
 interface HeroCardAbillities {
   trigger?: Trigger
@@ -855,8 +858,8 @@ gameState = {
   ],
   city: [
     new Deck("BRIDGE", true),
-    new Deck("ROOFTOPS", true),
     new Deck("STREETS", true),
+    new Deck("ROOFTOPS", true),
     new Deck("BANK", true),
     new Deck("SEWERS", true),
   ],
@@ -970,6 +973,7 @@ gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 // Card effects functions
 function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
 function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardType === "HERO"); }
+function isNonGrayHero(c: Card) { return isHero(c) && !isColor(Color.GRAY)(c); }
 function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN"); }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
 function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
@@ -1216,7 +1220,7 @@ function canPayCost(action: Ev) {
   if (action.type === 'FIGHT')
     usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   return usableRecruit >= requiredRecruit && usableAttack >= requiredAttack &&
-    usableRecruit + usableRecruit > requiredTotal;
+    usableRecruit + usableRecruit >= requiredTotal;
 }
 function payCost(action: Ev) {
   function payMin(a: { amount: number }, amount: number) {
@@ -1324,7 +1328,8 @@ function getActions(ev: Ev): Ev[] {
   }
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
-  // TODO find actions in the City and on mastermind?
+  FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  // TODO find actions on mastermind?
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;

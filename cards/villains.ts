@@ -401,3 +401,97 @@ addVillainTemplates("Dark City", [
   })],
 ]},
 ]);
+function burrowEv(ev: Ev) {
+  isLocation(ev.where, 'STREETS') || withCity('STREETS', streets => streets.size || moveCardEv(ev, ev.source, streets))
+}
+const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
+  function doReveal(ev: Ev, color: number) {
+    incPerTurn(what);
+    let count = 0;
+    selectObjectsAnyEv(ev, "Reveal cards", revealable().limit(color), () => count++);
+    addTurnMod('defense', c => c === what, () => -3 * count);
+    if (isMastermind(what)) addTurnTrigger('FIGHT', ev => ev.what === what, () => count = 0);
+  }
+  return new Ev(ev, 'COSMICTHREATREVEAL', {
+    cost: {
+      cond: c => !countPerTurn(c) && revealable().has(color || isNonGrayHero)
+    },
+    func: (ev) => {
+      color ? doReveal(ev, color) : chooseColorEv(ev, color => doReveal(ev, color))
+    },
+    what,
+  });
+}
+addVillainTemplates("Fantastic Four", [
+{ name: "Heralds of Galactus", cards: [
+// Cosmic Threat: [Ranged]
+// FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 9*
+// VP: 4
+  [ 2, makeVillainCard("Heralds of Galactus", "Firelord", 9, 4, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    cardActions: [ cosmicThreatAction(Color.RANGED) ],
+  })],
+// Cosmic Threat: [Instinct]
+// AMBUSH: Put each non-[Instinct] Hero from the HQ on the bottom of the Hero Deck.
+// ATTACK: 12*
+// VP: 6
+  [ 2, makeVillainCard("Heralds of Galactus", "Morg", 12, 6, {
+    ambush: ev => HQCards().limit(c => isHero(c) && !isColor(Color.INSTINCT)(c)).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+    cardActions: [ cosmicThreatAction(Color.INSTINCT) ],
+  })],
+// Cosmic Threat: [Covert]
+// FIGHT: Choose one of your [Covert] Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
+// ATTACK: 10*
+// VP: 5
+  [ 2, makeVillainCard("Heralds of Galactus", "Stardust", 10, 5, {
+    fight: ev => selectCardEv(ev, "Choose a Covert hero", yourHeroes().limit(Color.COVERT), sel => addTurnTrigger("CLEANUP", undefined, ev => moveCardEv(ev, sel, playerState.hand))),
+    cardActions: [ cosmicThreatAction(Color.COVERT) ],
+  })],
+// Cosmic Threat: [Strength]
+// AMBUSH: For each [Strength] Hero in the HQ, Terrax captures a Bystander.
+// ATTACK: 11*
+// VP: 5
+  [ 2, makeVillainCard("Heralds of Galactus", "Terrax the Tamer", 11, 5, {
+    ambush: ev => captureEv(ev, ev.source, HQCards().count(Color.STRENGTH)),
+    cardActions: [ cosmicThreatAction(Color.STRENGTH) ],
+  })],
+]},
+{ name: "Subterranea", cards: [
+// FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
+// Burrow
+// ATTACK: 7
+// VP: 4
+  [ 2, makeVillainCard("Subterranea", "Giganto", 7, 4, {
+    fight: [ ev => addEndDrawMod(2), burrowEv ],
+  })],
+// AMBUSH: Megataur captures two Bystanders.
+// Burrow
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Subterranea", "Megataur", 6, 4, {
+    fight: burrowEv,
+    ambush: ev => captureEv(ev, ev.source, 2),
+  })],
+// FIGHT: KO one of your Heroes.
+// Burrow
+// ATTACK: 3
+// VP: 2
+  [ 2, makeVillainCard("Subterranea", "Moloids", 3, 2, {
+    fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), burrowEv ],
+  })],
+// AMBUSH: Any Villain in the Streets moves to the Bridge, pushing any Villain already there to escape.
+// Burrow
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Subterranea", "Ra'ktar the Molan King", 4, 2, {
+    fight: burrowEv,
+    ambush: ev => villainIn('STREETS').each(c => withCity('BRIDGE', bridge => {
+      bridge.limit(isVillain).each(c => villainEscapeEv(ev, c));
+      moveCardEv(ev, c, bridge);
+    })),
+  })],
+]},
+]);
