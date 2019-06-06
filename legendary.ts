@@ -558,6 +558,7 @@ interface Turn extends Ev {
   triggers: Trigger[]
   versatileBoth?: boolean
   nextHeroRecruit?: "HAND" | "DECK" | "SOARING"
+  turnActions?: Ev[]
 }
 interface Trigger {
   event: string
@@ -1150,10 +1151,11 @@ function attachedCards(name: string, where: Deck | Card) {
   return where._attached[name].deck;
 }
 function pushEvents(ev: Ev | Ev[]): void {
-  let evs = ev instanceof Array ? ev : arguments;
-  for (let i = 0; i < evs.length; i++) {
-    eventQueueNew = eventQueueNew.concat(addTriggers(evs[i]));
-  }
+  const evs = ev instanceof Array ? ev : [ ev ];
+  evs.map(ev => {
+    payCost(ev);
+    eventQueueNew = eventQueueNew.concat(addTriggers(ev));
+  });
 }
 function joinQueue(): void {
   eventQueue = eventQueueNew.concat(eventQueue);
@@ -1205,12 +1207,15 @@ function canPayCost(action: Ev) {
   if (cost.cond && !cost.cond(action.what)) return false;
   let usableRecruit = turnState.recruit;
   let usableAttack = turnState.attack;
+  const requiredRecruit = cost.recruit || 0;
+  const requiredAttack = cost.attack || 0;
+  const requiredTotal = (cost.either || 0) + requiredRecruit + requiredAttack;
   if (action.type === 'RECRUIT')
     usableRecruit += turnState.recruitSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   if (action.type === 'FIGHT')
     usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
-  return usableRecruit >= cost.recruit && usableAttack >= cost.attack &&
-    usableRecruit + usableRecruit > cost.recruit + cost.attack + cost.either;
+  return usableRecruit >= requiredRecruit && usableAttack >= requiredAttack &&
+    usableRecruit + usableRecruit > requiredTotal;
 }
 function payCost(action: Ev) {
   function payMin(a: { amount: number }, amount: number) {
@@ -1220,9 +1225,10 @@ function payCost(action: Ev) {
   }
   const cost = action.cost;
   if (!cost) return true;
-  let attackToPay = cost.attack;
-  let recruitToPay = cost.recruit;
-  let eitherToPay = cost.either;
+  console.log("PAYCOST for", action);
+  let attackToPay = cost.attack || 0;
+  let recruitToPay = cost.recruit || 0;
+  let eitherToPay = cost.either || 0;
   if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
     attackToPay -= payMin(a, attackToPay);
     eitherToPay -= payMin(a, eitherToPay);
@@ -1282,6 +1288,10 @@ function teleportEv(ev: Ev, what: Card): void {
 function teleportCard(ev: Ev): void {
   moveCardEv(ev, ev.what, playerState.teleported);
 }
+function addTurnAction(action: Ev) {
+  if (!turnState.turnActions) turnState.turnActions = [];
+  turnState.turnActions.push(action);
+}
 function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => isHero(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
@@ -1297,6 +1307,9 @@ function getActions(ev: Ev): Ev[] {
     p.push((new Ev(ev, "RECRUIT", { func: buyCard, what: gameState.officer.top })));
   }
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
+  if (turnState.turnActions) p = p.concat(turnState.turnActions);
+  // TODO find actions in the City and on mastermind?
+  p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
 }

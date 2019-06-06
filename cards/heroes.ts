@@ -878,3 +878,138 @@ addHeroTemplates("Dark City", [
   ra: makeHeroCard("Wolverine", "Reckless Abandon", 7, u, 3, Color.COVERT, "X-Force", "", ev => drawEv(ev, turnState.cardsDrawn)),
 },
 ]);
+function setFocusEv(ev: Ev, cost: number, f: Handler, limit?: number) {
+  addTurnAction(focusActionEv(ev, cost, f));
+}
+addHeroTemplates("Fantastic Four", [
+{
+  name: "Human Torch",
+  team: "Fantastic Four",
+// RECRUIT: 2+
+// You may KO a Wound from your hand or discard pile. If you do, you get +1 Recruit.
+// COST: 3
+// FLAVOR: The Fantastic Four has access to all sorts of communications; Johnny prefers his own methods.
+  c1: makeHeroCard("Human Torch", "Call for Backup", 3, 2, u, Color.INSTINCT, "Fantastic Four", "FD", ev => KOHandOrDiscardEv(ev, isWound, ev => addRecruitEvent(ev, 1))),
+// ATTACK: 4
+// You gain a Wound.
+// COST: 4
+// FLAVOR: "I like to know my limits. So I can break them."
+  c2: makeHeroCard("Human Torch", "Hothead", 4, u, 4, Color.RANGED, "Fantastic Four", "F", ev => gainWoundEv(ev)),
+// ATTACK: 4+
+// {FOCUS 6} You get +4 Attack.
+// COST: 6
+  uc: makeHeroCard("Human Torch", "Flame On!", 6, u, 4, Color.RANGED, "Fantastic Four", "", ev => setFocusEv(ev, 6, ev => addAttackEvent(ev, 4))),
+// ATTACK: 6+
+// {TEAMPOWER Fantastic Four} You get +1 Attack for each city space that contains a Villain.
+// COST: 8
+  ra: makeHeroCard("Human Torch", "Nova Flame", 8, u, 6, Color.RANGED, "Fantastic Four", "", ev => superPower("Fantastic Four") && addAttackEvent(ev, CityCards().count(isVillain))),
+},
+{
+  name: "Invisible Woman",
+  team: "Fantastic Four",
+// RECRUIT: 2
+// {FOCUS 2} You may KO a card from your hand or discard pile.
+// COST: 4
+// FLAVOR: "Now you see it...Now you don't!"
+  c1: makeHeroCard("Invisible Woman", "Disappearing Act", 4, 2, u, Color.COVERT, "Fantastic Four", "FD", ev => setFocusEv(ev, 2, ev => KOHandOrDiscardEv(ev, undefined))),
+// ATTACK: 2+
+// If you played any other cards that cost 4 this turn, you get +2 Attack.
+// COST: 4
+// FLAVOR: A family that plays together stays together.
+  c2: makeHeroCard("Invisible Woman", "Four of a Kind", 4, u, 2, Color.RANGED, "Fantastic Four", "FD", ev => turnState.cardsPlayed.has(c => c.cost === 4) && addAttackEvent(ev, 2)),
+// ATTACK: 2
+// {FOCUS 2} Rescue a Bystander. You may only use this ability up to four times this turn.
+// COST: 4
+// FLAVOR: "If seeing is believing, you are not going to believe this."
+  uc: makeHeroCard("Invisible Woman", "Unseen Rescue", 4, u, 2, Color.COVERT, "Fantastic Four", "FD", ev => setFocusEv(ev, 2, ev => rescueEv(ev), 4)),
+// ATTACK: 5
+// If an ambush effect would occur, you may reveal this card and draw two cards instead.
+// COST: 7
+  ra: makeHeroCard("Invisible Woman", "Invisible Barrier", 7, u, 5, Color.COVERT, "Fantastic Four", "", [], { trigger: {
+    event: 'EFFECT',
+    match: ev => ev.effectName == 'ambush',
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2, owner(ev.source)), () => pushEvents(ev.replacing), owner(ev.source))
+  }}),
+},
+{
+  name: "Mr. Fantastic",
+  team: "Fantastic Four",
+// RECRUIT: 2
+// {FOCUS 2} When you draw a new hand of cards at the end of this turn, draw an extra card.
+// COST: 3
+// FLAVOR: "I consider the laws of physics more like guidelines."
+  c1: makeHeroCard("Mr. Fantastic", "Twisting Equations", 3, 2, u, Color.TECH, "Fantastic Four", "FD", ev => setFocusEv(ev, 2, ev => turnState.endDrawMod++)),
+// Draw two cards.
+// COST: 5
+// FLAVOR: Reed Richards has an idea for a new costume material, but it's a stretch.
+  c2: makeHeroCard("Mr. Fantastic", "Unstable Molecules", 5, u, u, Color.TECH, "Fantastic Four", "F", ev => drawEv(ev, 2)),
+// ATTACK: 1+
+// {TEAMPOWER Fantastic Four} You get +1 Attack for each card in your hand.
+// COST: 5
+// FLAVOR: "Most of my career is thinking. Then there's this."
+  uc: makeHeroCard("Mr. Fantastic", "One Gigantic Hand", 5, u, 1, Color.INSTINCT, "Fantastic Four", "F", ev => superPower("Fantastic Four") && addAttackEvent(ev, playerState.hand.size)),
+// ATTACK: 4+
+// If an Enemy you fight this turn would have a fight effect, you may cancel that effect instead.
+// {FOCUS 1} You get +1 Attack usable only against the Mastermind.
+// COST: 7
+  ra: makeHeroCard("Mr. Fantastic", "Ultimate Nullifier", 7, u, 4, Color.TECH, "Fantastic Four", "", [
+    ev => addTurnTrigger('EFFECT', ev => ev.effectName == 'fight', { replace: ev => chooseMayEv(ev, "Keep fight effect", () => pushEvents(ev.replacing)) }),
+    ev => setFocusEv(ev, 1, ev => addAttackSpecialEv(ev, isMastermind, 1))
+  ]),
+},
+{
+  name: "Silver Surfer",
+  team: "(Unaffiliated)",
+// RECRUIT: 2
+// {FOCUS 6} Defeat a Villain of 5 Attack or 6 Attack.
+// COST: 4
+// FLAVOR: "Master? Galactus had been my master! You - are but - a flea!"
+// GUN: 1
+  c1: makeHeroCard("Silver Surfer", "Epic Destiny", 4, 2, u, Color.STRENGTH, undefined, "GFD", ev => setFocusEv(ev, 6, ev => selectCardEv(ev, "Defeat villain", villains().limit(c => c.defense === 5 || c.defense === 6), (c) => defeatEv(ev, c)))),
+// RECRUIT: 2
+// {FOCUS 2} Draw a card.
+// COST: 3
+// FLAVOR: "Engage!"
+  c2: makeHeroCard("Silver Surfer", "Warp Speed", 3, 2, u, Color.COVERT, undefined, "FD", ev => setFocusEv(ev, 2, ev => drawEv(ev, 1))),
+// RECRUIT: 3
+// ATTACK: 0+
+// {FOCUS 9} You get +9 Attack.
+// COST: 6
+// FLAVOR: As a Herald, Surfer selected many planets for the Devourer of Worlds, until Earth taught him compassion.
+  uc: makeHeroCard("Silver Surfer", "The Power Cosmic", 6, 3, 0, Color.RANGED, undefined, "F", ev => setFocusEv(ev, 9, ev => addAttackEvent(ev, 9))),
+// Double the Recruit you have.
+// COST: 7
+// FLAVOR: Finding extra power is not a problem for the Silver Surfer. His power is immeasurable.
+  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, undefined, "F", ev => addRecruitEvent(ev, turnState.recruit)), // TODO recruit special
+},
+{
+  name: "Thing",
+  team: "Fantastic Four",
+// RECRUIT: 2+
+// {TEAMPOWER Fantastic Four} You get +2 Recruit.
+// COST: 3
+// FLAVOR: Yancy Street is Thing's turf. Trespass at your own risk.
+  c1: makeHeroCard("Thing", "It Started on Yancy Street", 3, 2, u, Color.INSTINCT, "Fantastic Four", "FD", ev => superPower("Fantastic Four") && addRecruitEvent(ev, 2)),
+// RECRUIT: 3
+// ATTACK: 0+
+// {FOCUS 3} You get +2 Attack.
+// COST: 5
+// FLAVOR: Recipe prep time: 3 seconds. Serves: 20
+  c2: makeHeroCard("Thing", "Knuckle Sandwich", 5, 3, 0, Color.STRENGTH, "Fantastic Four", "FD", ev => setFocusEv(ev, 3, ev => addAttackEvent(ev, 2))),
+// ATTACK: 4
+// Whenever you defeat a Villain in the Bank this turn, rescue a Bystander.
+// {FOCUS 1} Move a Villain to an adjacent city space. If another Villain is already there, swap them.
+// COST: 6
+  uc: makeHeroCard("Thing", "Crime Stopper", 6, u, 4, Color.STRENGTH, "Fantastic Four", "", [
+    ev => addTurnTrigger('DEFEAT', c => isLocation(c.where, 'BANK'), ev => rescueEv(ev)),
+    ev => setFocusEv(ev, 1, () => selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjecent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    })),
+  ]),
+// ATTACK: 5+
+// {POWER Strength} You get +3 Attack for each other [Strength] card you played this turn.
+// COST: 8
+// FLAVOR: Thing doesn't wear a watch, but he's happy to tell you what time it is.
+  ra: makeHeroCard("Thing", "It's Clobberin' Time!", 8, u, 5, Color.STRENGTH, "Fantastic Four", "F", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 3 * superPower(Color.STRENGTH))),
+},
+]);
