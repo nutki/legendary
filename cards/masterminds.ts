@@ -210,3 +210,66 @@ makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
   varDefense: c => c.printedDefense + c.attached("STRIKE").size,
 }),
 ]);
+addTemplates("MASTERMINDS", "Fantastic Four", [
+// Cosmic Threat: [Strength] [Instinct] [Covert] [Tech] [Ranged]
+// Galactus Wins: When the city is destroyed.
+makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
+// Destroy the city space closest to Galactus. Any Villain there escapes. Put this Master Strike there.
+    const space = gameState.city[0];
+    destroyCity(space);
+    if (!gameState.city.size) evilWinsEv(ev, ev.source);
+    space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
+    moveCardEv(ev, ev.source, space);
+}, [
+  [ "Cosmic Entity", ev => {
+  // Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then draws that many cards.
+    chooseColorEv(ev, color => eachPlayer(p => {
+      let count = 0;
+      selectObjectsAnyEv(ev, "Reveal cards", revealable(p).limit(color), () => count++, p);
+      drawEv(ev, count, p);
+    }))
+  } ],
+  [ "Force of Eternity", ev => {
+  // When you draw a new hand of cards at the end of this turn, draw six extra cards, then discard six cards.
+    addEndDrawMod(6);
+    addTurnTrigger("CLEANUP", undefined, ev => selectObjectsEv(ev, "Discard 6 cards", 6, playerState.hand.deck, c => discardEv(ev, c)));
+  } ],
+  [ "Panicked Mobs", ev => {
+  // Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then rescues that many Bystanders.
+    chooseColorEv(ev, color => eachPlayer(p => {
+      selectObjectsAnyEv(ev, "Reveal cards", revealable(p).limit(color), () => rescueByEv(ev, p), p);
+    }))
+  } ],
+  [ "Sunder the Earth", ev => {
+  // Each other player KOs all Heroes from their discard pile with the same card name as a Hero in the HQ.
+    const hqNames = HQCards().limit(isHero).map(c => c.cardName);
+    eachOtherPlayerVM(p => p.discard.limit(isHero).limit(c => hqNames.includes(c.cardName)).each(c => KOEv(ev, c)));
+  } ],
+]),
+// Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
+makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
+// All Subterranea Villains in the city escape. If any Villains escaped this way, each player gains a Wound.
+  const villains = CityCards().limit(c => c.villainGroup === ev.source.leads);
+  villains.each(c => villainEscapeEv(ev, c));
+  villains.size && eachPlayer(p => gainWoundEv(ev, p));
+}, [
+  [ "Dig to Freedom", ev => {
+  // Each other player chooses a Subterranea Villain in their Victory Pile and puts it into the Escaped Villains pile.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a villain", p.victory.limit(c => c.villainGroup === ev.source.mastermind.leads), c => villainDrawEv(ev, c), p))
+  } ],
+  [ "Master of Monsters", ev => {
+  // If this is not the final Tactic, reveal the top six cards of the Villain Deck. Play all the Subterranea Villains you revealed. Put the rest on the bottom of the Villain Deck in random order.
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 6, r => r.limit(c => c.villainGroup === ev.source.mastermind.leads).each(c => villainDrawEv(ev, c)), true, true)
+  } ],
+  [ "Secret Tunnel", ev => {
+  // You get +6 Attack usable only against Villains in the Streets.
+    addAttackSpecialEv(ev, c => isVillain(c) && isLocation(c.location, 'STREETS'), 6);
+  } ],
+  [ "Underground Riches", ev => {
+  // You get +6 Recruit usable only to recruit Heroes in the HQ space under the Streets.
+    addRecruitSpecialEv(ev, c => c.location.above && isLocation(c.location.above, 'STREETS'), 6);
+  } ],
+], {
+  varDefense: c => c.printedDefense + gameState.escaped.count(c => c.villainGroup === c.leads),
+}),
+]);

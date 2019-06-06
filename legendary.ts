@@ -1037,11 +1037,19 @@ function cityAdjecent(l: Deck): Deck[] {
   if (c2 && c2.isCity) ret.push(c2);
   return ret;
 }
+function destroyCity(space: Deck) {
+  gameState.city = gameState.city.filter(d => d !== space);
+  gameState.city.forEach(d => {
+    if (d.next === space) d.next = space.next;
+    if (d.below === space) d.below = space.below;
+    if (d.above === space) d.above = space.above;
+  });
+  space.isCity = false;
+}
 function HQCardsHighestCost(): Card[] {
-  let all = HQCards();
-  let maxCost = 0;
-  all.forEach(function (c) { if (c.cost > maxCost) maxCost = c.cost; });
-  return all.limit(function (c) { return c.cost === maxCost; });
+  const all = HQCards();
+  const maxCost = all.reduce((max, c) => c.cost > max ? c.cost : max, 0);
+  return all.limit(c => c.cost === maxCost);
 }
 function villainOrMastermind(): Card[] {
   return villains().concat(gameState.mastermind.deck);
@@ -1501,6 +1509,15 @@ function chooseNumberEv(ev: Ev, desc: string, min: number, max: number, effect: 
   let options: Ev[] = [];
   for (let i = min; i <= max; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
   pushEv(ev, "SELECTEVENT", { desc, ui: true, agent, options });
+}
+function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
+  chooseOneEv(ev, "Choose hero class",
+    ['Strength', () => f(Color.STRENGTH) ],
+    ['Instinct', () => f(Color.INSTINCT) ],
+    ['Covert', () => f(Color.COVERT) ],
+    ['Tech', () => f(Color.TECH) ],
+    ['Ranged', () => f(Color.RANGED) ],
+  );
 }
 function selectPlayerEv(ev: Ev, f: (p: Player) => void, who?: Player) {
   if (gameState.players.length === 1) {
