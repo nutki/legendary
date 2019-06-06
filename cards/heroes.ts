@@ -938,7 +938,7 @@ addHeroTemplates("Fantastic Four", [
 // {FOCUS 2} When you draw a new hand of cards at the end of this turn, draw an extra card.
 // COST: 3
 // FLAVOR: "I consider the laws of physics more like guidelines."
-  c1: makeHeroCard("Mr. Fantastic", "Twisting Equations", 3, 2, u, Color.TECH, "Fantastic Four", "FD", ev => setFocusEv(ev, 2, ev => turnState.endDrawMod++)),
+  c1: makeHeroCard("Mr. Fantastic", "Twisting Equations", 3, 2, u, Color.TECH, "Fantastic Four", "FD", ev => setFocusEv(ev, 2, ev => addEndDrawMod(1))),
 // Draw two cards.
 // COST: 5
 // FLAVOR: Reed Richards has an idea for a new costume material, but it's a stretch.
@@ -980,7 +980,7 @@ addHeroTemplates("Fantastic Four", [
 // Double the Recruit you have.
 // COST: 7
 // FLAVOR: Finding extra power is not a problem for the Silver Surfer. His power is immeasurable.
-  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, undefined, "F", ev => doubleRecruitEvent(ev)),
+  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, undefined, "F", ev => doubleRecruitEv(ev)),
 },
 {
   name: "Thing",

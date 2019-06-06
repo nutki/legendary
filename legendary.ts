@@ -1260,7 +1260,7 @@ function countPerTurn(c: Card) {
   return turnState.perTurn.get(c.id) || 0;
 }
 function incPerTurn(c: Card) {
-  if (!turnState.perTurn) return turnState.perTurn = new Map();
+  if (!turnState.perTurn) turnState.perTurn = new Map();
   turnState.perTurn.set(c.id, 1 + (turnState.perTurn.get(c.id) || 0));
 }
 function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?: number) {
