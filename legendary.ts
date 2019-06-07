@@ -85,6 +85,7 @@ interface Card {
   isHenchman?: boolean
   teleport?: boolean
   soaring?: boolean
+  wallcrawl?: boolean
   team: string
   flags?: string
   params?: SetupParams
@@ -119,6 +120,8 @@ interface HeroCardAbillities {
   playCostType?: string
   copyPasteCard?: boolean
   teleport?: boolean
+  soaring?: boolean
+  wallcrawl?: boolean
 }
 class Card {
   constructor (t: string) {
@@ -1227,7 +1230,6 @@ function payCost(action: Ev) {
   }
   const cost = action.cost;
   if (!cost) return true;
-  console.log("PAYCOST for", action);
   let attackToPay = cost.attack || 0;
   let recruitToPay = cost.recruit || 0;
   let eitherToPay = cost.either || 0;
@@ -1609,6 +1611,7 @@ function buyCard(ev: Ev): void {
   if (where === "HAND") gainToHandEv(ev, ev.what);
   else if (where === "DECK") gainToDeckEv(ev, ev.what);
   else if (where === "SOARING" || ev.what.soaring) gainSoaringEv(ev, ev.what);
+  else if (ev.what.wallcrawl) gainToDeckEv(ev, ev.what);
   else gainEv(ev, ev.what);
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
@@ -2154,6 +2157,7 @@ top villain deck card select (prof x uncommon)
 bystander mutli-select
 
 ENGINE:
+move fight and recruit action to new cost api
 fix replacement effect (cannot pushEvent ev.replacing)
 remodel triggers to attach on resolution not queuing
 separate escaped/carried off/escape pile concepts
