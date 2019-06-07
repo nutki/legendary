@@ -1013,3 +1013,174 @@ addHeroTemplates("Fantastic Four", [
   ra: makeHeroCard("Thing", "It's Clobberin' Time!", 8, u, 5, Color.STRENGTH, "Fantastic Four", "F", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 3 * superPower(Color.STRENGTH))),
 },
 ]);
+addHeroTemplates("Paint the Town Red", [
+{
+  name: "Black Cat",
+  team: "Spider Friends",
+// RECRUIT: 2+
+// {WALLCRAWL}
+// You get another +1 Recruit usable only to recruit the Hero in the HQ Space under the Bank.
+// COST: 4
+  c1: makeHeroCard("Black Cat", "Casual Bank Robbery", 4, 2, u, Color.COVERT, "Spider Friends", "D",
+    ev => addRecruitSpecialEv(ev, c => isLocation(c.location.below, 'BANK'), 1),
+    { wallcrawl: true }
+  ),
+// ATTACK: 0+
+// {WALLCRAWL}
+// Reveal the top card of any player's deck. You get + Attack equal to that card's printed Recruit plus its printed Attack.
+// COST: 1
+// GUN: 1
+  c2: makeHeroCard("Black Cat", "Pickpocket", 1, u, 0, Color.COVERT, "Spider Friends", "G",
+    ev => choosePlayerEv(ev, p => lookAtDeckEv(ev, 1, () => p.revealed.withTop(card => {
+        const amount = (card.printedAttack || 0) + (card.printedRecruit || 0);
+        amount && addAttackEvent(ev, amount);
+    }), p)),
+    { wallcrawl: true }
+  ),
+// ATTACK: 3
+// Each player reveals the top card of their deck. Choose any number of those cards to be discarded.
+// COST: 5
+// FLAVOR: Bad luck comes to all who cross Black Cat's path.
+  uc: makeHeroCard("Black Cat", "Jinx", 5, u, 3, Color.INSTINCT, "Spider Friends", "F", ev => eachPlayer(p => {
+    lookAtDeckEv(ev, 1, () => p.revealed.withTop(card => selectCardOptEv(ev, 'Discard a card from top of the deck', p.revealed.deck, c => discardEv(ev, c))))
+  })),
+// ATTACK: 5+
+// Each other player reveals a [Covert] Hero or chooses a Bystander from their Victory Pile. You rescue those Bystanders.
+// {TEAMPOWER Spider Friends} You get +1 Attack for each Bystander you rescued this turn.
+// COST: 8
+  ra: makeHeroCard("Black Cat", "Cat Burglar", 8, u, 5, Color.COVERT, "Spider Friends", "", [
+    ev => eachOtherPlayer(p => {
+      revealOrEv(ev, Color.COVERT, () => {
+        selectCardEv(ev, `Select a Bystander for ${playerState.name} to rescue`, p.victory.deck, c => rescueEv(ev, c), p);
+      }, p);
+    }),
+    ev => superPower("Spider Friends") && addAttackEvent(ev, turnState.bystandersRescued),
+  ]),
+},
+{
+  name: "Moon Knight",
+  team: "Marvel Knights",
+// RECRUIT: 2+
+// {WALLCRAWL}
+// {POWER Instinct} You get +1 Recruit.
+// COST: 3
+// FLAVOR: Criminals feel the cold light of the moon on their sins...but they never think to look up.
+  c1: makeHeroCard("Moon Knight", "Climbing Claws", 3, 2, u, Color.TECH, "Marvel Knights", "FD", ev => superPower(Color.INSTINCT) && addRecruitEvent(ev, 1), { wallcrawl: true }),
+// ATTACK: 2
+// {WALLCRAWL}
+// Whenever you defeat a Villain on the Rooftops this turn, you may KO one of your cards or a card from your discard pile.
+// COST: 3
+  c2: makeHeroCard("Moon Knight", "Lunar Communion", 3, u, 2, Color.INSTINCT, "Marvel Knights", "D",
+    ev => addTurnTrigger('DEFEAT', ev => isLocation(ev.where, 'ROOFTOPS'), ev => selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck])),
+    { wallcrawl: true }
+  ),
+// ATTACK: 3
+// Reveal the top card of your deck. If it's [Instinct] or [Tech], draw it.
+// COST: 5
+// FLAVOR: Villains face the crescent moon's judgment. Then they get the crescent moon's judgment in their face.
+  uc: makeHeroCard("Moon Knight", "Crescent Moon Darts", 5, u, 3, Color.TECH, "Marvel Knights", "F",
+    ev => drawIfEv(ev, Color.INSTINCT | Color.TECH)
+  ),
+// ATTACK: 6
+// Whenever you defeat a Villain on the Rooftops this turn, rescue Bystanders equal to that Villain's printed VP.
+// {POWER Tech} You may move a Villain to the Rooftops. If another Villain is already there, swap them.
+// COST: 8
+  ra: makeHeroCard("Moon Knight", "Golden Ankh of Khonshu", 8, u, 6, Color.INSTINCT, "Marvel Knights", "", [
+    ev => addTurnTrigger('DEFEAT', ev => isLocation(ev.where, 'ROOFTOPS'), ev => ev.parent.what.printedVP && rescueEv(ev, ev.parent.what.printedVP)),
+    ev => superPower(Color.TECH) && withCity('ROOFTOPS', rooftops => selectCardOptEv(ev, "Move to Rooftops", villains().limit(c => c.location !== rooftops), c => swapCardsEv(ev, c.location, rooftops))),
+  ]),
+},
+{
+  name: "Scarlet Spider",
+  team: "Spider Friends",
+// RECRUIT: 1
+// {WALLCRAWL}
+// {TEAMPOWER Spider Friends} Draw a card.
+// COST: 2
+  c1: makeHeroCard("Scarlet Spider", "Flip Out", 2, 1, u, Color.STRENGTH, "Spider Friends", "D", ev => superPower("Spider Friends") && drawEv(ev, 1), { wallcrawl: true }),
+// ATTACK: 1
+// {WALLCRAWL}
+// Draw a card.
+// COST: 4
+// FLAVOR: Predators who underestimate Scarlet Spider quickly find themselves the prey.
+  c2: makeHeroCard("Scarlet Spider", "Perfect Hunter", 4, u, 1, Color.INSTINCT, "Spider Friends", "F", ev => drawEv(ev, 1), { wallcrawl: true }),
+// ATTACK: 3+
+// {WALLCRAWL}
+// {POWER Instinct} You get +2 Attack.
+// COST: 6
+// FLAVOR: A life of chaos lends Scarlet Spider an unpredictability that opponents can't escape.
+  uc: makeHeroCard("Scarlet Spider", "Leap From Above", 6, u, 3, Color.COVERT, "Spider Friends", "FD", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 2), { wallcrawl: true }),
+// ATTACK: 5
+// Whenever you put a card on top of your deck this turn, you may draw that card.
+// COST: 7
+// FLAVOR: Many people are allergic...to getting punched in the face by a truck.
+  ra: makeHeroCard("Scarlet Spider", "Sting of the Spider", 7, u, 5, Color.STRENGTH, "Spider Friends", "F",
+    ev => addTurnTrigger('MOVECARD', ev => ev.to === playerState.deck && !ev.bottom, ev => chooseMayEv(ev, 'Draw card put on top of the deck', () => drawEv(ev)))
+  ),
+},
+{
+  name: "Spider-Woman",
+  team: "Spider Friends",
+// ATTACK: 2
+// {WALLCRAWL}
+// Reveal the top card of your deck. If that card has an Attack icon, draw it.
+// COST: 4
+  c1: makeHeroCard("Spider-Woman", "Bioelectric Shock", 4, u, 2, Color.RANGED, "Spider Friends", "D",
+    ev => drawIfEv(ev, c => c.printedAttack !== undefined),
+    { wallcrawl: true }
+  ),
+// RECRUIT: 3
+// To play this card, you must put a card from your hand on top of your deck.
+// COST: 2
+// FLAVOR: Et tu, Brute?
+  c2: makeHeroCard("Spider-Woman", "Radioactive Spider", 2, 3, u, Color.STRENGTH, "Spider Friends", "FD", [], { playCost: 1, playCostType: 'TOPDECK' }),
+// ATTACK: 3
+// {WALLCRAWL}
+// Reveal the top card of your deck. If that card has a Recruit icon, draw it.
+// COST: 6
+// FLAVOR: For prison psychologists, arachnophobia is a surprisingly common diagnosis.
+  uc: makeHeroCard("Spider-Woman", "Venom Blast", 6, u, 3, Color.RANGED, "Spider Friends", "F",
+    ev => drawIfEv(ev, c => c.printedRecruit !== undefined),
+    { wallcrawl: true }
+  ),
+// Recruit a Hero from the HQ for free.
+// {TEAMPOWER Spider Friends} Put that Hero on top of your deck.
+// COST: 7
+// FLAVOR: They'll follow her anywhere.
+  ra: makeHeroCard("Spider-Woman", "Arachno-Pheromones", 7, u, u, Color.COVERT, "Spider Friends", "F",
+    ev => selectCardEv(ev, 'Rectuit a Hero for free', HQCards().limit(isHero), c => {
+      if (superPower("Spider Friends")) turnState.nextHeroRecruit = 'HAND',
+      recruitForFreeEv(ev, c);
+    }),
+  ),
+},
+{
+  name: "Symbiote Spider-Man",
+  team: "Spider Friends",
+// ATTACK: 1+
+// {WALLCRAWL}
+// Reveal the top card of your deck. If it costs 1 or 2, you get +2 Attack.
+// COST: 2
+  c1: makeHeroCard("Symbiote Spider-Man", "Dark Strength", 2, u, 1, Color.STRENGTH, "Spider Friends", "D",
+    ev => lookAtDeckEv(ev, 1, () => playerState.revealed.has(c => c.cost === 1 || c.cost === 2) && addAttackEvent(ev, 2)),
+    { wallcrawl: true }
+  ),
+// Reveal the top two cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
+// COST: 2
+  c2: makeHeroCard("Symbiote Spider-Man", "Spider-Sense Tingling", 2, u, u, Color.INSTINCT, "Spider Friends", "D",
+    ev => lookAtDeckEv(ev, 2, () => playerState.revealed.limit(c => c.cost === 2).each(c => moveCardEv(ev, c, playerState.hand)))
+  ),
+// ATTACK: 1+
+// {WALLCRAWL}
+// You get +1 Attack for each other Hero you played this turn that costs 1 or 2.
+// COST: 2
+  uc: makeHeroCard("Symbiote Spider-Man", "Shadowed Spider", 2, u, 1, Color.COVERT, "Spider Friends", "D",
+    ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cost === 1 || c.cost === 2)),
+    { wallcrawl: true }
+  ),
+// ATTACK: 4
+// To play this card, you must put two cards from your hand on top of your deck.
+// COST: 2
+  ra: makeHeroCard("Symbiote Spider-Man", "Thwip!", 2, u, 4, Color.RANGED, "Spider Friends", "D", [], { playCost: 2, playCostType: 'TOPDECK' }),
+},
+]);
