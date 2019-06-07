@@ -557,6 +557,7 @@ interface Turn extends Ev {
   attackSpecial: { amount: number, cond: (c: Card) => boolean }[]
   recruitSpecial: { amount: number, cond: (c: Card) => boolean }[]
   cardsDrawn: number
+  bystandersRescued: number
   endDrawMod: number
   endDrawAmount: number
   cardsPlayed: Card[]
@@ -1184,6 +1185,7 @@ function popEvent(): Ev {
     totalRecruit: 0,
     cardsPlayed: [],
     cardsDrawn: 0,
+    bystandersRescued: 0,
     modifiers: {},
     triggers: [],
     func: playTurn
@@ -1501,6 +1503,12 @@ function chooseNumberEv(ev: Ev, desc: string, min: number, max: number, effect: 
   for (let i = min; i <= max; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
   pushEv(ev, "SELECTEVENT", { desc, ui: true, agent, options });
 }
+function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
+  pushEv(ev, "SELECTEVENT", { desc: "Choose a player", ui: true, agent, options: gameState.players.map(p => new Ev(ev, "EFFECT", {
+    func: () => effect(p),
+    desc: p.name,
+  })) });
+}
 function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
   chooseOneEv(ev, "Choose hero class",
     ['Strength', () => f(Color.STRENGTH) ],
@@ -1759,6 +1767,7 @@ function rescueEv(ev: Ev, what?: Card | number): void {
 }
 function rescueBystander(ev: Ev): void {
   let c = ev.what;
+  if (isBystander(c)) turnState.bystandersRescued++;
   moveCardEv(ev, c, playerState.victory);
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
