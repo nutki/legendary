@@ -1,7 +1,7 @@
 
 
 #CARDNAME: Carnage
-Venomverse
+#TEAM: Venomverse
 
 #SUBNAME: Rending Claws
 #COPIES: 5
@@ -37,7 +37,7 @@ Reveal the top card of your deck. You may KO it.
 
 
 #CARDNAME: Venom
-Venomverse
+#TEAM: Venomverse
 
 #SUBNAME: Devouring Drool
 #COPIES: 5
@@ -75,12 +75,12 @@ Venomverse
 #ATTACK: 0+
 <b>Digest 8:</b> KO a card from your Victory Pile. You get +6 Attack.
 <b>Indigestion:</b> KO a card from your hand or discard pile. You get +6 Recruit.
-Venomverse Venomverse: Instead, do both.
+{TEAMPOWER Venomverse, Venomverse} Instead, do both.
 #COST: 8
 
 
 #CARDNAME: Venom Rocket
-Venomverse
+#TEAM: Venomverse
 
 #SUBNAME: Hungry for Action
 #COPIES: 5
@@ -116,7 +116,7 @@ When a Master Strike is played, before it takes effect, you may put Ultimate Sur
 
 
 #CARDNAME: Venomized Dr. Strange
-Venomverse
+#TEAM: Venomverse
 
 #SUBNAME: Cauldron of the Cosmos
 #COPIES: 5
@@ -145,12 +145,12 @@ If you played a 4-cost card and a 2-cost card this turn, you get +2 Attack.
 #CLASS: [Ranged]
 #ATTACK: 4
 Reveal the top three cards of your deck. Draw on of them, discard one, and KO one.
-Venomverse Venomverse: Do this ability again.
+{TEAMPOWER Venomverse, Venomverse} Do this ability again.
 #COST: 8
 
 
 #CARDNAME: Venompool
-Venomverse
+#TEAM: Venomverse
 
 #SUBNAME: Digest That Chimichanga
 #COPIES: 5
@@ -183,7 +183,7 @@ Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extr
 #ATTACK: 4+
 <b>Digest 7:</b> You get +1 Attack for each two Bystanders in your Victory Pile.
 <b>Indigestion:</b> "Rescue" two Bystanders.
-Venomverse Venomverse: Instead, do both (in order).
+{TEAMPOWER Venomverse, Venomverse} Instead, do both (in order).
 #COST: 7
 
 

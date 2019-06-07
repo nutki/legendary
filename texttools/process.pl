@@ -18,6 +18,9 @@ Spider Friends
 (Unaffiliated)
 X-Force
 X-Men
+Champions
+Warbound
+Venomverse
 END
 $aff = "(?:".(join'|',map s/[().]/\\$&/gr, @aff).")";
 $class = "(?:Instinct|Ranged|Tech|Covert|Strength)";
@@ -33,7 +36,7 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!<span style="background-color: #......;"><span style="color: #......;">($class)</span></span>![$1]!g;
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?)</b>!'{'.(uc$1).'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     my @lines = split m!<br />!;
     for (@lines) {
       s!^== (.*?) ==.*!#EXPANSION: $1! && next;
@@ -48,10 +51,12 @@ while (<A>) {
       s!^<b>Focus (\d+) Recruit -&gt;</b>!{FOCUS $1}! && next;
 
       s!^($aff): (.*)$!{TEAMPOWER $1} $2! && next;
+      s!^($aff),? ($aff): (.*)$!{TEAMPOWER $1, $2} $3! && next;
       s!^\[($class)\]: (.*)$!{POWER $1} $2! && next;
       s!^\[($class)\],? \[($class)\]: (.*)$!{POWER $1 $2} $3! && next;
       s!^\[($class)\], \[($class)\], \[($class)\], \[($class)\]: (.*)$!{POWER $1 $2 $3 $4} $5! && next;
       s!^<b>(?:Healing|Betrayal)</b>: (.*)!#HEAL: $1! && next;
+      s!^<b>Spectrum</b>: (.*)$!{SPECTRUM} $1! && next;
 
       s!^<i>(PhD in Oceanography)</i>$!#SUBNAME: $1\n#COPIES: 1! && next; #FIX
       s!^Unbreakable Cage$!#SUBNAME: $&\n#COPIES: 3! && next; #FIX

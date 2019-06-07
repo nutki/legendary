@@ -6,7 +6,7 @@
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 2+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 You get another +1 Recruit usable only to recruit the Hero in the HQ Space under the Bank.
 #COST: 4
 
@@ -14,7 +14,7 @@ You get another +1 Recruit usable only to recruit the Hero in the HQ Space under
 #COPIES: 5
 #CLASS: [Covert]
 #ATTACK: 0+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Reveal the top card of any player's deck. You get + Attack equal to that card's printed Recruit plus its printed Attack.
 #COST: 1
 #GUN: 1
@@ -43,7 +43,7 @@ Each other player reveals a [Covert] Hero or chooses a Bystander from their Vict
 #COPIES: 5
 #CLASS: [Tech]
 #RECRUIT: 2+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 {POWER Instinct} You get +1 Recruit.
 #COST: 3
 #FLAVOR: Criminals feel the cold light of the moon on their sins...but they never think to look up.
@@ -52,7 +52,7 @@ Each other player reveals a [Covert] Hero or chooses a Bystander from their Vict
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Whenever you defeat a Villain on the Rooftops this turn, you may KO one of your cards or a card from your discard pile.
 #COST: 3
 
@@ -80,7 +80,7 @@ Whenever you defeat a Villain on the Rooftops this turn, rescue Bystanders equal
 #COPIES: 5
 #CLASS: [Strength]
 #RECRUIT: 1
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 {TEAMPOWER Spider Friends} Draw a card.
 #COST: 2
 
@@ -88,7 +88,7 @@ Whenever you defeat a Villain on the Rooftops this turn, rescue Bystanders equal
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 1
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Draw a card.
 #COST: 4
 #FLAVOR: Predators who underestimate Scarlet Spider quickly find themselves the prey.
@@ -97,7 +97,7 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 {POWER Instinct} You get +2 Attack.
 #COST: 6
 #FLAVOR: A life of chaos lends Scarlet Spider an unpredictability that opponents can't escape.
@@ -118,7 +118,7 @@ Whenever you put a card on top of your deck this turn, you may draw that card.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Reveal the top card of your deck. If that card has an Attack icon, draw it.
 #COST: 4
 
@@ -134,7 +134,7 @@ To play this card, you must put a card from your hand on top of your deck.
 #COPIES: 3
 #CLASS: [Ranged]
 #ATTACK: 3
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Reveal the top card of your deck. If that card has a Recruit icon, draw it.
 #COST: 6
 #FLAVOR: For prison psychologists, arachnophobia is a surprisingly common diagnosis.
@@ -155,7 +155,7 @@ Recruit a Hero from the HQ for free.
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 1+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Reveal the top card of your deck. If it costs 1 or 2, you get +2 Attack.
 #COST: 2
 
@@ -169,7 +169,7 @@ Reveal the top two cards of your deck. Put any that cost 2 or less into your han
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 1+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 You get +1 Attack for each other Hero you played this turn that costs 1 or 2.
 #COST: 2
 

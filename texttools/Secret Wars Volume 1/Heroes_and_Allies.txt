@@ -144,7 +144,7 @@ Draw a card.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
-{POWER Ranged} Reveal the top card of your deck. Draw it or <b>Teleport</b> it.
+{POWER Ranged} Reveal the top card of your deck. Draw it or {TELEPORT} it.
 #COST: 4
 #FLAVOR: "By the Hoary Hosts of Hoggoth!"
 
@@ -165,7 +165,7 @@ Draw a card.
 #SUBNAME: Sorcerer Supreme
 #COPIES: 1
 #CLASS: [Covert]
-Reveal the top three cards of your deck. Draw any number of them and <b>Teleport</b> the rest.
+Reveal the top three cards of your deck. Draw any number of them and {TELEPORT} the rest.
 #COST: 7
 
 
@@ -220,7 +220,7 @@ Gain a Sidekick.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 1+
-<b>Teleport</b>
+{TELEPORT}
 {POWER Ranged} You get +2 Attack.
 #COST: 3
 #FLAVOR: Any distance is two steps away when those two steps are through a hell dimension.
@@ -229,7 +229,7 @@ Gain a Sidekick.
 #COPIES: 3
 [Covert], [Ranged]
 #ATTACK: 2+
-<b>Teleport</b>
+{TELEPORT}
 For each Sidekick you played this turn, you get +1 Attack.
 #COST: 5
 
@@ -237,7 +237,7 @@ For each Sidekick you played this turn, you get +1 Attack.
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 2+
-<b>Teleport</b>
+{TELEPORT}
 Choose a Villain or Mastermind in your Victory Pile. You get +Attack equal to its printed VP.
 #COST: 7
 
@@ -427,7 +427,7 @@ Draw a card for each other player who has fewer cards in their Victory Pile than
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 2+
-<b>Teleport</b>
+{TELEPORT}
 You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.
 #COST: 5
 

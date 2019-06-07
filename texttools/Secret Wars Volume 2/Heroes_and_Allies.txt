@@ -7,7 +7,7 @@
 #CLASS: [Tech]
 #RECRUIT: 1+
 #ATTACK: 1+
-<b>Spectrum</b>: You get +1 Recruit and +1 Attack.
+{SPECTRUM} You get +1 Recruit and +1 Attack.
 #COST: 2
 #FLAVOR: His weapons are as versatile as Venom himself.
 #GUN: 1
@@ -17,7 +17,7 @@
 [Strength], [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 <b>Patrol the Bank</b>: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack.
 #COST: 3
 
@@ -26,7 +26,7 @@
 #CLASS: [Instinct]
 #RECRUIT: 2
 #ATTACK: 2
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 <b>Patrol the Sewers</b>: If it's empty, draw a card.
 #COST: 6
 #FLAVOR: Flash Thompson combines elite military training with Venom symbiote.
@@ -36,7 +36,7 @@
 #CLASS: [Strength]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 For each other card you played this turn with a Recruit icon, you get +1 Recruit.
 For each other card you played this turn with a Attack icon, you get +1 Attack.
 (If another card has both Recruit and Attack, you get both bonuses.)
@@ -50,7 +50,7 @@ For each other card you played this turn with a Attack icon, you get +1 Attack.
 #COPIES: 5
 [Strength], [Covert]
 #RECRUIT: 2+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 <b>Patrol the Sewers</b>: If it's empty, you get +1 Recruit.
 #COST: 3
 #FLAVOR: Even beneath the surface, Arkon conquers them all.
@@ -59,7 +59,7 @@ For each other card you played this turn with a Attack icon, you get +1 Attack.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
-<b>Spectrum</b>: Draw a card.
+{SPECTRUM} Draw a card.
 #COST: 3
 #FLAVOR: A Quiver of Thunderbolts is quite unorthodox but totally awesome.
 
@@ -94,7 +94,7 @@ Reveal the top card of your deck. If it's [Tech] or [Strength], draw it.
 #SUBNAME: Upside-down Thinking
 #COPIES: 5
 [Strength], [Tech]
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 <b>Patrol any city space</b>:
 If it's empty, then the hero in the HQ space under it costs 3 less this turn.
 #COST: 4
@@ -157,7 +157,7 @@ Reveal the top five cards of the Villain Deck. You get + Attack equal to the pri
 #COPIES: 5
 [Strength], [Tech]
 #RECRUIT: 1+
-<b>Spectrum</b>: you get +2 Recruit.
+{SPECTRUM} you get +2 Recruit.
 #COST: 2
 #FLAVOR: When you gotta go, you gotta go.
 
@@ -165,7 +165,7 @@ Reveal the top five cards of the Villain Deck. You get + Attack equal to the pri
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2+
-<b>Spectrum</b>: You get +2 Attack.
+{SPECTRUM} You get +2 Attack.
 #COST: 4
 #FLAVOR: The Captain and The Devil must journey through a sea of angry Hulks in the Battleworld region known as "Greenland."
 
@@ -298,7 +298,7 @@ For each space that's empty, you get +1 Attack.
 #COPIES: 5
 #CLASS: [Instinct]
 #RECRUIT: 2+
-<b>Spectrum</b>: You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
+{SPECTRUM} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
 #COST: 5
 
 #SUBNAME: Monster Hunter
@@ -314,7 +314,7 @@ For each space that's empty, you get +1 Attack.
 #COPIES: 3
 #CLASS: [Ranged]
 #ATTACK: 0+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 #COST: 6
 #FLAVOR: As commander of the wall, Elsa must hold back the Deadlands Hordes.
@@ -324,7 +324,7 @@ You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 6+
-<b>Spectrum</b>: You get +3 Attack.
+{SPECTRUM} You get +3 Attack.
 #COST: 8
 #FLAVOR: Elsa's father threw her at monsters before she could walk, training her relentlessly to become the perfect weapon.
 
@@ -369,7 +369,7 @@ KO up to three cards from your hand. Draw that many cards.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
-When a card effect causes you to discard this card, if it is your turn, <b>Teleport</b> it instead. If it is not your turn, set it aside and add it to your hand at the end of this turn.
+When a card effect causes you to discard this card, if it is your turn, {TELEPORT} it instead. If it is not your turn, set it aside and add it to your hand at the end of this turn.
 #COST: 3
 #FLAVOR: Hit-and-run tactics.
 
@@ -413,7 +413,7 @@ To play this card, you must discard three cards from your hand.
 #COPIES: 5
 [Instinct], [Covert]
 #ATTACK: 2+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 <b>Patrol the Rooftops</b>: If it's empty, you get +1 Attack.
 #COST: 4
 
@@ -428,7 +428,7 @@ To play this card, you must discard three cards from your hand.
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 5
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Any time you are shuffling your deck with this card in it, you may set this card aside and put it on top of your deck at the end of the shuffle.
 #COST: 7
 
@@ -440,7 +440,7 @@ Any time you are shuffling your deck with this card in it, you may set this card
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
-<b>Spectrum</b>: Reveal the top card of your deck. If it costs 2 or less, draw it.
+{SPECTRUM} Reveal the top card of your deck. If it costs 2 or less, draw it.
 #COST: 2
 #FLAVOR: Cindy Moon was bitten by the same radioactive spider as Peter Parker.
 
@@ -448,8 +448,8 @@ Any time you are shuffling your deck with this card in it, you may set this card
 #COPIES: 5
 [Strength], [Instinct]
 #ATTACK: 1
-<b>Wall-Crawl</b>
-<b>Spectrum</b>: Draw a card.
+{WALLCRAWL}
+{SPECTRUM} Draw a card.
 #COST: 2
 
 #SUBNAME: Silk Stalking
@@ -463,8 +463,8 @@ Any time you are shuffling your deck with this card in it, you may set this card
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 1
-<b>Wall-Crawl</b>
-<b>Spectrum</b>: Reveal the top four cards of your deck. Put any combination of those cards with a total cost of 2 or less into your hand. But the rest back in any order.
+{WALLCRAWL}
+{SPECTRUM} Reveal the top four cards of your deck. Put any combination of those cards with a total cost of 2 or less into your hand. But the rest back in any order.
 #COST: 2
 
 
@@ -522,7 +522,7 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 1+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 <b>Patrol the Bank</b>: If it's empty, you get +1 Attack.
 <b>Patrol your Victory Pile</b>: If it's empty, you get +1 Attack.
 #COST: 2
@@ -531,7 +531,7 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 0+
-<b>Wall-Crawl</b>
+{WALLCRAWL}
 Reveal the top three cards of your deck, then put them back in any order. You get +1 Attack for each card you revealed that costs 2 or less.
 #COST: 2
 

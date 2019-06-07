@@ -63,7 +63,7 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 
 #SUBNAME: Apocalyptic Blink
 #COPIES: 3
-#FIGHT: Reveal the top card of your deck. Draw it or <b>Teleport</b> it.
+#FIGHT: Reveal the top card of your deck. Draw it or {TELEPORT} it.
 #ATTACK: 5
 #VP: 3
 
@@ -108,14 +108,14 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 
 #SUBNAME: Inferno Darkchilde
 #COPIES: 2
-#FIGHT: Reveal the top card of your deck. KO it or <b>Teleport</b> it.
+#FIGHT: Reveal the top card of your deck. KO it or {TELEPORT} it.
 #ESCAPE: Each player <b>Teleports</b> a random card from their hand.
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: Inferno Nightcrawler
 #COPIES: 2
-#FIGHT: Up to two cards in your hand that have a Recruit icon gain <b>Teleport</b> this turn.
+#FIGHT: Up to two cards in your hand that have a Recruit icon gain {TELEPORT} this turn.
 #ATTACK: 4
 #VP: 2
 

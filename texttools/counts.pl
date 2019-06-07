@@ -41,6 +41,6 @@ for(@exps) {
   }
   close A;
  }
- printf "%3d %3d %3d %3d %3d %3d $_\n", $h{$e}, $v{$e}, $m{$e}, $hm{$e}, $s{$e}, $b{$e};
+ printf "%3d %3d %3d %3d %3d %3d $e\n", $h{$e}, $v{$e}, $m{$e}, $hm{$e}, $s{$e}, $b{$e};
 }
 printf "%3d %3d %3d %3d %3d %3d $_\n", $total{'h'}, $total{'v'}, $total{'m'}, $total{'hm'}, $total{'s'}, $total{'b'};

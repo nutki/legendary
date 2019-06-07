@@ -19,14 +19,16 @@ sub autopower {
   my %filt = (card => 'undefined', Wound => 'isWound');
   my @a = split"\n",shift;
   my @r = ();
+  my @ar = ();
   for (@a) {
     /^#|^$/ and next;
     my $effect = undef;
     my $cond = undef;
     my $wrap = undef;
+    my $ability = undef;
     s/^{POWER (.*?)} *// and $cond = "superPower(".(join', ',map{"Color.".uc}split" ",$1).")";
-    s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split" ",$1).")";
-    s/^<b>Spectrum<.b>: *// and $cond = "spectrumPower()";
+    s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split", ",$1).")";
+    s/^{SPECTRUM} *// and $cond = "spectrumPower()";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, ev => XXX)";
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
@@ -36,14 +38,21 @@ sub autopower {
     /^[Yy]ou get \+(\d+) (Attack|Recruit)\.?$/ and $effect = "add$2Event(ev, $1)";
     /^Rescue a Bystander\.?$/ and $effect = "rescueEv(ev)";
     /^{VERSATILE (\d+)}$/ and $effect = "versatileEv(ev, $1)";
+    s/^{WALLCRAWL}$// and $ability = 'wallcrawl: true';
+    s/^{TELEPORT}$// and $ability = 'teleport: true';
 
+    s/'/\\'/g;
+    $effect ||= "/*TODO*/'$_'" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
     $effect = "$cond && $effect" if $cond && $effect;
     push @r, $effect if $effect;
+    push @ar, $ability if $ability;
     #print "$_\n" if !$effect;
   }
   my $all = join', ',map"ev => $_",@r;
-  @r ? @r > 1 ? ", [ $all ]" : ", $all" : "";
+  my $powers = @r ? @r > 1 ? ", [ $all ]" : ", $all" : "";
+  my $aall = join', ',@ar;
+  @ar ? ($powers || ', []') . ", { $aall }" : $powers;
 }
   $content = $_;
   #print length$content, "\n";

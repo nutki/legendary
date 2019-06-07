@@ -123,7 +123,7 @@ You get +2 Attack only when fighting Masterminds.
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3+
-<b>Teleport</b>
+{TELEPORT}
 {TEAMPOWER X-Force} You get +1 Attack for each other X-Force Hero you played this turn.
 #COST: 6
 #GUN: 1
@@ -458,7 +458,7 @@ Whenever you rescue a Bystander this turn, you get +1 Attack.
 #COPIES: 5
 #CLASS: [Instinct]
 #RECRUIT: 2
-<b>Teleport</b>
+{TELEPORT}
 #COST: 3
 #FLAVOR: "Now you see me..." BAMF!"
 
@@ -466,7 +466,7 @@ Whenever you rescue a Bystander this turn, you get +1 Attack.
 #COPIES: 5
 #CLASS: [Covert]
 #ATTACK: 2
-<b>Teleport</b>
+{TELEPORT}
 #COST: 4
 #FLAVOR: Sometimes it is best to hide now and fight later.
 
@@ -482,8 +482,8 @@ Whenever you rescue a Bystander this turn, you get +1 Attack.
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 5
-<b>Teleport</b>
-When you play or <b>Teleport</b> this card, you may also <b>Teleport</b> up to three other cards from your hand.
+{TELEPORT}
+When you play or {TELEPORT} this card, you may also {TELEPORT} up to three other cards from your hand.
 #COST: 7
 
 

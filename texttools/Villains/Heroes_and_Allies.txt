@@ -101,7 +101,7 @@ You get +1 Attack for each card you discarded this turn.
 #CLASS: [Ranged]
 #ATTACK: 4
 All Adversaries and the Commander get -1 Attack this turn.
-Sinister Six, Sinister Six: Same Effect
+{TEAMPOWER Sinister Six, Sinister Six} Same Effect
 #COST: 7
 
 
@@ -233,7 +233,7 @@ You get +1 Attack for each New Recruit you played this turn.
 #SUBNAME: Endless Underlings
 #COPIES: 1
 #CLASS: [Strength]
-Crime Syndicate, Crime Syndicate: If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
+{TEAMPOWER Crime Syndicate, Crime Syndicate} If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
 #COST: 8
 
 

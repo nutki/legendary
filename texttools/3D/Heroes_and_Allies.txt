@@ -38,7 +38,7 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 0+
-<b>Teleport</b>
+{TELEPORT}
 You get +2 Attack usable only against villains in the Sewers or the Mastermind.
 #COST: 2
 
@@ -53,7 +53,7 @@ Choose a Villain or Mastermind. If there are no other Villains adjacent to it, i
 #COPIES: 3
 #CLASS: [Covert]
 #RECRUIT: 3
-<b>Teleport</b>
+{TELEPORT}
 You may move a Villain to another city space. If another Villain is already there, swap them.
 #COST: 5
 

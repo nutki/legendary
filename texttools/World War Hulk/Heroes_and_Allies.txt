@@ -1,7 +1,7 @@
 
 
 #CARDNAME: Amadeus Cho
-Champions
+#TEAM: Champions
 
 #SUBNAME: Extrapolate
 #COPIES: 5
@@ -87,7 +87,7 @@ Cost 5
 
 
 #CARDNAME: Caiera
-Warbound
+#TEAM: Warbound
 
 #SUBNAME: Shadow Queen
 #COPIES: 5
@@ -130,7 +130,7 @@ Double the Attack you have.
 
 
 #CARDNAME: Gladiator Hulk
-Warbound
+#TEAM: Warbound
 
 #SUBNAME: Don't Make Me Angry
 #COPIES: 5
@@ -175,7 +175,7 @@ You get double Attack from each Smash this turn.
 
 
 #CARDNAME: Hiroim
-Warbound
+#TEAM: Warbound
 
 #SUBNAME: Seek Redemption
 #COPIES: 5
@@ -205,7 +205,7 @@ You get +1 Attack for every two Bystanders in your Victory Pile.
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 2
-Warbound: You may KO a 0-cost card from any player's discard pile. If you KO a Wound this way, rescue a Bystander.
+{TEAMPOWER Warbound} You may KO a 0-cost card from any player's discard pile. If you KO a Wound this way, rescue a Bystander.
 #COST: 6
 
 #SUBNAME: Blade Of The People
@@ -304,7 +304,7 @@ You can spend any combination of Recruit and Attack to fight the Mastermind this
 
 
 #CARDNAME: Korg
-Warbound
+#TEAM: Warbound
 
 #SUBNAME: Nothing Beats Rock
 #COPIES: 5
@@ -349,7 +349,7 @@ Put all cards from the HQ on the bottom of the Hero Deck in random order. You ge
 
 
 #CARDNAME: Miek, The Unhived
-Warbound
+#TEAM: Warbound
 
 #SUBNAME: This Bug Smashes You
 #COPIES: 5
@@ -391,7 +391,7 @@ Look at the top three cards of your deck and put them back in any order. Then yo
 
 
 #CARDNAME: Namora
-Champions
+#TEAM: Champions
 
 #SUBNAME: Crushing Tsunami
 #COPIES: 5
@@ -434,7 +434,7 @@ If you <b>Smash</b> a 0-cost Hero this way, KO it.
 
 
 #CARDNAME: No-Name, Brood Queen
-Warbound
+#TEAM: Warbound
 
 #SUBNAME: Surprise Attack
 #COPIES: 5
