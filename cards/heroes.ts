@@ -1149,7 +1149,7 @@ addHeroTemplates("Paint the Town Red", [
 // FLAVOR: They'll follow her anywhere.
   ra: makeHeroCard("Spider-Woman", "Arachno-Pheromones", 7, u, u, Color.COVERT, "Spider Friends", "F",
     ev => selectCardEv(ev, 'Rectuit a Hero for free', HQCards().limit(isHero), c => {
-      if (superPower("Spider Friends")) turnState.nextHeroRecruit = 'HAND',
+      if (superPower("Spider Friends")) turnState.nextHeroRecruit = 'HAND';
       recruitForFreeEv(ev, c);
     }),
   ),
