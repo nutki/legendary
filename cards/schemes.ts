@@ -325,3 +325,81 @@ makeSchemeCard<{neg: boolean}>("Pull Reality Into the Negative Zone", { twists: 
   } : base);
 }),
 ]);
+addTemplates("SCHEMES", "Paint the Town Red", [
+// SETUP: 8 Twists.
+// EVILWINS: When 2 Villains with the same card name have escaped or the Villain Deck runs out.
+makeSchemeCard("The Clone Saga", { twists: 8 }, ev => {
+  // Twist: Each player reveals two non-grey Heroes with the same card name or discards down to 3 cards.
+  // TODO multiplayer reveal
+  eachPlayer(p => revealOrEv(ev, c => p.hand.deck.count(cc => cc.cardName === c.cardName) >= 2, () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 3, p.hand.deck, sel => discardEv(ev, sel), p), p));
+}, [
+  {
+    event: 'ESCAPE',
+    after: ev => gameState.escaped.size > gameState.escaped.deck.uniqueCount(c => c.cardName) && evilWinsEv(ev),
+  },
+  {
+    event: 'RUNOUT',
+    match: ev => ev.deckName === 'VILLAIN',
+    after: ev => evilWinsEv(ev),
+  },
+]),
+// SETUP: 8 Twists. Add 6 extra Henchmen from a single Henchman Group to the Hero Deck.
+// RULE: You can fight Villains in the HQ.
+// EVILWINS: When there are 5 Villains in the HQ.
+makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen_counts: [[3, 6], [10, 6], [10, 6], [10, 10, 6], [10, 10, 6]] }, ev => {
+  // Twist: KO a Hero from the HQ. Put the highest-Attack Villain from the city into that HQ space.
+  let space: Deck;
+  addTurnTrigger('MOVECARD', ev => space && ev.to === space && ev.from === gameState.herodeck, { replace: ev => {
+    selectCardEv(ev, "", CityCards().limit(isVillain), c => moveCardEv(ev, c, space)); // TODO highest attack
+  }});
+  selectCardEv(ev, "Select a Hero to KO", HQCards().limit(isHero), c => { KOEv(ev, c); space = c.location; });  
+  cont(ev, () => space = undefined);
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to.isHQ,
+  after: ev => schemeProgressEv(ev, 5 - CityCards().count(isVillain)),
+}, () => {
+  gameState.villaindeck.deck.filter(c => c.cardName === extraHenchmenName()).each(c => moveCard(c, gameState.herodeck));
+  gameState.herodeck.shuffle();
+  addStatSet('isFightable', c => isVillain(c) && c.location.isHQ, () => true);
+}),
+// SETUP: 8 Twists. Include Sinister Six as one of the Villain Groups.
+// RULE: Sinister Six Villains get +3 Attack. All Hero cards have Wall-Crawl.
+// EVILWINS: When 6 Sinister Six Villains have escaped or the Villain Deck runs out.
+makeSchemeCard("Splice Humans with Spider DNA", { twists: 8, required: { villains: "Sinister Six" } }, ev => {
+  // Twist: Each player puts a Sinister Six Villain from their Victory Pile on top of the Villain Deck. No matter how many players did so, play a single card from the Villain Deck.
+  eachPlayer(p => selectCardEv(ev, "Choose Sinister Six Villain", p.victory.limit(c => c.villainGroup === "Sinister Six"), c => moveCardEv(ev, c, gameState.villaindeck), p));
+  villainDrawEv(ev);
+}, [
+  {
+    event: 'ESCAPE',
+    after: ev => schemeProgressEv(ev, 6 - gameState.escaped.count(c => c.villainGroup === "Sinister Six")),
+  },
+  {
+    event: 'RUNOUT',
+    match: ev => ev.deckName === 'VILLAIN',
+    after: ev => evilWinsEv(ev),
+  },
+], () => {
+  addStatMod('defense', c => c.villainGroup === "Sinister Six", 3);
+//  addStatSet('wallcrawl', isHero, () => true); TODO
+}),
+// SETUP: 7 Twists.
+// RULE: Whenever you defeat a Villain, you may pay 1 Recruit. If you do, rescue a Bystander.
+// You can't fight the Mastermind unless you have a Bystander in your Victory Pile for each Twist next to the Mastermind.
+makeSchemeCard("Weave a Web of Lies", { twists: 7 }, ev => {
+  // Twist: Stack this Twist next to the Mastermind.
+  attachCardEv(ev, ev.source, gameState.mastermind, "TWIST");
+  // Twist 7 Evil Wins!
+  schemeProgressEv(ev, 7 - ev.nr);
+}, {
+  event: 'DEFEAT',
+  match: ev => isVillain(ev.what) && canPayCost(new Ev(ev, 'EFFECT', { func: rescueEv, cost: { recruit: 1 } })),
+  after: ev => chooseMayEv(ev, "Pay 1 recruit to rescue a Bystander", () => pushEv(ev, 'EFFECT', { func: rescueEv, cost: { recruit: 1 } })),
+}, () => {
+  addStatSet('fightCost', isMastermind, (c, prev) => ({
+    ...prev,
+    cond: c => (prev.cond ? prev.cond(c) : true) && playerState.victory.count(isBystander) >= gameState.mastermind.attached("TWIST").size,
+  }));
+}),
+]);

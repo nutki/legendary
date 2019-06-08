@@ -768,6 +768,10 @@ function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
   return h[h.length - n];
 }
+function extraHenchmenName(n: number = 1) {
+  const h = gameState.gameSetup.henchmen;
+  return h[h.length - n];
+}
 function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
     vd_villain: [ 1, 2, 3, 3, 4 ],
@@ -1029,7 +1033,7 @@ function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
 }
 function FightableCards(): Card[] {
-  return [...CityCards(), gameState.villaindeck.top].filter(c => c && isFightable(c));
+  return [...CityCards(), ...HQCards(), gameState.villaindeck.top].filter(c => c && isFightable(c));
 }
 function heroBelow(c: Card) {
   return c.location && c.location.above ? c.location.above.limit(isHero) : [];
