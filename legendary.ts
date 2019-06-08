@@ -335,6 +335,7 @@ interface Array<T> {
   withFirst: (f: (c: T) => void) => void
   withLast: (f: (c: T) => void) => void
   withRandom: (f: (c: T) => void) => void
+  firstOnly: () => T[]
   shuffle: () => void
 }
 Array.prototype.count = function (f) { return count(this, f); };
@@ -351,6 +352,7 @@ Object.defineProperty(Array.prototype, 'last', { get: function() { return this[t
 Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
 Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
 Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[gameState.gameRand.nextRange(0, this.size)]); };
+Array.prototype.firstOnly = function () { return this.length ? [ this[0] ] : [] };
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
 type Option = Card | Ev;
@@ -1029,6 +1031,9 @@ function currentVP(p?: Player): number {
 function FightableCards(): Card[] {
   return [...CityCards(), gameState.villaindeck.top].filter(c => c && isFightable(c));
 }
+function heroBelow(c: Card) {
+  return c.location && c.location.above ? c.location.above.limit(isHero) : [];
+}
 function HQCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function CityCards(): Card[] { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
 function cityAdjecent(l: Deck): Deck[] {
@@ -1051,7 +1056,7 @@ function destroyCity(space: Deck) {
   space.isCity = false;
 }
 function HQCardsHighestCost(): Card[] {
-  const all = HQCards();
+  const all = HQCards().limit(isHero);
   const maxCost = all.reduce((max, c) => c.cost > max ? c.cost : max, 0);
   return all.limit(c => c.cost === maxCost);
 }
@@ -1586,6 +1591,7 @@ function playCardEffects(ev: Ev, card?: Card) {
   card = card || ev.what;
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
     if (card.playCostType === "DISCARD") pickDiscardEv(ev);
+    if (card.playCostType === "TOPDECK") pickTopDeckEv(ev);
     if (card.attack) addAttackEvent(ev, card.attack);
     if (card.recruit) addRecruitEvent(ev, card.recruit);
     for (let i = 0; card.effects && i < card.effects.length; i++) {

@@ -495,3 +495,89 @@ addVillainTemplates("Fantastic Four", [
   })],
 ]},
 ]);
+function feastEv(ev: Ev, effect?: (c: Card) => void) {
+  lookAtDeckEv(ev, 1, () => playerState.revealed.each(c => {
+    KOEv(ev, c);
+    effect && cont(ev, () => effect(c));
+  }));
+}
+addVillainTemplates("Paint the Town Red", [
+{ name: "Maximum Carnage", cards: [
+// {FEAST}
+// Whenever Carrion feasts on a Hero that costs 1 or more, put Carrion back in the city space where he was.
+// ATTACK: 4
+// VP: 3
+  [ 2, makeVillainCard("Maximum Carnage", "Carrion", 4, 3, {
+    fight: ev => feastEv(ev, c => isHero(c) && c.cost >= 1 && moveCardEv(ev, ev.source, ev.where))
+  })],
+// AMBUSH: Demogoblin captures a Bystander.
+// {FEAST}
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Maximum Carnage", "Demogoblin", 5, 3, {
+    fight: feastEv,
+    ambush: ev => captureEv(ev, ev.source),
+  })],
+// Doppelganger's Attack is equal to the Cost of the Hero in the HQ space under him.
+// {FEAST}
+// ATTACK: *
+// VP: 3
+  [ 2, makeVillainCard("Maximum Carnage", "Doppelganger", u, 3, {
+    fight: feastEv,
+    varDefense: c => heroBelow(c).sum(c => c.cost),
+  })],
+// {FEAST}
+// When Shriek feasts on a 0-cost Hero, each other player gains a Wound.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Maximum Carnage", "Shriek", 6, 4, {
+    fight: ev => feastEv(ev, c => isHero(c) && !c.cost && eachOtherPlayerVM(p => gainWoundEv(ev, p))),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+]},
+{ name: "Sinister Six", cards: [
+// FIGHT: Copy the effects of the Hero in the HQ space under Chameleon, including its Recruit and Attack.
+// ATTACK: 6
+// VP: 2
+  [ 1, makeVillainCard("Sinister Six", "Chameleon", 6, 2, {
+    fight: ev => heroBelow(ev.source).withFirst(c => playCardEffects(ev, c)),
+  })],
+// AMBUSH: Each Sinister Six Villain captures a Bystander.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Sinister Six", "Hobgoblin", 5, 3, {
+    ambush: ev => villains().filter(c => c.villainGroup === "Sinister Six").each(v => captureEv(ev, v)),
+  })],
+// Kraven's Attack is equal to the Cost of the highest-cost Hero in the HQ.
+// ESCAPE: (After you do the normal escape KO) KO a Hero from the HQ with the highest cost.
+// ATTACK: *
+// VP: 4
+  [ 1, makeVillainCard("Sinister Six", "Kraven the Hunter", u, 4, {
+    escape: ev => selectCardEv(ev, "KO a Hero from HQ with the highest cost", HQCardsHighestCost(), c => KOEv(ev, c)),
+    varDefense: c => HQCardsHighestCost().firstOnly().sum(c => c.cost)
+  })],
+// Sandman's Attack is twice the number of Villains in the city.
+// ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+// ATTACK: *
+// VP: 4
+  [ 1, makeVillainCard("Sinister Six", "Sandman", undefined, 4, {
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
+    varDefense: () => CityCards().limit(isVillain).size * 2
+  })],
+// AMBUSH: Each player reveals an [Instinct] Hero or discards a card.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Sinister Six", "Shocker", 5, 3, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, p), p)),
+  })],
+// AMBUSH: (After Vulture enters the city) If there is a Villain on the Rooftops or Bridge, swap Vulture with one of those Villains.
+// ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Sinister Six", "Vulture", 4, 2, {
+    ambush: ev => selectCardEv(ev, "Select Villains to swap Vulture with", CityCards().limit(c => isVillain(c) && isLocation(c.location, 'ROOFTOPS', 'BRIDGE')), c => swapCardsEv(ev, ev.source.location, c.location)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
+  })],
+]},
+]);

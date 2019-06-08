@@ -145,8 +145,7 @@ sub autopower {
       my $groupname = $_{CARDNAME};
       my $copies = 0;
       print "{ name: \"$groupname\", cards: [\n";
-      for (0..3) {
-        $_ = $subitems[$_];
+      for (@subitems) {
         parse();
         filterprint(qw(SUBNAME COPIES));
         my $vp = $_{VP} =~ s/[^0-9.]//gr;

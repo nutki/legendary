@@ -267,7 +267,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
   } ],
   [ "Underground Riches", ev => {
   // You get +6 Recruit usable only to recruit Heroes in the HQ space under the Streets.
-    addRecruitSpecialEv(ev, c => c.location.above && isLocation(c.location.above, 'STREETS'), 6);
+    addRecruitSpecialEv(ev, c => c.location.below && isLocation(c.location.below, 'STREETS'), 6);
   } ],
 ], {
   varDefense: c => c.printedDefense + gameState.escaped.count(c => c.villainGroup === c.leads),
