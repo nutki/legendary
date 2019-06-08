@@ -273,3 +273,54 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
   varDefense: c => c.printedDefense + gameState.escaped.count(c => c.villainGroup === c.leads),
 }),
 ]);
+addTemplates("MASTERMINDS", "Paint the Town Red", [
+makeMastermindCard("Carnage", 9, 6, "Maximum Carnage", ev => {
+// Feast on each player. Whenever this Master Strike feasts on a player's 0-cost Hero, that player gains a Wound.
+  eachPlayer(p => feastEv(ev, c => isHero(c) && !c.cost && gainWoundEv(ev, p), p));
+}, [
+  [ "Drooling Jaws", ev => {
+  // Each player reveals the top card of their deck. Then Carnage feasts on the player of your choice.
+  } ],
+// {FEAST}
+// If Carnage feasts on a 0-cost Hero this way, repeat this process.
+  [ "Endless Hunger", ev => {
+    function f() { feastEv(ev, c => isHero(c) && !c.cost && f()); };
+    f();
+  } ],
+// {FEAST}
+// You get + Recruit equal to the Cost of the card Carnage feasts on.
+  [ "Feed Me", ev => {
+    feastEv(ev, c => addRecruitEvent(ev, c.cost))
+  } ],
+// {FEAST}
+// If Carnage feasts on a 0-cost Hero this way, each other player KOs a Bystander from their Victory Pile.
+  [ "Om Nom Nom", ev => {
+    feastEv(ev, c => isHero(c) && !c.cost && eachOtherPlayerVM(p => selectCardAndKOEv(ev, p.victory.limit(isBystander), p)))
+  } ],
+]),
+makeMastermindCard("Mysterio", 8, 6, "Sinister Six", ev => {
+// Shuffle this Master Strike into Mysterio's face down Mastermind Tactics. That card becomes a Mastermind Tactic worth 6 VP.
+  addStatSet('vp', c => c === ev.source, () => 6);
+  addStatSet('isTactic', c => c === ev.source, () => true);
+  shuffleIntoEv(ev, ev.source, ev.source.attachedDeck("TACTICS"));
+}, [
+  [ "Blurring Images", ev => {
+  // You get +1 Recruit for each Mastermind Tactic Mysterio has left after this one.
+    addRecruitEvent(ev, ev.source.mastermind.attachedDeck("TACTICS").size);
+  } ],
+  [ "Captive Audience", ev => {
+  // Rescue a Bystander for each Mastermind Tactic Mysterio has left after this one.
+    rescueEv(ev, ev.source.mastermind.attachedDeck("TACTICS").size);
+  } ],
+  [ "Master of Illusions", ev => {
+  // If this is not the final Tactic, shuffle a Master Strike Tactic from each other player's Victory Pile back into Mysterio's Mastermind Tactics.
+    finalTactic(ev.source) || eachOtherPlayerVM(p => selectCardEv(ev, "Choose Master Strike to shuffle back", p.victory.limit(c => isTactic(c) && isStrike(c)), c => {
+      shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));  
+    }, p));
+  } ],
+  [ "Mists of Deception", ev => {
+  // If this is not the final Tactic, reveal the top five cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest on the bottom of that deck in random order.
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 5, revealed => revealed.limit(isStrike).each(c => playStrikeEv(ev, c)), true, true);
+  } ],
+]),
+]);

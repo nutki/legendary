@@ -495,11 +495,12 @@ addVillainTemplates("Fantastic Four", [
   })],
 ]},
 ]);
-function feastEv(ev: Ev, effect?: (c: Card) => void) {
-  lookAtDeckEv(ev, 1, () => playerState.revealed.each(c => {
+function feastEv(ev: Ev, effect?: (c: Card) => void, who?: Player) {
+  who = who || playerState;
+  lookAtDeckEv(ev, 1, () => who.revealed.each(c => {
     KOEv(ev, c);
     effect && cont(ev, () => effect(c));
-  }));
+  }), who);
 }
 addVillainTemplates("Paint the Town Red", [
 { name: "Maximum Carnage", cards: [

@@ -982,7 +982,7 @@ function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardTy
 function isNonGrayHero(c: Card) { return isHero(c) && !isColor(Color.GRAY)(c); }
 function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN"); }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
-function isTactic(c: Card): boolean { return c.cardType === "TACTICS"; }
+function isTactic(c: Card): boolean { return getModifiedStat(c, 'isTactic', c.cardType === "TACTICS"); }
 function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }
 function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
 function isTwist(c: Card): boolean { return c.cardType === "SCHEME TWIST"; }
@@ -1113,6 +1113,7 @@ interface ModifiableStats {
   vp?: number
   isHero?: boolean
   isVillain?: boolean
+  isTactic?: boolean
   villainGroup?: string
   fight?: Handler | Handler[]
   ambush?: Handler | Handler[]
