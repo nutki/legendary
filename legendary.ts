@@ -122,6 +122,7 @@ interface HeroCardAbillities {
   teleport?: boolean
   soaring?: boolean
   wallcrawl?: boolean
+  cardActions?: ((c: Card, ev: Ev) => Ev)[]
 }
 class Card {
   constructor (t: string) {

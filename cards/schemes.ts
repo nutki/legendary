@@ -79,7 +79,6 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   addStatSet('villainGroup', isSkrull, () => "Skrulls");
   addStatSet('fight', isSkrull, () => (ev: Ev) => gainEv(ev, ev.source));
   repeat(12, () => moveCard(gameState.herodeck.top, gameState.villaindeck));
-  // TODO require Skrulls
   gameState.villaindeck.shuffle();
   gameState.schemeProgress = 6;
 }),

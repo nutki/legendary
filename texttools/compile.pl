@@ -36,10 +36,11 @@ sub autopower {
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
     /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev, $num{$1})";
     /^[Yy]ou get \+(\d+) (Attack|Recruit)\.?$/ and $effect = "add$2Event(ev, $1)";
-    /^Rescue a Bystander\.?$/ and $effect = "rescueEv(ev)";
+    /^(Rescue|Kidnap) a Bystander\.?$/ and $effect = "rescueEv(ev)";
     /^{VERSATILE (\d+)}$/ and $effect = "versatileEv(ev, $1)";
     s/^{WALLCRAWL}$// and $ability = 'wallcrawl: true';
     s/^{TELEPORT}$// and $ability = 'teleport: true';
+    s/^{DODGE}$// and $ability = 'cardActions: [ dodge ]';
 
     s/'/\\'/g;
     $effect ||= "/*TODO*/'$_'" if $_;
@@ -68,7 +69,8 @@ sub autopower {
     my $f = join'|',@_;
     print s!^// ($f):.*\n!!mgr;
   }
-  print "addTemplates(\"$type\", \"$exp\", [\n";
+  %atm = qw(HEROES Hero VILLAINS Villain BYSTANDERS Bystander);
+  print "addTemplates(\"$type\", \"$exp\", [\n" =~ s/Templates\("(HEROES|VILLAINS|BYSTANDERS)", /$atm{$1}Templates(/r;
   for (@items) {
     if ($type eq "HENCHMEN") {
       parse();
@@ -93,7 +95,7 @@ sub autopower {
       my $heroname = $_{CARDNAME};
       my $team = $_{TEAM};
       my $hasgun = $_{GUN};
-      my $pteam = $team eq "(Unaffiliated)" ? 'u' : "\"$team\"";
+      my $pteam = $team eq "(Unaffiliated)" ? 'undefined' : "\"$team\"";
       print "{\n";
       print "  name: \"$heroname\",\n";
       print "  team: \"$team\",\n";
