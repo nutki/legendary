@@ -78,21 +78,21 @@ addHeroTemplates("Legendary", [
 // A Villain of your choice captures a Bystander.
 // COST: 3
 // FLAVOR: "Hey, Abomination makes a pretty good babysitter."
-  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, undefined, "GFD", ev => selectCardEv(ev, "Choose a Villain", villains(), sel => captureEv(ev, sel))),
+  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, "Choose a Villain", villains(), sel => captureEv(ev, sel))),
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
-  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, undefined, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
+  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
-  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, undefined, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseMayEv(
+  uc: makeHeroCard("Deadpool", "Hey, Can I Get a Do-Over?", 3, u, 2, Color.INSTINCT, u, "GD", ev => { if (turnState.cardsPlayed.length === 0) chooseMayEv(
     ev, "Discard hand", () => { discardHandEv(ev); drawEv(ev, 4); }
   ); }),
 // ATTACK: 6
 // You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.
 // COST: 7
-  ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, undefined, "G", [
+  ra: makeHeroCard("Deadpool", "Random Acts of Unkindness", 7, u, 6, Color.INSTINCT, u, "G", [
   ev => chooseMayEv(ev, "Gain a Wound", () => gainWoundToHandEv(ev)),
   ev => {
     let selected: {player: Player, card: Card}[] = [];
@@ -965,22 +965,22 @@ addHeroTemplates("Fantastic Four", [
 // COST: 4
 // FLAVOR: "Master? Galactus had been my master! You - are but - a flea!"
 // GUN: 1
-  c1: makeHeroCard("Silver Surfer", "Epic Destiny", 4, 2, u, Color.STRENGTH, undefined, "GFD", ev => setFocusEv(ev, 6, ev => selectCardEv(ev, "Defeat villain", villains().limit(c => c.defense === 5 || c.defense === 6), (c) => defeatEv(ev, c)))),
+  c1: makeHeroCard("Silver Surfer", "Epic Destiny", 4, 2, u, Color.STRENGTH, u, "GFD", ev => setFocusEv(ev, 6, ev => selectCardEv(ev, "Defeat villain", villains().limit(c => c.defense === 5 || c.defense === 6), (c) => defeatEv(ev, c)))),
 // RECRUIT: 2
 // {FOCUS 2} Draw a card.
 // COST: 3
 // FLAVOR: "Engage!"
-  c2: makeHeroCard("Silver Surfer", "Warp Speed", 3, 2, u, Color.COVERT, undefined, "FD", ev => setFocusEv(ev, 2, ev => drawEv(ev, 1))),
+  c2: makeHeroCard("Silver Surfer", "Warp Speed", 3, 2, u, Color.COVERT, u, "FD", ev => setFocusEv(ev, 2, ev => drawEv(ev, 1))),
 // RECRUIT: 3
 // ATTACK: 0+
 // {FOCUS 9} You get +9 Attack.
 // COST: 6
 // FLAVOR: As a Herald, Surfer selected many planets for the Devourer of Worlds, until Earth taught him compassion.
-  uc: makeHeroCard("Silver Surfer", "The Power Cosmic", 6, 3, 0, Color.RANGED, undefined, "F", ev => setFocusEv(ev, 9, ev => addAttackEvent(ev, 9))),
+  uc: makeHeroCard("Silver Surfer", "The Power Cosmic", 6, 3, 0, Color.RANGED, u, "F", ev => setFocusEv(ev, 9, ev => addAttackEvent(ev, 9))),
 // Double the Recruit you have.
 // COST: 7
 // FLAVOR: Finding extra power is not a problem for the Silver Surfer. His power is immeasurable.
-  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, undefined, "F", ev => doubleRecruitEv(ev)),
+  ra: makeHeroCard("Silver Surfer", "Energy Surge", 7, u, u, Color.RANGED, u, "F", ev => doubleRecruitEv(ev)),
 },
 {
   name: "Thing",
@@ -1540,21 +1540,21 @@ addHeroTemplates("Villains", [
 // {DODGE}
 // Reveal a HYDRA card from your hand. That card is [Tech] instead of its normal color this turn.
 // COST: 3
-  c1: makeHeroCard("Ultron", "Army of Ultrons", 3, 2, u, Color.TECH, undefined, "D", ev => /*TODO*/'Reveal a HYDRA card from your hand. That card is [Tech] instead of its normal color this turn.', { cardActions: [ dodge ] }),
+  c1: makeHeroCard("Ultron", "Army of Ultrons", 3, 2, u, Color.TECH, u, "D", ev => /*TODO*/'Reveal a HYDRA card from your hand. That card is [Tech] instead of its normal color this turn.', { cardActions: [ dodge ] }),
 // ATTACK: 0+
 // {DODGE}
 // {POWER Tech} You get +1 Attack for each other [Tech] Ally you played this turn.
 // COST: 2
-  c2: makeHeroCard("Ultron", "Encephalo-Ray", 2, u, 0, Color.TECH, undefined, "D", ev => superPower(Color.TECH) && /*TODO*/'You get +1 Attack for each other [Tech] Ally you played this turn.', { cardActions: [ dodge ] }),
+  c2: makeHeroCard("Ultron", "Encephalo-Ray", 2, u, 0, Color.TECH, u, "D", ev => superPower(Color.TECH) && /*TODO*/'You get +1 Attack for each other [Tech] Ally you played this turn.', { cardActions: [ dodge ] }),
 // ATTACK: 3
 // {POWER Tech} Kidnap a Bystander for each other [Tech] Ally you played this turn.
 // COST: 6
-  uc: makeHeroCard("Ultron", "Genetic Experimentation", 6, u, 3, Color.TECH, undefined, "", ev => superPower(Color.TECH) && /*TODO*/'Kidnap a Bystander for each other [Tech] Ally you played this turn.'),
+  uc: makeHeroCard("Ultron", "Genetic Experimentation", 6, u, 3, Color.TECH, u, "", ev => superPower(Color.TECH) && /*TODO*/'Kidnap a Bystander for each other [Tech] Ally you played this turn.'),
 // ATTACK: 5+
 // Each other player reveals a [Tech] Ally or discards their hand. Each player who discarded their hand this way draws 5 cards.
 // {POWER Tech} You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.
 // COST: 8
-  ra: makeHeroCard("Ultron", "Molecular Rearrangement", 8, u, 5, Color.TECH, undefined, "", [ ev => /*TODO*/'Each other player reveals a [Tech] Ally or discards their hand. Each player who discarded their hand this way draws 5 cards.', ev => superPower(Color.TECH) && /*TODO*/'You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.' ]),
+  ra: makeHeroCard("Ultron", "Molecular Rearrangement", 8, u, 5, Color.TECH, u, "", [ ev => /*TODO*/'Each other player reveals a [Tech] Ally or discards their hand. Each player who discarded their hand this way draws 5 cards.', ev => superPower(Color.TECH) && /*TODO*/'You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.' ]),
 },
 {
   name: "Venom",
