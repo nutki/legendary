@@ -560,6 +560,7 @@ interface Turn extends Ev {
   attackSpecial: { amount: number, cond: (c: Card) => boolean }[]
   recruitSpecial: { amount: number, cond: (c: Card) => boolean }[]
   cardsDrawn: number
+  cardsDiscarded: number
   bystandersRescued: number
   endDrawMod: number
   endDrawAmount: number
@@ -1196,6 +1197,7 @@ function popEvent(): Ev {
     totalRecruit: 0,
     cardsPlayed: [],
     cardsDrawn: 0,
+    cardsDiscarded: 0,
     bystandersRescued: 0,
     modifiers: {},
     triggers: [],
@@ -1387,7 +1389,7 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, forFree: true });
 }
-function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => moveCardEv(ev, ev.what, owner(ev.what).discard) }); }
+function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => (turnState.cardsDiscarded++, moveCardEv(ev, ev.what, owner(ev.what).discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let card: Card;
@@ -1497,6 +1499,7 @@ function revealAndEv(ev: Ev, cond: Filter<Card>, effect: () => void, who?: Playe
 }
 function chooseOneEv(ev: Ev, desc: string, ...a: [string, (ev: Ev) => void][]): void {
   let options = a.map(o => new Ev(ev, "EFFECT", { func: o[1], desc: o[0] }));
+  if (!options.length) return;
   pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
 }
 function chooseMayEv(ev: Ev, desc: string, effect: (ev: Ev) => void, agent?: Player) {
