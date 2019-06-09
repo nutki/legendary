@@ -1184,3 +1184,344 @@ addHeroTemplates("Paint the Town Red", [
   ra: makeHeroCard("Symbiote Spider-Man", "Thwip!", 2, u, 4, Color.RANGED, "Spider Friends", "D", [], { playCost: 2, playCostType: 'TOPDECK' }),
 },
 ]);
+// cardAction
+function dodge(c: Card, ev: Ev) {
+  return new Ev(ev, 'DODGE', ev => { discardEv(ev, c); drawEv(ev); });
+}
+addHeroTemplates("Villains", [
+{
+  name: "Bullseye",
+  team: "Crime Syndicate",
+// ATTACK: 2
+// {POWER Instinct} Draw a card.
+// COST: 3
+// FLAVOR: "And for my next trick..."
+  c1: makeHeroCard("Bullseye", "Everything's A Weapon", 3, u, 2, Color.RANGED, "Crime Syndicate", "FD", ev => superPower(Color.INSTINCT) && drawEv(ev, 1)),
+// RECRUIT: 0+
+// {DODGE}
+// Choose an Adversary Group. You get +1 Recruit for each Adversary in your Victory Pile from that Adversary Group.
+// COST: 2
+  c2: makeHeroCard("Bullseye", "Fulfill The Contract", 2, 0, u, Color.INSTINCT, "Crime Syndicate", "D", ev => /*TODO*/'Choose an Adversary Group. You get +1 Recruit for each Adversary in your Victory Pile from that Adversary Group.', { cardActions: [ dodge ] }),
+// ATTACK: 3
+// Choose an Adversary. It gets -1 Attack for each Adversary in your Victory Pile from that Adversary Group.
+// COST: 6
+  uc: makeHeroCard("Bullseye", "Specialist Assassin", 6, u, 3, Color.COVERT, "Crime Syndicate", "", ev => /*TODO*/'Choose an Adversary. It gets -1 Attack for each Adversary in your Victory Pile from that Adversary Group.'),
+// ATTACK: 5+
+// You get +5 Attack for each Commander Tactic in your Victory Pile.
+// COST: 7
+// GUN: 1
+  ra: makeHeroCard("Bullseye", "Perfect Aim", 7, u, 5, Color.RANGED, "Crime Syndicate", "G", ev => /*TODO*/'You get +5 Attack for each Commander Tactic in your Victory Pile.'),
+},
+{
+  name: "Dr. Octopus",
+  team: "Sinister Six",
+// RECRUIT: 2
+// {POWER Tech} When you draw a new hand of cards at the end of this turn, draw an extra card.
+// COST: 3
+  c1: makeHeroCard("Dr. Octopus", "Brilliant Research", 3, 2, u, Color.TECH, "Sinister Six", "D", ev => superPower(Color.TECH) && /*TODO*/'When you draw a new hand of cards at the end of this turn, draw an extra card.'),
+// ATTACK: 2
+// Draw a card.
+// COST: 5
+// FLAVOR: "It worked! Hahahahaha!"
+  c2: makeHeroCard("Dr. Octopus", "Crazed Experiments", 5, u, 2, Color.TECH, "Sinister Six", "FD", ev => drawEv(ev, 1)),
+// ATTACK: 4+
+// If this is the eighth card you played this turn, you get +2 Attack.
+// COST: 6
+// FLAVOR: If at first you don't succeed...
+  uc: makeHeroCard("Dr. Octopus", "Eighth Time's a Charm", 6, u, 4, Color.STRENGTH, "Sinister Six", "FD", ev => /*TODO*/'If this is the eighth card you played this turn, you get +2 Attack.'),
+// ATTACK: 0+
+// Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don't shuffle). Then you get +1 Attack for each card you discarded this turn.
+// COST: 8
+  ra: makeHeroCard("Dr. Octopus", "Octo-Pulverize", 8, u, 0, Color.TECH, "Sinister Six", "", ev => /*TODO*/'Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don\'t shuffle). Then you get +1 Attack for each card you discarded this turn.'),
+},
+{
+  name: "Electro",
+  team: "Sinister Six",
+// {DODGE}
+// Reveal the top card of your deck. You may KO it.
+// COST: 2
+// FLAVOR: "I'm not really all that shocked to see you go"
+  c1: makeHeroCard("Electro", "Electroshock Therapy", 2, u, u, Color.RANGED, "Sinister Six", "FD", ev => /*TODO*/'Reveal the top card of your deck. You may KO it.', { cardActions: [ dodge ] }),
+// ATTACK: 0+
+// {DODGE}
+// You get +3 Attack usable only against Adversaries in the Bank.
+// {POWER Ranged} Instead you may get +3 Attack usable only against the Commander.
+// COST: 3
+  c2: makeHeroCard("Electro", "Shocking Robbery", 3, u, 0, Color.RANGED, "Sinister Six", "", [ ev => /*TODO*/'You get +3 Attack usable only against Adversaries in the Bank.', ev => superPower(Color.RANGED) && /*TODO*/'Instead you may get +3 Attack usable only against the Commander.' ], { cardActions: [ dodge ] }),
+// ATTACK: 2+
+// You get +1 Attack for each card you discarded this turn.
+// COST: 5
+// FLAVOR: Unlimited Power!
+  uc: makeHeroCard("Electro", "Supercharge", 5, u, 2, Color.INSTINCT, "Sinister Six", "FD", ev => /*TODO*/'You get +1 Attack for each card you discarded this turn.'),
+// ATTACK: 4
+// All Adversaries and the Commander get -1 Attack this turn.
+// {TEAMPOWER Sinister Six, Sinister Six} Same Effect
+// COST: 7
+  ra: makeHeroCard("Electro", "Anti-Matter", 7, u, 4, Color.RANGED, "Sinister Six", "", [ ev => /*TODO*/'All Adversaries and the Commander get -1 Attack this turn.', ev => superPower("Sinister Six", "Sinister Six") && /*TODO*/'Same Effect' ]),
+},
+{
+  name: "Enchantress",
+  team: "Foes of Asgard",
+// ATTACK: 2
+// {POWER Ranged} Whenever you defeat an Adversary this turn, you gain a New Recruit.
+// COST: 3
+  c1: makeHeroCard("Enchantress", "Enchant the Senses", 3, u, 2, Color.RANGED, "Foes of Asgard", "D", ev => superPower(Color.RANGED) && /*TODO*/'Whenever you defeat an Adversary this turn, you gain a New Recruit.'),
+// RECRUIT: 1+
+// You may KO a card from your hand or discard pile. You get + Recruit equal to that card's Cost.
+// COST: 4
+  c2: makeHeroCard("Enchantress", "Soul Sacrifice", 4, 1, u, Color.COVERT, "Foes of Asgard", "", ev => KOHandOrDiscardEv(ev, undefined)),
+// RECRUIT: 3
+// Choose an Adversary. You can spend any combination of Recruit and Attack to fight that Adversary this turn.
+// {POWER Covert Covert} You can also spend any combination of Recruit and Attack to fight the Commander this turn.
+// COST: 6
+  uc: makeHeroCard("Enchantress", "Irresistible Bribe", 6, 3, u, Color.COVERT, "Foes of Asgard", "", [ ev => /*TODO*/'Choose an Adversary. You can spend any combination of Recruit and Attack to fight that Adversary this turn.', ev => superPower(Color.COVERT, Color.COVERT) && /*TODO*/'You can also spend any combination of Recruit and Attack to fight the Commander this turn.' ]),
+// Draw three cards.
+// {TEAMPOWER Foes of Asgard} Then put Unending Anguish on the bottom of your deck.
+// COST: 7
+  ra: makeHeroCard("Enchantress", "Unending Anguish", 7, u, u, Color.COVERT, "Foes of Asgard", "", [ ev => drawEv(ev, 3), ev => superPower("Foes of Asgard") && /*TODO*/'Then put Unending Anguish on the bottom of your deck.' ]),
+},
+{
+  name: "Green Goblin",
+  team: "Sinister Six",
+// ATTACK: 2
+// {DODGE}
+// When you play or {DODGE} with this card, another HYDRA Ally in your hand gains {DODGE} this turn.
+// COST: 4
+  c1: makeHeroCard("Green Goblin", "Goblin Glider", 4, u, 2, Color.TECH, "Sinister Six", "D", ev => /*TODO*/'When you play or {DODGE} with this card, another HYDRA Ally in your hand gains {DODGE} this turn.', { cardActions: [ dodge ] }),
+// ATTACK: 1+
+// {DODGE}
+// If you discarded any cards this turn, you get +2 Attack.
+// COST: 3
+  c2: makeHeroCard("Green Goblin", "Pumpkin Bombs", 3, u, 1, Color.TECH, "Sinister Six", "D", ev => /*TODO*/'If you discarded any cards this turn, you get +2 Attack.', { cardActions: [ dodge ] }),
+// RECRUIT: 3
+// {DODGE}
+// If you discarded any cards this turn, kidnap a Bystander.
+// COST: 5
+  uc: makeHeroCard("Green Goblin", "Unstable Kidnapper", 5, 3, u, Color.INSTINCT, "Sinister Six", "", ev => /*TODO*/'If you discarded any cards this turn, kidnap a Bystander.', { cardActions: [ dodge ] }),
+// ATTACK: 4
+// Return from your discard pile to your hand all the cards you discarded this turn.
+// COST: 7
+  ra: makeHeroCard("Green Goblin", "Experimental Goblin Serum", 7, u, 4, Color.TECH, "Sinister Six", "", ev => /*TODO*/'Return from your discard pile to your hand all the cards you discarded this turn.'),
+},
+{
+  name: "Juggernaut",
+  team: "Brotherhood",
+// RECRUIT: 2+
+// {POWER Strength} Each other player reveals the top card of their deck, and if it costs 1, 2, or 3, discards it. You get +1 Recruit for each card discarded this way.
+// COST: 4
+  c1: makeHeroCard("Juggernaut", "Crimson Gem of Cyttorak", 4, 2, u, Color.STRENGTH, "Brotherhood", "D", ev => superPower(Color.STRENGTH) && /*TODO*/'Each other player reveals the top card of their deck, and if it costs 1, 2, or 3, discards it. You get +1 Recruit for each card discarded this way.'),
+// ATTACK: 2+
+// You get +1 Attack for each other card you played this turn that costs 4 or more.
+// COST: 4
+  c2: makeHeroCard("Juggernaut", "Size Matters", 4, u, 2, Color.STRENGTH, "Brotherhood", "D", ev => /*TODO*/'You get +1 Attack for each other card you played this turn that costs 4 or more.'),
+// ATTACK: 4
+// To play this card, you must discard a card from your hand.
+// COST: 5
+// FLAVOR: Move it or lose it.
+  uc: makeHeroCard("Juggernaut", "Runaway Train", 5, u, 4, Color.STRENGTH, "Brotherhood", "F", ev => /*TODO*/'To play this card, you must discard a card from your hand.'),
+// ATTACK: 5+
+// Choose one: Each player KOs two cards from their hand, or each player KOs two cards from their discard pile. Then you get +1 Attack for each non-grey Ally KO'd this turn.
+// COST: 8
+  ra: makeHeroCard("Juggernaut", "Unstoppable Force", 8, u, 5, Color.STRENGTH, "Brotherhood", "", ev => /*TODO*/'Choose one: Each player KOs two cards from their hand, or each player KOs two cards from their discard pile. Then you get +1 Attack for each non-grey Ally KO\'d this turn.'),
+},
+{
+  name: "Kingpin",
+  team: "Crime Syndicate",
+// Whenever a card effect causes you to gain a New Recruit this turn, put that New Recruit into your hand. Gain a New Recruit.
+// COST: 3
+  c1: makeHeroCard("Kingpin", "Pull the Strings", 3, u, u, Color.COVERT, "Crime Syndicate", "", ev => /*TODO*/'Whenever a card effect causes you to gain a New Recruit this turn, put that New Recruit into your hand. Gain a New Recruit.'),
+// RECRUIT: 2
+// {POWER Strength} Gain a New Recruit.
+// COST: 3
+// FLAVOR: "Anyone else want to punch Daredevil in the face?"
+  c2: makeHeroCard("Kingpin", "Recruitment Day", 3, 2, u, Color.STRENGTH, "Crime Syndicate", "FD", ev => superPower(Color.STRENGTH) && /*TODO*/'Gain a New Recruit.'),
+// ATTACK: 3+
+// You get +1 Attack for each New Recruit you played this turn.
+// COST: 5
+  uc: makeHeroCard("Kingpin", "Import Illegal Weapons", 5, u, 3, Color.TECH, "Crime Syndicate", "", ev => /*TODO*/'You get +1 Attack for each New Recruit you played this turn.'),
+// {TEAMPOWER Crime Syndicate, Crime Syndicate} If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
+// COST: 8
+  ra: makeHeroCard("Kingpin", "Endless Underlings", 8, u, u, Color.STRENGTH, "Crime Syndicate", "", ev => superPower("Crime Syndicate", "Crime Syndicate") && /*TODO*/'If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.'),
+},
+{
+  name: "Kraven",
+  team: "Sinister Six",
+// RECRUIT: 1+
+// {DODGE}
+// {TEAMPOWER Sinister Six} You get +2 Recruit.
+// COST: 2
+// FLAVOR: Sometimes it's not best to go it alone.
+  c1: makeHeroCard("Kraven", "Ceaseless Tracker", 2, 1, u, Color.INSTINCT, "Sinister Six", "FD", ev => superPower("Sinister Six") && addRecruitEvent(ev, 2), { cardActions: [ dodge ] }),
+// ATTACK: 2
+// Choose an Adversary. If there are no empty city spaces adjacent to that Adversary, it gets -1 Attack this turn.
+// COST: 4
+// GUN: 1
+  c2: makeHeroCard("Kraven", "Corner the Prey", 4, u, 2, Color.COVERT, "Sinister Six", "GD", ev => /*TODO*/'Choose an Adversary. If there are no empty city spaces adjacent to that Adversary, it gets -1 Attack this turn.'),
+// ATTACK: 2+
+// Choose an Adversary and a direction. Move that Adversary as many adjacent, empty spaces as you can in that direction. You get +1 Attack for each space it moved.
+// COST: 5
+  uc: makeHeroCard("Kraven", "Hunt Down", 5, u, 2, Color.STRENGTH, "Sinister Six", "D", ev => /*TODO*/'Choose an Adversary and a direction. Move that Adversary as many adjacent, empty spaces as you can in that direction. You get +1 Attack for each space it moved.'),
+// ATTACK: 0+
+// You get + Attack equal to the Cost of the highest-cost Ally in the Lair.
+// COST: 8
+// FLAVOR: No one's gonna ever keep him down.
+  ra: makeHeroCard("Kraven", "He's the Best Around", 8, u, 0, Color.INSTINCT, "Sinister Six", "F", ev => /*TODO*/'You get + Attack equal to the Cost of the highest-cost Ally in the Lair.'),
+},
+{
+  name: "Loki",
+  team: "Foes of Asgard",
+// ATTACK: 2
+// {POWER Covert} You may KO a card from your hand or discard pile. If you do, gain a New Recruit.
+// COST: 3
+  c1: makeHeroCard("Loki", "All Humans Are Expendable", 3, u, 2, Color.COVERT, "Foes of Asgard", "D", ev => superPower(Color.COVERT) && KOHandOrDiscardEv(ev, undefined, ev => /*TODO*/'Gain a New Recruit.')),
+// RECRUIT: 2+
+// {POWER Ranged} Each other player reveals a [Ranged] Ally or gains a Bindings. If any number of players gained a Bindings this way, you get +1 Recruit.
+// COST: 4
+  c2: makeHeroCard("Loki", "Illusionary Bindings ", 4, 2, u, Color.RANGED, "Foes of Asgard", "D", ev => superPower(Color.RANGED) && /*TODO*/'Each other player reveals a [Ranged] Ally or gains a Bindings. If any number of players gained a Bindings this way, you get +1 Recruit.'),
+// ATTACK: 3
+// Look at the top two cards of another player's deck. Without revealing those cards, call one of them "Good" and one "Bad." That player puts one of those cards into their discard pile and the other into your discard pile.
+// COST: 5
+  uc: makeHeroCard("Loki", "Father of Lies", 5, u, 3, Color.COVERT, "Foes of Asgard", "", ev => /*TODO*/'Look at the top two cards of another player\'s deck. Without revealing those cards, call one of them "Good" and one "Bad." That player puts one of those cards into their discard pile and the other into your discard pile.'),
+// ATTACK: 6
+// Each player reveals a Foes of Asgard Ally or reveals their hand. For each player that revealed their hand, you may swap a card from that hand with a card in the Lair of the same cost.
+// COST: 8
+  ra: makeHeroCard("Loki", "God of Mischief", 8, u, 6, Color.COVERT, "Foes of Asgard", "", ev => /*TODO*/'Each player reveals a Foes of Asgard Ally or reveals their hand. For each player that revealed their hand, you may swap a card from that hand with a card in the Lair of the same cost.'),
+},
+{
+  name: "Magneto",
+  team: "Brotherhood",
+// ATTACK: 1+
+// {DODGE}
+// You may choose a Bindings from your hand or discard pile and have another player gain that Bindings. If you do, you get +2 Attack.
+// COST: 3
+  c1: makeHeroCard("Magneto", "Magnetic Levitation", 3, u, 1, Color.RANGED, "Brotherhood", "D", ev => /*TODO*/'You may choose a Bindings from your hand or discard pile and have another player gain that Bindings. If you do, you get +2 Attack.', { cardActions: [ dodge ] }),
+// RECRUIT: 2+
+// {DODGE}
+// {POWER Strength} Choose a player. That player reveals a Brotherhood Ally or gains a Bindings. If a Bindings is gained this way, you get +1 Recruit.
+// COST: 4
+  c2: makeHeroCard("Magneto", "Mutants Will Rule", 4, 2, u, Color.STRENGTH, "Brotherhood", "D", ev => superPower(Color.STRENGTH) && /*TODO*/'Choose a player. That player reveals a Brotherhood Ally or gains a Bindings. If a Bindings is gained this way, you get +1 Recruit.', { cardActions: [ dodge ] }),
+// ATTACK: 3
+// If you discarded any cards this turn, draw a card.
+// COST: 5
+// FLAVOR: One person's trash is another person's high velocity projectile weapon.
+  uc: makeHeroCard("Magneto", "Weapons From Scrap Metal", 5, u, 3, Color.RANGED, "Brotherhood", "F", ev => /*TODO*/'If you discarded any cards this turn, draw a card.'),
+// ATTACK: 4+
+// {TEAMPOWER Brotherhood} For each other Brotherhood Ally you played this turn, choose a player to gain a Bindings. Then you get +2 Attack for each Bindings gained this turn.
+// COST: 7
+  ra: makeHeroCard("Magneto", "Master of Magnetism", 7, u, 4, Color.RANGED, "Brotherhood", "D", ev => superPower("Brotherhood") && /*TODO*/'For each other Brotherhood Ally you played this turn, choose a player to gain a Bindings. Then you get +2 Attack for each Bindings gained this turn.'),
+},
+{
+  name: "Mysterio",
+  team: "Sinister Six",
+// ATTACK: 1+
+// {DODGE}
+// {POWER Covert} You get +2 Attack.
+// COST: 2
+// FLAVOR: Mysterio is at his best when the mist rolls in.
+  c1: makeHeroCard("Mysterio", "Psychedelic Mist", 2, u, 1, Color.RANGED, "Sinister Six", "FD", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2), { cardActions: [ dodge ] }),
+// RECRUIT: 0+
+// ATTACK: 0+
+// Put a card from the lair on the bottom of the Ally Deck. If that card had a Recruit icon, you get +2 Recruit. If that card had an Attack icon, you get +2 Attack.
+// COST: 3
+  c2: makeHeroCard("Mysterio", "Shifting Decoy", 3, 0, 0, Color.COVERT, "Sinister Six", "D", ev => /*TODO*/'Put a card from the lair on the bottom of the Ally Deck. If that card had a Recruit icon, you get +2 Recruit. If that card had an Attack icon, you get +2 Attack.'),
+// ATTACK: 0+
+// You get +1 Attack for each color of Ally in the Lair.
+// COST: 5
+  uc: makeHeroCard("Mysterio", "Holographic Illusion", 5, u, 0, Color.TECH, "Sinister Six", "", ev => /*TODO*/'You get +1 Attack for each color of Ally in the Lair.'),
+// RECRUIT: 0+
+// ATTACK: 0+
+// Put a card from the Lair on the bottom of the Ally Deck. You get + Recruit equal to that card's printed Recruit and + Attack equal to its printed Attack.
+// {TEAMPOWER Sinister Six} Then, for each other Sinister Six Ally you played this turn, do the same effect. (Use a different Ally from the Lair each time.)
+// COST: 7
+  ra: makeHeroCard("Mysterio", "False Reflection", 7, 0, 0, Color.INSTINCT, "Sinister Six", "", [ ev => /*TODO*/'Put a card from the Lair on the bottom of the Ally Deck. You get + Recruit equal to that card\'s printed Recruit and + Attack equal to its printed Attack.', ev => superPower("Sinister Six") && /*TODO*/'Then, for each other Sinister Six Ally you played this turn, do the same effect. (Use a different Ally from the Lair each time.)' ]),
+},
+{
+  name: "Mystique",
+  team: "Brotherhood",
+// ATTACK: 2+
+// {POWER Instinct Tech} You get +3 Attack.
+// COST: 4
+// FLAVOR: Mystique is definitely a dual threat.
+// GUN: 1
+  c1: makeHeroCard("Mystique", "Hidden Weapons", 4, u, 2, Color.TECH, "Brotherhood", "GFD", ev => superPower(Color.INSTINCT, Color.TECH) && addAttackEvent(ev, 3)),
+// RECRUIT: 2
+// {DODGE}
+// As you play this card, you may choose a class. This card is that class instead of [Covert] this turn.
+// COST: 3
+  c2: makeHeroCard("Mystique", "Show Your True Colors", 3, 2, u, Color.COVERT, "Brotherhood", "D", ev => /*TODO*/'As you play this card, you may choose a class. This card is that class instead of [Covert] this turn.', { cardActions: [ dodge ] }),
+// Reveal the top card of the Ally Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Ally Deck.
+// COST: 4
+  uc: makeHeroCard("Mystique", "Turn the Tide", 4, u, u, Color.INSTINCT, "Brotherhood", "", ev => /*TODO*/'Reveal the top card of the Ally Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Ally Deck.'),
+// ATTACK: 0+
+// Reveal the top five cards of the Ally Deck. You get + Attack equal to their total printed Attack. Then put them back in any order.
+// COST: 7
+  ra: makeHeroCard("Mystique", "Spy Games", 7, u, 0, Color.COVERT, "Brotherhood", "", ev => /*TODO*/'Reveal the top five cards of the Ally Deck. You get + Attack equal to their total printed Attack. Then put them back in any order.'),
+},
+{
+  name: "Sabretooth",
+  team: "Brotherhood",
+// ATTACK: 2+
+// Reveal the top card of your deck, then put it back on top of your deck or into your discard pile. If that card was an [Instinct] Ally, you get +2 Attack.
+// COST: 3
+  c1: makeHeroCard("Sabretooth", "Leap of the Tiger", 3, u, 2, Color.INSTINCT, "Brotherhood", "D", ev => /*TODO*/'Reveal the top card of your deck, then put it back on top of your deck or into your discard pile. If that card was an [Instinct] Ally, you get +2 Attack.'),
+// RECRUIT: 1
+// Reveal the top card of your deck. If it's a Brotherhood Ally, you may draw it. Otherwise, you may KO it.
+// COST: 4
+  c2: makeHeroCard("Sabretooth", "Take One for the Team", 4, 1, u, Color.INSTINCT, "Brotherhood", "", ev => /*TODO*/'Reveal the top card of your deck. If it\'s a Brotherhood Ally, you may draw it. Otherwise, you may KO it.'),
+// Reveal the top three cards of your deck. Draw one of them, discard one, and put the other back on top of your deck.
+// COST: 2
+  uc: makeHeroCard("Sabretooth", "Stealthy Predator", 2, u, u, Color.COVERT, "Brotherhood", "D", ev => /*TODO*/'Reveal the top three cards of your deck. Draw one of them, discard one, and put the other back on top of your deck.'),
+// ATTACK: 4+
+// Each player reveals a [Instinct] Ally or reveals the top card of their deck. Choose any number of those revealed top cards to be KO'd.
+// {POWER Instinct} You get +1 Attack for each card KO'd this turn.
+// COST: 7
+  ra: makeHeroCard("Sabretooth", "Upper Hand", 7, u, 4, Color.STRENGTH, "Brotherhood", "", [ ev => /*TODO*/'Each player reveals a [Instinct] Ally or reveals the top card of their deck. Choose any number of those revealed top cards to be KO\'d.', ev => superPower(Color.INSTINCT) && /*TODO*/'You get +1 Attack for each card KO\'d this turn.' ]),
+},
+{
+  name: "Ultron",
+  team: "(Unaffiliated)",
+// RECRUIT: 2
+// {DODGE}
+// Reveal a HYDRA card from your hand. That card is [Tech] instead of its normal color this turn.
+// COST: 3
+  c1: makeHeroCard("Ultron", "Army of Ultrons", 3, 2, u, Color.TECH, undefined, "D", ev => /*TODO*/'Reveal a HYDRA card from your hand. That card is [Tech] instead of its normal color this turn.', { cardActions: [ dodge ] }),
+// ATTACK: 0+
+// {DODGE}
+// {POWER Tech} You get +1 Attack for each other [Tech] Ally you played this turn.
+// COST: 2
+  c2: makeHeroCard("Ultron", "Encephalo-Ray", 2, u, 0, Color.TECH, undefined, "D", ev => superPower(Color.TECH) && /*TODO*/'You get +1 Attack for each other [Tech] Ally you played this turn.', { cardActions: [ dodge ] }),
+// ATTACK: 3
+// {POWER Tech} Kidnap a Bystander for each other [Tech] Ally you played this turn.
+// COST: 6
+  uc: makeHeroCard("Ultron", "Genetic Experimentation", 6, u, 3, Color.TECH, undefined, "", ev => superPower(Color.TECH) && /*TODO*/'Kidnap a Bystander for each other [Tech] Ally you played this turn.'),
+// ATTACK: 5+
+// Each other player reveals a [Tech] Ally or discards their hand. Each player who discarded their hand this way draws 5 cards.
+// {POWER Tech} You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.
+// COST: 8
+  ra: makeHeroCard("Ultron", "Molecular Rearrangement", 8, u, 5, Color.TECH, undefined, "", [ ev => /*TODO*/'Each other player reveals a [Tech] Ally or discards their hand. Each player who discarded their hand this way draws 5 cards.', ev => superPower(Color.TECH) && /*TODO*/'You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.' ]),
+},
+{
+  name: "Venom",
+  team: "Sinister Six",
+// ATTACK: 2+
+// You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.
+// COST: 4
+// FLAVOR: Feeding Time!
+  c1: makeHeroCard("Venom", "Devour", 4, u, 2, Color.INSTINCT, "Sinister Six", "FD", ev => /*TODO*/'You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.'),
+// RECRUIT: 2
+// {POWER Strength} Kidnap a Bystander.
+// COST: 3
+// FLAVOR: "Where do you think you're going?"
+  c2: makeHeroCard("Venom", "Symbiote Takeover", 3, 2, u, Color.STRENGTH, "Sinister Six", "FD", ev => superPower(Color.STRENGTH) && rescueEv(ev)),
+// ATTACK: 4
+// Each Adversary with a 4 Attack or more guards a Bystander.
+// COST: 6
+  uc: makeHeroCard("Venom", "Horrify the Populace", 6, u, 4, Color.STRENGTH, "Sinister Six", "", ev => /*TODO*/'Each Adversary with a 4 Attack or more guards a Bystander.'),
+// RECRUIT: 0+
+// ATTACK: 5
+// Each other player reveals an [Instinct] Ally or KOs a Bystander from their Victory Pile.
+// {POWER Instinct} Kidnap all Bystanders that were KO'd this turn. Then you get +1 Recruit for each Bystander you kidnapped this turn.
+// COST: 7
+  ra: makeHeroCard("Venom", "Ravenous Greed", 7, 0, 5, Color.INSTINCT, "Sinister Six", "", [ ev => /*TODO*/'Each other player reveals an [Instinct] Ally or KOs a Bystander from their Victory Pile.', ev => superPower(Color.INSTINCT) && /*TODO*/'Kidnap all Bystanders that were KO\'d this turn. Then you get +1 Recruit for each Bystander you kidnapped this turn.' ]),
+},
+]);
