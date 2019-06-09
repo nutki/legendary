@@ -193,6 +193,8 @@ tr.cityscape td:first-child:before {
 </style>
 </head>
 <body>
+<div style="display: flex; height: 666px">
+<div>
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
 <table class="d"><tr class="cityscape">
 <td><div class="deck" data-id="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
@@ -222,6 +224,9 @@ tr.cityscape td:first-child:before {
 <img class="icon" src="icons/VP.png"><span class="number" id="vp"></span>
 <span id="message"></span>
 <span id="extraActions"></span>
+</div>
+<div id="logContainer" style="overflow: auto;"></div>
+</div>
 <table class="d"><tr>
 <td class="w" colspan="2"><div class="deck" data-id="PLAYAREA0" data-fanout="1" data-mode="IMG"></div></td>
 </tr><tr>
@@ -248,7 +253,7 @@ tr.cityscape td:first-child:before {
 <span class="deck" data-id="SCHEME" data-mode="count"></span>
 <hr>
 <span class="deck" data-id="MASTERMIND" data-mode="count"></span>
-<div id="logContainer"></div>
+<hr>
 Players: <select id="setup_players"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
 Mastermind: <select id="setup_mastermind"></select>
 Scheme: <select id="setup_scheme"></select>

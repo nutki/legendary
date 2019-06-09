@@ -620,6 +620,7 @@ interface Game extends Ev {
   schemeState: any
   schemeProgress?: number
   gameSetup: Setup
+  turnNum: number
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -915,6 +916,7 @@ gameState = {
   bystandersCarried: 0,
   schemeState: {},
   gameSetup,
+  turnNum: 0,
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -1628,6 +1630,7 @@ function playCard(ev: Ev): void {
   }
 }
 function buyCard(ev: Ev): void {
+  textLog.log(`Recruited ${ev.what.cardName || ev.what.id}`);
   if (!ev.forFree) {
     // TODO: other pay options
     turnState.recruit -= ev.what.cost;
@@ -1684,7 +1687,6 @@ function reshufflePlayerDeck(): void {
 }
 function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev: Ev): void {
-  textLog.log("Scheme Twist!");
   moveCardEv(ev, ev.what, gameState.ko);
   let e = pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
   cont(ev, () => {
@@ -1697,14 +1699,14 @@ function playTwist(ev: Ev): void {
 }
 function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStrike, what: what }); }
 function playStrike(ev: Ev) {
-  textLog.log("Master Strike!");
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
   gameState.mastermind.each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike, what: ev.what }));
 }
-function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
+function villainDrawEv(ev: Ev, what?: Ev): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw }); }
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
+  textLog.log(ev.what ? `Playing villain card: ${c.cardName || c.id}` : `Drawn from villain deck: ${c.cardName || c.id}`);
   ev.what = c;
   if (!c) {
   } else if (isVillain(c)) {
@@ -1744,6 +1746,7 @@ function villainEscape(ev: Ev): void {
 function villainFight(ev: Ev): void {
   let c = ev.what;
   let d = c.defense;
+  textLog.log(`Fought ${ev.what.cardName || ev.what.id}`);
   turnState.attackSpecial.limit(a => a.cond(c)).each(a => {
     let n = Math.min(a.amount, d);
     a.amount -= n;
@@ -1837,7 +1840,8 @@ function addTriggers(ev: Ev): Ev[] {
   return newev;
 }
 function playTurn(ev: Turn) {
-  textLog.log("Turn Start");
+  gameState.turnNum++;
+  textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
   villainDrawEv(ev);
   pushEv(ev, "ACTIONS", ev => {
@@ -2046,6 +2050,10 @@ function mainLoop(): void {
   });
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   document.getElementById("logContainer").innerHTML = textLog.text;
+  setTimeout(() => {
+    const log = document.getElementById("logContainer");
+    log.scrollTop = log.scrollHeight;
+  }, 100);
 }
 function startGame(): void {
   initGameState(undoLog.gameSetup);

@@ -255,7 +255,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
 }, [
   [ "Dig to Freedom", ev => {
   // Each other player chooses a Subterranea Villain in their Victory Pile and puts it into the Escaped Villains pile.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a villain", p.victory.limit(c => c.villainGroup === ev.source.mastermind.leads), c => villainDrawEv(ev, c), p))
+      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a villain", p.victory.limit(c => c.villainGroup === ev.source.mastermind.leads), c => moveCardEv(ev, c, gameState.escaped), p))
   } ],
   [ "Master of Monsters", ev => {
   // If this is not the final Tactic, reveal the top six cards of the Villain Deck. Play all the Subterranea Villains you revealed. Put the rest on the bottom of the Villain Deck in random order.
