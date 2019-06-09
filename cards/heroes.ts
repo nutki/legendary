@@ -6,7 +6,7 @@ addHeroTemplates("Legendary", [
 // ATTACK: 2
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, rescue a Bystander.
 // COST: 3
-  c1: makeHeroCard("Black Widow", "Dangerous Rescue", 3, u, 2, Color.COVERT, "Avengers", "GD", ev => { if (superPower(Color.COVERT)) KOHandOrDiscardEv(ev, undefined, ev => rescueEv(ev)); }),
+  c1: makeHeroCard("Black Widow", "Dangerous Rescue", 3, u, 2, Color.COVERT, "Avengers", "GD", ev => { if (superPower(Color.COVERT)) KOHandOrDiscardEv(ev, undefined, () => rescueEv(ev)); }),
 // Draw a card.
 // {POWER Tech} Rescue a Bystander.
 // COST: 2
@@ -190,7 +190,7 @@ addHeroTemplates("Legendary", [
 // ATTACK: 2+
 // You may KO a Wound from your hand or discard pile. If you do, you get +2 Attack.
 // COST: 4
-  c2: makeHeroCard("Hulk", "Unstoppable Hulk", 4, u, 2, Color.INSTINCT, "Avengers", "D", ev => KOHandOrDiscardEv(ev, isWound, ev => addAttackEvent(ev, 2))),
+  c2: makeHeroCard("Hulk", "Unstoppable Hulk", 4, u, 2, Color.INSTINCT, "Avengers", "D", ev => KOHandOrDiscardEv(ev, isWound, () => addAttackEvent(ev, 2))),
 // ATTACK: 4
 // Each player gains a Wound.
 // COST: 5
@@ -228,7 +228,7 @@ addHeroTemplates("Legendary", [
   team: "S.H.I.E.L.D.",
 // You may KO a S.H.I.E.L.D. Hero from your hand or discard pile. If you do, you may gain a S.H.I.E.L.D. Officer to your hand.
 // COST: 4
-  c1: makeHeroCard("Nick Fury", "Battlefield Promotion", 4, u, u, Color.COVERT, "S.H.I.E.L.D.", "G", ev => KOHandOrDiscardEv(ev, "S.H.I.E.L.D.", ev => { if (gameState.officer.top) gainToHandEv(ev, gameState.officer.top); })),
+  c1: makeHeroCard("Nick Fury", "Battlefield Promotion", 4, u, u, Color.COVERT, "S.H.I.E.L.D.", "G", ev => KOHandOrDiscardEv(ev, "S.H.I.E.L.D.", () => gameState.officer.withTop(c => gainToHandEv(ev, c)))),
 // ATTACK: 2+
 // {POWER Tech} You get +1 Attack.
 // COST: 3
@@ -253,7 +253,7 @@ addHeroTemplates("Legendary", [
 // RECRUIT: 2+
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
 // COST: 3
-  c2: makeHeroCard("Rogue", "Energy Drain", 3, 2, u, Color.COVERT, "X-Men", "D", ev => { if(superPower(Color.COVERT)) KOHandOrDiscardEv(ev, undefined, ev => addRecruitEvent(ev, 1)); }),
+  c2: makeHeroCard("Rogue", "Energy Drain", 3, 2, u, Color.COVERT, "X-Men", "D", ev => { if(superPower(Color.COVERT)) KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1)); }),
 // Play this card as a copy of another Hero you played this turn. This card is both [Covert] and the color you copy.
 // COST: 5
   uc: makeHeroCard("Rogue", "Copy Powers", 5, u, u, Color.COVERT, "X-Men", "", [], { copyPasteCard: true }),
@@ -357,7 +357,7 @@ addHeroTemplates("Legendary", [
 // ATTACK: 2
 // You may KO a Wound from your hand or discard pile. If you do, draw a card.
 // COST: 3
-  c1: makeHeroCard("Wolverine", "Healing Factor", 3, u, 2, Color.INSTINCT, "X-Men", "D", ev => KOHandOrDiscardEv(ev, isWound, ev => drawEv(ev))),
+  c1: makeHeroCard("Wolverine", "Healing Factor", 3, u, 2, Color.INSTINCT, "X-Men", "D", ev => KOHandOrDiscardEv(ev, isWound, () => drawEv(ev))),
 // ATTACK: 1
 // {POWER Instinct} Draw a card.
 // COST: 2
@@ -889,7 +889,7 @@ addHeroTemplates("Fantastic Four", [
 // You may KO a Wound from your hand or discard pile. If you do, you get +1 Recruit.
 // COST: 3
 // FLAVOR: The Fantastic Four has access to all sorts of communications; Johnny prefers his own methods.
-  c1: makeHeroCard("Human Torch", "Call for Backup", 3, 2, u, Color.INSTINCT, "Fantastic Four", "FD", ev => KOHandOrDiscardEv(ev, isWound, ev => addRecruitEvent(ev, 1))),
+  c1: makeHeroCard("Human Torch", "Call for Backup", 3, 2, u, Color.INSTINCT, "Fantastic Four", "FD", ev => KOHandOrDiscardEv(ev, isWound, () => addRecruitEvent(ev, 1))),
 // ATTACK: 4
 // You gain a Wound.
 // COST: 4
@@ -1184,7 +1184,8 @@ addHeroTemplates("Paint the Town Red", [
   ra: makeHeroCard("Symbiote Spider-Man", "Thwip!", 2, u, 4, Color.RANGED, "Spider Friends", "D", [], { playCost: 2, playCostType: 'TOPDECK' }),
 },
 ]);
-// cardAction
+
+// EXPANSION Villains
 function dodge(c: Card, ev: Ev) {
   return new Ev(ev, 'DODGE', ev => { discardEv(ev, c); drawEv(ev); });
 }
@@ -1201,16 +1202,26 @@ addHeroTemplates("Villains", [
 // {DODGE}
 // Choose an Adversary Group. You get +1 Recruit for each Adversary in your Victory Pile from that Adversary Group.
 // COST: 2
-  c2: makeHeroCard("Bullseye", "Fulfill The Contract", 2, 0, u, Color.INSTINCT, "Crime Syndicate", "D", ev => /*TODO*/'Choose an Adversary Group. You get +1 Recruit for each Adversary in your Victory Pile from that Adversary Group.', { cardActions: [ dodge ] }),
+  c2: makeHeroCard("Bullseye", "Fulfill The Contract", 2, 0, u, Color.INSTINCT, "Crime Syndicate", "D", ev => {
+    const groups = playerState.victory.limit(isVillain).unique(c => c.villainGroup);
+    const f = (group: string) => addRecruitEvent(ev, playerState.victory.limit(isVillain).count(c => c.villainGroup === group));
+    const options = groups.map(g => [g, () => f(g)] as [ string, () => void]);
+    chooseOneEv(ev, "Choose an Adversary Group", ...options);
+  }, { cardActions: [ dodge ] }),
 // ATTACK: 3
 // Choose an Adversary. It gets -1 Attack for each Adversary in your Victory Pile from that Adversary Group.
 // COST: 6
-  uc: makeHeroCard("Bullseye", "Specialist Assassin", 6, u, 3, Color.COVERT, "Crime Syndicate", "", ev => /*TODO*/'Choose an Adversary. It gets -1 Attack for each Adversary in your Victory Pile from that Adversary Group.'),
+  uc: makeHeroCard("Bullseye", "Specialist Assassin", 6, u, 3, Color.COVERT, "Crime Syndicate", "", ev => {
+    const p = playerState;
+    selectCardEv(ev, "Choose an Adversary", villains(), c => addStatMod('defense', v => v === c, () => -p.victory.limit(v => v.villainGroup === c.villainGroup)));
+  }),
 // ATTACK: 5+
 // You get +5 Attack for each Commander Tactic in your Victory Pile.
 // COST: 7
 // GUN: 1
-  ra: makeHeroCard("Bullseye", "Perfect Aim", 7, u, 5, Color.RANGED, "Crime Syndicate", "G", ev => /*TODO*/'You get +5 Attack for each Commander Tactic in your Victory Pile.'),
+  ra: makeHeroCard("Bullseye", "Perfect Aim", 7, u, 5, Color.RANGED, "Crime Syndicate", "G", ev => {
+    addAttackEvent(ev, 5 * playerState.victory.count(isTactic));
+  }),
 },
 {
   name: "Dr. Octopus",
@@ -1218,7 +1229,9 @@ addHeroTemplates("Villains", [
 // RECRUIT: 2
 // {POWER Tech} When you draw a new hand of cards at the end of this turn, draw an extra card.
 // COST: 3
-  c1: makeHeroCard("Dr. Octopus", "Brilliant Research", 3, 2, u, Color.TECH, "Sinister Six", "D", ev => superPower(Color.TECH) && /*TODO*/'When you draw a new hand of cards at the end of this turn, draw an extra card.'),
+  c1: makeHeroCard("Dr. Octopus", "Brilliant Research", 3, 2, u, Color.TECH, "Sinister Six", "D", ev => {
+    superPower(Color.TECH) && addEndDrawMod(1);
+  }),
 // ATTACK: 2
 // Draw a card.
 // COST: 5
@@ -1228,11 +1241,16 @@ addHeroTemplates("Villains", [
 // If this is the eighth card you played this turn, you get +2 Attack.
 // COST: 6
 // FLAVOR: If at first you don't succeed...
-  uc: makeHeroCard("Dr. Octopus", "Eighth Time's a Charm", 6, u, 4, Color.STRENGTH, "Sinister Six", "FD", ev => /*TODO*/'If this is the eighth card you played this turn, you get +2 Attack.'),
+  uc: makeHeroCard("Dr. Octopus", "Eighth Time's a Charm", 6, u, 4, Color.STRENGTH, "Sinister Six", "FD", ev => {
+    turnState.cardsPlayed.size === 7 && addAttackEvent(ev, 2);
+  }),
 // ATTACK: 0+
 // Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don't shuffle). Then you get +1 Attack for each card you discarded this turn.
 // COST: 8
-  ra: makeHeroCard("Dr. Octopus", "Octo-Pulverize", 8, u, 0, Color.TECH, "Sinister Six", "", ev => /*TODO*/'Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don\'t shuffle). Then you get +1 Attack for each card you discarded this turn.'),
+  ra: makeHeroCard("Dr. Octopus", "Octo-Pulverize", 8, u, 0, Color.TECH, "Sinister Six", "", ev => {
+    repeat(8, () => playerState.deck.withTop(c => discardEv(ev, c)));
+    cont(ev, () => addAttackEvent(ev, turnState.cardsDiscarded.size));
+  }),
 },
 {
   name: "Electro",
@@ -1241,23 +1259,31 @@ addHeroTemplates("Villains", [
 // Reveal the top card of your deck. You may KO it.
 // COST: 2
 // FLAVOR: "I'm not really all that shocked to see you go"
-  c1: makeHeroCard("Electro", "Electroshock Therapy", 2, u, u, Color.RANGED, "Sinister Six", "FD", ev => /*TODO*/'Reveal the top card of your deck. You may KO it.', { cardActions: [ dodge ] }),
+  c1: makeHeroCard("Electro", "Electroshock Therapy", 2, u, u, Color.RANGED, "Sinister Six", "FD", ev => {
+    lookAtDeckEv(ev, 1, () => playerState.revealed.withTop(c => chooseMayEv(ev, "KO revealed card", () => KOEv(ev, c))));
+  }, { cardActions: [ dodge ] }),
 // ATTACK: 0+
 // {DODGE}
 // You get +3 Attack usable only against Adversaries in the Bank.
 // {POWER Ranged} Instead you may get +3 Attack usable only against the Commander.
 // COST: 3
-  c2: makeHeroCard("Electro", "Shocking Robbery", 3, u, 0, Color.RANGED, "Sinister Six", "", [ ev => /*TODO*/'You get +3 Attack usable only against Adversaries in the Bank.', ev => superPower(Color.RANGED) && /*TODO*/'Instead you may get +3 Attack usable only against the Commander.' ], { cardActions: [ dodge ] }),
+  c2: makeHeroCard("Electro", "Shocking Robbery", 3, u, 0, Color.RANGED, "Sinister Six", "", ev => {
+    let cond = (c: Card) => isLocation(c.location, 'BANK');
+    superPower(Color.RANGED) && chooseMayEv(ev, "Choose attack against the Commander", () => cond = isMastermind);
+    cont(ev, () => addAttackSpecialEv(ev, cond, 3));
+  }, { cardActions: [ dodge ] }),
 // ATTACK: 2+
 // You get +1 Attack for each card you discarded this turn.
 // COST: 5
 // FLAVOR: Unlimited Power!
-  uc: makeHeroCard("Electro", "Supercharge", 5, u, 2, Color.INSTINCT, "Sinister Six", "FD", ev => /*TODO*/'You get +1 Attack for each card you discarded this turn.'),
+  uc: makeHeroCard("Electro", "Supercharge", 5, u, 2, Color.INSTINCT, "Sinister Six", "FD", ev => addAttackEvent(ev, turnState.cardsDiscarded.size)),
 // ATTACK: 4
 // All Adversaries and the Commander get -1 Attack this turn.
 // {TEAMPOWER Sinister Six, Sinister Six} Same Effect
 // COST: 7
-  ra: makeHeroCard("Electro", "Anti-Matter", 7, u, 4, Color.RANGED, "Sinister Six", "", [ ev => /*TODO*/'All Adversaries and the Commander get -1 Attack this turn.', ev => superPower("Sinister Six", "Sinister Six") && /*TODO*/'Same Effect' ]),
+  ra: makeHeroCard("Electro", "Anti-Matter", 7, u, 4, Color.RANGED, "Sinister Six", "", ev => {
+    addTurnMod('defense', c => isVillain(c) || isMastermind(c), superPower("Sinister Six", "Sinister Six") ? -2 : -1);
+  }),
 },
 {
   name: "Enchantress",
@@ -1265,20 +1291,27 @@ addHeroTemplates("Villains", [
 // ATTACK: 2
 // {POWER Ranged} Whenever you defeat an Adversary this turn, you gain a New Recruit.
 // COST: 3
-  c1: makeHeroCard("Enchantress", "Enchant the Senses", 3, u, 2, Color.RANGED, "Foes of Asgard", "D", ev => superPower(Color.RANGED) && /*TODO*/'Whenever you defeat an Adversary this turn, you gain a New Recruit.'),
+  c1: makeHeroCard("Enchantress", "Enchant the Senses", 3, u, 2, Color.RANGED, "Foes of Asgard", "D", ev => {
+    superPower(Color.RANGED) && addTurnTrigger('DEFEAT', ev => isVillain(ev.what), () => gameState.newRecruit.withTop(c => gainEv(ev, c)));
+  }),
 // RECRUIT: 1+
 // You may KO a card from your hand or discard pile. You get + Recruit equal to that card's Cost.
 // COST: 4
-  c2: makeHeroCard("Enchantress", "Soul Sacrifice", 4, 1, u, Color.COVERT, "Foes of Asgard", "", ev => KOHandOrDiscardEv(ev, undefined)),
+  c2: makeHeroCard("Enchantress", "Soul Sacrifice", 4, 1, u, Color.COVERT, "Foes of Asgard", "", ev => KOHandOrDiscardEv(ev, undefined, c => addRecruitEvent(ev, c.cost))),
 // RECRUIT: 3
 // Choose an Adversary. You can spend any combination of Recruit and Attack to fight that Adversary this turn.
 // {POWER Covert Covert} You can also spend any combination of Recruit and Attack to fight the Commander this turn.
 // COST: 6
-  uc: makeHeroCard("Enchantress", "Irresistible Bribe", 6, 3, u, Color.COVERT, "Foes of Asgard", "", [ ev => /*TODO*/'Choose an Adversary. You can spend any combination of Recruit and Attack to fight that Adversary this turn.', ev => superPower(Color.COVERT, Color.COVERT) && /*TODO*/'You can also spend any combination of Recruit and Attack to fight the Commander this turn.' ]),
+  uc: makeHeroCard("Enchantress", "Irresistible Bribe", 6, 3, u, Color.COVERT, "Foes of Asgard", "", [
+    ev => selectCardEv(ev, "Choose an Adversary", villains(), c => addTurnSet('fightCost', v => v === c, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)}))),
+    ev => superPower(Color.COVERT, Color.COVERT) && addTurnSet('fightCost', isMastermind, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)}))
+  ]),
 // Draw three cards.
 // {TEAMPOWER Foes of Asgard} Then put Unending Anguish on the bottom of your deck.
 // COST: 7
-  ra: makeHeroCard("Enchantress", "Unending Anguish", 7, u, u, Color.COVERT, "Foes of Asgard", "", [ ev => drawEv(ev, 3), ev => superPower("Foes of Asgard") && /*TODO*/'Then put Unending Anguish on the bottom of your deck.' ]),
+  ra: makeHeroCard("Enchantress", "Unending Anguish", 7, u, u, Color.COVERT, "Foes of Asgard", "", [
+    ev => drawEv(ev, 3),
+    ev => superPower("Foes of Asgard") && moveCardEv(ev, ev.source, playerState.deck, true) ]),
 },
 {
   name: "Green Goblin",
@@ -1292,16 +1325,18 @@ addHeroTemplates("Villains", [
 // {DODGE}
 // If you discarded any cards this turn, you get +2 Attack.
 // COST: 3
-  c2: makeHeroCard("Green Goblin", "Pumpkin Bombs", 3, u, 1, Color.TECH, "Sinister Six", "D", ev => /*TODO*/'If you discarded any cards this turn, you get +2 Attack.', { cardActions: [ dodge ] }),
+  c2: makeHeroCard("Green Goblin", "Pumpkin Bombs", 3, u, 1, Color.TECH, "Sinister Six", "D", ev => turnState.cardsDiscarded.size && addAttackEvent(ev, 2), { cardActions: [ dodge ] }),
 // RECRUIT: 3
 // {DODGE}
 // If you discarded any cards this turn, kidnap a Bystander.
 // COST: 5
-  uc: makeHeroCard("Green Goblin", "Unstable Kidnapper", 5, 3, u, Color.INSTINCT, "Sinister Six", "", ev => /*TODO*/'If you discarded any cards this turn, kidnap a Bystander.', { cardActions: [ dodge ] }),
+  uc: makeHeroCard("Green Goblin", "Unstable Kidnapper", 5, 3, u, Color.INSTINCT, "Sinister Six", "", ev => turnState.cardsDiscarded.size && rescueEv(ev), { cardActions: [ dodge ] }),
 // ATTACK: 4
 // Return from your discard pile to your hand all the cards you discarded this turn.
 // COST: 7
-  ra: makeHeroCard("Green Goblin", "Experimental Goblin Serum", 7, u, 4, Color.TECH, "Sinister Six", "", ev => /*TODO*/'Return from your discard pile to your hand all the cards you discarded this turn.'),
+  ra: makeHeroCard("Green Goblin", "Experimental Goblin Serum", 7, u, 4, Color.TECH, "Sinister Six", "", ev => {
+    playerState.discard.deck.each(c => turnState.cardsDiscarded.includes(c) && moveCardEv(ev, c, playerState.hand));
+  }),
 },
 {
   name: "Juggernaut",
@@ -1309,39 +1344,60 @@ addHeroTemplates("Villains", [
 // RECRUIT: 2+
 // {POWER Strength} Each other player reveals the top card of their deck, and if it costs 1, 2, or 3, discards it. You get +1 Recruit for each card discarded this way.
 // COST: 4
-  c1: makeHeroCard("Juggernaut", "Crimson Gem of Cyttorak", 4, 2, u, Color.STRENGTH, "Brotherhood", "D", ev => superPower(Color.STRENGTH) && /*TODO*/'Each other player reveals the top card of their deck, and if it costs 1, 2, or 3, discards it. You get +1 Recruit for each card discarded this way.'),
+  c1: makeHeroCard("Juggernaut", "Crimson Gem of Cyttorak", 4, 2, u, Color.STRENGTH, "Brotherhood", "D", ev => {
+    let count = 0;
+    superPower(Color.STRENGTH) && eachOtherPlayer(p => lookAtDeckEv(ev, 1, () => p.revealed.limit(c => [1, 2, 3].includes(c.cost)).each(c => (count++, discardEv(ev, c))), p));
+    cont(ev, () => addRecruitEvent(ev, count));
+  }),
 // ATTACK: 2+
 // You get +1 Attack for each other card you played this turn that costs 4 or more.
 // COST: 4
-  c2: makeHeroCard("Juggernaut", "Size Matters", 4, u, 2, Color.STRENGTH, "Brotherhood", "D", ev => /*TODO*/'You get +1 Attack for each other card you played this turn that costs 4 or more.'),
+  c2: makeHeroCard("Juggernaut", "Size Matters", 4, u, 2, Color.STRENGTH, "Brotherhood", "D", ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cost >= 4))),
 // ATTACK: 4
 // To play this card, you must discard a card from your hand.
 // COST: 5
 // FLAVOR: Move it or lose it.
-  uc: makeHeroCard("Juggernaut", "Runaway Train", 5, u, 4, Color.STRENGTH, "Brotherhood", "F", ev => /*TODO*/'To play this card, you must discard a card from your hand.'),
+  uc: makeHeroCard("Juggernaut", "Runaway Train", 5, u, 4, Color.STRENGTH, "Brotherhood", "F", [], { playCost: 1, playCostType: 'DISCARD'}),
 // ATTACK: 5+
 // Choose one: Each player KOs two cards from their hand, or each player KOs two cards from their discard pile. Then you get +1 Attack for each non-grey Ally KO'd this turn.
 // COST: 8
-  ra: makeHeroCard("Juggernaut", "Unstoppable Force", 8, u, 5, Color.STRENGTH, "Brotherhood", "", ev => /*TODO*/'Choose one: Each player KOs two cards from their hand, or each player KOs two cards from their discard pile. Then you get +1 Attack for each non-grey Ally KO\'d this turn.'),
+  ra: makeHeroCard("Juggernaut", "Unstoppable Force", 8, u, 5, Color.STRENGTH, "Brotherhood", "", ev => {
+    let count = 0;
+    let fromHand: boolean;
+    chooseOneEv(ev, "Each player KOs two cards from", ["Hand", () => fromHand = true], ["Discard", () => fromHand = false]);
+    cont(ev, () => eachPlayer(p => selectObjectsEv(ev, "KO two cards", 2, fromHand ? p.hand.deck : p.discard.deck, c => (isNonGrayHero(c) && count++, KOEv(ev, c)), p)));
+    cont(ev, () => addAttackEvent(ev, count));
+  }),
 },
 {
   name: "Kingpin",
   team: "Crime Syndicate",
 // Whenever a card effect causes you to gain a New Recruit this turn, put that New Recruit into your hand. Gain a New Recruit.
 // COST: 3
-  c1: makeHeroCard("Kingpin", "Pull the Strings", 3, u, u, Color.COVERT, "Crime Syndicate", "", ev => /*TODO*/'Whenever a card effect causes you to gain a New Recruit this turn, put that New Recruit into your hand. Gain a New Recruit.'),
+  c1: makeHeroCard("Kingpin", "Pull the Strings", 3, u, u, Color.COVERT, "Crime Syndicate", "", [
+    () => addTurnTrigger('MOVECARD', ev => ev.from === gameState.newRecruit && ev.to === playerState.discard && ev.getSource() instanceof Card, { replace: ev => moveCardEv(ev, ev.parent.what, playerState.hand) }),
+    ev => gameState.newRecruit.withTop(c => gainEv(ev, c)),
+  ]),
 // RECRUIT: 2
 // {POWER Strength} Gain a New Recruit.
 // COST: 3
 // FLAVOR: "Anyone else want to punch Daredevil in the face?"
-  c2: makeHeroCard("Kingpin", "Recruitment Day", 3, 2, u, Color.STRENGTH, "Crime Syndicate", "FD", ev => superPower(Color.STRENGTH) && /*TODO*/'Gain a New Recruit.'),
+  c2: makeHeroCard("Kingpin", "Recruitment Day", 3, 2, u, Color.STRENGTH, "Crime Syndicate", "FD", ev => {
+    superPower(Color.STRENGTH) && gameState.newRecruit.withTop(c => gainEv(ev, c));
+  }),
 // ATTACK: 3+
 // You get +1 Attack for each New Recruit you played this turn.
 // COST: 5
-  uc: makeHeroCard("Kingpin", "Import Illegal Weapons", 5, u, 3, Color.TECH, "Crime Syndicate", "", ev => /*TODO*/'You get +1 Attack for each New Recruit you played this turn.'),
+  uc: makeHeroCard("Kingpin", "Import Illegal Weapons", 5, u, 3, Color.TECH, "Crime Syndicate", "", ev => {
+    addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cardName === "New Recruits"));
+  }),
 // {TEAMPOWER Crime Syndicate, Crime Syndicate} If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
 // COST: 8
-  ra: makeHeroCard("Kingpin", "Endless Underlings", 8, u, u, Color.STRENGTH, "Crime Syndicate", "", ev => superPower("Crime Syndicate", "Crime Syndicate") && /*TODO*/'If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.'),
+  ra: makeHeroCard("Kingpin", "Endless Underlings", 8, u, u, Color.STRENGTH, "Crime Syndicate", "", ev => {
+    superPower("Crime Syndicate", "Crime Syndicate") && addTurnTrigger('MOVECARD',
+      ev => ev.to === gameState.newRecruit && ev.from === playerState.playArea && ev.what.cardName === "New Recruits",
+      ev => moveCardEv(ev, ev.parent.what, playerState.deck, true));
+  }),
 },
 {
   name: "Kraven",
@@ -1373,7 +1429,7 @@ addHeroTemplates("Villains", [
 // ATTACK: 2
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, gain a New Recruit.
 // COST: 3
-  c1: makeHeroCard("Loki", "All Humans Are Expendable", 3, u, 2, Color.COVERT, "Foes of Asgard", "D", ev => superPower(Color.COVERT) && KOHandOrDiscardEv(ev, undefined, ev => /*TODO*/'Gain a New Recruit.')),
+  c1: makeHeroCard("Loki", "All Humans Are Expendable", 3, u, 2, Color.COVERT, "Foes of Asgard", "D", ev => superPower(Color.COVERT) && KOHandOrDiscardEv(ev, undefined, () => gameState.newRecruit.withTop(c => gainEv(ev, c)))),
 // RECRUIT: 2+
 // {POWER Ranged} Each other player reveals a [Ranged] Ally or gains a Bindings. If any number of players gained a Bindings this way, you get +1 Recruit.
 // COST: 4

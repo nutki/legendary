@@ -329,6 +329,7 @@ interface Array<T> {
   count: (f: Filter<T>) => number
   limit: (f: Filter<T>) => T[]
   uniqueCount: <U>(f: (c: T) => U) => number
+  unique: <U>(f: (c: T) => U) => U[]
   has: (f: Filter<T>) => boolean
   each: (f: (c: T) => void) => void
   sum: (f: (c: T) => number) => number
@@ -348,6 +349,7 @@ Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U
 Array.prototype.sum = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => a + v, 0); };
 Array.prototype.merge = function <T>(this: Array<T>) { return this.reduce((a, v) => a.concat(v), []); };
 Array.prototype.uniqueCount = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return m.size; }
+Array.prototype.unique = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return [...m.keys()]; }
 Object.defineProperty(Array.prototype, 'first', { get: function() { return this[0]; }, set: function(v) { return this[0] = v; } });
 Object.defineProperty(Array.prototype, 'last', { get: function() { return this[this.size-1]; }, set: function(v) { return this[this.size - 1] = v; } });
 Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
@@ -560,7 +562,7 @@ interface Turn extends Ev {
   attackSpecial: { amount: number, cond: (c: Card) => boolean }[]
   recruitSpecial: { amount: number, cond: (c: Card) => boolean }[]
   cardsDrawn: number
-  cardsDiscarded: number
+  cardsDiscarded: Card[]
   bystandersRescued: number
   endDrawMod: number
   endDrawAmount: number
@@ -599,6 +601,7 @@ interface Game extends Ev {
   ko: Deck
   herodeck: Deck
   officer: Deck
+  newRecruit: Deck
   wounds: Deck
   scheme: Deck
   bystanders: Deck
@@ -858,6 +861,7 @@ gameState = {
   ko: new Deck('KO', true),
   herodeck: new Deck('HERO'),
   officer: new Deck('SHIELDOFFICER', true),
+  newRecruit: new Deck('NEWRECRUIT', true),
   wounds: new Deck('WOUNDS', true),
   scheme: new Deck('SCHEME', true),
   bystanders: new Deck('BYSTANDERS', true),
@@ -1197,7 +1201,7 @@ function popEvent(): Ev {
     totalRecruit: 0,
     cardsPlayed: [],
     cardsDrawn: 0,
-    cardsDiscarded: 0,
+    cardsDiscarded: [],
     bystandersRescued: 0,
     modifiers: {},
     triggers: [],
@@ -1389,7 +1393,7 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, forFree: true });
 }
-function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => (turnState.cardsDiscarded++, moveCardEv(ev, ev.what, owner(ev.what).discard)) }); }
+function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, owner(ev.what).discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let card: Card;
@@ -1586,10 +1590,10 @@ function revealOne(ev: Ev, who: Player) {
     moveCardEv(ev, who.deck.top, who.revealed);
   }
 }
-function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (ev: Ev) => void) {
+function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => void) {
   let cards = handOrDiscard();
   if (filter) cards = cards.limit(filter);
-  selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, func); });
+  selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, () => func(sel)); });
 }
 
 
