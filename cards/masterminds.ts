@@ -153,7 +153,7 @@ makeMastermindCard("Mephisto", 10, 6, "Underworld", ev => {
 ], { trigger: {
   event: "GAIN",
   match: ev => isWound(ev.what) && ev.where !== ev.who.deck,
-  replace: (ev) => gainToDeckEv(ev, ev.parent.what, ev.parent.who)
+  replace: (ev) => gainToDeckEv(ev, ev.parent.what, ev.parent.who) // TODO this retriggers events on GAIN, maybe replace by modify: Ev => Ev
 }}),
 // Mr. Sinister gets +1 Attack for each Bystander he has.
 makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
