@@ -1189,6 +1189,25 @@ addHeroTemplates("Paint the Town Red", [
 function dodge(c: Card, ev: Ev) {
   return new Ev(ev, 'DODGE', ev => { discardEv(ev, c); drawEv(ev); });
 }
+
+const madameHydraTemplate = makeHeroCard("Viper", "Madame HYDRA", 3, 2, u, Color.GRAY, "HYDRA", "D", [], { playCost: 1, playCostType: 'DISCARD', cardActions: [ dodge ] });
+const hydraOperativeTemplate = makeHeroCard("Ally", "HYDRA Operative",   0, 1, u, Color.GRAY, "HYDRA");
+const hydraSoldierTemplate = makeHeroCard("Ally", "HYDRA Soldier", 0, u, 1, Color.GRAY, "HYDRA");
+function returnToStackEv(ev: Ev, deck: Deck) {
+  const c = ev.source;
+  // Cannot return copies or copyPaste cards
+  if (!c.instance || Object.getPrototypeOf(c) !== c.instance) return false;
+  moveCardEv(ev, c, deck);
+  return true;
+}
+const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.GRAY, u, "D", [
+  ev => returnToStackEv(ev, gameState.newRecruit),
+  ev => drawEv(ev),
+]);
+const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
+  chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.newRecruit) && drawEv(ev, 2));
+});
+
 addHeroTemplates("Villains", [
 {
   name: "Bullseye",
