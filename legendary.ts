@@ -372,7 +372,6 @@ interface Ev<TSchemeState = any> {
   who?: Player
   amount?: number
   bottom?: boolean
-  forFree?: boolean
   villain?: Card
   result?: "WIN" | "LOSS" | "DRAW"
   agent?: Player
@@ -408,7 +407,6 @@ interface EvParams {
   deckName?: string
   amount?: number
   bottom?: boolean
-  forFree?: boolean
   villain?: Card
   source?: Card | Ev
   ui?: boolean
@@ -1293,9 +1291,6 @@ function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?
   }
   return new Ev(ev, 'FOCUS', { what, func, cost });
 }
-function canRecruit(c: Card): boolean {
-  return turnState.recruit >= c.cost;
-}
 function canFight(c: Card): boolean {
   if (c.fightCond && !c.fightCond(c)) return false;
   let a = turnState.attack;
@@ -1332,20 +1327,19 @@ function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => isHero(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
-  if (!turnState.noRecruitOrFight) {
+  if (!turnState.noRecruitOrFight) { // Do post filtering instead in case specialActions contain fight or recruit
   // TODO any deck with recruitable
-  p = p.concat(HQCards().limit(isHero).limit(canRecruit).map(d => (new Ev(ev, "RECRUIT", { func: buyCard, what: d }))));
+  p = p.concat(HQCards().limit(isHero).map(d => recruitCardActionEv(ev, d)));
   // TODO any deck with fightable
   p = p.concat(FightableCards().limit(canFight).map(d => (new Ev(ev, "FIGHT", { func: villainFight, what: d }))));
   if (gameState.mastermind.size && gameState.mastermind.top.attached('TACTICS').size && canFight(gameState.mastermind.top))
-    p.push((new Ev(ev, "FIGHT", { func: villainFight, what: gameState.mastermind.top })));
-  if (gameState.officer.size && canRecruit(gameState.officer.top))
-    p.push((new Ev(ev, "RECRUIT", { func: buyCard, what: gameState.officer.top })));
+  p.push((new Ev(ev, "FIGHT", { func: villainFight, what: gameState.mastermind.top })));
+  gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
   }
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
-  // TODO find actions on mastermind?
+  // TODO find actions on mastermind? and hand
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
@@ -1389,7 +1383,7 @@ function swapCardsEv(ev: Ev, where1: Deck, where2: Deck) {
 function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { console.log(`attaching as ${name} to `, to); moveCardEv(ev, what, to.attachedDeck(name)); }
 function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
-  pushEv(ev, "RECRUIT", { func: buyCard, what: card, forFree: true });
+  pushEv(ev, "RECRUIT", { func: buyCard, what: card });
 }
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, owner(ev.what).discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
@@ -1627,10 +1621,6 @@ function playCard(ev: Ev): void {
 }
 function buyCard(ev: Ev): void {
   textLog.log(`Recruited ${ev.what.cardName || ev.what.id}`);
-  if (!ev.forFree) {
-    // TODO: other pay options
-    turnState.recruit -= ev.what.cost;
-  }
   turnState.recruitedOrFought = true;
   let where = turnState.nextHeroRecruit;
   turnState.nextHeroRecruit = undefined;
