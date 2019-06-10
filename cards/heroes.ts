@@ -37,7 +37,7 @@ addHeroTemplates("Legendary", [
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
     event: "GAIN",
     match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 1, owner(ev.source)), () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 1, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
@@ -505,7 +505,7 @@ addHeroTemplates("Dark City", [
     match: (ev, source: Card) => isWound(ev.what) && ev.who === owner(source) && source.location === ev.who.hand,
     replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
       discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-    }, () => pushEvents(ev.replacing), owner(ev.source))
+    }, () => doReplacing(ev), owner(ev.source))
   }}),
 // ATTACK: 4+
 // {POWER Strength} You get +2 Attack.
@@ -520,7 +520,7 @@ addHeroTemplates("Dark City", [
     match: (ev, source) => isWound(ev.what) && ev.who !== owner(<Card>source),
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
       gainEv(ev, ev.parent.what, owner(ev.source)); drawEv(ev, 1, owner(ev.source));
-    }, () => pushEvents(ev.replacing), owner(ev.source))
+    }, () => doReplacing(ev), owner(ev.source))
   }}),
 },
 {
@@ -691,11 +691,11 @@ addHeroTemplates("Dark City", [
   ra: makeHeroCard("Iceman", "Impenetrable Ice Wall", 8, u, 7, Color.RANGED, "X-Men", "", [], { triggers: [ {
     event: "GAIN",
     match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
-    replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => revealOrEv(ev, c => c === ev.source, () => doReplacing(ev), owner(ev.source))
   }, {
     event: "DISCARD",
     match: (ev, source) => owner(<Card>source) === owner(ev.what) && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
-    replace: ev => revealOrEv(ev, c => c === ev.source, () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => revealOrEv(ev, c => c === ev.source, () => doReplacing(ev), owner(ev.source))
   }]}),
 },
 {
@@ -928,7 +928,7 @@ addHeroTemplates("Fantastic Four", [
   ra: makeHeroCard("Invisible Woman", "Invisible Barrier", 7, u, 5, Color.COVERT, "Fantastic Four", "", [], { trigger: {
     event: 'EFFECT',
     match: ev => ev.effectName == 'ambush',
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2, owner(ev.source)), () => pushEvents(ev.replacing), owner(ev.source))
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
 },
 {
@@ -953,7 +953,7 @@ addHeroTemplates("Fantastic Four", [
 // {FOCUS 1} You get +1 Attack usable only against the Mastermind.
 // COST: 7
   ra: makeHeroCard("Mr. Fantastic", "Ultimate Nullifier", 7, u, 4, Color.TECH, "Fantastic Four", "", [
-    ev => addTurnTrigger('EFFECT', ev => ev.effectName == 'fight', { replace: ev => chooseMayEv(ev, "Keep fight effect", () => pushEvents(ev.replacing)) }),
+    ev => addTurnTrigger('EFFECT', ev => ev.effectName == 'fight', { replace: ev => chooseMayEv(ev, "Keep fight effect", () => doReplacing(ev)) }),
     ev => setFocusEv(ev, 1, ev => addAttackSpecialEv(ev, isMastermind, 1))
   ]),
 },

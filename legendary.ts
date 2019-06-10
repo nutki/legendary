@@ -1181,12 +1181,8 @@ function attachedCards(name: string, where: Deck | Card) {
   if (!where._attached[name]) return [];
   return where._attached[name].deck;
 }
-function pushEvents(ev: Ev | Ev[]): void {
-  const evs = ev instanceof Array ? ev : [ ev ];
-  evs.map(ev => {
-    payCost(ev);
-    eventQueueNew = eventQueueNew.concat(addTriggers(ev));
-  });
+function pushEvents(ev: Ev, withTriggers: boolean = true): void {
+  eventQueueNew = eventQueueNew.concat(withTriggers ? addTriggers(ev) : ev);
 }
 function joinQueue(): void {
   eventQueue = eventQueueNew.concat(eventQueue);
@@ -1703,7 +1699,7 @@ function playStrike(ev: Ev) {
   // TODO mastermind order
   gameState.mastermind.each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike, what: ev.what }));
 }
-function villainDrawEv(ev: Ev, what?: Ev): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw }); }
+function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
   textLog.log(ev.what ? `Playing villain card: ${c.cardName || c.id}` : `Drawn from villain deck: ${c.cardName || c.id}`);
@@ -1835,9 +1831,12 @@ function addTriggers(ev: Ev): Ev[] {
   });
   triggers.forEach(function(t) {
     if (t.trigger.replace)
-      newev = [ new Ev(ev, "EFFECT", { func:t.trigger.replace, replacing:newev, source:t.source })];
+      newev = [ new Ev(ev, "EFFECT", { func:t.trigger.replace, replacing: newev, source:t.source })];
   });
   return newev;
+}
+function doReplacing(ev: Ev) {
+  ev.replacing.each(e => pushEvents(e, false));
 }
 function playTurn(ev: Turn) {
   gameState.turnNum++;
@@ -1973,6 +1972,10 @@ function clickCard(ev: MouseEvent): void {
     }
   }
 }
+function playEvent(ev: Ev) {
+  payCost(ev);
+  ev.func(ev);
+}
 function mainLoop(): void {
   let extraActions: { name: string, confirm?: boolean, func: () => void }[] = [];
   clickActions = {};
@@ -1989,10 +1992,10 @@ function mainLoop(): void {
       const v = undoLog.readInts();
       v.length ? v.forEach(o => ev.result1((<Card[]>ev.options)[o])) : ev.result0();
     }
-  })[ev.type] || ev.func)(ev);
+  })[ev.type] || playEvent)(ev);
   }
   let ev = popEvent();
-  while (!ev.ui) { ev.func(ev); ev = popEvent(); }
+  while (!ev.ui) { playEvent(ev); ev = popEvent(); }
   displayGame(ev);
   console.log(">>> " + ev.type, ev);
   ((<{[t: string]: (ev: Ev) => void}>{
@@ -2194,7 +2197,6 @@ bystander mutli-select
 
 ENGINE:
 move fight and recruit action to new cost api
-fix replacement effect (cannot pushEvent ev.replacing)
 remodel triggers to attach on resolution not queuing
 separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
