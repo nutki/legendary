@@ -955,7 +955,6 @@ gameState.herodeck.shuffle();
 // Init auxiliary decks
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
-console.log("BYS", gameSetup.bystanders)
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 gameState.bystanders.shuffle();
 //// TODO sidekicks
@@ -1235,7 +1234,7 @@ function canPayCost(action: Ev) {
   if (action.type === 'FIGHT')
     usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   return usableRecruit >= requiredRecruit && usableAttack >= requiredAttack &&
-    usableRecruit + usableRecruit >= requiredTotal;
+    usableRecruit + usableAttack >= requiredTotal;
 }
 function payCost(action: Ev) {
   function payMin(a: { amount: number }, amount: number) {
@@ -1375,7 +1374,7 @@ function swapCardsEv(ev: Ev, where1: Deck, where2: Deck) {
     if (what2) moveCard(what2, where1);
   });
 }
-function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { console.log(`attaching as ${name} to `, to); moveCardEv(ev, what, to.attachedDeck(name)); }
+function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedDeck(name)); }
 function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
   pushEv(ev, "RECRUIT", { func: buyCard, what: card });
@@ -2176,10 +2175,9 @@ remodel triggers to attach on resolution not queuing?
 separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
-required villain/hero groups
 
 other sets base functions: artifacts, sidekicks, divided cards
 
-Sets
+https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 
 */
