@@ -1273,6 +1273,9 @@ function payCost(action: Ev) {
 function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
 }
+function fightActionEv(ev: Ev, what: Card) {
+  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: getFightCost(what) });
+}
 function countPerTurn(c: Card) {
   if (!turnState.perTurn) return 0;
   return turnState.perTurn.get(c.id) || 0;
@@ -1290,13 +1293,6 @@ function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?
     func = ev => { incPerTurn(what); effect(ev); };
   }
   return new Ev(ev, 'FOCUS', { what, func, cost });
-}
-function canFight(c: Card): boolean {
-  if (c.fightCond && !c.fightCond(c)) return false;
-  let a = turnState.attack;
-  a += turnState.attackSpecial.limit(a => a.cond(c)).sum(a => a.amount);
-  if (c.bribe || turnState.attackWithRecruit) a += turnState.recruit;
-  return a >= c.defense;
 }
 function canHeal(c: Card): boolean {
   if (!c.isHealable()) return false;
@@ -1331,9 +1327,8 @@ function getActions(ev: Ev): Ev[] {
   // TODO any deck with recruitable
   p = p.concat(HQCards().limit(isHero).map(d => recruitCardActionEv(ev, d)));
   // TODO any deck with fightable
-  p = p.concat(FightableCards().limit(canFight).map(d => (new Ev(ev, "FIGHT", { func: villainFight, what: d }))));
-  if (gameState.mastermind.size && gameState.mastermind.top.attached('TACTICS').size && canFight(gameState.mastermind.top))
-  p.push((new Ev(ev, "FIGHT", { func: villainFight, what: gameState.mastermind.top })));
+  p = p.concat(FightableCards().map(d => fightActionEv(ev, d)));
+  gameState.mastermind.each(c => c.attached('TACTICS').size && p.push(fightActionEv(ev, c)))
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
   }
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
@@ -1730,21 +1725,8 @@ function villainEscape(ev: Ev): void {
   pushEffects(ev, c, "escape", c.escape);
 }
 function villainFight(ev: Ev): void {
-  let c = ev.what;
-  let d = c.defense;
-  textLog.log(`Fought ${ev.what.cardName || ev.what.id}`);
-  turnState.attackSpecial.limit(a => a.cond(c)).each(a => {
-    let n = Math.min(a.amount, d);
-    a.amount -= n;
-    d -= n;
-  });
-  let n = Math.min(turnState.attack, d);
-  turnState.attack -= n; // Use attack first
-  d -= n;
-  if (d > 0) { // Asume bribe
-    // TODO Ask for spilt (optional)
-    turnState.recruit -= d;
-  }
+  const c = ev.what;
+  textLog.log(`Fought ${c.cardName || c.id}`);
   turnState.recruitedOrFought = true;
   if (c.fightCost) cont(ev, c.fightCost);
   defeatEv(ev, c);
@@ -2186,8 +2168,7 @@ top villain deck card select (prof x uncommon)
 bystander mutli-select
 
 ENGINE:
-move fight and recruit action to new cost api
-remodel triggers to attach on resolution not queuing
+remodel triggers to attach on resolution not queuing?
 separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id

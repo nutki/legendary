@@ -242,7 +242,7 @@ makeSchemeCard<{isGoblinQueen: (c: Card) => boolean}>("Transform Citizens Into D
   gameState.schemeProgress = 4;
   gameState.specialActions = (ev) => {
     const what = demonGoblins.top;
-    return what && canFight(what) ? [ new Ev(ev, "FIGHT", { func: villainFight, what }) ] : [];
+    return what && [ fightActionEv(ev, what) ];
   };
 }),
 // SETUP: 8 Twists. Villain Deck includes 14 cards for an extra Hero and no Bystanders.
