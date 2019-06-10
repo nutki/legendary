@@ -2028,6 +2028,8 @@ function mainLoop(): void {
   });
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   document.getElementById("logContainer").innerHTML = textLog.text;
+  closePopupDecks();
+  autoOpenPopupDecks();
   setTimeout(() => {
     const log = document.getElementById("logContainer");
     log.scrollTop = log.scrollHeight;
@@ -2128,19 +2130,31 @@ function setupSet(s: Setup): void {
   chooseSelects("setup_henchmen", s.henchmen);
   globalFormSetup = s
 }
+function getPopups() {
+  const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
+  return popups;
+}
+function getDecks() {
+  const decks: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("deck"), 0);
+  return decks;
+}
+function closePopupDecks() {
+  getPopups().each(d => d.classList.add("hidden"));
+}
+function autoOpenPopupDecks() {
+  getPopups().each(d => d.getElementsByClassName("select").length && d.classList.remove("hidden"));
+}
 function startApp(): void {
   const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup')) || exampleGameSetup;
   setupInit();
   setupSet(lastSetup);
   undoLog.init();
   window.onclick = clickCard;
-  const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
-  popups.forEach(e => e.addEventListener("wheel", function(e) {
+  getPopups().forEach(e => e.addEventListener("wheel", function(e) {
     this.scrollLeft += (e.deltaY * 10);
     e.preventDefault();
   }));
-  const decks: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("deck"), 0);
-  decks.forEach(div => {
+  getDecks().forEach(div => {
     let popup = div.getAttribute("data-popupid");
     if (popup) {
       let e = document.getElementById(popup);
@@ -2158,8 +2172,6 @@ document.addEventListener('DOMContentLoaded', startApp, false);
 GUI:
 Show hidden events (card revealing)
 Select setup screen
-auto popup decks
-close popup decks on action
 show multiple actions (play/teleport)
 separate config screen
 highlight deck selection
@@ -2169,6 +2181,7 @@ scrollable cards played and hand
 "scenarios"
 top villain deck card select (prof x uncommon)
 bystander mutli-select
+attached cards view
 
 ENGINE:
 remodel triggers to attach on resolution not queuing?
