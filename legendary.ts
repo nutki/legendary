@@ -1945,8 +1945,12 @@ function clickCard(ev: MouseEvent): void {
   }
 }
 function playEvent(ev: Ev) {
-  payCost(ev);
-  ev.func(ev);
+  if (ev.cost) {
+    payCost(ev);
+    cont(ev, () => ev.func(ev));
+  } else {
+    ev.func(ev);
+  }
 }
 function mainLoop(): void {
   let extraActions: { name: string, confirm?: boolean, func: () => void }[] = [];
