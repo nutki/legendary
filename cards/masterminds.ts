@@ -270,7 +270,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
     addRecruitSpecialEv(ev, c => c.location.below && isLocation(c.location.below, 'STREETS'), 6);
   } ],
 ], {
-  varDefense: c => c.printedDefense + gameState.escaped.count(c => c.villainGroup === c.leads),
+  varDefense: c => c.printedDefense + gameState.escaped.count(v => v.villainGroup === c.leads),
 }),
 ]);
 addTemplates("MASTERMINDS", "Paint the Town Red", [
