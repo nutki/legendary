@@ -561,6 +561,7 @@ interface Turn extends Ev {
   recruitSpecial: { amount: number, cond: (c: Card) => boolean }[]
   cardsDrawn: number
   cardsDiscarded: Card[]
+  pastEvents: Ev[]
   bystandersRescued: number
   endDrawMod: number
   endDrawAmount: number
@@ -601,6 +602,7 @@ interface Game extends Ev {
   officer: Deck
   newRecruit: Deck
   wounds: Deck
+  bindings: Deck
   scheme: Deck
   bystanders: Deck
   hq: Deck[]
@@ -862,6 +864,7 @@ gameState = {
   officer: new Deck('SHIELDOFFICER', true),
   newRecruit: new Deck('NEWRECRUIT', true),
   wounds: new Deck('WOUNDS', true),
+  bindings: new Deck('BINDINGS', true),
   scheme: new Deck('SCHEME', true),
   bystanders: new Deck('BYSTANDERS', true),
   hq: [
@@ -1003,6 +1006,9 @@ function isHealable(c: Card): boolean { return c.isHealable(); }
 function isColor(col: number): (c: Card) => boolean { return function (c) { return c.isColor(col); }; }
 function isTeam(team: string): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
 function isGroup(group: string): (c: Card) => boolean { return c => c.isGroup(group); }
+function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
+function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
+function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
 function isFightable(c: Card): boolean {
   return getModifiedStat(c, 'isFightable', c.location.isCity);
 }
@@ -1197,6 +1203,7 @@ function popEvent(): Ev {
     cardsPlayed: [],
     cardsDrawn: 0,
     cardsDiscarded: [],
+    pastEvents: [],
     bystandersRescued: 0,
     modifiers: {},
     triggers: [],
@@ -1366,10 +1373,12 @@ function shuffleIntoEv(ev: Ev, what: Card, where: Deck): void {
   cont(ev, () => where.shuffle());
 }
 // Swaps contents of 2 city spaces
-function swapCardsEv(ev: Ev, where1: Deck, where2: Deck) {
+function swapCardsEv(ev: Ev, p1: (Card | Deck), p2: (Card | Deck)) {
   cont(ev, () => {
-    const what1 = where1.top;
-    const what2 = where2.top;
+    const where1 = p1 instanceof Deck ? p1 : p1.location;
+    const what1 = p1 instanceof Deck ? p1.top : p1;
+    const where2 = p2 instanceof Deck ? p2 : p2.location;
+    const what2 = p2 instanceof Deck ? p2.top : p2;
     if (what1) moveCard(what1, where2);
     if (what2) moveCard(what2, where1);
   });
@@ -1492,6 +1501,11 @@ function chooseOneEv(ev: Ev, desc: string, ...a: [string, (ev: Ev) => void][]): 
   if (!options.length) return;
   pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
 }
+function chooseOptionEv<T>(ev: Ev, desc: string, choices: { l: string, v: T }[], effect: (v: T) => void, agent: Player = playerState) {
+  let options = choices.map(o => new Ev(ev, "EFFECT", { func: () => effect(o.v), desc: o.l }));
+  if (!options.length) return;
+  pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent });
+}
 function chooseMayEv(ev: Ev, desc: string, effect: (ev: Ev) => void, agent?: Player) {
   agent = agent || playerState;
   pushEv(ev, "SELECTEVENT", { desc, options: [
@@ -1507,11 +1521,17 @@ function chooseNumberEv(ev: Ev, desc: string, min: number, max: number, effect: 
   for (let i = min; i <= max; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
   pushEv(ev, "SELECTEVENT", { desc, ui: true, agent, options });
 }
-function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
-  pushEv(ev, "SELECTEVENT", { desc: "Choose a player", ui: true, agent, options: gameState.players.map(p => new Ev(ev, "EFFECT", {
+function _choosePlayerEv(ev: Ev, effect: (p: Player) => void, list: Player[], agent: Player) {
+  pushEv(ev, "SELECTEVENT", { desc: "Choose a player", ui: true, agent, options: list.map(p => new Ev(ev, "EFFECT", {
     func: () => effect(p),
     desc: p.name,
   })) });
+}
+function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
+  _choosePlayerEv(ev, effect, gameState.players, agent);
+}
+function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
+  gameState.players.length > 1 && _choosePlayerEv(ev, effect, gameState.players.limit(p => p !== agent), agent);
 }
 function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
   chooseOneEv(ev, "Choose hero class",
@@ -1950,6 +1970,7 @@ function playEvent(ev: Ev) {
   } else {
     ev.func(ev);
   }
+  turnState.pastEvents.push(ev);
 }
 function mainLoop(): void {
   let extraActions: { name: string, confirm?: boolean, func: () => void }[] = [];
@@ -2184,6 +2205,7 @@ bystander mutli-select
 attached cards view
 
 ENGINE:
+replace cardsDrawn and cardsDiscarded with pastEvents
 remodel triggers to attach on resolution not queuing?
 separate escaped/carried off/escape pile concepts
 set location of copies (to avoid null pointers in many places)
