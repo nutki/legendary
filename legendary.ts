@@ -1011,6 +1011,7 @@ function isGroup(group: string): (c: Card) => boolean { return c => c.isGroup(gr
 function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
+function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isFightable(c: Card): boolean {
   return getModifiedStat(c, 'isFightable', c.location.isCity);
 }
@@ -2211,7 +2212,7 @@ attached cards view
 ENGINE:
 replace cardsDrawn and cardsDiscarded with pastEvents
 remodel triggers to attach on resolution not queuing?
-separate escaped/carried off/escape pile concepts
+count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 

@@ -198,8 +198,7 @@ makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
   repeat(gameState.players.size === 1 ? 12 : 24, () => moveCard(gameState.bystanders.top, gameState.herodeck));
   gameState.herodeck.shuffle();
   gameState.specialActions = (ev) => {
-    if (turnState.recruit < 2) return [];
-    return HQCards().limit(isBystander).map(c => new Ev(ev, "PAYTORESCUE", { what: c, func: ev => { turnState.recruit -= 2; rescueEv(ev, ev.what); }}));
+    return HQCards().limit(isBystander).map(c => new Ev(ev, "PAYTORESCUE", { what: c, cost: { recruit: 2 }, func: ev => rescueEv(ev, ev.what) }));
   };
 }),
 // SETUP: 8 Twists representing Plutonium. Add an extra Villain Group.

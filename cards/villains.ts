@@ -340,14 +340,14 @@ addVillainTemplates("Dark City", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Streets of New York", "Bullseye", 6, 4, {
-    fight: ev => { selectCardAndKOEv(ev, yourHeroes().limit(c => c.printedRecruit !== undefined)); selectCardAndKOEv(ev, yourHeroes().limit(c => c.printedAttack !== undefined)); },
+    fight: ev => { selectCardAndKOEv(ev, yourHeroes().limit(hasRecruitIcon)); selectCardAndKOEv(ev, yourHeroes().limit(hasAttackIcon)); },
   })],
 // {BRIBE}
 // FIGHT: KO one of your Heroes with a Recruit icon.
 // ATTACK: 5*
 // VP: 2
   [ 2, makeVillainCard("Streets of New York", "Hammerhead", 5, 2, {
-    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(c => c.printedRecruit !== undefined)),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(hasRecruitIcon)),
     bribe: true,
   })],
 // AMBUSH: Each player discards three cards, then draws two cards.
@@ -598,7 +598,6 @@ function elusive(n: number) {
 function xTremeAttack(c: Card): number {
   return CityCards().limit(isVillain).count(cc => cc.xTremeAttack && cc !== c);
 }
-function isOdd(n: number) { return n % 2 === 1; }
 addVillainTemplates("Villains", [
 { name: "Avengers", cards: [
 // ATTACK: 3*
@@ -764,12 +763,10 @@ addVillainTemplates("Villains", [
     fight: ev => {
       let revealed: Card[] = [];
       eachPlayer(p => lookAtDeckEv(ev, 1, () => { p.revealed.limit(isHero).each(c => revealed.push(c)); discardEv(ev, p.revealed.top); }));
-      let playOne = () => selectCardEv(ev, "Choose a card to copy", revealed, sel => {
+      repeat(gameState.players.size, () => selectCardEv(ev, "Choose a card to copy", revealed, sel => {
         playCopyEv(ev, sel);
         revealed = revealed.limit(c => c !== sel);
-        if (revealed.length > 0) cont(ev, playOne);
-      });
-      cont(ev, playOne);
+      }));
     },
     varDefense: xTremeAttack,
     xTremeAttack: true,
@@ -778,7 +775,7 @@ addVillainTemplates("Villains", [
 // VP: 3
 // FIGHT: Reveal the top three cards of your deck. Put any that have odd-numbered costs into your hand and discard the rest. (0 is even.)
   [ 2, makeVillainCard("Uncanny Avengers", "Scarlet Witch", 5, 3, {
-    fight: ev => lookAtDeckEv(ev, 3, () => playerState.revealed.each(c => isOdd(c.cost) ? moveCardEv(ev, c, playerState.hand) : discardEv(ev, c))),
+    fight: ev => lookAtDeckEv(ev, 3, () => playerState.revealed.each(c => isCostOdd(c) ? moveCardEv(ev, c, playerState.hand) : discardEv(ev, c))),
   })],
 // ATTACK: 7+
 // VP: 5

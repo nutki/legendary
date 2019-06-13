@@ -82,7 +82,7 @@ addHeroTemplates("Legendary", [
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
-  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit(c => c.cost % 2 === 1).length)),
+  c2: makeHeroCard("Deadpool", "Oddball", 5, u, 2, Color.COVERT, u, "GD", ev => addAttackEvent(ev, turnState.cardsPlayed.count(isCostOdd))),
 // ATTACK: 2
 // If this is the first Hero you played this turn, you may discard the rest of your hand and draw four cards.
 // COST: 3
@@ -568,8 +568,8 @@ addHeroTemplates("Dark City", [
 // COST: 5
   uc: makeHeroCard("Domino", "Specialized Ammunition", 5, 0, 0, Color.TECH, "X-Force", "G", ev => selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, sel => {
     discardEv(ev, sel);
-    if (sel.printedAttack !== undefined) addAttackEvent(ev, 4);
-    if (sel.printedRecruit !== undefined) addRecruitEvent(ev, 4);
+    hasAttackIcon(sel) && addAttackEvent(ev, 4);
+    hasRecruitIcon(sel) &&  addRecruitEvent(ev, 4);
   })),
 // RECRUIT: 0+
 // ATTACK: 0+
@@ -1126,7 +1126,7 @@ addHeroTemplates("Paint the Town Red", [
 // Reveal the top card of your deck. If that card has an Attack icon, draw it.
 // COST: 4
   c1: makeHeroCard("Spider-Woman", "Bioelectric Shock", 4, u, 2, Color.RANGED, "Spider Friends", "D",
-    ev => drawIfEv(ev, c => c.printedAttack !== undefined),
+    ev => drawIfEv(ev, hasAttackIcon),
     { wallcrawl: true }
   ),
 // RECRUIT: 3
@@ -1140,7 +1140,7 @@ addHeroTemplates("Paint the Town Red", [
 // COST: 6
 // FLAVOR: For prison psychologists, arachnophobia is a surprisingly common diagnosis.
   uc: makeHeroCard("Spider-Woman", "Venom Blast", 6, u, 3, Color.RANGED, "Spider Friends", "F",
-    ev => drawIfEv(ev, c => c.printedRecruit !== undefined),
+    ev => drawIfEv(ev, hasRecruitIcon),
     { wallcrawl: true }
   ),
 // Recruit a Hero from the HQ for free.
