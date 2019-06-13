@@ -1,0 +1,110 @@
+Base, Dark City, FF, PTTR
+http://bit.ly/LegendaryOnlineLeagueS4_Spreadsheet
+
+Match 1 - Due Sunday night, 2014-10-12
+
+Mastermind: Magneto
+Scheme: Pull Reality into the Negative Zone
+Villain Group: Four Horsemen
+Henchmen: Sentinels
+Hero 1: Cable
+Heroes 2 & 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 18 turns
+
+Match 2 - Due Sunday night, 2014-10-19
+
+Mastermind: Loki
+Scheme: Unleash the Power of the Cosmic Cube
+Villain Group: Skrulls
+Henchmen: Maggia Goons
+Hero 1: Iceman
+Hero 2: Black Cat
+Hero 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 19 turns
+
+Match 3 - Due Sunday night, 2014-10-26
+
+Mastermind: Apocalypse
+Scheme: Invincible Force Field
+Villain Group: Hydra
+Henchmen: Savage Land Mutates
+Hero 1: Iron Fist
+Hero 2: Nick Fury
+Hero 3: Scarlet Spider
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 7 Twists, 1 Bystander
+Maximum Winning Turn Count: 18 turns
+Note: Apocalypse gives +2 attack to all Hydra Villains, just as if they were the Four Horsemen. This is the result of the change to the official Advanced Solo Mode rules found in the Legendary Villains rulebook.
+
+Match 4 - Due Sunday night, 2014-11-02
+
+Mastermind: Galactus
+Scheme: Weave A Web of Lies
+Villain Group: Heralds of Galactus
+Henchmen: Doombot Legion
+Hero 1: Jean Grey
+Heroes 2 & 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 7 Twists, 1 Bystander
+Maximum Winning Turn Count: 18 turns
+
+Match 5 - Due Sunday night, 2014-11-09
+
+Mastermind: Carnage
+Scheme: Transform Citizens into Demons
+Villain Group: Emissaries of Evil
+Henchmen: Phalanx
+Hero in the Villain Deck: Jean Grey
+Hero 1: Invisible Woman
+Hero 2: Symbiote Spider-Man
+Hero 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 0 Bystanders, 14 Jean Greys
+Maximum Winning Turn Count: 33 turns
+
+Match 6 - Due Sunday night, 2014-11-16
+
+Mastermind: Kingpin
+Scheme: Massive Earthquake Generator
+Villain Group: Enemies of Asgard
+Henchmen: Savage Land Mutates
+Hero 1: Nightcrawler
+Hero 2: Emma Frost
+Hero 3: Blade
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 21 turns
+
+Match 7 - Due Sunday night, 2014-11-23
+
+Mastermind: Mr. Sinister
+Scheme: Replace Earth's Leaders with Killbots
+Villain Group: MLF
+Henchmen: Hand Ninjas
+Hero 1: Spider-Man
+Heroes 2 & 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 5 Twists, 18 Bystanders
+Maximum Winning Turn Count: 34 turns
+Note: Do NOT include the 3 additional Scheme Twists that are stacked next to the Scheme as part of the Scheme's Setup in the number of Scheme Twists when you submit your results. Only the Scheme Twists actually drawn from the Villain Deck factor into your score.
+
+Match 8 - Due Sunday night, 2014-11-30
+
+Mastermind: Mysterio
+Scheme: Portals to the Dark Dimension
+Villain Group: Spider-Foes
+Henchmen: Maggia Goons
+Hero 1: Rogue
+Hero 2: Thor
+Hero 3: You choose from the list of available heroes.
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 7 Twists, 1 Bystander
+Maximum Winning Turn Count: 18 turns
+
+Match 9 - Due Sunday night, 2014-12-07
+
+Mastermind: Mephisto
+Scheme: Capture Baby Hope
+Villain Group: Radiation
+Henchmen: Doombot Legion
+Hero 1: Daredevil
+Hero 2: Punisher
+Hero 3: Moon Knight
+Villain Deck Composition: 8 Villains, 3 Henchmen, 5 Master Strikes, 8 Twists, 1 Bystander
+Maximum Winning Turn Count: 19 turns
