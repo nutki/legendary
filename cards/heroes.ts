@@ -26,11 +26,11 @@ addHeroTemplates("Legendary", [
 // RECRUIT: 0+
 // You get +1 Recruit for each color of Hero you have.
 // COST: 3
-  c1: makeHeroCard("Captain America", "Avengers Assemble!", 3, 0, u, Color.INSTINCT, "Avengers", "", ev => addRecruitEvent(ev, numColorsYouHave())),
+  c1: makeHeroCard("Captain America", "Avengers Assemble!", 3, 0, u, Color.INSTINCT, "Avengers", "", ev => addRecruitEvent(ev, numColors())),
 // ATTACK: 0+
 // You get +1 Attack for each color of Hero you have.
 // COST: 4
-  c2: makeHeroCard("Captain America", "Perfect Teamwork", 4, u, 0, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, numColorsYouHave())),
+  c2: makeHeroCard("Captain America", "Perfect Teamwork", 4, u, 0, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, numColors())),
 // ATTACK: 4
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
@@ -1207,6 +1207,11 @@ const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.
 const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
   chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.newRecruit) && drawEv(ev, 2));
 });
+const bindingsTemplate = makeWoundCard(() => !turnState.recruitedOrFought, ev => {
+  KOEv(ev, ev.source);
+  playerState.hand.limit(isBindings).limit(c => c !== ev.source).each(w => gainEv(ev, w, playerState.right));
+  turnState.noRecruitOrFight = true;
+}, "Bindings", "BINDINGS");
 
 addHeroTemplates("Villains", [
 {

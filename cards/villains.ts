@@ -582,3 +582,309 @@ addVillainTemplates("Paint the Town Red", [
   })],
 ]},
 ]);
+// fight effect
+function demolishEv(ev: Ev) {
+  let cost: number;
+  revealHeroDeckEv(ev, 1, c => c.withFirst(c => cost = c.cost), false, true);
+  cont(ev, () => eachPlayer(p => {
+    cost !== undefined && selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost === cost), c => discardEv(ev, c), p)
+  }));
+}
+// fightCond
+function elusive(n: number) {
+  return () => turnState.totalRecruit >= n;
+}
+// varDefense
+function xTremeAttack(c: Card): number {
+  return CityCards().limit(isVillain).count(cc => cc.xTremeAttack && cc !== c);
+}
+function isOdd(n: number) { return n % 2 === 1; }
+addVillainTemplates("Villains", [
+{ name: "Avengers", cards: [
+// ATTACK: 3*
+// VP: 2
+// Elusive 4
+  [ 2, makeVillainCard("Avengers", "Ant-Man", 3, 2, {
+    fightCost: elusive(4),
+  })],
+// ATTACK: 4+
+// VP: 5
+// AMBUSH: Each player reveals three colors of Allies or gains a Bindings. (Grey is a color.)
+// FIGHT: Same effect. Captain America gets +1 Attack for each color of Ally in the Lair.
+// ESCAPE: Demolish each player.
+  [ 1, makeVillainCard("Avengers", "Captain America", 4, 5, {
+    ambush: ev => eachPlayer(p => numColors(yourHeroes(p)) >= 3 || gainBindingsEv(ev, p)),
+    fight: ev => eachPlayer(p => numColors(yourHeroes(p)) >= 3 || gainBindingsEv(ev, p)),
+    escape: demolishEv,
+    varDefense: c => c.printedDefense + numColors(HQCards().limit(isHero)),
+  })],
+// ATTACK: 8
+// VP: 6
+// AMBUSH: Demolish each player twice.
+// FIGHT: Same effect.
+// ESCAPE: Same effect.
+  [ 1, makeVillainCard("Avengers", "Hulk", 8, 6, {
+    ambush: [ demolishEv, demolishEv ],
+    fight: [ demolishEv, demolishEv ],
+    escape: [ demolishEv, demolishEv ],
+  })],
+// ATTACK: 7
+// VP: 5
+// AMBUSH: Each player reveals a [Tech] Ally or gains a Bindings.
+// FIGHT: Same effect.
+// ESCAPE: Demolish each player.
+  [ 1, makeVillainCard("Avengers", "Iron Man", 7, 5, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p))),
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p))),
+    escape: demolishEv,
+  })],
+// ATTACK: 7
+// VP: 5
+// AMBUSH: KO each Ally from the Lair that costs 7 Cost or more.
+// FIGHT: Same effect.
+// ESCAPE: Demolish each player.
+  [ 1, makeVillainCard("Avengers", "Thor", 7, 5, {
+    ambush: ev => HQCards().limit(isHero).limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
+    fight: ev => HQCards().limit(isHero).limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
+    escape: demolishEv,
+  })],
+// ATTACK: 1*
+// VP: 4
+// Elusive 7
+  [ 2, makeVillainCard("Avengers", "Wasp", 1, 4, {
+    fightCond: elusive(7)
+  })],
+]},
+{ name: "Defenders", cards: [
+// ATTACK: 5
+// VP: 3
+// FIGHT: The next Ally you recruit this turn goes on top of your deck.
+// ESCAPE: Each player reveals the top card of their deck and if it costs 1 Cost or more, discards it.
+  [ 2, makeVillainCard("Defenders", "Daredevil", 5, 3, {
+    fight: ev => turnState.nextHeroRecruit = "DECK",
+  })],
+// ATTACK: 3*
+// VP: 2
+// To fight Iron Fist, you must also reveal three Allies with different costs.
+  [ 2, makeVillainCard("Defenders", "Iron Fist", 3, 2, {
+  })],
+// ATTACK: 6
+// VP: 4
+// AMBUSH: If any other Defenders Adversaries are in the city, each player gains a Bindings.
+// FIGHT: Same Effect.
+// ESCAPE: Same Effects.
+  [ 2, makeVillainCard("Defenders", "Namor, The Sub-Mariner", 6, 4, {
+    ambush: ev => CityCards().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
+    fight: ev => CityCards().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
+    escape: ev => CityCards().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
+  })],
+// ATTACK: 4
+// VP: 2
+// FIGHT: Each player reveals the top three cards of their deck. You choose which players discard them and which players put them back on top in the order of their choice.
+  [ 2, makeVillainCard("Defenders", "Luke Cage", 4, 2, {
+    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 3, () => chooseMayEv(ev, "Discard revealed", () => p.revealed.deck.each(c => discardEv(ev, c))), p)),
+  })],
+]},
+{ name: "Marvel Knights", cards: [
+// ATTACK: 4
+// VP: 2
+// FIGHT: Each player draws a card.
+  [ 2, makeVillainCard("Marvel Knights", "Black Panther", 4, 2, {
+    fight: ev => eachPlayer(p => drawEv(ev, 1, p)),
+  })],
+// ATTACK: 4
+// VP: 2
+// FIGHT: KO one of your Allies. Then KO a Bindings from your hand or discard pile.
+  [ 2, makeVillainCard("Marvel Knights", "Elektra", 4, 2, {
+    fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), ev => selectCardAndKOEv(ev, handOrDiscard().limit(isBindings))],
+  })],
+// ATTACK: 6
+// VP: 4
+// FIGHT: Reveal the top card of your deck. If it costs 0 Cost, KO it.
+// ESCAPE: Each player reveals the top card of their deck and if it costs 1 Cost or more, KOs it.
+  [ 2, makeVillainCard("Marvel Knights", "Punisher", 6, 4, {
+    fight: ev => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(c => !c.cost).each(c => KOEv(ev, c))),
+    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 1, () => p.revealed.limit(c => c.cost >= 1).each(c => KOEv(ev, c)), p)),
+  })],
+// ATTACK: 5
+// VP: 3
+// FIGHT: You may KO another Adversary from your Victory Pile. If you do, you get +3 Recruit.
+// ESCAPE: Each player may KO an Adversary from their Victory Pile. Any player who does not do so gains a Bindings.
+  [ 2, makeVillainCard("Marvel Knights", "Ghost Rider", 5, 3, {
+    fight: ev => selectCardOptEv(ev, "KO an adversary", playerState.victory.limit(isVillain).limit(c => c !== ev.source), c => { KOEv(ev, c); addRecruitEvent(ev, 3); }),
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "KO an adversary", p.victory.limit(isVillain), c => KOEv(ev, c), () => gainBindingsEv(ev, p), p)),
+  })],
+]},
+{ name: "Spider Friends", cards: [
+// ATTACK: 2*
+// VP: 2
+// Elusive 6.
+// FIGHT: Each player reveals the top card of their deck. Choose any number of those cards to be discarded.
+  [ 2, makeVillainCard("Spider Friends", "Black Cat", 2, 2, {
+    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Discard revealed", p.revealed.deck, c => discardEv(ev, c)), p)),
+  })],
+// ATTACK: 5
+// VP: 3
+// FIGHT: Reveal the top card of your deck. If it has a Recruit icon, KO it.
+// ESCAPE: Each player reveals the top card of their deck, and if it has an Attack icon, KO it.
+  [ 2, makeVillainCard("Spider Friends", "Firestar", 5, 3, {
+    fight: ev => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(hasRecruitIcon).each(c => KOEv(ev, c))),
+    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 1, () => p.revealed.limit(hasAttackIcon).each(c => KOEv(ev, c)), p)),
+  })],
+// ATTACK: 4
+// VP: 2
+// FIGHT: KO one of your Allies. Then, if you fought Moon Knight on the Rooftops, KO another of your Allies.
+  [ 2, makeVillainCard("Spider Friends", "Moon Knight", 4, 2, {
+    fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), ev => isLocation(ev.where, 'ROOFTOPS') && selectCardAndKOEv(ev, yourHeroes()) ]
+  })],
+// ATTACK: 2
+// VP: 3
+// FIGHT: Reveal the top card of the Adversary Deck. If that card is worth 2 Victory Points or less, play it. If you play a card from the Adversary Deck this way, put Spider-Man back on top of the Adversary Deck.
+// ESCAPE: Each player gains a Bindings.
+  [ 2, makeVillainCard("Spider Friends", "Spider-Man", 2, 3, {
+    fight: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(c => c.vp <= 2).each(c => { villainDrawEv(ev, c); moveCardEv(ev, ev.source, gameState.villaindeck); })),
+    escape: ev => eachPlayer(p => gainBindingsEv(ev, p)),
+  })],
+]},
+{ name: "Uncanny Avengers", cards: [
+// ATTACK: 4+
+// VP: 2
+// X-Treme Attack.
+// AMBUSH: Each player who does not reveal a Ranged Ally discards two cards, then draws a card.
+  [ 2, makeVillainCard("Uncanny Avengers", "Havok", 4, 2, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => { pickDiscardEv(ev, p); pickDiscardEv(ev, p); drawEv(ev, 2, p); })),
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+// ATTACK: 4+
+// VP: 2
+// X-Treme Attack.
+// FIGHT: Each other player discards the top card of their deck. Play a copy of one of those Allies.
+  [ 2, makeVillainCard("Uncanny Avengers", "Rogue", 4, 2, {
+    fight: ev => {
+      let revealed: Card[] = [];
+      eachPlayer(p => lookAtDeckEv(ev, 1, () => { p.revealed.limit(isHero).each(c => revealed.push(c)); discardEv(ev, p.revealed.top); }));
+      let playOne = () => selectCardEv(ev, "Choose a card to copy", revealed, sel => {
+        playCopyEv(ev, sel);
+        revealed = revealed.limit(c => c !== sel);
+        if (revealed.length > 0) cont(ev, playOne);
+      });
+      cont(ev, playOne);
+    },
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+// ATTACK: 5
+// VP: 3
+// FIGHT: Reveal the top three cards of your deck. Put any that have odd-numbered costs into your hand and discard the rest. (0 is even.)
+  [ 2, makeVillainCard("Uncanny Avengers", "Scarlet Witch", 5, 3, {
+    fight: ev => lookAtDeckEv(ev, 3, () => playerState.revealed.each(c => isOdd(c.cost) ? moveCardEv(ev, c, playerState.hand) : discardEv(ev, c))),
+  })],
+// ATTACK: 7+
+// VP: 5
+// X-Treme Attack.
+// Wolverine gets +1 Attack for each card you've drawn this turn.
+// ESCAPE: Each player reveals an [Instinct] Ally or gains a Bindings. Then shuffle Wolverine back into the Adversary deck.
+  [ 2, makeVillainCard("Uncanny Avengers", "Wolverine", 7, 5, {
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+    escape: ev => {
+      eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainBindingsEv(ev, p)));
+      shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+    },
+  })],
+]},
+{ name: "Uncanny X-Men", cards: [
+// ATTACK: 5+
+// VP: 3
+// X-Treme Attack.
+// FIGHT: You may KO a Bindings from your hand or discard pile. If you don't, each other player gains a Bindings.
+  [ 2, makeVillainCard("Uncanny X-Men", "Colossus", 5, 3, {
+    fight: ev => selectCardOptEv(ev, "KO a Bindings", handOrDiscard(), c => KOEv(ev, c), () => eachOtherPlayerVM(p => gainBindingsEv(ev, p))),
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+// ATTACK: 4+
+// VP: 2
+// X-Treme Attack.
+// FIGHT: Choose an Ally you played this turn. When you draw a new hand of cards at the end of this turn, add that Ally to your new hand as an extra card.
+  [ 2, makeVillainCard("Uncanny X-Men", "Nightcrawler", 4, 2, {
+    fight: ev => selectCardEv(ev, "Choose an Ally played this turn", playerState.playArea.limit(isHero), sel => addTurnTrigger("CLEANUP", undefined, ev => moveCardEv(ev, sel, playerState.hand))),
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+// ATTACK: 2*+
+// VP: 2
+// X-Treme Attack.
+// Elusive 5
+  [ 2, makeVillainCard("Uncanny X-Men", "Shadowcat", 2, 2, {
+    fightCond: elusive(5),
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+// ATTACK: 4+
+// VP: 2
+// X-Treme Attack.
+// AMBUSH: (After Storm enters the city.) Move Storm to the Rooftops. If another Adversary is already there, swap them.
+// FIGHT: If you fight Storm on the Rooftops, each other player gains a Bindings.
+  [ 2, makeVillainCard("Uncanny X-Men", "Storm", 4, 2, {
+    ambush: ev => withCity('ROOFTOPS', rooftops => swapCardsEv(ev, ev.source.location, rooftops)),
+    fight: ev => isLocation(ev.where, 'ROOFTOPS') && eachOtherPlayerVM(p => gainBindingsEv(ev, p)),
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+]},
+{ name: "X-Men First Class", cards: [
+// ATTACK: 4+
+// VP: 2
+// X-Treme Attack.
+// FIGHT: Draws two cards, then discard a card.
+  [ 2, makeVillainCard("X-Men First Class", "Angel", 4, 2, {
+    fight: ev => { drawEv(ev, 2); pickDiscardEv(ev); },
+    varDefense: xTremeAttack,
+    xTremeAttack: true,
+  })],
+// ATTACK: 5+
+// VP: 3
+// X-Treme Attack.
+// FIGHT: Draw a card for each [Ranged] Ally you played this turn.
+  [ 2, makeVillainCard("X-Men First Class", "Iceman", 5, 3, {
+    fight: ev => drawEv(ev, turnState.cardsPlayed.count(Color.RANGED)),
+    xTremeAttack: true,
+    varDefense: xTremeAttack,
+  })],
+// ATTACK: 6+
+// VP: 4
+// X-Treme Attack.
+// AMBUSH: Jean Grey guards a Bystander for each Adversary in the city with X-Treme Attack (including Jean).
+// FIGHT: You get +1 Recruit for each Bystander you kidnapped this turn.
+  [ 1, makeVillainCard("X-Men First Class", "Jean Grey", 6, 4, {
+    ambush: ev => captureEv(ev, ev.source, CityCards().count(c => c.xTremeAttack)),
+    fight: ev => addRecruitEvent(ev, turnState.pastEvents.count(e => e.type === "RESCUE")),
+    xTremeAttack: true,
+    varDefense: xTremeAttack,
+  })],
+// ATTACK: 5+
+// VP: 3
+// X-Treme Attack.
+// FIGHT: KO one of your Allies. Then KO another of your Allies if there are any other Adversaries in the city with X-Treme Attack.
+  [ 2, makeVillainCard("X-Men First Class", "Beast", 5, 3, {
+    fight: [
+      ev => selectCardAndKOEv(ev, yourHeroes()),
+      ev => CityCards().has(c => c.xTremeAttack && c !== ev.source) && selectCardAndKOEv(ev, yourHeroes()),
+    ],
+    xTremeAttack: true,
+    varDefense: xTremeAttack,
+  })],
+// ATTACK: 6+
+// VP: 4
+// X-Treme Attack. To Fight Cyclops, you must also discard a card.
+// ESCAPE: Each player reveals a Brotherhood Ally or discards a card.
+  [ 1, makeVillainCard("X-Men First Class", "Cyclops", 6, 4, {
+    fightCond: () => playerState.hand.size >= 1,
+    fightCost: ev => pickDiscardEv(ev),
+    xTremeAttack: true,
+    varDefense: xTremeAttack,
+  })],
+]},
+]);

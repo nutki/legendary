@@ -92,6 +92,7 @@ interface Card {
   set?: string
   templateId?: string
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
+  xTremeAttack: boolean
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -104,6 +105,7 @@ interface VillainCardAbillities {
   bribe?: boolean
   isHenchman?: boolean
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
+  xTremeAttack?: boolean
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -140,7 +142,7 @@ class Card {
     return value < 0 ? 0 : value;
   }
   get vp() {
-    const baseVP = this.varVP ? this.varVP(this) : this.printedVP;
+    const baseVP = (this.varVP ? this.varVP(this) : this.printedVP) || 0;
     return getModifiedStat(this, 'vp', baseVP);
   }
   get villainGroup() {
@@ -219,8 +221,8 @@ function makeBystanderCard(name?: string, rescue?: (ev: Ev) => void) {
   c.rescue = rescue;
   return c;
 }
-function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name?: string) {
-  let c = new Card("WOUND");
+function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name?: string, customType?: string) {
+  let c = new Card(customType || "WOUND");
   c.heal = heal;
   c.healCond = cond;
   if (name) c.cardName = name;
@@ -1104,8 +1106,7 @@ function revealable(who = playerState) {
   return who.hand.deck.concat(playerState.playArea.deck);
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
-function numColorsYouHave() {
-  const heroes = yourHeroes(playerState);
+function numColors(heroes: Card[] = yourHeroes()) {
   const colors = [Color.RED, Color.YELLOW, Color.BLACK, Color.BLUE, Color.GREEN, Color.GRAY];
   return colors.count(color => heroes.some(hero => hero.isColor(color)));
 }
@@ -1423,6 +1424,9 @@ function gainWoundEv(ev: Ev, who?: Player): void {
     if (gameState.wounds.top) gainEv(ev, gameState.wounds.top, who);
   });
 }
+function gainBindingsEv(ev: Ev, who: Player = playerState): void {
+  cont(ev, () => gameState.bindings.withTop(c => gainEv(ev, c, who)));
+}
 function gainWoundToHandEv(ev: Ev, who: Player = playerState): void {
   cont(ev, () => gameState.wounds.withTop(c => gainToHandEv(ev, c, who)));
 }
@@ -1609,8 +1613,8 @@ function playCopyEv(ev: Ev, what: Card) {
 function playCardEffects(ev: Ev, card?: Card) {
   card = card || ev.what;
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
-    if (card.playCostType === "DISCARD") pickDiscardEv(ev);
-    if (card.playCostType === "TOPDECK") pickTopDeckEv(ev);
+    if (card.playCostType === "DISCARD") repeat(card.playCost, () => pickDiscardEv(ev));
+    if (card.playCostType === "TOPDECK") repeat(card.playCost, () => pickTopDeckEv(ev));
     if (card.attack) addAttackEvent(ev, card.attack);
     if (card.recruit) addRecruitEvent(ev, card.recruit);
     for (let i = 0; card.effects && i < card.effects.length; i++) {
