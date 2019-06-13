@@ -324,3 +324,120 @@ makeMastermindCard("Mysterio", 8, 6, "Sinister Six", ev => {
   } ],
 ]),
 ]);
+addTemplates("MASTERMINDS", "Villains", [
+makeMastermindCard("Dr. Strange", 8, 6, "Defenders", ev => {
+// Command Strike: Reveal the top three cards of the Adversary Deck. Put the Adversary you revealed with the highest printed Attack on top of that deck. Then play a Plot Twist from among the cards you revealed. Then put the rest of those cards on the bottom of that deck in random order.
+  revealVillainDeckEv(ev, 3, cards => {
+    const max = cards.limit(isVillain).max(c => c.printedDefense);
+    selectCardEv(ev, "Select card to put on to of the Villain deck", cards.limit(c => isVillain(c) && c.defense === max), c => moveCardEv(ev, c, gameState.villaindeck));
+    cards.limit(isStrike).withFirst(c => villainDrawEv(ev, c));
+  }, true, true);
+// 
+}, [
+  [ "Book of the Vishanti", ev => {
+  // Each other player reveals a [Covert] Ally or discards all the cards in their hand, then draws as many cards as they discarded.
+    eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, p.hand.size, p); }, p));
+  } ],
+  [ "Crimson Bands of Cyttorak", ev => {
+  // Each other player reveals their hand, then gains a Bindings for each non-grey Ally that player has.
+    eachPlayer(p => repeat(yourHeroes(p).count(isNonGrayHero), () => gainBindingsEv(ev, p)));
+  } ],
+  [ "Eye of Agamotto", ev => {
+  // Reveal cards from the Ally Deck equal to the number of players. Put one of those cards into each player's discard pile.
+    revealHeroDeckEv(ev, gameState.players.size, cards => {
+      const selected: Card[] = [];
+      eachPlayer(p => cont(ev, () => {
+        selectCardEv(ev, `Select card for ${p.name} to gain`, cards.limit(c => !selected.includes(c)), c => { selected.push(c); gainEv(ev, c, p); });
+      }))
+    });
+  } ],
+  [ "Winds of Watoomb", ev => {
+  // After you draw a new hand of cards at the end of this turn, each player simultaneously passes a non-grey Ally from their hand to the hand of the player on their left.
+    addTurnTrigger("CLEANUP", u, () => {
+      let selected: { p: Player, c: Card}[] = [];
+      eachPlayer(p => selectCardEv(ev, "Select a card to pass", p.hand.deck, c => selected.push({ p, c }), p));
+      cont(ev, () => selected.each(({ p, c }) => moveCardEv(ev, c, p.left.hand)));
+    });
+  } ],
+]),
+makeMastermindCard("Nick Fury", 9, 6, "Avengers", ev => {
+// Stack this Strike next to Nick Fury. Then demolish each player once for each Strike stacked here.
+  attachCardEv(ev, ev.what, ev.source, "STRIKE");
+  repeat(ev.source.attached("STRIKE").size, () => demolishEv(ev));
+}, [
+  [ "Bounty on Fury's Head", ev => {
+  // KO any number of your Hydra Allies. For each Ally you KO'd this way, you may gain a Madame HYDRA.
+    selectObjectsAnyEv(ev, "KO HYDRA Allies", yourHeroes().limit("HYDRA"), c => KOEv(ev, c));
+    cont(ev, () => repeat(turnState.pastEvents.count(e => e.type === "KO" && e.parent === ev), () => chooseMayEv(ev, "Gain Madame HYDRA", () => gameState.madame.withTop(c => gainEv(ev, c)))));
+  } ],
+  [ "Purge Hydra", ev => {
+  // Each other player reveals their hand and discards two Hydra Allies.
+    eachPlayer(p => selectObjectsEv(ev, "Discard 2 HYDRA Allies", 2, p.hand.limit("HYDRA"), c => discardEv(ev, c), p));
+  } ],
+  [ "The Avengers Initiative", ev => {
+  // Each other player reveals a [Tech] Ally or chooses an Avengers Adversary from their Victory Pile and it enters the Bridge.
+    withCity("BRIDGE", bridge => eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => selectCardEv(ev, "Select an Adversary", p.victory.limit(c => c.villainGroup === "Avengers"), c => moveCardEv(ev, c, bridge)), p)));
+  } ],
+  [ "Total Fury", ev => {
+  // Defeat an Adversary whose Attack is less than the number of Hydra Allies in the KO pile.
+    selectCardEv(ev, "Defeat an Adversary", villains().limit(c => c.defense < gameState.ko.count("HYDRA")), c => defeatEv(ev, c));
+  } ],
+]),
+// Odin gets +1 Attack for each Asgardian Warrior in the city and in the Overrun Pile.
+makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
+// Each player puts an Asgardian Warrior from their Victory Pile into an empty city space. Any player who cannot do so gains a Bindings.
+  eachPlayer(p => selectCardOrEv(ev, "Select an Asgardian Warrior", p.victory.limit(c => gameState.city.has(d => !d.size) && c.villainGroup === "Asgardian Warriors"), c => {
+    selectCardEv(ev, "Select an empty city space", gameState.city.limit(d => !d.size), d => moveCardEv(ev, c, d), p);
+  }, () => gainBindingsEv(ev, p), p));
+}, [
+  [ "Divine Justice", ev => {
+  // Each other player with a Bindings in their discard pile gains another Bindings.
+    eachOtherPlayerVM(p => p.discard.has(isBindings) && gainBindingsEv(ev, p));
+  } ],
+  [ "Might of Valhalla", ev => {
+  // Draw a card for each Asgardian Warrior in your Victory Pile.
+    drawEv(ev, playerState.victory.count(c => c.villainGroup === "Asgardian Warriors"));
+  } ],
+  [ "Riches of Asgard", ev => {
+  // You get +1 Recruit for each Asgardian Warrior in your Victory Pile.
+    addRecruitEvent(ev, playerState.victory.count(c => c.villainGroup === "Asgardian Warriors"));
+  } ],
+  [ "Ride of the Valkyries", ev => {
+  // Each other player reveals a Foes of Asgard Ally or discards a card for each Asgardian Warrior in the Overrun Pile.
+    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => repeat(gameState.escaped.count(c => c.villainGroup === "Asgardian Warriors"), () => pickDiscardEv(ev, p)), p));
+  } ],
+], {
+  varDefense: c => c.printedDefense + CityCards().count(v => v.villainGroup === c.leads) + gameState.escaped.count(v => v.villainGroup === c.leads),
+}),
+makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
+// Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
+  const cards = HQCards().limit(isHero);
+  selectObjectsValidEv(ev, "Choose the two highest-cost Allies", s => {
+    const minSelected = -s.max(c => -c.cost);
+    const maxRest = cards.limit(c => !s.includes(c)).max(c => c.cost);
+    return maxRest === undefined || minSelected >= maxRest;
+  }, cards, c => attachCardEv(ev, ev.what, ev.source, "PAWN"));
+// TODO make pawns recruitable
+}, [
+  [ "Cerebro Device", ev => {
+  // Reveal the top three cards of the Adversary Deck. Play any Adversaries you revealed that have "X-Treme Attack". Put the rest back in random order.
+    revealVillainDeckEv(ev, 3, cards => cards.limit(c => c.xTremeAttack).each(c => villainDrawEv(ev, c)));
+  } ],
+  [ "Mental Dominance", ev => {
+  // Stack the top three cards of the Ally Deck next to Professor X in random order as "Telepathic Pawns."
+    revealHeroDeckEv(ev, 3, cards => { cards.shuffle(); cards.each(c => attachCardEv(ev, c, ev.source.mastermind, "PAWN"))});
+  } ],
+  [ "Mightiest Mutant Mind", ev => {
+  // Each other player reveals a Brotherhood Ally or stacks a non-grey Ally from their hand next to Professor X as a "Telepathic Pawn."
+    eachOtherPlayerVM(p => revealOrEv(ev, "Brotherhood", () => selectCardEv(ev, "Select a non-grey Ally", p.hand.limit(isNonGrayHero), c => {
+      attachCardEv(ev, c, ev.source.mastermind, "PAWN");
+    }, p), p))
+  } ],
+  [ "Telepathic Imprisonment", ev => {
+  // Each other player reveals a Brotherhood Ally or gains a Bindings.
+    eachOtherPlayerVM(p => revealOrEv(ev, "Brotherhood", () => gainBindingsEv(ev, p), p))
+  } ],
+], {
+  varDefense: c => c.printedDefense + c.attached("PAWN").size
+}),
+]);

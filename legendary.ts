@@ -335,6 +335,7 @@ interface Array<T> {
   has: (f: Filter<T>) => boolean
   each: (f: (c: T) => void) => void
   sum: (f: (c: T) => number) => number
+  max: (f: (c: T) => number) => number
   merge: () => T
   withFirst: (f: (c: T) => void) => void
   withLast: (f: (c: T) => void) => void
@@ -349,6 +350,7 @@ Array.prototype.limit = function (f) { return limit(this, f); };
 Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U) { return this.forEach(f); };
 Array.prototype.sum = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => a + v, 0); };
+Array.prototype.max = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => v === undefined ? a : a === undefined ? v : Math.max(a, v), undefined); };
 Array.prototype.merge = function <T>(this: Array<T>) { return this.reduce((a, v) => a.concat(v), []); };
 Array.prototype.uniqueCount = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return m.size; }
 Array.prototype.unique = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return [...m.keys()]; }
@@ -396,6 +398,7 @@ interface Ev<TSchemeState = any> {
   state?: TSchemeState
   cost?: ActionCost
   effectName?: EffectStat
+  isValid?: (p: any) => boolean
 }
 interface EvParams {
   where?: Deck
@@ -425,6 +428,7 @@ interface EvParams {
   confirm?: boolean
   cost?: ActionCost
   effectName?: EffectStat
+  isValid?: (p: any) => boolean
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
@@ -523,10 +527,11 @@ let officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u
 let twistTemplate = new Card("SCHEME TWIST");
 let strikeTemplate = new Card("MASTER STRIKE");
 let woundTemplate = makeWoundCard(function () {
-  return !turnState.recruitedOrFought;
+  return !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT");
 }, function (ev) {
   playerState.hand.limit(isWound).forEach(function (w) { KOEv(ev, w); });
-  turnState.noRecruitOrFight = true;
+  addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
+  addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
 });
 
 function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
@@ -555,8 +560,6 @@ interface Turn extends Ev {
   recruit: number
   attack: number
   attackWithRecruit: boolean
-  recruitedOrFought: boolean
-  noRecruitOrFight: boolean
   totalRecruit: number
   totalAttack: number
   attackSpecial: { amount: number, cond: (c: Card) => boolean }[]
@@ -602,6 +605,7 @@ interface Game extends Ev {
   ko: Deck
   herodeck: Deck
   officer: Deck
+  madame: Deck
   newRecruit: Deck
   wounds: Deck
   bindings: Deck
@@ -864,6 +868,7 @@ gameState = {
   ko: new Deck('KO', true),
   herodeck: new Deck('HERO'),
   officer: new Deck('SHIELDOFFICER', true),
+  madame: new Deck('MADAME', true),
   newRecruit: new Deck('NEWRECRUIT', true),
   wounds: new Deck('WOUNDS', true),
   bindings: new Deck('BINDINGS', true),
@@ -1331,14 +1336,12 @@ function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => isHero(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
-  if (!turnState.noRecruitOrFight) { // Do post filtering instead in case specialActions contain fight or recruit
   // TODO any deck with recruitable
   p = p.concat(HQCards().limit(isHero).map(d => recruitCardActionEv(ev, d)));
   // TODO any deck with fightable
   p = p.concat(FightableCards().map(d => fightActionEv(ev, d)));
   gameState.mastermind.each(c => c.attached('TACTICS').size && p.push(fightActionEv(ev, c)))
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
-  }
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
@@ -1443,6 +1446,15 @@ function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler |
   }
   if (!effects) return;
   if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
+}
+function selectObjectsValidEv<T>(ev: Ev, desc: string, isValid: (sel: T[]) => boolean, objects: T[], effect1: (o: T) => void, effect0?: () => void, who: Player = playerState) {
+  if (objects.length === 0) {
+    if (effect0) cont(ev, () => effect0());
+  } else {
+    effect0 = effect0 || (() => {});
+    effect1 = effect1 || (() => {});
+    pushEv(ev, "SELECTOBJECTS", { desc: desc, isValid, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
+  }
 }
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0 || max === 0) {
@@ -1640,7 +1652,6 @@ function playCard(ev: Ev): void {
 }
 function buyCard(ev: Ev): void {
   textLog.log(`Recruited ${ev.what.cardName || ev.what.id}`);
-  turnState.recruitedOrFought = true;
   let where = turnState.nextHeroRecruit;
   turnState.nextHeroRecruit = undefined;
   if (where === "HAND") gainToHandEv(ev, ev.what);
@@ -1751,7 +1762,6 @@ function villainEscape(ev: Ev): void {
 function villainFight(ev: Ev): void {
   const c = ev.what;
   textLog.log(`Fought ${c.cardName || c.id}`);
-  turnState.recruitedOrFought = true;
   if (c.fightCost) cont(ev, c.fightCost);
   defeatEv(ev, c);
 }
@@ -2026,7 +2036,11 @@ function mainLoop(): void {
       });
       extraActions.push({name: "Confirm", func: () => {
         let num = selected.count(s => s);
-        if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
+        if (ev.isValid) {
+          if (ev.isValid(options.filter((a, i) => selected[i]))) { console.log("Selection is not valid"); return; }
+        } else {
+          if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
+        }
         let indexes = selected.map((s, i) => s ? i : -1).filter(i => i >= 0);
         indexes.forEach(i => ev.result1(options[i]));
         if (num === 0) ev.result0();

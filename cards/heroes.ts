@@ -1207,10 +1207,11 @@ const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.
 const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
   chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.newRecruit) && drawEv(ev, 2));
 });
-const bindingsTemplate = makeWoundCard(() => !turnState.recruitedOrFought, ev => {
+const bindingsTemplate = makeWoundCard(() => !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT"), ev => {
   KOEv(ev, ev.source);
   playerState.hand.limit(isBindings).limit(c => c !== ev.source).each(w => gainEv(ev, w, playerState.right));
-  turnState.noRecruitOrFight = true;
+  addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
+  addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
 }, "Bindings", "BINDINGS");
 
 addHeroTemplates("Villains", [
