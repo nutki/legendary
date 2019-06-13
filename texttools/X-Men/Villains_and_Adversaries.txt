@@ -82,14 +82,14 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #COPIES: 1
 <b>Trap!</b>
 #AMBUSH: A Villain captures a Bystander.
-<b>By End of Turn:</b> Have no Bystanders in each city captured by Villains.
-<b>Or Suffer:</b> After you draw your new hand at end of turn, each player discards down to four cards each. ????
+<b>By End of Turn:</b> Have no Bystanders in the city captured by Villains.
+<b>Or Suffer:</b> After you draw your new hand at end of turn, each player discards down to four cards in hand.
 #VP: 3
 
 #SUBNAME: Minor Domo
 #COPIES: 2
 #AMBUSH: Minor Domo captures 2 <b>Human Shields</b>.
-#ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) ????.
+#ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) gains a Wound.
 2* Attack
 #VP: 2
 

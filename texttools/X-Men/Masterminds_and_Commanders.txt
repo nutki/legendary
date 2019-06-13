@@ -1,29 +1,29 @@
 
 #CARDNAME: Arcade
-#START: Arcade captures 5 Human Shields.
+#START: Arcade captures 5 <b>Human Shields</b>.
 #LEADS: Murderworld
-#STRIKE: Arcade captures a random Bystander from each player's Victory Pile as a Human Shield. Each player who didn't have a Bystander gains a Wound instead.
+#STRIKE: Arcade captures a random Bystander from each player's Victory Pile as a <b>Human Shield</b>. Each player who didn't have a Bystander gains a Wound instead.
 #ATTACK: 3*
 #VP: 5
 
 #CARDNAME: Epic Arcade
-#START: Arcade captures 8 Human Shields. Play a random Horror.
+#START: Arcade captures 8 <b>Human Shields</b>. Play a random Horror.
 #LEADS: Murderworld
-#STRIKE: Arcade captures two random Bystanders from each player's Victory Pile as a Human Shield. Each player who didn't have two Bystanders gains a Wound instead.
+#STRIKE: Arcade captures two random Bystanders from each player's Victory Pile as a <b>Human Shield</b>. Each player who didn't have two Bystanders gains a Wound instead.
 #ATTACK: 4*
 #VP: 5
 
 #TACTIC: I Love a Parade!
-#FIGHT: Arcade captures two Human Shields. Play an extra card from the Villain Deck next turn.
+#FIGHT: Arcade captures two <b>Human Shields</b>. Play an extra card from the Villain Deck next turn.
 
 #TACTIC: I Need an Audience
-#FIGHT: Arcade captures Human Shields equal to the number of Villains in the city.
+#FIGHT: Arcade captures <b>Human Shields</b> equal to the number of Villains in the city.
 
 #TACTIC: Roulette Wheel of Death
-#FIGHT: Arcade captures a random Bystander as a Human Shield from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
+#FIGHT: Arcade captures a random Bystander as a <b>Human Shield</b> from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
 
 #TACTIC: Welcome to my Theme Park!
-#FIGHT: Arcade and each Murderworld Villain in the city capture two Human Shields.
+#FIGHT: Arcade and each Murderworld Villain in the city capture two <b>Human Shields</b>.
 
 
 #CARDNAME: Dark Phoenix
@@ -81,31 +81,30 @@ Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
 
 
 #CARDNAME: Mojo
-#START: Mojo captures 3 Human Shields. All Bystanders in Victory Piles are worth 3 VP.
+#START: Mojo captures 3 <b>Human Shields</b>. All Bystanders in Victory Piles are worth 3 VP.
 #LEADS: Mojoverse
-#STRIKE: Mojo captures a Human Shield. Each player reveals a [Tech] Hero or discards a card at random.
+#STRIKE: Mojo captures a <b>Human Shield</b>. Each player reveals a [Tech] Hero or discards a card at random.
 #ATTACK: 6*
 #VP: 5
 
 #CARDNAME: Epic Mojo
-#START: Mojo captures 6 Human Shields. Play a random Horror.
-All Bystanders in Victory Piles are worth 4 VP.
+#START: Mojo captures 6 <b>Human Shields</b>. Play a random Horror. All Bystanders in Victory Piles are worth 4 VP.
 #LEADS: Mojoverse
-#STRIKE: Mojo and each Mojoverse Villain capture a Human Shield. Each player reveals a [Tech] Hero or discards down to 4 cards each.
+#STRIKE: Mojo and each Mojoverse Villain capture a <b>Human Shield</b>. Each player reveals a [Tech] Hero or discards down to 4 cards each.
 #ATTACK: 7*
 #VP: 5
 
 #TACTIC: Billions of TV Viewers
-#FIGHT: Each player reveals a [Tech] Hero or chooses a random Bystander from their Victory Pile. Mojo captures those Bystanders as Human Shields.
+#FIGHT: Each player reveals a [Tech] Hero or chooses a random Bystander from their Victory Pile. Mojo captures those Bystanders as <b>Human Shields</b>.
 
 #TACTIC: Brain-Melting TV Marathon
 #FIGHT: Each other player without a Mojo Tactic in their Victory Pile gains a Wound.
 
 #TACTIC: Cross-Dimensional Marketing
-#FIGHT: You get +1 Recruit for each Bystander in your Victory Pile. Mojo captures a Human Shield.
+#FIGHT: You get +1 Recruit for each Bystander in your Victory Pile. Mojo captures a <b>Human Shield</b>.
 
 #TACTIC: Mojo Branding Opportunity
-#FIGHT: Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a HUman Shield.
+#FIGHT: Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a <b>Human Shield</b>.
 
 
 #CARDNAME: Onslaught
