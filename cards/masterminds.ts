@@ -386,7 +386,7 @@ makeMastermindCard("Nick Fury", 9, 6, "Avengers", ev => {
 // Odin gets +1 Attack for each Asgardian Warrior in the city and in the Overrun Pile.
 makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
 // Each player puts an Asgardian Warrior from their Victory Pile into an empty city space. Any player who cannot do so gains a Bindings.
-  eachPlayer(p => selectCardOrEv(ev, "Select an Asgardian Warrior", p.victory.limit(c => gameState.city.has(d => !d.size) && c.villainGroup === "Asgardian Warriors"), c => {
+  eachPlayer(p => selectCardOrEv(ev, "Select an Asgardian Warrior", p.victory.limit(c => gameState.city.has(d => !d.size) && c.villainGroup === ev.source.leads), c => {
     selectCardEv(ev, "Select an empty city space", gameState.city.limit(d => !d.size), d => moveCardEv(ev, c, d), p);
   }, () => gainBindingsEv(ev, p), p));
 }, [
@@ -396,27 +396,26 @@ makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
   } ],
   [ "Might of Valhalla", ev => {
   // Draw a card for each Asgardian Warrior in your Victory Pile.
-    drawEv(ev, playerState.victory.count(c => c.villainGroup === "Asgardian Warriors"));
+    drawEv(ev, playerState.victory.count(c => c.villainGroup === ev.source.mastermind.leads));
   } ],
   [ "Riches of Asgard", ev => {
   // You get +1 Recruit for each Asgardian Warrior in your Victory Pile.
-    addRecruitEvent(ev, playerState.victory.count(c => c.villainGroup === "Asgardian Warriors"));
+    addRecruitEvent(ev, playerState.victory.count(c => c.villainGroup === ev.source.mastermind.leads));
   } ],
   [ "Ride of the Valkyries", ev => {
   // Each other player reveals a Foes of Asgard Ally or discards a card for each Asgardian Warrior in the Overrun Pile.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => repeat(gameState.escaped.count(c => c.villainGroup === "Asgardian Warriors"), () => pickDiscardEv(ev, p)), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => repeat(gameState.escaped.count(c => c.villainGroup === ev.source.mastermind.leads), () => pickDiscardEv(ev, p)), p));
   } ],
 ], {
   varDefense: c => c.printedDefense + CityCards().count(v => v.villainGroup === c.leads) + gameState.escaped.count(v => v.villainGroup === c.leads),
 }),
 makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
 // Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
-  const cards = HQCards().limit(isHero);
-  selectObjectsValidEv(ev, "Choose the two highest-cost Allies", s => {
-    const minSelected = -s.max(c => -c.cost);
-    const maxRest = cards.limit(c => !s.includes(c)).max(c => c.cost);
-    return maxRest === undefined || minSelected >= maxRest;
-  }, cards, c => attachCardEv(ev, ev.what, ev.source, "PAWN"));
+  const selected: Card[] = [];
+  selectCardEv(ev, "Select an Ally", HQCardsHighestCost(), c => selected.push(c));
+  cont(ev, () => selectCardEv(ev, "Select another Ally", HQCards().limit(isHero).limit(c => c !== selected[0]).highest(c => c.cost), c => selected.push(c)));
+  cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, ev.what, ev.source, "PAWN")));
+  cont(ev, () => selected.each(c => attachCardEv(ev, ev.what, ev.source, "PAWN")));
 // TODO make pawns recruitable
 }, [
   [ "Cerebro Device", ev => {

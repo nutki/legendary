@@ -336,6 +336,7 @@ interface Array<T> {
   each: (f: (c: T) => void) => void
   sum: (f: (c: T) => number) => number
   max: (f: (c: T) => number) => number
+  highest: (f: (c: T) => number) => T[]
   merge: () => T
   withFirst: (f: (c: T) => void) => void
   withLast: (f: (c: T) => void) => void
@@ -351,6 +352,7 @@ Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U) { return this.forEach(f); };
 Array.prototype.sum = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => a + v, 0); };
 Array.prototype.max = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => v === undefined ? a : a === undefined ? v : Math.max(a, v), undefined); };
+Array.prototype.highest = function <T>(this: Array<T>, f) { return this.filter(a => f(a) === this.max(f)); };
 Array.prototype.merge = function <T>(this: Array<T>) { return this.reduce((a, v) => a.concat(v), []); };
 Array.prototype.uniqueCount = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return m.size; }
 Array.prototype.unique = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return [...m.keys()]; }
@@ -398,7 +400,6 @@ interface Ev<TSchemeState = any> {
   state?: TSchemeState
   cost?: ActionCost
   effectName?: EffectStat
-  isValid?: (p: any) => boolean
 }
 interface EvParams {
   where?: Deck
@@ -428,7 +429,6 @@ interface EvParams {
   confirm?: boolean
   cost?: ActionCost
   effectName?: EffectStat
-  isValid?: (p: any) => boolean
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
@@ -1079,9 +1079,7 @@ function destroyCity(space: Deck) {
   space.isCity = false;
 }
 function HQCardsHighestCost(): Card[] {
-  const all = HQCards().limit(isHero);
-  const maxCost = all.reduce((max, c) => c.cost > max ? c.cost : max, 0);
-  return all.limit(c => c.cost === maxCost);
+  return HQCards().limit(isHero).highest(c => c.cost);
 }
 function villainOrMastermind(): Card[] {
   return villains().concat(gameState.mastermind.deck);
@@ -1446,15 +1444,6 @@ function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler |
   }
   if (!effects) return;
   if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
-}
-function selectObjectsValidEv<T>(ev: Ev, desc: string, isValid: (sel: T[]) => boolean, objects: T[], effect1: (o: T) => void, effect0?: () => void, who: Player = playerState) {
-  if (objects.length === 0) {
-    if (effect0) cont(ev, () => effect0());
-  } else {
-    effect0 = effect0 || (() => {});
-    effect1 = effect1 || (() => {});
-    pushEv(ev, "SELECTOBJECTS", { desc: desc, isValid, options: objects, ui: true, agent: who, result1: effect1, result0: effect0});
-  }
 }
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0 || max === 0) {
@@ -2036,11 +2025,7 @@ function mainLoop(): void {
       });
       extraActions.push({name: "Confirm", func: () => {
         let num = selected.count(s => s);
-        if (ev.isValid) {
-          if (ev.isValid(options.filter((a, i) => selected[i]))) { console.log("Selection is not valid"); return; }
-        } else {
-          if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
-        }
+        if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
         let indexes = selected.map((s, i) => s ? i : -1).filter(i => i >= 0);
         indexes.forEach(i => ev.result1(options[i]));
         if (num === 0) ev.result0();
