@@ -413,9 +413,9 @@ makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
 // Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
   const selected: Card[] = [];
   selectCardEv(ev, "Select an Ally", HQCardsHighestCost(), c => selected.push(c));
-  cont(ev, () => selectCardEv(ev, "Select another Ally", HQCards().limit(isHero).limit(c => c !== selected[0]).highest(c => c.cost), c => selected.push(c)));
-  cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, ev.what, ev.source, "PAWN")));
-  cont(ev, () => selected.each(c => attachCardEv(ev, ev.what, ev.source, "PAWN")));
+  cont(ev, () => selectCardEv(ev, "Select another Ally", HQCards().limit(isHero).limit(c => selected.includes(c)).highest(c => c.cost), c => selected.push(c)));
+  cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, c, ev.source, "PAWN")));
+  cont(ev, () => selected.each(c => attachCardEv(ev, c, ev.source, "PAWN")));
 // TODO make pawns recruitable
 }, [
   [ "Cerebro Device", ev => {
