@@ -1,5 +1,5 @@
 "use strict";
-addBystanderTemplates("Legendary", [[ 30, makeBystanderCard() ]]);
+addBystanderTemplates("Legendary", [[ 30, makeBystanderCard("Bystander") ]]);
 addBystanderTemplates("Dark City", [
 // RESCUE: draw a card.
 [ 4, makeBystanderCard("News Reporter", ev => drawEv(ev, 1, ev.who)) ],

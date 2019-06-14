@@ -401,27 +401,6 @@ addVillainTemplates("Dark City", [
   })],
 ]},
 ]);
-function burrowEv(ev: Ev) {
-  isLocation(ev.where, 'STREETS') || withCity('STREETS', streets => streets.size || moveCardEv(ev, ev.source, streets))
-}
-const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
-  function doReveal(ev: Ev, color: number) {
-    incPerTurn(what);
-    let count = 0;
-    selectObjectsAnyEv(ev, "Reveal cards", revealable().limit(color), () => count++);
-    addTurnMod('defense', c => c === what, () => -3 * count);
-    if (isMastermind(what)) addTurnTrigger('FIGHT', ev => ev.what === what, () => count = 0);
-  }
-  return new Ev(ev, 'COSMICTHREATREVEAL', {
-    cost: {
-      cond: c => !countPerTurn(c) && revealable().has(color || isNonGrayHero)
-    },
-    func: (ev) => {
-      color ? doReveal(ev, color) : chooseColorEv(ev, color => doReveal(ev, color))
-    },
-    what,
-  });
-}
 addVillainTemplates("Fantastic Four", [
 { name: "Heralds of Galactus", cards: [
 // Cosmic Threat: [Ranged]
@@ -495,13 +474,6 @@ addVillainTemplates("Fantastic Four", [
   })],
 ]},
 ]);
-function feastEv(ev: Ev, effect?: (c: Card) => void, who?: Player) {
-  who = who || playerState;
-  lookAtDeckEv(ev, 1, () => who.revealed.each(c => {
-    KOEv(ev, c);
-    effect && cont(ev, () => effect(c));
-  }), who);
-}
 addVillainTemplates("Paint the Town Red", [
 { name: "Maximum Carnage", cards: [
 // {FEAST}
@@ -582,22 +554,6 @@ addVillainTemplates("Paint the Town Red", [
   })],
 ]},
 ]);
-// fight effect
-function demolishEv(ev: Ev) {
-  let cost: number;
-  revealHeroDeckEv(ev, 1, c => c.withFirst(c => cost = c.cost), false, true);
-  cont(ev, () => eachPlayer(p => {
-    cost !== undefined && selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost === cost), c => discardEv(ev, c), p)
-  }));
-}
-// fightCond
-function elusive(n: number) {
-  return () => turnState.totalRecruit >= n;
-}
-// varDefense
-function xTremeAttack(c: Card): number {
-  return CityCards().limit(isVillain).count(cc => cc.xTremeAttack && cc !== c);
-}
 addVillainTemplates("Villains", [
 { name: "Avengers", cards: [
 // ATTACK: 3*

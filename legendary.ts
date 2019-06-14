@@ -127,8 +127,9 @@ interface HeroCardAbillities {
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
 }
 class Card {
-  constructor (t: string) {
+  constructor (t: string, n: string) {
     this.cardType = t;
+    this.cardName = n;
   }
   get cost() { return this.printedCost || 0; }
   get attack() { return getModifiedStat(this, 'attack', this.printedAttack); }
@@ -158,26 +159,18 @@ class Card {
   get captured() { return this.attached('CAPTURED'); }
 };
 let Color = {
-  RED:1,
   COVERT:1,
-  YELLOW:2,
   INSTINCT:2,
-  BLACK:4,
   TECH:4,
-  BLUE:8,
   RANGED:8,
-  GREEN:16,
   STRENGTH:16,
-  BASIC:32,
   GRAY:32,
-  MAX:32
 };
 function makeHeroCard(hero: string, name: string, cost: number, recruit: number, attack: number, color: number, team: string, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
-  let c = new Card("HERO");
+  let c = new Card("HERO", name);
   c.printedCost = cost;
   c.printedRecruit = recruit;
   c.printedAttack = attack;
-  c.cardName = name;
   c.heroName = hero;
   c.color = color;
   c.team = team;
@@ -187,26 +180,23 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   return c;
 }
 function makeVillainCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
-  let c = new Card("VILLAIN");
+  let c = new Card("VILLAIN", name);
   c.printedDefense = defense;
   c.printedVP = vp;
-  c.cardName = name;
   c.printedVillainGroup = group;
   if (abilities) Object.assign(c, abilities);
   return c;
 }
 function makeMastermindCard(name: string, defense: number, vp: number, leads: string, strike: (ev: Ev) => void, tactics: [string, (ev: Ev) => void][], abilities?: MastermindCardAbillities) {
-  let c = new Card("MASTERMIND");
+  let c = new Card("MASTERMIND", name);
   c.printedDefense = defense;
   c.printedVP = vp;
-  c.cardName = name;
   c.leads = leads;
   c.strike = strike;
   c.tacticsTemplates = tactics.map(function (e) {
-    let t = new Card("TACTICS");
+    let t = new Card("TACTICS", e[0]);
     t.printedVP = vp;
     t.printedDefense = defense;
-    t.cardName = e[0];
     t.fight = e[1];
     t.mastermind = c;
     return t;
@@ -214,15 +204,14 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
   if (abilities) Object.assign(c, abilities);
   return c;
 }
-function makeBystanderCard(name?: string, rescue?: (ev: Ev) => void) {
-  let c = new Card("BYSTANDER");
+function makeBystanderCard(name: string, rescue?: (ev: Ev) => void) {
+  let c = new Card("BYSTANDER", name);
   c.printedVP = 1;
-  c.cardName = name;
   c.rescue = rescue;
   return c;
 }
-function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name?: string, customType?: string) {
-  let c = new Card(customType || "WOUND");
+function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name: string, customType?: string) {
+  let c = new Card(customType || "WOUND", name);
   c.heal = heal;
   c.healCond = cond;
   if (name) c.cardName = name;
@@ -352,7 +341,7 @@ Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U) { return this.forEach(f); };
 Array.prototype.sum = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => a + v, 0); };
 Array.prototype.max = function (this: Array<number>, f) { return this.map(f).reduce((a, v) => v === undefined ? a : a === undefined ? v : Math.max(a, v), undefined); };
-Array.prototype.highest = function <T>(this: Array<T>, f) { return this.filter(a => f(a) === this.max(f)); };
+Array.prototype.highest = function <T>(this: Array<T>, f: (c: T) => number) { return this.filter(a => f(a) === this.max(f)); };
 Array.prototype.merge = function <T>(this: Array<T>) { return this.reduce((a, v) => a.concat(v), []); };
 Array.prototype.uniqueCount = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return m.size; }
 Array.prototype.unique = function <T, U>(this: Array<T>, f: (c: T) => U) { let m = new Set<U>(); this.forEach(e => m.add(f(e))); return [...m.keys()]; }
@@ -448,6 +437,12 @@ class Ev implements EvParams {
 };
 
 interface Templates {
+  [s: string]: {
+    set?: string
+    templateId?: string
+    name?: string
+    cardName?: string
+  }[]
   HEROES: {
     set?: string
     templateId?: string
@@ -521,22 +516,9 @@ function findMastermindTemplate(name: string): Card { return cardTemplates.MASTE
 function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.templateId === name)[0]; }
 function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.templateId === name)[0]; }
 const u: undefined = undefined;
-let sa = makeHeroCard('Hero', 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.");
-let sb = makeHeroCard('Hero', 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.");
-let officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D.");
-let twistTemplate = new Card("SCHEME TWIST");
-let strikeTemplate = new Card("MASTER STRIKE");
-let woundTemplate = makeWoundCard(function () {
-  return !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT");
-}, function (ev) {
-  playerState.hand.limit(isWound).forEach(function (w) { KOEv(ev, w); });
-  addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
-  addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
-});
 
 function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
-  let c = new Card('SCHEME');
-  c.cardName = name;
+  let c = new Card('SCHEME', name);
   c.params = counts;
   c.twist = effect;
   if (triggers) c.triggers = triggers instanceof Array ? triggers : [ triggers ];
@@ -593,6 +575,7 @@ interface SetupParams {
   heroes?: number[] | number,
   wounds?: number[] | number,
   twists?: number[] | number,
+  bindings?: number[] | number,
   required?: any
 }
 interface Game extends Ev {
@@ -719,6 +702,10 @@ const exampleGameSetup: Setup = {
   bystanders: ["Legendary"],
   withOfficers: true,
   withWounds: true,
+  withMadame: true,
+  withNewRecruits: true,
+  withBindings: true,
+  handType: 'SHIELD',
   numPlayers: 1,
 };
 const undoLog: UndoLog = {
@@ -775,6 +762,10 @@ interface Setup {
   bystanders: string[]
   withOfficers: boolean
   withWounds: boolean
+  withNewRecruits: boolean
+  withMadame: boolean
+  withBindings: boolean
+  handType: 'SHIELD' | 'HYDRA'
 }
 function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
@@ -790,6 +781,7 @@ function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPl
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
     heroes: [ 3, 5, 5, 5, 6 ],
     wounds: 30,
+    bindings: 30,
   };
   let r = name in s.params ? s.params[name] : defaults[name];
   return r instanceof Array ? r[numPlayers - 1] : r;
@@ -810,6 +802,10 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     bystanders: undefined,
     withOfficers: undefined,
     withWounds: undefined,
+    withNewRecruits: undefined,
+    withMadame: undefined,
+    withBindings: undefined,
+    handType: 'SHIELD',
   };
   function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
     const a = setup[t];
@@ -949,9 +945,13 @@ gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
 if (gameState.scheme.top.triggers)
 gameState.triggers = gameState.triggers.concat(gameState.scheme.top.triggers);
 // Init starting decks
+const handCards = {
+  SHIELD: [ shieldAgentTemplate, shieldTrooperTemplate ],
+  HYDRA: [ hydraOperativeTemplate, hydraSoldierTemplate ],
+}[gameSetup.handType];
 gameState.players.forEach(p => {
-  p.deck.addNewCard(sa, 8);
-  p.deck.addNewCard(sb, 4);
+  p.deck.addNewCard(handCards[0], 8);
+  p.deck.addNewCard(handCards[1], 4);
   p.deck.shuffle();
 });
 // Init hero deck and populate initial HQ
@@ -965,6 +965,9 @@ gameState.herodeck.shuffle();
 // Init auxiliary decks
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
+if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
+if (gameSetup.withNewRecruits) gameState.madame.addNewCard(newRecruitsTemplate, 15);
+if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 gameState.bystanders.shuffle();
 //// TODO sidekicks
@@ -1094,7 +1097,7 @@ function withCity(where: CityLocation, f: (d: Deck) => void) {
   gameState.city.limit(e => e.id === where).each(f);
 }
 function isLocation(where: Deck, ...locations: CityLocation[]) {
-  return locations.some(l => where.id === l);
+  return where ? locations.some(l => where.id === l) : false;
 }
 function atLocation(what: Card, ...locations: CityLocation[]) {
   return locations.some(l => what.location.id === l);
@@ -1111,19 +1114,13 @@ function revealable(who = playerState) {
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
 function numColors(heroes: Card[] = yourHeroes()) {
-  const colors = [Color.RED, Color.YELLOW, Color.BLACK, Color.BLUE, Color.GREEN, Color.GRAY];
+  const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
   return colors.count(color => heroes.some(hero => hero.isColor(color)));
 }
 
 function superPower(...f: (number | string)[]): number {
   if (f.length > 1) return f.count(c => superPower(c) < f.count(e => c === e)) === 0 ? 1 : 0;
   return count(turnState.cardsPlayed, f[0]);
-}
-function versatileEv(ev: Ev, a: number): void {
-  if (turnState.versatileBoth) {
-    addRecruitEvent(ev, a);
-    addAttackEvent(ev, a);
-  } else chooseOneEv(ev, "Versatile is", ["Recruit", ev => addRecruitEvent(ev, a)], ["Attack", ev => addAttackEvent(ev, a)]);
 }
 function addEndDrawMod(a: number): void { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a: number): void { turnState.endDrawAmount = a; }
@@ -1295,16 +1292,6 @@ function incPerTurn(c: Card) {
   if (!turnState.perTurn) turnState.perTurn = new Map();
   turnState.perTurn.set(c.id, 1 + (turnState.perTurn.get(c.id) || 0));
 }
-function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?: number) {
-  let func = effect;
-  const cost: ActionCost = { recruit };
-  const what = ev.source;
-  if (limit) {
-    cost.cond = () => countPerTurn(what) < limit;
-    func = ev => { incPerTurn(what); effect(ev); };
-  }
-  return new Ev(ev, 'FOCUS', { what, func, cost });
-}
 function canHeal(c: Card): boolean {
   if (!c.isHealable()) return false;
   return c.healCond ? c.healCond() : true;
@@ -1319,12 +1306,6 @@ function canPlay(c: Card): boolean {
 }
 function healCard(ev: Ev): void {
   pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.heal });
-}
-function teleportEv(ev: Ev, what: Card): void {
-  pushEv(ev, "TELEPORT", { func: teleportCard, what });
-}
-function teleportCard(ev: Ev): void {
-  moveCardEv(ev, ev.what, playerState.teleported);
 }
 function addTurnAction(action: Ev) {
   if (!turnState.turnActions) turnState.turnActions = [];
@@ -1534,6 +1515,7 @@ function _choosePlayerEv(ev: Ev, effect: (p: Player) => void, list: Player[], ag
   })) });
 }
 function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
+  gameState.players.size === 1 ? cont(ev, () => effect(gameState.players[0])) :
   _choosePlayerEv(ev, effect, gameState.players, agent);
 }
 function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
@@ -1608,7 +1590,13 @@ function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => vo
   selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, () => func(sel)); });
 }
 
-
+function returnToStackEv(ev: Ev, deck: Deck) {
+  const c = ev.source;
+  // Cannot return copies or copyPaste cards
+  if (!c.instance || Object.getPrototypeOf(c) !== c.instance) return false;
+  moveCardEv(ev, c, deck);
+  return true;
+}
 function playCopyEv(ev: Ev, what: Card) {
   pushEv(ev, "PLAY", { func: playCard, what: makeCardCopy(what) });
 }
@@ -2064,7 +2052,7 @@ function startGame(): void {
   initGameState(undoLog.gameSetup);
   mainLoop();
 }
-function makeOptions(id: string, templateType: string, nameProp: string, current: string, f: (name: any) => boolean = () => true) {
+function makeOptions(id: string, templateType: keyof Templates, nameProp: 'name' | 'cardName', current: string, f: (name: any) => boolean = () => true) {
   const values = cardTemplates[templateType].filter(f);
   const el = <HTMLSelectElement>document.getElementById(id);
   el.addEventListener("change", setupChange);
@@ -2085,7 +2073,7 @@ function makeOptions(id: string, templateType: string, nameProp: string, current
     el.add(option);
   });
 }
-function makeSelects(id: string, templateType: string, nameProp: string, name: string, values: string[]) {
+function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name' | 'cardName', name: string, values: string[]) {
   let selected = values.map((a, i) => {
     let e = document.getElementById(id + i);
     if (!e) return undefined;
@@ -2125,6 +2113,10 @@ function setupChange(): void {
   tmp.bystanders = ["Legendary", "Dark City"];
   tmp.withOfficers = true;
   tmp.withWounds = true;
+  tmp.withBindings = true;
+  tmp.withMadame = true;
+  tmp.withNewRecruits = true;
+  tmp.handType = 'SHIELD';
   console.log(tmp, s1, s2, s3);
   globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
 }
@@ -2209,7 +2201,7 @@ bystander mutli-select
 attached cards view
 
 ENGINE:
-replace cardsDrawn and cardsDiscarded with pastEvents
+replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
 remodel triggers to attach on resolution not queuing?
 count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
 set location of copies (to avoid null pointers in many places)

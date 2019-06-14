@@ -1184,36 +1184,6 @@ addHeroTemplates("Paint the Town Red", [
   ra: makeHeroCard("Symbiote Spider-Man", "Thwip!", 2, u, 4, Color.RANGED, "Spider Friends", "D", [], { playCost: 2, playCostType: 'TOPDECK' }),
 },
 ]);
-
-// EXPANSION Villains
-function dodge(c: Card, ev: Ev) {
-  return new Ev(ev, 'DODGE', ev => { discardEv(ev, c); drawEv(ev); });
-}
-
-const madameHydraTemplate = makeHeroCard("Viper", "Madame HYDRA", 3, 2, u, Color.GRAY, "HYDRA", "D", [], { playCost: 1, playCostType: 'DISCARD', cardActions: [ dodge ] });
-const hydraOperativeTemplate = makeHeroCard("Ally", "HYDRA Operative",   0, 1, u, Color.GRAY, "HYDRA");
-const hydraSoldierTemplate = makeHeroCard("Ally", "HYDRA Soldier", 0, u, 1, Color.GRAY, "HYDRA");
-function returnToStackEv(ev: Ev, deck: Deck) {
-  const c = ev.source;
-  // Cannot return copies or copyPaste cards
-  if (!c.instance || Object.getPrototypeOf(c) !== c.instance) return false;
-  moveCardEv(ev, c, deck);
-  return true;
-}
-const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.GRAY, u, "D", [
-  ev => returnToStackEv(ev, gameState.newRecruit),
-  ev => drawEv(ev),
-]);
-const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
-  chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.newRecruit) && drawEv(ev, 2));
-});
-const bindingsTemplate = makeWoundCard(() => !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT"), ev => {
-  KOEv(ev, ev.source);
-  playerState.hand.limit(isBindings).limit(c => c !== ev.source).each(w => gainEv(ev, w, playerState.right));
-  addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
-  addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
-}, "Bindings", "BINDINGS");
-
 addHeroTemplates("Villains", [
 {
   name: "Bullseye",
