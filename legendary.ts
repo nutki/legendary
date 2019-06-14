@@ -576,7 +576,7 @@ interface SetupParams {
   wounds?: number[] | number,
   twists?: number[] | number,
   bindings?: number[] | number,
-  required?: any
+  required?: { heroes?: string, villains?: string, henchmen?:string },
 }
 interface Game extends Ev {
   gameRand: RNG
@@ -775,7 +775,7 @@ function extraHenchmenName(n: number = 1) {
   const h = gameState.gameSetup.henchmen;
   return h[h.length - n];
 }
-function getParam(name: keyof SetupParams, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
+function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_counts'>, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
     vd_villain: [ 1, 2, 3, 3, 4 ],
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
@@ -821,7 +821,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     if (findVillainTemplate(leads)) setRequired('villains', leads);
     if (findHenchmanTemplate(leads)) setRequired('henchmen', leads);
   }
-  const schemeReq = <{ heroes?: string, villains?: string, henchmen?:string }>scheme.params.required;
+  const schemeReq = scheme.params.required;
   if (schemeReq) {
     if (schemeReq.heroes) setRequired('heroes', schemeReq.heroes);
     if (schemeReq.villains) setRequired('villains', schemeReq.villains);

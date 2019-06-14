@@ -418,14 +418,43 @@ makeSchemeCard("Build an Underground MegaVault Prison", { twists: 8, bindings: [
 // SETUP: 8 Twists. Stack 2 Cops per player next to this Plot.
 // RULE: You can fight any Cop on top of Allies. If you do, the player of your choice gains that Ally.
 // EVILWINS: When a Twist must put out a Cop, but the Cop Stack is already empty.
-makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8 }, ev => {
+makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_henchmen_counts: [[3, 2], [10, 4], [10, 6], [10, 10, 8], [10, 10, 10]], required: { henchmen: 'Cops' } }, ev => {
   // Twist: Each player returns all Cops from their Victory Pile to the Cop Stack. Then each player puts a non-grey Ally from their hand in front of them. Put a Cop from the Cop Stack on top of each of those Allies.
+  const copStack = gameState.scheme.attachedDeck('COPS');
+  eachPlayer(p => p.victory.each(c => moveCardEv(ev, c, copStack)));
+  eachPlayer(p => selectCardEv(ev, "Choose a non-grey Ally", p.hand.deck, c => {
+    schemeProgressEv(ev, copStack.size); 
+    copStack.withTop(cop => {
+      attachCardEv(ev, c, cop, "CAGED");
+      attachCardEv(ev, cop, p.deck, "COPS");
+    });
+  }, p));
+}, [], () => {
+  const copStack = gameState.scheme.attachedDeck('COPS');
+  gameState.villaindeck.limit(c => c.villainGroup === 'Cops').each(c => moveCard(c, copStack));
+  gameState.schemeProgress = copStack.size + 1;
+  gameState.specialActions = ev => playerState.deck.attached('COPS').map(c => fightActionEv(ev, c));
 }),
 // SETUP: 8 Twists. Put the Thor Adversary next to this Plot.
 // RULE: Whenever Thor overruns, stack a Plot Twist from the KO pile next to this Plot as a "Triumph of Asgard."
 // EVILWINS: When there are 3 Triumphs of Asgard next to this Plot.
-makeSchemeCard("Crown Thor King of Asgard", { twists: 8 }, ev => {
+makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ], required: { heroes: 'Avengers' }}, ev => {
   // Twist: If Thor is in the city, he overruns. Otherwise, Thor enters the Bridge from wherever he is, and Thor guards 3 Bystanders.
+  const thor = ev.state.thor;
+  CityCards().has(c => c === thor) ? villainEscapeEv(ev, thor) : villainDrawEv(ev, thor);
+}, {
+  event: "ESCAPE",
+  match: ev => ev.what === gameState.schemeState.thor,
+  after: ev => gameState.ko.limit(isTwist).withFirst(c => {
+    attachCardEv(ev, c, gameState.scheme, "TRIUMPH");
+    cont(ev, () => schemeProgressEv(ev, 3 - gameState.scheme.attached("TRIUMPH").size));
+  })
+}, (s) => {
+  const thorSpace = gameState.scheme.attachedDeck('THOR');
+  gameState.villaindeck.limit(c => c.villainGroup === 'Avengers').each(c => moveCard(c, thorSpace));
+  thorSpace.deck = thorSpace.deck.limit(c => c.cardName === 'Thor');
+  s.thor = thorSpace.top;
+  gameState.schemeProgress = 3;
 }),
 // SETUP: 8 Twists.
 // RULE: An Adversary gets +1 Attack for each Ally it has captured. When you fight that Adversary, gain those Allies.
@@ -433,20 +462,59 @@ makeSchemeCard("Crown Thor King of Asgard", { twists: 8 }, ev => {
 makeSchemeCard("Crush HYDRA", { twists: 8 }, ev => {
   if (ev.nr <= 7) {
     // Twist 1-7 Each Adversary in the city captures a New Recruit, or if there are no more New Recruits, a Madame HYDRA.
+    CityCards().limit(isVillain).each(v => cont(ev, () => {
+      (gameState.newRecruit.size ? gameState.newRecruit : gameState.madame).withTop(c => captureEv(ev, v, c));
+    }));
   } else if (ev.nr === 8) {
     // Twist 8 Put all captured Allies from the city into the Overrun Pile.
+    CityCards().limit(isVillain).each(v => v.captured.limit(isHero).each(c => moveCardEv(ev, c, gameState.escaped)));
   }
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 11 - gameState.escaped.count(isHero))
+}, () => {
+  addStatMod('defense', isVillain, c => c.captured.count(isHero));
+  addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source)); // TODO this should not be a rescue action
+  gameState.schemeProgress = 11;
 }),
 // SETUP: 8 Twists. Stack 8 Bystanders next to this Plot as "Young Mutants."
 // EVILWINS: When there are 8 Bystanders in the Overrun Pile.
 makeSchemeCard("Graduation at Xavier's X-Academy", { twists: 8 }, ev => {
   // Twist: Put a Bystander from next to this Plot into the Overrun Pile.
+  gameState.scheme.attachedDeck("MUTANTS").withTop(c => moveCardEv(ev, c, gameState.escaped));
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 8 - gameState.escaped.count(isBystander))
+}, () => {
+  const mutantStack = gameState.scheme.attachedDeck("MUTANTS");
+  repeat(8, () => gameState.bystanders.withTop(c => moveCard(c, mutantStack)));
+  gameState.schemeProgress = 8;
 }),
 // SETUP: 8 Twists, Stack 21 Bystanders next to this Plot as "Infiltrating Spies."
 // RULE: When you recruit an Ally, kidnap any Bystander in that Lair space. When an Ally leaves the Lair in any other way, put any Bystander from that Lair space into the Overrun Pile.
 // EVILWINS: When there are 12 Bystanders in the Overrun Pile.
 makeSchemeCard("Infiltrate the Lair with Spies", { twists: 8 }, ev => {
   // Twist: Put all Bystanders from the Lair into the Overrun pile. Then put a Bystander from next to this Plot into each Lair space under the Bridge, Streets, and Sewers.
+  gameState.hq.each(d => d.attached('SPIES').each(c => moveCardEv(ev, c, gameState.escaped)));
+  const locations: CityLocation[] = ['BRIDGE', 'STREETS', 'SEWERS'];
+  locations.each(l => withCity(l, d => cont(ev, () => gameState.scheme.attachedDeck("SPIES").withTop(c => attachCardEv(ev, c, d, "SPIES")))));
+}, [{
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 12 - gameState.escaped.count(isBystander))
+}, {
+  event: 'RECRUIT',
+  match: ev => ev.what.location.attached('SPIES').size > 0,
+  before: ev => ev.parent.what.location.attached('SPIES').each(c => rescueEv(ev, c)),
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.what.location.attached('SPIES').size > 0,
+  after: ev => ev.parent.what.location.attached('SPIES').each(c => moveCardEv(ev, c, gameState.escaped)),
+}], () => {
+  const spyStack = gameState.scheme.attachedDeck("SPIES");
+  repeat(21, () => gameState.bystanders.withTop(c => moveCard(c, spyStack)));
 }),
 // SETUP: 8 Twists, Include 10 S.H.I.E.L.D. Assault Squads as one of the Backup Adversary groups.
 // RULE: Assault Squads get +1 Attack for each War Machine Technology next to the Plot.
