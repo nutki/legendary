@@ -931,11 +931,11 @@ if (undoLog.replaying) {
   gameState.gameRand = new RNG();
   undoLog.write(gameState.gameRand.state);
 }
+if (gameSetup.cityType === 'VILLAIN') gameState.city = gameState.city.reverse();
 gameState.cityEntry = gameState.city[4];
 gameState.villaindeck.revealed = new Deck('VILLAIN_REVEALED', true);
 gameState.herodeck.revealed = new Deck('HERO_REVEALED', true);
 
-if (gameSetup.cityType === 'VILLAIN') gameState.city = gameState.city.reverse();
 for (let i = 0; i < 5; i++) {
   gameState.hq[i].below = gameState.city[i];
   gameState.city[i].above = gameState.hq[i];
@@ -1930,12 +1930,22 @@ function eventSource(ev: Ev): string {
   return s instanceof Card ? makeDisplayCardImg(s, false, false, false) : "";
 }
 
+function getDisplayInfo() {
+  return ({
+    attack: turnState.attack,
+    attackSpecial: turnState.attackSpecial.sum(c => c.amount),
+    recruit: turnState.recruit,
+    recruitSpecial: turnState.recruitSpecial.sum(c => c.amount),
+    soloVP: soloVP(),
+  });
+}
 function displayGame(ev: Ev): void {
+  const { recruit, recruitSpecial, attack, attackSpecial, soloVP } = getDisplayInfo();
   displayDecks();
   document.getElementById("source").innerHTML = eventSource(ev);
-  document.getElementById("recruit").innerHTML = turnState.recruit.toString();
-  document.getElementById("attack").innerHTML = turnState.attack.toString();
-  document.getElementById("vp").innerHTML = soloVP().toString();
+  document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
+  document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
+  document.getElementById("vp").innerHTML = `${soloVP}`;
 }
 
 // Main loop
@@ -2091,6 +2101,29 @@ function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name'
     makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.templateId === name);
   });
 }
+function makeBystanderSelects(id: string) {
+  const e = document.getElementById(id);
+  cardTemplates.BYSTANDERS.each(({set}) => {
+    const i = document.createElement('input');
+    i.setAttribute('data-set', set);
+    i.type = "checkbox";
+    e.appendChild(i);
+    e.appendChild(document.createTextNode(set))
+  });
+}
+function getBystanderSelects(id: string) {
+  const r: string[] = [];
+  [...document.getElementById(id).getElementsByTagName('input')].each(e => {
+    if (e.checked) r.push(e.getAttribute('data-set'));
+  })
+  return r;
+}
+function setBysternderSelects(id: string, value: string[]) {
+  [...document.getElementById(id).getElementsByTagName('input')].each(e => {
+    console.log(value);
+    e.checked = value.includes(e.getAttribute('data-set'));
+  })
+}
 function getSelects(name: string, t: string[]): boolean {
   return t.map((old, i) => {
     const v = (<HTMLSelectElement>document.getElementById(name + i)).value;
@@ -2116,18 +2149,20 @@ function setupChange(): void {
   const s1 = getSelects("setup_heroes", tmp.heroes);
   const s2 = getSelects("setup_villains", tmp.villains);
   const s3 = getSelects("setup_henchmen", tmp.henchmen);
-  tmp.bystanders = ["Legendary", "Dark City"];
-  tmp.withOfficers = true;
+  tmp.bystanders = getBystanderSelects("setup_bystanders");
+  tmp.withOfficers = (<HTMLInputElement>document.getElementById('withOfficers')).checked;
   tmp.withWounds = true;
   tmp.withBindings = true;
-  tmp.withMadame = true;
-  tmp.withNewRecruits = true;
-  tmp.handType = 'SHIELD';
+  tmp.withMadame = (<HTMLInputElement>document.getElementById('withMadame')).checked;
+  tmp.withNewRecruits = (<HTMLInputElement>document.getElementById('withNewRecruits')).checked;
+  tmp.handType = (<HTMLInputElement>document.getElementById('handType')).value === 'HYDRA' ? 'HYDRA' : 'SHIELD';
+  tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
   console.log(tmp, s1, s2, s3);
   globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
 }
 function setupInit(): void {
-  document.getElementById("setup_players").addEventListener("change", setupChange)
+  makeBystanderSelects("setup_bystanders");
+  [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
   makeOptions("setup_mastermind", "MASTERMINDS", "cardName", undefined);
 }
@@ -2151,7 +2186,13 @@ function setupSet(s: Setup): void {
   chooseSelects("setup_heroes", s.heroes);
   chooseSelects("setup_villains", s.villains);
   chooseSelects("setup_henchmen", s.henchmen);
-  globalFormSetup = s
+  (<HTMLInputElement>document.getElementById('withMadame')).checked = s.withMadame;
+  (<HTMLInputElement>document.getElementById('withNewRecruits')).checked = s.withNewRecruits;
+  (<HTMLInputElement>document.getElementById('withOfficers')).checked = s.withOfficers;
+  (<HTMLSelectElement>document.getElementById('handType')).value = s.handType;
+  (<HTMLSelectElement>document.getElementById('cityType')).value = s.cityType;
+  setBysternderSelects("setup_bystanders", s.bystanders);
+  globalFormSetup = s;
 }
 function getPopups() {
   const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
@@ -2196,17 +2237,16 @@ GUI:
 Show hidden events (card revealing)
 Select setup screen
 show multiple actions (play/teleport)
-separate config screen
 highlight deck selection
 multiplayer play areas
 idicators of actionable locations in hidden decks
 scrollable cards played and hand
 "scenarios"
 top villain deck card select (prof x uncommon)
-bystander mutli-select
-attached cards view
+!attached cards view
 
 ENGINE:
+cardAction for hand (dodge) and maybe mastermind
 replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
 remodel triggers to attach on resolution not queuing?
 count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
