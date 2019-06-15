@@ -706,6 +706,7 @@ const exampleGameSetup: Setup = {
   withNewRecruits: true,
   withBindings: true,
   handType: 'SHIELD',
+  cityType: 'VILLAIN',
   numPlayers: 1,
 };
 const undoLog: UndoLog = {
@@ -766,6 +767,7 @@ interface Setup {
   withMadame: boolean
   withBindings: boolean
   handType: 'SHIELD' | 'HYDRA'
+  cityType: 'VILLAIN' | 'HERO'
 }
 function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
@@ -806,6 +808,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     withMadame: undefined,
     withBindings: undefined,
     handType: 'SHIELD',
+    cityType: 'VILLAIN',
   };
   function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
     const a = setup[t];
@@ -932,6 +935,7 @@ gameState.cityEntry = gameState.city[4];
 gameState.villaindeck.revealed = new Deck('VILLAIN_REVEALED', true);
 gameState.herodeck.revealed = new Deck('HERO_REVEALED', true);
 
+if (gameSetup.cityType === 'VILLAIN') gameState.city = gameState.city.reverse();
 for (let i = 0; i < 5; i++) {
   gameState.hq[i].below = gameState.city[i];
   gameState.city[i].above = gameState.hq[i];
@@ -966,7 +970,7 @@ gameState.herodeck.shuffle();
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
 if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
-if (gameSetup.withNewRecruits) gameState.madame.addNewCard(newRecruitsTemplate, 15);
+if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTemplate, 15);
 if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 gameState.bystanders.shuffle();
@@ -1321,6 +1325,8 @@ function getActions(ev: Ev): Ev[] {
   p = p.concat(FightableCards().map(d => fightActionEv(ev, d)));
   gameState.mastermind.each(c => c.attached('TACTICS').size && p.push(fightActionEv(ev, c)))
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
+  gameState.madame.withTop(c => p.push(recruitCardActionEv(ev, c)));
+  gameState.newRecruit.withTop(c => p.push(recruitCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
@@ -1853,7 +1859,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermind.cardName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
   if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
-  return imageName("", card, card.cardType);
+  return imageName("", card);
 }
 function makeDisplayAttached(c: Deck | Card) {
   let res = '';

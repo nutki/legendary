@@ -502,7 +502,7 @@ makeSchemeCard("Infiltrate the Lair with Spies", { twists: 8 }, ev => {
   // Twist: Put all Bystanders from the Lair into the Overrun pile. Then put a Bystander from next to this Plot into each Lair space under the Bridge, Streets, and Sewers.
   gameState.hq.each(d => d.attached('SPIES').each(c => moveCardEv(ev, c, gameState.escaped)));
   const locations: CityLocation[] = ['BRIDGE', 'STREETS', 'SEWERS'];
-  locations.each(l => withCity(l, d => cont(ev, () => gameState.scheme.attachedDeck("SPIES").withTop(c => attachCardEv(ev, c, d, "SPIES")))));
+  locations.each(l => withCity(l, d => cont(ev, () => gameState.scheme.attachedDeck("SPIES").withTop(c => attachCardEv(ev, c, d.below, "SPIES")))));
 }, [{
   event: 'MOVECARD',
   match: ev => ev.to === gameState.escaped,
