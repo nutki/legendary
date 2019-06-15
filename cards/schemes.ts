@@ -438,7 +438,7 @@ makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_hench
 // SETUP: 8 Twists. Put the Thor Adversary next to this Plot.
 // RULE: Whenever Thor overruns, stack a Plot Twist from the KO pile next to this Plot as a "Triumph of Asgard."
 // EVILWINS: When there are 3 Triumphs of Asgard next to this Plot.
-makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ], required: { heroes: 'Avengers' }}, ev => {
+makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8 }, ev => {
   // Twist: If Thor is in the city, he overruns. Otherwise, Thor enters the Bridge from wherever he is, and Thor guards 3 Bystanders.
   const thor = ev.state.thor;
   CityCards().has(c => c === thor) ? villainEscapeEv(ev, thor) : villainDrawEv(ev, thor);
@@ -451,7 +451,10 @@ makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8, vd_villai
   })
 }, (s) => {
   const thorSpace = gameState.scheme.attachedDeck('THOR');
-  gameState.villaindeck.limit(c => c.villainGroup === 'Avengers').each(c => moveCard(c, thorSpace));
+  gameState.villaindeck.limit(c => c.villainGroup === 'Avengers' && c.cardName === 'Thor').each(c => moveCard(c, thorSpace));
+  if (!thorSpace.size) {
+    thorSpace.addNewCard(findVillainTemplate('Avengers').cards.map(([, c]) => c).find(c => c.cardName === 'Thor'));
+  }
   thorSpace.deck = thorSpace.deck.limit(c => c.cardName === 'Thor');
   s.thor = thorSpace.top;
   gameState.schemeProgress = 3;
@@ -519,16 +522,34 @@ makeSchemeCard("Infiltrate the Lair with Spies", { twists: 8 }, ev => {
 // SETUP: 8 Twists, Include 10 S.H.I.E.L.D. Assault Squads as one of the Backup Adversary groups.
 // RULE: Assault Squads get +1 Attack for each War Machine Technology next to the Plot.
 // EVILWINS: When there are 3 Assault Squads in the Overrun Pile.
-makeSchemeCard("Mass Produce War Machine Armor", { twists: 8 }, ev => {
+makeSchemeCard("Mass Produce War Machine Armor", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: 'S.H.I.E.L.D. Assault Squad' } }, ev => {
   // Twist: Stack this Twist next to the Plot as "War Machine Technology." An Assault Squad from the current player's Victory Pile enters the Bridge.
+  attachCardEv(ev, ev.source, gameState.scheme, 'TECHNOLOGY');
+  selectCardEv(ev, "Select an Assault Squad", playerState.victory.limit(isGroup('S.H.I.E.L.D. Assault Squad')), c => villainDrawEv(ev, c));
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 3 - gameState.escaped.count(isGroup('S.H.I.E.L.D. Assault Squad')))
+}, () => {
+  addStatMod('defense', isGroup('S.H.I.E.L.D. Assault Squad'), () => gameState.scheme.attached('TECHNOLOGY').size);
+  gameState.schemeProgress = 3;
 }),
 // SETUP: 8 Twists.
 // EVILWINS: When there are 3 Adversaries per player in the Overrun Pile.
 makeSchemeCard("Resurrect Heroes with Norn Stones", { twists: 8 }, ev => {
   if (ev.nr <= 6) {
     // Twist 1-6 An Adversary from the current player's Victory Pile enters the Bridge. Then play the top card of the Adversary Deck.
+    selectCardEv(ev, "Select an Adversary", playerState.victory.limit(isVillain), c => villainDrawEv(ev, c));
+    villainDrawEv(ev);
   } else if (ev.nr >= 7 && ev.nr <= 8) {
     // Twist 7-8 Each player puts an Adversary from their Victory Pile into the Overrun Pile.
+    eachPlayer(p => selectCardEv(ev, "Select an Adversary", p.victory.limit(isVillain), c => moveCardEv(ev, c, gameState.escaped), p));
   }
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 3 * gameState.players.size - gameState.escaped.count(isVillain))
+}, () => {
+  gameState.schemeProgress = 3 * gameState.players.size;
 }),
 ]);
