@@ -890,6 +890,7 @@ playerState = {
 };
 playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState.revealed.owner = playerState;
 playerState.playArea.owner = playerState;
+playerState.artifact.owner = playerState.shard.owner = playerState.teleported.owner = playerState;
 playerState.left = playerState.right = playerState;
 gameState = {
   type: "STATE",
@@ -1054,7 +1055,7 @@ function isTwist(c: Card): boolean { return c.cardType === "SCHEME TWIST"; }
 function isScheme(c: Card): boolean { return c.cardType === "SCHEME"; }
 function isHenchman(c: Card): boolean { return c.isHenchman === true; }
 function isEnemy(c: Card): boolean { return isVillain(c) || isMastermind(c); }
-function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER"; }
+function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER" && (!c.gainable || !owner(c)); }
 function isHealable(c: Card): boolean { return c.isHealable(); }
 function isColor(col: number): (c: Card) => boolean { return function (c) { return c.isColor(col); }; }
 function isTeam(team: string): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
