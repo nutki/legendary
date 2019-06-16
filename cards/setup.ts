@@ -29,6 +29,15 @@ const bindingsTemplate = makeWoundCard(() => !turnState.pastEvents.has(e => e.ty
   addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
 }, "Bindings", "BINDINGS");
 
+// EXPANSION Guardian of the Galaxy
+
+function makeShardToken() {
+  const c = new Card("SHARD", "Shard");
+  c.set = "Guardians of the Galaxy";
+  return c;
+}
+const shardTemplate = makeShardToken();
+
 // EXPANSION Civil War
 
 const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {

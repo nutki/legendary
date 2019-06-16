@@ -36,7 +36,7 @@ addHeroTemplates("Legendary", [
 // COST: 6
   uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who,
+    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who,
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 1, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
 // ATTACK: 3+
@@ -517,7 +517,7 @@ addHeroTemplates("Dark City", [
 // COST: 8
   ra: makeHeroCard("Colossus", "Russian Heavy Tank", 8, u, 6, Color.STRENGTH, "X-Force", "", [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && ev.who !== owner(<Card>source),
+    match: (ev, source) => isWound(ev.what) && ev.who !== owner(source),
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
       gainEv(ev, ev.parent.what, owner(ev.source)); drawEv(ev, 1, owner(ev.source));
     }, () => doReplacing(ev), owner(ev.source))
@@ -690,11 +690,11 @@ addHeroTemplates("Dark City", [
 // COST: 8
   ra: makeHeroCard("Iceman", "Impenetrable Ice Wall", 8, u, 7, Color.RANGED, "X-Men", "", [], { triggers: [ {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(<Card>source) === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
+    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
     replace: ev => revealOrEv(ev, c => c === ev.source, () => doReplacing(ev), owner(ev.source))
   }, {
     event: "DISCARD",
-    match: (ev, source) => owner(<Card>source) === owner(ev.what) && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
+    match: (ev, source) => owner(source) === owner(ev.what) && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
     replace: ev => revealOrEv(ev, c => c === ev.source, () => doReplacing(ev), owner(ev.source))
   }]}),
 },
@@ -878,9 +878,6 @@ addHeroTemplates("Dark City", [
   ra: makeHeroCard("Wolverine", "Reckless Abandon", 7, u, 3, Color.COVERT, "X-Force", "", ev => drawEv(ev, turnState.cardsDrawn)),
 },
 ]);
-function setFocusEv(ev: Ev, cost: number, f: Handler, limit?: number) {
-  addTurnAction(focusActionEv(ev, cost, f, limit));
-}
 addHeroTemplates("Fantastic Four", [
 {
   name: "Human Torch",
@@ -1670,3 +1667,155 @@ addHeroTemplates("Villains", [
   ]),
 },
 ]);
+addHeroTemplates("Guardians of the Galaxy", [
+  {
+    name: "Drax the Destroyer",
+    team: "Guardians of the Galaxy",
+  // <b>Artifact -</b>
+  // Once per turn, you get +1 Attack.
+  // COST: 3
+    c1: makeHeroCard("Drax the Destroyer", "Knives of the Hunter", 3, u, u, Color.STRENGTH, "Guardians of the Galaxy", "", ev => addAttackEvent(ev, 1), { isArtifact: true }),
+  // RECRUIT: 2
+  // Look at the top card of your deck. Discard it or put it back.
+  // {POWER Instinct} You may KO the card you discarded this way.
+  // COST: 3
+    c2: makeHeroCard("Drax the Destroyer", "Interstellar Tracker", 3, 2, u, Color.INSTINCT, "Guardians of the Galaxy", "D", ev => {
+      lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Discard revealed", playerState.revealed.deck, c => {
+        discardEv(ev, c)
+      }));
+      superPower(Color.INSTINCT) && cont(ev, () => turnState.pastEvents.limit(e => e.type === "DISCARD" && e.parent === ev).each(e => {
+        chooseMayEv(ev, "KO discarded card", () => KOEv(ev, e.what));
+      }));
+    }),
+  // ATTACK: 4
+  // {TEAMPOWER Guardians of the Galaxy} Each other player reveals an [Instinct] Hero or discards an <b>Artifact</b> they control. For each <b>Artifact</b> discarded this way, you gain a Shard.
+  // COST: 6
+    uc: makeHeroCard("Drax the Destroyer", "The Destroyer", 6, u, 4, Color.INSTINCT, "Guardians of the Galaxy", "", ev => {
+      superPower("Guardians of the Galaxy") && eachOtherPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardEv(ev, "Choose an Artifact to discard", p.artifact.deck, c => discardEv(ev, c), p), p));
+      cont(ev, () => gainShardEv(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev)));
+    }),
+  // Double the Attack you have.
+  // COST: 7
+    ra: makeHeroCard("Drax the Destroyer", "Avatar of Destruction", 7, u, u, Color.INSTINCT, "Guardians of the Galaxy", "", ev => doubleAttackEv(ev)),
+  },
+  {
+    name: "Gamora",
+    team: "Guardians of the Galaxy",
+  // RECRUIT: 2
+  // A Villain gains a Shard.
+  // COST: 2
+    c1: makeHeroCard("Gamora", "Bounty Hunter", 2, 2, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => {
+      selectCardEv(ev, "Choose a Villain", villains(), c => attachShardEv(ev, c));
+    }),
+  // Gain two Shards.
+  // {POWER Covert} Gain another Shard.
+  // COST: 3
+    c2: makeHeroCard("Gamora", "Deadliest Woman in the Universe", 3, u, u, Color.INSTINCT, "Guardians of the Galaxy", "", ev => {
+      gainShardEv(ev, superPower(Color.COVERT) ? 3 : 2);
+    }),
+  // ATTACK: 3
+  // A Villain of your choice gets no Attack from Shards this turn.
+  // {POWER Covert Covert} The Mastermind gets no Attack from Shards this turn.
+  // COST: 5
+  // GUN: 1
+    uc: makeHeroCard("Gamora", "Galactic Assassin", 5, u, 3, Color.COVERT, "Guardians of the Galaxy", "G", [
+      ev => selectCardEv(ev, "Choose a Villain", villains(), v => addTurnMod('defense', c => c === v, c => -c.attached('SHARD').size)),
+      ev => superPower(Color.COVERT, Color.COVERT) && addTurnMod('defense', isMastermind, c => -c.attached('SHARD').size)
+    ]),
+  // <b>Artifact -</b>
+  // Once per turn, gain two Shards. Once per turn, you may spend 5 Shards to get +10 Attack.
+  // COST: 8
+    ra: makeHeroCard("Gamora", "Godslayer Blade", 8, u, u, Color.COVERT, "Guardians of the Galaxy", "", [
+      ev => gainShardEv(ev, 2),
+      ev => playerState.shard.size >= 5 && repeat(5, () => { spendShardEv(ev); addAttackEvent(ev, 2); }) ], { isArtifact: true }),
+  },
+  {
+    name: "Groot",
+    team: "Guardians of the Galaxy",
+  // ATTACK: 2
+  // {POWER Strength} You may KO a card from your hand or discard pile. If you do, gain a Shard.
+  // COST: 4
+    c1: makeHeroCard("Groot", "Prune the Growths", 4, u, 2, Color.STRENGTH, "Guardians of the Galaxy", "D", ev => superPower(Color.STRENGTH) && KOHandOrDiscardEv(ev, undefined, () => gainShardEv(ev))),
+  // ATTACK: 1
+  // When you draw a new hand of cards at the end of this turn, draw an extra card.
+  // COST: 3
+    c2: makeHeroCard("Groot", "Surviving Sprig", 3, u, 1, Color.STRENGTH, "Guardians of the Galaxy", "", ev => addEndDrawMod(1)),
+  // Gain two Shards. You may spend Shards to get Recruit this turn.
+  // {POWER Covert} You may choose another player. That player gains a Shard.
+  // COST: 4
+    uc: makeHeroCard("Groot", "Groot and Branches", 4, u, u, Color.COVERT, "Guardians of the Galaxy", "", [
+      ev => gainShardEv(ev, 2),
+      ev => addTurnAction(useShardForRecruitActionEv(ev)),
+      ev => superPower(Color.COVERT) && chooseMayEv(ev, "Another player may gain a Shard", () => chooseOtherPlayerEv(ev, p => gainShardEv(ev, 1, p))),
+    ]),
+  // RECRUIT: 5
+  // When you recruit your next Hero this turn, you gain Shards equal to that Hero's cost.
+  // COST: 8
+    ra: makeHeroCard("Groot", "I Am Groot", 8, 5, u, Color.STRENGTH, "Guardians of the Galaxy", "", ev => {
+      let once = 0;
+      addTurnTrigger('RECRUIT', ev => isHero(ev.what), ev => !once++ && gainShardEv(ev, ev.parent.what.cost));
+    }),
+  },
+  {
+    name: "Rocket Raccoon",
+    team: "Guardians of the Galaxy",
+  // RECRUIT: 2
+  // You may discard a card. If you do, draw a card.
+  // COST: 3
+    c1: makeHeroCard("Rocket Raccoon", "Gritty Scavenger", 3, 2, u, Color.TECH, "Guardians of the Galaxy", "GD", ev => {
+      selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
+    }),
+  // ATTACK: 2
+  // {TEAMPOWER Guardians of the Galaxy} You gain a Shard for each other Guardians of the Galaxy Hero you played this turn.
+  // COST: 4
+    c2: makeHeroCard("Rocket Raccoon", "Trigger Happy", 4, u, 2, Color.RANGED, "Guardians of the Galaxy", "GD", ev => {
+      gainShardEv(ev, superPower("Guardians of the Galaxy"));
+    }),
+  // <b>Artifact -</b>
+  // Whenever a Master Strike or Villain's Ambush ability is completed, you may gain a Shard.
+  // COST: 4
+    uc: makeHeroCard("Rocket Raccoon", "Incoming Detector", 4, u, u, Color.INSTINCT, "Guardians of the Galaxy", "G", [], {
+      isArtifact: true,
+      triggers: [ {
+        event: "EFFECT",
+        match: (ev, source) => ev.effectName === "ambush" && isControlledArtifact(source),
+        after: ev => gainShardEv(ev),
+      },  {
+        event: "STRIKE",
+        match: (ev, source) => isControlledArtifact(source),
+        after: ev => gainShardEv(ev),
+      } ],
+    }),
+  // ATTACK: 5+
+  // {POWER Tech} You get +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind.
+  // COST: 7
+    ra: makeHeroCard("Rocket Raccoon", "Vengeance is Rocket", 7, u, 5, Color.TECH, "Guardians of the Galaxy", "G", ev => {
+      const count = gameState.ko.count(isStrike) + gameState.mastermind.deck.sum(m => m.attached("STRIKE").size);
+      superPower(Color.TECH) && addAttackEvent(ev, count);
+    }),
+  },
+  {
+    name: "Star-Lord",
+    team: "Guardians of the Galaxy",
+  // <b>Artifact -</b>
+  // Once per turn, gain a Shard.
+  // COST: 4
+  // GUN: 1
+    c1: makeHeroCard("Star-Lord", "Element Guns", 4, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev), { isArtifact: true }),
+  // RECRUIT: 2
+  // Choose an <b>Artifact</b> any player controls with a "once per turn" ability. Play a copy of one of those abilities.
+  // COST: 4
+    c2: makeHeroCard("Star-Lord", "Legendary Outlaw", 4, 2, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => {
+      selectCardEv(ev, "Choose an Artifact", gameState.players.map(p => p.artifact.deck).merge(), c => playCopyEv(ev, c));
+    }),
+  // <b>Artifact -</b>
+  // Once per turn, draw a card.
+  // COST: 6
+    uc: makeHeroCard("Star-Lord", "Implanted Memory Chip", 6, u, u, Color.TECH, "Guardians of the Galaxy", "", ev => drawEv(ev), { isArtifact: true }),
+  // <b>Artifact -</b>
+  // Once per turn, gain a Shard for each <b>Artifact</b> you control.
+  // COST: 8
+  // GUN: 1
+    ra: makeHeroCard("Star-Lord", "Sentient Starship", 8, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev, playerState.artifact.size), { isArtifact: true }),
+  },
+  ]);

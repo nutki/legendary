@@ -1,5 +1,3 @@
-"use strict";
-
 // Random Number Generator
 class RNG {
   m: number
@@ -92,7 +90,9 @@ interface Card {
   set?: string
   templateId?: string
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
-  xTremeAttack: boolean
+  xTremeAttack?: boolean
+  isArtifact?: boolean
+  artifactEffects?: ((ev: Ev) => void)[]
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -125,6 +125,7 @@ interface HeroCardAbillities {
   soaring?: boolean
   wallcrawl?: boolean
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
+  isArtifact?: boolean
 }
 class Card {
   constructor (t: string, n: string) {
@@ -140,6 +141,7 @@ class Card {
   }
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
+    if (value !== undefined) value += this.attached('SHARD').size;
     return value < 0 ? 0 : value;
   }
   get vp() {
@@ -176,7 +178,13 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   c.team = team;
   c.flags = flags;
   c.effects = typeof effects === "function" ? [ effects ] : effects;
-  if (abilities) Object.assign(c, abilities);
+  if (abilities) {
+    Object.assign(c, abilities);
+    if (abilities.isArtifact) {
+      c.artifactEffects = c.effects;
+      c.effects = [ playArtifact ];
+    }
+  }
   return c;
 }
 function makeVillainCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
@@ -236,7 +244,6 @@ function makeCardCopy(c: Card): Card {
   let r = Object.create(Object.getPrototypeOf(c));
   r.id = c.id + '@COPY@' + gameState.nextId++;
   r.ctype = "P";
-  // Artifact specials - choose which ability -- embed in artifact play effect
   return r;
 }
 function makeCardCopyPaste(c: Card, p: Card): Card {
@@ -247,7 +254,6 @@ function makeCardCopyPaste(c: Card, p: Card): Card {
   p.color = color;
   // TODO: copy other tmp state (MOoT?)
   // TODO: remove tmp state from result?
-  // TODO Return to stack effects - trigger replace move to sidekick/new recruit stacks (they should check if the instance is correct)
   return p;
 }
 function moveCard(c: Card, where: Deck, bottom?: boolean): void {
@@ -534,6 +540,8 @@ interface Player {
   playArea: Deck
   revealed: Deck
   teleported: Deck
+  artifact: Deck
+  shard: Deck
   left: Player
   right: Player
   hand: Deck
@@ -562,7 +570,7 @@ interface Turn extends Ev {
 }
 interface Trigger {
   event: string
-  match?: (e: Ev, s?: Card | Ev) => boolean
+  match?: (e: Ev, s?: Card) => boolean
   after?: (e: Ev) => void
   replace?: (e: Ev) => void
   before?: (e: Ev) => void
@@ -576,6 +584,7 @@ interface SetupParams {
   wounds?: number[] | number,
   twists?: number[] | number,
   bindings?: number[] | number,
+  shards?: number[] | number,
   required?: { heroes?: string, villains?: string, henchmen?:string },
 }
 interface Game extends Ev {
@@ -596,6 +605,7 @@ interface Game extends Ev {
   bystanders: Deck
   hq: Deck[]
   city: Deck[]
+  shard: Deck
   triggers: Trigger[]
   endDrawAmount: number
   modifiers: Modifiers
@@ -707,6 +717,7 @@ const exampleGameSetup: Setup = {
   withBindings: true,
   handType: 'SHIELD',
   cityType: 'VILLAIN',
+  withShards: true,
   numPlayers: 1,
 };
 const undoLog: UndoLog = {
@@ -768,6 +779,7 @@ interface Setup {
   withBindings: boolean
   handType: 'SHIELD' | 'HYDRA'
   cityType: 'VILLAIN' | 'HERO'
+  withShards: boolean
 }
 function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
@@ -784,6 +796,7 @@ function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_cou
     heroes: [ 3, 5, 5, 5, 6 ],
     wounds: 30,
     bindings: 30,
+    shards: 60,
   };
   let r = name in s.params ? s.params[name] : defaults[name];
   return r instanceof Array ? r[numPlayers - 1] : r;
@@ -807,6 +820,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     withNewRecruits: undefined,
     withMadame: undefined,
     withBindings: undefined,
+    withShards: undefined,
     handType: 'SHIELD',
     cityType: 'VILLAIN',
   };
@@ -848,6 +862,8 @@ playerState = {
   playArea: new Deck('PLAYAREA0', true),
   revealed: new Deck('REVEALED0', true),
   teleported: new Deck('TELEPORT0', true),
+  artifact: new Deck('ARTIFACT0', true),
+  shard: new Deck('SHARD0', true),
   left: undefined,
   right: undefined,
 };
@@ -873,6 +889,7 @@ gameState = {
   bindings: new Deck('BINDINGS', true),
   scheme: new Deck('SCHEME', true),
   bystanders: new Deck('BYSTANDERS', true),
+  shard: new Deck('SHARD', true),
   hq: [
     new Deck("HQ1", true),
     new Deck("HQ2", true),
@@ -972,6 +989,7 @@ if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('w
 if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
 if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTemplate, 15);
 if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
+if (gameSetup.withShards) gameState.shard.addNewCard(shardTemplate, getParam('shards'));
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 gameState.bystanders.shuffle();
 //// TODO sidekicks
@@ -1021,6 +1039,7 @@ function isColor(col: number): (c: Card) => boolean { return function (c) { retu
 function isTeam(team: string): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
 function isGroup(group: string): (c: Card) => boolean { return c => c.isGroup(group); }
 function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
+function isArtifact(c: Card): boolean { return c.isArtifact; }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
@@ -1112,9 +1131,7 @@ function eachOtherPlayerVM<T>(f: (p: Player) => T): T[] { return gameState.advan
 function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); }
 function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
 function revealable(who = playerState) {
-  // TODO: also artifacts and maybe MOoT
-  if (who !== playerState) return who.hand.deck;
-  return who.hand.deck.concat(playerState.playArea.deck);
+  return [...who.hand.deck, ...who.playArea.deck, ...who.artifact.deck];
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
 function numColors(heroes: Card[] = yourHeroes()) {
@@ -1293,8 +1310,10 @@ function countPerTurn(c: Card) {
   return turnState.perTurn.get(c.id) || 0;
 }
 function incPerTurn(c: Card) {
+  const prev = countPerTurn(c);
   if (!turnState.perTurn) turnState.perTurn = new Map();
-  turnState.perTurn.set(c.id, 1 + (turnState.perTurn.get(c.id) || 0));
+  turnState.perTurn.set(c.id, prev + 1);
+  return prev;
 }
 function canHeal(c: Card): boolean {
   if (!c.isHealable()) return false;
@@ -1330,6 +1349,7 @@ function getActions(ev: Ev): Ev[] {
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  p.push(useShardActionEv(ev));
   // TODO find actions on mastermind? and hand
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
@@ -1353,6 +1373,10 @@ function addRecruitSpecialEv(ev: Ev, cond: (c: Card) => boolean, amount: number)
 function doubleRecruitEv(ev: Ev) {
   addRecruitEvent(ev, turnState.recruit);
   turnState.recruitSpecial.each(r => addRecruitSpecialEv(ev, r.cond, r.amount));
+}
+function doubleAttackEv(ev: Ev) {
+  addAttackEvent(ev, turnState.attack);
+  turnState.attackSpecial.each(r => addAttackSpecialEv(ev, r.cond, r.amount));
 }
 function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   if (!what.instance) return;
@@ -1596,10 +1620,13 @@ function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => vo
   selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, () => func(sel)); });
 }
 
+function isCopy(c: Card) {
+  return !c.instance || Object.getPrototypeOf(c) !== c.instance;
+}
 function returnToStackEv(ev: Ev, deck: Deck) {
   const c = ev.source;
   // Cannot return copies or copyPaste cards
-  if (!c.instance || Object.getPrototypeOf(c) !== c.instance) return false;
+  if (isCopy(c)) return false;
   moveCardEv(ev, c, deck);
   return true;
 }
@@ -1735,6 +1762,9 @@ function villainEscape(ev: Ev): void {
   let c = ev.what;
   let b = c.captured;
   gameState.villainsEscaped++;
+  // Handle GotG shards
+  c.attached('SHARD').withFirst(c => attachShardEv(ev, gameState.mastermind.top, c));
+  cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   gameState.bystandersCarried += b.count(isBystander);
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, p));
@@ -1758,6 +1788,9 @@ function villainDefeat(ev: Ev): void {
   // TODO according to https://boardgamegeek.com/article/19007319#19007319 defeat triggers would happen here
   // TODO choose move order
   // TODO all the move effects should happen first
+  // Handle GotG shards
+  c.attached('SHARD').withFirst(c => gainShardEv(ev, c));
+  cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   b.each(bc => rescueEv(ev, bc));
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
@@ -1779,21 +1812,21 @@ function rescueBystander(ev: Ev): void {
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
 }
-function addTurnTrigger(type: string, match: (ev: Ev, source: (Card | Ev)) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
+function addTurnTrigger(type: string, match: (ev: Ev, source: Card) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, match, after: f } : { event: type, match, ...f };
   turnState.triggers.push(trigger);
 }
 function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: object}[] {
   let triggers:{trigger: Trigger, source: Card|Ev}[] = [];
-  let checkTrigger = (source: Ev | Card) => (t: Trigger) => {
+  let checkTrigger = (source?: Card) => (t: Trigger) => {
     if(t.event === ev.type && (!t.match || t.match(ev, source))) triggers.push({trigger:t, source:source});
   };
   let checkCardTrigger = (c: Card) => {
     if (c.trigger) checkTrigger(c)(c.trigger);
     if (c.triggers) c.triggers.forEach(t => checkTrigger(c)(t))
   };
-  gameState.triggers.forEach(checkTrigger(gameState));
-  turnState.triggers.forEach(checkTrigger(turnState));
+  gameState.triggers.forEach(checkTrigger());
+  turnState.triggers.forEach(checkTrigger());
   gameState.mastermind.each(checkCardTrigger);
   playerState.hand.each(checkCardTrigger);
   // TODO other player's hand triggers
@@ -2157,6 +2190,7 @@ function setupChange(): void {
   tmp.withNewRecruits = (<HTMLInputElement>document.getElementById('withNewRecruits')).checked;
   tmp.handType = (<HTMLInputElement>document.getElementById('handType')).value === 'HYDRA' ? 'HYDRA' : 'SHIELD';
   tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
+  tmp.withShards = true;
   console.log(tmp, s1, s2, s3);
   globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
 }
@@ -2253,7 +2287,7 @@ count escape pile conditions properly (not just trigger on escape, but also not 
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 
-other sets base functions: artifacts, sidekicks, divided cards
+other sets base functions: sidekicks, divided cards
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 
