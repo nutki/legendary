@@ -440,3 +440,58 @@ makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
   varDefense: c => c.printedDefense + c.attached("PAWN").size
 }),
 ]);
+addTemplates("MASTERMINDS", "Guardians of the Galaxy", [
+makeMastermindCard("Supreme Intelligence of the Kree", 9, 6, "Kree Starforce", ev => {
+// The Supreme Intelligence gains a Shard. Then each player reveals their hand and discards each with cost equal to, and cost one higher than, the number of Shards on the Supreme Intelligence.
+  attachShardEv(ev, ev.source);
+  cont(ev, () => {
+    const count = ev.source.attached('SHARD').size;
+    eachPlayer(p => p.hand.limit(c => c.cost === count || c.cost === count + 1).each(c => discardEv(ev, c)));
+  })
+}, [
+  [ "Combined Knowledge of All Kree", ev => {
+  // The Supreme Intelligence gains a Shard for each Kree Villain in the city and/or the Escape Pile.
+    attachShardEv(ev, ev.source.mastermind, CityCards().count(isGroup(ev.source.mastermind.leads)) + gameState.escaped.count(isGroup(ev.source.mastermind.leads)));
+  } ],
+  [ "Cosmic Omniscience", ev => {
+  // The Supreme Intelligence gains a Shard for each Master Strike in the KO pile.
+    attachShardEv(ev, ev.source.mastermind, gameState.ko.count(isStrike));
+  } ],
+  [ "Countermeasure Protocols", ev => {
+  // The Supreme Intelligence gains a Shard for each Mastermind Tactic (including this one) in any player's Victory Pile.
+    attachShardEv(ev, ev.source.mastermind, gameState.players.sum(p => p.victory.count(c => c.mastermind === ev.source.mastermind)));
+  } ],
+  [ "Guide Kree Evolution", ev => {
+  // The Supreme Intelligence and Kree Villains in the city each gain a Shard.
+    attachShardEv(ev, ev.source.mastermind);
+    CityCards().limit(isGroup(ev.source.mastermind.leads)).each(c => attachShardEv(ev, c));
+  } ],
+]),
+// Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any player.
+makeMastermindCard("Thanos", 24, 7, "Infinity Gems", ev => {
+// Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Bound Souls" pile.
+  eachPlayer(p => selectCardEv(ev, "Select a non-grey Hero", p.hand.deck, c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
+}, [
+  [ "Centuries of Envy", ev => {
+  // Each other player discards an Infinity Gem Artifact card they control.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Select an Infinity Gem", p.artifact.limit(isGroup("Inifinity Gems")), c => discardEv(ev, c), p));
+  } ],
+  [ "God of Death", ev => {
+  // Each other player reveals their hand and gains a Wound for each card that player has with the same card name as any card in Thanos' Bound Souls pile.
+    const names = ev.source.mastermind.attached('SOULS').unique(c => c.cardName);
+    eachOtherPlayerVM(p => p.hand.limit(c => names.includes(c.cardName)).each(() => gainWoundEv(ev, p)));
+  } ],
+  [ "Keeper of Souls", ev => {
+  // Gain a Hero from Thanos' Bound Souls pile. Then each other player puts a non-grey Hero from their discard pile into Thanos' Bound Souls pile.
+    selectCardEv(ev, "Choose a Hero", ev.source.mastermind.attached('SOULS'), c => gainEv(ev, c));
+    cont(ev, () => eachOtherPlayerVM(p => selectCardEv(ev, "Select a non-grey Hero", p.discard.deck, c => attachCardEv(ev, c, ev.source, 'SOULS'), p)));
+  } ],
+  [ "The Mad Titan", ev => {
+  // Each other player reveals their hand and discards all cards with the same card name as any card in Thanos' Bound Souls pile.
+    const names = ev.source.mastermind.attached('SOULS').unique(c => c.cardName);
+    eachOtherPlayerVM(p => p.hand.limit(c => names.includes(c.cardName)).each(c => discardEv(ev, c)));
+  } ],
+], {
+  varDefense: c => c.printedDefense - 2 * (gameState.players.sum(p => p.artifact.count(isGroup("Infinity Gems"))) + playerState.victory.count(isGroup(c.leads)))
+}),
+]);
