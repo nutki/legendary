@@ -841,3 +841,152 @@ addVillainTemplates("Villains", [
   })],
 ]},
 ]);
+addVillainTemplates("Guardians of the Galaxy", [
+{ name: "Kree Starforce", cards: [
+// Captain Atlas gets +1 Attack for each Shard on the Mastermind.
+// ESCAPE: Each player loses a Shard. Each player that cannot do so gains a Wound.
+// ATTACK: 6+
+// VP: 4
+  [ 1, makeVillainCard("Kree Starforce", "Captain Atlas", 6, 4, {
+    escape: ev => eachPlayer(p => p.shard.size ? spendShardEv(ev, p) : gainWoundEv(ev, p)),
+    varDefense: c => c.printedDefense + gameState.mastermind.deck.max(m => m.attached('SHARD').size),
+  })],
+// AMBUSH: Another Villain in the city gains two Shards.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Kree Starforce", "Demon Druid", 5, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a Villain", CityCards().limit(isVillain).limit(c => c !== ev.source), c => attachShardEv(ev, c, 2)),
+  })],
+// AMBUSH: Each Kree Villain in the city gains a Shard (including this Villain).
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Kree Starforce", "Dr. Minerva", 5, 3, {
+    ambush: ev => CityCards().limit(isVillain).each(c => attachShardEv(ev, c)),
+  })],
+// AMBUSH: Each player may draw a card. Korath gains a Shard for each card drawn this way.
+// ESCAPE: If Korath had any Shards, each player gains a Wound.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Kree Starforce", "Korath the Pursuer", 5, 3, {
+    ambush: ev => {
+      eachPlayer(p => chooseMayEv(ev, "Draw a card", () => drawEv(ev, 1, p)));
+      cont(ev, () => attachShardEv(ev, ev.source, turnState.pastEvents.count(e => e.type === "DRAWONE" && e.parent === ev)));
+    },
+    escape: ev => turnState.pastEvents.has(e => e.type === "MOVECARD" && e.to === gameState.shard && ev.parent === e.parent) && eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+// AMBUSH: Each player simultaneously points their finger to accuse another player. Each player who was accused the most gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Kree Starforce", "Ronan the Accuser", 7, 5, {
+    ambush: ev => {
+      const counts = new Map<Player, number>();
+      gameState.players.each(p => counts.set(p, 0));
+      eachPlayer(p => chooseOtherPlayerEv(ev, cp => counts.set(cp, counts.get(cp) + 1), p));
+      cont(ev, () => {
+        const max = [...counts.values()].max(v => v);
+        gameState.players.limit(p => counts.get(p) === max).each(p => gainWoundEv(ev, p));
+      });
+    },
+    escape: ev => {
+      const counts = new Map<Player, number>();
+      gameState.players.each(p => counts.set(p, 0));
+      eachPlayer(p => chooseOtherPlayerEv(ev, cp => counts.set(cp, counts.get(cp) + 1), p));
+      cont(ev, () => {
+        const max = [...counts.values()].max(v => v);
+        gameState.players.limit(p => counts.get(p) === max).each(p => gainWoundEv(ev, p));
+      });
+    },
+  })],
+// FIGHT: Put a Shard on each Hero in the HQ. When a player gains that Hero, they gain that Shard. If that Hero leaves the HQ some other way, return that Shard to the supply.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Kree Starforce", "Shatterax", 5, 3, {
+    fight: ev => {
+      if (!gameState.triggers.includes(extraShatteraxTriggers[0]))
+        extraShatteraxTriggers.each(t => gameState.triggers.push(t));
+      HQCards().limit(isHero).each(c => attachShardEv(ev, c));
+    },
+  })],
+// AMBUSH: Supremor and the Mastermind each gain a Shard.
+// ATTACK: 3
+// VP: 2
+  [ 2, makeVillainCard("Kree Starforce", "Supremor", 3, 2, {
+    ambush: ev => { attachShardEv(ev, ev.source); gameState.mastermind.each(m => attachShardEv(ev, m)); },
+  })],
+]},
+{ name: "Infinity Gems", cards: [
+// AMBUSH: Mind Gem gains a Shard for each Scheme Twist in the KO pile and/or stacked next to the Scheme.
+// FIGHT: Put this into your discard pile as an Artifact.
+// Artifact - Once per turn, you get +2 Recruit.
+// ATTACK: 6
+// VP: 0
+  [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Mind Gem", 6, u, {
+    ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isTwist) + gameState.scheme.attached("TWIST").size),
+  }), u, u, 0, u, "D", ev => addRecruitEvent(ev, 2), { isArtifact: true }) ],
+// AMBUSH: Power Gem gains a Shard for each Master Strike in the KO pile and/or stacked next to the Mastermind.
+// FIGHT: Put this into your discard pile as an Artifact.
+// Artifact - Once per turn, you get +2 Attack.
+// ATTACK: 7
+// VP: 0
+  [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Power Gem", 7, u, {
+    ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isStrike) + gameState.mastermind.deck.sum(m => m.attached("STRIKE").size)),
+  }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), { isArtifact: true }) ],
+// AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
+// FIGHT: Put this into your discard pile as an Artifact.
+// Artifact - Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
+// ATTACK: 5
+// VP: 0
+  [ 2, makeGainableCard(makeVillainCard("Infinity Gems", "Reality Gem", 5, u, {
+    ambush: ev => attachShardEv(ev, ev.source, CityCards().count(isGroup("Infinity Gems")) + gameState.escaped.count(isGroup("Infinity Gems"))),
+  }), u, u, 0, u, "", [], { isArtifact: true, trigger: {
+    event: "VILLAINDRAW",
+    match: (ev, source) => owner(source) === playerState,
+    before: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(c => !isTwist(c)).each(c => chooseMayEv(ev, "Put on the bottom of the Villain Deck", () => { moveCardEv(ev, c, gameState.villaindeck, true); gainShardEv(ev); }))),
+  } }) ],
+// AMBUSH: Soul Gem gains a Shard for each Villain in the city.
+// FIGHT: Put this into your discard pile as an Artifact.
+// Artifact - Whenever you defeat a Villain, put a Shard on Soul Gem from the supply. Once per turn, you get + Attack equal to the number of Shards on Soul Gem.
+// ATTACK: 6
+// VP: 0
+  [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Soul Gem", 6, u, {
+    ambush: ev => attachShardEv(ev, ev.source, CityCards().count(isVillain)),
+  }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { isArtifact: true, triggers: [{
+    event: "MOVECARD",
+    match: (ev, source) => ev.what === source,
+    before: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
+  }, {
+    event: "DEFEAT",
+    match: (ev, source) => owner(source) === playerState,
+    after: ev => attachShardEv(ev, ev.source),
+  }] }) ],
+// AMBUSH: Space Gem gains a Shard for each empty space in the city.
+// FIGHT: Put this into your discard pile as an Artifact.
+// Artifact - Once per turn, you may move a Villain to another city space. If another Villain is already there, swap them. If you moved any Villains this way, gain a Shard.
+// ATTACK: 5
+// VP: 0
+  [ 2, makeGainableCard(makeVillainCard("Infinity Gems", "Space Gem", 5, u, {
+    ambush: ev => attachShardEv(ev, ev.source, gameState.city.count(l => l.size === 0)),
+  }), u, u, 0, u, "", ev => {
+    selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
+      selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => swapCardsEv(ev, v.location, dest));
+      gainShardEv(ev);
+    });
+  }, { isArtifact: true }) ],
+// AMBUSH: Play another card from the Villain Deck. Time Gem gains Shards equal to that card's printed Victory Points.
+// FIGHT: Put this into your discard pile as an Artifact.
+// Artifact - When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
+// ATTACK: 6
+// VP: 0
+  [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Time Gem", 6, u, {
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => cards.each(c => {
+      attachShardEv(ev, ev.source, c.vp);
+      villainDrawEv(ev, c);
+    })),
+  }), u, u, 0, u, "", [], { isArtifact: true, trigger: {
+    event: "PLAY",
+    match: (ev, source) => ev.what === source,
+    after: ev => gameState.extraTurn = true, // TODO mutliplayer, once per game
+  }}) ],
+]},
+]);

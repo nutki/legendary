@@ -154,6 +154,15 @@ function attachShardEv(ev: Ev, to: Card, shard: (Card | number) = 1) {
   if (typeof shard !== "number") attachCardEv(ev, shard, to, "SHARD");
   else repeat(shard, () => cont(ev, () => gameState.shard.withTop(c => attachCardEv(ev, c, to, "SHARD"))));
 }
-function spendShardEv(ev: Ev) {
-  cont(ev, () => playerState.shard.withTop(c => moveCardEv(ev, c, gameState.shard)));
+function spendShardEv(ev: Ev, p: Player = playerState) {
+  cont(ev, () => p.shard.withTop(c => moveCardEv(ev, c, gameState.shard)));
 }
+const extraShatteraxTriggers: Trigger[] = [{
+  event: 'RECRUIT',
+  match: ev => ev.what.location.attached('SHARD').size > 0,
+  before: ev => ev.parent.what.location.attached('SHARD').each(c => gainShardEv(ev, c)),
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.what.location.attached('SHARD').size > 0,
+  after: ev => ev.parent.what.location.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
+}];

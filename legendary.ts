@@ -93,6 +93,7 @@ interface Card {
   xTremeAttack?: boolean
   isArtifact?: boolean
   artifactEffects?: ((ev: Ev) => void)[]
+  gainable?: boolean
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -177,6 +178,26 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   c.color = color;
   c.team = team;
   c.flags = flags;
+  c.effects = typeof effects === "function" ? [ effects ] : effects;
+  if (abilities) {
+    Object.assign(c, abilities);
+    if (abilities.isArtifact) {
+      c.artifactEffects = c.effects;
+      c.effects = [ playArtifact ];
+    }
+  }
+  return c;
+}
+function makeGainableCard(c: Card, recruit: number, attack: number, color: number, team: string, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
+  c.gainable = true;
+  c.printedRecruit = recruit;
+  c.printedAttack = attack;
+  c.heroName = c.cardName;
+  c.color = color;
+  c.team = team;
+  c.flags = flags;
+  if (c.cardType === "VILLAIN") c.fight = ev => gainEv(ev, ev.source);
+  if (c.cardType === "BYSTANDER") c.rescue = ev => gainEv(ev, ev.source);
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   if (abilities) {
     Object.assign(c, abilities);
@@ -1022,9 +1043,9 @@ gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 
 // Card effects functions
 function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
-function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardType === "HERO"); }
+function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardType === "HERO" || (c.gainable && owner(c) !== undefined && !c.isArtifact)); }
 function isNonGrayHero(c: Card) { return isHero(c) && !isColor(Color.GRAY)(c); }
-function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN"); }
+function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN" && (!c.gainable || !owner(c))); }
 function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
 function isTactic(c: Card): boolean { return getModifiedStat(c, 'isTactic', c.cardType === "TACTICS"); }
 function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }

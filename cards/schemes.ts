@@ -283,9 +283,9 @@ makeSchemeCard("Bathe the Earth in Cosmic Rays", { twists: 6 }, ev => {
 // EVILWINS: When 20 non-grey Heroes are KO'd.
 makeSchemeCard("Flood the Planet with Melted Glaciers", { twists: 8 }, ev => {
   // Twist: Stack the Twist next to the Scheme as "Rising Waters." Then KO each Hero from the HQ whose cost is less than or equal to the number of Rising Waters in that stack.
-  attachCardEv(ev, ev.twist, gameState.scheme, "WATERS");
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
   cont(ev, () => {
-    const waterLevel = gameState.scheme.attached("WATERS").size;
+    const waterLevel = gameState.scheme.attached("TWIST").size;
     HQCards().limit(isHero).limit(c => c.cost <= waterLevel).each(c => KOEv(ev, c));
   });
 }, [{
@@ -301,7 +301,7 @@ makeSchemeCard("Invincible Force Field", { twists: 7 }, ev => {
   // Twist 7 Evil Wins!
   schemeProgressEv(ev, 7 - ev.nr);
 }, [], () => {
-  addStatSet('fightCost', isMastermind, (c, { either, ...rest }) => ({ either: either + gameState.scheme.attached("FORCEFIELD").size, ...rest}));
+  addStatSet('fightCost', isMastermind, (c, { either, ...rest }) => ({ either: either + c.location.attached("FORCEFIELD").size, ...rest}));
 }),
 // SETUP: 8 Twists.
 makeSchemeCard<{neg: boolean}>("Pull Reality Into the Negative Zone", { twists: 8 }, ev => {
@@ -446,8 +446,8 @@ makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8 }, ev => {
   event: "ESCAPE",
   match: ev => ev.what === gameState.schemeState.thor,
   after: ev => gameState.ko.limit(isTwist).withFirst(c => {
-    attachCardEv(ev, c, gameState.scheme, "TRIUMPH");
-    cont(ev, () => schemeProgressEv(ev, 3 - gameState.scheme.attached("TRIUMPH").size));
+    attachCardEv(ev, c, gameState.scheme, "TWIST");
+    cont(ev, () => schemeProgressEv(ev, 3 - gameState.scheme.attached("TWIST").size));
   })
 }, (s) => {
   const thorSpace = gameState.scheme.attachedDeck('THOR');
@@ -524,14 +524,14 @@ makeSchemeCard("Infiltrate the Lair with Spies", { twists: 8 }, ev => {
 // EVILWINS: When there are 3 Assault Squads in the Overrun Pile.
 makeSchemeCard("Mass Produce War Machine Armor", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: 'S.H.I.E.L.D. Assault Squad' } }, ev => {
   // Twist: Stack this Twist next to the Plot as "War Machine Technology." An Assault Squad from the current player's Victory Pile enters the Bridge.
-  attachCardEv(ev, ev.source, gameState.scheme, 'TECHNOLOGY');
+  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
   selectCardEv(ev, "Select an Assault Squad", playerState.victory.limit(isGroup('S.H.I.E.L.D. Assault Squad')), c => villainDrawEv(ev, c));
 }, {
   event: 'MOVECARD',
   match: ev => ev.to === gameState.escaped,
   after: ev => schemeProgressEv(ev, 3 - gameState.escaped.count(isGroup('S.H.I.E.L.D. Assault Squad')))
 }, () => {
-  addStatMod('defense', isGroup('S.H.I.E.L.D. Assault Squad'), () => gameState.scheme.attached('TECHNOLOGY').size);
+  addStatMod('defense', isGroup('S.H.I.E.L.D. Assault Squad'), () => gameState.scheme.attached('TWIST').size);
   gameState.schemeProgress = 3;
 }),
 // SETUP: 8 Twists.
