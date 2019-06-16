@@ -606,7 +606,7 @@ interface SetupParams {
   twists?: number[] | number,
   bindings?: number[] | number,
   shards?: number[] | number,
-  required?: { heroes?: string, villains?: string, henchmen?:string },
+  required?: { heroes?: string | string[], villains?: string | string[], henchmen?:string | string[] },
 }
 interface Game extends Ev {
   gameRand: RNG
@@ -845,11 +845,14 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     handType: 'SHIELD',
     cityType: 'VILLAIN',
   };
-  function setRequired(t: "henchmen" | "villains" | "heroes", name: string) {
+  function setRequired(t: "henchmen" | "villains" | "heroes", names: string | string[]) {
     const a = setup[t];
-    if (a.includes(name)) return;
-    let pos = a.findIndex(v => v === undefined);
-    if (pos >= 0) a[pos] = name;
+    for(let name of names instanceof Array ? names : [names]) {
+      if (!a.includes(name)) {
+        const pos = a.findIndex(v => v === undefined);
+        if (pos >= 0) a[pos] = name;
+      }
+    }
   }
   setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
   setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
@@ -1150,7 +1153,7 @@ function atLocation(what: Card, ...locations: CityLocation[]) {
 function hasBystander(c: Card): boolean { return c.captured.has(isBystander); }
 function eachOtherPlayer<T>(f: (p: Player) => T): T[] { return gameState.players.filter(e => e !== playerState).map(f); }
 function eachOtherPlayerVM<T>(f: (p: Player) => T): T[] { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
-function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); }
+function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); } // TODO starting from left
 function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
 function revealable(who = playerState) {
   return [...who.hand.deck, ...who.playArea.deck, ...who.artifact.deck];
@@ -1433,11 +1436,12 @@ function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: P
     cont(ev, () => { if (card) { drawEv(ev, 1, who); if (func) func(card); } } );
 }
 function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
-function evilWinsEv(ev: Ev, mastermind?: Card): void { gameOverEv(ev, 'LOSS', mastermind); }
-function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card) {
-  let desc = result === "LOSS" ? `${mastermind ? mastermind.cardName : "Evil"} Wins` : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
+function evilWinsEv(ev: Ev, mastermind?: Card | Player): void { gameOverEv(ev, 'LOSS', mastermind); }
+function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card | Player) {
+  const winnerName = mastermind instanceof Card ? mastermind.cardName : mastermind ? `Evil ${mastermind.name}` : "Evil";
+  let desc = result === "LOSS" ? `${winnerName} Wins` : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
   textLog.log("Game Over: " + desc);
-  pushEv(ev, "GAMEOVER", { ui: true, result, desc, what: mastermind });
+  pushEv(ev, "GAMEOVER", { ui: true, result, desc });
 }
 function schemeProgressEv(ev: Ev, amount: number) {
   cont(ev, () => {
@@ -1603,7 +1607,7 @@ function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false,
   if (src.size === 1) moveCardEv(ev, src.top, dst);
   else selectCardEv(ev, "Choose a card to put back", src.deck, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst); }, agent);
 };
-function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean, bottom: boolean = false, agent: Player = playerState) {
+function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
   const dst = src.revealed;
   let i = 0;

@@ -553,3 +553,101 @@ makeSchemeCard("Resurrect Heroes with Norn Stones", { twists: 8 }, ev => {
   gameState.schemeProgress = 3 * gameState.players.size;
 }),
 ]);
+addTemplates("SCHEMES", "Guardians of the Galaxy", [
+// SETUP: 8 Twists. Always include the Infinity Gems Villain Group.
+// EVILWINS: When 6 Infinity Gem Villains are in the city and/or the Escape Pile.
+// EVILWINS: When a player controls 4 Infinity Gem Artifacts, that player is corrupted by power. That player wins, Evil wins, and all other players lose.
+makeSchemeCard("Forge the Infinity Gauntlet", { twists: 8, required: { villains: "Infinity Gems"} }, ev => {
+  // Twist: Starting to your left and going clockwise, the first player with an Infinity Gem Artifact card in play or in their discard pile chooses on of those Infinity Gems to enter the city. Then put a Shard on each Infinity Gem in the city.
+  eachPlayer(p => selectCardEv(ev, "Choose an Infinity Gem", p.artifact.limit(isGroup("Infinity Gems")), c => villainDrawEv(ev, c), p));
+  cont(ev, () => CityCards().limit(isGroup("Infinity Gems")).each(c => attachShardEv(ev, c)))
+}, [{
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 6 - gameState.escaped.count(isGroup("Infinity Gems")))
+}, {
+  event: "MOVECARD",
+  match: ev => gameState.players.has(p => p.artifact === ev.to),
+  after: ev => ev.parent.to.count(isGroup("Infinity Gems")) >= 4 && evilWinsEv(ev, ev.parent.to.owner),
+}], () => {
+  gameState.schemeProgress = 6;
+}),
+// SETUP: 8 Twists. Make a face down 'Nega-Bomb Deck' of 6 Bystanders.
+// EVILWINS: When 16 non-grey Heroes are in the KO pile.
+makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
+  // Twist: Shuffle this Twist into the Nega-Bomb Deck. Then reveal a random card from that deck. If it's a Bystander, rescue it. If it's a Twist, KO it, KO all Heroes from the HQ, and each player gains a Wound.
+  const negabomb = gameState.scheme.attachedDeck("NEGABOMB");
+  shuffleIntoEv(ev, ev.source, negabomb);
+  revealDeckEv(ev, negabomb, 1, cards => {
+    cards.limit(isBystander).each(c => rescueEv(ev, c));
+    cards.limit(isTwist).each(c => {
+      KOEv(ev, c);
+      HQCards().limit(isHero).each(c => KOEv(ev, c));
+      eachPlayer(p => gainWoundEv(ev, p));
+    });
+  });
+}, {
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.escaped,
+  after: ev => schemeProgressEv(ev, 16 - gameState.escaped.count(isNonGrayHero))
+}, () => {
+  gameState.schemeProgress = 16;
+  const negabomb = gameState.scheme.attachedDeck("NEGABOMB");
+  repeat(6, () => gameState.bystanders.withTop(c => moveCard(c, negabomb)));
+}),
+// SETUP: 8 Twists. Always include Kree Starforce and Skrull Villain Groups.
+// EVILWINS: When there are 4 Kree Conquests or 4 Skrull Conquests.
+makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], required: { villains: ['Kree Starforce', 'Skrull']} }, ev => {
+  const kLoc = gameState.mastermind;
+  const sLoc = gameState.villaindeck;
+  if (ev.nr <= 7) {
+    // Twist 1-7 All Kree and Skrulls escape from the city. Then, if there are more Kree than Skrulls in the Escape Pile, stack this Twist next to the Mastermind as a Kree Conquest. If there are more Skrulls than Kree in the Escape Pile, stack this Twist next to the Villain Deck as a Skrull Conquest.
+    CityCards().limit(c => isGroup("Kree Starforce")(c) || isGroup("Skrull")(c)).each(c => villainEscapeEv(ev, c));
+    cont(ev, () => {
+      const k = gameState.escaped.count(isGroup("Kree Starforce"));
+      const s = gameState.escaped.count(isGroup("Skrull"));
+      k > s && attachCardEv(ev, ev.source, kLoc, "CONQUEST");
+      s > k && attachCardEv(ev, ev.source, sLoc, "CONQUEST");
+    });
+  } else if (ev.nr === 8) {
+  // Twist 8 Stack this Twist on the side with the most Conquests.
+    const kCount = kLoc.attached("CONQUEST").size;
+    const sCount = sLoc.attached("CONQUEST").size;
+    attachCardEv(ev, ev.source, kCount > sCount ? kLoc : sLoc, "CONQUEST")
+  }
+  cont(ev, () => {
+    const kCount = kLoc.attached("CONQUEST").size;
+    const sCount = sLoc.attached("CONQUEST").size;
+    schemeProgressEv(ev, 4 - Math.max(kCount, sCount));
+  });
+}, [], () => {
+  gameState.schemeProgress = 4;
+}),
+// SETUP: 30 Shards in the supply. Twists equal to the number of players plus 5.
+// RULE: During your turn, any number of times, you may spend 2 Recruit to gain one of the Mastermind's Shards.
+// EVILWINS: When the Mastermind has 10 Shards or when there are no more Shards in the supply.
+makeSchemeCard("Unite the Shards", { twists: [6, 7, 8, 9, 10], shards: 30 }, ev => {
+  // Twist: Stack this Twist next to the Scheme. Then for each Twist in that stack, the Mastermind gains a Shard.
+  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  cont(ev, () => attachShardEv(ev, gameState.mastermind.top, gameState.scheme.attached('TWIST').size));
+}, [{
+  event: "MOVECARD",
+  match: ev => ev.from === gameState.shard,
+  after: ev => gameState.shard.size === 0 && evilWinsEv(ev),
+}, {
+  event: "MOVECARD",
+  match: ev => ev.to.attachedTo && ev.to.attachedTo instanceof Card && isMastermind(ev.to.attachedTo),
+  after: ev => schemeProgressEv(ev, 10 - ev.parent.to.size),
+}], () => {
+  gameState.schemeProgress = 10;
+  gameState.specialActions = (ev: Ev) => [new Ev(ev, 'BUYSHARD', {
+    cost: {
+      recruit: 2,
+      cond: () => gameState.mastermind.deck.sum(m => m.attached('SHARD').size) > 0,
+    },
+    func: ev => {
+      gameState.mastermind.deck.map(m => m.attached('SHARD')).merge().withFirst(c => gainShardEv(ev, c));
+    }
+  })];
+}),
+]);
