@@ -184,6 +184,7 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
     if (abilities.isArtifact) {
       c.artifactEffects = c.effects;
       c.effects = [ playArtifact ];
+      c.cardActions = c.artifactEffects.map(artifactActions);
     }
   }
   return c;
@@ -1375,6 +1376,7 @@ function getActions(ev: Ev): Ev[] {
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p.push(useShardActionEv(ev));
+  playerState.artifact.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   // TODO find actions on mastermind? and hand
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
@@ -1995,15 +1997,17 @@ function getDisplayInfo() {
     attackSpecial: turnState.attackSpecial.sum(c => c.amount),
     recruit: turnState.recruit,
     recruitSpecial: turnState.recruitSpecial.sum(c => c.amount),
+    shard: playerState.shard.size,
     soloVP: soloVP(),
   });
 }
 function displayGame(ev: Ev): void {
-  const { recruit, recruitSpecial, attack, attackSpecial, soloVP } = getDisplayInfo();
+  const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard } = getDisplayInfo();
   displayDecks();
   document.getElementById("source").innerHTML = eventSource(ev);
   document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
   document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
+  document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
   document.getElementById("vp").innerHTML = `${soloVP}`;
 }
 

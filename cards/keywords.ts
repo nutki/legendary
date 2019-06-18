@@ -115,17 +115,17 @@ function dodge(c: Card, ev: Ev) {
 function isControlledArtifact(c: Card) {
   return c.location === playerState.artifact;
 }
-function artifactActions(c: Card, ev: Ev): Ev[] {
-  return c.artifactEffects.map(effect => new Ev(ev, 'USEARTIFACT', { cost: { cond: c => {
+function artifactActions(effect: (ev: Ev) => void) {
+  return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', { what: c, cost: { cond: c => {
     return isControlledArtifact(c) && !countPerTurn(c); // TODO multiple effects, thrown artifacts
   }}, func: ev => {
     incPerTurn(c);
     effect(ev);
-  }}));
+  }});
 }
 function playArtifact(ev: Ev) {
-  if (isCopy(ev.what) || owner(ev.what) !== playerState) { // Chameleon does no make a copy, but the card played is not owned by the current player
-    chooseOptionEv(ev, "Choose Effect", ev.what.artifactEffects.map((v, i) => ({ l: `Effect ${i+1}`, v })), f => f(ev), ev.who);
+  if (isCopy(ev.source) || owner(ev.source) !== playerState) { // Chameleon does no make a copy, but the card played is not owned by the current player
+    chooseOptionEv(ev, "Choose Effect", ev.source.artifactEffects.map((v, i) => ({ l: `Effect ${i+1}`, v })), f => f(ev), ev.who);
   } else {
     moveCardEv(ev, ev.source, playerState.artifact);
   }
