@@ -1,8 +1,8 @@
 // Base
 
-const shieldAgentTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.");
-const shieldTrooperTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.");
-const officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D.");
+const shieldAgentTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "GN");
+const shieldTrooperTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.", "GN");
+const officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"DN");
 const twistTemplate = new Card("SCHEME TWIST", "Scheme Twist");
 const strikeTemplate = new Card("MASTER STRIKE", "Master Strike");
 const woundTemplate = makeWoundCard(function () {
@@ -16,8 +16,8 @@ const woundTemplate = makeWoundCard(function () {
 // EXPANSION Villains
 
 const madameHydraTemplate = makeHeroCard("Viper", "Madame HYDRA", 3, 2, u, Color.GRAY, "HYDRA", "D", [], { playCost: 1, playCostType: 'DISCARD', cardActions: [ dodge ] });
-const hydraOperativeTemplate = makeHeroCard("Ally", "HYDRA Operative", 0, 1, u, Color.GRAY, "HYDRA");
-const hydraSoldierTemplate = makeHeroCard("Ally", "HYDRA Soldier", 0, u, 1, Color.GRAY, "HYDRA");
+const hydraOperativeTemplate = makeHeroCard("Ally", "HYDRA Operative", 0, 1, u, Color.GRAY, "HYDRA", "GN");
+const hydraSoldierTemplate = makeHeroCard("Ally", "HYDRA Soldier", 0, u, 1, Color.GRAY, "HYDRA", "GN");
 const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.GRAY, u, "D", [
   ev => returnToStackEv(ev, gameState.newRecruit),
   ev => drawEv(ev),
