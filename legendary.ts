@@ -1966,7 +1966,8 @@ function displayDecks(): void {
     let html = '';
     if (mode === "IMG") {
       if (deck.id === "PLAYAREA0") {
-        html = turnState.cardsPlayed.map(makeDisplayPlayAreaImg).join('');
+        html = playerState.artifact.deck.map(c => makeDisplayCardImg(c)) +
+          turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg).join('');
       } else if (fanout) {
         html = deck.deck.map(c => makeDisplayCardImg(c, !deck.faceup)).reverse().join('');
       } else {
@@ -2021,7 +2022,7 @@ function getEventName(ev: Ev): string {
   if (ev.desc) return ev.desc;
   if (ev.what) return `${ev.type} ${ev.what.cardName}`;
   console.log("Unknown option", ev);
-  return "Unknown option";
+  return ev.type;
 }
 let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev: MouseEvent): void {

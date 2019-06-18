@@ -119,7 +119,7 @@ function artifactActions(effect: (ev: Ev) => void) {
   return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', { what: c, cost: { cond: c => {
     return isControlledArtifact(c) && !countPerTurn(c); // TODO multiple effects, thrown artifacts
   }}, func: ev => {
-    incPerTurn(c);
+    incPerTurn(ev.what);
     effect(ev);
   }});
 }
