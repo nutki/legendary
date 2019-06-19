@@ -87,11 +87,11 @@ function feastEv(ev: Ev, effect?: (c: Card) => void, who?: Player) {
 // EXPANSION Villains
 // <b>Demolish</b>: Reveal the top card of the Ally (Hero) Deck, note its cost, and put it on the bottom of the Ally Deck. Each player reveals their hand and discards a card with that cost.
 // fight effect
-function demolishEv(ev: Ev) {
+function demolishEv(ev: Ev, who: (p: Player) => boolean = () => true) {
   let cost: number;
   revealHeroDeckEv(ev, 1, c => c.withFirst(c => cost = c.cost), false, true);
   cont(ev, () => eachPlayer(p => {
-    cost !== undefined && selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost === cost), c => discardEv(ev, c), p)
+    who(p) && cost !== undefined && selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost === cost), c => discardEv(ev, c), p)
   }));
 }
 // <b>Elusive</b>: "Elusive 6" means "You can only fight this Adversary if you have made at least 6 Recruit this turn." You don't have to spend that Recruit to fight this Adversary, you just have to have made that much Recruit this turn. You can still spend that Recruit on recruiting Allies (Heroes).
@@ -166,3 +166,30 @@ const extraShatteraxTriggers: Trigger[] = [{
   match: ev => ev.what.location.attached('SHARD').size > 0,
   after: ev => ev.parent.what.location.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
 }];
+
+// EXPANSION Fear Itself
+
+const uruEnchantedTrigger: (n: number) => Trigger = n => ({
+  event: 'FIGHT',
+  before: ev => {
+    const size = gameState.villaindeck.size;
+    for (let i = n; size && i > 0; i -= size) {
+      revealVillainDeckEv(ev, i, cards => {
+        if (i == n) cards.each(c => pushEv(ev, 'URUENCHANTEDREVEAL', { what: c, func: () => {}}));
+        addTurnMod('defense', c => c === ev.parent.what, cards.sum(c => c.vp));
+      }, true, true);
+    }
+  },
+});
+function getFightEvent(ev: Ev) {
+  for (let e = ev; e; e = e.parent) if (e.type === "FIGHT") return e;
+  return undefined;
+}
+function uruEnchantedCards(ev: Ev) {
+  return turnState.pastEvents.filter(e => e.type === 'URUENCHANTEDREVEAL' && getFightEvent(e) === getFightEvent(ev));
+}
+const uruFail = (ev: Ev) => {
+  addTurnSet('fightCost', undefined, (c, prev) => ({ ...prev, cond: () => false }));
+  pushEffects(ev, ev.what, 'fight', ev.what.fight);
+};
+function demolishOtherEv(ev: Ev) { demolishEv(ev, p => p !== playerState ); }

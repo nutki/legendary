@@ -1292,14 +1292,14 @@ function canPayCost(action: Ev) {
   return usableRecruit >= requiredRecruit && usableAttack >= requiredAttack &&
     usableRecruit + usableAttack >= requiredTotal;
 }
-function payCost(action: Ev) {
+function payCost(action: Ev, resolve: (r: boolean) => void) {
   function payMin(a: { amount: number }, amount: number) {
     const n = Math.min(a.amount, amount);
     a.amount -= n;
     return n;
   }
   const cost = action.cost;
-  if (!cost) return true;
+  if (!cost) return resolve(true);
   let attackToPay = cost.attack || 0;
   let recruitToPay = cost.recruit || 0;
   let eitherToPay = cost.either || 0;
@@ -1311,20 +1311,30 @@ function payCost(action: Ev) {
     recruitToPay -= payMin(a, recruitToPay);
     eitherToPay -= payMin(a, eitherToPay);
   });
-  if (turnState.recruit < recruitToPay || turnState.attack < attackToPay) return false;
   turnState.recruit -= recruitToPay;
   turnState.attack -= attackToPay;
-  if (!eitherToPay) return true;
-  if (turnState.recruit + turnState.attack < eitherToPay) return false;
-  if (!turnState.recruit) { turnState.attack -= eitherToPay; return true; }
-  if (!turnState.attack) { turnState.recruit -= eitherToPay; return true; }
+  if (turnState.attack < 0 || turnState.recruit < 0) {
+    if (turnState.attack > turnState.recruit) turnState.attack -= eitherToPay; else turnState.recruit -= eitherToPay;
+    turnState.attack = Math.max(turnState.attack, 0);
+    turnState.recruit = Math.max(turnState.recruit, 0);
+    return resolve(false);
+  }
+  if (!eitherToPay) return resolve(true);
+  if (turnState.recruit + turnState.attack < eitherToPay) {
+    turnState.attack = turnState.recruit = 0;
+    return resolve(false);
+  }
+  if (!turnState.recruit) { turnState.attack -= eitherToPay; return resolve(true); }
+  if (!turnState.attack) { turnState.recruit -= eitherToPay; return resolve(true); }
   const maxAttack = Math.min(eitherToPay, turnState.attack);
   const minAttack = Math.max(eitherToPay - turnState.recruit, 0);
   chooseNumberEv(action, "Spend attack", minAttack, maxAttack, (amount) => {
     turnState.attack -= amount;
     turnState.recruit -= eitherToPay - amount;
+    resolve(true);
   });
 }
+
 function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
 }
@@ -2036,13 +2046,10 @@ function clickCard(ev: MouseEvent): void {
   }
 }
 function playEvent(ev: Ev) {
-  if (ev.cost) {
-    payCost(ev);
-    cont(ev, () => ev.func(ev));
-  } else {
-    ev.func(ev);
-  }
-  turnState.pastEvents.push(ev);
+  payCost(ev, res => {
+    res && ev.func(ev);
+    turnState.pastEvents.push(ev);
+  });
 }
 function mainLoop(): void {
   let extraActions: { name: string, confirm?: boolean, func: () => void }[] = [];

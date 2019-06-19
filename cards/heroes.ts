@@ -1818,4 +1818,133 @@ addHeroTemplates("Guardians of the Galaxy", [
   // GUN: 1
     ra: makeHeroCard("Star-Lord", "Sentient Starship", 8, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev, playerState.artifact.size), { isArtifact: true }),
   },
-  ]);
+]);
+addHeroTemplates("Fear Itself", [
+{
+  name: "Greithoth, Breaker of Wills",
+  team: "Foes of Asgard",
+// <b>Thrown Artifact</b>
+// When you throw this, you get +2 Recruit.
+// COST: 3
+// FLAVOR: When Absorbing Man seized the Mace, he was reborn as Greithoth, body and soul.
+  c1: makeHeroCard("Greithoth, Breaker of Wills", "Mace of Chains", 3, u, u, Color.INSTINCT, "Foes of Asgard", "FD", ev => addRecruitEvent(ev, 2), { isArtifact: true }),
+// ATTACK: 1+
+// If you control an <b>Artifact</b>, you get +2 Attack.
+// COST: 3
+  c2: makeHeroCard("Greithoth, Breaker of Wills", "Absorb Metal", 3, u, 1, Color.COVERT, "Foes of Asgard", "D", ev => playerState.artifact.size && addAttackEvent(ev, 2)),
+// ATTACK: 3+
+// {POWER Covert} Each player discards the bottom card of their deck. For each non-grey card discard this way, you get +1 Attack.
+// COST: 5
+  uc: makeHeroCard("Greithoth, Breaker of Wills", "Break the Will to Resist", 5, u, 3, Color.STRENGTH, "Foes of Asgard", "", ev => superPower(Color.COVERT) && (eachPlayer(p => p.deck.withLast(c => discardEv(ev, c))), addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev && !isColor(Color.GRAY)(ev.what))))),
+// ATTACK: 4+
+// You get +Attack equal to the total number of <b>Artifact</b>s controlled by players and <b>Artifact</b>s the Lair.
+// COST: 7
+  ra: makeHeroCard("Greithoth, Breaker of Wills", "Body of Uru", 7, u, 4, Color.COVERT, "Foes of Asgard", "", ev => addAttackEvent(ev, HQCards().count(c => c.isArtifact) + gameState.players.sum(p => p.artifact.size))),
+},
+{
+  name: "Kuurth, Breaker of Stone",
+  team: "Foes of Asgard",
+// <b>Thrown Artifact</b>
+// When you throw this, you get +2 Attack.
+// COST: 4
+  c1: makeHeroCard("Kuurth, Breaker of Stone", "Unstoppable Sledge", 4, u, u, Color.RANGED, "Foes of Asgard", "D", ev => addAttackEvent(ev, 2), { isArtifact: true }),
+// RECRUIT: 2+
+// Reveal the top or bottom card of your deck. If it costs 4 or more, you get +2 Recruit.
+// COST: 4
+  c2: makeHeroCard("Kuurth, Breaker of Stone", "Reach for Power", 4, 2, u, Color.STRENGTH, "Foes of Asgard", "D", ev => {/*TODO*/}),
+// ATTACK: 3+
+// {TEAMPOWER Foes of Asgard} Discard the top card of any player's deck. Then reveal the top or bottom card of your deck. If the card you revealed has an equal or higher cost, you get +2 Attack.
+// COST: 5
+  uc: makeHeroCard("Kuurth, Breaker of Stone", "Contest of Strength", 5, u, 3, Color.STRENGTH, "Foes of Asgard", "D", ev => superPower("Foes of Asgard") && /*TODO*/'Discard the top card of any player\'s deck. Then reveal the top or bottom card of your deck. If the card you revealed has an equal or higher cost, you get +2 Attack.'),
+// ATTACK: 0+
+// Reveal a card from your hand, the top card of your deck, and the bottom card of your deck. You get +Attack equal to their total costs.
+// COST: 7
+  ra: makeHeroCard("Kuurth, Breaker of Stone", "Break Every Bone", 7, u, 0, Color.STRENGTH, "Foes of Asgard", "", ev => /*TODO*/'Reveal a card from your hand, the top card of your deck, and the bottom card of your deck. You get +Attack equal to their total costs.'),
+},
+{
+  name: "Nerkkod, Breaker of Oceans",
+  team: "Foes of Asgard",
+// RECRUIT: 2
+// You may move an Adversary to an adjacent city space. If another Adversary is already there, swap them.
+// COST: 3
+  c1: makeHeroCard("Nerkkod, Breaker of Oceans", "Pull of the Tides", 3, 2, u, Color.STRENGTH, "Foes of Asgard", "D", ev => /*TODO*/'You may move an Adversary to an adjacent city space. If another Adversary is already there, swap them.'),
+// ATTACK: 2
+// Whenever you defeat an Adversary on the Bridge this turn, you may KO one of your cards or a card from your discard pile. If you do, gain a New Recruit.
+// COST: 4
+// FLAVOR: "It's feeding time!"
+  c2: makeHeroCard("Nerkkod, Breaker of Oceans", "Feed My Undersea Legions", 4, u, 2, Color.COVERT, "Foes of Asgard", "FD", ev => /*TODO*/'Whenever you defeat an Adversary on the Bridge this turn, you may KO one of your cards or a card from your discard pile. If you do, gain a New Recruit.'),
+// <b>Thrown Artifact</b>
+// When you throw this, you get +3 Attack, usable only against Adversaries on the Bridge or the Commander.
+// COST: 5
+  uc: makeHeroCard("Nerkkod, Breaker of Oceans", "Cudgel of the Deep", 5, u, u, Color.RANGED, "Foes of Asgard", "", [ ev => /*TODO*/'<b>Thrown Artifact</b>', ev => /*TODO*/'When you throw this, you get +3 Attack, usable only against Adversaries on the Bridge or the Commander.' ]),
+// ATTACK: 5
+// {TEAMPOWER Foes of Asgard} Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each of those players' hands and put them into your hand.
+// COST: 7
+  ra: makeHeroCard("Nerkkod, Breaker of Oceans", "Break Their Loyalties", 7, u, 5, Color.INSTINCT, "Foes of Asgard", "", ev => superPower("Foes of Asgard") && /*TODO*/'Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each of those players\' hands and put them into your hand.'),
+},
+{
+  name: "Nul, Breaker of Worlds",
+  team: "Foes of Asgard",
+// RECRUIT: 2
+// {POWER Strength} Choose a player and <b>Demolish</b> them. If that player discards a card this way, draw a card.
+// COST: 3
+  c1: makeHeroCard("Nul, Breaker of Worlds", "Demolition Derby", 3, 2, u, Color.STRENGTH, "Foes of Asgard", "D", ev => superPower(Color.STRENGTH) && /*TODO*/'Choose a player and <b>Demolish</b> them. If that player discards a card this way, draw a card.'),
+// <b>Thrown Artifact</b>
+// When you throw this, you get +2 Attack for each [Strength] Ally you played this turn.
+// COST: 4
+  c2: makeHeroCard("Nul, Breaker of Worlds", "Otherworldly Mace", 4, u, u, Color.INSTINCT, "Foes of Asgard", "D", [ ev => /*TODO*/'<b>Thrown Artifact</b>', ev => /*TODO*/'When you throw this, you get +2 Attack for each [Strength] Ally you played this turn.' ]),
+// ATTACK: 4
+// Say "NUL SMASH!" Then each player slaps a palm on the table. The last other player to slap a palm on the table gains a Bindings.
+// COST: 6
+  uc: makeHeroCard("Nul, Breaker of Worlds", "Nul Smash!", 6, u, 4, Color.STRENGTH, "Foes of Asgard", "", ev => /*TODO*/'Say "NUL SMASH!" Then each player slaps a palm on the table. The last other player to slap a palm on the table gains a Bindings.'),
+// ATTACK: 6
+// KO up to two cards from your hand and/or discard pile. For each Bindings you KO this way, <b>demolish</b> each other player.
+// COST: 8
+  ra: makeHeroCard("Nul, Breaker of Worlds", "Break the World", 8, u, 6, Color.STRENGTH, "Foes of Asgard", "", ev => /*TODO*/'KO up to two cards from your hand and/or discard pile. For each Bindings you KO this way, <b>demolish</b> each other player.'),
+},
+{
+  name: "Skadi",
+  team: "HYDRA",
+// RECRUIT: 2
+// {POWER Tech} gain a Madame HYDRA.
+// COST: 3
+// FLAVOR: The daughter of the Red Skull will fulfill his final dream.
+  c1: makeHeroCard("Skadi", "Dark Prophecy", 3, 2, u, Color.TECH, "HYDRA", "FD", ev => superPower(Color.TECH) && /*TODO*/'gain a Madame HYDRA.'),
+// ATTACK: 1
+// You may discard a HYDRA Ally. If you do, draw two cards.
+// COST: 5
+// FLAVOR: Skadi hails HYDRA. Immortal HYDRA. Whenever she cuts off a limb, two more take its place.
+  c2: makeHeroCard("Skadi", "Ancient Oath of HYDRA", 5, u, 1, Color.TECH, "HYDRA", "F", ev => /*TODO*/'You may discard a HYDRA Ally. If you do, draw two cards.'),
+// <b>Thrown Artifact</b>
+// When you throw this, you get +2 Attack for each card you discarded this turn.
+// COST: 5
+  uc: makeHeroCard("Skadi", "Hammer of the Serpent", 5, u, u, Color.STRENGTH, "HYDRA", "D", [ ev => /*TODO*/'<b>Thrown Artifact</b>', ev => /*TODO*/'When you throw this, you get +2 Attack for each card you discarded this turn.' ]),
+// <b>Thrown Artifact</b>
+// When you throw this, you get +1 Attack for each other HYDRA card you played this turn.
+// COST: 7
+  ra: makeHeroCard("Skadi", "War Banner of HYDRA", 7, u, u, Color.COVERT, "HYDRA", "", [ ev => /*TODO*/'<b>Thrown Artifact</b>', ev => /*TODO*/'When you throw this, you get +1 Attack for each other HYDRA card you played this turn.' ]),
+},
+{
+  name: "Skirn, Breaker of Men",
+  team: "Foes of Asgard",
+// Gain two New Recruits.
+// {POWER Instinct} Gain a third New Recruit.
+// COST: 3
+// FLAVOR: It's easy to look up to a leader like Skirn. About 50 feet up.
+  c1: makeHeroCard("Skirn, Breaker of Men", "Towering Leader", 3, u, u, Color.INSTINCT, "Foes of Asgard", "F", [ ev => /*TODO*/'Gain two New Recruits.', ev => superPower(Color.INSTINCT) && /*TODO*/'Gain a third New Recruit.' ]),
+// ATTACK: 2
+// Look at the bottom card of your deck. Discard it or put it back.
+// {POWER Covert} Draw a card from the bottom of your deck.
+// COST: 4
+  c2: makeHeroCard("Skirn, Breaker of Men", "Underhanded Dealings", 4, u, 2, Color.COVERT, "Foes of Asgard", "D", [ ev => /*TODO*/'Look at the bottom card of your deck. Discard it or put it back.', ev => superPower(Color.COVERT) && /*TODO*/'Draw a card from the bottom of your deck.' ]),
+// <b>Thrown Artifact</b>
+// When you throw this, you get +1 Attack for each card you've drawn this turn.
+// COST: 2
+  uc: makeHeroCard("Skirn, Breaker of Men", "Titanic Bludgeon", 2, u, u, Color.RANGED, "Foes of Asgard", "D", [ ev => /*TODO*/'<b>Thrown Artifact</b>', ev => /*TODO*/'When you throw this, you get +1 Attack for each card you\'ve drawn this turn.' ]),
+// ATTACK: 4
+// Each player reveals a [Covert] Ally or discards a card. For each card discarded this way, you draw a card.
+// COST: 7
+// GUN: 1
+  ra: makeHeroCard("Skirn, Breaker of Men", "Break Your Hopes", 7, u, 4, Color.STRENGTH, "Foes of Asgard", "G", ev => /*TODO*/'Each player reveals a [Covert] Ally or discards a card. For each card discarded this way, you draw a card.'),
+},
+]);
