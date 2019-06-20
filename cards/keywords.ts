@@ -107,7 +107,7 @@ function xTremeAttack(c: Card): number {
 // {DODGE}: "During your turn, you may discard this card from your hand to draw another card." When you Dodge a card from your hand, ignore all the other text on that card. When you Dodge a card from your hand, you didn't "play" that card, so the Dodged card's Ally (Hero) Class/color doesn't help you use the Superpower abilities of other cards you play that turn. Some Allies in the Villains set count the number of cards you discarded this turn; this includes cards you discarded with Dodge.
 // hero cardAction
 function dodge(c: Card, ev: Ev) {
-  return new Ev(ev, 'DODGE', ev => { discardEv(ev, c); drawEv(ev); });
+  return new Ev(ev, 'DODGE', { what: c, func: ev => { discardEv(ev, ev.what); drawEv(ev); }, cost: { cond: c => c.location === playerState.hand } });
 }
 
 // EXPANSION Guardians of the Galaxy

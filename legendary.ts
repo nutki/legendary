@@ -1387,7 +1387,8 @@ function getActions(ev: Ev): Ev[] {
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p.push(useShardActionEv(ev));
   playerState.artifact.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
-  // TODO find actions on mastermind? and hand
+  playerState.hand.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  // TODO find actions on mastermind?
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
@@ -2318,7 +2319,6 @@ top villain deck card select (prof x uncommon)
 !attached cards view
 
 ENGINE:
-cardAction for hand (dodge) and maybe mastermind
 replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
 remodel triggers to attach on resolution not queuing?
 count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
