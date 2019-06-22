@@ -102,7 +102,7 @@ function elusive(n: number) {
 // <b>X-Treme Attack</b>: "This Adversary gets +1 Attack for each other Adversary in the city with X-Treme Attack."
 // varDefense
 function xTremeAttack(c: Card): number {
-  return CityCards().limit(isVillain).count(cc => cc.xTremeAttack && cc !== c);
+  return c.printedDefense + CityCards().limit(isVillain).count(cc => cc.xTremeAttack && cc !== c);
 }
 // {DODGE}: "During your turn, you may discard this card from your hand to draw another card." When you Dodge a card from your hand, ignore all the other text on that card. When you Dodge a card from your hand, you didn't "play" that card, so the Dodged card's Ally (Hero) Class/color doesn't help you use the Superpower abilities of other cards you play that turn. Some Allies in the Villains set count the number of cards you discarded this turn; this includes cards you discarded with Dodge.
 // hero cardAction

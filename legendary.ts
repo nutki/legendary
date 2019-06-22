@@ -1274,7 +1274,7 @@ function getRecruitCost(c: Card): ActionCost {
   return getModifiedStat(c, 'recruitCost', { recruit: c.cost });
 }
 function getFightCost(c: Card): ActionCost {
-  return getModifiedStat(c, 'fightCost', (c.bribe || turnState.attackWithRecruit ? { either: c.defense } : { attack: c.defense }));
+  return getModifiedStat(c, 'fightCost', (c.bribe || turnState.attackWithRecruit ? { either: c.defense, cond: c.fightCond } : { attack: c.defense, cond: c.fightCond }));
 }
 function canPayCost(action: Ev) {
   const cost = action.cost;
@@ -1334,7 +1334,9 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
     resolve(true);
   });
 }
-
+function noOpActionEv(ev: Ev) {
+  return new Ev(ev, 'NOOP', { func: () => {}, cost: { cond: () => false }});
+}
 function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
 }
@@ -1387,7 +1389,8 @@ function getActions(ev: Ev): Ev[] {
   FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p.push(useShardActionEv(ev));
   playerState.artifact.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
-  // TODO find actions on mastermind? and hand
+  playerState.hand.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  gameState.mastermind.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
