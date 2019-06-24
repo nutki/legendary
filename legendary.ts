@@ -288,7 +288,6 @@ function moveCard(c: Card, where: Deck, bottom?: boolean): void {
   if (c.ctype !== 'P') throw TypeError("need card in play");
   if (!c.location) {
     TypeError("Moving card without location " + c);
-    console.log(c);
   };
   c.location.remove(c);
   // Remove copy pasting
@@ -1230,9 +1229,6 @@ function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, valu
 }
 // Game engine functions
 function attachedDeck(name: string, where: Deck | Card) {
-  if (!(where instanceof Deck || where instanceof Card)) {
-    console.log("Need deck or card to attach to");
-  }
   if (!where._attached) where._attached = {};
   if (!where._attached[name])
     where._attached[name] = new Deck(where.id + '/' + name);
@@ -1240,9 +1236,6 @@ function attachedDeck(name: string, where: Deck | Card) {
   return where._attached[name];
 }
 function attachedCards(name: string, where: Deck | Card) {
-  if (!(where instanceof Deck || where instanceof Card)) {
-    console.log("Need deck or card to attach to");
-  }
   if (!where._attached) return [];
   if (!where._attached[name]) return [];
   return where._attached[name].deck;
@@ -1714,9 +1707,7 @@ function playCard(ev: Ev): void {
   moveCardEv(ev, ev.what, playerState.playArea);
   if (ev.what.copyPasteCard) {
     selectCardEv(ev, "Choose a card to copy", turnState.cardsPlayed, target => {
-      console.log("COPYPASTE", ev.what, target);
       makeCardCopyPaste(target, ev.what);
-      console.log("RESULT", ev.what);
       if (canPlay(ev.what)) playCardEffects(ev);
     });
   } else {
@@ -1817,7 +1808,7 @@ function villainDraw(ev: Ev): void {
       // TODO select mastermind in case of multiple
     }
   } else {
-    console.log("dont know what to do with", c);
+    throw Error("dont know what to do with: " + c.id);
   }
 }
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
@@ -1938,94 +1929,6 @@ function playTurn(ev: Turn) {
   });
 }
 
-// GUI
-function imageName(path: string, card: Card, subname?: string): string {
-  let name = card.cardName;
-  if (!name) name = subname;
-  else if (subname !== undefined) name = subname + "_" + name;
-  name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
-  if (card.set && card.set !== 'Legendary') path = card.set + '/' + path;
-  return "images/" + path + "/" + name + ".png";
-}
-function cardImageName(card: Card): string {
-  if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
-  if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
-  if (card.cardType === "VILLAIN") return imageName("villains", card, card.villainGroup);
-  if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
-  if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermind.cardName);
-  if (card.cardType === "SCHEME") return imageName("schemes", card);
-  if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
-  return imageName("", card);
-}
-function makeDisplayAttached(c: Deck | Card) {
-  let res = '';
-  if (c._attached) for (let i in c._attached) if (c._attached[i].size) {
-    res += ' [ ' + i + ': ' + c._attached[i].deck.map(makeDisplayCard).join(' ') + ' ]';
-  }
-  return res;
-}
-
-function makeDisplayCard(c: Card): string {
-  let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
-  return res + makeDisplayAttached(c);
-}
-function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): string {
-  const extraClasses = gone ? " gone" : "";
-  let r = '';
-  r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
-  r += `<img class="cardface" src="${back ? 'images/back.png' : cardImageName(c)}">`
-  if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
-  if (isScheme(c) && gameState.schemeProgress !== undefined)
-    r += `<div class="count">${gameState.schemeProgress}</div>`;
-  if (!back && c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
-  if (c.captured.size > 0) r += `<div class="capturedHint">${c.captured.size}</div>`
-  r += `<div class="frame"></div></div>`;
-  return r;
-}
-function makeDisplayPlayAreaImg(c: Card): string {
-  const gone = !playerState.playArea.deck.includes(c);;
-  return makeDisplayCardImg(c, false, gone);
-}
-function displayDecks(): void {
-  let divs = document.getElementsByClassName("deck");
-  let list = Deck.deckList;
-  let deckById:{[id: string]:Deck} = {};
-  for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
-  for (let i = 0; i < divs.length; i++) {
-    let div = divs[i];
-    let deck = deckById[div.getAttribute("data-id")];
-    let fanout = div.getAttribute("data-fanout");
-    let mode = div.getAttribute("data-mode");
-    let count = div.getAttribute("data-count");
-    let popup = div.getAttribute("data-popupid");
-    let html = '';
-    if (mode === "IMG") {
-      if (deck.id === "PLAYAREA0") {
-        html = playerState.artifact.deck.map(c => makeDisplayCardImg(c)) +
-          turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg).join('');
-      } else if (fanout) {
-        html = deck.deck.map(c => makeDisplayCardImg(c, !deck.faceup)).reverse().join('');
-      } else {
-        html = deck.size ? makeDisplayCardImg(deck.top, !deck.faceup, false, popup === null) : '';
-      }
-      if (count === "1") {
-      }
-      if (count === "VP") {
-        html += '<img class="vpcount" src="icons/VP.png">';
-        html += '<div class="deckcount vpcount">' + currentVP(playerState) + '</div>';
-      } else if (count) {
-        html += `<div class="deckcount"><span class="name">${count}</span><br>${deck.size}</div>`;
-      }
-    } else {
-      html = deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ');
-    }
-    div.innerHTML = html;
-  }
-}
-function eventSource(ev: Ev): string {
-  const s = ev.getSource();
-  return s instanceof Card ? makeDisplayCardImg(s, false, false, false) : "";
-}
 
 function getDisplayInfo() {
   return ({
@@ -2037,33 +1940,18 @@ function getDisplayInfo() {
     soloVP: soloVP(),
   });
 }
-function displayGame(ev: Ev): void {
-  const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard } = getDisplayInfo();
-  displayDecks();
-  document.getElementById("source").innerHTML = eventSource(ev);
-  document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
-  document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
-  document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
-  document.getElementById("vp").innerHTML = `${soloVP}`;
-}
 
 // Main loop
-function setMessage(msg: string): void {
-  document.getElementById("message").innerHTML = msg;
-}
-
 function getEventName(ev: Ev): string {
   if (ev.type === "ENDOFTURN") return "End Turn";
   if (ev.desc) return ev.desc;
   if (ev.what) return `${ev.type} ${ev.what.cardName}`;
-  console.log("Unknown option", ev);
   return ev.type;
 }
 let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev: MouseEvent): void {
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     const id = node.id || (node.getAttribute && node.getAttribute('data-id'));
-    if (id) console.log(id);
     if (id && clickActions[id]) {
       clickActions[id]();
       return;
@@ -2098,7 +1986,6 @@ function mainLoop(): void {
   let ev = popEvent();
   while (!ev.ui) { playEvent(ev); ev = popEvent(); }
   displayGame(ev);
-  console.log(">>> " + ev.type, ev);
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": function () {
       (<Ev[]>ev.options).map((option, i) => {
@@ -2126,7 +2013,7 @@ function mainLoop(): void {
       });
       extraActions.push({name: "Confirm", func: () => {
         let num = selected.count(s => s);
-        if (num < ev.min || num > ev.max) { console.log(`${num} not in ${ev.min}-${ev.max}`); return; }
+        if (num < ev.min || num > ev.max) return;
         let indexes = selected.map((s, i) => s ? i : -1).filter(i => i >= 0);
         indexes.forEach(i => ev.result1(options[i]));
         if (num === 0) ev.result0();
@@ -2165,168 +2052,12 @@ function startGame(): void {
   initGameState(undoLog.gameSetup);
   mainLoop();
 }
-function makeOptions(id: string, templateType: keyof Templates, nameProp: 'name' | 'cardName', current: string, f: (name: any) => boolean = () => true) {
-  const values = cardTemplates[templateType].filter(f);
-  const el = <HTMLSelectElement>document.getElementById(id);
-  el.addEventListener("change", setupChange);
-  if (values.length !== 1) el.add(document.createElement("option"));
-  let set = "Legendary";
-  values.forEach(s => {
-    if (s.set !== set) {
-      set = s.set;
-      const option = document.createElement("option");
-      option.text = `---- ${set} ----`;
-      option.disabled = true;
-      el.add(option);
-    }
-    const option = document.createElement("option");
-    option.text = s[nameProp];
-    option.value = s.templateId;
-    if (current === s.templateId) option.selected = true;
-    el.add(option);
-  });
-}
-function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name' | 'cardName', name: string, values: string[]) {
-  let selected = values.map((a, i) => {
-    let e = document.getElementById(id + i);
-    if (!e) return undefined;
-    return (<HTMLSelectElement>e).value;
-  });
-  document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
-  values.forEach((name, i) => {
-    console.log(id, name);
-    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.templateId === name);
-  });
-}
-function makeBystanderSelects(id: string) {
-  const e = document.getElementById(id);
-  cardTemplates.BYSTANDERS.each(({set}) => {
-    const i = document.createElement('input');
-    i.setAttribute('data-set', set);
-    i.type = "checkbox";
-    e.appendChild(i);
-    e.appendChild(document.createTextNode(set))
-  });
-}
-function getBystanderSelects(id: string) {
-  const r: string[] = [];
-  [...document.getElementById(id).getElementsByTagName('input')].each(e => {
-    if (e.checked) r.push(e.getAttribute('data-set'));
-  })
-  return r;
-}
-function setBysternderSelects(id: string, value: string[]) {
-  [...document.getElementById(id).getElementsByTagName('input')].each(e => {
-    console.log(value);
-    e.checked = value.includes(e.getAttribute('data-set'));
-  })
-}
-function getSelects(name: string, t: string[]): boolean {
-  return t.map((old, i) => {
-    const v = (<HTMLSelectElement>document.getElementById(name + i)).value;
-    if (v === "") return false;
-    t[i] = v;
-    return true;
-  }).every(v => v);
-}
-let globalFormSetup: Setup;
-function setupChange(): void {
-  const pel = <HTMLSelectElement>document.getElementById("setup_players");
-  const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
-  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
-  console.log(pel.value, pel.selectedIndex);
-  console.log(sel.value, sel.selectedIndex);
-  console.log(mel.value, mel.selectedIndex);
-  if (!sel.value || !mel.value) return;
-  const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
-  console.log(tmp);
-  makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
-  makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
-  makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
-  const s1 = getSelects("setup_heroes", tmp.heroes);
-  const s2 = getSelects("setup_villains", tmp.villains);
-  const s3 = getSelects("setup_henchmen", tmp.henchmen);
-  tmp.bystanders = getBystanderSelects("setup_bystanders");
-  tmp.withOfficers = (<HTMLInputElement>document.getElementById('withOfficers')).checked;
-  tmp.withWounds = true;
-  tmp.withBindings = true;
-  tmp.withMadame = (<HTMLInputElement>document.getElementById('withMadame')).checked;
-  tmp.withNewRecruits = (<HTMLInputElement>document.getElementById('withNewRecruits')).checked;
-  tmp.handType = (<HTMLInputElement>document.getElementById('handType')).value === 'HYDRA' ? 'HYDRA' : 'SHIELD';
-  tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
-  tmp.withShards = true;
-  console.log(tmp, s1, s2, s3);
-  globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
-}
-function setupInit(): void {
-  makeBystanderSelects("setup_bystanders");
-  [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
-  makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
-  makeOptions("setup_mastermind", "MASTERMINDS", "cardName", undefined);
-}
-function chooseSelects(name: string, values: string[]): void {
-  values.forEach((v, i) => {
-    const el = <HTMLSelectElement>document.getElementById(name + i);
-    el.value = v;
-  });
-}
-function setupSet(s: Setup): void {
-  const pel = <HTMLSelectElement>document.getElementById("setup_players");
-  const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
-  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
-  pel.value = s.numPlayers.toString();
-  sel.value = s.scheme;
-  mel.value = s.mastermind;
-  const tmp = getGameSetup(s.scheme, s.mastermind, s.numPlayers);
-  makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
-  makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
-  makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
-  chooseSelects("setup_heroes", s.heroes);
-  chooseSelects("setup_villains", s.villains);
-  chooseSelects("setup_henchmen", s.henchmen);
-  (<HTMLInputElement>document.getElementById('withMadame')).checked = s.withMadame;
-  (<HTMLInputElement>document.getElementById('withNewRecruits')).checked = s.withNewRecruits;
-  (<HTMLInputElement>document.getElementById('withOfficers')).checked = s.withOfficers;
-  (<HTMLSelectElement>document.getElementById('handType')).value = s.handType;
-  (<HTMLSelectElement>document.getElementById('cityType')).value = s.cityType;
-  setBysternderSelects("setup_bystanders", s.bystanders);
-  globalFormSetup = s;
-}
-function getPopups() {
-  const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
-  return popups;
-}
-function getDecks() {
-  const decks: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("deck"), 0);
-  return decks;
-}
-function closePopupDecks() {
-  getPopups().each(d => d.classList.add("hidden"));
-}
-function autoOpenPopupDecks() {
-  getPopups().each(d => d.getElementsByClassName("select").length && d.classList.remove("hidden"));
-}
 function startApp(): void {
   const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup')) || exampleGameSetup;
   setupInit();
   setupSet(lastSetup);
   undoLog.init();
-  window.onclick = clickCard;
-  getPopups().forEach(e => e.addEventListener("wheel", function(e) {
-    this.scrollLeft += (e.deltaY * 10);
-    e.preventDefault();
-  }));
-  getDecks().forEach(div => {
-    let popup = div.getAttribute("data-popupid");
-    if (popup) {
-      let e = document.getElementById(popup);
-      div.addEventListener("click", ev => e.classList.toggle("hidden"));
-    }
-  });
-  document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
-  document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
-  document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
-  document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
+  initUI();
   startGame();
 }
 document.addEventListener('DOMContentLoaded', startApp, false);
