@@ -1,0 +1,177 @@
+
+#CARDNAME: Howard the Duck
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Traveling Companion
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+Reveal the top card of the Bystander Deck. If it's a Special Bystander, rescue it. Otherwise, put it on the bottom of that deck.
+#COST: 3
+
+#SUBNAME: Rebel Without a Cause
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Reveal the top card of your deck. If it costs 0 Cost or has no team icon, draw it.
+#COST: 4
+
+#SUBNAME: Right Place, Wrong Time
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 3+
+You get +1 Attack for each other Hero you played this turn with no team icon.
+#COST: 5
+
+#SUBNAME: Interplanetary Visitor
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
+#COST: 7
+
+
+#CARDNAME: Jessica Jones
+#TEAM: Marvel Knights
+
+#SUBNAME: Alter Ego
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2
+<b>Switcheroo 4</b>
+#COST: 3
+#FLAVOR: No one suspected Jessica would ever trade her leather jacket for a sequined bodysuit as the flashy Avenger "Jewel."
+
+#SUBNAME: Alias Investigations
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1
+<b>Switcheroo 5</b>
+<b>Investigate </b>for a card with an Attack icon.
+#COST: 4
+
+#SUBNAME: Crack the Case
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 3
+<b>Switcheroo 6</b>
+<b>Investigate </b>for a card with a Recruit icon. You may draw that card or KO it.
+#COST: 5
+
+#SUBNAME: Uncover Hidden Evil
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4
+{POWER Covert} <b>Investigate </b>the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
+#COST: 7
+
+
+#CARDNAME: Man-Thing
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Form From Ooze
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 0+
+{TELEPORT}
+You get +2 Attack, usable only against Villains in the Sewers or the Mastermind
+#COST: 2
+
+#SUBNAME: Burn the Fearful
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+Choose a Villain or Mastermind. If there are no other Villains adjacent to it, it gets -1 Attack this turn.
+#COST: 4
+
+#SUBNAME: Travel the Nexus of Realities
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 3
+{TELEPORT}
+You may move a Villain to another city space. If another Villain is already there, swap them.
+#COST: 5
+
+#SUBNAME: Eternity of Solitude
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+{POWER Strength} You get +1 Attack for each empty city space.
+#COST: 7
+
+
+#CARDNAME: Ms. America
+#TEAM: Avengers
+
+#SUBNAME: Star Power
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 1+
+{TELEPORT}
+{POWER Strength} You get +2 Attack.
+#COST: 3
+#FLAVOR: Her cosmic punches don't just make her targets see stars. Everyone else can see them too.
+
+#SUBNAME: Search Parallel Dimensions
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+<b>Investigate </b>for an Avengers card and {TELEPORT} that card.
+#COST: 4
+#FLAVOR: She hails from the Utopian Parallel to rally the Avengers with a warning.
+
+#SUBNAME: Kick a Hole in Reality
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3
+{POWER Strength} Reveal the top card of your deck. KO it or {TELEPORT} it.
+#COST: 6
+#FLAVOR: She's here to take names and kick holes…in the fabric of spacetime.
+
+#SUBNAME: Hyper-Cosmic Awareness
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+You get +1 Attack for each other card in your hand.
+#COST: 7
+#FLAVOR: Her enemies are also cosmically aware - that she has pulverized them into star fragments.
+
+
+#CARDNAME: Squirrel Girl
+#TEAM: Avengers
+
+#SUBNAME: Find Tiny Friends
+#COPIES: 5
+#CLASS: [Instinct]
+<b>Switcheroo 3</b>
+<b>Investigate </b>for a card that costs 3 or less.
+#COST: 2
+
+#SUBNAME: Nut Punch
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1+
+<b>Switcheroo 4</b>
+{POWER Instinct} You get +2 Attack.
+#COST: 3
+#FLAVOR: Some Villains fear this attack more than any other.
+
+#SUBNAME: Squirrelgility
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2+
+<b>Switcheroo 5</b>
+You get +2 Attack if at least 2 cards entered the HQ this turn.
+#COST: 4
+
+#SUBNAME: Unbeatable Squirrel Girl
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+You may choose a number from 1 to 5. A Hero in your hand gains <b>Switcheroo</b> for that number.
+{POWER Instinct Instinct} You may choose a number from 1 to 8 instead.
+#COST: 8
+
+
+
+

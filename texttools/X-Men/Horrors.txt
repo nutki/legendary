@@ -1,12 +1,12 @@
 
 <b>The Apprentice Rises</b>
-<b>Ambush:</b> Add a random new Mastermind to the game with one Tactic.
+<b>Ambush</b>: Add a random new Mastermind to the game with one Tactic.
 
 <b>Army of Evil</b>
 Each non-Henchman Villain has +1 Attack.
 
 <b>The Blood Thickens</b>
-<b>Ambush:</b> Shuffle an additional Master Strike into the Villain Deck. Then, play another card from the Villain Deck.
+<b>Ambush</b>: Shuffle an additional Master Strike into the Villain Deck. Then, play another card from the Villain Deck.
 
 <b>Empire of Oppression</b>
 Each players hand size is one less. (This applies when they draw a new hand.)
@@ -33,28 +33,28 @@ The Mastermind has +1 Attack.
 Whenever you play a Bystander from the Villain Deck, play another card from the Villain Deck.
 
 <b>Opening Salvo</b>
-<b>Ambush:</b> Each player gains a Wound.
+<b>Ambush</b>: Each player gains a Wound.
 
 <b>Pain upon Pain</b>
 Whenever you complete a Master Strike, play another card from the Villain Deck.
 
 <b>The Plot Thickens</b>
-<b>Ambush:</b> Shuffle an additional Scheme Twist into the Villain Deck.
+<b>Ambush</b>: Shuffle an additional Scheme Twist into the Villain Deck.
 
 <b>Plots upon Plots</b>
 Whenever you complete a Scheme Twist, play another card from the Villain Deck.
 
 <b>Psychic Infection</b>
-<b>Ambush:</b> Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card, then each player discards a card.
+<b>Ambush</b>: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card, then each player discards a card.
 
 <b>Shadow of the Disciple</b>
 This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind worth 5 VP. It gains the ability "Master Strike: Each player reveals a Tech Hero or gains a Wound."
 
 <b>Surprise Assault</b>
-<b>Ambush:</b> Play two cards from the Villain Deck.
+<b>Ambush</b>: Play two cards from the Villain Deck.
 
 <b>Viral Infection</b>
-<b>Ambush:</b> Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card and the player on your right gains a Wound.
+<b>Ambush</b>: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card and the player on your right gains a Wound.
 
 <b>Tyrant Mastermind</b>
 The Mastermind as +3 Attack.

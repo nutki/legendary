@@ -5,7 +5,7 @@
 #COPIES: 1
 <i>5th Circle of Kung-Fu</i>
 #FIGHT: <b>Fateful Resurrection</b>
-#ESCAPE: Deadpool ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Each player reveals a Hero with an odd-numbered cost or gains a Wound." <i>(0 is even).</i>
+#ESCAPE: Deadpool ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals a Hero with an odd-numbered cost or gains a Wound." <i>(0 is even).</i>
 #ATTACK: 5+
 #VP: 5
 
@@ -24,7 +24,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Pink Sphinx
 #COPIES: 3
-#FIGHT: <b>Spectrum:</b> KO one of your Heroes.
+#FIGHT: <b>Spectrum</b>: KO one of your Heroes.
 #ATTACK: 4
 #VP: 2
 
@@ -34,7 +34,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 #SUBNAME: Angela
 #COPIES: 1
 #FIGHT: <b>Fateful Resurrection</b>
-#ESCAPE: Angela ascends to become a new Mastermind. She gains the ability, "<b>Master Strike:</b> Each player KOs a Hero from their discard pile that costs 1 or more."
+#ESCAPE: Angela ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: Each player KOs a Hero from their discard pile that costs 1 or more."
 #ATTACK: 7
 #VP: 5
 
@@ -47,7 +47,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 #SUBNAME: Gamora
 #COPIES: 1
 #AMBUSH: <b>Charge</b> one space.
-#FIGHT: <i>(After this goes to your victory pile.)</i> <b>Patrol the Sewers:</b> If it's empty, each other player gains a Wound.
+#FIGHT: <i>(After this goes to your victory pile.)</i> <b>Patrol the Sewers</b>: If it's empty, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 6
 #VP: 4
@@ -60,7 +60,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Rocket Raccoon
 #COPIES: 2
-#FIGHT: <i>(After this goes to your Victory Pile.)</i> <b>Patrol the Bank:</b> If it's empty, draw a card. If it's not empty, KO one of your Heroes.
+#FIGHT: <i>(After this goes to your Victory Pile.)</i> <b>Patrol the Bank</b>: If it's empty, draw a card. If it's not empty, KO one of your Heroes.
 #ATTACK: 4
 #VP: 2
 
@@ -131,7 +131,7 @@ When in the Sewers, Rooftops or Bridge, he is in "wolf form" and gets +3 Attack.
 #SUBNAME: Doctor Spectrum
 #COPIES: 3
 #AMBUSH: <b>Charge</b> one space.
-#FIGHT: <b>Spectrum:</b> KO a card from your discard pile. <b>Escape:</b> Each player who doesn't have <b>Spectrum</b> discards a card.
+#FIGHT: <b>Spectrum</b>: KO a card from your discard pile. <b>Escape</b>: Each player who doesn't have <b>Spectrum</b> discards a card.
 #ATTACK: 6
 #VP: 4
 
@@ -145,14 +145,14 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #SUBNAME: Warrior Woman
 #COPIES: 1
 #AMBUSH: <b>Charge</b> one space.
-#ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike:</b> <b>Patrol the Bank:</b> If there's a Villain there, each player discards a card with a Recruit icon."
+#ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: <b>Patrol the Bank</b>: If there's a Villain there, each player discards a card with a Recruit icon."
 #ATTACK: 8
 #VP: 6
 
 #SUBNAME: Whizzer
 #COPIES: 2
 #AMBUSH: <b>Charge</b> three spaces.
-<i>Fight</i> <i>(After he goes to your victory pile.)</i> <b>Patrol the Bridge:</b> If there's a Villain there, each other player gains a Wound.
+<i>Fight</i> <i>(After he goes to your victory pile.)</i> <b>Patrol the Bridge</b>: If there's a Villain there, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5
 #VP: 3
@@ -181,7 +181,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 
 #SUBNAME: '92 Professor X
 #COPIES: 1
-#ESCAPE: '92 Professor X ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Stack the two heroes from the HQ with the highest cost next to '92 Professor X. He gets +1 Attack for each Hero stacked there. Players can recruit the top card of the stack."
+#ESCAPE: '92 Professor X ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Stack the two heroes from the HQ with the highest cost next to '92 Professor X. He gets +1 Attack for each Hero stacked there. Players can recruit the top card of the stack."
 #ATTACK: 8+
 #VP: 6
 

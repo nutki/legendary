@@ -104,7 +104,7 @@ Whenever you play a <b>Divided</b> card this turn: play both sides as if they we
 
 
 #CARDNAME: Daredevil
-#TEAM: Avengers
+Avengers/Marvel Knights
 
 #SUBNAME: Dual Existence
 #COPIES: 5
@@ -405,7 +405,7 @@ Reveal the top three cards of your deck. If you revealed at least three differen
 
 
 #CARDNAME: Peter Parker
-#TEAM: Avengers
+Avengers/Spider Friends
 
 #SUBNAME: Conflicted Loyalties
 #COPIES: 5

@@ -139,7 +139,7 @@ Raza gets +1 Attack for each Bystander he has.
 #SUBNAME: Whiplash
 #COPIES: 2
 #FIGHT: Each player reveals a [Tech] hero or gains a wound.
-<b>Escape: </b> Same effect.
+#ESCAPE:  Same effect.
 #ATTACK: 6
 #VP: 4
 

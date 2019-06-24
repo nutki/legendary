@@ -12,7 +12,7 @@ To fight Blind Al, you also gotta drop a Deuce <i>(discard a card with a "2" pri
 #SUBNAME: Sluggo
 #COPIES: 2
 <b>Revenge for Deadpool's "Friends"</b>
-#FIGHT: <b>Excessive Violence:</b> Gain the Hero from the HQ with the lowest cost <i>(or tied for lowest)</i>.
+#FIGHT: <b>Excessive Violence</b>: Gain the Hero from the HQ with the lowest cost <i>(or tied for lowest)</i>.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5+
 #VP: 4

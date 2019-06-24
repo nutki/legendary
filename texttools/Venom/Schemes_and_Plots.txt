@@ -1,7 +1,7 @@
 
 #CARDNAME: Invasion of the Venom Symbiotes
 #SETUP: 8 Twists. Add an extra Henchman Group.
-#TWIST: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush:</b> This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
+#TWIST: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush</b>: This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
 #EVILWINS: When the Escape Pile has 3 cards per player, or the Villain Deck runs out.
 
 #CARDNAME: Maximum Carnage

@@ -68,7 +68,7 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 5
-<b>Excessive Violence:</b> Take another turn after this one. But don't use this ability more than once per game - trilogies are stupid.
+<b>Excessive Violence</b>: Take another turn after this one. But don't use this ability more than once per game - trilogies are stupid.
 #COST: 7
 #FLAVOR: Hey Wolverine! I've had a breakthrough!
 
@@ -88,7 +88,7 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2 1/2
-<b>Excessive Violence:</b> Rescue a Bystander.
+<b>Excessive Violence</b>: Rescue a Bystander.
 #COST: 3
 #FLAVOR: And they say cartoons are too violent these days.
 
@@ -171,11 +171,12 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Ranged]
 #RECRUIT: 3
-<b>Excessive Violence:</b> You may KO one of your cards or a card from your discard pile.
+<b>Excessive Violence</b>: You may KO one of your cards or a card from your discard pile.
 #COST: 5
 #FLAVOR: Wait, isn't shooting electricity underwater a terrible idea?
 
-<i>PhD in Oceanography (1 copy)</i>
+#SUBNAME: PhD in Oceanography
+#COPIES: 1
 #CLASS: [Tech]
 You may KO a card from your hand or discard pile.
 {TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.

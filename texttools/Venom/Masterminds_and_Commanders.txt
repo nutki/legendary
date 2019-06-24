@@ -3,15 +3,15 @@
 If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
 #LEADS: Life Foundation
 #STRIKE: A Villain from the city <b>Symbiote Bonds</b> with Hybrid, If Hybrid was already bonded, then each player gains a Wound instead.
-<b>Attack:</b> 6
-<b>VP:</b> 6
+#ATTACK: 6
+#VP: 6
 
 #CARDNAME: Epic Hybrid
 If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
 #LEADS: Life Foundation
 #STRIKE: The highest Attack unbonded Villain from the city and/or Escape Pile <b>Symbiote Bonds</b> with Hybrid. If no new bond could occur, then each player gains a Wound instead.
-<b>Attack:</b> 8
-<b>VP:</b> 6
+#ATTACK: 8
+#VP: 6
 
 Alien Awakening
 #FIGHT: If this is not the final tactic, a Henchman Villain from any Victory Pile <b>Symbiote Bonds</b> with Hybrid.
@@ -30,15 +30,15 @@ Symbiotic Call
 Poison Thanos gets +1 Attack for each different cost among cards in his "Poisoned Souls" pile.
 #LEADS: Poisons
 #STRIKE: Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Poisoned Souls: pile.
-<b>Attack:</b> 12+
-<b>VP:</b> 7
+#ATTACK: 12+
+#VP: 7
 
 #CARDNAME: Epic Poison Thanos
 Poison Thanos gets +2 Attack for each different cost among cards in his "Poisoned Souls" pile.
 #LEADS: Poisons
 #STRIKE: Each player reveals their hand and puts half (round up) of their non-grey Heroes net to Thanos in a "Poisoned Souls" pile. Each player that lost no Heroes this way gains a Wound.
-<b>Attack:</b> 13+
-<b>VP:</b> 7
+#ATTACK: 13+
+#VP: 7
 
 Desperate Rescue
 #FIGHT: You may gain a Hero from Poison Thanos' "Poisoned Souls" pile.

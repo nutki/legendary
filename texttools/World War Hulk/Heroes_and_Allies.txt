@@ -23,7 +23,7 @@ Then, if you drew two cards this turn, Transform this into Like Totally Smart Hu
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 2+
-<b>Outwit:</b> You get +2 Attack.
+<b>Outwit</b>: You get +2 Attack.
 #COST: 5
 #FLAVOR: This hulk breaks encryption just as well as he breaks skulls.
 
@@ -555,7 +555,7 @@ You may <b>Transform</b> this into Agoraphobia and put it in your discard pile. 
 #SUBNAME: Rival Personalities
 #COPIES: 5
 #CLASS: [Strength]
-2+Attack
+#ATTACK: 2+
 You get +1 Attack for each card that <b>Transformed</b> this turn.
 #COST: 4
 

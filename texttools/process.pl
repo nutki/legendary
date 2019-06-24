@@ -35,6 +35,7 @@ while (<A>) {
     ($name, $_) = ($1, $2);
     $name =~ s/ /_/g;
     $name .= ".txt";
+    s!(: ?)</b>!</b>$1!g; #FIX
     s!<span style="background-color: #......;"><span style="color: #......;">($class)</span></span>![$1]!g;
     s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
@@ -61,7 +62,6 @@ while (<A>) {
       s!^<b>(?:Healing|Betrayal)</b>: (.*)!#HEAL: $1! && next;
       s!^<b>Spectrum</b>: (.*)$!{SPECTRUM} $1! && next;
 
-      s!^<i>(PhD in Oceanography)</i>$!#SUBNAME: $1\n#COPIES: 1! && next; #FIX
       s!^Unbreakable Cage$!#SUBNAME: $&\n#COPIES: 3! && next; #FIX
       s!^(Weight of the World) \(1 copy\)$!#SUBNAME: $&\n#COPIES: 1! && next; #FIX
 

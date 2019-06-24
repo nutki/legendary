@@ -7,7 +7,7 @@
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2
-<b>Excessive Violence:</b> Draw a card.
+<b>Excessive Violence</b>: Draw a card.
 #COST: 3
 #FLAVOR: One good gaping wound deserves another.
 
@@ -15,8 +15,8 @@
 #COPIES: 5
 #CLASS: [Strength]
 #RECRUIT: 0+
-<b>Digest 4:</b> Draw two cards.
-<b>Indigestion:</b> You get +2 Recruit.
+<b>Digest 4</b>: Draw two cards.
+<b>Indigestion</b>: You get +2 Recruit.
 #COST: 4
 #FLAVOR: He'd be willing to eat a Groot salad too.
 
@@ -24,7 +24,7 @@
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3
-<b>Excessive Violence:</b>
+<b>Excessive Violence</b>:
 Reveal the top card of your deck. You may KO it.
 #COST: 6
 
@@ -32,7 +32,7 @@ Reveal the top card of your deck. You may KO it.
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 6
-<b>Excessive Violence:</b> Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
+<b>Excessive Violence</b>: Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
 #COST: 8
 
 
@@ -44,8 +44,8 @@ Reveal the top card of your deck. You may KO it.
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Digest 3:</b> You get +2 Attack.
-<b>Indigestion:</b> You get +2 Recruit.
+<b>Digest 3</b>: You get +2 Attack.
+<b>Indigestion</b>: You get +2 Recruit.
 {POWER Instinct} Instead, you get both.
 #COST: 3
 
@@ -54,7 +54,7 @@ Reveal the top card of your deck. You may KO it.
 #CLASS: [Strength]
 #RECRUIT: 0+
 #ATTACK: 2
-<b>Excessive Violence:</b> You get +2 Recruit.
+<b>Excessive Violence</b>: You get +2 Recruit.
 #COST: 4
 #FLAVOR: The face that launched a thousand nightmares.
 
@@ -63,7 +63,7 @@ Reveal the top card of your deck. You may KO it.
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Choose one:</b>
+<b>Choose one</b>:
 - You get +1 Recruit for each other card you played this turn with a Recruit icon.
 - Or you get +1 Attack for each other card you played this turn with an Attack icon.
 #COST: 6
@@ -73,8 +73,8 @@ Reveal the top card of your deck. You may KO it.
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Digest 8:</b> KO a card from your Victory Pile. You get +6 Attack.
-<b>Indigestion:</b> KO a card from your hand or discard pile. You get +6 Recruit.
+<b>Digest 8</b>: KO a card from your Victory Pile. You get +6 Attack.
+<b>Indigestion</b>: KO a card from your hand or discard pile. You get +6 Recruit.
 {TEAMPOWER Venomverse, Venomverse} Instead, do both.
 #COST: 8
 
@@ -86,7 +86,7 @@ Reveal the top card of your deck. You may KO it.
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2
-<b>Digest 3:</b> You may discard a card. If you do, draw a card.
+<b>Digest 3</b>: You may discard a card. If you do, draw a card.
 #COST: 3
 #FLAVOR: And thirsty for vengeance.
 #GUN: 1
@@ -103,7 +103,7 @@ If a Master Strike or Villain that has an Ambush ability was played this turn, y
 #COPIES: 3
 #CLASS: [Ranged]
 #ATTACK: 2
-<b>Excessive Violence:</b> You may KO a card from your hand or discard pile.
+<b>Excessive Violence</b>: You may KO a card from your hand or discard pile.
 #COST: 5
 
 #SUBNAME: Ultimate Survivor
@@ -122,7 +122,7 @@ When a Master Strike is played, before it takes effect, you may put Ultimate Sur
 #COPIES: 5
 #CLASS: [Ranged]
 #RECRUIT: 1
-<b>Digest 2:</b> Draw a card.
+<b>Digest 2</b>: Draw a card.
 #COST: 2
 #FLAVOR: Through it, he scried other symbiotes across the dimensions.
 
@@ -156,8 +156,8 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 0+
-<b>Digest 2:</b> You get +2 Attack.
-<b>Indigestion:</b> "Rescue" a Bystander.
+<b>Digest 2</b>: You get +2 Attack.
+<b>Indigestion</b>: "Rescue" a Bystander.
 {POWER Strength} Instead, you get both.
 #COST: 2
 
@@ -174,18 +174,17 @@ Draw two cards. But you can't draw any more cards until the end of this turn.
 #CLASS: [Instinct]
 #ATTACK: 3
 Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extra time.
-<b>Excessive Violence:</b> "Rescue" a Bystander.
+<b>Excessive Violence</b>: "Rescue" a Bystander.
 #COST: 5
 
 #SUBNAME: Play to the Crowd
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 4+
-<b>Digest 7:</b> You get +1 Attack for each two Bystanders in your Victory Pile.
-<b>Indigestion:</b> "Rescue" two Bystanders.
+<b>Digest 7</b>: You get +1 Attack for each two Bystanders in your Victory Pile.
+<b>Indigestion</b>: "Rescue" two Bystanders.
 {TEAMPOWER Venomverse, Venomverse} Instead, do both (in order).
 #COST: 7
-
 
 
 
