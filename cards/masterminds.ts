@@ -413,10 +413,9 @@ makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
 // Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
   const selected: Card[] = [];
   selectCardEv(ev, "Select an Ally", HQCardsHighestCost(), c => selected.push(c));
-  cont(ev, () => selectCardEv(ev, "Select another Ally", HQCards().limit(isHero).limit(c => selected.includes(c)).highest(c => c.cost), c => selected.push(c)));
+  cont(ev, () => selectCardEv(ev, "Select another Ally", HQCards().limit(isHero).limit(c => !selected.includes(c)).highest(c => c.cost), c => selected.push(c)));
   cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, c, ev.source, "PAWN")));
   cont(ev, () => selected.each(c => attachCardEv(ev, c, ev.source, "PAWN")));
-// TODO make pawns recruitable
 }, [
   [ "Cerebro Device", ev => {
   // Reveal the top three cards of the Adversary Deck. Play any Adversaries you revealed that have "X-Treme Attack". Put the rest back in random order.
@@ -437,7 +436,8 @@ makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
     eachOtherPlayerVM(p => revealOrEv(ev, "Brotherhood", () => gainBindingsEv(ev, p), p))
   } ],
 ], {
-  varDefense: c => c.printedDefense + c.attached("PAWN").size
+  varDefense: c => c.printedDefense + c.attached("PAWN").size,
+  cardActions: [ (c: Card, ev: Ev) => c.attached("PAWN").size ? recruitCardActionEv(ev, c.attachedDeck("PAWN").top) : noOpActionEv(ev) ],
 }),
 ]);
 addTemplates("MASTERMINDS", "Guardians of the Galaxy", [
