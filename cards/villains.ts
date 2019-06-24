@@ -923,7 +923,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Mind Gem", 6, u, {
     ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isTwist) + gameState.scheme.attached("TWIST").size),
-  }), u, u, 0, u, "D", ev => addRecruitEvent(ev, 2), { isArtifact: true }) ],
+  }), u, u, 0, u, "D", ev => addRecruitEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] }) ],
 // AMBUSH: Power Gem gains a Shard for each Master Strike in the KO pile and/or stacked next to the Mastermind.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - Once per turn, you get +2 Attack.
@@ -931,7 +931,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Power Gem", 7, u, {
     ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isStrike) + gameState.mastermind.deck.sum(m => m.attached("STRIKE").size)),
-  }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), { isArtifact: true }) ],
+  }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] }) ],
 // AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
@@ -972,7 +972,7 @@ addVillainTemplates("Guardians of the Galaxy", [
       selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => swapCardsEv(ev, v.location, dest));
       gainShardEv(ev);
     });
-  }, { isArtifact: true }) ],
+  }, { isArtifact: true, cardActions: [ useArtifactAction() ]}) ],
 // AMBUSH: Play another card from the Villain Deck. Time Gem gains Shards equal to that card's printed Victory Points.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
@@ -988,5 +988,92 @@ addVillainTemplates("Guardians of the Galaxy", [
     match: (ev, source) => ev.what === source,
     after: ev => gameState.extraTurn = true, // TODO mutliplayer, once per game
   }}) ],
+]},
+]);
+addVillainTemplates("Fear Itself", [
+{ name: "The Mighty", cards: [
+// 2 Uru-Enchanted Weapons
+// Fight or Fail: If her Uru-Enchanted Weapons revealed any Bystanders, kidnap them.
+// ATTACK: 3*
+// VP: 4
+  [ 1, makeVillainCard("The Mighty", "Black Widow", 3, 4, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(2),
+    fight: ev => uruEnchantedCards(ev).limit(isBystander).each(c => rescueEv(ev, c)),
+  })],
+// Uru-Enchanted Weapon
+// AMBUSH: Reveal the top three cards of the Adversary Deck. Put the Adversary you revealed with the highest printed VP on top of that deck. Put the rest on the bottom of that deck in random order.
+// Fight or Fail: You get +2 Recruit.
+// ATTACK: 5*
+// VP: 4
+  [ 1, makeVillainCard("The Mighty", "Dr. Strange", 5, 4, {
+    ambush: ev => revealVillainDeckEv(ev, 3, cards => selectCardEv(ev, "Choose an Adversary to put on top of the deck", cards.limit(isVillain).highest(c => c.printedVP), c => moveCardEv(ev, c, gameState.villaindeck)), true, true),
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(1),
+    fight: ev => addRecruitEvent(ev, 2),
+  })],
+// Uru-Enchanted Weapon
+// Fight or Fail: Choose one: Each other player draws a card, or each other player discards a card.
+// ATTACK: 3*
+// VP: 2
+  [ 1, makeVillainCard("The Mighty", "Hawkeye", 3, 2, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(1),
+    fight: ev => chooseOptionEv(ev, "Choose one", [{ l: "Each other player draws a card", v: true }, { l: "Each other player discards a card", v: false }], r => eachOtherPlayerVM(p => r ? drawEv(ev, 1, p) : pickDiscardEv(ev, p))),
+  })],
+// Uru-Enchanted Weapon
+// If his Uru-Enchanted Weapon revealed an Adversary, KO one of your Allies.
+// ATTACK: 3*
+// VP: 2
+  [ 1, makeVillainCard("The Mighty", "Iron Fist", 3, 2, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(1),
+    fight: ev => uruEnchantedCards(ev).has(isVillain) && selectCardAndKOEv(ev, yourHeroes()),
+  })],
+// Uru-Enchanted Weapon
+// Fight or Fail: If her Uru-Enchanted Weapon revealed a Command Strike or Plot Twist, play it.
+// ESCAPE: Each player reveals a [Ranged] Ally or gains a Bindings.
+// ATTACK: 4*
+// VP: 3
+  [ 1, makeVillainCard("The Mighty", "Ms. Marvel", 4, 3, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(1),
+    fight: ev => uruEnchantedCards(ev).limit(c => isStrike(c) || isTwist(c)).each(c => villainDrawEv(ev, c)),
+    escape: ev => revealOrEv(ev, Color.RANGED, () => gainBindingsEv(ev)),
+  })],
+// Uru-Enchanted Weapon
+// Fight or Fail: If her Uru-Enchanted Weapon revealed an Adversary, put that Adversary into your Victory Pile.
+// ATTACK: 4*
+// VP: 2
+  [ 1, makeVillainCard("The Mighty", "Red She-Hulk", 4, 2, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(1),
+    fight: ev => uruEnchantedCards(ev).limit(isVillain).each(c => moveCardEv(ev, c, playerState.victory)),
+  })],
+// 2 Uru-Enchanted Weapons
+// Fight or Fail: Play all the cards revealed by his Uru-Enchanted Weapon that are worth 2 VP or less.
+// ESCAPE: Each player gains a Bindings.
+// ATTACK: 2*
+// VP: 3
+  [ 1, makeVillainCard("The Mighty", "Spider-Man", 2, 3, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(2),
+    fight: ev => uruEnchantedCards(ev).limit(c => c.vp <= 2).each(c => villainDrawEv(ev, c)),
+    escape: ev => eachPlayer(p => gainBindingsEv(ev, p)),
+  })],
+// 2 Uru-Enchanted Weapons
+// Fight or Fail: Draw two cards.
+// ESCAPE: Each player reveals an [Instinct] Ally or gains a Bindings. Then put Wolverine on top of the Adversary Deck.
+// ATTACK: 5*
+// VP: 6
+  [ 1, makeVillainCard("The Mighty", "Wolverine", 5, 6, {
+    fightFail: uruEnchantedFail,
+    trigger: uruEnchantedTrigger(2),
+    fight: ev => drawEv(ev, 2),
+    escape: ev => {
+      eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainBindingsEv(ev, p), p));
+      moveCardEv(ev, ev.source, gameState.villaindeck);
+    },
+  })],
 ]},
 ]);

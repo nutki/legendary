@@ -55,6 +55,7 @@ interface Card {
   playCost?: number
   fightCond?: (c?: Card) => boolean
   fightCost?: (ev: Ev) => void
+  fightFail?: (ev: Ev) => void
   healCond?: () => boolean
   instance: Card
   _attached: {[name: string]:Deck}
@@ -103,13 +104,17 @@ interface VillainCardAbillities {
   varDefense?: (c: Card) => number
   fightCond?: (c?: Card) => boolean
   fightCost?: (ev: Ev) => void
+  fightFail?: (ev: Ev) => void
   bribe?: boolean
   isHenchman?: boolean
+  trigger?: Trigger
+  triggers?: Trigger[]
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   xTremeAttack?: boolean
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
+  fightFail?: (ev: Ev) => void
   bribe?: boolean
   init?: (c: Card) => void
   trigger?: Trigger
@@ -184,7 +189,6 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
     if (abilities.isArtifact) {
       c.artifactEffects = c.effects;
       c.effects = [ playArtifact ];
-      c.cardActions = c.artifactEffects.map(artifactActions);
     }
   }
   return c;
@@ -417,6 +421,7 @@ interface Ev<TSchemeState = any> {
   state?: TSchemeState
   cost?: ActionCost
   effectName?: EffectStat
+  failFunc?: (ev: Ev) => void
 }
 interface EvParams {
   where?: Deck
@@ -446,6 +451,7 @@ interface EvParams {
   confirm?: boolean
   cost?: ActionCost
   effectName?: EffectStat
+  failFunc?: (ev: Ev) => void
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
@@ -1125,10 +1131,18 @@ function destroyCity(space: Deck) {
   gameState.city = gameState.city.filter(d => d !== space);
   gameState.city.forEach(d => {
     if (d.next === space) d.next = space.next;
-    if (d.below === space) d.below = space.below;
-    if (d.above === space) d.above = space.above;
+  });
+  gameState.hq.forEach(d => {
+    if (d.below === space) d.below = undefined;
   });
   space.isCity = false;
+}
+function destroyHQ(space: Deck) {
+  gameState.hq = gameState.hq.filter(d => d !== space);
+  gameState.city.forEach(d => {
+    if (d.above === space) d.above = undefined;
+  });
+  space.isHQ = false;
 }
 function HQCardsHighestCost(): Card[] {
   return HQCards().limit(isHero).highest(c => c.cost);
@@ -1339,16 +1353,18 @@ function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
 }
 function fightActionEv(ev: Ev, what: Card) {
-  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: getFightCost(what) });
+  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: getFightCost(what), failFunc: what.fightFail });
 }
-function countPerTurn(c: Card) {
+function countPerTurn(key: string, c?: Card) {
+  if (c) key += '-' + c.id;
   if (!turnState.perTurn) return 0;
-  return turnState.perTurn.get(c.id) || 0;
+  return turnState.perTurn.get(key) || 0;
 }
-function incPerTurn(c: Card) {
-  const prev = countPerTurn(c);
+function incPerTurn(key: string, c?: Card) {
+  const prev = countPerTurn(key, c);
+  if (c) key += '-' + c.id;
   if (!turnState.perTurn) turnState.perTurn = new Map();
-  turnState.perTurn.set(c.id, prev + 1);
+  turnState.perTurn.set(key, prev + 1);
   return prev;
 }
 function canHeal(c: Card): boolean {
@@ -1440,7 +1456,7 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
   pushEv(ev, "RECRUIT", { func: buyCard, what: card });
 }
-function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, owner(ev.what).discard)) }); }
+function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let card: Card;
@@ -1637,20 +1653,26 @@ function revealVillainDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), 
 function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   revealDeckEv(ev, gameState.herodeck, amount, action, random, bottom, agent);
 }
-function lookAtDeckEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
+function lookAtDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   who = who || playerState;
   agent = agent || who;
-  for (let i = 0; i < amount; i++) cont(ev, ev => revealOne(ev, who));
+  for (let i = 0; i < amount; i++) cont(ev, ev => revealOne(ev, who, bottom));
   cont(ev, action);
-  cont(ev, () => cleanupRevealed(ev, who.revealed, who.deck, false, agent));
+  cont(ev, () => cleanupRevealed(ev, who.revealed, who.deck, bottom, agent));
 }
-function revealOne(ev: Ev, who: Player) {
+function lookAtDeckEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
+  lookAtDeckTopOrBottomEv(ev, amount, false, action, who, agent);
+}
+function lookAtDeckBottomEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
+  lookAtDeckTopOrBottomEv(ev, amount, true, action, who, agent);
+}
+function revealOne(ev: Ev, who: Player, bottom: boolean) {
   if (!who.deck.size && !who.discard.size) {
   } else if (!who.deck.size) {
     pushEv(ev, "RESHUFFLE", reshufflePlayerDeck);
     pushEvents(ev);
   } else {
-    moveCardEv(ev, who.deck.top, who.revealed);
+    moveCardEv(ev, bottom ? who.deck.bottom : who.deck.top, who.revealed);
   }
 }
 function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => void) {
@@ -2049,6 +2071,7 @@ function clickCard(ev: MouseEvent): void {
 function playEvent(ev: Ev) {
   payCost(ev, res => {
     res && ev.func(ev);
+    !res && ev.failFunc && ev.failFunc(ev);
     turnState.pastEvents.push(ev);
   });
 }

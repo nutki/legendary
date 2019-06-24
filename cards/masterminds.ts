@@ -495,3 +495,31 @@ makeMastermindCard("Thanos", 24, 7, "Infinity Gems", ev => {
   varDefense: c => c.printedDefense - 2 * (gameState.players.sum(p => p.artifact.count(isGroup("Infinity Gems"))) + playerState.victory.count(isGroup(c.leads)))
 }),
 ]);
+addTemplates("MASTERMINDS", "Fear Itself", [
+makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty.", ev => {
+// Demolish each player. Then stack this Strike next to Iron Man. Uru-Enchanted Iron Man has an Uru-Enchanted Weapon for each Strike stacked here.
+  demolishEv(ev);
+  attachCardEv(ev, ev.what, ev.source, "STRIKE");
+}, [
+  [ "Armor of the Destroyer", ev => {
+  // For each [Tech] Ally you have, demolish each other player.
+    repeat(yourHeroes().count(Color.TECH), () => demolishOtherEv(ev));
+  } ],
+  [ "Pepper Potts in Rescue Armor", ev => {
+  // A Bystander from the Bystander Stack becomes a Command Strike that takes effect immediately.
+    gameState.bystanders.withTop(c => playStrikeEv(ev, c));
+  } ],
+  [ "Quantum Inventions", ev => {
+  // Draw two cards. Then, if you reveal a [Tech] card, draw two more cards.
+    drawEv(ev, 2);
+    revealAndEv(ev, Color.TECH, () => drawEv(ev, 2));
+  } ],
+  [ "Repulsor Coils", ev => {
+  // Each other player reveals a [Tech] ally or gains a Bindings.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev)));
+  } ],
+], {
+  trigger: uruEnchantedTrigger(c => c.attached("STRIKE").size),
+  fightFail: uruEnchantedFail,
+}),
+]);

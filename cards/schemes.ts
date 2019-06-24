@@ -651,3 +651,62 @@ makeSchemeCard("Unite the Shards", { twists: [6, 7, 8, 9, 10], shards: 30 }, ev 
   })];
 }),
 ]);
+addTemplates("SCHEMES", "Fear Itself", [
+// SETUP: 10 Twists.
+// Earth's Fear Level starts at 8. The number of Allies in the Lair is always equal to the Fear Level.
+// EVILWINS: When the Fear Level is 0.
+makeSchemeCard("Fear Itself", { twists: 10 }, ev => {
+  // Twist: KO an Ally from the Lair. The Fear Level goes down by 1.
+  selectCardEv(ev, "Choose an Ally to KO", HQCards().limit(isHero), c => {
+    for (let i = gameState.hq.indexOf(c.location); i < gameState.hq.size - 1; i++)
+      swapCardsEv(ev, gameState.hq[i], gameState.hq[i + 1]);
+  });
+  cont(ev, () => gameState.hq.withLast(d => { destroyHQ(d); d.each(c => KOEv(ev, c)); }));
+  cont(ev, () => schemeProgressEv(ev, gameState.hq.size));
+}, [], () => {
+  const extraLair = [new Deck("HQ11", true), new Deck("HQ12", true), new Deck("HQ13", true)];
+  extraLair.each(d => d.isHQ = true);
+  gameState.hq = [...gameState.hq, ...extraLair];
+  gameState.schemeProgress = 8;
+}),
+// SETUP: 6 Twists.
+// RULE: While an Adversary is on the Rooftops, it gets +1 Attack for each StarkTech Defenses.
+// EVILWINS: When there are 13 non-grey Allies in the KO pile.
+makeSchemeCard("Last Stand at Avengers Tower", { twists: 6 }, ev => {
+  // Twist: Stack this Twist above the Rooftops as StarkTech Defenses. If there is an Adversary on the Rooftops, choose 3 Allies from the Lair and KO them.
+  withCity('ROOFTOPS', rooftops => rooftops.has(isVillain) && selectObjectsEv(ev, "Select Allies to KO", 3, HQCards().limit(isHero) ,c => KOEv(ev, c)))
+}, { event: "MOVECARD", match: ev => ev.to === gameState.ko, after: ev => schemeProgressEv(ev, 13 - gameState.ko.count(isNonGrayHero)) }, () => {
+  addStatMod('defense', c => atLocation(c, 'ROOFTOPS'), c => c.location.attached('STARKTECH').size);
+  gameState.schemeProgress = 13;
+}),
+// SETUP: 2+ players only. 8 Twists. Shuffle a 'Betrayal Deck' of 3 Bindings per player and a 9th Twist.
+// RULE: During your turn, you may reveal a Twist from your Betrayal Cards to become 'the Traitor'. If you do, each other player gains all the Bindings from their Betrayal Cards.
+// During your turns, you may spend 4 Attack any number of times to play an additional card from the Adversary Deck.
+// <b>When the players win</b>: The Traitor reveals themself and loses.
+makeSchemeCard<{traitor: Player}>(" The Traitor", { twists: 8 }, ev => {
+  const betrayalDeck = gameState.scheme.attachedDeck('BETRAYAL');
+  if (ev.nr <= 3 && !ev.state.traitor) {
+    // Twist 1-3 If there is no revealed Traitor, each player puts a 'Betrayal Card' from the Betrayal Deck face down in front of them and looks at it.
+    eachPlayer(p => cont(ev, () => betrayalDeck.withTop(c => attachCardEv(ev, c, p.deck, 'BETRAYAL'))));
+  } else if (ev.nr === 8) {
+    // Twist 8 Good wins! The Traitor reveals themself and also wins.
+    evilWinsEv(ev, gameState.players.find(p => p.deck.attached('BETRAYAL').has(isTwist)));
+  }
+}, [], s => {
+  const betrayalDeck = gameState.scheme.attachedDeck('BETRAYAL');
+  betrayalDeck.addNewCard(twistTemplate);
+  repeat(gameState.players.size * 3, () => gameState.bindings.top && moveCard(gameState.bindings.top, betrayalDeck));
+  betrayalDeck.shuffle();
+  gameState.specialActions = ev => {
+    if (!s.traitor) {
+      return playerState.deck.attached('BETRAYAL').limit(isTwist).map(c => new Ev(ev, 'BETRAY', { what: c, func: ev => {
+        s.traitor = playerState;
+        eachOtherPlayer(p => p.deck.attached('BETRAYAL').limit(isBindings).each(c => gainEv(ev, c, p)));
+      }}));
+    } else if (s.traitor === playerState) {
+      return [ new Ev(ev, 'BETRAY', { cost: { attack: 4 }, func: ev => villainDrawEv(ev) })];
+    }
+    return [];
+  }
+}),
+]);

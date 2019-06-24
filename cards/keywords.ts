@@ -29,8 +29,8 @@ function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?
   const cost: ActionCost = { recruit };
   const what = ev.source;
   if (limit) {
-    cost.cond = () => countPerTurn(what) < limit;
-    func = ev => { incPerTurn(what); effect(ev); };
+    cost.cond = () => countPerTurn('focus', what) < limit;
+    func = ev => { incPerTurn('focus', what); effect(ev); };
   }
   return new Ev(ev, 'FOCUS', { what, func, cost });
 }
@@ -50,7 +50,7 @@ function burrowEv(ev: Ev) {
 // villain cardAction
 const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
   function doReveal(ev: Ev, color: number) {
-    incPerTurn(what);
+    incPerTurn('cosmicThreat', what);
     let count = 0;
     selectObjectsAnyEv(ev, "Reveal cards", revealable().limit(color), () => count++);
     addTurnMod('defense', c => c === what, () => -3 * count);
@@ -58,7 +58,7 @@ const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
   }
   return new Ev(ev, 'COSMICTHREATREVEAL', {
     cost: {
-      cond: c => !countPerTurn(c) && revealable().has(color || isNonGrayHero)
+      cond: c => !countPerTurn('cosmicThreat', c) && revealable().has(color || isNonGrayHero)
     },
     func: (ev) => {
       color ? doReveal(ev, color) : chooseColorEv(ev, color => doReveal(ev, color))
@@ -115,12 +115,12 @@ function dodge(c: Card, ev: Ev) {
 function isControlledArtifact(c: Card) {
   return c.location === playerState.artifact;
 }
-function artifactActions(effect: (ev: Ev) => void) {
+function useArtifactAction(i: number = 0, shardCost: number = 0) {
   return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', { what: c, cost: { cond: c => {
-    return isControlledArtifact(c) && !countPerTurn(c); // TODO multiple effects, thrown artifacts
+    return isControlledArtifact(c) && !countPerTurn(`useArtifact${i}`, c) && playerState.shard.size >= shardCost;
   }}, func: ev => {
-    incPerTurn(ev.what);
-    effect(ev);
+    incPerTurn(`useArtifact${i}`, ev.what);
+    ev.what.artifactEffects[i](ev);
   }});
 }
 function playArtifact(ev: Ev) {
@@ -169,10 +169,11 @@ const extraShatteraxTriggers: Trigger[] = [{
 
 // EXPANSION Fear Itself
 
-const uruEnchantedTrigger: (n: number) => Trigger = n => ({
+const uruEnchantedTrigger: (amount: number | ((c: Card) => number)) => Trigger = amount => ({
   event: 'FIGHT',
   before: ev => {
     const size = gameState.villaindeck.size;
+    const n = typeof amount === "function" ? amount(ev.parent.what) : amount;
     for (let i = n; size && i > 0; i -= size) {
       revealVillainDeckEv(ev, i, cards => {
         if (i == n) cards.each(c => pushEv(ev, 'URUENCHANTEDREVEAL', { what: c, func: () => {}}));
@@ -186,10 +187,16 @@ function getFightEvent(ev: Ev) {
   return undefined;
 }
 function uruEnchantedCards(ev: Ev) {
-  return turnState.pastEvents.filter(e => e.type === 'URUENCHANTEDREVEAL' && getFightEvent(e) === getFightEvent(ev));
+  return turnState.pastEvents.filter(e => e.type === 'URUENCHANTEDREVEAL' && getFightEvent(e) === getFightEvent(ev)).map(e => e.what);
 }
-const uruFail = (ev: Ev) => {
+const uruEnchantedFail = (ev: Ev) => {
   addTurnSet('fightCost', undefined, (c, prev) => ({ ...prev, cond: () => false }));
   pushEffects(ev, ev.what, 'fight', ev.what.fight);
 };
 function demolishOtherEv(ev: Ev) { demolishEv(ev, p => p !== playerState ); }
+function throwArtifactAction(c: Card, ev: Ev) {
+  return new Ev(ev, 'THROWARTIFACT', { what: c, cost: { cond: c => isControlledArtifact(c) }, func: ev => {
+    moveCardEv(ev, ev.what, playerState.deck, true);
+    cont(ev, () => ev.what.artifactEffects[0](ev));
+  }});
+}
