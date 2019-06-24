@@ -46,7 +46,7 @@
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 4
------------------
+#GAINABLE
 #CLASS: [Instinct]
 You get +1 Attack for each color of Hero you have. (including [Instinct] and grey)
 #ATTACK: 0+
@@ -56,7 +56,7 @@ You get +1 Attack for each color of Hero you have. (including [Instinct] and gre
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Bank. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 3
------------------
+#GAINABLE
 #CLASS: [Tech]
 Draw a card.
 #ATTACK: 1
@@ -65,7 +65,7 @@ Draw a card.
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with a Henchman Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 5
------------------
+#GAINABLE
 #CLASS: [Strength]
 {POWER Strength} You get +2 Attack.
 #ATTACK: 2+
@@ -75,7 +75,7 @@ Draw a card.
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Streets. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 4
------------------
+#GAINABLE
 #CLASS: [Instinct]
 {POWER Instinct} Look at the top card of your deck. You may KO it.
 #ATTACK: 2
@@ -84,7 +84,7 @@ Draw a card.
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 3
------------------
+#GAINABLE
 #CLASS: [Covert]
 Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is even.)
 #ATTACK: 2
@@ -93,7 +93,7 @@ Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 2
------------------
+#GAINABLE
 #CLASS: [Covert]
 Reveal the top card of your deck. If it costs 2 or less, draw it.
 #ATTACK: 2
@@ -102,7 +102,7 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #COPIES: 1
 #FIGHT: This <b>Symbiote Bonds</b> with a Villain on the Rooftops or Bridge. If already bonded or unable to bond, gain this as a Hero instead.
 #ATTACK: 3
------------------
+#GAINABLE
 #CLASS: [Ranged]
 {POWER Ranged} You get +2 Attack usable only against the Mastermind.
 #ATTACK: 2+

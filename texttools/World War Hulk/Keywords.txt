@@ -30,7 +30,7 @@
 * When a Hero card says "Wounded Fury", it means <b>"You get +1 Attack for each Wound in your discard pile."</b>
 * Likewise, when a Villain or Mastermind says "Wounded Fury", it means <b>"It gets +1 Attack for each Wound in your discard pile."</b>
 
-<b>Cross-Dimensional Rampage</b>: As different Hulks rampage across planets and dimensions, only another Hulk can stop them! This keyword debuted in Legendary: Secret Wars.
+<b>Cross-Dimensional}: As different Hulks rampage across planets and dimensions, only another Hulk can stop them! This keyword debuted in Legendary: Secret Wars.
 * "Cross-Dimensional Hulk Rampage" means <b>"Each player reveals one of their Hulk Heroes or a Hulk card in their Victory Pile or gains a Wound."</b>
 * You can reveal any card that includes the word "Hulk" in its card name, Hero name, Villain Group name, or Tactics for Hulk Masterminds. This includes any Red Hulk, She-Hulk, Red She-Hulk, Skaar, Son of Hulk, Joe Fixit Grey Hulk, Hulkling, Hulk Gang, Cosmic Hulk Robot, Hulkbuster, Enchain the Hulk, and so on.
 * You don't need to know the whole history of Marvel comics to judge who counts as a Hulk – just rely on whether the card says Hulk in its name or not. There are only a few, very specific exceptions we have to make to stay true to the characters:

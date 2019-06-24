@@ -18,7 +18,7 @@ You may put a Hero from the HQ on the bottom of the Hero Deck. The Hero that rep
 
 #SUBNAME: Disrupt Circuits
 #COPIES: 3
-[Covert], [Tech]
+#CLASS: [Covert], [Tech]
 #ATTACK: 2+
 You get +1 Attack for each [Tech] Hero in the HQ.
 #COST: 5
@@ -45,7 +45,7 @@ You get +1 Attack if you reveal four cards with no rules text.
 
 #SUBNAME: Speak No Words
 #COPIES: 5
-[Covert], [Ranged]
+#CLASS: [Covert], [Ranged]
 #RECRUIT: 2
 #ATTACK: 1
 #COST: 4
@@ -71,7 +71,7 @@ For each card with no rules text you played this turn, draw a card.
 
 #SUBNAME: Catlike Reflexes
 #COPIES: 5
-[Instinct], [Covert]
+#CLASS: [Instinct], [Covert]
 #RECRUIT: 1
 Draw a card.
 #COST: 3
@@ -79,7 +79,7 @@ Draw a card.
 
 #SUBNAME: Multifaceted Genius
 #COPIES: 5
-[Strength], [Tech]
+#CLASS: [Strength], [Tech]
 #ATTACK: 2+
 You get +1 Attack for each other multicolored card you played this turn.
 #COST: 4
@@ -87,7 +87,7 @@ You get +1 Attack for each other multicolored card you played this turn.
 
 #SUBNAME: Stalk the Urban Jungle
 #COPIES: 3
-[Strength], [Covert]
+#CLASS: [Strength], [Covert]
 #ATTACK: 4
 Whenever you defeat a Villain on the Rooftops or Streets this turn, you may KO one of your cards or a card from your discard pile.
 #COST: 6
@@ -95,7 +95,7 @@ Whenever you defeat a Villain on the Rooftops or Streets this turn, you may KO o
 
 #SUBNAME: King of Wakanda
 #COPIES: 1
-[Instinct], [Tech]
+#CLASS: [Instinct], [Tech]
 Gain three sidekicks.
 {TEAMPOWER Illuminati} Put them on top of your deck.
 #COST: 7
@@ -114,7 +114,7 @@ Gain three sidekicks.
 
 #SUBNAME: Supersonic Flight
 #COPIES: 5
-[Strength], [Ranged]
+#CLASS: [Strength], [Ranged]
 #ATTACK: 1
 Draw a card.
 #COST: 3
@@ -150,7 +150,7 @@ Draw a card.
 
 #SUBNAME: Trust Me, I'm a Doctor 
 #COPIES: 5
-[Instinct], [Ranged]
+#CLASS: [Instinct], [Ranged]
 #RECRUIT: 1+
 {TEAMPOWER Illuminati} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
 #COST: 2
@@ -189,7 +189,7 @@ Once per turn, if you made at least 6 Recruit this turn, you get +2 Attack.
 
 #SUBNAME: Heir to the Hammer
 #COPIES: 3
-[Strength], [Ranged]
+#CLASS: [Strength], [Ranged]
 #ATTACK: 4+
 {POWER Ranged Strength} You get +2 Attack.
 #COST: 6
@@ -227,7 +227,7 @@ Gain a Sidekick.
 
 #SUBNAME: Dimensional Portal
 #COPIES: 3
-[Covert], [Ranged]
+#CLASS: [Covert], [Ranged]
 #ATTACK: 2+
 {TELEPORT}
 For each Sidekick you played this turn, you get +1 Attack.
@@ -263,7 +263,7 @@ Choose a Villain or Mastermind in your Victory Pile. You get +Attack equal to it
 
 #SUBNAME: Pieces on a Chessboard
 #COPIES: 3
-[Covert], [Tech]
+#CLASS: [Covert], [Tech]
 #ATTACK: 3
 You may have a Henchman Villain from your Victory Pile enter the city. If you do, draw a card.
 #COST: 5
@@ -297,7 +297,7 @@ Each other player reveals a [Tech] hero or chooses a Henchman Villain from their
 
 #SUBNAME: Feed the Sharks
 #COPIES: 3
-[Strength], [Instinct]
+#CLASS: [Strength], [Instinct]
 #ATTACK: 2
 You may KO a card from your hand or discard pile. If you do, draw a card.
 #COST: 6
@@ -322,7 +322,7 @@ Defeat a Villain for free.
 
 #SUBNAME: Loner
 #COPIES: 5
-[Instinct], [Covert]
+#CLASS: [Instinct], [Covert]
 #ATTACK: 2+
 If you don't recruit any heroes this turn, you get +2 Attack.
 #COST: 5
@@ -332,7 +332,7 @@ If you don't recruit any heroes this turn, you get +2 Attack.
 #COPIES: 3
 #CLASS: [Instinct]
 #ATTACK: 3+
-{POWER Instinct} <b>Cross-Dimensional Wolverine Rampage</b>. For each other player who gained a Wound this way, you get +1 Attack.
+{POWER Instinct} {XDRAMPAGE Wolverine}. For each other player who gained a Wound this way, you get +1 Attack.
 #COST: 6
 
 #SUBNAME: No More Heroes
@@ -348,7 +348,7 @@ Reveal your hand. You get +5 Attack if you haven't played any S.H.I.E.L.D. or HY
 
 #SUBNAME: Inspiration Through Power
 #COPIES: 5
-[Instinct], [Covert]
+#CLASS: [Instinct], [Covert]
 #RECRUIT: 1
 #ATTACK: 1
 #COST: 2
@@ -392,7 +392,7 @@ If the most recent Hero you have played this turn has a Recruit icon, you get +2
 
 #SUBNAME: Optimized Technology
 #COPIES: 5
-[Tech], [Ranged]
+#CLASS: [Tech], [Ranged]
 #ATTACK: 2
 Draw a card.
 #COST: 5
@@ -418,7 +418,7 @@ Draw a card for each other player who has fewer cards in their Victory Pile than
 
 #SUBNAME: Revel in Destruction 
 #COPIES: 5
-[Strength], [Ranged]
+#CLASS: [Strength], [Ranged]
 #RECRUIT: 2+
 {TEAMPOWER Cabal} KO a Bystander from the Bystander Stack. Then, you get +1 Recruit for every three Bystanders in the KO pile.
 #COST: 3
@@ -450,7 +450,7 @@ KO six Bystanders from the Bystander Stack. Then, defeat any Villain or Mastermi
 
 #SUBNAME: Marvel Team-Up
 #COPIES: 5
-[Strength], [Instinct]
+#CLASS: [Strength], [Instinct]
 Gain a Sidekick.
 Reveal the top card of your deck. If it costs 2 or less, draw it.
 #COST: 2

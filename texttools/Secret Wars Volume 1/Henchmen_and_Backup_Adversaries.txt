@@ -13,9 +13,9 @@
 #CARDNAME: Thor Corps
 #FIGHT: Gain this as a Hero.
 #ATTACK: 3
------
-Team: Avengers
-Class: [Strength]/[Ranged]
+#GAINABLE
+#TEAM: Avengers
+#CLASS: [Strength]/[Ranged]
 #RECRUIT: 2+
 {POWER Strength Ranged} You get +1 Recruit.
 

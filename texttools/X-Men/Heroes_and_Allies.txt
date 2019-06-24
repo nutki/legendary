@@ -6,20 +6,20 @@
 #COPIES: 5
 #CLASS: [Covert]
 {SOARING FLIGHT}
-<b>Lightshow</b>: Draw a card.
+{LIGHTSHOW}: Draw a card.
 #ATTACK: 2
 #COST: 3
 
 #SUBNAME: Blazing Flare/Blazing Fists
 #COPIES: 5
-<b>Divided</b>
-<i>Blazing Flare (Aurora)</i>
+#DIVIDED Blazing Flare
+#DIVHERO Aurora
 #CLASS: [Ranged]
-<b>Lightshow</b>: You get +2 Recruit.
+{LIGHTSHOW}: You get +2 Recruit.
 #RECRUIT: 2+
 #COST: 4
-------------
-<i>Blazing Fists (Northstar)</i>
+#DIVIDED Blazing Fists
+#DIVHERO Northstar
 #CLASS: [Strength]
 <b>Berserk</b>
 #ATTACK: 2+
@@ -29,7 +29,7 @@
 #COPIES: 3
 #CLASS: [Ranged]
 {SOARING FLIGHT}
-<b>Lightshow</b>: You get +3 Attack
+{LIGHTSHOW}: You get +3 Attack
 #ATTACK: 2+
 #COST: 5
 
@@ -38,7 +38,7 @@
 #CLASS: [Instinct]
 {SOARING FLIGHT}
 All Heroes you recruit this turn have {SOARING FLIGHT}.
-<b>Lightshow</b>: You get +2 Attack for each <b>Lightshow</b> card you played this turn.
+{LIGHTSHOW}: You get +2 Attack for each {LIGHTSHOW} card you played this turn.
 #RECRUIT: 4
 #ATTACK: 0+
 #COST: 7
@@ -157,13 +157,13 @@ Attack: 4+
 
 #SUBNAME: Reliable/Unpredictable
 #COPIES: 5
-<b>Divided</b>
-<i>Reliable (Colossus)</i>
+#DIVIDED Reliable
+#DIVHERO Colossus
 #CLASS: [Strength]
 #RECRUIT: 2
 #COST: 3
-------------
-<i>Unpredictable (Wolverine)</i>
+#DIVIDED Unpredictable
+#DIVHERO Wolverine
 #CLASS: [Instinct]
 <b>Berserk</b>, <b>Berserk</b>
 #ATTACK: 1+
@@ -201,7 +201,7 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #COPIES: 5
 #CLASS: [Instinct]
 <b>Piercing Energy</b>
-<b>Lightshow</b>: You get +1 Piercing for each <b>Lightshow</b> card you played this turn.
+{LIGHTSHOW}: You get +1 Piercing for each {LIGHTSHOW} card you played this turn.
 #RECRUIT: 1
 0+ Piercing
 #COST: 3
@@ -209,14 +209,14 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Dazzling Glamour
 #COPIES: 5
 #CLASS: [Ranged]
-<b>Lightshow</b>: You get +2 Attack.
+{LIGHTSHOW}: You get +2 Attack.
 #ATTACK: 2+
 #COST: 4
 
 #SUBNAME: City-Wide Mega Concert
 #COPIES: 3
 #CLASS: [Tech]
-<b>Lightshow</b>: When you draw a new hand of cards at the end of this turn, draw two extra cards.
+{LIGHTSHOW}: When you draw a new hand of cards at the end of this turn, draw two extra cards.
 #ATTACK: 3
 #COST: 5
 #FLAVOR: Performing is her passion, fighting aliens is more of a nights-and-weekends thing.
@@ -224,7 +224,7 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Inspire the World
 #COPIES: 1
 #CLASS: [Ranged]
-<b>Lightshow</b>: Put a Hero from the HQ on top of your deck.
+{LIGHTSHOW}: Put a Hero from the HQ on top of your deck.
 #ATTACK: 5
 #COST: 7
 
@@ -235,7 +235,7 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Blinding Burst
 #COPIES: 5
 #CLASS: [Ranged]
-<b>Lightshow</b>: You get +3 Attack usable only against the Mastermind.
+{LIGHTSHOW}: You get +3 Attack usable only against the Mastermind.
 #RECRUIT: 2
 #COST: 3
 
@@ -270,7 +270,7 @@ To play this card, you must discard a card from your hand.
 #COPIES: 5
 #CLASS: [Covert]
 Draw a card.
-<b>Lightshow</b>: You get +1 Recruit for each <b>Lightshow</b> card you played this turn.
+{LIGHTSHOW}: You get +1 Recruit for each {LIGHTSHOW} card you played this turn.
 #RECRUIT: 0+
 #COST: 2
 
@@ -278,21 +278,21 @@ Draw a card.
 #COPIES: 5
 #CLASS: [Ranged]
 Draw a card.
-<b>Lightshow</b>: You get +1 Attack for each <b>Lightshow</b> card you played this turn.
+{LIGHTSHOW}: You get +1 Attack for each {LIGHTSHOW} card you played this turn.
 #ATTACK: 1+
 #COST: 4
 
 #SUBNAME: Unexpected Explosion
 #COPIES: 3
 #CLASS: [Instinct]
-<b>Lightshow</b>: Look at the top card of your deck. If it costs 0, KO it.
+{LIGHTSHOW}: Look at the top card of your deck. If it costs 0, KO it.
 #ATTACK: 3
 #COST: 5
 
 #SUBNAME: Prismatic Cascade
 #COPIES: 1
 #CLASS: [Covert]
-<b>Lightshow</b>: You get +1 Recruit and +1 Attack for each <b>Lightshow</b> card you played this turn.
+{LIGHTSHOW}: You get +1 Recruit and +1 Attack for each {LIGHTSHOW} card you played this turn.
 #RECRUIT: 0+
 #ATTACK: 5+
 #COST: 7
@@ -338,28 +338,24 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 
 #SUBNAME: Bend Steel/Bend Light
 #COPIES: 5
-<b>Divided</b>
-<i>Bend Steel</i>
+#DIVIDED Bend Steel
 #CLASS: [Strength]
 <b>Berserk</b>
 #ATTACK: 1+
 #COST: 2
-------------
-<i>Bend Light</i>
+#DIVIDED Bend Light
 #CLASS: [Covert]
-<b>Lightshow</b>: You get +2 Recruit.
+{LIGHTSHOW}: You get +2 Recruit.
 #RECRUIT: 1+
 #COST: 2
 
 #SUBNAME: Split Personality/Split Eardrums
 #COPIES: 5
-<b>Divided</b>
-<i>Split Personality</i>
+#DIVIDED Split Personality
 #CLASS: [Tech]
 #ATTACK: 2
 #COST: 3
-------------
-<i>Split Eardrums</i>
+#DIVIDED Split Eardrums
 #CLASS: [Ranged]
 <b>Piercing Energy</b>
 2 Piercing
@@ -367,13 +363,11 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 
 #SUBNAME: Channel Time/Channel Fire
 #COPIES: 3
-<b>Divided</b>
-<i>Channel Time</i>
+#DIVIDED Channel Time
 #CLASS: [Instinct]
 Draw two cards.
 #COST: 5
-------------
-<i>Channel Fire</i>
+#DIVIDED Channel Fire
 #CLASS: [Tech]
 You get +1 Attack for each different Hero Class in your discard pile.
 #ATTACK: 0+

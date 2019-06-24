@@ -3,56 +3,56 @@
 
 #SUBNAME: Zombie Baron Zemo
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #FIGHT: For each of your Avengers Heroes, rescue a Bystander.
 #ATTACK: 6
 #VP: 4
 
 #SUBNAME: Zombie Loki
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #ESCAPE: Loki ascends to become a new Mastermind. He gains the ability, <b>"Master Strike:</b> Each player reveals a [Strength]  Hero or gains a Wound."
 #ATTACK: 8
 #VP: 6
 
 #SUBNAME: Zombie Madame Hydra
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #FIGHT: KO one of your <span style="background-color: #AAAAAA;"><span style="color: #FFFFFF;">S.H.I.E.L.D.</span></span> Heroes or <span style="background-color: #AAAAAA;"><span style="color: #FFFFFF;">HYDRA</span></span> Allies.
 #ATTACK: 4
 #VP: 2
 
 #SUBNAME: Zombie Mr. Sinister
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #ESCAPE: Sinister ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Sinister captures a Bystander. Then, each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Sinister has."
 #ATTACK: 7
 #VP: 5
 
 #SUBNAME: Zombie M.O.D.O.K.
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #FIGHT: KO one of your heroes with a Recruit icon.
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: Zombie Mysterio
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #ESCAPE: Shuffle this card into the Mastermind's face-down Tactics. It becomes a Mastermind Tactic that says "<b>Fight:</b> Draw two cards."
 #ATTACK: 6
 #VP: 6
 
 #SUBNAME: Zombie Thanos
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #ESCAPE: Thanos ascends to become a new Mastermind. He gains the ability, "<b>Master Strike:</b> Each player reveals their hand and KOs one of their non-grey Heroes."
 #ATTACK: 9
 #VP: 6
 
 #SUBNAME: Zombie Venom
 #COPIES: 1
-#AMBUSH: <b>Rise of the Living Dead</b>
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5*
@@ -84,7 +84,7 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #SUBNAME: Apocalyptic Weapon X
 #COPIES: 2
 #FIGHT: KO one of your heroes.
-#ESCAPE: <b>Cross-Dimensional Wolverine Rampage</b>
+#ESCAPE: {XDRAMPAGE Wolverine}
 #ATTACK: 7
 #VP: 5
 
@@ -126,16 +126,16 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
 #ATTACK: 6
------------------
+#GAINABLE
 #CLASS: [Strength]
 You get +1 Attack for each color of Hero you have
-#ATTACK: 0+
+#ATTACKG: 0+
 
 #SUBNAME: Ultimate Captain Marvel
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4
------------------
+#GAINABLE
 #CLASS: [Ranged]
 {TELEPORT}
 #RECRUIT: 2
@@ -143,21 +143,21 @@ You get +1 Attack for each color of Hero you have
 #SUBNAME: Ultimate Thor
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
-#ESCAPE: <b>Cross-Dimensional Thor Rampage</b>
+#ESCAPE: {XDRAMPAGE Thor}
 #ATTACK: 7
------------------
+#GAINABLE
 #CLASS: [Ranged]
 {POWER Ranged} You get +3 Attack.
-#ATTACK: 3+
+#ATTACKG: 3+
 
 #SUBNAME: Ultimate Wasp
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
------------------
+#GAINABLE
 #CLASS: [Covert]
 {POWER Covert} You get +2 Attack.
-#ATTACK: 2+
+#ATTACKG: 2+
 
 
 #CARDNAME: Sentinel Territories
@@ -183,7 +183,7 @@ You get +1 Attack for each color of Hero you have
 #SUBNAME: Wolverine of Future Past
 #COPIES: 2
 #FIGHT: <i>Wolverine alters the future:</i> At the start of the next player's turn, you draw a card, and that player draws a card.
-#ESCAPE: <b>Cross-Dimensional Wolverine Rampage</b>
+#ESCAPE: {XDRAMPAGE Wolverine}
 #ATTACK: 7
 #VP: 5
 
@@ -192,7 +192,7 @@ You get +1 Attack for each color of Hero you have
 
 #SUBNAME: The Hulk Gang
 #COPIES: 3
-#FIGHT: <b>Cross-Dimensional Hulk Rampage</b> <b>Escape:</b> Same effect.
+#FIGHT: {XDRAMPAGE Hulk} <b>Escape:</b> Same effect.
 #ATTACK: 5 <b>VP:</b> 3
 
 #SUBNAME: Wasteland Kingpin

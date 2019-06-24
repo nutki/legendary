@@ -36,7 +36,9 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!<span style="background-color: #......;"><span style="color: #......;">($class)</span></span>![$1]!g;
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
+    s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     my @lines = split m!<br />!;
     for (@lines) {
       s!^== (.*?) ==.*!#EXPANSION: $1! && next;
@@ -45,8 +47,9 @@ while (<A>) {
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;
       s!^<i>5th Circle of Kung-Fu</i> \(2 copies\)$!<i>5th Circle of Kung-Fu</i>!; #FIX
       s!^<i>(.*?)</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
-      s!^(\[$class\])$!#CLASS: $1! && next;
-      s!^($aff)$!#TEAM: $1! && next;
+      s!^(\[$class\](, \[$class\])?)$!#CLASS: $1! && next;
+      s!^Class: (\[$class\](/\[$class\])?)$!#CLASS: $1! && next;
+      s!^(?:Team: )?($aff)$!#TEAM: $1! && next;
       s!^(Bribe|Feast)$!'{'.(uc$1).'}'!e && next;
       s!^<b>Focus (\d+) Recruit -&gt;</b>!{FOCUS $1}! && next;
 
@@ -71,14 +74,20 @@ while (<A>) {
     }
     $_ = join"\n",@lines;
     if ($name =~ /^Bystanders/) {
+      s!#ATTACK:!#ATTACKG:!g;
+      s!^-{6,}!#GAINABLE!mg;
       s!^(<b>)?VP(</b>)?: (\d+)$!#VP: $3!gm;
       s!^When you (?:rescue|kidnap) this Bystander,(?: |\n)(.*)!#RESCUE: $1!gm;
     }
     if ($name =~ /^Hench/) {
+      s!#ATTACK:!#ATTACKG:!g;
+      s!^-{5,}!#GAINABLE!mg;
       s!^<b>(VP|Attack|Fight|Escape|Ambush)</b>: (.*)!"#" . uc($1) . ": $2"!gme;
       s!^Ambush: (.*)!#AMBUSH: $1!gm; #FIX
     }
     if ($name =~ /^Villains/) {
+      s!#ATTACK:!#ATTACKG:!g;
+      s!^-{6,}!#GAINABLE!mg;
       s!^<i>Teleport</i>$!{TELEPORT}!m; #FIX
       s!^Burrow$!{BURROW}!;
       s!^<b>(VP|Attack|Fight|Escape|Ambush):?</b>:? ?(.*)!"#" . uc($1) . ": $2"!gme;
@@ -102,6 +111,14 @@ while (<A>) {
       s!^<b>(?:Good|Evil) Wins(?:</b>:|:</b>) (.*)!#EVILWINS: $1!gm;
     }
     if ($name =~ /^Hero/) {
+      s!<b>Divided</b>\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)-{6,}\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)\n\n!
+        my $lhero = $2 && "#DIVHERO $2\n";
+        my $lteam = $3 && "#DIVTEAM $3\n";
+        my $rhero = $6 && "#DIVHERO $6\n";
+        my $rteam = $7 && "#DIVTEAM $7\n";
+        print STDERR "Divided $1|$2|$3 ---- $5|$6|$7"; "#DIVIDED $1\n$lhero$lteam$4#DIVIDED $5\n$rhero$rteam$8\n\n"
+      !sge;
+      s!^<b>Divided.*\n.*!!mg and print STDERR "BUU $&";
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm
     }
     print "$name";

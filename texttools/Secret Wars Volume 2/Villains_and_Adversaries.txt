@@ -106,8 +106,8 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Ghost Deadpool
 #COPIES: 2
-#FIGHT: <b>Fateful Resurrection</b>. Then, <b>Cross-Dimensional Deadpool Rampage</b>
-#ESCAPE: <b>Cross-Dimensional Deadpool Rampage</b>
+#FIGHT: <b>Fateful Resurrection</b>. Then, {XDRAMPAGE Deadpool}
+#ESCAPE: {XDRAMPAGE Deadpool}
 #ATTACK: 5
 #VP: 5
 
@@ -165,19 +165,19 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #AMBUSH: Charge one space.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
------------------
+#GAINABLE
 #CLASS: [Strength]
 {POWER Tech} Draw a card.
-#ATTACK: 2
+#ATTACKG: 2
 
 #SUBNAME: '92 Jubilee
 #COPIES: 3
 #FIGHT: Gain this as a Hero.
-#ATTACK: 4
------------------
+#ATTACKG: 4
+#GAINABLE
 #CLASS: [Ranged]
 <i>Spectrum:</i> You get +2 Attack.
-#ATTACK: 2+
+#ATTACKG: 2+
 
 #SUBNAME: '92 Professor X
 #COPIES: 1
@@ -188,12 +188,12 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #SUBNAME: '92 Wolverine
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
-#ESCAPE: <b>Cross-Dimensional Wolverine Rampage</b>
+#ESCAPE: {XDRAMPAGE Wolverine}
 #ATTACK: 7
------------------
+#GAINABLE
 #CLASS: [Instinct]
 {POWER Instinct} Draw two cards.
-#ATTACK: 2
+#ATTACKG: 2
 
 
 

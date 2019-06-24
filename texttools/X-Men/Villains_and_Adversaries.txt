@@ -13,11 +13,11 @@
 #FIGHT: Gain this as a Hero.
 #ESCAPE: Havok becomes a Hero Dominated by the Mastermind.
 #ATTACK: 6
----------
+#GAINABLE
 #TEAM: X-Men
 #CLASS: [Ranged]
 <b>X-Gene</b> [Ranged]: You get +2 Attack.
-#ATTACK: 2+
+#ATTACKG: 2+
 
 #SUBNAME: Nemesis
 #COPIES: 1
@@ -104,7 +104,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #COPIES: 1
 #AMBUSH: Each player reveals a [Covert] Hero or discards their hand. Each player who discarded their hand this way draws 5 cards.
 #ESCAPE: Same effect.
-#ATTACK: 6
+#ATTACKG: 6
 #VP: 4
 
 #SUBNAME: Warwolves
@@ -164,48 +164,48 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4
----------
+#GAINABLE
 #CLASS: [Instinct]
 <b>X-Gene</b> [Instinct]: The next Hero you recruit from the HQ has Soaring Flight.
-#ATTACK: 2
+#ATTACKG: 2
 
 #SUBNAME: Dark Beast
 #COPIES: 1
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
----------
+#GAINABLE
 #CLASS: [Tech]
 <b>X-Gene</b> [Tech]: You may KO a card from your hand or discard pile.
-#ATTACK: 2
+#ATTACKG: 2
 
 #SUBNAME: Dark Cyclops
 #COPIES: 1
 #AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 7
----------
+#GAINABLE
 #CLASS: [Ranged]
 <b>X-Gene</b> [Ranged]: Return a [Ranged] Hero from your discard pile to your hand.
-#ATTACK: 3
+#ATTACKG: 3
 
 #SUBNAME: Dark Iceman
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
----------
+#GAINABLE
 #CLASS: [Strength]
 <b>X-Gene</b> [Strength]: Draw a card.
-#ATTACK: 2
+#ATTACKG: 2
 
 #SUBNAME: Dark Marvel Girl
 #COPIES: 1
 #AMBUSH: Dark Marvel Girl Dominates each X-Men Hero that costs 4 or less from the HQ.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4+
----------
+#GAINABLE
 #CLASS: [Covert]
 <b>X-Gene</b> [Covert]: Rescue a Bystander.
-#ATTACK: 2
+#ATTACKG: 2
 
 
 #CARDNAME: Shi'ar Imperial Guard

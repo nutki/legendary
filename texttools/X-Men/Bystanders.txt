@@ -3,14 +3,14 @@
 #CLASS: [Tech]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 Look at the top two cards of your deck. Draw one and discard the other.
 #COST: 2
 
 #CARDNAME: Heartless Computer Scientist
 #CLASS: [Tech]
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 {POWER Tech} You may KO a card from your hand or discard pile.
 #RECRUIT: 2
 #COST: 3
@@ -19,42 +19,42 @@ Look at the top two cards of your deck. Draw one and discard the other.
 #CLASS: [Covert]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 Reveal the top card of the Hero Deck. You get +Attack equal to its printed Attack.
-#ATTACK: 0+
+#ATTACKG: 0+
 #COST: 3
 
 #CARDNAME: Magik
 #CLASS: [Ranged]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 Teleport (Instead of playing this card, you may set it aside. At the end of the turn, add it to your hand as an extra card.)
-#ATTACK: 2
+#ATTACKG: 2
 #COST: 4
 
 #CARDNAME: Magma
 #CLASS: [Ranged]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 Chose one: Draw a card or you get +2 Attack.
-#ATTACK: 0+
+#ATTACKG: 0+
 #COST: 3
 
 #CARDNAME: Martial Arts Master
 #CLASS: [Instinct]
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 Draw a card.
-#ATTACK: 1
+#ATTACKG: 1
 #COST: 3
 
 #CARDNAME: Mirage
 #CLASS: [Covert]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 Draw a card.
 #RECRUIT: 1
 #COST: 3
@@ -64,7 +64,7 @@ Draw a card.
 #CLASS: [Strength]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 {POWER Strength} You get +1 Attack.
 2+ Attack.
 #COST: 3
@@ -73,9 +73,9 @@ Draw a card.
 #CLASS: [Tech]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 {POWER Tech} Draw a card.
-#ATTACK: 2
+#ATTACKG: 2
 #COST: 3
 
 #CARDNAME: Wolfsbane
@@ -83,9 +83,9 @@ Draw a card.
 #CLASS: [Instinct]
 --- New Mutants
 #RESCUE: gain it as a Hero.
-------------
+#GAINABLE
 <b>Berserk</b>, <b>Berserk</b>, <b>Berserk</b>
-#ATTACK: 0+
+#ATTACKG: 0+
 #COST: 3
 
 

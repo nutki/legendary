@@ -55,6 +55,23 @@ sub autopower {
   my $aall = join', ',@ar;
   @ar ? ($powers || ', []') . ", { $aall }" : $powers;
 }
+sub gainable() {
+  /GAINABLE/ or return ();
+  my $attack = $_{ATTACKG} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
+  my $recruit = $_{RECRUIT} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
+  my $class = $_{CLASS} =~ s/\[(.*)\]/uc$1/er;
+  my $pteam = $_{TEAM} || 'u';
+  my $autopower = autopower($_);
+  $attack = 'u' if $attack eq '';
+  $recruit = 'u' if $recruit eq '';
+  my $flags = '';
+  # Deadpool flags
+  $flags .= 'G' if $_{GUN};
+  $flags .= 'F' if $_{FLAVOR};
+  $flags .= 'D' if /2/;
+  return ("makeGainableCard(", ", $recruit, $attack, Color.$class, $pteam, \"$flags\"$autopower)");
+}
+
   $content = $_;
   #print length$content, "\n";
   $content =~ s/^\n+//;
@@ -63,31 +80,33 @@ sub autopower {
   sub parse {
     %_ = ();
     /#(\w+): (.*)/ ? ($_{$1} = $_{$1} ? "$_{$1}|$2" : $2) : ($_{ABILITIES} .= $_) for split /\n/;
-    s!^#?!// !mg;
+    s!^#COPIES:.*\n!!mg;
   }
   sub filterprint {
     my $f = join'|',@_;
-    print s!^// ($f):.*\n!!mgr;
+    print s!^#($f):.*\n!!mgr =~ s!^#?!// !mgr;
   }
   %atm = qw(HEROES Hero VILLAINS Villain BYSTANDERS Bystander);
   print "addTemplates(\"$type\", \"$exp\", [\n" =~ s/Templates\("(HEROES|VILLAINS|BYSTANDERS)", /$atm{$1}Templates(/r;
   for (@items) {
     if ($type eq "HENCHMEN") {
       parse();
+      my ($gs, $ge) = gainable();
       my $attack = $_{ATTACK} =~ s/[^0-9]//gr;
       filterprint(qw(CARDNAME VP));
-      print "makeHenchmenCard(\"$_{CARDNAME}\", $attack, {\n";
+      print "${gs}makeHenchmenCard(\"$_{CARDNAME}\", $attack, {\n";
       print "  fight: ev => { },\n" if $_{FIGHT};
       print "  ambush: ev => { },\n" if $_{AMBUSH};
-      print "}),\n";
+      print "})$ge,\n";
       $_{VP} == 1 || $_{FIGHT} eq "Gain this as a Hero." or die "VP is not 1: $_{VP}";
     } elsif ($type eq "BYSTANDERS") {
       parse();
+      my ($gs, $ge) = gainable();
       filterprint(qw(CARDNAME VP COPIES));
       $copies = $_{COPIES} * 1 || 1;
-      print "{ card: [ $copies, makeBystanderCard(\"$_{CARDNAME}\"";
+      print "{ card: [ $copies, ${gs}makeBystanderCard(\"$_{CARDNAME}\"";
       print ", ev => {}" if $_{RESCUE};
-      print ") ] },\n";
+      print ")$ge ] },\n";
       $_{VP} == 1 || !defined($_{VP}) or die "VP is not 1: $_{VP}";
     } elsif ($type eq "HEROES") {
       ($_, my @subitems) = split/^\n+/m;
@@ -95,7 +114,7 @@ sub autopower {
       my $heroname = $_{CARDNAME};
       my $team = $_{TEAM};
       my $hasgun = $_{GUN};
-      my $pteam = $team eq "(Unaffiliated)" ? 'undefined' : "\"$team\"";
+      my $pteam = $team eq "(Unaffiliated)" ? 'u' : "\"$team\"";
       print "{\n";
       print "  name: \"$heroname\",\n";
       print "  team: \"$team\",\n";
@@ -118,6 +137,8 @@ sub autopower {
         $flags .= 'G' if $hasgun || $_{GUN};
         $flags .= 'F' if $_{FLAVOR};
         $flags .= 'D' if /2/ || $heroname =~ /2/;
+        # SW1 Black Bolt flag (no rules text)
+        $flags .= 'N' if !/^[^#]/m;
         print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam, \"$flags\"$autopower),\n";
       }
       print "},\n";
@@ -149,15 +170,16 @@ sub autopower {
       print "{ name: \"$groupname\", cards: [\n";
       for (@subitems) {
         parse();
+        my ($gs, $ge) = gainable();
         filterprint(qw(SUBNAME COPIES));
-        my $vp = $_{VP} =~ s/[^0-9.]//gr;
+        my $vp = $_{VP} =~ s/[^0-9.]//gr || 'u';
         my $defense = $_{ATTACK} =~ s/[^0-9]//gr;
         $copies += $_{COPIES};
-        print "  [ $_{COPIES}, makeVillainCard(\"$groupname\", \"$_{SUBNAME}\", $defense, $vp, {\n";
+        print "  [ $_{COPIES}, ${gs}makeVillainCard(\"$groupname\", \"$_{SUBNAME}\", $defense, $vp, {\n";
         print "    ambush: ev => {},\n" if $_{AMBUSH};
         print "    fight: ev => {},\n" if $_{FIGHT};
         print "    escape: ev => {},\n" if $_{ESCAPE};
-        print "  })],\n";
+        print "  })$ge],\n";
       }
       print "]},\n";
       $copies == 8 or die "Group $groupname has $copies";

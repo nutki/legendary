@@ -20,7 +20,7 @@ signature teamwork.
 {SOARING FLIGHT}: This ability represents X-Men flying into action as rapid reinforcements.
 * "Soaring Flight" means "When you recruit this Hero, set it aside. At the end of this turn, add it to your new hand as an extra card."
 
-<b>Lightshow</b>: This keyword represents X-Men using fireworks and blinding bursts in spectacular combinations.
+{LIGHTSHOW}: This keyword represents X-Men using fireworks and blinding bursts in spectacular combinations.
 * Some Heroes say things like "Lightshow: You get +3 Attack." Once per turn, if you played at least two Lightshow cards this turn, you can use a single Lightshow ability from any of those cards.
 * If you play three, four, or more Lightshow cards you still use only a single Lightshow ability.
 
