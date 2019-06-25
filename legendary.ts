@@ -1310,6 +1310,7 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
   let attackToPay = cost.attack || 0;
   let recruitToPay = cost.recruit || 0;
   let eitherToPay = cost.either || 0;
+  if (turnState.attackWithRecruit) { eitherToPay += attackToPay;  attackToPay = 0; }
   if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
     attackToPay -= payMin(a, attackToPay);
     eitherToPay -= payMin(a, eitherToPay);
