@@ -385,8 +385,62 @@ Array.prototype.firstOnly = function () { return this.length ? [ this[0] ] : [] 
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
 type Option = Card | Ev;
+type EvType =
+// Basic actions
+'RECRUIT' |
+'FIGHT' |
+'PLAY' |
+'HEAL' |
+'ENDOFTURN' |
+// Basic effects
+'KO' |
+'RESCUE' |
+'DISCARD' |
+'GAIN' |
+'STRIKE' |
+'TWIST' |
+'DEFEAT' |
+'ESCAPE' |
+'ADDATTACK' |
+'ADDRECRUIT' |
+'CAPTURE' |
+'VILLAINDRAW' |
+'DRAW' |
+'PLAYCARDEFFECTS' |
+'RESHUFFLE' |
+'RUNOUT' |
+// UI
+'SELECTEVENT' |
+'SELECTCARD1' |
+'SELECTCARD01' |
+'SELECTOBJECTS' |
+// Expansion actions
+'TELEPORT' |
+'FOCUS' |
+'DODGE' |
+'COSMICTHREATREVEAL' |
+'USESHARDFORRECRUIT' |
+'USESHARD' |
+'USEARTIFACT' |
+'THROWARTIFACT' |
+// Expansion effects
+'URUENCHANTEDREVEAL' |
+// Special
+'STATE' |
+'TURN' |
+'ACTIONS' |
+'CLEANUP' |
+'GAMEOVER' |
+'EFFECT' |
+'MOVECARD' |
+'NOOP' |
+// Scheme Actions
+'PAYTORESCUE' |
+'BETRAY' |
+'BUYSHARD' |
+undefined;
 interface Ev<TSchemeState = any> {
-  type: string
+  type: EvType
   desc?: string
   parent: Ev
   source?: Card
@@ -453,7 +507,7 @@ interface EvParams {
   failFunc?: (ev: Ev) => void
 }
 class Ev implements EvParams {
-  constructor (ev: Ev, type: string, params: EvParams | ((ev: Ev) => void)) {
+  constructor (ev: Ev, type: EvType, params: EvParams | ((ev: Ev) => void)) {
   this.parent = ev;
   this.type = type;
   if (typeof params === "function") {
@@ -596,7 +650,7 @@ interface Turn extends Ev {
   perTurn?: Map<string, number>
 }
 interface Trigger {
-  event: string
+  event: EvType
   match?: (e: Ev, s?: Card) => boolean
   after?: (e: Ev) => void
   replace?: (e: Ev) => void
@@ -1495,7 +1549,7 @@ function gainWoundToHandEv(ev: Ev, who: Player = playerState): void {
   cont(ev, () => gameState.wounds.withTop(c => gainToHandEv(ev, c, who)));
 }
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
-function pushEv(ev: Ev, name: string, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
+function pushEv(ev: Ev, name: EvType, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
 type Handler = (ev: Ev) => void;
 function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler | Handler[], params: EvParams = {}) {
   effects = getModifiedStat(c, effectName, effects);
@@ -1867,7 +1921,7 @@ function rescueBystander(ev: Ev): void {
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
 }
-function addTurnTrigger(type: string, match: (ev: Ev, source: Card) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
+function addTurnTrigger(type: EvType, match: (ev: Ev, source: Card) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, match, after: f } : { event: type, match, ...f };
   turnState.triggers.push(trigger);
 }

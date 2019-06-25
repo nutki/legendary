@@ -2010,7 +2010,7 @@ addHeroTemplates("Fear Itself", [
 // <b>Thrown Artifact</b>
 // When you throw this, you get +1 Attack for each card you've drawn this turn.
 // COST: 2
-  uc: makeHeroCard("Skirn, Breaker of Men", "Titanic Bludgeon", 2, u, u, Color.RANGED, "Foes of Asgard", "D", ev => addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DRAWONE" && e.who === playerState)), { isArtifact: true, cardActions: [ throwArtifactAction ]}),
+  uc: makeHeroCard("Skirn, Breaker of Men", "Titanic Bludgeon", 2, u, u, Color.RANGED, "Foes of Asgard", "D", ev => addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DRAW" && e.who === playerState)), { isArtifact: true, cardActions: [ throwArtifactAction ]}),
 // ATTACK: 4
 // Each player reveals a [Covert] Ally or discards a card. For each card discarded this way, you draw a card.
 // COST: 7
