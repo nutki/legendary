@@ -200,3 +200,41 @@ function throwArtifactAction(c: Card, ev: Ev) {
     cont(ev, () => ev.what.artifactEffects[0](ev));
   }});
 }
+
+// {RISEOFTHELIVINGDEAD}: "Each player checks the top card of their Victory Pile. If that card is a Villain with a 'Rise of the Living Dead' ability, that Villain reenters the city."
+// (Mastermind Tactics never return this way.)
+// If you put a Villain with Bystanders into your Victory Pile, you choose the order.
+function selectCardOrderEv(ev: Ev, desc: string, cards: Card[], effect: (c: Card) => void, agent: Player = playerState) {
+  const f: (rest: Card[]) => void = rest => rest.size && selectCardEv(ev, "Select order", rest, c => {
+    effect(c);
+    f(rest.limit(v => v !== c));
+  }, agent);
+  f(cards);
+}
+// Ambush effect
+function raiseOfTheLivingDead(ev: Ev) {
+  const cards = gameState.players.map(p => p.victory.top).limit(c => c && c.ambush === raiseOfTheLivingDead && isVillain(c));
+  selectCardOrderEv(ev, "Choose a card to return to the city", cards, c => villainDrawEv(ev, c));
+}
+
+// {XDRAMPAGE}: "Cross-Dimensional (Character) Rampage" means "Each player reveals one of their (Character) Heroes or a (Character) card in their Victory pile or gains a Wound." (Character) cards include any card with "(Character)" in its card name or Hero name.
+// "Hulk" cards additionally include "Maestro" and "Nul, Breaker of Worlds."
+// "Wolverine" cards additionally include any card with "Weapon X" or "Old Man Logan".
+function isCharacterName(name: string) {
+  const names = [ name ];
+  if (name === 'Hulk') names.push('Maestro', 'Nul, Breaker of Worlds');
+  if (name === 'Wolverine') names.push('Weapon X', 'Old Man Logan');
+  return (c: Card) => names.has(n => c.cardName.includes(n) || c.heroName && c.heroName.includes(n));
+}
+// generic effect
+function xdRampageEv(ev: Ev, name: string) {
+  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${name} card`, [...revealable(p), ...p.victory.deck].limit(isCharacterName(name)), () => {}, () => gainWoundEv(ev, p), p))
+}
+
+function isSidekick(c: Card) { return c.cardName === 'Sidekick'; }
+function gainSidekickEv(ev: Ev) { gameState.sidekick.withTop(c => gainEv(ev, c)); }
+function recruitSidekickActionEv(ev: Ev, what: Card) {
+  const cost = getRecruitCost(what);
+  cost.cond = () => countPerTurn('recruitSidekick') === 0;
+  return new Ev(ev, 'RECRUIT', { what, func: ev => { incPerTurn('recruitSidekick'); buyCard(ev); }, cost });
+}

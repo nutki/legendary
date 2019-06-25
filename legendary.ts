@@ -678,6 +678,7 @@ interface Game extends Ev {
   ko: Deck
   herodeck: Deck
   officer: Deck
+  sidekick: Deck
   madame: Deck
   newRecruit: Deck
   wounds: Deck
@@ -792,6 +793,7 @@ const exampleGameSetup: Setup = {
   heroes: [ "Black Widow", "Deadpool", "Wolverine" ],
   bystanders: ["Legendary"],
   withOfficers: true,
+  withSidekicks: true,
   withWounds: true,
   withMadame: true,
   withNewRecruits: true,
@@ -854,6 +856,7 @@ interface Setup {
   heroes: string[]
   bystanders: string[]
   withOfficers: boolean
+  withSidekicks: boolean
   withWounds: boolean
   withNewRecruits: boolean
   withMadame: boolean
@@ -897,6 +900,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     heroes: [],
     bystanders: undefined,
     withOfficers: undefined,
+    withSidekicks: undefined,
     withWounds: undefined,
     withNewRecruits: undefined,
     withMadame: undefined,
@@ -968,6 +972,7 @@ gameState = {
   ko: new Deck('KO', true),
   herodeck: new Deck('HERO'),
   officer: new Deck('SHIELDOFFICER', true),
+  sidekick: new Deck('SIDEKICK', true),
   madame: new Deck('MADAME', true),
   newRecruit: new Deck('NEWRECRUIT', true),
   wounds: new Deck('WOUNDS', true),
@@ -1070,6 +1075,7 @@ gameSetup.heroes.map(findHeroTemplate).forEach(h => {
 gameState.herodeck.shuffle();
 // Init auxiliary decks
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
+if (gameSetup.withSidekicks) gameState.sidekick.addNewCard(sidekickTemplate, 15);
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
 if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
 if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTemplate, 15);
@@ -1077,7 +1083,6 @@ if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getP
 if (gameSetup.withShards) gameState.shard.addNewCard(shardTemplate, getParam('shards'));
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 gameState.bystanders.shuffle();
-//// TODO sidekicks
 // Init villain deck
 gameSetup.henchmen.map(findHenchmanTemplate).forEach((h, i) => gameState.villaindeck.addNewCard(h, getHenchmenCounts()[i]));
 gameSetup.villains.map(findVillainTemplate).forEach(v => (<[number, Card][]>v.cards).forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
@@ -1446,6 +1451,7 @@ function getActions(ev: Ev): Ev[] {
   p = p.concat(FightableCards().map(d => fightActionEv(ev, d)));
   gameState.mastermind.each(c => c.attached('TACTICS').size && p.push(fightActionEv(ev, c)))
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
+  gameState.sidekick.withTop(c => p.push(recruitSidekickActionEv(ev, c)));
   gameState.madame.withTop(c => p.push(recruitCardActionEv(ev, c)));
   gameState.newRecruit.withTop(c => p.push(recruitCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
@@ -2136,7 +2142,7 @@ count escape pile conditions properly (not just trigger on escape, but also not 
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 
-other sets base functions: sidekicks, divided cards
+other sets base functions: divided cards
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 
