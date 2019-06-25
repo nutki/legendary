@@ -30,20 +30,20 @@ sub autopower {
     s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split", ",$1).")";
     s/^{SPECTRUM} *// and $cond = "spectrumPower()";
 
-    s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, ev => XXX)";
+    s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
 
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
     /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev, $num{$1})";
     /^[Yy]ou get \+(\d+) (Attack|Recruit)\.?$/ and $effect = "add$2Event(ev, $1)";
     /^(Rescue|Kidnap) a Bystander\.?$/ and $effect = "rescueEv(ev)";
+    /^[Gg]ain a(nother)? Sidekick\.?$/ and $effect = "gainSidekickEv(ev)";
     /^{VERSATILE (\d+)}$/ and $effect = "versatileEv(ev, $1)";
     s/^{WALLCRAWL}$// and $ability = 'wallcrawl: true';
     s/^{TELEPORT}$// and $ability = 'teleport: true';
     s/^{DODGE}$// and $ability = 'cardActions: [ dodge ]';
 
-    s/'/\\'/g;
-    $effect ||= "/*TODO*/'$_'" if $_;
+    $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
     $effect = "$cond && $effect" if $cond && $effect;
     push @r, $effect if $effect;
@@ -84,7 +84,7 @@ sub gainable() {
   }
   sub filterprint {
     my $f = join'|',@_;
-    print s!^#($f):.*\n!!mgr =~ s!^#?!// !mgr;
+    print s!^#($f):.*\n!!mgr =~ s!^#?(.*\n)!// $1!mgr;
   }
   %atm = qw(HEROES Hero VILLAINS Villain BYSTANDERS Bystander);
   print "addTemplates(\"$type\", \"$exp\", [\n" =~ s/Templates\("(HEROES|VILLAINS|BYSTANDERS)", /$atm{$1}Templates(/r;
@@ -125,11 +125,11 @@ sub gainable() {
         my $autopower = autopower($_);
         parse();
         $_{COPIES} == $count or die "Bad number of copies for $pname: $_{COPIES}";
-        filterprint(qw(SUBNAME COPIES CLASS));
+        filterprint(qw(SUBNAME CLASS ATTACK RECRUIT COST FLAVOR));
         my $attack = $_{ATTACK} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
         my $recruit = $_{RECRUIT} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
         my $cost = $_{COST} =~ s/[^0-9]//gr;
-        my $class = $_{CLASS} =~ s/\[(.*)\]/uc$1/er;
+        my $class = join' | ',map{'Color.'.uc}($_{CLASS} =~ /\[(\w+)\]/g);
         $attack = 'u' if $attack eq '';
         $recruit = 'u' if $recruit eq '';
         my $flags = '';
@@ -139,7 +139,7 @@ sub gainable() {
         $flags .= 'D' if /2/ || $heroname =~ /2/;
         # SW1 Black Bolt flag (no rules text)
         $flags .= 'N' if !/^[^#]/m;
-        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, Color.$class, $pteam, \"$flags\"$autopower),\n";
+        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, $class, $pteam, \"$flags\"$autopower),\n";
       }
       print "},\n";
     } elsif ($type eq "MASTERMINDS") {
