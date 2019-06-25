@@ -1281,7 +1281,7 @@ function getRecruitCost(c: Card): ActionCost {
   return getModifiedStat(c, 'recruitCost', { recruit: c.cost });
 }
 function getFightCost(c: Card): ActionCost {
-  return getModifiedStat(c, 'fightCost', (c.bribe || turnState.attackWithRecruit ? { either: c.defense, cond: c.fightCond } : { attack: c.defense, cond: c.fightCond }));
+  return getModifiedStat(c, 'fightCost', (c.bribe ? { either: c.defense, cond: c.fightCond } : { attack: c.defense, cond: c.fightCond }));
 }
 function canPayCost(action: Ev) {
   const cost = action.cost;
@@ -1290,8 +1290,8 @@ function canPayCost(action: Ev) {
   let usableRecruit = turnState.recruit;
   let usableAttack = turnState.attack;
   const requiredRecruit = cost.recruit || 0;
-  const requiredAttack = cost.attack || 0;
-  const requiredTotal = (cost.either || 0) + requiredRecruit + requiredAttack;
+  const requiredAttack = turnState.attackWithRecruit ? 0 : (cost.attack || 0);
+  const requiredTotal = (cost.either || 0) + (cost.recruit || 0) + (cost.attack || 0);
   if (action.type === 'RECRUIT')
     usableRecruit += turnState.recruitSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   if (action.type === 'FIGHT')
