@@ -232,7 +232,7 @@ function xdRampageEv(ev: Ev, name: string) {
 }
 
 function isSidekick(c: Card) { return c.cardName === 'Sidekick'; }
-function gainSidekickEv(ev: Ev) { gameState.sidekick.withTop(c => gainEv(ev, c)); }
+function gainSidekickEv(ev: Ev) { cont(ev, () => gameState.sidekick.withTop(c => gainEv(ev, c))); }
 function recruitSidekickActionEv(ev: Ev, what: Card) {
   const cost = getRecruitCost(what);
   cost.cond = () => countPerTurn('recruitSidekick') === 0;

@@ -138,7 +138,7 @@ class Card {
     this.cardType = t;
     this.cardName = n;
   }
-  get cost() { return this.printedCost || 0; }
+  get cost() { return getModifiedStat(this, 'cost', this.printedCost || 0); }
   get attack() { return getModifiedStat(this, 'attack', this.printedAttack); }
   get recruit() { return this.printedRecruit; }
   get baseDefense() {
@@ -1132,6 +1132,7 @@ function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
 function isArtifact(c: Card): boolean { return c.isArtifact; }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
+function hasFlag(flag: 'N' | 'D' | 'G' | 'F') { return (c: Card) => c.flags && c.flags.includes(flag); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isFightable(c: Card): boolean {
   return getModifiedStat(c, 'isFightable', c.location.isCity);
@@ -1262,9 +1263,10 @@ interface ModifiableStats {
   isFightable?: boolean
   fightCost?: ActionCost
   recruitCost?: ActionCost
+  cost?: number
 }
 
-type NumericStat = 'defense' | 'vp';
+type NumericStat = 'defense' | 'vp' | 'cost';
 type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape';
 type Modifier<T> = {cond: (c: Card) => boolean, func: (c: Card, v?: T) => T};
 type Modifiers = {[stat in keyof ModifiableStats]:Modifier<ModifiableStats[stat]>[]};
@@ -1589,12 +1591,12 @@ function selectObjectsUpToEv<T>(ev: Ev, desc: string, num: number, objects: T[],
 function selectObjectsAnyEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv<T>(ev, desc, 0, undefined, objects, effect1, undefined, false, who);
 }
-function selectObjectEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
-  selectObjectsMinMaxEv(ev, desc, 1, 1, objects, effect1, undefined, false, who);
-}
-function selectObjectOptEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
-  selectObjectsMinMaxEv(ev, desc, 0, 1, objects, effect1, undefined, false, who);
-}
+// function selectObjectEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
+//   selectObjectsMinMaxEv(ev, desc, 1, 1, objects, effect1, undefined, false, who);
+// }
+// function selectObjectOptEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
+//   selectObjectsMinMaxEv(ev, desc, 0, 1, objects, effect1, undefined, false, who);
+// }
 
 function selectCardOrEv<T>(ev: Ev, desc: string, cards: T[], effect1: (c: T) => void, effect0: () => void, who?: Player) {
   who = who || playerState;
@@ -1671,11 +1673,6 @@ function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
     ['Ranged', () => f(Color.RANGED) ],
   );
 }
-function selectPlayerEv(ev: Ev, f: (p: Player) => void, who?: Player) {
-  if (gameState.players.length === 1) {
-    f(playerState);
-  } else selectObjectEv(ev, "Choose a Player", gameState.players, f, who); // TODO multiplayer
-}
 function pickDiscardEv(ev: Ev, who?: Player, agent?: Player) {
   who = who || playerState;
   agent = agent || who;
@@ -1708,6 +1705,9 @@ function revealVillainDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), 
 }
 function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   revealDeckEv(ev, gameState.herodeck, amount, action, random, bottom, agent);
+}
+function revealPlayerDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
+  lookAtDeckEv(ev, amount, () => action(who.revealed.deck), who, agent);
 }
 function lookAtDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   who = who || playerState;
@@ -1807,6 +1807,12 @@ function cleanUp(ev: Ev): void {
   moveAll(playerState.teleported, playerState.hand);
   let drawAmount = (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0);
   drawEv(ev, drawAmount);
+}
+function drawCardEv(ev: Ev, what: Card, who: Player = playerState) {
+  pushEv(ev, "DRAW", { func: ev => {
+    turnState.cardsDrawn++;
+    moveCardEv(ev, ev.what, ev.who.hand);
+  }, what, who });
 }
 function drawEv(ev: Ev, amount: number = 1, who: Player = playerState) {
   for (let i = 0; i < amount; i++)
