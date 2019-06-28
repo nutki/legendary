@@ -710,3 +710,95 @@ makeSchemeCard<{traitor: Player}>(" The Traitor", { twists: 8 }, ev => {
   }
 }),
 ]);
+addTemplates("SCHEMES", "Secret Wars Volume 1", [
+// SETUP: 9 Twists. Put 10 extra Annihilation Wave Henchmen in that KO pile.
+// EVILWINS: When there are 10 Annihilation Henchmen next to the Mastermind.
+makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], required: { henchmen: 'Annihilation Wave' } }, ev => {
+  // Twist: KO all Annihilation Henchmen from the players' Victory Piles. Stack this Twist next to the Scheme. Then, for each Twist in that stack, put an Annihilation Henchman from the KO pile next to the Mastermind. Players can fight those Henchmen.
+  eachPlayer(p => p.victory.limit(c => c.cardName === 'Annihilation Wave').each(c => KOEv(ev, c)));
+  attachCardEv(ev, ev.source, gameState.scheme, "TWIST");
+  cont(ev, () => {
+    const w = gameState.ko.limit(c => c.cardName === 'Annihilation Wave');
+    const n = gameState.scheme.attached('TWIST').size;
+    w.forEach((c, i) => i < n && attachCardEv(ev, c, gameState.mastermind, 'WAVE'));
+  });
+  cont(ev, () => schemeProgressEv(ev, 10 - gameState.mastermind.attached('WAVE').size));
+}, [], () => {
+  gameState.schemeProgress = 10;
+  gameState.villaindeck.limit(c => c.cardName === 'Annihilation Wave').each(c => moveCard(c, gameState.ko));
+  gameState.specialActions = ev => gameState.mastermind.attached('WAVE').map(c => fightActionEv(ev, c));
+}),
+// SETUP: 8 Twists. Add 10 Sidekicks to the Villain Deck.
+// RULE: Sidekicks in the Villain Deck and city are Villains. Their Attack is 2 plus the number of Twists stacked next to this Scheme. When you defeat a Sidekick, gain it to the top of your deck.
+// EVILWINS: When 4 Sidekicks escape.
+makeSchemeCard("Corrupt the Next Generation of Heroes", { twists: 8 }, ev => {
+  if (ev.nr <= 7) {
+    // Twist 1-7 Each player returns a Sidekick from their discard pile to the Sidekick Stack. Then, two Sidekicks from the Sidekick Stack enter the city.
+    eachPlayer(p => selectCardEv(ev, "Choose a Sidekick", p.discard.limit(isSidekick), c => moveCardEv(ev, c, gameState.sidekick, true), p));
+    repeat(2, () => cont(ev, () => gameState.sidekick.withTop(c => villainDrawEv(ev, c))));
+  } else if (ev.nr === 8) {
+    // Twist 8 All Sidekicks in the city escape.
+    CityCards().limit(isSidekick).each(c => villainEscapeEv(ev, c));
+  }
+}, escapeProgressTrigger(isSidekick, 4), () => {
+  gameState.schemeProgress = 4;
+  addStatSet('defense', isSidekick, c => c.cost + 2);
+  addStatSet('isVillain', isSidekick, c => !owner(c));
+  addStatSet('fight', isSidekick, () => (ev: Ev) => gainToDeckEv(ev, ev.source));
+  repeat(10, () => gameState.sidekick.withTop(c => moveCard(c, gameState.villaindeck)));
+}),
+// SETUP: 5 Twists. If playing solo, add an extra Villain Group.
+// EVILWINS: When 8 Master Strikes have taken effect.
+makeSchemeCard("Crush Them With My Bare Hands", { twists: 5, vd_villain: [ 2, 2, 3, 3, 4 ] }, ev => {
+  // Twist: This Twist becomes a Master Strike that takes effect immediately.
+  playStrikeEv(ev, ev.source);
+}, {
+  event: 'STRIKE',
+  after: ev => schemeProgressEv(ev, gameState.schemeProgress - 1),
+}, () => {
+  gameState.schemeProgress = 8;
+}),
+// SETUP: 8 Twists.
+makeSchemeCard("Dark Alliance", { twists: 8 }, ev => {
+  if (ev.nr === 1) {
+    // Twist 1 Add a random second Mastermind to the game with one Mastermind Tactic.
+  } else if (ev.nr >= 2 && ev.nr <= 4) {
+    // Twist 2-4 If the second Mastermind is still in play, it gains another Mastermind Tactic.
+  } else if (ev.nr >= 5 && ev.nr <= 6) {
+    // Twist 5-6 Each Mastermind captures a Bystander.
+  } else if (ev.nr === 7) {
+    // Twist 7 Evil Wins!
+  }
+}),
+// SETUP: Add an extra Villain Group. Shuffle the Villain Deck, then split it as evenly as possible into a Villain Deck for each player. Then, shuffle 2 Twists into each player's Villain Deck.
+// RULE: The normal city does not exist. Instead, each player has a different dimension in front of them with one city space. Villains and Bystanders from your Villain Deck enter your dimension. You can fight Villains in any dimension.
+// EVILWINS: When the number of non-grey Heroes in the KO pile is 5 times the number of players.
+makeSchemeCard("Fragmented Realities", { twists: 8 }, ev => {
+  // Twist: Play two card from your Villain Deck
+}),
+// SETUP: 8 Twists. Choose 3 other Masterminds, and shuffle their 12 Tactics into the Villain Deck. Those Tactics are "Tyrant Villains" with their printed Attack and no abilities.
+// EVILWINS: When 5 Tyrant Villains escape.
+makeSchemeCard("Master of Tyrants", { twists: 8 }, ev => {
+  if (ev.nr <= 7) {
+    // Twist 1-7 Put this Twist under a Tyrant Villain as "Dark Power." It gets +2 Attack.
+  } else if (ev.nr === 8) {
+    // Twist 8 All Tyrant Villains in the city escape.
+  }
+}),
+// SETUP: 10 Twists.
+// RULE: When a player recruits a Hero with a Wound next to it, that player can either gain that Wound or pay 1 Recruit to return that Wound to the Wound Stack.
+// EVILWINS: When the Wound Stack runs out.
+makeSchemeCard("Pan-Dimensional Plague", { twists: 10 }, ev => {
+  // Twist: KO all Wounds from next to the HQ. Then, put a Wound from the Wound Stack next to each Hero in the HQ.
+}),
+// SETUP: 8 Twists. Add an extra Villain Group. Put the Villain Deck on the Bank space.
+// RULE: The Sewers and Bank do not exist, so the city is only 3 spaces. There is a parallel dimension with 3 city spaces above the main city. Whenever a Villain enters the city, the current player chooses which city it enters.
+// EVILWINS: When 10 Villains escape.
+makeSchemeCard("Smash Two Dimensions Together", { twists: 8 }, ev => {
+  if (ev.nr <= 7) {
+    // Twist 1-7 Play two cards from the Villain Deck.
+  } else if (ev.nr === 8) {
+    // Twist 8 All Villains in both dimensions escape.
+  }
+}),
+]);

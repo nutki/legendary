@@ -523,3 +523,127 @@ makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty.", ev => {
   fightFail: uruEnchantedFail,
 }),
 ]);
+addTemplates("MASTERMINDS", "Secret Wars Volume 1", [
+// Bystanders captured by Madelyne are "Demon Goblin" Villains with 2 Attack. You can fight them to rescue them as Bystanders. You can't fight her while she has any Demon Goblins.
+makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
+// Madelyne captures 4 Bystanders. If she already had any Bystanders before that, then each player gains a Wound.
+  captureEv(ev, ev.source, 4);
+  ev.source.captured.has(isBystander) && eachPlayer(p => gainWoundEv(ev, p));
+}, [
+  [ "City of Demon Goblins", ev => {
+  // Madelyne captures five Bystanders.
+    captureEv(ev, ev.source, 5);
+  } ],
+  [ "Corrupted Clone of Jean Grey", ev => {
+  // Each other player reveals an X-Men Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p)))
+  } ],
+  [ "Everyone's a Demon on the Inside", ev => {
+  // Madelyne captures a Bystander from each other player's Victory Pile.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => captureEv(ev, ev.source, c)));
+  } ],
+  [ "Gather the Harvest", ev => {
+  // For each Limbo Villain in the city and/or Escape Pile, Madelyne captures a Bystander.
+    captureEv(ev, ev.source, [...CityCards(), ...gameState.escaped.deck].count(c => c.villainGroup === ev.source.leads));
+  } ],
+], {
+  fightCond: c => !c.captured.has(isBystander),
+  init: m => {
+    const isDemonGoblin = (c: Card) => c.location.attachedTo === m && isBystander(c);
+    addStatSet('isVillain', isDemonGoblin, () => true);
+    addStatSet('villainGroup', isDemonGoblin, () => "Demon Goblin");
+    addStatSet('defense', isDemonGoblin, () => 2);
+  },
+  cardActions: [(m, ev) => {
+    const goblins = m.captured.limit(isBystander);
+    return goblins.map(c => fightActionEv(ev, c))[0]; // TODO SW1 allow returning array 
+  }],
+}),
+// You can't fight Nimrod unless you made at least 6 Recruit this turn.
+makeMastermindCard("Nimrod, Super Sentinel", 6, 6, "Sentinel Territories", ev => {
+// Each player who does not reveal a [Tech] Hero must choose Recruit or Attack, then discard all their cards with that icon.
+  eachPlayer(p => revealOrEv(ev, Color.TECH, () => chooseOptionEv(ev, "Choose", [{l:"Recruit", v:hasRecruitIcon}, {l:"Attack", v:hasAttackIcon}], f => p.hand.limit(f).each(c => discardEv(ev, c)), p), p));
+}, [
+  [ "Adapt and Destroy", ev => {
+  // Choose Recruit or Attack. Each other player reveals their hand and discards a card with that icon.
+    chooseOptionEv(ev, "Choose", [{l:"Recruit", v:hasRecruitIcon}, {l:"Attack", v:hasAttackIcon}], f => {
+      eachOtherPlayerVM(p => selectCardEv(ev, "Discard a card", p.hand.limit(f), c => discardEv(ev, c)));
+    });
+  } ],
+  [ "Detect Mutation", ev => {
+  // Choose Recruit or Attack. Then, reveal the top card of your deck. If that card has that icon, draw it and repeat this process.
+    const rep = () => chooseOptionEv(ev, "Choose", [{l:"Recruit", v:hasRecruitIcon}, {l:"Attack", v:hasAttackIcon}], f => {
+      revealPlayerDeckEv(ev, 1, cards => cards.limit(f).each(c => { drawCardEv(ev, c); cont(ev, rep); }));
+    });
+    rep();
+  } ],
+  [ "Scatter the Mutants", ev => {
+  // Choose Recruit or Attack. Put all Heroes from the HQ with that icon on the bottom of the Hero Deck.
+    chooseOptionEv(ev, "Choose", [{l:"Recruit", v:hasRecruitIcon}, {l:"Attack", v:hasAttackIcon}], f => {
+      HQCards().limit(isHero).limit(f).each(c => moveCardEv(ev, c, gameState.herodeck, true));
+    });
+  } ],
+  [ "Teleport and Incarcerate", ev => {
+  // Choose Recruit or Attack. Then, reveal the top card of that Hero Deck. If that card has that icon, gain that card, and Teleport it.
+    chooseOptionEv(ev, "Choose", [{l:"Recruit", v:hasRecruitIcon}, {l:"Attack", v:hasAttackIcon}], f => {
+      revealHeroDeckEv(ev, 1, cards => cards.limit(f).each(c => { gainEv(ev, c); teleportEv(ev, c); }));
+    });
+  } ],
+], {
+  fightCond: c => turnState.totalRecruit >= 6
+}),
+// Wasteland Hulk gets +3 Attack for each of his Mastermind Tactics among all players' Victory Piles.
+makeMastermindCard("Wasteland Hulk", 7, 6, "Wasteland", ev => {
+// Cross-Dimensional Hulk Rampage
+  xdRampageEv(ev, 'Hulk');
+}, [
+  [ "Brutal Beating", ev => {
+  // Each other player counts the number of Wounds in their discard pile, then discards that many cards.
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", p.discard.count(isWound), p.hand.deck, c => discardEv(ev, c)));
+  } ],
+  [ "Memories of Pain", ev => {
+  // Each other player puts two Wounds from their discard pile on top of their deck.
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "Put two Wounds on top of your deck", 2, p.discard.limit(isWound), c => moveCardEv(ev, c, p.deck), p));
+  } ],
+  [ "Radioactive Regeneration", ev => {
+  // KO up to two Wounds from your hand and/or discard pile.
+    selectObjectsUpToEv(ev, "KO up to two Wounds", 2, handOrDiscard().limit(isWound), c => KOEv(ev, c));
+  } ],
+  [ "Revert to Bruce Banner", ev => {
+  // You gain a [Tech] Hero from the HQ for free.
+    selectCardEv(ev, "Choose a Hero to gain", HQCards().limit(isHero).limit(Color.TECH), c => gainEv(ev, c));
+  } ],
+], {
+  varDefense: m => m.printedDefense + 3 * gameState.players.sum(p => p.victory.limit(isTactic).count(c => c.mastermind === m)),
+}),
+// Zombie Green Goblin gets +1 Attack for each Hero in the KO pile that costs 7 or more.
+makeMastermindCard("Zombie Green Goblin", 11, 6, "The Deadlands", ev => {
+// Rise of the Living Dead. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
+  raiseOfTheLivingDead(ev);
+  HQCards().limit(isHero).limit(c => c.cost >= 7).each(c => KOEv(ev, c));
+  cont(ev, () => eachPlayer(p => selectObjectsEv(ev, "Choose cards to discard", gameState.ko.limit(isHero).count(c => c.cost >= 7), p.hand.deck, c => discardEv(ev, c), p)));
+}, [
+  [ "Army of Cadavers", ev => {
+  // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "Rise of the Living Dead."
+    raiseOfTheLivingDead(ev);
+    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", CityCards().count(c => c.ambush === raiseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
+  } ],
+  [ "The Hungry Dead", ev => {
+  // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "Rise of the Living Dead".
+    raiseOfTheLivingDead(ev);
+    cont(ev, () => CityCards().has(c => c.ambush === raiseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
+  } ],
+  [ "Love To Have You For Dinner", ev => {
+  // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
+    raiseOfTheLivingDead(ev);
+    revealHeroDeckEv(ev, 5, cards => cards.limit(c => c.cost >= 7).each(c => KOEv(ev, c)), true, true);
+  } ],
+  [ "Reign of Terror", ev => {
+  // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
+    raiseOfTheLivingDead(ev);
+    cont(ev, () => HQCards().limit(isHero).limit(c => c.cost <= 6).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
+  } ],
+], {
+  varDefense: c => c.printedDefense + gameState.ko.limit(isHero).count(c => c.cost >= 7),
+}),
+]);

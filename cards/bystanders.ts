@@ -19,3 +19,7 @@ addBystanderTemplates("Villains", [
 // RESCUE: kidnap another Bystander.
 [ 3, makeBystanderCard("Rockstar", ev => rescueByEv(ev, ev.who)) ],
 ]);
+addBystanderTemplates("Secret Wars Volume 1", [
+// RESCUE: you get +2 Recruit, usable only to recruit Heroes in the HQ space under the Bank.
+[ 3, makeBystanderCard("Banker", ev => playerState === ev.who && addRecruitSpecialEv(ev, c => isLocation(c.location.below, 'BANK'), 2)) ],
+]);

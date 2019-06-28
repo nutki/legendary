@@ -238,3 +238,10 @@ function recruitSidekickActionEv(ev: Ev, what: Card) {
   cost.cond = () => countPerTurn('recruitSidekick') === 0;
   return new Ev(ev, 'RECRUIT', { what, func: ev => { incPerTurn('recruitSidekick'); buyCard(ev); }, cost });
 }
+
+function ascendToMastermind(ev: Ev) {
+  moveCardEv(ev, ev.source, gameState.mastermind);
+}
+function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void) {
+  // TODO SW1
+}

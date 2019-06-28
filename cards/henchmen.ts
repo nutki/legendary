@@ -65,3 +65,25 @@ makeHenchmenCard("S.H.I.E.L.D. Assault Squad", 3, {
   ],
 }),
 ]);
+addTemplates("HENCHMEN", "Secret Wars Volume 1", [
+// AMBUSH: Rise of the Living Dead
+// FIGHT: Reveal a [Covert] Hero or KO one of your Heroes with an Attack icon.
+// ATTACK: 3
+makeHenchmenCard("Ghost Racers", 3, {
+  fight: ev => revealOrEv(ev, Color.COVERT, () => selectCardAndKOEv(ev, yourHeroes().limit(hasAttackIcon))),
+  ambush: raiseOfTheLivingDead,
+}),
+// FIGHT: KO a Hero from your discard pile or the HQ. If that Hero has a Recruit icon, you get +1 Recruit.
+// ATTACK: 3
+makeHenchmenCard("M.O.D.O.K.s", 3, {
+  fight: ev => selectCardEv(ev, "Choose a card to KO", [...HQCards().limit(isHero), ...playerState.discard.deck], c => { KOEv(ev, c); hasRecruitIcon(c) && addRecruitEvent(ev, 1); }),
+}),
+// FIGHT: Gain this as a Hero.
+// ATTACK: 3
+// GAINABLE
+// TEAM: Avengers
+// CLASS: [Strength]/[Ranged]
+// RECRUIT: 2+
+// {POWER Strength Ranged} You get +1 Recruit.
+makeGainableCard(makeHenchmenCard("Thor Corps", 3, {}, u), 2, u, Color.STRENGTH | Color.RANGED, "Avengers", "D", ev => superPower(Color.STRENGTH, Color.RANGED) && addRecruitEvent(ev, 1)),
+]);

@@ -1077,3 +1077,252 @@ addVillainTemplates("Fear Itself", [
   })],
 ]},
 ]);
+addVillainTemplates("Secret Wars Volume 1", [
+{ name: "The Deadlands", cards: [
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// FIGHT: For each of your Avengers Heroes, rescue a Bystander.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("The Deadlands", "Zombie Baron Zemo", 6, 4, {
+    ambush: raiseOfTheLivingDead,
+    fight: ev => rescueEv(ev, yourHeroes().count("Avengers")),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// ESCAPE: Loki ascends to become a new Mastermind. He gains the ability, <b>"Master Strike</b>: Each player reveals a [Strength]  Hero or gains a Wound."
+// ATTACK: 8
+// VP: 6
+  [ 1, makeVillainCard("The Deadlands", "Zombie Loki", 8, 6, {
+    ambush: raiseOfTheLivingDead,
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// FIGHT: KO one of your S.H.I.E.L.D. Heroes or HYDRA Allies.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("The Deadlands", "Zombie Madame Hydra", 4, 2, {
+    ambush: raiseOfTheLivingDead,
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(isShieldOrHydra))
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// ESCAPE: Sinister ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Sinister captures a Bystander. Then, each player with exactly 6 cards reveals a [Covert] Hero or discards cards equal to the number of Bystanders Sinister has."
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("The Deadlands", "Zombie Mr. Sinister", 7, 5, {
+    ambush: raiseOfTheLivingDead,
+    escape: ascendToMastermind,
+    strike: [
+      ev => captureEv(ev, ev.source),
+      ev => eachPlayer(p => p.hand.size === 6 && selectObjectsEv(ev, "Choose cards to discard", ev.source.captured.count(isBystander), p.hand.deck, c => discardEv(ev, c))),
+    ]
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// FIGHT: KO one of your heroes with a Recruit icon.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("The Deadlands", "Zombie M.O.D.O.K.", 5, 3, {
+    ambush: raiseOfTheLivingDead,
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(hasRecruitIcon)),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// ESCAPE: Shuffle this card into the Mastermind's face-down Tactics. It becomes a Mastermind Tactic that says "<b>Fight</b>: Draw two cards."
+// ATTACK: 6
+// VP: 6
+  [ 1, makeVillainCard("The Deadlands", "Zombie Mysterio", 6, 6, {
+    ambush: raiseOfTheLivingDead,
+    fight: ev => isMastermind(ev.parent.what) && drawEv(ev, 2),
+    escape: ev => withMastermind(ev, m => shuffleIntoEv(ev, ev.source, m.attachedDeck('TACTICS')), true),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// ESCAPE: Thanos ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals their hand and KOs one of their non-grey Heroes."
+// ATTACK: 9
+// VP: 6
+  [ 1, makeVillainCard("The Deadlands", "Zombie Thanos", 9, 6, {
+    ambush: raiseOfTheLivingDead,
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(isNonGrayHero)))
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// You can't defeat Zombie Venom unless you have a [Covert] Hero.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5*
+// VP: 3
+  [ 1, makeVillainCard("The Deadlands", "Zombie Venom", 5, 3, {
+    ambush: raiseOfTheLivingDead,
+    fightCond: () => yourHeroes().has(Color.COVERT),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+]},
+{ name: "Domain of Apocalypse", cards: [
+// FIGHT: Reveal the top card of your deck. Draw it or {TELEPORT} it.
+// ATTACK: 5
+// VP: 3
+  [ 3, makeVillainCard("Domain of Apocalypse", "Apocalyptic Blink", 5, 3, {
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => chooseOneEv(ev, "Choose one", ["Draw", ev => drawCardEv(ev, c)], ["Teleport", ev => teleportEv(ev, c)]))),
+  })],
+// FIGHT: Gain an X-Men Hero from the HQ for free.
+// ESCAPE: Magneto ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals an X-Men Hero or discards down to four cards."
+// ATTACK: 8
+// VP: 6
+  [ 1, makeVillainCard("Domain of Apocalypse", "Apocalyptic Magneto", 8, 6, {
+    fight: ev => {},
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => selectObjectsEv(ev, "Discard down to four cards", p.hand.size - 4, p.hand.deck, c => discardEv(ev, c)), p)),
+  })],
+// FIGHT: Reveal the top card of the Hero deck. The player of your choice gains it.
+// ESCAPE: Reveal the top card of the Hero deck. Each player reveals their hand and discards a card of that class.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Domain of Apocalypse", "Apocalyptic Rogue", 6, 4, {
+    fight: ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => choosePlayerEv(ev, p => gainEv(ev, c, p)))),
+    escape: ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(sharesColor(c)), c => discardEv(ev, c), p)))),
+  })],
+// FIGHT: KO one of your heroes.
+// ESCAPE: {XDRAMPAGE Wolverine}
+// ATTACK: 7
+// VP: 5
+  [ 2, makeVillainCard("Domain of Apocalypse", "Apocalyptic Weapon X", 7, 5, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    escape: ev => xdRampageEv(ev, 'Wolverine'),
+  })],
+]},
+{ name: "Limbo", cards: [
+// AMBUSH: The Mastermind captures a Bystander.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Limbo", "Inferno Colossus", 5, 3, {
+    ambush: ev => withMastermind(ev, m => captureEv(ev, m)),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  })],
+// AMBUSH: Inferno Cyclops captures a Bystander.
+// ESCAPE: The Mastermind captures all the Bystanders this Villain had.
+// <i>(Players still discard for the Bystander being carried away.)</i>
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Limbo", "Inferno Cyclops", 6, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    escape: ev => withMastermind(ev, m => {}), // TODO SW1 escaping locations
+  })],
+// FIGHT: Reveal the top card of your deck. KO it or {TELEPORT} it.
+// ESCAPE: Each player <b>Teleports</b> a random card from their hand.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Limbo", "Inferno Darkchilde", 5, 3, {
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => chooseOneEv(ev, "Choose one", ["KO", ev => KOEv(ev, c)], ["Teleport", ev => teleportEv(ev, c)]))),
+    escape: ev => eachPlayer(p => p.hand.withRandom(c => teleportEv(ev, c))),
+  })],
+// FIGHT: Up to two cards in your hand that have a Recruit icon gain {TELEPORT} this turn.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Limbo", "Inferno Nightcrawler", 4, 2, {
+    fight: ev => selectObjectsUpToEv(ev, "Give Teleport", 2, playerState.hand.limit(hasRecruitIcon), c => {
+      addTurnSet('teleport', v => c === v, () => true);
+    }),
+  })],
+]},
+{ name: "Manhattan (Earth-1610)", cards: [
+// FIGHT: Gain this as a Hero.
+// ATTACK: 6
+// GAINABLE
+// CLASS: [Strength]
+// You get +1 Attack for each color of Hero you have
+// ATTACKG: 0+
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain America", 6, u, {}), u, 0, Color.STRENGTH, u, "", ev => addAttackEvent(ev, numColors()))],
+// FIGHT: Gain this as a Hero.
+// ATTACK: 4
+// GAINABLE
+// CLASS: [Ranged]
+// {TELEPORT}
+// RECRUIT: 2
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain Marvel", 4, u, {}), 2, u, Color.RANGED, u, "D", [], { teleport: true })],
+// FIGHT: Gain this as a Hero.
+// ESCAPE: {XDRAMPAGE Thor}
+// ATTACK: 7
+// GAINABLE
+// CLASS: [Ranged]
+// {POWER Ranged} You get +3 Attack.
+// ATTACKG: 3+
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Thor", 7, u, {
+    escape: ev => xdRampageEv(ev, 'Thor'),
+  }), u, 3, Color.RANGED, u, "", ev => superPower(Color.RANGED) && addAttackEvent(ev, 3))],
+// FIGHT: Gain this as a Hero.
+// ATTACK: 5
+// GAINABLE
+// CLASS: [Covert]
+// {POWER Covert} You get +2 Attack.
+// ATTACKG: 2+
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, u, "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2))],
+]},
+{ name: "Sentinel Territories", cards: [
+// FIGHT: <i>Colossus changes the future:</i> Don't play a Villain card at the beginning of next turn.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Sentinel Territories", "Colossus of Future Past", 5, 3, {
+    fight: ev => addFutureTrigger(ev, ev => {
+      addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
+    }),
+  })],
+// FIGHT: You get +1 Recruit. Then, <i>Kate Pryde alters the future:</i> At the beginning of the next player's turn, that player gets +1 Recruit.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Sentinel Territories", "Kate Pryde of Future Past", 4, 2, {
+    fight: [
+      ev => addRecruitEvent(ev, 1),
+      ev => addFutureTrigger(ev, ev => addRecruitEvent(ev, 1)),
+    ]
+  })],
+// FIGHT: <i>Rachel Summers alters the future:</i> During the next player's turn, all Villains and the Mastermind get -1 Attack.
+// ESCAPE: This turn, All Villains and the Mastermind get +1 Attack.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Sentinel Territories", "Rachel Summers of Future Past", 6, 4, {
+    fight: ev => addFutureTrigger(ev, ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1)),
+    escape: ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1),
+  })],
+// FIGHT: <i>Wolverine alters the future:</i> At the start of the next player's turn, you draw a card, and that player draws a card.
+// ESCAPE: {XDRAMPAGE Wolverine}
+// ATTACK: 7
+// VP: 5
+  [ 2, makeVillainCard("Sentinel Territories", "Wolverine of Future Past", 7, 5, {
+    fight: ev => addFutureTrigger(ev, ev => {
+      drawEv(ev, 1, owner(ev.source));
+      drawEv(ev);
+    }),
+    escape: ev => xdRampageEv(ev, 'Wolverine'),
+  })],
+]},
+{ name: "Wasteland", cards: [
+// FIGHT: {XDRAMPAGE Hulk}
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 3, makeVillainCard("Wasteland", "The Hulk Gang", 5, 3, {
+    fight: ev => xdRampageEv(ev, 'Hulk'),
+    escape: ev => xdRampageEv(ev, 'Hulk'),
+  })],
+// ESCAPE: Kingpin ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals an [Instinct] Hero or discards their hand and draws 5 cards."
+// ATTACK: 11*
+// {BRIBE}
+// VP: 6
+  [ 1, makeVillainCard("Wasteland", "Wasteland Kingpin", 11, 6, {
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => { discardHandEv(ev, p); drawEv(ev, 5, p); })),
+    bribe: true,
+  })],
+// AMBUSH: Wasteland Hawkeye captures a Bystander.
+// FIGHT: Choose one: Each other player draws a card, or each other player discards a card.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Wasteland", "Wasteland Hawkeye", 6, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => chooseOneEv(ev, "Each other player", ["draws a card", () => eachOtherPlayerVM(p => drawEv(ev, 1, p))], ["discards a card", () => eachOtherPlayerVM(p => pickDiscardEv(ev, p))]),
+  })],
+// FIGHT: Reveal the top card of your deck. If it costs 2 or less, KO it.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Wasteland", "Wasteland Spider-Girl", 4, 2, {
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost <= 2).each(c => KOEv(ev, c))),
+  })],
+]},
+]);

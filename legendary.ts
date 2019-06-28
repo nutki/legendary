@@ -100,6 +100,7 @@ interface VillainCardAbillities {
   ambush?: Handler | Handler[]
   fight?: Handler | Handler[]
   escape?: Handler | Handler[]
+  strike?: Handler | Handler[]
   varVP?: (c: Card) => number
   varDefense?: (c: Card) => number
   fightCond?: (c?: Card) => boolean
@@ -120,6 +121,7 @@ interface MastermindCardAbillities {
   trigger?: Trigger
   triggers?: Trigger[]
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
+  fightCond?: (c?: Card) => boolean
 }
 interface HeroCardAbillities {
   trigger?: Trigger
@@ -251,9 +253,9 @@ function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name: string
   if (name) c.cardName = name;
   return c;
 }
-function makeHenchmenCard(name: string, defense: number, abilities: VillainCardAbillities) {
+function makeHenchmenCard(name: string, defense: number, abilities: VillainCardAbillities, vp: number = 1) {
   abilities.isHenchman = true;
-  return makeVillainCard(name, name, defense, 1, abilities);
+  return makeVillainCard(name, name, defense, vp, abilities);
 }
 function makeCardInPlay(c: Card, where: Deck, bottom?: boolean) {
   if (c.ctype === "P") throw TypeError("need card template");
@@ -1133,6 +1135,7 @@ function isArtifact(c: Card): boolean { return c.isArtifact; }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
 function hasFlag(flag: 'N' | 'D' | 'G' | 'F') { return (c: Card) => c.flags && c.flags.includes(flag); }
+function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("HYDRA")(c); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isFightable(c: Card): boolean {
   return getModifiedStat(c, 'isFightable', c.location.isCity);
@@ -1236,6 +1239,10 @@ function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
 function numColors(heroes: Card[] = yourHeroes()) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
   return colors.count(color => heroes.some(hero => hero.isColor(color)));
+}
+function sharesColor(c1: Card) {
+  const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
+  return (c2: Card) => colors.has(color => c1.isColor(color) && c2.isColor(color));
 }
 
 function superPower(...f: (number | string)[]): number {
@@ -1537,6 +1544,13 @@ function schemeProgressEv(ev: Ev, amount: number) {
     if (amount === 0) evilWinsEv(ev);
   });
 }
+function escapeProgressTrigger(f: Filter<Card>, max: number): Trigger {
+  return ({
+    event: "MOVECARD",
+    match: ev => ev.to === gameState.escaped,
+    after: ev => schemeProgressEv(ev, max - gameState.escaped.count(f))
+  });
+}
 function runOutEv(ev: Ev, deck: string) { pushEv(ev, "RUNOUT", { deckName: deck, func: () => {} }); }
 function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {
   if (what && typeof what !== "number") pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: what, villain: villain });
@@ -1672,6 +1686,9 @@ function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
     ['Tech', () => f(Color.TECH) ],
     ['Ranged', () => f(Color.RANGED) ],
   );
+}
+function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {
+  selectCardEv(ev, "Choose Mastermind", real ? gameState.mastermind.limit(isMastermind) : gameState.mastermind.deck, effect);
 }
 function pickDiscardEv(ev: Ev, who?: Player, agent?: Player) {
   who = who || playerState;
@@ -2147,6 +2164,13 @@ remodel triggers to attach on resolution not queuing?
 count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
+TODO SW1 mastermind selection
+TODO SW1 extra masterminds setup params
+TODO SW1 fight card placement order
+TODO SW1 escape card special location
+TODO SW1 (scheme) entry selection
+TODO SW1 make cardAction allow functions returning multiple actions
+TODO SW2 make scheme card position independent
 
 other sets base functions: divided cards
 

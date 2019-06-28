@@ -2234,7 +2234,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // Reveal your hand. You get +5 Attack if you haven't played any S.H.I.E.L.D. or HYDRA cards this turn and don't have any in your hand.
   ra: makeHeroCard("Old Man Logan", "No More Heroes", 7, u, 5, Color.INSTINCT, "X-Men", "", ev => {
     const cards = [...turnState.cardsPlayed, ...playerState.hand.deck];
-    if(!cards.has('S.H.I.E.L.D.') && !cards.has('HYDRA')) addAttackEvent(ev, 5);
+    if(!cards.has(isShieldOrHydra)) addAttackEvent(ev, 5);
   }),
 },
 {
