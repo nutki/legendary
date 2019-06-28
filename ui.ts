@@ -5,7 +5,7 @@ function imageName(path: string, card: Card, subname?: string): string {
   else if (subname !== undefined) name = subname + "_" + name;
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
   if (card.set && card.set !== 'Legendary') path = card.set + '/' + path;
-  return "images/" + path + "/" + name + ".png";
+  return "images/" + path + "/" + name + ".jpg";
 }
 function cardImageName(card: Card): string {
   if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
@@ -33,7 +33,7 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   const extraClasses = gone ? " gone" : "";
   let r = '';
   r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
-  r += `<img class="cardface" src="${back ? 'images/back.png' : cardImageName(c)}">`
+  r += `<img class="cardface" src="${back ? 'images/back.jpg' : cardImageName(c)}">`
   if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
   if (isScheme(c) && gameState.schemeProgress !== undefined)
     r += `<div class="count">${gameState.schemeProgress}</div>`;
