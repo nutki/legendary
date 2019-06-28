@@ -47,14 +47,14 @@ for $type (sort {$a cmp $b} keys %input) {
   sub checkimage {
     my $dir = shift @_;
     my $name = join' ',@_;
-    $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".png";
+    $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".jpg";
     $imagename = "$exp/$imagename" if $exp ne 'Legendary';
     print "no image: $imagename\n" unless -f "../images/$imagename";
     return if -f "../images/$imagename";
     do {
     my @f = ();
     opendir DIR, $tmpDir;
-    while($f = readdir DIR) { $f=~/\.png$/ and push @f, $f }
+    while($f = readdir DIR) { $f=~/\.jpg$/ and push @f, $f }
     closedir DIR;
     $| = 1;
     printf "waiting\r";;
