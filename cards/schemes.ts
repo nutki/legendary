@@ -683,7 +683,7 @@ makeSchemeCard("Last Stand at Avengers Tower", { twists: 6 }, ev => {
 // RULE: During your turn, you may reveal a Twist from your Betrayal Cards to become 'the Traitor'. If you do, each other player gains all the Bindings from their Betrayal Cards.
 // During your turns, you may spend 4 Attack any number of times to play an additional card from the Adversary Deck.
 // <b>When the players win</b>: The Traitor reveals themself and loses.
-makeSchemeCard<{traitor: Player}>(" The Traitor", { twists: 8 }, ev => {
+makeSchemeCard<{traitor: Player}>("The Traitor", { twists: 8 }, ev => {
   const betrayalDeck = gameState.scheme.attachedDeck('BETRAYAL');
   if (ev.nr <= 3 && !ev.state.traitor) {
     // Twist 1-3 If there is no revealed Traitor, each player puts a 'Betrayal Card' from the Betrayal Deck face down in front of them and looks at it.

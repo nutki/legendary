@@ -2171,6 +2171,7 @@ TODO SW1 escape card special location
 TODO SW1 (scheme) entry selection
 TODO SW1 make cardAction allow functions returning multiple actions
 TODO SW2 make scheme card position independent
+copy artifact should not count as cards played
 
 other sets base functions: divided cards
 

@@ -13,8 +13,7 @@ sub mkdir_recursive {
 sub mkdir_and_copy {
     my ($from, $to) = @_;
     mkdir_recursive(dirname($to));
-    move($from, $to) or die "Couldn't copy: $!";
-    return;
+    return move($from, $to);
 }
 
 
@@ -60,9 +59,10 @@ for $type (sort {$a cmp $b} keys %input) {
     printf "waiting\r";;
     usleep 500000;
     if (@f == 1) {
-      mkdir_and_copy("$tmpDir/$f[0]", "../images/$imagename");
-      print "OK\n";
-      return;
+      if (mkdir_and_copy("$tmpDir/$f[0]", "../images/$imagename")) {
+        print "OK\n";
+        return;
+      };
     }
     } while (1);
   }
