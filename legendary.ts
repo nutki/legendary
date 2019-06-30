@@ -1967,6 +1967,10 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
   turnState.triggers.forEach(checkTrigger());
   gameState.mastermind.each(checkCardTrigger);
   playerState.hand.each(checkCardTrigger);
+  CityCards().each(checkCardTrigger);
+  HQCards().each(checkCardTrigger);
+  // TODO check other active locations (villain/hero deck top for example)
+  playerState.artifact.each(checkCardTrigger);
   // TODO other player's hand triggers
   playerState.revealed.each(checkCardTrigger);
   playerState.playArea.each(checkCardTrigger);

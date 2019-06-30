@@ -171,6 +171,7 @@ const extraShatteraxTriggers: Trigger[] = [{
 
 const uruEnchantedTrigger: (amount: number | ((c: Card) => number)) => Trigger = amount => ({
   event: 'FIGHT',
+  match: (ev, source) => ev.what === source,
   before: ev => {
     const size = gameState.villaindeck.size;
     const n = typeof amount === "function" ? amount(ev.parent.what) : amount;
@@ -180,6 +181,7 @@ const uruEnchantedTrigger: (amount: number | ((c: Card) => number)) => Trigger =
         addTurnMod('defense', c => c === ev.parent.what, cards.sum(c => c.vp));
       }, true, true);
     }
+    cont(ev, () => ev.parent.cost = getFightCost(ev.parent.what));
   },
 });
 function getFightEvent(ev: Ev) {
@@ -190,7 +192,7 @@ function uruEnchantedCards(ev: Ev) {
   return turnState.pastEvents.filter(e => e.type === 'URUENCHANTEDREVEAL' && getFightEvent(e) === getFightEvent(ev)).map(e => e.what);
 }
 const uruEnchantedFail = (ev: Ev) => {
-  addTurnSet('fightCost', undefined, (c, prev) => ({ ...prev, cond: () => false }));
+  addTurnSet('fightCost', () => true, (c, prev) => ({ ...prev, cond: () => false }));
   pushEffects(ev, ev.what, 'fight', ev.what.fight);
 };
 function demolishOtherEv(ev: Ev) { demolishEv(ev, p => p !== playerState ); }
