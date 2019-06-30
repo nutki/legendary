@@ -1940,7 +1940,7 @@ addHeroTemplates("Fear Itself", [
 // <b>Thrown Artifact</b>
 // When you throw this, you get +2 Attack for each [Strength] Ally you played this turn.
 // COST: 4
-  c2: makeHeroCard("Nul, Breaker of Worlds", "Otherworldly Mace", 4, u, u, Color.INSTINCT, "Foes of Asgard", "D", ev => {
+  c2: makeHeroCard("Nul, Breaker of Worlds", "Otherworldly Maul", 4, u, u, Color.INSTINCT, "Foes of Asgard", "D", ev => {
     addAttackEvent(ev, 2 * superPower(Color.STRENGTH));
   }, {
     isArtifact: true,
@@ -1995,7 +1995,7 @@ addHeroTemplates("Fear Itself", [
 // COST: 3
 // FLAVOR: It's easy to look up to a leader like Skirn. About 50 feet up.
   c1: makeHeroCard("Skirn, Breaker of Men", "Towering Leader", 3, u, u, Color.INSTINCT, "Foes of Asgard", "F", ev => {
-    repeat(superPower(Color.INSTINCT) ? 3 : 2, () => gameState.newRecruit.withTop(c => gainEv(ev, c)));
+    repeat(superPower(Color.INSTINCT) ? 3 : 2, () => cont(ev, () => gameState.newRecruit.withTop(c => gainEv(ev, c))));
   }),
 // ATTACK: 2
 // Look at the bottom card of your deck. Discard it or put it back.
