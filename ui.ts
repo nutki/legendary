@@ -129,7 +129,6 @@ function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name'
   });
   document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
   values.forEach((name, i) => {
-    console.log(id, name);
     makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.templateId === name);
   });
 }
@@ -152,7 +151,6 @@ function getBystanderSelects(id: string) {
 }
 function setBysternderSelects(id: string, value: string[]) {
   [...document.getElementById(id).getElementsByTagName('input')].each(e => {
-    console.log(value);
     e.checked = value.includes(e.getAttribute('data-set'));
   })
 }
@@ -169,12 +167,8 @@ function setupChange(): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
   const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
-  console.log(pel.value, pel.selectedIndex);
-  console.log(sel.value, sel.selectedIndex);
-  console.log(mel.value, mel.selectedIndex);
   if (!sel.value || !mel.value) return;
   const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
-  console.log(tmp);
   makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
   makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
@@ -191,7 +185,6 @@ function setupChange(): void {
   tmp.handType = (<HTMLInputElement>document.getElementById('handType')).value === 'HYDRA' ? 'HYDRA' : 'SHIELD';
   tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
   tmp.withShards = true;
-  console.log(tmp, s1, s2, s3);
   globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
 }
 function setupInit(): void {
