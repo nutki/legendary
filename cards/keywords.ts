@@ -239,9 +239,8 @@ function xdRampageEv(ev: Ev, name: string) {
 function isSidekick(c: Card) { return c.cardName === 'Sidekick'; }
 function gainSidekickEv(ev: Ev) { cont(ev, () => gameState.sidekick.withTop(c => gainEv(ev, c))); }
 function recruitSidekickActionEv(ev: Ev, what: Card) {
-  const cost = getRecruitCost(what);
-  cost.cond = () => countPerTurn('recruitSidekick') === 0;
-  return new Ev(ev, 'RECRUIT', { what, func: ev => { incPerTurn('recruitSidekick'); buyCard(ev); }, cost });
+  const cost = getRecruitCost(what, () => limitPerTurn(e => e.type === 'RECRUIT' && isSidekick(e.what)));
+  return new Ev(ev, 'RECRUIT', { what, where: what.location, func: ev => buyCard(ev), cost });
 }
 
 function ascendToMastermind(ev: Ev) {

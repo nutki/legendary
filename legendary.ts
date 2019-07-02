@@ -1358,8 +1358,8 @@ interface ActionCost {
   either?: number;
   cond?: (c: Card) => boolean;
 }
-function getRecruitCost(c: Card): ActionCost {
-  return getModifiedStat(c, 'recruitCost', { recruit: c.cost });
+function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
+  return getModifiedStat(c, 'recruitCost', { recruit: c.cost, cond });
 }
 function getFightCost(c: Card): ActionCost {
   return getModifiedStat(c, 'fightCost', (c.bribe ? { either: c.defense, cond: c.fightCond } : { attack: c.defense, cond: c.fightCond }));
@@ -1443,6 +1443,9 @@ function incPerTurn(key: string, c?: Card) {
   if (!turnState.perTurn) turnState.perTurn = new Map();
   turnState.perTurn.set(key, prev + 1);
   return prev;
+}
+function limitPerTurn(f: (ev: Ev) => boolean, n: number = 1) {
+  return turnState.pastEvents.count(f) < n;
 }
 function canHeal(c: Card): boolean {
   if (!c.isHealable()) return false;
@@ -1730,8 +1733,8 @@ function pickTopDeckEv(ev: Ev, who?: Player, agent?: Player) {
 }
 function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
-  if (src.size === 1) moveCardEv(ev, src.top, dst);
-  else selectCardEv(ev, "Choose a card to put back", src.deck, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst); }, agent);
+  if (src.size === 1) moveCardEv(ev, src.top, dst, bottom);
+  else selectCardEv(ev, "Choose a card to put back", src.deck, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst, bottom, agent); }, agent);
 };
 function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
