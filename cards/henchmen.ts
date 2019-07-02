@@ -76,7 +76,7 @@ makeHenchmenCard("Ghost Racers", 3, {
 // FIGHT: KO a Hero from your discard pile or the HQ. If that Hero has a Recruit icon, you get +1 Recruit.
 // ATTACK: 3
 makeHenchmenCard("M.O.D.O.K.s", 3, {
-  fight: ev => selectCardEv(ev, "Choose a card to KO", [...HQCards().limit(isHero), ...playerState.discard.deck], c => { KOEv(ev, c); hasRecruitIcon(c) && addRecruitEvent(ev, 1); }),
+  fight: ev => selectCardEv(ev, "Choose a card to KO", [...hqHeroes(), ...playerState.discard.deck], c => { KOEv(ev, c); hasRecruitIcon(c) && addRecruitEvent(ev, 1); }),
 }),
 // FIGHT: Gain this as a Hero.
 // ATTACK: 3

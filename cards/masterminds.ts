@@ -6,7 +6,7 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
 }, [
   // You may recruit a [Tech] or [Ranged] Hero from the HQ for free.
   [ "Dark Technology", ev => {
-    selectCardEv(ev, "Recruit a Hero for free", HQCards().limit(Color.TECH | Color.RANGED), sel => recruitForFreeEv(ev, sel));
+    selectCardEv(ev, "Recruit a Hero for free", hqHeroes().limit(Color.TECH | Color.RANGED), sel => recruitForFreeEv(ev, sel));
   } ],
   // Choose one: each other player draws a card or each other player discards a card.
   [ "Monarch's Decree", ev => {
@@ -27,7 +27,7 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
   eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p));
 }, [
   // Defeat a Villain in the City for free.
-  [ "Cruel Ruler", ev => selectCardEv(ev, "Defeat a Villain", CityCards().limit(isVillain), sel => defeatEv(ev, sel)) ],
+  [ "Cruel Ruler", ev => selectCardEv(ev, "Defeat a Villain", cityVillains(), sel => defeatEv(ev, sel)) ],
   // KO up to four cards from your discard pile.
   [ "Maniacal Tyrant", ev => selectObjectsUpToEv(ev, "KO up to 4 cards", 4, playerState.discard.deck, sel => KOEv(ev, sel)) ],
   // Each other player KOs a Villain from their Victory Pile.
@@ -40,7 +40,7 @@ makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
   eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 4, p.hand.deck, sel => discardEv(ev, sel), p), p));
 }, [
   // Recruit an X-Men Hero from the HQ for free.
-  [ "Bitter Captor", ev => selectCardEv(ev, "Recruit an X-Men for free", HQCards().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],
+  [ "Bitter Captor", ev => selectCardEv(ev, "Recruit an X-Men for free", hqHeroes().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],
   // Each other player reveals an X-Men Hero or gains two Wounds.
   [ "Crushing Shockwave", ev => {
     eachOtherPlayerVM(p => revealOrEv(ev, 'X-Men', () => { gainWoundEv(ev, p); gainWoundEv(ev, p); }, p));
@@ -164,7 +164,7 @@ makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
 }, [
   [ "Human Experimentation", ev => {
   // Mr. Sinister captures Bystanders equal to the number of Villains in the city.
-    captureEv(ev, ev.source.mastermind, CityCards().count(isVillain));
+    captureEv(ev, ev.source.mastermind, cityVillains().size);
   } ],
   [ "Master Geneticist", ev => {
   // Reveal the top seven cards of the Villain Deck. Mr. Sinister captures all of the Bystanders you revealed. Put the rest back in random order.
@@ -242,14 +242,14 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
   } ],
   [ "Sunder the Earth", ev => {
   // Each other player KOs all Heroes from their discard pile with the same card name as a Hero in the HQ.
-    const hqNames = HQCards().limit(isHero).map(c => c.cardName);
+    const hqNames = hqHeroes().map(c => c.cardName);
     eachOtherPlayerVM(p => p.discard.limit(isHero).limit(c => hqNames.includes(c.cardName)).each(c => KOEv(ev, c)));
   } ],
 ]),
 // Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
 makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
 // All Subterranea Villains in the city escape. If any Villains escaped this way, each player gains a Wound.
-  const villains = CityCards().limit(c => c.villainGroup === ev.source.leads);
+  const villains = cityVillains().limit(isGroup(ev.source.leads));
   villains.each(c => villainEscapeEv(ev, c));
   villains.size && eachPlayer(p => gainWoundEv(ev, p));
 }, [
@@ -407,13 +407,13 @@ makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
     eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => repeat(gameState.escaped.count(c => c.villainGroup === ev.source.mastermind.leads), () => pickDiscardEv(ev, p)), p));
   } ],
 ], {
-  varDefense: c => c.printedDefense + CityCards().count(v => v.villainGroup === c.leads) + gameState.escaped.count(v => v.villainGroup === c.leads),
+  varDefense: c => c.printedDefense + cityVillains().count(isGroup(c.leads)) + gameState.escaped.count(isGroup(c.leads)),
 }),
 makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
 // Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
   const selected: Card[] = [];
   selectCardEv(ev, "Select an Ally", HQCardsHighestCost(), c => selected.push(c));
-  cont(ev, () => selectCardEv(ev, "Select another Ally", HQCards().limit(isHero).limit(c => !selected.includes(c)).highest(c => c.cost), c => selected.push(c)));
+  cont(ev, () => selectCardEv(ev, "Select another Ally", hqHeroes().limit(c => !selected.includes(c)).highest(c => c.cost), c => selected.push(c)));
   cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, c, ev.source, "PAWN")));
   cont(ev, () => selected.each(c => attachCardEv(ev, c, ev.source, "PAWN")));
 }, [
@@ -451,7 +451,7 @@ makeMastermindCard("Supreme Intelligence of the Kree", 9, 6, "Kree Starforce", e
 }, [
   [ "Combined Knowledge of All Kree", ev => {
   // The Supreme Intelligence gains a Shard for each Kree Villain in the city and/or the Escape Pile.
-    attachShardEv(ev, ev.source.mastermind, CityCards().count(isGroup(ev.source.mastermind.leads)) + gameState.escaped.count(isGroup(ev.source.mastermind.leads)));
+    attachShardEv(ev, ev.source.mastermind, cityVillains().count(isGroup(ev.source.mastermind.leads)) + gameState.escaped.count(isGroup(ev.source.mastermind.leads)));
   } ],
   [ "Cosmic Omniscience", ev => {
   // The Supreme Intelligence gains a Shard for each Master Strike in the KO pile.
@@ -464,7 +464,7 @@ makeMastermindCard("Supreme Intelligence of the Kree", 9, 6, "Kree Starforce", e
   [ "Guide Kree Evolution", ev => {
   // The Supreme Intelligence and Kree Villains in the city each gain a Shard.
     attachShardEv(ev, ev.source.mastermind);
-    CityCards().limit(isGroup(ev.source.mastermind.leads)).each(c => attachShardEv(ev, c));
+    cityVillains().limit(isGroup(ev.source.mastermind.leads)).each(c => attachShardEv(ev, c));
   } ],
 ]),
 // Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any player.
@@ -544,7 +544,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
   } ],
   [ "Gather the Harvest", ev => {
   // For each Limbo Villain in the city and/or Escape Pile, Madelyne captures a Bystander.
-    captureEv(ev, ev.source, [...CityCards(), ...gameState.escaped.deck].count(c => c.villainGroup === ev.source.leads));
+    captureEv(ev, ev.source, [...cityVillains(), ...gameState.escaped.deck].count(isGroup(ev.source.leads)));
   } ],
 ], {
   fightCond: c => !c.captured.has(isBystander),
@@ -580,7 +580,7 @@ makeMastermindCard("Nimrod, Super Sentinel", 6, 6, "Sentinel Territories", ev =>
   [ "Scatter the Mutants", ev => {
   // Choose Recruit or Attack. Put all Heroes from the HQ with that icon on the bottom of the Hero Deck.
     chooseOptionEv(ev, "Choose", [{l:"Recruit", v:hasRecruitIcon}, {l:"Attack", v:hasAttackIcon}], f => {
-      HQCards().limit(isHero).limit(f).each(c => moveCardEv(ev, c, gameState.herodeck, true));
+      hqHeroes().limit(f).each(c => moveCardEv(ev, c, gameState.herodeck, true));
     });
   } ],
   [ "Teleport and Incarcerate", ev => {
@@ -611,7 +611,7 @@ makeMastermindCard("Wasteland Hulk", 7, 6, "Wasteland", ev => {
   } ],
   [ "Revert to Bruce Banner", ev => {
   // You gain a [Tech] Hero from the HQ for free.
-    selectCardEv(ev, "Choose a Hero to gain", HQCards().limit(isHero).limit(Color.TECH), c => gainEv(ev, c));
+    selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(Color.TECH), c => gainEv(ev, c));
   } ],
 ], {
   varDefense: m => m.printedDefense + 3 * gameState.players.sum(p => p.victory.limit(isTactic).count(c => c.mastermind === m)),
@@ -620,18 +620,18 @@ makeMastermindCard("Wasteland Hulk", 7, 6, "Wasteland", ev => {
 makeMastermindCard("Zombie Green Goblin", 11, 6, "The Deadlands", ev => {
 // Rise of the Living Dead. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
   raiseOfTheLivingDead(ev);
-  HQCards().limit(isHero).limit(c => c.cost >= 7).each(c => KOEv(ev, c));
+  hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c));
   cont(ev, () => eachPlayer(p => selectObjectsEv(ev, "Choose cards to discard", gameState.ko.limit(isHero).count(c => c.cost >= 7), p.hand.deck, c => discardEv(ev, c), p)));
 }, [
   [ "Army of Cadavers", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "Rise of the Living Dead."
     raiseOfTheLivingDead(ev);
-    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", CityCards().count(c => c.ambush === raiseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
+    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", cityVillains().count(c => c.ambush === raiseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
   } ],
   [ "The Hungry Dead", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "Rise of the Living Dead".
     raiseOfTheLivingDead(ev);
-    cont(ev, () => CityCards().has(c => c.ambush === raiseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
+    cont(ev, () => cityVillains().has(c => c.ambush === raiseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
   } ],
   [ "Love To Have You For Dinner", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
@@ -641,7 +641,7 @@ makeMastermindCard("Zombie Green Goblin", 11, 6, "The Deadlands", ev => {
   [ "Reign of Terror", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
     raiseOfTheLivingDead(ev);
-    cont(ev, () => HQCards().limit(isHero).limit(c => c.cost <= 6).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
+    cont(ev, () => hqHeroes().limit(c => c.cost <= 6).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
   } ],
 ], {
   varDefense: c => c.printedDefense + gameState.ko.limit(isHero).count(c => c.cost >= 7),

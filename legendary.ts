@@ -317,6 +317,8 @@ class Deck {
   next?: Deck
   below?: Deck
   above?: Deck
+  adjacentLeft?: Deck
+  adjacentRight?: Deck
   attachedTo?: Deck | Card
   revealed?: Deck
   constructor(name: string, faceup?: boolean) {
@@ -616,6 +618,7 @@ function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev
 }
 
 interface Player {
+  nr: number
   name: string
   deck: Deck
   discard: Deck
@@ -669,6 +672,7 @@ interface SetupParams {
   bindings?: number[] | number,
   shards?: number[] | number,
   required?: { heroes?: string | string[], villains?: string | string[], henchmen?:string | string[] },
+  extra_masterminds?: number[] | number,
 }
 interface Game extends Ev {
   gameRand: RNG
@@ -789,7 +793,7 @@ const exampleGameSetup: Setup = {
   heroes: [ "Black Widow", "Deadpool", "Iron Man", "Spider-Man", "Thor" ],
 */
   scheme: "Midtown Bank Robbery",
-  mastermind: "Magneto",
+  mastermind: [ "Magneto" ],
   henchmen: ["Sentinel"],
   villains: ["Skrulls"],
   heroes: [ "Black Widow", "Deadpool", "Wolverine" ],
@@ -852,7 +856,7 @@ const textLog = {
 interface Setup {
   numPlayers: number,
   scheme: string,
-  mastermind: string
+  mastermind: string[]
   henchmen: string[]
   villains: string[]
   heroes: string[]
@@ -883,6 +887,7 @@ function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_cou
     wounds: 30,
     bindings: 30,
     shards: 60,
+    extra_masterminds: 0,
   };
   let r = name in s.params ? s.params[name] : defaults[name];
   return r instanceof Array ? r[numPlayers - 1] : r;
@@ -896,7 +901,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   let setup: Setup = {
     numPlayers,
     scheme: schemeName,
-    mastermind: mastermindName,
+    mastermind: [],
     henchmen: [],
     villains: [],
     heroes: [],
@@ -923,6 +928,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
   setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
   setup.henchmen = Array(getHenchmenCounts(scheme, numPlayers).length).fill(undefined);
+  setup.mastermind = Array(1 + getParam('extra_masterminds', scheme, numPlayers)).fill(undefined);
   if (numPlayers > 1) {
     const leads = mastermind.leads;
     if (findVillainTemplate(leads)) setRequired('villains', leads);
@@ -944,6 +950,7 @@ eventQueue = [];
 eventQueueNew = [];
 turnState = undefined;
 playerState = {
+  nr: 0,
   name: "Player 1",
   deck: new Deck('DECK0'),
   discard: new Deck('DISCARD0', true),
@@ -1015,8 +1022,8 @@ gameState = {
     },
     { // Win by defeating masterminds
       event: "DEFEAT",
-      match: function (ev) { return ev.what.location === gameState.mastermind; },
-      after: function (ev) { if (!gameState.mastermind.has(c => !c.tacticsTemplates || c.attached("TACTICS").size > 0)) gameOverEv(ev, "WIN"); },
+      match: ev => isMastermind(ev.what),
+      after: ev => fightableCards().has(isMastermind) || gameOverEv(ev, "WIN"),
     },
     { // Loss by villain deck or hero deck running out
       event: "CLEANUP",
@@ -1052,6 +1059,7 @@ for (let i = 0; i < 5; i++) {
   gameState.hq[i].isHQ = true;
   if (i) gameState.city[i].next = gameState.city[i - 1];
 }
+makeCityAdjacent(gameState.city);
 
 // Init Scheme
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
@@ -1094,16 +1102,16 @@ for (let i = 0; i < getParam('vd_bystanders'); i++)
   moveCard(gameState.bystanders.top, gameState.villaindeck);
 gameState.villaindeck.shuffle();
 // Init Mastermind
-{
-  let mastermind = gameState.mastermind.addNewCard(findMastermindTemplate(gameSetup.mastermind));
+gameSetup.mastermind.forEach((m, i) => {
+  let mastermind = gameState.mastermind.addNewCard(findMastermindTemplate(m));
   let tactics = gameState.mastermind.top.attachedDeck('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
   tactics.each(t => t.mastermind = gameState.mastermind.top);
-    if (gameState.players.size === 1 &&
+    if (i === 0 && gameState.players.size === 1 &&
       !gameSetup.villains.includes(mastermind.leads) &&
       !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
-}
+});
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
@@ -1117,7 +1125,7 @@ function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
 function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardType === "HERO" || (c.gainable && owner(c) !== undefined && !c.isArtifact)); }
 function isNonGrayHero(c: Card) { return isHero(c) && !isColor(Color.GRAY)(c); }
 function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN" && (!c.gainable || !owner(c))); }
-function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND"; }
+function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND" || c.location === gameState.mastermind; }
 function isTactic(c: Card): boolean { return getModifiedStat(c, 'isTactic', c.cardType === "TACTICS"); }
 function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }
 function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
@@ -1138,7 +1146,12 @@ function hasFlag(flag: 'N' | 'D' | 'G' | 'F') { return (c: Card) => c.flags && c
 function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("HYDRA")(c); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isFightable(c: Card): boolean {
-  return getModifiedStat(c, 'isFightable', c.location.isCity);
+  const res = isVillain(c) ?
+    c.location.isCity || c.location === gameState.mastermind :
+    isMastermind(c) ?
+      c.location === gameState.mastermind && c.attachedDeck('TACTICS').size > 0 :
+      false;
+  return getModifiedStat(c, 'isFightable', res);
 }
 function limit(cards: Card[], cond: Filter<Card>): Card[] {
   if (cards instanceof Deck) throw new TypeError();
@@ -1171,23 +1184,23 @@ function soloVP(): number {
 function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
 }
-function FightableCards(): Card[] {
-  return [...CityCards(), ...HQCards(), gameState.villaindeck.top].filter(c => c && isFightable(c));
+function fightableCards(): Card[] {
+  return [...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck].filter(c => c && isFightable(c));
 }
 function heroBelow(c: Card) {
   return c.location && c.location.above ? c.location.above.limit(isHero) : [];
 }
-function HQCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
+function hqCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
+function hqHeroes() { return hqCards().limit(isHero); }
 function CityCards(): Card[] { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
-function cityAdjecent(l: Deck): Deck[] {
-  let pos = gameState.city.indexOf(l);
-  let ret: Deck[] = [];
-  if (!l.isCity || pos < 0) return ret;
-  let c1 = gameState.city[pos - 1];
-  let c2 = gameState.city[pos + 1];
-  if (c1 && c1.isCity) ret.push(c1);
-  if (c2 && c2.isCity) ret.push(c2);
-  return ret;
+function cityAdjacent(l: Deck): Deck[] {
+  return [l.adjacentLeft, l.adjacentRight].limit(d => d && d.isCity);
+}
+function makeCityAdjacent(city: Deck[], s: number = 0, e: number = city.length) {
+  for (let i = s; i < e; i++) {
+    if (i > s) city[i].adjacentLeft = city[i - 1];
+    if (i < e - 1) city[i].adjacentRight = city[i + 1];
+  }
 }
 function destroyCity(space: Deck) {
   gameState.city = gameState.city.filter(d => d !== space);
@@ -1207,16 +1220,16 @@ function destroyHQ(space: Deck) {
   space.isHQ = false;
 }
 function HQCardsHighestCost(): Card[] {
-  return HQCards().limit(isHero).highest(c => c.cost);
-}
-function villainOrMastermind(): Card[] {
-  return villains().concat(gameState.mastermind.deck);
+  return hqHeroes().highest(c => c.cost);
 }
 function villains(): Card[] {
+  return fightableCards().limit(isVillain);
+}
+function cityVillains(): Card[] {
   return CityCards().limit(isVillain);
 }
-function villainIn(where: CityLocation): Card[] {
-  return CityCards().limit(isVillain).limit(c => c.location.id === where);
+function villainIn(...where: CityLocation[]): Card[] {
+  return cityVillains().limit(c => where.has(l => l === c.location.id));
 }
 function withCity(where: CityLocation, f: (d: Deck) => void) {
   gameState.city.limit(e => e.id === where).each(f);
@@ -1414,7 +1427,7 @@ function noOpActionEv(ev: Ev) {
   return new Ev(ev, 'NOOP', { func: () => {}, cost: { cond: () => false }});
 }
 function recruitCardActionEv(ev: Ev, c: Card) {
-  return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, cost: getRecruitCost(c) });
+  return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, where: c.location, cost: getRecruitCost(c) });
 }
 function fightActionEv(ev: Ev, what: Card) {
   return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: getFightCost(what), failFunc: what.fightFail });
@@ -1455,21 +1468,19 @@ function getActions(ev: Ev): Ev[] {
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   // TODO any deck with recruitable
-  p = p.concat(HQCards().limit(isHero).map(d => recruitCardActionEv(ev, d)));
+  p = p.concat(hqHeroes().map(d => recruitCardActionEv(ev, d)));
   // TODO any deck with fightable
-  p = p.concat(FightableCards().map(d => fightActionEv(ev, d)));
-  gameState.mastermind.each(c => c.attached('TACTICS').size && p.push(fightActionEv(ev, c)))
+  p = p.concat(fightableCards().map(d => fightActionEv(ev, d)));
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
   gameState.sidekick.withTop(c => p.push(recruitSidekickActionEv(ev, c)));
   gameState.madame.withTop(c => p.push(recruitCardActionEv(ev, c)));
   gameState.newRecruit.withTop(c => p.push(recruitCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
-  FightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  fightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p.push(useShardActionEv(ev));
   playerState.artifact.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   playerState.hand.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
-  gameState.mastermind.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
@@ -1516,10 +1527,15 @@ function swapCardsEv(ev: Ev, p1: (Card | Deck), p2: (Card | Deck)) {
     if (what2) moveCard(what2, where1);
   });
 }
+function swapDecks(d1: Deck, d2: Deck) {
+  const tmp = d1.deck;
+  d1.deck = d2.deck;
+  d2.deck = tmp;
+}
 function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedDeck(name)); }
 function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
-  pushEv(ev, "RECRUIT", { func: buyCard, what: card });
+  pushEv(ev, "RECRUIT", { func: buyCard, what: card, where: card.location });
 }
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
@@ -1544,12 +1560,22 @@ function schemeProgressEv(ev: Ev, amount: number) {
     if (amount === 0) evilWinsEv(ev);
   });
 }
-function escapeProgressTrigger(f: Filter<Card>, max: number): Trigger {
+function _ProgressTrigger(f: Filter<Card>, escaped: boolean, ko: boolean, max: number, perPlayer: boolean): Trigger {
   return ({
     event: "MOVECARD",
-    match: ev => ev.to === gameState.escaped,
-    after: ev => schemeProgressEv(ev, max - gameState.escaped.count(f))
+    match: ev => escaped && ev.to === gameState.escaped || ko && ev.to === gameState.ko,
+    after: ev => schemeProgressEv(ev, (perPlayer ? max * gameState.players.size : max) - (escaped ? gameState.escaped.count(f) : 0) - (ko ? gameState.ko.count(f) : 0)),
   });
+}
+function escapeProgressTrigger(f: Filter<Card>, max: number, perPlayer: boolean = false) { return _ProgressTrigger(f, true, false, max, perPlayer); }
+function koProgressTrigger(f: Filter<Card>, max: number, perPlayer: boolean = false) { return _ProgressTrigger(f, false, true, max, perPlayer); }
+function koOrEscapeProgressTrigger(f: Filter<Card>, max: number, perPlayer: boolean = false) { return _ProgressTrigger(f, true, true, max, perPlayer); }
+function runOutProgressTrigger(d: string): Trigger {
+  return ({
+    event: "MOVECARD",
+    match: ev => ev.from.id === d,
+    after: ev => schemeProgressEv(ev, ev.parent.from.size),
+  })
 }
 function runOutEv(ev: Ev, deck: string) { pushEv(ev, "RUNOUT", { deckName: deck, func: () => {} }); }
 function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {
@@ -1688,7 +1714,8 @@ function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
   );
 }
 function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {
-  selectCardEv(ev, "Choose Mastermind", real ? gameState.mastermind.limit(isMastermind) : gameState.mastermind.deck, effect);
+  const options = fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
+  options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);
 }
 function pickDiscardEv(ev: Ev, who?: Player, agent?: Player) {
   who = who || playerState;
@@ -1855,8 +1882,8 @@ function playTwist(ev: Ev): void {
   let e = pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
   cont(ev, () => {
     if (gameState.players.length === 1) {
-      if (gameState.advancedSolo) selectCardEv(ev, "Choose a card to put on the bottom of the Hero deck", HQCards().limit(c => c.cost <= 6), sel => moveCardEv(ev, sel, gameState.herodeck, true));
-      else selectCardAndKOEv(ev, HQCards().limit(c => c.cost <= 6));
+      if (gameState.advancedSolo) selectCardEv(ev, "Choose a card to put on the bottom of the Hero deck", hqHeroes().limit(c => c.cost <= 6), sel => moveCardEv(ev, sel, gameState.herodeck, true));
+      else selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
     }
     if (e.another) villainDrawEv(e);
   });
@@ -1865,7 +1892,7 @@ function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStr
 function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
-  gameState.mastermind.each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike, what: ev.what }));
+  fightableCards().limit(isMastermind).each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike, what: ev.what }));
 }
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
@@ -1884,12 +1911,12 @@ function villainDraw(ev: Ev): void {
   } else if (c.cardType === "BYSTANDER" || c.cardType === "HERO") { // only X-Cutioner's Song puts non villain heroes in the Villain Deck
     let i = gameState.cityEntry;
     while (i && !i.size) i = i.next;
-    if (!i) i = gameState.mastermind;
-    if (!i.top) { // no mastermind?
-      moveCardEv(ev, c, gameState.ko);
-    } else {
+    if (i) {
       captureEv(ev, i.top, c);
-      // TODO select mastermind in case of multiple
+    } else if (fightableCards().has(isMastermind)) {
+      withMastermind(ev, m => captureEv(ev, m, c));
+    } else { // no mastermind?
+      moveCardEv(ev, c, gameState.ko);
     }
   } else {
     throw Error("dont know what to do with: " + c.id);
@@ -1901,13 +1928,13 @@ function villainEscape(ev: Ev): void {
   let b = c.captured;
   gameState.villainsEscaped++;
   // Handle GotG shards
-  c.attached('SHARD').withFirst(c => attachShardEv(ev, gameState.mastermind.top, c));
+  c.attached('SHARD').withFirst(c => withMastermind(ev, m => attachShardEv(ev, m, c)));
   cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   gameState.bystandersCarried += b.count(isBystander);
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, p));
   moveCardEv(ev, c, gameState.escaped);
-  selectCardAndKOEv(ev, HQCards().limit(c => c.cost <= 6));
+  selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
   pushEffects(ev, c, "escape", c.escape);
 }
 function villainFight(ev: Ev): void {
@@ -1968,7 +1995,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
   gameState.mastermind.each(checkCardTrigger);
   playerState.hand.each(checkCardTrigger);
   CityCards().each(checkCardTrigger);
-  HQCards().each(checkCardTrigger);
+  hqCards().each(checkCardTrigger);
   // TODO check other active locations (villain/hero deck top for example)
   playerState.artifact.each(checkCardTrigger);
   // TODO other player's hand triggers
@@ -2168,12 +2195,15 @@ remodel triggers to attach on resolution not queuing?
 count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
-TODO SW1 mastermind selection
+rename lookAtDeck to revealPlayerDeck where applicable
+redo scheme triggers to functions
+split schemeProgress and schemeTarget
 TODO SW1 extra masterminds setup params
 TODO SW1 fight card placement order
-TODO SW1 escape card special location
-TODO SW1 (scheme) entry selection
+TODO SW1 escape card special location (also to check which bystanders were carried)
+TODO SW1 render city dynamically
 TODO SW1 make cardAction allow functions returning multiple actions
+TODO SW1 addFutureTrigger
 TODO SW2 make scheme card position independent
 copy artifact should not count as cards played
 

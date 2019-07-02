@@ -87,7 +87,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
 // Single player based on https://boardgamegeek.com/thread/1127095/single-player-superhero-civil-war
 makeSchemeCard("Super Hero Civil War", { twists: [ 8, 8, 8, 5, 5 ], heroes: [ 4, 4, 5, 5, 6 ]}, ev => {
   // Twist: KO all the Heroes in the HQ.
-  HQCards().limit(isHero).each(c => KOEv(ev, c));
+  hqHeroes().each(c => KOEv(ev, c));
 }, {
   event: "RUNOUT",
   match: ev => ev.deckName === "HERO",
@@ -121,7 +121,7 @@ makeSchemeCard<{hope: Card}>("Capture Baby Hope", { twists: 8 }, ev => {
     attachCardEv(ev, ev.twist, gameState.mastermind, "TWIST");
     attachCardEv(ev, hope, gameState.scheme, "BABYHOPE");
     cont(ev, () => schemeProgressEv(ev, 3 - gameState.mastermind.attached("TWIST").size));
-  } else CityCards().limit(isVillain).withLast(v => captureEv(ev, v, hope));
+  } else cityVillains().withLast(v => captureEv(ev, v, hope));
 }, [], (s) => {
   const hopeTemplate = new Card("BABYHOPE", "Baby Hope");
   hopeTemplate.varVP = () => 6;
@@ -137,7 +137,7 @@ makeSchemeCard<{hope: Card}>("Capture Baby Hope", { twists: 8 }, ev => {
 makeSchemeCard("Detonate the Helicarrier", { twists: 8, heroes: 6 }, ev => {
   // Twist: Stack this Twist next to the Scheme. Then for each Twist in that stack, KO the leftmost Hero in the HQ and immediately refill that space.
   attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
-  repeat(ev.nr, () => cont(ev, () => HQCards().limit(isHero).withFirst(c => KOEv(ev, c))));
+  repeat(ev.nr, () => cont(ev, () => hqHeroes().withFirst(c => KOEv(ev, c))));
 }, [{
   event: "KO",
   match: ev => ev.what.location.isHQ,
@@ -172,7 +172,7 @@ makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
 // EVILWINS: When 5 Goons escape.
 makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: "Maggia Goons" } }, ev => {
   // Twist: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
-  CityCards().limit(ev.state.isGoon).each(c => villainEscapeEv(ev, c));
+  cityVillains().limit(ev.state.isGoon).each(c => villainEscapeEv(ev, c));
   eachPlayer(p => p.victory.limit(ev.state.isGoon).each(c => moveCardEv(ev, c, gameState.villaindeck)));
   cont(ev, () => gameState.villaindeck.shuffle());
 }, {
@@ -188,7 +188,7 @@ makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists:
 // EVILWINS: When the number of Bystanders KO'd and/or carried off is 4 times the number of players.
 makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
   // Twist: KO all Bystanders in the HQ. Then each player reveals an [Instinct] Hero or KOs a Bystander from their Victory Pile.
-  HQCards().limit(isBystander).each(c => KOEv(ev, c));
+  hqCards().limit(isBystander).each(c => KOEv(ev, c));
   eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardAndKOEv(ev, p.victory.limit(isBystander), p), p));
 }, [{
   event: "MOVECARD",
@@ -198,7 +198,7 @@ makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
   repeat(gameState.players.size === 1 ? 12 : 24, () => moveCard(gameState.bystanders.top, gameState.herodeck));
   gameState.herodeck.shuffle();
   gameState.specialActions = (ev) => {
-    return HQCards().limit(isBystander).map(c => new Ev(ev, "PAYTORESCUE", { what: c, cost: { recruit: 2 }, func: ev => rescueEv(ev, ev.what) }));
+    return hqCards().limit(isBystander).map(c => new Ev(ev, "PAYTORESCUE", { what: c, cost: { recruit: 2 }, func: ev => rescueEv(ev, ev.what) }));
   };
 }),
 // SETUP: 8 Twists representing Plutonium. Add an extra Villain Group.
@@ -206,7 +206,7 @@ makeSchemeCard("Save Humanity", { twists: 8 }, ev => {
 // EVILWINS: When 4 Plutonium have been carried off by Villains.
 makeSchemeCard("Steal the Weaponized Plutonium", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
   // Twist: This Plutonium is captured by the closest Villain to the Villain Deck. If there are no Villains in the city, KO this Plutonium. Either way, play another card from the Villain Deck.
-  CityCards().limit(isVillain).withLast(v => captureEv(ev, v, ev.twist));
+  cityVillains().withLast(v => captureEv(ev, v, ev.twist));
   villainDrawEv(ev);
 }, [{
   event: "ESCAPE",
@@ -250,7 +250,7 @@ makeSchemeCard<{isGoblinQueen: (c: Card) => boolean}>("Transform Citizens Into D
 // EVILWINS: 9 non grey Heroes are KO'd or carried off.
 makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 6, 6, 6, 7 ]  }, ev => {
   // Twist: KO all Heroes captured by enemies. Then play another card from the Villain Deck.
-  villainOrMastermind().each(e => e.captured.limit(isHero).each(h => KOEv(ev, h)));
+  fightableCards().each(e => e.captured.limit(isHero).each(h => KOEv(ev, h)));
   villainDrawEv(ev);
 }, [{
   event: "ESCAPE",
@@ -272,7 +272,7 @@ makeSchemeCard("Bathe the Earth in Cosmic Rays", { twists: 6 }, ev => {
   // Twist: Each player in turn does the following: Reveal your hand. KO one of your non-grey Heroes. Choose a Hero from the HQ with the same or lower cost and put it into your hand.
   eachPlayer(p => selectCardEv(ev, "Select non-grey Hero", p.hand.limit(isNonGrayHero), c => {
     KOEv(ev, c);
-    selectCardEv(ev, "Select hero to put in hand", HQCards().limit(h => h.cost <= c.cost), c => moveCardEv(ev, c, p.hand), p);
+    selectCardEv(ev, "Select hero to put in hand", hqHeroes().limit(h => h.cost <= c.cost), c => moveCardEv(ev, c, p.hand), p);
   }, p))
 }, [{
   event: "MOVECARD",
@@ -286,7 +286,7 @@ makeSchemeCard("Flood the Planet with Melted Glaciers", { twists: 8 }, ev => {
   attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
   cont(ev, () => {
     const waterLevel = gameState.scheme.attached("TWIST").size;
-    HQCards().limit(isHero).limit(c => c.cost <= waterLevel).each(c => KOEv(ev, c));
+    hqHeroes().limit(c => c.cost <= waterLevel).each(c => KOEv(ev, c));
   });
 }, [{
   event: "MOVECARD",
@@ -348,14 +348,14 @@ makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen_counts
   // Twist: KO a Hero from the HQ. Put the highest-Attack Villain from the city into that HQ space.
   let space: Deck;
   addTurnTrigger('MOVECARD', ev => space && ev.to === space && ev.from === gameState.herodeck, { replace: ev => {
-    selectCardEv(ev, "", CityCards().limit(isVillain), c => moveCardEv(ev, c, space)); // TODO highest attack
+    selectCardEv(ev, "Choose a highest cost Villain", cityVillains().highest(c => c.defense), c => moveCardEv(ev, c, space));
   }});
-  selectCardEv(ev, "Select a Hero to KO", HQCards().limit(isHero), c => { KOEv(ev, c); space = c.location; });  
+  selectCardEv(ev, "Select a Hero to KO", hqHeroes(), c => { KOEv(ev, c); space = c.location; });  
   cont(ev, () => space = undefined);
 }, {
   event: 'MOVECARD',
   match: ev => ev.to.isHQ,
-  after: ev => schemeProgressEv(ev, 5 - CityCards().count(isVillain)),
+  after: ev => schemeProgressEv(ev, 5 - hqCards().count(isVillain)),
 }, () => {
   gameState.villaindeck.deck.filter(c => c.cardName === extraHenchmenName()).each(c => moveCard(c, gameState.herodeck));
   gameState.herodeck.shuffle();
@@ -441,7 +441,7 @@ makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_hench
 makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8 }, ev => {
   // Twist: If Thor is in the city, he overruns. Otherwise, Thor enters the Bridge from wherever he is, and Thor guards 3 Bystanders.
   const thor = ev.state.thor;
-  CityCards().has(c => c === thor) ? villainEscapeEv(ev, thor) : villainDrawEv(ev, thor);
+  cityVillains().has(c => c === thor) ? villainEscapeEv(ev, thor) : villainDrawEv(ev, thor);
 }, {
   event: "ESCAPE",
   match: ev => ev.what === gameState.schemeState.thor,
@@ -465,12 +465,12 @@ makeSchemeCard<{thor: Card}>("Crown Thor King of Asgard", { twists: 8 }, ev => {
 makeSchemeCard("Crush HYDRA", { twists: 8 }, ev => {
   if (ev.nr <= 7) {
     // Twist 1-7 Each Adversary in the city captures a New Recruit, or if there are no more New Recruits, a Madame HYDRA.
-    CityCards().limit(isVillain).each(v => cont(ev, () => {
+    cityVillains().each(v => cont(ev, () => {
       (gameState.newRecruit.size ? gameState.newRecruit : gameState.madame).withTop(c => captureEv(ev, v, c));
     }));
   } else if (ev.nr === 8) {
     // Twist 8 Put all captured Allies from the city into the Overrun Pile.
-    CityCards().limit(isVillain).each(v => v.captured.limit(isHero).each(c => moveCardEv(ev, c, gameState.escaped)));
+    cityVillains().each(v => v.captured.limit(isHero).each(c => moveCardEv(ev, c, gameState.escaped)));
   }
 }, {
   event: 'MOVECARD',
@@ -560,7 +560,7 @@ addTemplates("SCHEMES", "Guardians of the Galaxy", [
 makeSchemeCard("Forge the Infinity Gauntlet", { twists: 8, required: { villains: "Infinity Gems"} }, ev => {
   // Twist: Starting to your left and going clockwise, the first player with an Infinity Gem Artifact card in play or in their discard pile chooses on of those Infinity Gems to enter the city. Then put a Shard on each Infinity Gem in the city.
   eachPlayer(p => selectCardEv(ev, "Choose an Infinity Gem", p.artifact.limit(isGroup("Infinity Gems")), c => villainDrawEv(ev, c), p));
-  cont(ev, () => CityCards().limit(isGroup("Infinity Gems")).each(c => attachShardEv(ev, c)))
+  cont(ev, () => cityVillains().limit(isGroup("Infinity Gems")).each(c => attachShardEv(ev, c)))
 }, [{
   event: "MOVECARD",
   match: ev => ev.to === gameState.escaped,
@@ -582,7 +582,7 @@ makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
     cards.limit(isBystander).each(c => rescueEv(ev, c));
     cards.limit(isTwist).each(c => {
       KOEv(ev, c);
-      HQCards().limit(isHero).each(c => KOEv(ev, c));
+      hqHeroes().each(c => KOEv(ev, c));
       eachPlayer(p => gainWoundEv(ev, p));
     });
   });
@@ -602,7 +602,7 @@ makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], 
   const sLoc = gameState.villaindeck;
   if (ev.nr <= 7) {
     // Twist 1-7 All Kree and Skrulls escape from the city. Then, if there are more Kree than Skrulls in the Escape Pile, stack this Twist next to the Mastermind as a Kree Conquest. If there are more Skrulls than Kree in the Escape Pile, stack this Twist next to the Villain Deck as a Skrull Conquest.
-    CityCards().limit(c => isGroup("Kree Starforce")(c) || isGroup("Skrull")(c)).each(c => villainEscapeEv(ev, c));
+    cityVillains().limit(c => isGroup("Kree Starforce")(c) || isGroup("Skrull")(c)).each(c => villainEscapeEv(ev, c));
     cont(ev, () => {
       const k = gameState.escaped.count(isGroup("Kree Starforce"));
       const s = gameState.escaped.count(isGroup("Skrull"));
@@ -657,7 +657,7 @@ addTemplates("SCHEMES", "Fear Itself", [
 // EVILWINS: When the Fear Level is 0.
 makeSchemeCard("Fear Itself", { twists: 10 }, ev => {
   // Twist: KO an Ally from the Lair. The Fear Level goes down by 1.
-  selectCardEv(ev, "Choose an Ally to KO", HQCards().limit(isHero), c => {
+  selectCardEv(ev, "Choose an Ally to KO", hqHeroes(), c => {
     for (let i = gameState.hq.indexOf(c.location); i < gameState.hq.size - 1; i++)
       swapCardsEv(ev, gameState.hq[i], gameState.hq[i + 1]);
   });
@@ -674,7 +674,7 @@ makeSchemeCard("Fear Itself", { twists: 10 }, ev => {
 // EVILWINS: When there are 13 non-grey Allies in the KO pile.
 makeSchemeCard("Last Stand at Avengers Tower", { twists: 6 }, ev => {
   // Twist: Stack this Twist above the Rooftops as StarkTech Defenses. If there is an Adversary on the Rooftops, choose 3 Allies from the Lair and KO them.
-  withCity('ROOFTOPS', rooftops => rooftops.has(isVillain) && selectObjectsEv(ev, "Select Allies to KO", 3, HQCards().limit(isHero) ,c => KOEv(ev, c)))
+  withCity('ROOFTOPS', rooftops => rooftops.has(isVillain) && selectObjectsEv(ev, "Select Allies to KO", 3, hqHeroes() ,c => KOEv(ev, c)))
 }, { event: "MOVECARD", match: ev => ev.to === gameState.ko, after: ev => schemeProgressEv(ev, 13 - gameState.ko.count(isNonGrayHero)) }, () => {
   addStatMod('defense', c => atLocation(c, 'ROOFTOPS'), c => c.location.attached('STARKTECH').size);
   gameState.schemeProgress = 13;
@@ -738,7 +738,7 @@ makeSchemeCard("Corrupt the Next Generation of Heroes", { twists: 8 }, ev => {
     repeat(2, () => cont(ev, () => gameState.sidekick.withTop(c => villainDrawEv(ev, c))));
   } else if (ev.nr === 8) {
     // Twist 8 All Sidekicks in the city escape.
-    CityCards().limit(isSidekick).each(c => villainEscapeEv(ev, c));
+    cityVillains().limit(isSidekick).each(c => villainEscapeEv(ev, c));
   }
 }, escapeProgressTrigger(isSidekick, 4), () => {
   gameState.schemeProgress = 4;
@@ -759,37 +759,112 @@ makeSchemeCard("Crush Them With My Bare Hands", { twists: 5, vd_villain: [ 2, 2,
   gameState.schemeProgress = 8;
 }),
 // SETUP: 8 Twists.
-makeSchemeCard("Dark Alliance", { twists: 8 }, ev => {
+makeSchemeCard("Dark Alliance", { twists: 8, extra_masterminds: 1 }, ev => {
   if (ev.nr === 1) {
     // Twist 1 Add a random second Mastermind to the game with one Mastermind Tactic.
+    gameState.scheme.attachedDeck('EXTRA_MASTERMIND').limit(isMastermind).each(m => {
+      moveCardEv(ev, m, gameState.mastermind);
+    });
   } else if (ev.nr >= 2 && ev.nr <= 4) {
     // Twist 2-4 If the second Mastermind is still in play, it gains another Mastermind Tactic.
+    gameState.scheme.attachedDeck('EXTRA_MASTERMIND').limit(isTactic).each(c => {
+      gameState.mastermind.limit(m => c.mastermind === m).withRandom(m => {
+        shuffleIntoEv(ev, c, m.attachedDeck('TACTICS'));
+      });
+    });
   } else if (ev.nr >= 5 && ev.nr <= 6) {
     // Twist 5-6 Each Mastermind captures a Bystander.
+    gameState.mastermind.each(m => captureEv(ev, m));
   } else if (ev.nr === 7) {
     // Twist 7 Evil Wins!
   }
+  schemeProgressEv(ev, 7 - ev.nr);
+}, [], () => {
+  gameState.schemeProgress = 7;
+  gameState.mastermind.withTop(m => {
+    moveCard(m, gameState.scheme.attachedDeck('EXTRA_MASTERMIND'));
+    while(attachedCards('TACTICS', m).size > 1) {
+      moveCard(attachedCards('TACTICS', m)[0], gameState.scheme.attachedDeck('EXTRA_MASTERMIND'));
+    }
+  })
 }),
 // SETUP: Add an extra Villain Group. Shuffle the Villain Deck, then split it as evenly as possible into a Villain Deck for each player. Then, shuffle 2 Twists into each player's Villain Deck.
 // RULE: The normal city does not exist. Instead, each player has a different dimension in front of them with one city space. Villains and Bystanders from your Villain Deck enter your dimension. You can fight Villains in any dimension.
 // EVILWINS: When the number of non-grey Heroes in the KO pile is 5 times the number of players.
-makeSchemeCard("Fragmented Realities", { twists: 8 }, ev => {
+makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
   // Twist: Play two card from your Villain Deck
+  villainDrawEv(ev);
+  villainDrawEv(ev);
+}, [
+  koProgressTrigger(isNonGrayHero, 5, true),
+  {
+    event: 'VILLAINDRAW', // TODO turn start
+    before: ev => {
+      gameState.cityEntry = gameState.city[playerState.nr];
+      swapDecks(gameState.villaindeck, gameState.villaindeck.attachedDeck('REALITY' + playerState.nr));
+    }
+  },
+  {
+    event: 'CLEANUP',
+    after: ev => swapDecks(gameState.villaindeck, gameState.villaindeck.attachedDeck('REALITY' + playerState.nr)),
+  }
+], () => {
+  const num = gameState.players.size;
+  const vd = gameState.villaindeck;
+  while(gameState.city.length) destroyCity(gameState.city[0]);
+  gameState.city = gameState.players.map((p, i) => {
+    const l = new Deck('CITY' + i, true);
+    l.isCity = true;
+    return l;
+  });
+  vd.limit(isTwist).forEach((c, i) => moveCard(c, vd.attachedDeck('REALITY' + (i % num))));
+  vd.deck.forEach((c, i) => moveCard(c, vd.attachedDeck('REALITY' + (i % num))));
+  swapDecks(vd, vd.attachedDeck('REALITY0'));
+  gameState.schemeProgress = 5 * gameState.players.size;
 }),
 // SETUP: 8 Twists. Choose 3 other Masterminds, and shuffle their 12 Tactics into the Villain Deck. Those Tactics are "Tyrant Villains" with their printed Attack and no abilities.
 // EVILWINS: When 5 Tyrant Villains escape.
-makeSchemeCard("Master of Tyrants", { twists: 8 }, ev => {
+makeSchemeCard("Master of Tyrants", { twists: 8, extra_masterminds: 3 }, ev => {
   if (ev.nr <= 7) {
     // Twist 1-7 Put this Twist under a Tyrant Villain as "Dark Power." It gets +2 Attack.
+    selectCardEv(ev, 'Choose Tyrant Villain', cityVillains().limit(isTactic), c => attachCardEv(ev, ev.source, c, 'DARK_POWER'));
   } else if (ev.nr === 8) {
     // Twist 8 All Tyrant Villains in the city escape.
+    cityVillains().limit(isTactic).each(c => villainEscapeEv(ev, c));
   }
+}, escapeProgressTrigger(isTactic, 5), () => {
+  gameState.schemeProgress = 5;
+  const tyrants = gameState.mastermind.deck.splice(1);
+  const isTyrant = (c: Card) => tyrants.includes(c.mastermind);
+  addStatMod('defense', isTyrant, c => c.attached('DARK_POWER').size * 2);
+  addStatSet('isVillain', isTyrant, c => true);
+  addStatSet('villainGroup', isTyrant, c => 'Tyrant Villain');
+  addStatSet('fight', isTyrant, c => []);
+  tyrants.each(t => t.attached('TACTICS').each(c => moveCard(c, gameState.villaindeck)));
+  gameState.villaindeck.shuffle();
 }),
 // SETUP: 10 Twists.
 // RULE: When a player recruits a Hero with a Wound next to it, that player can either gain that Wound or pay 1 Recruit to return that Wound to the Wound Stack.
 // EVILWINS: When the Wound Stack runs out.
 makeSchemeCard("Pan-Dimensional Plague", { twists: 10 }, ev => {
   // Twist: KO all Wounds from next to the HQ. Then, put a Wound from the Wound Stack next to each Hero in the HQ.
+  gameState.hq.each(d => d.attached('WOUNDS').each(c => KOEv(ev, c)));
+  gameState.hq.each(d => cont(ev, () => {
+    gameState.wounds.withTop(c => attachCardEv(ev, c, d, 'WOUNDS'));
+  }));
+}, [ runOutProgressTrigger("WOUNDS"), {
+  event: 'RECRUIT',
+  match: ev => ev.where.isHQ && ev.where.attached('WOUNDS').size > 0,
+  after: ev => {
+    const l = ev.parent.where;
+    const a = new Ev(ev, 'EFFECT', { cost: { recruit: 1 }, func: ev => {
+      l.attached('WOUNDS').each(c => moveCardEv(ev, c, gameState.wounds));
+    }});
+    canPayCost(a) && chooseMayEv(ev, 'Pay to return the Wound', () => playEvent(a));
+    cont(ev, () => l.attached('WOUNDS').each(c => gainEv(ev, c)));
+  },
+} ], () => {
+  gameState.schemeProgress = gameState.wounds.size;
 }),
 // SETUP: 8 Twists. Add an extra Villain Group. Put the Villain Deck on the Bank space.
 // RULE: The Sewers and Bank do not exist, so the city is only 3 spaces. There is a parallel dimension with 3 city spaces above the main city. Whenever a Villain enters the city, the current player chooses which city it enters.
@@ -797,8 +872,30 @@ makeSchemeCard("Pan-Dimensional Plague", { twists: 10 }, ev => {
 makeSchemeCard("Smash Two Dimensions Together", { twists: 8 }, ev => {
   if (ev.nr <= 7) {
     // Twist 1-7 Play two cards from the Villain Deck.
+    villainDrawEv(ev);
+    villainDrawEv(ev);
   } else if (ev.nr === 8) {
     // Twist 8 All Villains in both dimensions escape.
+    cityVillains().each(c => villainEscapeEv(ev, c));
   }
+}, [escapeProgressTrigger(isVillain, 10), {
+  event: 'VILLAINDRAW',
+  before: ev => {
+    selectCardEv(ev, 'Choose a dimension', [gameState.city[2], gameState.city[5]], d => gameState.cityEntry = d);
+  }
+}], () => {
+  const secondCity = [0, 1, 2].map(i => {
+    const l = new Deck('CITY' + i, true);
+    l.isCity = true;
+    return l;
+  });
+  secondCity[2].next = secondCity[1];
+  secondCity[1].next = secondCity[0];
+  makeCityAdjacent(secondCity);
+  destroyCity(gameState.city[4]);
+  destroyCity(gameState.city[3]);
+  gameState.city = gameState.city.concat(secondCity);
+  gameState.cityEntry = gameState.city[2];
+  gameState.schemeProgress = 10;
 }),
 ]);

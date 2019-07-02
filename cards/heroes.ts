@@ -18,7 +18,7 @@ addHeroTemplates("Legendary", [
 // ATTACK: 4
 // Defeat a Villain or Mastermind that has a Bystander.
 // COST: 7
-  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, "Defeat an enemey", villainOrMastermind().limit(hasBystander), sel => defeatEv(ev, sel))),
+  ra: makeHeroCard("Black Widow", "Silent Sniper", 7, u, 4, Color.COVERT, "Avengers", "G", ev => selectCardEv(ev, "Defeat an enemey", fightableCards().limit(hasBystander), sel => defeatEv(ev, sel))),
 },
 {
   name: "Captain America",
@@ -78,7 +78,7 @@ addHeroTemplates("Legendary", [
 // A Villain of your choice captures a Bystander.
 // COST: 3
 // FLAVOR: "Hey, Abomination makes a pretty good babysitter."
-  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, "Choose a Villain", villains(), sel => captureEv(ev, sel))),
+  c1: makeHeroCard("Deadpool", "Here, Hold This for a Second", 3, 2, u, Color.TECH, u, "GFD", ev => selectCardEv(ev, "Choose a Villain", cityVillains(), sel => captureEv(ev, sel))),
 // ATTACK: 2+
 // You get +1 Attack for each other Hero with an odd-numbered Cost you played this turn.
 // COST: 5
@@ -240,7 +240,7 @@ addHeroTemplates("Legendary", [
   uc: makeHeroCard("Nick Fury", "Legendary Commander", 6, u, 1, Color.STRENGTH, "S.H.I.E.L.D.", "G", ev => addAttackEvent(ev, superPower("S.H.I.E.L.D."))),
 // Defeat any Villain or Mastermind whose Attack is less than the number of S.H.I.E.L.D. Heroes in the KO pile.
 // COST: 8
-  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, "Defeat a Villain", villainOrMastermind().limit(v => v.defense < gameState.ko.count("S.H.I.E.L.D.")), sel => defeatEv(ev, sel))),
+  ra: makeHeroCard("Nick Fury", "Pure Fury", 8, u, u, Color.TECH, "S.H.I.E.L.D.", "G", ev => selectCardEv(ev, "Defeat a Villain", fightableCards().limit(v => v.defense < gameState.ko.count("S.H.I.E.L.D.")), sel => defeatEv(ev, sel))),
 },
 {
   name: "Rogue",
@@ -310,7 +310,7 @@ addHeroTemplates("Legendary", [
 // You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
 // COST: 6
   uc: makeHeroCard("Storm", "Spinning Cyclone", 6, u, 4, Color.COVERT, "X-Men", "", ev => {
-    selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
       selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => {
         swapCardsEv(ev, v.location, dest);
         v.captured.limit(isBystander).each(c => rescueEv(ev, c));
@@ -448,8 +448,8 @@ addHeroTemplates("Dark City", [
 // You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
 // COST: 3
   c2: makeHeroCard("Blade", "Stalk the Prey", 3, u, 2, Color.COVERT, "Marvel Knights", "GD", ev => {
-    selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
-      selectCardEv(ev, "Choose a new city space", cityAdjecent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
     });
   }),
 // ATTACK: 3
@@ -633,7 +633,7 @@ addHeroTemplates("Dark City", [
 // FLAVOR: That's a BIG FREAKING GUN!!!!
 // GUN: 1
   ra: makeHeroCard("Forge", "B.F.G.", 7, u, 5, Color.TECH, "X-Force", "GF", ev => {
-    if (superPower(Color.TECH, Color.TECH)) selectCardEv(ev, "Defeat a mastermind", gameState.mastermind.deck, sel => defeatEv(ev, sel));
+    if (superPower(Color.TECH, Color.TECH)) selectCardEv(ev, "Defeat a mastermind", fightableCards().limit(isMastermind), sel => defeatEv(ev, sel));
   }),
 },
 {
@@ -788,7 +788,7 @@ addHeroTemplates("Dark City", [
 // COST: 3
 // FLAVOR: "What do they call you? Wheels?"
   c1: makeHeroCard("Professor X", "Class Dismissed", 3, 2, u, Color.INSTINCT, "X-Men", "FD", [
-    ev => selectCardOptEv(ev, "Choose a Hero", HQCards().limit(isHero), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => selectCardOptEv(ev, "Choose a Hero", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
     ev => { if (superPower(Color.INSTINCT)) KOHandOrDiscardEv(ev, undefined); },
   ]),
 // ATTACK: 1+
@@ -899,7 +899,7 @@ addHeroTemplates("Fantastic Four", [
 // ATTACK: 6+
 // {TEAMPOWER Fantastic Four} You get +1 Attack for each city space that contains a Villain.
 // COST: 8
-  ra: makeHeroCard("Human Torch", "Nova Flame", 8, u, 6, Color.RANGED, "Fantastic Four", "", ev => superPower("Fantastic Four") && addAttackEvent(ev, CityCards().count(isVillain))),
+  ra: makeHeroCard("Human Torch", "Nova Flame", 8, u, 6, Color.RANGED, "Fantastic Four", "", ev => superPower("Fantastic Four") && addAttackEvent(ev, cityVillains().size)),
 },
 {
   name: "Invisible Woman",
@@ -999,8 +999,8 @@ addHeroTemplates("Fantastic Four", [
 // COST: 6
   uc: makeHeroCard("Thing", "Crime Stopper", 6, u, 4, Color.STRENGTH, "Fantastic Four", "", [
     ev => addTurnTrigger('DEFEAT', c => isLocation(c.where, 'BANK'), ev => rescueEv(ev)),
-    ev => setFocusEv(ev, 1, () => selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
-      selectCardEv(ev, "Choose a new city space", cityAdjecent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    ev => setFocusEv(ev, 1, () => selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
     })),
   ]),
 // ATTACK: 5+
@@ -1084,7 +1084,7 @@ addHeroTemplates("Paint the Town Red", [
 // COST: 8
   ra: makeHeroCard("Moon Knight", "Golden Ankh of Khonshu", 8, u, 6, Color.INSTINCT, "Marvel Knights", "", [
     ev => addTurnTrigger('DEFEAT', ev => isLocation(ev.where, 'ROOFTOPS'), ev => ev.parent.what.printedVP && rescueEv(ev, ev.parent.what.printedVP)),
-    ev => superPower(Color.TECH) && withCity('ROOFTOPS', rooftops => selectCardOptEv(ev, "Move to Rooftops", villains().limit(c => c.location !== rooftops), c => swapCardsEv(ev, c.location, rooftops))),
+    ev => superPower(Color.TECH) && withCity('ROOFTOPS', rooftops => selectCardOptEv(ev, "Move to Rooftops", cityVillains().limit(c => c.location !== rooftops), c => swapCardsEv(ev, c.location, rooftops))),
   ]),
 },
 {
@@ -1145,7 +1145,7 @@ addHeroTemplates("Paint the Town Red", [
 // COST: 7
 // FLAVOR: They'll follow her anywhere.
   ra: makeHeroCard("Spider-Woman", "Arachno-Pheromones", 7, u, u, Color.COVERT, "Spider Friends", "F",
-    ev => selectCardEv(ev, 'Rectuit a Hero for free', HQCards().limit(isHero), c => {
+    ev => selectCardEv(ev, 'Rectuit a Hero for free', hqHeroes(), c => {
       if (superPower("Spider Friends")) turnState.nextHeroRecruit = 'HAND';
       recruitForFreeEv(ev, c);
     }),
@@ -1404,22 +1404,20 @@ addHeroTemplates("Villains", [
 // COST: 4
 // GUN: 1
   c2: makeHeroCard("Kraven", "Corner the Prey", 4, u, 2, Color.COVERT, "Sinister Six", "GD", ev => {
-    selectCardEv(ev, "Choose an Adversary", villains(), c => addTurnMod('defense', v => v === c, c => cityAdjecent(c.location).every(d => d.size > 0) ? -1 : 0));
+    selectCardEv(ev, "Choose an Adversary", villains(), c => addTurnMod('defense', v => v === c, c => cityAdjacent(c.location).every(d => d.size > 0) ? -1 : 0));
   }),
 // ATTACK: 2+
 // Choose an Adversary and a direction. Move that Adversary as many adjacent, empty spaces as you can in that direction. You get +1 Attack for each space it moved.
 // COST: 5
   uc: makeHeroCard("Kraven", "Hunt Down", 5, u, 2, Color.STRENGTH, "Sinister Six", "D", ev => {
-    function f(c: Card, left: boolean) {
-      const city = gameState.city, loc = c.location, pos = city.indexOf(loc), inc = left ? -1 : 1;
-      if (pos < 0 || !loc) return;
-      let count = 0;
-      while(city[pos + inc * (count + 1)] && !city[pos + inc * (count + 1)].size) count++;
+    function f(c: Card, dir: 'adjacentLeft' | 'adjacentRight') {
+      let loc = c.location, count = 0;
+      while(loc[dir] && loc[dir].isCity && !loc[dir].size) count++, loc = loc[dir];
       if (!count) return;
-      swapCardsEv(ev, loc, city[pos + inc * count]);
+      swapCardsEv(ev, loc, c.location);
       addAttackEvent(ev, count);
     }
-    selectCardEv(ev, "Choose an Adversary", villains(), c => chooseOneEv(ev, "Choose direction", ["Left", () => f(c, true)], ["Right", () => f(c, false)]));
+    selectCardEv(ev, "Choose an Adversary", villains(), c => chooseOneEv(ev, "Choose direction", ["Left", () => f(c, 'adjacentLeft')], ["Right", () => f(c, 'adjacentRight')]));
   }),
 // ATTACK: 0+
 // You get + Attack equal to the Cost of the highest-cost Ally in the Lair.
@@ -1460,7 +1458,7 @@ addHeroTemplates("Villains", [
   ra: makeHeroCard("Loki", "God of Mischief", 8, u, 6, Color.COVERT, "Foes of Asgard", "", ev => {
     eachPlayer(p => revealOrEv(ev, "Foes of Asgard", () => {
       selectCardOptEv(ev, "Select card to swap", p.hand.deck, cardFromHand => {
-        selectCardEv(ev, "Select card to swap", HQCards().limit(c => c.cost === cardFromHand.cost), cardInHQ => {
+        selectCardEv(ev, "Select card to swap", hqCards().limit(c => c.cost === cardFromHand.cost), cardInHQ => {
           swapCardsEv(ev, cardFromHand, cardInHQ);
         });
       });
@@ -1510,19 +1508,19 @@ addHeroTemplates("Villains", [
 // Put a card from the lair on the bottom of the Ally Deck. If that card had a Recruit icon, you get +2 Recruit. If that card had an Attack icon, you get +2 Attack.
 // COST: 3
   c2: makeHeroCard("Mysterio", "Shifting Decoy", 3, 0, 0, Color.COVERT, "Sinister Six", "D", ev => {
-    selectCardEv(ev, "Select a card to put on the bottom of the Ally Deck", HQCards(), c => { hasAttackIcon(c) && addAttackEvent(ev, 2); hasRecruitIcon(c) && addRecruitEvent(ev, 2); moveCardEv(ev, c, gameState.herodeck, true); });
+    selectCardEv(ev, "Select a card to put on the bottom of the Ally Deck", hqCards(), c => { hasAttackIcon(c) && addAttackEvent(ev, 2); hasRecruitIcon(c) && addRecruitEvent(ev, 2); moveCardEv(ev, c, gameState.herodeck, true); });
   }),
 // ATTACK: 0+
 // You get +1 Attack for each color of Ally in the Lair.
 // COST: 5
-  uc: makeHeroCard("Mysterio", "Holographic Illusion", 5, u, 0, Color.TECH, "Sinister Six", "", ev => addAttackEvent(ev, HQCards().limit(isHero).uniqueCount(c => c.color))),
+  uc: makeHeroCard("Mysterio", "Holographic Illusion", 5, u, 0, Color.TECH, "Sinister Six", "", ev => addAttackEvent(ev, hqHeroes().uniqueCount(c => c.color))),
 // RECRUIT: 0+
 // ATTACK: 0+
 // Put a card from the Lair on the bottom of the Ally Deck. You get + Recruit equal to that card's printed Recruit and + Attack equal to its printed Attack.
 // {TEAMPOWER Sinister Six} Then, for each other Sinister Six Ally you played this turn, do the same effect. (Use a different Ally from the Lair each time.)
 // COST: 7
   ra: makeHeroCard("Mysterio", "False Reflection", 7, 0, 0, Color.INSTINCT, "Sinister Six", "", ev => {
-    repeat(superPower("Sinister Six") + 1, () => selectCardEv(ev, "Select a card to put on the bottom of the Ally Deck", HQCards(), c => {
+    repeat(superPower("Sinister Six") + 1, () => selectCardEv(ev, "Select a card to put on the bottom of the Ally Deck", hqCards(), c => {
       hasAttackIcon(c) && addAttackEvent(ev, c.printedAttack);
       hasRecruitIcon(c) && addRecruitEvent(ev, c.printedRecruit);
       moveCardEv(ev, c, gameState.herodeck, true);
@@ -1653,7 +1651,7 @@ addHeroTemplates("Villains", [
 // Each Adversary with a 4 Attack or more guards a Bystander.
 // COST: 6
   uc: makeHeroCard("Venom", "Horrify the Populace", 6, u, 4, Color.STRENGTH, "Sinister Six", "", ev => {
-    CityCards().limit(isVillain).limit(c => c.attack >= 4).each(c => captureEv(ev, c));
+    cityVillains().limit(c => c.attack >= 4).each(c => captureEv(ev, c));
   }),
 // RECRUIT: 0+
 // ATTACK: 5
@@ -1705,7 +1703,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // A Villain gains a Shard.
   // COST: 2
     c1: makeHeroCard("Gamora", "Bounty Hunter", 2, 2, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => {
-      selectCardEv(ev, "Choose a Villain", villains(), c => attachShardEv(ev, c));
+      selectCardEv(ev, "Choose a Villain", cityVillains(), c => attachShardEv(ev, c));
     }),
   // Gain two Shards.
   // {POWER Covert} Gain another Shard.
@@ -1844,7 +1842,7 @@ addHeroTemplates("Fear Itself", [
 // ATTACK: 4+
 // You get +Attack equal to the total number of <b>Artifact</b>s controlled by players and <b>Artifact</b>s the Lair.
 // COST: 7
-  ra: makeHeroCard("Greithoth, Breaker of Wills", "Body of Uru", 7, u, 4, Color.COVERT, "Foes of Asgard", "", ev => addAttackEvent(ev, HQCards().count(c => c.isArtifact) + gameState.players.sum(p => p.artifact.size))),
+  ra: makeHeroCard("Greithoth, Breaker of Wills", "Body of Uru", 7, u, 4, Color.COVERT, "Foes of Asgard", "", ev => addAttackEvent(ev, hqCards().count(c => c.isArtifact) + gameState.players.sum(p => p.artifact.size))),
 },
 {
   name: "Kuurth, Breaker of Stone",
@@ -1893,8 +1891,8 @@ addHeroTemplates("Fear Itself", [
 // You may move an Adversary to an adjacent city space. If another Adversary is already there, swap them.
 // COST: 3
   c1: makeHeroCard("Nerkkod, Breaker of Oceans", "Pull of the Tides", 3, 2, u, Color.STRENGTH, "Foes of Asgard", "D", ev => {
-    selectCardOptEv(ev, "Choose an Adversary to move", CityCards().limit(isVillain), v => {
-      selectCardEv(ev, "Choose a new city space", cityAdjecent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    selectCardOptEv(ev, "Choose an Adversary to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
     });
   }),
 // ATTACK: 2
@@ -2030,7 +2028,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // You may put a Hero from the HQ on the bottom of the Hero Deck. The Hero that replaces it in the HQ costs 1 less during this turn.
   c2: makeHeroCard("Apocalyptic Kitty Pryde", "Infiltrate HQ", 3, 2, u, Color.TECH, "X-Men", "D", ev => {
     let where: Deck;
-    selectCardOptEv(ev, "Select card to put on the bottom of the Hero Deck", HQCards().limit(isHero), c => {
+    selectCardOptEv(ev, "Select card to put on the bottom of the Hero Deck", hqHeroes(), c => {
       where = c.location;
       moveCardEv(ev, c, gameState.herodeck, true);
     });
@@ -2041,7 +2039,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   }),
 // You get +1 Attack for each [Tech] Hero in the HQ.
   uc: makeHeroCard("Apocalyptic Kitty Pryde", "Disrupt Circuits", 5, u, 2, Color.COVERT | Color.TECH, "X-Men", "FD", ev => {
-    addAttackEvent(ev, HQCards().limit(isHero).count(Color.TECH));
+    addAttackEvent(ev, hqHeroes().count(Color.TECH));
   }),
 // When any player defeats a Villain or Mastermind with a "Fight" effect, you may discard this card to cancel that fight effect. If you do, draw three cards.
   ra: makeHeroCard("Apocalyptic Kitty Pryde", "Untouchable", 7, 5, u, Color.COVERT, "X-Men", "", [], { trigger: {
@@ -2211,7 +2209,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // Defeat a Villain for free.
 // {POWER Instinct Instinct Strength Strength} Instead, defeat the Mastermind once for free.
   ra: makeHeroCard("Namor, the Sub-Mariner", "Imperius Rex", 7, u, u, Color.STRENGTH, "Cabal", "", ev => {
-    selectCardEv(ev, "Choose a card to defeat", superPower(Color.INSTINCT, Color.INSTINCT, Color.STRENGTH, Color.STRENGTH) ? gameState.mastermind.deck : villains(), c => defeatEv(ev, c));
+    selectCardEv(ev, "Choose a card to defeat", fightableCards().limit(superPower(Color.INSTINCT, Color.INSTINCT, Color.STRENGTH, Color.STRENGTH) ? isMastermind : isVillain), c => defeatEv(ev, c));
   }),
 },
 {
@@ -2291,7 +2289,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // KO six Bystanders from the Bystander Stack. Then, defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in the KO pile.
   ra: makeHeroCard("Thanos", "Utter Annihilation", 8, u, u, Color.RANGED, "Cabal", "", [
     ev => repeat(6, () => gameState.bystanders.withTop(c => KOEv(ev, c))),
-    ev => selectCardEv(ev, "Choose a Villain", villainOrMastermind().limit(c => c.defense <= gameState.ko.count(isBystander)), c => defeatEv(ev, c)),
+    ev => selectCardEv(ev, "Choose a Villain", fightableCards().limit(c => c.defense <= gameState.ko.count(isBystander)), c => defeatEv(ev, c)),
   ]),
 },
 {

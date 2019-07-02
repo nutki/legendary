@@ -154,7 +154,7 @@ addVillainTemplates("Legendary", [
   [ 1, makeVillainCard("Skrulls", "Paibok the Power Skrull", 8, 3, {
     fight: ev => {
       let selected: Card[] = [];
-      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, HQCards().limit(c => !selected.includes(c)), sel => selected.push(sel)));
+      eachPlayerEv(ev, ev => selectCardEv(ev, `Choose a hero for ${ev.who.name} to gain`, hqHeroes().limit(c => !selected.includes(c)), sel => selected.push(sel)));
       eachPlayerEv(ev, ev => gainEv(ev, selected.shift()));
     }
   })],
@@ -173,7 +173,7 @@ addVillainTemplates("Legendary", [
 // ATTACK: *
 // VP: 2
   [ 3, makeVillainCard("Skrulls", "Skrull Shapeshifters", 0, 2, {
-    ambush: ev => HQCards().withLast(c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
+    ambush: ev => hqHeroes().withLast(c => attachCardEv(ev, c, ev.source, "SKRULL_CAPTURE")),
     fight: ev => ev.source.attached("SKRULL_CAPTURE").each(c => gainEv(ev, c)),
     varDefense: c => c.attached("SKRULL_CAPTURE").sum(c => c.cost),
   })],
@@ -418,7 +418,7 @@ addVillainTemplates("Fantastic Four", [
 // ATTACK: 12*
 // VP: 6
   [ 2, makeVillainCard("Heralds of Galactus", "Morg", 12, 6, {
-    ambush: ev => HQCards().limit(c => isHero(c) && !isColor(Color.INSTINCT)(c)).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ambush: ev => hqHeroes().limit(c => !isColor(Color.INSTINCT)(c)).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
     cardActions: [ cosmicThreatAction(Color.INSTINCT) ],
   })],
 // Cosmic Threat: [Covert]
@@ -434,7 +434,7 @@ addVillainTemplates("Fantastic Four", [
 // ATTACK: 11*
 // VP: 5
   [ 2, makeVillainCard("Heralds of Galactus", "Terrax the Tamer", 11, 5, {
-    ambush: ev => captureEv(ev, ev.source, HQCards().count(Color.STRENGTH)),
+    ambush: ev => captureEv(ev, ev.source, hqHeroes().count(Color.STRENGTH)),
     cardActions: [ cosmicThreatAction(Color.STRENGTH) ],
   })],
 ]},
@@ -520,7 +520,7 @@ addVillainTemplates("Paint the Town Red", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Sinister Six", "Hobgoblin", 5, 3, {
-    ambush: ev => villains().filter(c => c.villainGroup === "Sinister Six").each(v => captureEv(ev, v)),
+    ambush: ev => cityVillains().filter(c => c.villainGroup === "Sinister Six").each(v => captureEv(ev, v)),
   })],
 // Kraven's Attack is equal to the Cost of the highest-cost Hero in the HQ.
 // ESCAPE: (After you do the normal escape KO) KO a Hero from the HQ with the highest cost.
@@ -536,7 +536,7 @@ addVillainTemplates("Paint the Town Red", [
 // VP: 4
   [ 1, makeVillainCard("Sinister Six", "Sandman", undefined, 4, {
     escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
-    varDefense: () => CityCards().limit(isVillain).size * 2
+    varDefense: () => cityVillains().size * 2
   })],
 // AMBUSH: Each player reveals an [Instinct] Hero or discards a card.
 // ATTACK: 5
@@ -549,7 +549,7 @@ addVillainTemplates("Paint the Town Red", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Sinister Six", "Vulture", 4, 2, {
-    ambush: ev => selectCardEv(ev, "Select Villains to swap Vulture with", CityCards().limit(c => isVillain(c) && isLocation(c.location, 'ROOFTOPS', 'BRIDGE')), c => swapCardsEv(ev, ev.source.location, c.location)),
+    ambush: ev => selectCardEv(ev, "Select Villains to swap Vulture with", villainIn('ROOFTOPS', 'BRIDGE'), c => swapCardsEv(ev, ev.source.location, c.location)),
     escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
   })],
 ]},
@@ -571,7 +571,7 @@ addVillainTemplates("Villains", [
     ambush: ev => eachPlayer(p => numColors(yourHeroes(p)) >= 3 || gainBindingsEv(ev, p)),
     fight: ev => eachPlayer(p => numColors(yourHeroes(p)) >= 3 || gainBindingsEv(ev, p)),
     escape: demolishEv,
-    varDefense: c => c.printedDefense + numColors(HQCards().limit(isHero)),
+    varDefense: c => c.printedDefense + numColors(hqHeroes()),
   })],
 // ATTACK: 8
 // VP: 6
@@ -599,8 +599,8 @@ addVillainTemplates("Villains", [
 // FIGHT: Same effect.
 // ESCAPE: Demolish each player.
   [ 1, makeVillainCard("Avengers", "Thor", 7, 5, {
-    ambush: ev => HQCards().limit(isHero).limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
-    fight: ev => HQCards().limit(isHero).limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
+    ambush: ev => hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
+    fight: ev => hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
     escape: demolishEv,
   })],
 // ATTACK: 1*
@@ -629,9 +629,9 @@ addVillainTemplates("Villains", [
 // FIGHT: Same Effect.
 // ESCAPE: Same Effects.
   [ 2, makeVillainCard("Defenders", "Namor, The Sub-Mariner", 6, 4, {
-    ambush: ev => CityCards().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
-    fight: ev => CityCards().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
-    escape: ev => CityCards().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
+    ambush: ev => cityVillains().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
+    fight: ev => cityVillains().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
+    escape: ev => cityVillains().has(c => c.villainGroup === "Defenders" && c != ev.source) && eachPlayer(p => gainBindingsEv(ev, p)),
   })],
 // ATTACK: 4
 // VP: 2
@@ -812,7 +812,7 @@ addVillainTemplates("Villains", [
 // AMBUSH: Jean Grey guards a Bystander for each Adversary in the city with X-Treme Attack (including Jean).
 // FIGHT: You get +1 Recruit for each Bystander you kidnapped this turn.
   [ 1, makeVillainCard("X-Men First Class", "Jean Grey", 6, 4, {
-    ambush: ev => captureEv(ev, ev.source, CityCards().count(c => c.xTremeAttack)),
+    ambush: ev => captureEv(ev, ev.source, cityVillains().count(c => c.xTremeAttack)),
     fight: ev => addRecruitEvent(ev, turnState.pastEvents.count(e => e.type === "RESCUE")),
     xTremeAttack: true,
     varDefense: xTremeAttack,
@@ -824,7 +824,7 @@ addVillainTemplates("Villains", [
   [ 2, makeVillainCard("X-Men First Class", "Beast", 5, 3, {
     fight: [
       ev => selectCardAndKOEv(ev, yourHeroes()),
-      ev => CityCards().has(c => c.xTremeAttack && c !== ev.source) && selectCardAndKOEv(ev, yourHeroes()),
+      ev => cityVillains().has(c => c.xTremeAttack && c !== ev.source) && selectCardAndKOEv(ev, yourHeroes()),
     ],
     xTremeAttack: true,
     varDefense: xTremeAttack,
@@ -855,13 +855,13 @@ addVillainTemplates("Guardians of the Galaxy", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Kree Starforce", "Demon Druid", 5, 3, {
-    ambush: ev => selectCardEv(ev, "Choose a Villain", CityCards().limit(isVillain).limit(c => c !== ev.source), c => attachShardEv(ev, c, 2)),
+    ambush: ev => selectCardEv(ev, "Choose a Villain", cityVillains().limit(c => c !== ev.source), c => attachShardEv(ev, c, 2)),
   })],
 // AMBUSH: Each Kree Villain in the city gains a Shard (including this Villain).
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Kree Starforce", "Dr. Minerva", 5, 3, {
-    ambush: ev => CityCards().limit(isVillain).each(c => attachShardEv(ev, c)),
+    ambush: ev => cityVillains().each(c => attachShardEv(ev, c)),
   })],
 // AMBUSH: Each player may draw a card. Korath gains a Shard for each card drawn this way.
 // ESCAPE: If Korath had any Shards, each player gains a Wound.
@@ -905,14 +905,14 @@ addVillainTemplates("Guardians of the Galaxy", [
     fight: ev => {
       if (!gameState.triggers.includes(extraShatteraxTriggers[0]))
         extraShatteraxTriggers.each(t => gameState.triggers.push(t));
-      HQCards().limit(isHero).each(c => attachShardEv(ev, c));
+      hqHeroes().each(c => attachShardEv(ev, c));
     },
   })],
 // AMBUSH: Supremor and the Mastermind each gain a Shard.
 // ATTACK: 3
 // VP: 2
   [ 2, makeVillainCard("Kree Starforce", "Supremor", 3, 2, {
-    ambush: ev => { attachShardEv(ev, ev.source); gameState.mastermind.each(m => attachShardEv(ev, m)); },
+    ambush: ev => { attachShardEv(ev, ev.source); withMastermind(ev, m => attachShardEv(ev, m)); },
   })],
 ]},
 { name: "Infinity Gems", cards: [
@@ -938,7 +938,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // ATTACK: 5
 // VP: 0
   [ 2, makeGainableCard(makeVillainCard("Infinity Gems", "Reality Gem", 5, u, {
-    ambush: ev => attachShardEv(ev, ev.source, CityCards().count(isGroup("Infinity Gems")) + gameState.escaped.count(isGroup("Infinity Gems"))),
+    ambush: ev => attachShardEv(ev, ev.source, cityVillains().count(isGroup("Infinity Gems")) + gameState.escaped.count(isGroup("Infinity Gems"))),
   }), u, u, 0, u, "", [], { isArtifact: true, trigger: {
     event: "VILLAINDRAW",
     match: (ev, source) => owner(source) === playerState,
@@ -950,7 +950,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // ATTACK: 6
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Soul Gem", 6, u, {
-    ambush: ev => attachShardEv(ev, ev.source, CityCards().count(isVillain)),
+    ambush: ev => attachShardEv(ev, ev.source, cityVillains().size),
   }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { isArtifact: true, triggers: [{
     event: "MOVECARD",
     match: (ev, source) => ev.what === source,
@@ -968,7 +968,7 @@ addVillainTemplates("Guardians of the Galaxy", [
   [ 2, makeGainableCard(makeVillainCard("Infinity Gems", "Space Gem", 5, u, {
     ambush: ev => attachShardEv(ev, ev.source, gameState.city.count(l => l.size === 0)),
   }), u, u, 0, u, "", ev => {
-    selectCardOptEv(ev, "Choose a Villain to move", CityCards().limit(isVillain), v => {
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
       selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => swapCardsEv(ev, v.location, dest));
       gainShardEv(ev);
     });

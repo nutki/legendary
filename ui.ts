@@ -166,15 +166,17 @@ let globalFormSetup: Setup;
 function setupChange(): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
-  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
+  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
   if (!sel.value || !mel.value) return;
   const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
   makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
   makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
+  makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Mastermind", tmp.mastermind);
   const s1 = getSelects("setup_heroes", tmp.heroes);
   const s2 = getSelects("setup_villains", tmp.villains);
   const s3 = getSelects("setup_henchmen", tmp.henchmen);
+  const s4 = getSelects("setup_mastermind", tmp.mastermind);
   tmp.bystanders = getBystanderSelects("setup_bystanders");
   tmp.withOfficers = (<HTMLInputElement>document.getElementById('withOfficers')).checked;
   tmp.withSidekicks = (<HTMLInputElement>document.getElementById('withSidekicks')).checked;
@@ -191,7 +193,7 @@ function setupInit(): void {
   makeBystanderSelects("setup_bystanders");
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
-  makeOptions("setup_mastermind", "MASTERMINDS", "cardName", undefined);
+  makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Extra Mastermind", [ undefined ]);
 }
 function chooseSelects(name: string, values: string[]): void {
   values.forEach((v, i) => {
@@ -202,17 +204,19 @@ function chooseSelects(name: string, values: string[]): void {
 function setupSet(s: Setup): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
-  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind");
+  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
   pel.value = s.numPlayers.toString();
   sel.value = s.scheme;
-  mel.value = s.mastermind;
-  const tmp = getGameSetup(s.scheme, s.mastermind, s.numPlayers);
+  mel.value = s.mastermind[0];
+  const tmp = getGameSetup(s.scheme, s.mastermind[0], s.numPlayers);
   makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
   makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
+  makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Mastermind", tmp.mastermind);
   chooseSelects("setup_heroes", s.heroes);
   chooseSelects("setup_villains", s.villains);
   chooseSelects("setup_henchmen", s.henchmen);
+  chooseSelects("setup_mastermind", s.mastermind);
   (<HTMLInputElement>document.getElementById('withMadame')).checked = s.withMadame;
   (<HTMLInputElement>document.getElementById('withNewRecruits')).checked = s.withNewRecruits;
   (<HTMLInputElement>document.getElementById('withOfficers')).checked = s.withOfficers;
