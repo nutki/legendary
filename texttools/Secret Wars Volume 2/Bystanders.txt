@@ -1,7 +1,7 @@
 
 #CARDNAME: Alligator Trapper
 #COPIES: 3
-#RESCUE: <b>Patrol the Sewers</b>: If it's empty, you get +2 Recruit.
+#RESCUE: {PATROL Sewers}: If it's empty, you get +2 Recruit.
 #VP: 1
 
 

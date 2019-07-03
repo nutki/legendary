@@ -4,16 +4,16 @@ Choose a class. Other players can't recruit heroes of that class until the start
 <i>Attack:</i> 6
 
 <b>Seize the High Ground</b>
-<b>Patrol the Rooftops</b>: If there's a Villain there, then all Villains everywhere get +1 Attack until the start of your next turn.
+{PATROL Rooftops}: If there's a Villain there, then all Villains everywhere get +1 Attack until the start of your next turn.
 Then, discard this card.
 <i>Attack:</i> 3
 
 <b>Hostage Situation</b>
-<b>Patrol the Streets</b>: If there's a Villain there, then each Villain in the city captures a Bystander.
+{PATROL Streets}: If there's a Villain there, then each Villain in the city captures a Bystander.
 <i>Attack:</i> 2
 
 <b>This is a Stickup</b>
-<b>Patrol the Bank</b>: If there's a Villain there, each other player reveals their hand and discards a card with a Recruit icon.
+{PATROL Bank}: If there's a Villain there, each other player reveals their hand and discards a card with a Recruit icon.
 <i>Attack:</i> 4
 
 <b>Shadowy Disciple</b>
@@ -21,11 +21,11 @@ This ambition ascends to become a new 9 Attack Mastermind worth 5 VP. It gains t
 <i>Attack:</i> 9
 
 <b>Detonate the Bridge</b>
-<b>Patrol the Bridge</b>: If there's a Villain there, each player gains a Wound.
+{PATROL Bridge}: If there's a Villain there, each player gains a Wound.
 <i>Attack:</i> 4
 
 <b>Short Escape Tunnels</b>
-<b>Patrol the Sewers</b>: If there's a Villain there, it escapes.
+{PATROL Sewers}: If there's a Villain there, it escapes.
 <i>Attack:</i> 5
 
 <b>Crazed Charge</b>

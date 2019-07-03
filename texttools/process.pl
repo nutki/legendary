@@ -40,6 +40,7 @@ while (<A>) {
     s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
+    s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
     my @lines = split m!<br />!;
     for (@lines) {
       s!^== (.*?) ==.*!#EXPANSION: $1! && next;

@@ -18,7 +18,7 @@
 #RECRUIT: 0+
 #ATTACK: 0+
 {WALLCRAWL}
-<b>Patrol the Bank</b>: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack.
+{PATROL Bank}: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack.
 #COST: 3
 
 #SUBNAME: Big Slimeportunity
@@ -27,7 +27,7 @@
 #RECRUIT: 2
 #ATTACK: 2
 {WALLCRAWL}
-<b>Patrol the Sewers</b>: If it's empty, draw a card.
+{PATROL Sewers}: If it's empty, draw a card.
 #COST: 6
 #FLAVOR: Flash Thompson combines elite military training with Venom symbiote.
 
@@ -51,7 +51,7 @@ For each other card you played this turn with a Attack icon, you get +1 Attack.
 #CLASS: [Strength], [Covert]
 #RECRUIT: 2+
 {WALLCRAWL}
-<b>Patrol the Sewers</b>: If it's empty, you get +1 Recruit.
+{PATROL Sewers}: If it's empty, you get +1 Recruit.
 #COST: 3
 #FLAVOR: Even beneath the surface, Arkon conquers them all.
 
@@ -67,7 +67,7 @@ For each other card you played this turn with a Attack icon, you get +1 Attack.
 #COPIES: 3
 #CLASS: [Instinct]
 #ATTACK: 3+
-<b>Patrol two adjacent city spaces</b>:
+{PATROL two adjacent city spaces}:
 If they're both empty, you get +1 Attack.
 #COST: 5
 
@@ -76,7 +76,7 @@ If they're both empty, you get +1 Attack.
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Patrol the Rooftops</b>: If it's empty, you get +4 Recruit and +4 Attack. If it's not, defeat the Villain there for free.
+{PATROL Rooftops}: If it's empty, you get +4 Recruit and +4 Attack. If it's not, defeat the Villain there for free.
 #COST: 7
 
 
@@ -95,7 +95,7 @@ Reveal the top card of your deck. If it's [Tech] or [Strength], draw it.
 #COPIES: 5
 #CLASS: [Strength], [Tech]
 {WALLCRAWL}
-<b>Patrol any city space</b>:
+{PATROL any city space}:
 If it's empty, then the hero in the HQ space under it costs 3 less this turn.
 #COST: 4
 
@@ -173,7 +173,7 @@ Reveal the top five cards of the Villain Deck. You get + Attack equal to the pri
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3
-<b>Patrol the Streets</b>: If it's empty, you may KO a card from your hand or discard pile.
+{PATROL Streets}: If it's empty, you may KO a card from your hand or discard pile.
 #COST: 6
 #FLAVOR: Captain America and Devil Dinosaur...Unlikely brothers in arms.
 
@@ -207,7 +207,7 @@ You get +1 Recruit for each different team icon among your heroes.
 #COPIES: 3
 #CLASS: [Strength], [Covert]
 #ATTACK: 2
-<b>Patrol the Rooftops</b>: If it's empty, reveal the top two cards of your deck. If they have different team icons, draw them. Otherwise, put them back in any order.
+{PATROL Rooftops}: If it's empty, reveal the top two cards of your deck. If they have different team icons, draw them. Otherwise, put them back in any order.
 #COST: 5
 
 #SUBNAME: Lead the Captain Britain Corps
@@ -233,7 +233,7 @@ KO a Bystander from the Bystander Deck. If it's a Special Bystander, you may use
 #CLASS: [Strength], [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Patrol the Escape Pile</b>: If there are none Bystanders in it, you get +2 Attack. Otherwise, you get +2 Recruit.
+{PATROL Escape Pile}: If there are none Bystanders in it, you get +2 Attack. Otherwise, you get +2 Recruit.
 #COST: 2
 #FLAVOR: Thanos' most trusted general...And his most cruel.
 
@@ -260,7 +260,7 @@ KO a Bystander from the Bystander Deck. If it's a Special Bystander, you may use
 #COPIES: 5
 #CLASS: [Tech], [Ranged]
 #RECRUIT: 1
-<b>Patrol the Streets</b>: If it's empty, draw a card.
+{PATROL Streets}: If it's empty, draw a card.
 #COST: 2
 #FLAVOR: This mashup cleans the trash up.
 #GUN: 1
@@ -284,7 +284,7 @@ Reveal the top card of the Villain Deck. If it's a Villain, you may fight it thi
 #COPIES: 1
 #CLASS: [Ranged]
 #ATTACK: 5+
-<b>Patrol every city space</b>:
+{PATROL every city space}:
 For each space that's empty, you get +1 Attack.
 #COST: 7
 #FLAVOR: It's quiet. Too quiet.
@@ -305,7 +305,7 @@ For each space that's empty, you get +1 Attack.
 #COPIES: 5
 #CLASS: [Covert], [Tech]
 #ATTACK: 2
-<b>Patrol the Sewers</b>: If it's empty, rescue a Bystander.
+{PATROL Sewers}: If it's empty, rescue a Bystander.
 #COST: 3
 #FLAVOR: Elsa knows a lot of lore about various dark creatures, but most of it boils down to where to stab them.
 #GUN: 1
@@ -414,14 +414,14 @@ To play this card, you must discard three cards from your hand.
 #CLASS: [Instinct], [Covert]
 #ATTACK: 2+
 {WALLCRAWL}
-<b>Patrol the Rooftops</b>: If it's empty, you get +1 Attack.
+{PATROL Rooftops}: If it's empty, you get +1 Attack.
 #COST: 4
 
 #SUBNAME: Seek the Empty Mind
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3+
-<b>Patrol your discard pile</b>: If it's empty, you get +2 Attack.
+{PATROL your discard pile}: If it's empty, you get +2 Attack.
 #COST: 5
 
 #SUBNAME: Muscle Memory
@@ -508,14 +508,14 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 #COPIES: 5
 #CLASS: [Instinct], [Tech]
 #ATTACK: 2
-<b>Patrol the Bridge</b>: If it's empty, reveal the top card of your deck. If that card costs 2 or less, draw it.
+{PATROL Bridge}: If it's empty, reveal the top card of your deck. If that card costs 2 or less, draw it.
 #COST: 2
 
 #SUBNAME: Save the Day
 #COPIES: 5
 #CLASS: [Tech]
 #ATTACK: 1+
-<b>Patrol the Rooftops</b>: If it's empty, rescue a Bystander, and then you get +1 Attack for every two Bystanders in your Victory Pile.
+{PATROL Rooftops}: If it's empty, rescue a Bystander, and then you get +1 Attack for every two Bystanders in your Victory Pile.
 #COST: 2
 
 #SUBNAME: First Adventure
@@ -523,8 +523,8 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 #CLASS: [Strength]
 #ATTACK: 1+
 {WALLCRAWL}
-<b>Patrol the Bank</b>: If it's empty, you get +1 Attack.
-<b>Patrol your Victory Pile</b>: If it's empty, you get +1 Attack.
+{PATROL Bank}: If it's empty, you get +1 Attack.
+{PATROL your Victory Pile}: If it's empty, you get +1 Attack.
 #COST: 2
 
 #SUBNAME: Intertwining Webs
@@ -549,7 +549,7 @@ Reveal the top three cards of your deck, then put them back in any order. You ge
 #SUBNAME: Bridge to a Better Future
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Patrol the Bridge</b>: If it's empty, then when you draw a new hand of cards at the end of this turn, draw an extra card.
+{PATROL Bridge}: If it's empty, then when you draw a new hand of cards at the end of this turn, draw an extra card.
 #COST: 4
 
 #SUBNAME: Telekinesis
@@ -563,7 +563,7 @@ You may move a villain to an adjacent city space. If another Villain is already 
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 5
-{TEAMPOWER X-Men} <b>Patrol any city space</b>: If it's empty, gain the hero in the HQ space under it. Put that hero on top of your deck.
+{TEAMPOWER X-Men} {PATROL any city space}: If it's empty, gain the hero in the HQ space under it. Put that hero on top of your deck.
 #COST: 7
 
 

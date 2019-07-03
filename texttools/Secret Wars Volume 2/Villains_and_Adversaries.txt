@@ -47,7 +47,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 #SUBNAME: Gamora
 #COPIES: 1
 #AMBUSH: <b>Charge</b> one space.
-#FIGHT: <i>(After this goes to your victory pile.)</i> <b>Patrol the Sewers</b>: If it's empty, each other player gains a Wound.
+#FIGHT: <i>(After this goes to your victory pile.)</i> {PATROL Sewers}: If it's empty, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 6
 #VP: 4
@@ -60,7 +60,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Rocket Raccoon
 #COPIES: 2
-#FIGHT: <i>(After this goes to your Victory Pile.)</i> <b>Patrol the Bank</b>: If it's empty, draw a card. If it's not empty, KO one of your Heroes.
+#FIGHT: <i>(After this goes to your Victory Pile.)</i> {PATROL Bank}: If it's empty, draw a card. If it's not empty, KO one of your Heroes.
 #ATTACK: 4
 #VP: 2
 
@@ -145,14 +145,14 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #SUBNAME: Warrior Woman
 #COPIES: 1
 #AMBUSH: <b>Charge</b> one space.
-#ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: <b>Patrol the Bank</b>: If there's a Villain there, each player discards a card with a Recruit icon."
+#ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: {PATROL Bank}: If there's a Villain there, each player discards a card with a Recruit icon."
 #ATTACK: 8
 #VP: 6
 
 #SUBNAME: Whizzer
 #COPIES: 2
 #AMBUSH: <b>Charge</b> three spaces.
-<i>Fight</i> <i>(After he goes to your victory pile.)</i> <b>Patrol the Bridge</b>: If there's a Villain there, each other player gains a Wound.
+<i>Fight</i> <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5
 #VP: 3
