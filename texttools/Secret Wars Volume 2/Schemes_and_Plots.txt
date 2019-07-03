@@ -12,7 +12,7 @@
 
 #CARDNAME: The Fountain of Eternal Life
 #SETUP: 8 Twists. (1 player: 4 Twists.)
-#RULE: All Villains and Mastermind Tactics have "<b>Fight</b>: <b>Fateful Resurrection</b>."
+#RULE: All Villains and Mastermind Tactics have "<b>Fight</b>: {FATEFULRESURRECTION}."
 #TWIST: A Villain from your Victory Pile enters the Sewers. Put this Twist on the bottom of the Villain Deck.
 #EVILWINS: When the number of escaped Villains is 3 times the number of players.
 

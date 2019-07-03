@@ -41,6 +41,9 @@ while (<A>) {
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
+    s!<b>Fateful Resurrection</b>!{FATEFULRESURRECTION}!g;
+    s!<b>Charge</b>!{CHARGE}!g;
+    s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
     my @lines = split m!<br />!;
     for (@lines) {
       s!^== (.*?) ==.*!#EXPANSION: $1! && next;

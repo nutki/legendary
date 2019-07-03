@@ -49,7 +49,7 @@ Escape: Each player gains a wound. Put King Hyperion on the Mastermind space.
 #VP: 6
 
 #TACTIC: Enslavement Beam
-#FIGHT: <b>Fateful Resurrection</b>. If she resurrects, rescue four bystanders.
+#FIGHT: {FATEFULRESURRECTION}. If she resurrects, rescue four bystanders.
 
 #TACTIC: Shiklah's Husband, Deadpool
 #FIGHT: Gain this as a Hero.
@@ -60,10 +60,10 @@ You get +1 Attack for each Hero with an odd-numbered cost you played this turn. 
 #ATTACK: 5+
 
 #TACTIC: Drain Life
-#FIGHT: <b>Fateful Resurrection</b>. If she resurrects, defeat a Villain in the city for free.
+#FIGHT: {FATEFULRESURRECTION}. If she resurrects, defeat a Villain in the city for free.
 
 #TACTIC: Infernal Power
-#FIGHT: <b>Fateful Resurrection</b>. If she resurrects, draw two cards.
+#FIGHT: {FATEFULRESURRECTION}. If she resurrects, draw two cards.
 
 
 #CARDNAME: Spider-Queen

@@ -3,8 +3,8 @@
 
 #SUBNAME: Deadpool
 #COPIES: 1
-<i>5th Circle of Kung-Fu</i>
-#FIGHT: <b>Fateful Resurrection</b>
+{NTHCIRCLE 5} (2 copies)
+#FIGHT: {FATEFULRESURRECTION}
 #ESCAPE: Deadpool ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals a Hero with an odd-numbered cost or gains a Wound." <i>(0 is even).</i>
 #ATTACK: 5+
 #VP: 5
@@ -18,7 +18,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 #SUBNAME: Howard the Duck
 #COPIES: 2
 #AMBUSH: Howard the Duck captures <i>(the heart of)</i> a Bystander.
-<i>7th Circle of Quack-Fu</i>
+{NTHCIRCLE 7}
 #ATTACK: 1+
 #VP: 4
 
@@ -33,7 +33,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Angela
 #COPIES: 1
-#FIGHT: <b>Fateful Resurrection</b>
+#FIGHT: {FATEFULRESURRECTION}
 #ESCAPE: Angela ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: Each player KOs a Hero from their discard pile that costs 1 or more."
 #ATTACK: 7
 #VP: 5
@@ -46,7 +46,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Gamora
 #COPIES: 1
-#AMBUSH: <b>Charge</b> one space.
+#AMBUSH: {CHARGE} one space.
 #FIGHT: <i>(After this goes to your victory pile.)</i> {PATROL Sewers}: If it's empty, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 6
@@ -69,28 +69,28 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Laughing Skull
 #COPIES: 2
-<b>5th Circle of Kung-Fu</b>
+{NTHCIRCLE 5}
 #ESCAPE: Each player reveals a Hero that costs 5 or more, or they discard a card.
 #ATTACK: 5+
 #VP: 5
 
 #SUBNAME: Rand K'ai
 #COPIES: 2
-<b>6th Circle of Kung-Fu</b>
+{NTHCIRCLE 6}
 #ESCAPE: Each player reveals a Hero that costs 6 or more, or they gain a wound.
 #ATTACK: 6+
 #VP: 6
 
 #SUBNAME: Razor Fist
 #COPIES: 2
-<b>3rd Circle of Kung-Fu</b>
+{NTHCIRCLE 3}
 #FIGHT: For each of your Heroes that costs 3, KO one of your Heroes.
 #ATTACK: 3+
 #VP: 3
 
 #SUBNAME: Red Sai
 #COPIES: 2
-<b>4th Circle of Kung-Fu</b>
+{NTHCIRCLE 4}
 #FIGHT: Draw a card for each of your Heroes that costs 4.
 #ATTACK: 4+
 #VP: 4
@@ -100,13 +100,13 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Bug, Shiklah's Dragon
 #COPIES: 2
-#FIGHT: KO a card from your discard pile. <b>Fateful Resurrection</b>
+#FIGHT: KO a card from your discard pile. {FATEFULRESURRECTION}
 #ATTACK: 4
 #VP: 3
 
 #SUBNAME: Ghost Deadpool
 #COPIES: 2
-#FIGHT: <b>Fateful Resurrection</b>. Then, {XDRAMPAGE Deadpool}
+#FIGHT: {FATEFULRESURRECTION}. Then, {XDRAMPAGE Deadpool}
 #ESCAPE: {XDRAMPAGE Deadpool}
 #ATTACK: 5
 #VP: 5
@@ -114,13 +114,13 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 #SUBNAME: Man-Thing
 #COPIES: 2
 #AMBUSH: Each Monster Metropolis Villain captures a Bystander.
-#FIGHT: <b>Fateful Resurrection</b>
+#FIGHT: {FATEFULRESURRECTION}
 #ATTACK: 5
 #VP: 4
 
 #SUBNAME: Marcus Symbiote Centaur
 #COPIES: 2
-#AMBUSH: <b>Charge</b> two spaces.
+#AMBUSH: {CHARGE} two spaces.
 When in the Sewers, Rooftops or Bridge, he is in "wolf form" and gets +3 Attack.
 #ATTACK: 3+
 #VP: 3
@@ -130,7 +130,7 @@ When in the Sewers, Rooftops or Bridge, he is in "wolf form" and gets +3 Attack.
 
 #SUBNAME: Doctor Spectrum
 #COPIES: 3
-#AMBUSH: <b>Charge</b> one space.
+#AMBUSH: {CHARGE} one space.
 #FIGHT: <b>Spectrum</b>: KO a card from your discard pile. <b>Escape</b>: Each player who doesn't have <b>Spectrum</b> discards a card.
 #ATTACK: 6
 #VP: 4
@@ -144,14 +144,14 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 
 #SUBNAME: Warrior Woman
 #COPIES: 1
-#AMBUSH: <b>Charge</b> one space.
+#AMBUSH: {CHARGE} one space.
 #ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: {PATROL Bank}: If there's a Villain there, each player discards a card with a Recruit icon."
 #ATTACK: 8
 #VP: 6
 
 #SUBNAME: Whizzer
 #COPIES: 2
-#AMBUSH: <b>Charge</b> three spaces.
+#AMBUSH: {CHARGE} three spaces.
 <i>Fight</i> <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5
