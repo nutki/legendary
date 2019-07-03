@@ -35,8 +35,8 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
   r += `<img class="cardface" src="${back ? 'images/back.jpg' : cardImageName(c)}">`
   if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
-  if (isScheme(c) && gameState.schemeProgress !== undefined)
-    r += `<div class="count">${gameState.schemeProgress}</div>`;
+  if (isScheme(c) && getSchemeCountdown() !== undefined)
+    r += `<div class="count">${getSchemeCountdown()}</div>`;
   if (!back && c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
   if (c.captured.size > 0) r += `<div class="capturedHint">${c.captured.size}</div>`
   r += `<div class="frame"></div></div>`;

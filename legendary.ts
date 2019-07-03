@@ -164,6 +164,7 @@ class Card {
   isTeam(t: string) { return this.team === t; }
   isGroup(t: string) { return this.villainGroup === t; }
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
+  hasWallCrawl() { return getModifiedStat(this, "wallcrawl", this.wallcrawl); }
   attachedDeck(name: string) { return attachedDeck(name, this); }
   attached(name: string) { return attachedCards(name, this); }
   get captured() { return this.attached('CAPTURED'); }
@@ -412,7 +413,6 @@ type EvType =
 'DRAW' |
 'PLAYCARDEFFECTS' |
 'RESHUFFLE' |
-'RUNOUT' |
 // UI
 'SELECTEVENT' |
 'SELECTCARD1' |
@@ -469,8 +469,6 @@ interface Ev<TSchemeState = any> {
   result0?: () => void
   result1?: (c: Card) => void
   confirm?: boolean
-  // RUNOUT
-  deckName?: string
   // Twist EFFECT
   twist?: Card
   nr?: number
@@ -706,6 +704,7 @@ interface Game extends Ev {
   extraTurn?: boolean
   schemeState: any
   schemeProgress?: number
+  schemeTarget?: number
   gameSetup: Setup
   turnNum: number
 }
@@ -1005,11 +1004,6 @@ gameState = {
   ],
   cityEntry: undefined,
   triggers: [
-    { // Trigger RUNOUT events.
-      event: "MOVECARD",
-      match: ev => ["VILLAIN", "HERO", "WOUNDS", "BINDINGS"].includes(ev.from.id),
-      after: ev => { if (!ev.parent.from.size) runOutEv(ev, ev.parent.from.id); },
-    },
     { // Replace HQ cards.
       event: "MOVECARD",
       match: function (ev) { return ev.from.isHQ; },
@@ -1284,6 +1278,7 @@ interface ModifiableStats {
   fightCost?: ActionCost
   recruitCost?: ActionCost
   cost?: number
+  wallcrawl?: boolean
 }
 
 type NumericStat = 'defense' | 'vp' | 'cost';
@@ -1563,24 +1558,33 @@ function schemeProgressEv(ev: Ev, amount: number) {
     if (amount === 0) evilWinsEv(ev);
   });
 }
-function _ProgressTrigger(f: Filter<Card>, escaped: boolean, ko: boolean, max: number, perPlayer: boolean): Trigger {
+function getSchemeCountdown() {
+  if (gameState.schemeTarget) {
+    return gameState.schemeTarget - (gameState.schemeProgress || 0);
+  } else {
+    return gameState.schemeProgress;
+  }
+}
+function setSchemeTarget(n: number, perPlayer: boolean = false) {
+  gameState.schemeTarget = perPlayer ? gameState.players.size * n : n;
+}
+function _ProgressTrigger(f: Filter<Card>, escaped: boolean, ko: boolean): Trigger {
   return ({
     event: "MOVECARD",
     match: ev => escaped && ev.to === gameState.escaped || ko && ev.to === gameState.ko,
-    after: ev => schemeProgressEv(ev, (perPlayer ? max * gameState.players.size : max) - (escaped ? gameState.escaped.count(f) : 0) - (ko ? gameState.ko.count(f) : 0)),
+    after: ev => schemeProgressEv(ev, (escaped ? gameState.escaped.count(f) : 0) + (ko ? gameState.ko.count(f) : 0)),
   });
 }
-function escapeProgressTrigger(f: Filter<Card>, max: number, perPlayer: boolean = false) { return _ProgressTrigger(f, true, false, max, perPlayer); }
-function koProgressTrigger(f: Filter<Card>, max: number, perPlayer: boolean = false) { return _ProgressTrigger(f, false, true, max, perPlayer); }
-function koOrEscapeProgressTrigger(f: Filter<Card>, max: number, perPlayer: boolean = false) { return _ProgressTrigger(f, true, true, max, perPlayer); }
-function runOutProgressTrigger(d: string): Trigger {
+function escapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, false); }
+function koProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, false, true); }
+function koOrEscapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, true); }
+function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS", useProgress: boolean = true): Trigger {
   return ({
     event: "MOVECARD",
     match: ev => ev.from.id === d,
-    after: ev => schemeProgressEv(ev, ev.parent.from.size),
+    after: useProgress ? ev => schemeProgressEv(ev, ev.parent.from.size) : ev => ev.parent.from.size || evilWinsEv(ev),
   })
 }
-function runOutEv(ev: Ev, deck: string) { pushEv(ev, "RUNOUT", { deckName: deck, func: () => {} }); }
 function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {
   if (what && typeof what !== "number") pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: what, villain: villain });
   else for (let i = 0; i < what; i++) cont(ev, () => {
@@ -1829,7 +1833,7 @@ function buyCard(ev: Ev): void {
   if (where === "HAND") gainToHandEv(ev, ev.what);
   else if (where === "DECK") gainToDeckEv(ev, ev.what);
   else if (where === "SOARING" || ev.what.soaring) gainSoaringEv(ev, ev.what);
-  else if (ev.what.wallcrawl) gainToDeckEv(ev, ev.what);
+  else if (ev.what.hasWallCrawl()) gainToDeckEv(ev, ev.what);
   else gainEv(ev, ev.what);
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
@@ -2199,7 +2203,6 @@ count escape pile conditions properly (not just trigger on escape, but also not 
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 rename lookAtDeck to revealPlayerDeck where applicable
-redo scheme triggers to functions
 split schemeProgress and schemeTarget
 TODO SW1 extra masterminds setup params
 TODO SW1 fight card placement order
