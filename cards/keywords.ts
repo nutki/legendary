@@ -232,8 +232,11 @@ function isCharacterName(name: string) {
   return (c: Card) => names.has(n => c.cardName.includes(n) || c.heroName && c.heroName.includes(n));
 }
 // generic effect
-function xdRampageEv(ev: Ev, name: string) {
-  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${name} card`, [...revealable(p), ...p.victory.deck].limit(isCharacterName(name)), () => {}, () => gainWoundEv(ev, p), p))
+function xdRampageEv(ev: Ev, name: string, effect0?: (p: Player) => void) {
+  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${name} card`, [...revealable(p), ...p.victory.deck].limit(isCharacterName(name)), () => {}, () => {
+    gainWoundEv(ev, p);
+    effect0 && effect0(p);
+  }, p))
 }
 
 function isSidekick(c: Card) { return c.cardName === 'Sidekick'; }
@@ -247,5 +250,58 @@ function ascendToMastermind(ev: Ev) {
   moveCardEv(ev, ev.source, gameState.mastermind);
 }
 function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void) {
-  // TODO SW1
+  let done: boolean = false;
+  gameState.triggers.push({
+    event: 'TURN', // TODO turn start trigger
+    match: ev => !done,
+    after: ev => (effect(ev), done = true),
+  })
+}
+
+// {SPECTRUM} Some cards have abilities like "Spectrum: Draw a card." You can use a card's Spectrum abilities only if you have at least 3 classes of Hero.
+// Grey S.H.I.E.L.D. Heroes, HYDRA Allies, New Recruits and Sidekicks don't have classes, so they don't help.
+// You can count all the classes you have among cards you played this turn and cards in your hand.
+function spectrumPower() {
+  const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH];
+  return colors.count(color => yourHeroes().has(color)) >= 3;
+}
+
+// <b>Patrol</b>: Some cards have abilities like "Patrol the Sewers: If it's empty, rescue a Bystander." When you play that card, you can use that ability only if that city space has no cards in it.
+// If that city space becomes empty later in the turn, it's too late to use the Patrol ability.
+// This can also say "Fight: Patrol the Bank: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack."
+// Other cards let you patrol even stranger places, like the Escape Pile or a Victory Pile. Similarly, you can use those Patrol abilities if that place has no cards in it.
+// If a Mastermind or Scheme causes a city space not to exist, you can't patrol that space.
+function patrolDeck(where: Deck, effect0: () => void, effect1?: (c: Card) => void) {
+  where.size ? effect0() : effect1 && effect1(where.top);
+}
+function patrolCity(where: CityLocation, effect0: () => void, effect1?: (c: Card) => void) {
+  withCity(where, d => patrolDeck(d, effect0, effect1));
+}
+function patrolCityForVillain(where: CityLocation, effect: (c: Card) => void) {
+  withCity(where, d => d.limit(isVillain).withFirst(effect));
+}
+// <b>Circle of Kung-Fu (and Quack-Fu)</b>: "5th Circle of Kung-Fu" means "During your turn, this Villain has +5 Attack unless you reveal a Hero that costs 5 or more."
+// Likewise, the 7th Circle gets +7 Attack unless you reveal a Hero that costs 7 or more, etc.
+// If a Villain or Mastermind already has a Circle of Kung-Fu, and a Scheme gives them another one, only count the highest circle - don't add them up.
+function nthCircleDefense(c: Card) {
+  return c.printedDefense;
+}
+function nthCircleReveal(ev: Ev) {
+  const n = 4;
+  revealAndEv(ev, c => c.cost >= n, () => {});
+}
+
+// <b>Fateful Resurrection</b>: On a Villain card, "Fight: Fateful Resurrection" means "Fight: Reveal the top card of the Villain Deck. If it's a Scheme Twist or Master Strike, this Villain reenters the city."
+// If a Villain resurrects this way, you still rescue its Bystanders and do its other Fight effects.
+// The Villain pushes into the Sewers and does any Ambush abilities as normal.
+// If a Mastermind Tactic resurrects this way, shuffle it back into the other face down Tactics.
+// If a Villain that has ascended to become a Mastermind resurrects this way, it stays a Mastermind and does not reenter the city.
+function fatefulResurrectionEv(ev: Ev) {
+  revealVillainDeckEv(ev, 1, cards => (cards.has(isTwist) || cards.has(isStrike)) && villainDrawEv(ev, ev.source));
+}
+// <b>Charge</b>: "Ambush: Charge one space" means "(After this Villain enters the Sewers,) it charges forward an extra space, pushing other Villains forward."
+function chargeEv(n: number) {
+  return (ev: Ev) => repeat(n, () => cont(ev, () => {
+    ev.source.location.next ? moveCardEv(ev, ev.source, ev.source.location.next) : villainEscapeEv(ev, ev.source);
+  }))
 }
