@@ -283,7 +283,7 @@ You get + Attack equal to the Cost of the highest-cost Ally in the Lair.
 {POWER Covert} You may KO a card from your hand or discard pile. If you do, gain a New Recruit.
 #COST: 3
 
-#SUBNAME: Illusionary Bindings 
+#SUBNAME: Illusionary Bindings
 #COPIES: 5
 #CLASS: [Ranged]
 #RECRUIT: 2+

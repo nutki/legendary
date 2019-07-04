@@ -51,7 +51,7 @@ while (<A>) {
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;
       s!^<i>5th Circle of Kung-Fu</i> \(2 copies\)$!<i>5th Circle of Kung-Fu</i>!; #FIX
-      s!^<i>(.*?)</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
+      s!^<i>(.*?)\s*</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
       s!^(\[$class\](, \[$class\])?)$!#CLASS: $1! && next;
       s!^Class: (\[$class\](/\[$class\])?)$!#CLASS: $1! && next;
       s!^(?:Team: )?($aff)$!#TEAM: $1! && next;
@@ -69,8 +69,8 @@ while (<A>) {
       s!^Unbreakable Cage$!#SUBNAME: $&\n#COPIES: 3! && next; #FIX
       s!^(Weight of the World) \(1 copy\)$!#SUBNAME: $&\n#COPIES: 1! && next; #FIX
 
-      s!^<span style="font-size: 10pt;"><i><b>(.*?)</b></i></span>( \(first print run promo\))?$!#CARDNAME: $1! && next;
-      s!^<span style="font-size: 10pt;"><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!#CARDNAME: $1\n#COPIES: $3! && next;
+      s!^<span style="font-size: 10pt;"><i><b>(.*?)\s*</b></i></span>( \(first print run promo\))?$!#CARDNAME: $1! && next;
+      s!^<span style="font-size: 10pt;"><i><b>(.*?)\s*</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!#CARDNAME: $1\n#COPIES: $3! && next;
       s!^<span style="font-size: 8pt;"><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
       s!^<span style="font-size: 8pt;"><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
 
