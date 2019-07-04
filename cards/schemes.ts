@@ -808,3 +808,67 @@ makeSchemeCard("Smash Two Dimensions Together", { twists: 8 }, ev => {
   setSchemeTarget(10);
 }),
 ]);
+addTemplates("SCHEMES", "Secret Wars Volume 2", [
+// SETUP: 8 Twists. Add an extra Villain Group.
+// EVILWINS: When the number of escaped Villains equals the number of players plus 6.
+makeSchemeCard("Deadlands Hordes Charge the Wall", { twists: 8 }, ev => {
+  // Twist: Each Villain simultaneously charges two spaces. Play another card from the Villain Deck.
+}),
+// SETUP: 8 Twists.
+// EVILWINS: When there are six Masterminds.
+makeSchemeCard("Enthrone the Barons of Battleworld", { twists: 8 }, ev => {
+  if (ev.nr <= 7) {
+    // Twist 1-7 The Villain in the city or Escape Pile with the highest printed Attack ascends to become a new Mastermind. It gets +2 Attack. It gains the ability "<b>Master Strike</b>: Each Player discards a card with cost equal to this Mastermind's printed VP." <i>(Keep them separate from any Villains who ascend through Escape effects.)</i>
+  } else if (ev.nr === 8) {
+    // Twist 8 The Villain in each player's Victory Pile with the highest printed Attack ascends the same way.
+  }
+}),
+// SETUP: 8 Twists. (1 player: 4 Twists.)
+// RULE: All Villains and Mastermind Tactics have "<b>Fight</b>: {FATEFULRESURRECTION}."
+// EVILWINS: When the number of escaped Villains is 3 times the number of players.
+makeSchemeCard("The Fountain of Eternal Life", { twists: 8 }, ev => {
+  // Twist: A Villain from your Victory Pile enters the Sewers. Put this Twist on the bottom of the Villain Deck.
+}),
+// SETUP: 8 Twists.
+makeSchemeCard("The God-Emperor of Battleworld", { twists: 8 }, ev => {
+  if (ev.nr === 1) {
+    // Twist 1 This Scheme ascends to becomes (sic) a new 9-Attack "God-Emperor" Mastermind worth 9 VP. It has "<b>Master Strike</b>: Each player with exactly six cards in hand reveals a [Tech] Hero or puts two cards from their hand on top of their deck."
+  } else if (ev.nr >= 2 && ev.nr <= 6) {
+    // Twist 2-6 Stack this Twist next to the Scheme. The God-Emperor gets another +2 Attack.
+  } else if (ev.nr === 7) {
+    // Twist 7 If the God-Emperor lives, it KOs all other Masterminds.
+  } else if (ev.nr === 8) {
+    // Twist 8 Evil wins! <i>(If any Mastermind still lives.)</i>
+  }
+}),
+// SETUP: 10 Twists. Always include Khonshu Guardians. Add all fourteen cards for an extra Hero to the Villain Deck.
+// RULE: Heroes in the Villain Deck are "Khonshu Guardian" Villains with Attack equal to their printed cost. While in the Sewers, Rooftops, or Bridge, they are in "wolf form" and have double their Attack. When you defeat one, gain it as a Hero.
+// EVILWINS: When 7 Khonshu Guardians escape.
+makeSchemeCard("The Mark of Khonshu", { twists: 10 }, ev => {
+  // Twist: Play two cards from the Villain Deck.
+}),
+// SETUP: 8 Twists.
+// RULE: Villains and the Mastermind have the Circle of Kung-Fu matching the number of Twists stacked here.
+// EVILWINS: When the number of escaped Villains is double the number of players.
+makeSchemeCard("Master the Mysteries of Kung-Fu", { twists: 8 }, ev => {
+  // Twist: Stack this Twist next to the Scheme.
+}),
+// SETUP: 8 Twists.
+makeSchemeCard("Secret Wars", { twists: 8 }, ev => {
+  if (ev.nr <= 3) {
+    // Twist 1-3 Add another random Mastermind to the game with one Tactic.
+  } else if (ev.nr === 8) {
+    // Twist 8 Evil wins!
+  }
+}),
+// SETUP: 6 Twists. Add 10 random Ambition cards to the Villain Deck.
+// RULE: Ambition cards are Villains with their printed Attack. Add +1 Attack for each Twist stacked next to the Scheme. They are worth 4 VP. Whenever an Ambition Villain escapes, do its Ambition effect.
+// EVILWINS: When 4 Ambition Villains escape.
+makeSchemeCard("Sinister Ambitions", { twists: 6 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Stack this Twist next to the Scheme. Play another card from the Villain Deck.
+  } else if (ev.nr === 6) {
+    // Twist 6 Each Ambition Villain in the city escapes.
+  }
+}),
+]);

@@ -261,9 +261,9 @@ function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void) {
 // {SPECTRUM} Some cards have abilities like "Spectrum: Draw a card." You can use a card's Spectrum abilities only if you have at least 3 classes of Hero.
 // Grey S.H.I.E.L.D. Heroes, HYDRA Allies, New Recruits and Sidekicks don't have classes, so they don't help.
 // You can count all the classes you have among cards you played this turn and cards in your hand.
-function spectrumPower() {
+function spectrumPower(p: Player = playerState) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH];
-  return colors.count(color => yourHeroes().has(color)) >= 3;
+  return colors.count(color => yourHeroes(p).has(color)) >= 3;
 }
 
 // <b>Patrol</b>: Some cards have abilities like "Patrol the Sewers: If it's empty, rescue a Bystander." When you play that card, you can use that ability only if that city space has no cards in it.
@@ -284,11 +284,18 @@ function patrolCityForVillain(where: CityLocation, effect: (c: Card) => void) {
 // Likewise, the 7th Circle gets +7 Attack unless you reveal a Hero that costs 7 or more, etc.
 // If a Villain or Mastermind already has a Circle of Kung-Fu, and a Scheme gives them another one, only count the highest circle - don't add them up.
 function nthCircleDefense(c: Card) {
-  return c.printedDefense;
+  return c.printedDefense + (turnState.pastEvents.has(e => e.type === 'NTHCIRCLEREVEAL' && e.amount >= c.nthCircle) ? 0 : c.nthCircle);
 }
-function nthCircleReveal(ev: Ev) {
-  const n = 4;
-  revealAndEv(ev, c => c.cost >= n, () => {});
+const nthCircleRevealAction = (what: Card, ev: Ev) => {
+  return new Ev(ev, 'NTHCIRCLEREVEAL', {
+    what,
+    amount: what.nthCircle,
+    cost: { cond: c => revealable().has(c => c.cost >= ev.what.nthCircle) },
+    func: ev => selectCardEv(ev, "Reveal a card", revealable().limit(c => c.cost >= ev.what.nthCircle), () => {}),
+  })
+}
+function nthCircleParams(n: number) {
+  return { nthCircle: n, cardActions: [ nthCircleRevealAction ], varDefense: nthCircleDefense };
 }
 
 // <b>Fateful Resurrection</b>: On a Villain card, "Fight: Fateful Resurrection" means "Fight: Reveal the top card of the Villain Deck. If it's a Scheme Twist or Master Strike, this Villain reenters the city."
@@ -296,9 +303,14 @@ function nthCircleReveal(ev: Ev) {
 // The Villain pushes into the Sewers and does any Ambush abilities as normal.
 // If a Mastermind Tactic resurrects this way, shuffle it back into the other face down Tactics.
 // If a Villain that has ascended to become a Mastermind resurrects this way, it stays a Mastermind and does not reenter the city.
-function fatefulResurrectionEv(ev: Ev) {
-  revealVillainDeckEv(ev, 1, cards => (cards.has(isTwist) || cards.has(isStrike)) && villainDrawEv(ev, ev.source));
+function fatefulResurrectionAndEv(effect?: (ev: Ev) => void) {
+  return (ev: Ev) => revealVillainDeckEv(ev, 1, cards => (cards.has(isTwist) || cards.has(isStrike)) && (villainDrawEv(ev, ev.source), effect && cont(ev, () => effect(ev))));
 }
+const fatefulResurrectionEv = fatefulResurrectionAndEv();
+function fatefulResurrectionTacticEv(ev: Ev, effect: () => void) {
+  revealVillainDeckEv(ev, 1, cards => (cards.has(isTwist) || cards.has(isStrike)) && (shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck('TACTICS')), cont(ev, () => effect())));
+}
+
 // <b>Charge</b>: "Ambush: Charge one space" means "(After this Villain enters the Sewers,) it charges forward an extra space, pushing other Villains forward."
 function chargeEv(n: number) {
   return (ev: Ev) => repeat(n, () => cont(ev, () => {

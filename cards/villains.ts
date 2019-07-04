@@ -1326,3 +1326,231 @@ addVillainTemplates("Secret Wars Volume 1", [
   })],
 ]},
 ]);
+addVillainTemplates("Secret Wars Volume 2", [
+{ name: "Deadpool's Secret Secret Wars", cards: [
+// {NTHCIRCLE 5} (2 copies) FIX
+// FIGHT: {FATEFULRESURRECTION}
+// ESCAPE: Deadpool ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals a Hero with an odd-numbered cost or gains a Wound." <i>(0 is even).</i>
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Deadpool's Secret Secret Wars", "Deadpool", 5, 5, {
+    ...nthCircleParams(5),
+    fight: fatefulResurrectionEv,
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p)),
+  })],
+// You can't fight Doop if there is a Villain in an adjacent city space.
+// ATTACK: 2*
+// VP: 2
+  [ 2, makeVillainCard("Deadpool's Secret Secret Wars", "Doop", 2, 2, {
+    fightCond: c => !cityAdjacent(c.location).has(d => d.has(isVillain)),
+  })],
+// AMBUSH: Howard the Duck captures <i>(the heart of)</i> a Bystander.
+// {NTHCIRCLE 7}
+// ATTACK: 1+
+// VP: 4
+  [ 2, makeVillainCard("Deadpool's Secret Secret Wars", "Howard the Duck", 1, 4, {
+    ...nthCircleParams(7),
+    ambush: ev => captureEv(ev, ev.source),
+  })],
+// FIGHT: {SPECTRUM}: KO one of your Heroes.
+// ATTACK: 4
+// VP: 2
+  [ 3, makeVillainCard("Deadpool's Secret Secret Wars", "Pink Sphinx", 4, 2, {
+    fight: ev => spectrumPower() && selectCardAndKOEv(ev, yourHeroes()),
+  })],
+]},
+{ name: "Guardians of Knowhere", cards: [
+// FIGHT: {FATEFULRESURRECTION}
+// ESCAPE: Angela ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: Each player KOs a Hero from their discard pile that costs 1 or more."
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Guardians of Knowhere", "Angela", 7, 5, {
+    fight: fatefulResurrectionEv,
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => selectCardAndKOEv(ev, p.discard.limit(isHero).limit(c => c.cost >= 1), p)),
+  })],
+// FIGHT: Reveal the top card of your deck. KO it or put it back. <b>Fateful Resurrection.</b>
+// ATTACK: 5
+// VP: 4
+  [ 2, makeVillainCard("Guardians of Knowhere", "Drax the Destroyer", 5, 4, {
+    fight: [ ev => {
+      revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "KO a card", cards, c => KOEv(ev, c)));
+    }, fatefulResurrectionEv ],
+  })],
+// AMBUSH: {CHARGE} one space.
+// FIGHT: <i>(After this goes to your victory pile.)</i> {PATROL Sewers}: If it's empty, each other player gains a Wound.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Guardians of Knowhere", "Gamora", 6, 4, {
+    ambush: chargeEv(1),
+    fight: ev => patrolCity('SEWERS', () => eachOtherPlayerVM(p => gainWoundEv(ev, p))),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+// FIGHT: <b>Fateful Resurrection.</b> If Groot resurrects this way, then he becomes Tiny Dancing Groot with Attack 1 and no abilities for the rest of the turn.
+// ATTACK: 5
+// VP: 4
+  [ 2, makeVillainCard("Guardians of Knowhere", "Groot", 5, 4, {
+    fight: fatefulResurrectionAndEv(ev => {
+      addTurnSet('defense', c => c === ev.source, () => 1);
+      addTurnSet('fight', c => c === ev.source, () => []);
+    }),
+  })],
+// FIGHT: <i>(After this goes to your Victory Pile.)</i> {PATROL Bank}: If it's empty, draw a card. If it's not empty, KO one of your Heroes.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Guardians of Knowhere", "Rocket Raccoon", 4, 2, {
+    fight: ev => patrolCity('BANK', () => drawEv(ev), () => selectCardAndKOEv(ev, yourHeroes())),
+  })],
+]},
+{ name: "K'un-lun", cards: [
+// {NTHCIRCLE 5}
+// ESCAPE: Each player reveals a Hero that costs 5 or more, or they discard a card.
+// ATTACK: 5+
+// VP: 5
+  [ 2, makeVillainCard("K'un-lun", "Laughing Skull", 5, 5, {
+    ...nthCircleParams(5),
+    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => pickDiscardEv(ev, p), p)),
+  })],
+// {NTHCIRCLE 6}
+// ESCAPE: Each player reveals a Hero that costs 6 or more, or they gain a wound.
+// ATTACK: 6+
+// VP: 6
+  [ 2, makeVillainCard("K'un-lun", "Rand K'ai", 6, 6, {
+    ...nthCircleParams(6),
+    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => gainWoundEv(ev, p), p)),
+  })],
+// {NTHCIRCLE 3}
+// FIGHT: For each of your Heroes that costs 3, KO one of your Heroes.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("K'un-lun", "Razor Fist", 3, 3, {
+    ...nthCircleParams(3),
+    fight: ev => repeat(yourHeroes().count(c => c.cost === 3), () => selectCardAndKOEv(ev, yourHeroes())),
+  })],
+// {NTHCIRCLE 4}
+// FIGHT: Draw a card for each of your Heroes that costs 4.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("K'un-lun", "Red Sai", 4, 4, {
+    ...nthCircleParams(4),
+    fight: ev => drawEv(ev, yourHeroes().count(c => c.cost === 4)),
+  })],
+]},
+{ name: "Monster Metropolis", cards: [
+// FIGHT: KO a card from your discard pile. {FATEFULRESURRECTION}
+// ATTACK: 4
+// VP: 3
+  [ 2, makeVillainCard("Monster Metropolis", "Bug, Shiklah's Dragon", 4, 3, {
+    fight: [ ev => selectCardAndKOEv(ev, playerState.discard.deck), fatefulResurrectionEv ],
+  })],
+// FIGHT: {FATEFULRESURRECTION}. Then, {XDRAMPAGE Deadpool}
+// ESCAPE: {XDRAMPAGE Deadpool}
+// ATTACK: 5
+// VP: 5
+  [ 2, makeVillainCard("Monster Metropolis", "Ghost Deadpool", 5, 5, {
+    fight: [ fatefulResurrectionEv, ev => xdRampageEv(ev, 'Deadpool')],
+    escape: ev => xdRampageEv(ev, 'Deadpool'),
+  })],
+// AMBUSH: Each Monster Metropolis Villain captures a Bystander.
+// FIGHT: {FATEFULRESURRECTION}
+// ATTACK: 5
+// VP: 4
+  [ 2, makeVillainCard("Monster Metropolis", "Man-Thing", 5, 4, {
+    ambush: ev => cityVillains().limit(isGroup("Monster Metropolis")).each(c => captureEv(ev, c)),
+    fight: fatefulResurrectionEv,
+  })],
+// AMBUSH: {CHARGE} two spaces.
+// When in the Sewers, Rooftops or Bridge, he is in "wolf form" and gets +3 Attack.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Monster Metropolis", "Marcus Symbiote Centaur", 3, 3, {
+    ambush: chargeEv(2),
+    varDefense: c => c.printedDefense + (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 3 : 0),
+  })],
+]},
+{ name: "Utopolis", cards: [
+// AMBUSH: {CHARGE} one space.
+// FIGHT: {SPECTRUM}: KO a card from your discard pile.
+// ESCAPE: Each player who doesn't have {SPECTRUM} discards a card. FIX
+// ATTACK: 6
+// VP: 4
+  [ 3, makeVillainCard("Utopolis", "Doctor Spectrum", 6, 4, {
+    ambush: chargeEv(1),
+    fight: ev => spectrumPower() && selectCardAndKOEv(ev, playerState.discard.deck),
+    escape: ev => eachPlayer(p => spectrumPower(p) || pickDiscardEv(ev, p)),
+  })],
+// While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
+// ESCAPE: Nighthawk becomes a Scheme Twist that takes effect immediately.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Utopolis", "Nighthawk", 4, 4, {
+    escape: ev => playTwistEv(ev, ev.source),
+    varDefense: c => c.printedDefense + (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 4 : 0)
+  })],
+// AMBUSH: {CHARGE} one space.
+// ESCAPE: Warrior Woman ascends to become a new Mastermind. She gains the ability, "<b>Master Strike</b>: {PATROL Bank}: If there's a Villain there, each player discards a card with a Recruit icon."
+// ATTACK: 8
+// VP: 6
+  [ 1, makeVillainCard("Utopolis", "Warrior Woman", 8, 6, {
+    ambush: chargeEv(1),
+    escape: ascendToMastermind,
+    strike: ev => patrolCityForVillain('BANK', () => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p))),
+  })],
+// AMBUSH: {CHARGE} three spaces.
+// FIGHT: <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound. FIX
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Utopolis", "Whizzer", 5, 3, {
+    ambush: chargeEv(3),
+    fight: ev => patrolCityForVillain('BRIDGE', () => eachOtherPlayerVM(p => gainWoundEv(ev, p))),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+]},
+{ name: "X-Men '92", cards: [
+// AMBUSH: Charge one space.
+// FIGHT: Gain this as a Hero.
+// ATTACK: 5
+// GAINABLE
+// CLASS: [Strength]
+// {POWER Tech} Draw a card.
+// ATTACKG: 2
+  [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Beast", 5, u, {
+    ambush: chargeEv(1),
+  }), u, 2, Color.STRENGTH, u, "D", ev => superPower(Color.TECH) && drawEv(ev, 1))],
+// FIGHT: Gain this as a Hero.
+// ATTACKG: 4 FIX
+// GAINABLE
+// CLASS: [Ranged]
+// <i>Spectrum:</i> You get +2 Attack.
+// ATTACKG: 2+
+  [ 3, makeGainableCard(makeVillainCard("X-Men '92", "'92 Jubilee", 4, u, {}), u, 2, Color.RANGED, u, "D", ev => spectrumPower() && addAttackEvent(ev, 2)) ],
+// ESCAPE: '92 Professor X ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Stack the two heroes from the HQ with the highest cost next to '92 Professor X. He gets +1 Attack for each Hero stacked there. Players can recruit the top card of the stack."
+// ATTACK: 8+
+// VP: 6
+  [ 1, makeVillainCard("X-Men '92", "'92 Professor X", 8, 6, {
+    escape: ascendToMastermind,
+    strike: ev => {
+      // Copied from Villains' Professor X Mastermind
+      const selected: Card[] = [];
+      selectCardEv(ev, "Select an Ally", HQCardsHighestCost(), c => selected.push(c));
+      cont(ev, () => selectCardEv(ev, "Select another Ally", hqHeroes().limit(c => !selected.includes(c)).highest(c => c.cost), c => selected.push(c)));
+      cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, c, ev.source, "PAWN")));
+      cont(ev, () => selected.each(c => attachCardEv(ev, c, ev.source, "PAWN")));
+    },
+    cardActions: [ (c: Card, ev: Ev) => c.attached("PAWN").size ? recruitCardActionEv(ev, c.attachedDeck("PAWN").top) : noOpActionEv(ev) ],
+  })],
+// FIGHT: Gain this as a Hero.
+// ESCAPE: {XDRAMPAGE Wolverine}
+// ATTACK: 7
+// GAINABLE
+// CLASS: [Instinct]
+// {POWER Instinct} Draw two cards.
+// ATTACKG: 2
+  [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Wolverine", 7, u, {
+    escape: ev => xdRampageEv(ev, 'Wolverine'),
+  }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 2))],
+]},
+]);

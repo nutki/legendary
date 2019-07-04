@@ -105,9 +105,9 @@ sub gainable() {
       my ($gs, $ge) = gainable();
       filterprint(qw(CARDNAME VP COPIES));
       $copies = $_{COPIES} * 1 || 1;
-      print "{ card: [ $copies, ${gs}makeBystanderCard(\"$_{CARDNAME}\"";
+      print "[ $copies, ${gs}makeBystanderCard(\"$_{CARDNAME}\"";
       print ", ev => {}" if $_{RESCUE};
-      print ")$ge ] },\n";
+      print ")$ge ],\n";
       $_{VP} == 1 || !defined($_{VP}) or die "VP is not 1: $_{VP}";
     } elsif ($type eq "HEROES") {
       ($_, my @subitems) = split/^\n+/m;

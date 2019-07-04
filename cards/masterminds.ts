@@ -647,3 +647,125 @@ makeMastermindCard("Zombie Green Goblin", 11, 6, "The Deadlands", ev => {
   varDefense: c => c.printedDefense + gameState.ko.limit(isHero).count(c => c.cost >= 7),
 }),
 ]);
+addTemplates("MASTERMINDS", "Secret Wars Volume 2", [
+// 7th Circle of Kung-Fu
+makeMastermindCard("Immortal Emperor Zheng-Zhu", 7, 5, "K'un-Lun", ev => {
+// Each player reveals a Hero that costs 7 or more, or they discard down to 3 cards.
+  eachPlayer(p => revealOrEv(ev, c => c.cost >= 7, () => selectObjectsEv(ev, "Discard down to 3 cards", p.hand.size - 3, p.hand.deck, c => discardEv(ev, c), p), p));
+}, [
+  [ "Ultimate Kung-Fu Mastery", ev => {
+  // Each other player reveals a card with "Circle of Kung-Fu" from their Victory Pile or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Reveal a card with 'Circle of Kung-Fu'", p.victory.limit(c => c.nthCircle > 0), () => {}, () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Emperor's Justice", ev => {
+  // Each other player reveals a Marvel Knight Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, "Marvel Knight", () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Humble the Pretenders", ev => {
+  // Each other player reveals a Marvel Knight Hero or discards a card that costs less than 7.
+    eachOtherPlayerVM(p => revealOrEv(ev, "Marvel Knight", () => selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost < 7), c => discardEv(ev, c), p), p));
+  } ],
+  [ "Imperial Edict", ev => {
+  // Choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck in random order.
+    const cards: Card[] = [];
+    selectObjectsAnyEv(ev, "Put Heroes on the bottom of the Hero Deck", hqHeroes(), c => cards.push(c));
+    cont(ev, () => {
+      cards.shuffle();
+      cards.each(c => moveCardEv(ev, c, gameState.herodeck, true));
+    });
+  } ],
+], {
+  ...nthCircleParams(7),
+}),
+// Escape: Each player gains a wound. Put King Hyperion on the Mastermind space.
+makeMastermindCard("King Hyperion", 12, 6, "Utopolis", ev => {
+// King Hyperion enters the city if he was not already there. Then, he <b>charges</b> three spaces.
+  enterCityEv(ev, ev.source);
+  cont(ev, chargeEv(3));
+}, [
+  [ "Worshipped by Millions", ev => {
+  // If King Hyperion is in the city, put him back on the Mastermind space and shuffle this Tactic back into his Tactics. If you do, rescue six Bystanders.
+    if (!ev.source.mastermind.location.isCity) return;
+    moveCardEv(ev, ev.source.mastermind, gameState.mastermind);
+    shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+    rescueEv(ev, 6);
+  } ],
+  [ "Royal Treasury", ev => {
+  // If King Hyperion is in the city, put him back on the Mastermind space and shuffle this Tactic back into his Tactics. If you do, you get +5 Recruit.
+    if (!ev.source.mastermind.location.isCity) return;
+    moveCardEv(ev, ev.source.mastermind, gameState.mastermind);
+    shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+    addRecruitEvent(ev, 5);
+  } ],
+  [ "Monarch of Utopolis", ev => {
+  // If King Hyperion is in the city, put him back on the Mastermind space and shuffle this Tactic back into his Tactics. If you do, when you drew a new hand of cards at the end of this turn, draw three extra cards.
+    if (!ev.source.mastermind.location.isCity) return;
+    moveCardEv(ev, ev.source.mastermind, gameState.mastermind);
+    shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+    addEndDrawMod(3);
+  } ],
+  [ "Rule with an Iron Fist", ev => {
+  // If King Hyperion is in the city, put him back on the Mastermind space and shuffle this Tactic back into his Tactics. If you do, you may defeat a Villain in the city for free.
+    if (!ev.source.mastermind.location.isCity) return;
+    moveCardEv(ev, ev.source.mastermind, gameState.mastermind);
+    shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+    selectCardOptEv(ev, "Choose a Villain to defeat", cityVillains(), c => defeatEv(ev, c));
+  } ],
+], {
+  escape: ev => {
+    eachPlayer(p => gainWoundEv(ev, p));
+    moveCardEv(ev, ev.source, gameState.mastermind);
+  }
+}),
+makeMastermindCard("Shiklah, the Demon Bride", 9, 6, "Monster Metropolis", ev => {
+// Reveal the top three cards of the Villain Deck. Put all the Scheme Twists you revealed on top of the Villain Deck. Put the rest on the bottom of that deck in random order.
+}, [
+  [ "Enslavement Beam", ev => {
+  // {FATEFULRESURRECTION}. If she resurrects, rescue four bystanders.
+    fatefulResurrectionTacticEv(ev, () => rescueEv(ev, 4));
+  } ],
+// GAINABLE
+// TEAM: (Unaffiliated)
+// CLASS: [Covert]
+// You get +1 Attack for each Hero with an odd-numbered cost you played this turn. <i>(0 is even.)</i>
+// ATTACK: 5+
+  makeGainableCard(makeTacticsCard("Shiklah's Husband, Deadpool"), u, 5, Color.COVERT, u, "", ev => addAttackEvent(ev, turnState.cardsPlayed.count(isCostOdd))),
+  [ "Drain Life", ev => {
+  // {FATEFULRESURRECTION}. If she resurrects, defeat a Villain in the city for free.
+    fatefulResurrectionTacticEv(ev, () => selectCardEv(ev, "Select a Villain to defeat", cityVillains(), c => defeatEv(ev, c)));
+  } ],
+  [ "Infernal Power", ev => {
+  // {FATEFULRESURRECTION}. If she resurrects, draw two cards.
+    fatefulResurrectionTacticEv(ev, () => drawEv(ev, 2));
+  } ],
+]),
+// Spider-Queen gets +1 Attack for each Bystander in the Escape pile.
+makeMastermindCard("Spider-Queen", 8, 6, "Spider-Infected", ev => {
+// Each player puts a Spider-Infected from their Victory Pile into an empty city space. Any player who cannot do so gains a Wound.
+  eachPlayer(p => selectCardOrEv(ev, "Select a Villain to put in the city", p.victory.limit(isGroup(ev.source.leads)), c => {
+    selectCardOrEv(ev, "Select an empty city space", gameState.city.limit(d => !d.size), d => {
+      moveCardEv(ev, c, d);
+    }, () => gainWoundEv(ev, p), p);
+  }, () => gainWoundEv(ev, p), p));
+}, [
+  [ "Sonic Scream", ev => {
+  // Reveal the top eight cards of the Villain Deck. Put all the Bystanders you revealed into the Escape pile. Put the rest on the bottom of the Villain Deck in random orders.
+    revealVillainDeckEv(ev, 8, cards => cards.limit(isBystander).each(c => moveCardEv(ev, c, gameState.escaped)), true, true);
+  } ],
+  [ "Infect the Entire City", ev => {
+  // Put a Bystander from the Bystander Deck into the Escape Pile. Then, each Spider-Infected in the city captures a Bystander.
+    gameState.bystanders.withTop(c => moveCardEv(ev, c, gameState.escaped));
+    cont(ev, () => cityVillains().limit(isGroup(ev.source.mastermind.leads)).each(c => captureEv(ev, c)));
+  } ],
+  [ "Control Arachnid Genes", ev => {
+  // You may gain a Spider-Friend Hero from the HQ.
+    selectCardOptEv(ev, "Gain a Spider-Friend", hqHeroes().limit("Spider-Friend"), c => gainEv(ev, c));
+  } ],
+  [ "Web the Skyscrapers", ev => {
+  // Each other player reveals a Spider-Friend Hero or puts a Bystander from their Victory Pile into the Escape pile.
+    eachOtherPlayerVM(p => revealOrEv(ev, "Spider-Friend", () => selectCardEv(ev, "Put a Bystander into the Escape pile", p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped)), p));
+  } ],
+], {
+  varDefense: c => c.printedDefense + gameState.escaped.count(isBystander)
+}),
+]);

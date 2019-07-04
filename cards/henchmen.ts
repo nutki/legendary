@@ -87,3 +87,25 @@ makeHenchmenCard("M.O.D.O.K.s", 3, {
 // {POWER Strength Ranged} You get +1 Recruit.
 makeGainableCard(makeHenchmenCard("Thor Corps", 3, {}, u), 2, u, Color.STRENGTH | Color.RANGED, "Avengers", "D", ev => superPower(Color.STRENGTH, Color.RANGED) && addRecruitEvent(ev, 1)),
 ]);
+addTemplates("HENCHMEN", "Secret Wars Volume 2", [
+// While in the Sewers, Rooftops or Bridge, this is in "wolf form" and gets +2 Attack.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3
+makeHenchmenCard("Khonshu Guardians", 3, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: c => c.printedDefense + (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 2 : 0),
+}),
+// FIGHT: KO one of your Heroes.
+// {FATEFULRESURRECTION} FIX
+// ATTACK: 3
+makeHenchmenCard("Magma Men", 3, {
+  fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), fatefulResurrectionEv ],
+}),
+// AMBUSH: This captures a Bystander.
+// FIGHT: The next Hero you gain this turn has Wall-Crawl.
+// ATTACK: 3
+makeHenchmenCard("Spider-Infected", 3, {
+  fight: ev => captureEv(ev, ev.source),
+  ambush: ev => turnState.nextHeroRecruit = 'DECK',
+}),
+]);

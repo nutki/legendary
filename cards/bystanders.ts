@@ -23,3 +23,16 @@ addBystanderTemplates("Secret Wars Volume 1", [
 // RESCUE: you get +2 Recruit, usable only to recruit Heroes in the HQ space under the Bank.
 [ 3, makeBystanderCard("Banker", ev => playerState === ev.who && addRecruitSpecialEv(ev, c => isLocation(c.location.below, 'BANK'), 2)) ],
 ]);
+addBystanderTemplates("Secret Wars Volume 2", [
+// RESCUE: {PATROL Sewers}: If it's empty, you get +2 Recruit.
+[ 3, makeBystanderCard("Alligator Trapper", ev => playerState === ev.who && patrolCity('SEWERS', () => addRecruitEvent(ev, 2))) ],
+// RESCUE: this card becomes a Villain with 3 Attack and enters the city. It gains the ability: "<b>Fight</b>: KO one of your Heroes."
+[ 4, makeBystanderCard("Shapeshifted Copycat", ev => {
+  addStatSet('isVillain', c => c === ev.source, () => true);
+  addStatSet('defense', c => c === ev.source, () => 3);
+  addStatSet('fight', c => c === ev.source, () => ev => selectCardAndKOEv(ev, yourHeroes()));
+  villainDrawEv(ev, ev.source);
+}) ],
+// RESCUE: a player of your choice gains a S.H.I.E.L.D. Officer.
+[ 3, makeBystanderCard("Undercover Agent", ev => choosePlayerEv(ev, p => gameState.officer.withTop(c => gainEv(ev, c)))) ],
+]);

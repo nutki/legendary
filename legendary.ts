@@ -95,6 +95,7 @@ interface Card {
   isArtifact?: boolean
   artifactEffects?: ((ev: Ev) => void)[]
   gainable?: boolean
+  nthCircle?: number
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -112,6 +113,7 @@ interface VillainCardAbillities {
   triggers?: Trigger[]
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   xTremeAttack?: boolean
+  nthCircle?: number
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -122,6 +124,8 @@ interface MastermindCardAbillities {
   triggers?: Trigger[]
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   fightCond?: (c?: Card) => boolean
+  escape?: Handler | Handler[] // King Hyperion
+  nthCircle?: number
 }
 interface HeroCardAbillities {
   trigger?: Trigger
@@ -204,7 +208,7 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
   c.color = color;
   c.team = team;
   c.flags = flags;
-  if (c.cardType === "VILLAIN") c.fight = ev => gainEv(ev, ev.source);
+  if (c.cardType === "VILLAIN" || c.cardType === "TACTIC") c.fight = ev => gainEv(ev, ev.source);
   if (c.cardType === "BYSTANDER") c.rescue = ev => gainEv(ev, ev.source);
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   if (abilities) {
@@ -224,17 +228,21 @@ function makeVillainCard(group: string, name: string, defense: number, vp: numbe
   if (abilities) Object.assign(c, abilities);
   return c;
 }
-function makeMastermindCard(name: string, defense: number, vp: number, leads: string, strike: (ev: Ev) => void, tactics: [string, (ev: Ev) => void][], abilities?: MastermindCardAbillities) {
+function makeTacticsCard(name: string, fight?: Handler) {
+  const t = new Card("TACTICS", name);
+  if (fight) t.fight = fight;
+  return t;
+}
+function makeMastermindCard(name: string, defense: number, vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
   let c = new Card("MASTERMIND", name);
   c.printedDefense = defense;
   c.printedVP = vp;
   c.leads = leads;
   c.strike = strike;
   c.tacticsTemplates = tactics.map(function (e) {
-    let t = new Card("TACTICS", e[0]);
+    const t = e instanceof Card ? e : makeTacticsCard(e[0], e[1]);
     t.printedVP = vp;
     t.printedDefense = defense;
-    t.fight = e[1];
     t.mastermind = c;
     return t;
   });
@@ -429,6 +437,7 @@ type EvType =
 'THROWARTIFACT' |
 // Expansion effects
 'URUENCHANTEDREVEAL' |
+'NTHCIRCLEREVEAL' |
 // Special
 'STATE' |
 'TURN' |
@@ -1928,6 +1937,10 @@ function villainDraw(ev: Ev): void {
   } else {
     throw Error("dont know what to do with: " + c.id);
   }
+}
+function enterCityEv(ev: Ev, c: Card) {
+  moveCardEv(ev, c, gameState.cityEntry);
+  pushEffects(ev, c, 'ambush', c.ambush);
 }
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
 function villainEscape(ev: Ev): void {
