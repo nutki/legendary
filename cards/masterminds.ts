@@ -681,7 +681,7 @@ makeMastermindCard("Immortal Emperor Zheng-Zhu", 7, 5, "K'un-Lun", ev => {
 makeMastermindCard("King Hyperion", 12, 6, "Utopolis", ev => {
 // King Hyperion enters the city if he was not already there. Then, he <b>charges</b> three spaces.
   enterCityEv(ev, ev.source);
-  cont(ev, chargeEv(3));
+  cont(ev, () => villainChargeEv(ev, ev.source, 3));
 }, [
   [ "Worshipped by Millions", ev => {
   // If King Hyperion is in the city, put him back on the Mastermind space and shuffle this Tactic back into his Tactics. If you do, rescue six Bystanders.

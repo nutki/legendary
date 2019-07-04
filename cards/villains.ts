@@ -1384,7 +1384,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("Guardians of Knowhere", "Gamora", 6, 4, {
-    ambush: chargeEv(1),
+    ambush: chargeAmbushEffect(1),
     fight: ev => patrolCity('SEWERS', () => eachOtherPlayerVM(p => gainWoundEv(ev, p))),
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
@@ -1466,7 +1466,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACK: 3+
 // VP: 3
   [ 2, makeVillainCard("Monster Metropolis", "Marcus Symbiote Centaur", 3, 3, {
-    ambush: chargeEv(2),
+    ambush: chargeAmbushEffect(2),
     varDefense: c => c.printedDefense + (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 3 : 0),
   })],
 ]},
@@ -1477,7 +1477,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACK: 6
 // VP: 4
   [ 3, makeVillainCard("Utopolis", "Doctor Spectrum", 6, 4, {
-    ambush: chargeEv(1),
+    ambush: chargeAmbushEffect(1),
     fight: ev => spectrumPower() && selectCardAndKOEv(ev, playerState.discard.deck),
     escape: ev => eachPlayer(p => spectrumPower(p) || pickDiscardEv(ev, p)),
   })],
@@ -1494,7 +1494,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACK: 8
 // VP: 6
   [ 1, makeVillainCard("Utopolis", "Warrior Woman", 8, 6, {
-    ambush: chargeEv(1),
+    ambush: chargeAmbushEffect(1),
     escape: ascendToMastermind,
     strike: ev => patrolCityForVillain('BANK', () => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p))),
   })],
@@ -1504,7 +1504,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Utopolis", "Whizzer", 5, 3, {
-    ambush: chargeEv(3),
+    ambush: chargeAmbushEffect(3),
     fight: ev => patrolCityForVillain('BRIDGE', () => eachOtherPlayerVM(p => gainWoundEv(ev, p))),
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
@@ -1518,7 +1518,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // {POWER Tech} Draw a card.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Beast", 5, u, {
-    ambush: chargeEv(1),
+    ambush: chargeAmbushEffect(1),
   }), u, 2, Color.STRENGTH, u, "D", ev => superPower(Color.TECH) && drawEv(ev, 1))],
 // FIGHT: Gain this as a Hero.
 // ATTACKG: 4 FIX

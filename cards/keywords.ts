@@ -284,7 +284,7 @@ function patrolCityForVillain(where: CityLocation, effect: (c: Card) => void) {
 // Likewise, the 7th Circle gets +7 Attack unless you reveal a Hero that costs 7 or more, etc.
 // If a Villain or Mastermind already has a Circle of Kung-Fu, and a Scheme gives them another one, only count the highest circle - don't add them up.
 function nthCircleDefense(c: Card) {
-  return c.printedDefense + (turnState.pastEvents.has(e => e.type === 'NTHCIRCLEREVEAL' && e.amount >= c.nthCircle) ? 0 : c.nthCircle);
+  return (turnState.pastEvents.has(e => e.type === 'NTHCIRCLEREVEAL' && e.amount >= c.nthCircle) ? 0 : c.nthCircle);
 }
 const nthCircleRevealAction = (what: Card, ev: Ev) => {
   return new Ev(ev, 'NTHCIRCLEREVEAL', {
@@ -295,7 +295,7 @@ const nthCircleRevealAction = (what: Card, ev: Ev) => {
   })
 }
 function nthCircleParams(n: number) {
-  return { nthCircle: n, cardActions: [ nthCircleRevealAction ], varDefense: nthCircleDefense };
+  return { printedNthCircle: n, cardActions: [ nthCircleRevealAction ] };
 }
 
 // <b>Fateful Resurrection</b>: On a Villain card, "Fight: Fateful Resurrection" means "Fight: Reveal the top card of the Villain Deck. If it's a Scheme Twist or Master Strike, this Villain reenters the city."
@@ -312,8 +312,9 @@ function fatefulResurrectionTacticEv(ev: Ev, effect: () => void) {
 }
 
 // <b>Charge</b>: "Ambush: Charge one space" means "(After this Villain enters the Sewers,) it charges forward an extra space, pushing other Villains forward."
-function chargeEv(n: number) {
-  return (ev: Ev) => repeat(n, () => cont(ev, () => {
-    ev.source.location.next ? moveCardEv(ev, ev.source, ev.source.location.next) : villainEscapeEv(ev, ev.source);
-  }))
+function villainChargeEv(ev: Ev, c: Card, n: number) {
+  repeat(n, () => cont(ev, () => {
+    c.location.next ? moveCardEv(ev, c, c.location.next) : villainEscapeEv(ev, c);
+  }));
 }
+const chargeAmbushEffect = (n: number) => (ev: Ev) => villainChargeEv(ev, ev.source, n);

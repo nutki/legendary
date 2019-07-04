@@ -811,55 +811,111 @@ makeSchemeCard("Smash Two Dimensions Together", { twists: 8 }, ev => {
 addTemplates("SCHEMES", "Secret Wars Volume 2", [
 // SETUP: 8 Twists. Add an extra Villain Group.
 // EVILWINS: When the number of escaped Villains equals the number of players plus 6.
-makeSchemeCard("Deadlands Hordes Charge the Wall", { twists: 8 }, ev => {
+makeSchemeCard("Deadlands Hordes Charge the Wall", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
   // Twist: Each Villain simultaneously charges two spaces. Play another card from the Villain Deck.
-}),
+  cityVillains().each(c => villainChargeEv(ev, c, 2));
+  villainDrawEv(ev);
+}, escapeProgressTrigger(isVillain), () => setSchemeTarget(6 + gameState.players.size)),
 // SETUP: 8 Twists.
 // EVILWINS: When there are six Masterminds.
 makeSchemeCard("Enthrone the Barons of Battleworld", { twists: 8 }, ev => {
+  const ascend = (m: Card) => {
+    moveCardEv(ev, m, gameState.mastermind);
+    addStatSet('strike', c => c === m, () => ev => {
+      eachPlayer(p => selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost === m.printedVP), c => discardEv(ev, c), p));
+    })
+  };
   if (ev.nr <= 7) {
     // Twist 1-7 The Villain in the city or Escape Pile with the highest printed Attack ascends to become a new Mastermind. It gets +2 Attack. It gains the ability "<b>Master Strike</b>: Each Player discards a card with cost equal to this Mastermind's printed VP." <i>(Keep them separate from any Villains who ascend through Escape effects.)</i>
+    selectCardEv(ev, "Choose a Villain", gameState.escaped.limit(isVillain).highest(c => c.printedAttack), ascend);
   } else if (ev.nr === 8) {
     // Twist 8 The Villain in each player's Victory Pile with the highest printed Attack ascends the same way.
+    eachPlayer(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain).highest(c => c.printedAttack), ascend));
   }
+}, [
+  { event: 'DEFEAT', match: ev => isMastermind(ev.what), after: ev => schemeProgressEv(ev, fightableCards().count(isMastermind)) },
+  { event: 'MOVECARD', match: ev => ev.to === gameState.mastermind, after: ev => schemeProgressEv(ev, fightableCards().count(isMastermind)) },
+], () => {
+  setSchemeTarget(6);
+  gameState.schemeProgress = fightableCards().count(isMastermind);
 }),
 // SETUP: 8 Twists. (1 player: 4 Twists.)
 // RULE: All Villains and Mastermind Tactics have "<b>Fight</b>: {FATEFULRESURRECTION}."
 // EVILWINS: When the number of escaped Villains is 3 times the number of players.
-makeSchemeCard("The Fountain of Eternal Life", { twists: 8 }, ev => {
+makeSchemeCard("The Fountain of Eternal Life", { twists: [ 4, 8, 8, 8, 8 ] }, ev => {
   // Twist: A Villain from your Victory Pile enters the Sewers. Put this Twist on the bottom of the Villain Deck.
+  selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => villainDrawEv(ev, c));
+  moveCardEv(ev, ev.source, gameState.villaindeck, true);
+}, escapeProgressTrigger(isVillain), () => {
+  setSchemeTarget(3, true);
+  addStatSet('fight', isVillain, (c, prev) => combineHandlers(prev, fatefulResurrectionEv));
+  addStatSet('fight', isTactic, (c, prev) => combineHandlers(prev, ev => fatefulResurrectionTacticEv(ev, () => {})));
 }),
 // SETUP: 8 Twists.
 makeSchemeCard("The God-Emperor of Battleworld", { twists: 8 }, ev => {
   if (ev.nr === 1) {
     // Twist 1 This Scheme ascends to becomes (sic) a new 9-Attack "God-Emperor" Mastermind worth 9 VP. It has "<b>Master Strike</b>: Each player with exactly six cards in hand reveals a [Tech] Hero or puts two cards from their hand on top of their deck."
+    moveCardEv(ev, ev.source, gameState.mastermind);
+    addStatSet('strike', c => c === ev.source, () => ev => {
+      eachPlayer(p => p.hand.size === 6 && revealOrEv(ev, "Reveal a Hero", () => {
+        selectObjectsEv(ev, "Put two cards on top of your deck", 2, p.hand.deck, c => moveCardEv(ev, c, p.deck), p);
+      }))
+    });
+    addStatSet('vp', c => c === ev.source, () => 9);
+    addStatSet('defense', c => c === ev.source, () => 9 + 2 * gameState.scheme.attached('TWIST').size);
   } else if (ev.nr >= 2 && ev.nr <= 6) {
     // Twist 2-6 Stack this Twist next to the Scheme. The God-Emperor gets another +2 Attack.
+    attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
   } else if (ev.nr === 7) {
     // Twist 7 If the God-Emperor lives, it KOs all other Masterminds.
-  } else if (ev.nr === 8) {
-    // Twist 8 Evil wins! <i>(If any Mastermind still lives.)</i>
+    fightableCards().includes(ev.source) && fightableCards().limit(isMastermind).limit(c => c !== ev.source).each(c => KOEv(ev, c)); // TODO detach on KO
   }
-}),
+  // Twist 8 Evil wins! <i>(If any Mastermind still lives.)</i>
+  schemeProgressEv(ev, ev.nr);
+}, [], () => setSchemeTarget(8)),
 // SETUP: 10 Twists. Always include Khonshu Guardians. Add all fourteen cards for an extra Hero to the Villain Deck.
 // RULE: Heroes in the Villain Deck are "Khonshu Guardian" Villains with Attack equal to their printed cost. While in the Sewers, Rooftops, or Bridge, they are in "wolf form" and have double their Attack. When you defeat one, gain it as a Hero.
 // EVILWINS: When 7 Khonshu Guardians escape.
-makeSchemeCard("The Mark of Khonshu", { twists: 10 }, ev => {
+makeSchemeCard("The Mark of Khonshu", { twists: 10, heroes: [4, 6, 6, 6, 7], required: { henchmen: 'Khonshu Guardians' }}, ev => {
   // Twist: Play two cards from the Villain Deck.
+  villainDrawEv(ev);
+  villainDrawEv(ev);
+}, escapeProgressTrigger(isGroup('Khonshu Guardians')), () => {
+  setSchemeTarget(7);
+  const isExtra = (c: Card) => c.heroName === extraHeroName();
+  // Based on 'Secret Invasion of the Skrull Shapeshifters'
+  addStatSet('defense', isExtra, c => c.cost * (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 2 : 1));
+  addStatSet('isVillain', isExtra, () => true);
+  addStatSet('villainGroup', isExtra, () => "Khonshu Guardians");
+  addStatSet('fight', isExtra, () => (ev: Ev) => gainEv(ev, ev.source));
+  gameState.herodeck.limit(isExtra).each(c => moveCard(c, gameState.villaindeck));
+  gameState.villaindeck.shuffle();
 }),
 // SETUP: 8 Twists.
 // RULE: Villains and the Mastermind have the Circle of Kung-Fu matching the number of Twists stacked here.
 // EVILWINS: When the number of escaped Villains is double the number of players.
 makeSchemeCard("Master the Mysteries of Kung-Fu", { twists: 8 }, ev => {
   // Twist: Stack this Twist next to the Scheme.
+  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+}, escapeProgressTrigger(isVillain), () => {
+  addStatSet('nthCircle', isEnemy, (c, prev) => Math.max(prev || 0, gameState.scheme.attached('TWIST').size));
+  gameState.specialActions = ev => fightableCards().map(c => nthCircleRevealAction(c, ev));
+  setSchemeTarget(2, true);
 }),
 // SETUP: 8 Twists.
-makeSchemeCard("Secret Wars", { twists: 8 }, ev => {
+makeSchemeCard("Secret Wars", { twists: 8, extra_masterminds: 3 }, ev => {
   if (ev.nr <= 3) {
     // Twist 1-3 Add another random Mastermind to the game with one Tactic.
-  } else if (ev.nr === 8) {
-    // Twist 8 Evil wins!
+    gameState.scheme.attached('EXTRAMASTERMINDS').withRandom(m => moveCardEv(ev, m, gameState.mastermind));
   }
+  // Twist 8 Evil wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  setSchemeTarget(8);
+  while(gameState.mastermind.size > 1) gameState.mastermind.withTop(m => {
+    moveCard(m, gameState.scheme.attachedDeck('EXTRAMASTERMINDS'));
+    while (m.attached('TACTICS').size > 1) m.attached('TACTICS').withFirst(c => moveCard(c, gameState.scheme.attachedDeck('EXTRATACTICS')));
+  });
 }),
 // SETUP: 6 Twists. Add 10 random Ambition cards to the Villain Deck.
 // RULE: Ambition cards are Villains with their printed Attack. Add +1 Attack for each Twist stacked next to the Scheme. They are worth 4 VP. Whenever an Ambition Villain escapes, do its Ambition effect.
@@ -867,8 +923,18 @@ makeSchemeCard("Secret Wars", { twists: 8 }, ev => {
 makeSchemeCard("Sinister Ambitions", { twists: 6 }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Stack this Twist next to the Scheme. Play another card from the Villain Deck.
+    attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+    villainDrawEv(ev);
   } else if (ev.nr === 6) {
     // Twist 6 Each Ambition Villain in the city escapes.
+    cityVillains().limit(isGroup('Ambition')).each(c => villainEscapeEv(ev, c));
   }
+}, escapeProgressTrigger(isGroup('Ambition')), () => {
+  const isAmbition = (c: Card) => c.cardType === 'AMBITION';
+  addStatMod('defense', isAmbition, c => gameState.scheme.attached('TWIST').size);
+  addStatSet('isVillain', isAmbition, () => true);
+  addStatSet('villainGroup', isAmbition, () => "Ambition");
+  addStatSet('escape', isAmbition, c => c.fight); // TODO add ambitions
+  setSchemeTarget(4);
 }),
 ]);

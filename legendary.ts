@@ -95,7 +95,7 @@ interface Card {
   isArtifact?: boolean
   artifactEffects?: ((ev: Ev) => void)[]
   gainable?: boolean
-  nthCircle?: number
+  printedNthCircle?: number
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -113,7 +113,7 @@ interface VillainCardAbillities {
   triggers?: Trigger[]
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   xTremeAttack?: boolean
-  nthCircle?: number
+  printedNthCircle?: number
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -125,7 +125,7 @@ interface MastermindCardAbillities {
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   fightCond?: (c?: Card) => boolean
   escape?: Handler | Handler[] // King Hyperion
-  nthCircle?: number
+  printedNthCircle?: number
 }
 interface HeroCardAbillities {
   trigger?: Trigger
@@ -154,6 +154,7 @@ class Card {
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
     if (value !== undefined) value += this.attached('SHARD').size;
+    if (value !== undefined && this.nthCircle) value += nthCircleDefense(this);
     return value < 0 ? 0 : value;
   }
   get vp() {
@@ -169,6 +170,7 @@ class Card {
   isGroup(t: string) { return this.villainGroup === t; }
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
   hasWallCrawl() { return getModifiedStat(this, "wallcrawl", this.wallcrawl); }
+  get nthCircle() { return getModifiedStat(this, "nthCircle", this.printedNthCircle || 0); }
   attachedDeck(name: string) { return attachedDeck(name, this); }
   attached(name: string) { return attachedCards(name, this); }
   get captured() { return this.attached('CAPTURED'); }
@@ -1288,10 +1290,12 @@ interface ModifiableStats {
   recruitCost?: ActionCost
   cost?: number
   wallcrawl?: boolean
+  strike?: Handler | Handler[]
+  nthCircle?: number
 }
 
 type NumericStat = 'defense' | 'vp' | 'cost';
-type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape';
+type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape' | 'strike';
 type Modifier<T> = {cond: (c: Card) => boolean, func: (c: Card, v?: T) => T};
 type Modifiers = {[stat in keyof ModifiableStats]:Modifier<ModifiableStats[stat]>[]};
 function addMod<T extends keyof ModifiableStats>(modifiers: Modifiers, stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) {
@@ -1311,6 +1315,11 @@ function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
 }
 function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, value: ModifiableStats[T]): ModifiableStats[T] {
   return modifyStat(c, turnState && turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
+}
+function combineHandlers(prev: Handler | Handler[], h: Handler) {
+  if (!prev) return h;
+  if (prev instanceof Array) return prev.includes(h) ? prev : [...prev, h];
+  return prev === h ? prev : [prev, h];
 }
 // Game engine functions
 function attachedDeck(name: string, where: Deck | Card) {
@@ -1908,7 +1917,7 @@ function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStr
 function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
-  fightableCards().limit(isMastermind).each(m => pushEv(ev, "EFFECT", { source: m, func: m.strike, what: ev.what }));
+  fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what }));
 }
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
