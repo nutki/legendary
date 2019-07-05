@@ -318,3 +318,36 @@ function villainChargeEv(ev: Ev, c: Card, n: number) {
   }));
 }
 const chargeAmbushEffect = (n: number) => (ev: Ev) => villainChargeEv(ev, ev.source, n);
+
+// <b>Man/Woman Out of Time</b>: "After you use this card's abilities, set it aside. At the beginning of your next turn, play this card a second time then discard it."
+// The card is discarded the second time you play it, so you play the card only twice total.
+// Play your returning Man Out of Time cards after the "Play a Villain Card" part of your turn and before you start playing out your hand.
+// You "played" a Man Out of Time card on both the first turn you played it and the second turn when you replayed it, so it can help activate your Superpower Abilities on both turns.
+function outOfTime(ev: Ev) {
+  let e = ev;
+  while (e && e.type !== 'PLAYOOT') e = e.parent;
+  e || moveCardEv(ev, ev.source, playerState.outOfTime);
+}
+function playOutOfTime(ev: Ev) {
+  selectCardOrderEv(ev, "Play Out of Time Heroes", playerState.outOfTime.deck, c => {
+    pushEv(ev, "PLAY", { func: playCard, what: c });
+    discardEv(ev, c);
+  });
+}
+
+// <b>Savior</b>: "Use this ability if you have at least 3 Bystanders in your Victory Pile."
+// If you defeat a Villain with Bystanders, put those Bystanders into your Victory Pile before checking any Savior ability on that Villain.
+// If a Hero card rescues a Bystander, that Bystander counts towards any Savior ability on that Hero.
+function saviorPower(p: Player = playerState) {
+  return p.victory.count(isBystander) >= 3;
+}
+
+// <b>Abomination</b>: "This Villain gets +Attack equal to the printed Attack of the Hero in the HQ space under this Villain's city space."
+// "Ultimate Abomination" means "This Mastermind gets +Attack equal to the total printed Attack of all the Heroes in the HQ."
+// An Abomination Villain's Attack can go up and down as the Villain moves through the city.
+function abominationVarDefense(c: Card) {
+  return c.printedDefense + (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) : 0);
+}
+function ultimateAbominationVarDefense(c: Card) {
+  return c.printedDefense + hqHeroes().limit(hasAttackIcon).sum(c => c.printedAttack);
+}

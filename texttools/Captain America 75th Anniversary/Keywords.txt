@@ -4,7 +4,7 @@ The card is discarded the second time you play it, so you play the card only twi
 Play your returning Man Out of Time cards after the "Play a Villain Card" part of your turn and before you start playing out your hand.
 You "played" a Man Out of Time card on both the first turn you played it and the second turn when you replayed it, so it can help activate your Superpower Abilities on both turns.
 
-<b>Savior</b>: "Use this ability if you have at least 3 Bystanders in your Victory Pile."
+{SAVIOR} "Use this ability if you have at least 3 Bystanders in your Victory Pile."
 If you defeat a Villain with Bystanders, put those Bystanders into your Victory Pile before checking any Savior ability on that Villain.
 If a Hero card rescues a Bystander, that Bystander counts towards any Savior ability on that Hero.
 

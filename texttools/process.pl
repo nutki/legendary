@@ -65,6 +65,8 @@ while (<A>) {
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
     s!<b>Fateful Resurrection</b>!{FATEFULRESURRECTION}!g;
     s!<b>Charge</b>!{CHARGE}!g;
+    s!<b>Savior</b>:!{SAVIOR}!g;
+    s!<b>(Man|Woman) Out of Time</b>!{OUTOFTIME}!g;
     s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
@@ -82,6 +84,8 @@ while (<A>) {
 
       s!^($aff): (.*)$!{TEAMPOWER $1} $2! && next;
       s!^($aff),? ($aff): (.*)$!{TEAMPOWER $1, $2} $3! && next;
+      s!^($aff),? ($aff),? ($aff): (.*)$!{TEAMPOWER $1, $2, $3} $4! && next;
+      s!^($aff),? ($aff),? ($aff),? ($aff): (.*)$!{TEAMPOWER $1, $2, $3, $4} $5! && next;
       s!^\[($class)\]: (.*)$!{POWER $1} $2! && next;
       s!^\[($class)\],? \[($class)\]: (.*)$!{POWER $1 $2} $3! && next;
       s!^\[($class)\], \[($class)\], \[($class)\], \[($class)\]: (.*)$!{POWER $1 $2 $3 $4} $5! && next;

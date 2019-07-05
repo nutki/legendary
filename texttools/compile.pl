@@ -29,6 +29,7 @@ sub autopower {
     s/^{POWER (.*?)} *// and $cond = "superPower(".(join', ',map{"Color.".uc}split" ",$1).")";
     s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split", ",$1).")";
     s/^{SPECTRUM} *// and $cond = "spectrumPower()";
+    s/^{SAVIOR} *// and $cond = "saviorPower()";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -39,6 +40,7 @@ sub autopower {
     /^[Yy]ou get \+(\d+) (Attack|Recruit)\.?$/ and $effect = "add$2Event(ev, $1)";
     /^(Rescue|Kidnap) a Bystander\.?$/ and $effect = "rescueEv(ev)";
     /^[Gg]ain a(nother)? Sidekick\.?$/ and $effect = "gainSidekickEv(ev)";
+    /^{OUTOFTIME}\.?$/ and $effect = "outOfTimeEv(ev)";
     /^{VERSATILE (\d+)}$/ and $effect = "versatileEv(ev, $1)";
     s/^{WALLCRAWL}$// and $ability = 'wallcrawl: true';
     s/^{TELEPORT}$// and $ability = 'teleport: true';
