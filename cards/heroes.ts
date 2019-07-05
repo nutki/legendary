@@ -1437,7 +1437,7 @@ addHeroTemplates("Villains", [
 // RECRUIT: 2+
 // {POWER Ranged} Each other player reveals a [Ranged] Ally or gains a Bindings. If any number of players gained a Bindings this way, you get +1 Recruit.
 // COST: 4
-  c2: makeHeroCard("Loki", "Illusionary Bindings ", 4, 2, u, Color.RANGED, "Foes of Asgard", "D", ev => {
+  c2: makeHeroCard("Loki", "Illusionary Bindings", 4, 2, u, Color.RANGED, "Foes of Asgard", "D", ev => {
     superPower(Color.RANGED) && eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => gameState.bindings.withTop(c => gainEv(ev, c, p)), p));
     cont(ev, () => turnState.pastEvents.has(e => e.type === "GAIN" && e.parent === ev) && addRecruitEvent(ev, 1));
   }),
@@ -2113,7 +2113,7 @@ addHeroTemplates("Secret Wars Volume 1", [
     }
   }),
 // {TEAMPOWER Illuminati} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
-  c2: makeHeroCard("Dr. Strange", "Trust Me, I'm a Doctor ", 2, 1, u, Color.INSTINCT | Color.RANGED, "Illuminati", "D", ev => superPower("Illuminati") && KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1))),
+  c2: makeHeroCard("Dr. Strange", "Trust Me, I'm a Doctor", 2, 1, u, Color.INSTINCT | Color.RANGED, "Illuminati", "D", ev => superPower("Illuminati") && KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1))),
 // {POWER Instinct} Reveal the top card of the Villain Deck. If it's a Villain, you get +2 Attack and may fight that Villain this turn.
   uc: makeHeroCard("Dr. Strange", "Fight the Future", 5, u, 3, Color.INSTINCT, "Illuminati", "D", ev => superPower(Color.INSTINCT) && revealVillainDeckEv(ev, 1, r => {
     r.limit(isVillain).each(c => {
@@ -2268,7 +2268,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   name: "Thanos",
   team: "Cabal",
 // {TEAMPOWER Cabal} KO a Bystander from the Bystander Stack. Then, you get +1 Recruit for every three Bystanders in the KO pile.
-  c1: makeHeroCard("Thanos", "Revel in Destruction ", 3, 2, u, Color.STRENGTH | Color.RANGED, "Cabal", "D", ev => {
+  c1: makeHeroCard("Thanos", "Revel in Destruction", 3, 2, u, Color.STRENGTH | Color.RANGED, "Cabal", "D", ev => {
     if(superPower("Cabal")) {
       gameState.bystanders.withTop(c => KOEv(ev, c));
       cont(ev, () => addRecruitEvent(ev, Math.floor(gameState.ko.count(isBystander) / 3)));
