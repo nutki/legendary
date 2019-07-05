@@ -41,5 +41,3 @@
 #EVILWINS: When there are 3 Western Victories or 3 Eastern Victories.
 
 
-
-

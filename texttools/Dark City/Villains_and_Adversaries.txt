@@ -26,7 +26,6 @@
 #ATTACK: 5
 #VP: 3
 
-
 #CARDNAME: Four Horsemen
 
 #SUBNAME: Death
@@ -57,7 +56,6 @@
 #ATTACK: 6
 #VP: 4
 
-
 #CARDNAME: Marauders
 
 #SUBNAME: Blockbuster
@@ -87,7 +85,6 @@ Scalphunter gets +1 Attack for each Bystander he has.
 #ATTACK: 5
 #VP: 3
 
-
 #CARDNAME: MLF
 
 #SUBNAME: Forearm
@@ -113,7 +110,6 @@ To fight Forearm, you must also reveal four Hero cards with different card names
 To fight Zero, you must also discard three cards that cost 0.
 #ATTACK: 0*
 #VP: 2
-
 
 #CARDNAME: Streets of New York
 
@@ -144,7 +140,6 @@ To fight Zero, you must also discard three cards that cost 0.
 #ATTACK: 8*
 #VP: 4
 
-
 #CARDNAME: Underworld
 
 #SUBNAME: Azazel
@@ -173,7 +168,5 @@ To fight Zero, you must also discard three cards that cost 0.
 #ESCAPE: Each player without Dracula in their Victory Pile gains a Wound.
 #ATTACK: 5
 #VP: 3
-
-
 
 

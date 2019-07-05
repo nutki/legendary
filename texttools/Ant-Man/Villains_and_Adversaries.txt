@@ -3,7 +3,7 @@
 
 #SUBNAME: Ultron Roboticks
 #COPIES: 1
-<b>Microscopic Size-chaning</b>: [Tech] [Tech] [Tech]
+<b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech]
 #FIGHT: KO one of your Heroes.
 #ATTACK: 3*
 #VP: 2
@@ -57,7 +57,6 @@
 #AMBUSH: Crimson Cowl captures a Bystander.
 #ATTACK: 5+
 #VP: 4
-
 
 #CARDNAME: Queen's Vengeance
 
@@ -116,7 +115,5 @@
 #ESCAPE: Each player simultaneously does that same effect.
 #ATTACK: 5
 #VP: 3
-
-
 
 

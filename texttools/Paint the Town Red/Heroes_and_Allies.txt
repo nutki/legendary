@@ -15,7 +15,7 @@ You get another +1 Recruit usable only to recruit the Hero in the HQ Space under
 #CLASS: [Covert]
 #ATTACK: 0+
 {WALLCRAWL}
-Reveal the top card of any player's deck. You get + Attack equal to that card's printed Recruit plus its printed Attack.
+Reveal the top card of any player's deck. You get +Attack equal to that card's printed Recruit plus its printed Attack.
 #COST: 1
 #GUN: 1
 
@@ -34,7 +34,6 @@ Each player reveals the top card of their deck. Choose any number of those cards
 Each other player reveals a [Covert] Hero or chooses a Bystander from their Victory Pile. You rescue those Bystanders.
 {TEAMPOWER Spider Friends} You get +1 Attack for each Bystander you rescued this turn.
 #COST: 8
-
 
 #CARDNAME: Moon Knight
 #TEAM: Marvel Knights
@@ -72,7 +71,6 @@ Whenever you defeat a Villain on the Rooftops this turn, rescue Bystanders equal
 {POWER Tech} You may move a Villain to the Rooftops. If another Villain is already there, swap them.
 #COST: 8
 
-
 #CARDNAME: Scarlet Spider
 #TEAM: Spider Friends
 
@@ -93,7 +91,7 @@ Draw a card.
 #COST: 4
 #FLAVOR: Predators who underestimate Scarlet Spider quickly find themselves the prey.
 
-#SUBNAME: Leap From Above
+#SUBNAME: Leap from Above
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3+
@@ -109,7 +107,6 @@ Draw a card.
 Whenever you put a card on top of your deck this turn, you may draw that card.
 #COST: 7
 #FLAVOR: Many people are allergic...to getting punched in the face by a truck.
-
 
 #CARDNAME: Spider-Woman
 #TEAM: Spider Friends
@@ -147,7 +144,6 @@ Recruit a Hero from the HQ for free.
 #COST: 7
 #FLAVOR: They'll follow her anywhere.
 
-
 #CARDNAME: Symbiote Spider-Man
 #TEAM: Spider Friends
 
@@ -179,7 +175,5 @@ You get +1 Attack for each other Hero you played this turn that costs 1 or 2.
 #ATTACK: 4
 To play this card, you must put two cards from your hand on top of your deck.
 #COST: 2
-
-
 
 

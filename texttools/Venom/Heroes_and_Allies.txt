@@ -1,5 +1,4 @@
 
-
 #CARDNAME: Carnage
 #TEAM: Venomverse
 
@@ -24,8 +23,7 @@
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3
-<b>Excessive Violence</b>:
-Reveal the top card of your deck. You may KO it.
+<b>Excessive Violence</b>: Reveal the top card of your deck. You may KO it.
 #COST: 6
 
 #SUBNAME: Feast or Famine
@@ -34,7 +32,6 @@ Reveal the top card of your deck. You may KO it.
 #ATTACK: 6
 <b>Excessive Violence</b>: Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
 #COST: 8
-
 
 #CARDNAME: Venom
 #TEAM: Venomverse
@@ -78,7 +75,6 @@ Reveal the top card of your deck. You may KO it.
 {TEAMPOWER Venomverse, Venomverse} Instead, do both.
 #COST: 8
 
-
 #CARDNAME: Venom Rocket
 #TEAM: Venomverse
 
@@ -114,7 +110,6 @@ When a Master Strike is played, before it takes effect, you may put Ultimate Sur
 #COST: 7
 #GUN: 1
 
-
 #CARDNAME: Venomized Dr. Strange
 #TEAM: Venomverse
 
@@ -147,7 +142,6 @@ If you played a 4-cost card and a 2-cost card this turn, you get +2 Attack.
 Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
 {TEAMPOWER Venomverse, Venomverse} Do this ability again.
 #COST: 8
-
 
 #CARDNAME: Venompool
 #TEAM: Venomverse
@@ -185,6 +179,5 @@ Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extr
 <b>Indigestion</b>: "Rescue" two Bystanders.
 {TEAMPOWER Venomverse, Venomverse} Instead, do both (in order).
 #COST: 7
-
 
 

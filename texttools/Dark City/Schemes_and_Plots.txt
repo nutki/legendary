@@ -47,5 +47,3 @@
 #EVILWINS: 9 non grey Heroes are KO'd or carried off.
 
 
-
-

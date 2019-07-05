@@ -32,7 +32,6 @@ You gain a Wound.
 {TEAMPOWER Fantastic Four} You get +1 Attack for each city space that contains a Villain.
 #COST: 8
 
-
 #CARDNAME: Invisible Woman
 #TEAM: Fantastic Four
 
@@ -67,7 +66,6 @@ If you played any other cards that cost 4 this turn, you get +2 Attack.
 If an ambush effect would occur, you may reveal this card and draw two cards instead.
 #COST: 7
 
-
 #CARDNAME: Mr. Fantastic
 #TEAM: Fantastic Four
 
@@ -101,7 +99,6 @@ Draw two cards.
 If an Enemy you fight this turn would have a fight effect, you may cancel that effect instead.
 {FOCUS 1} You get +1 Attack usable only against the Mastermind.
 #COST: 7
-
 
 #CARDNAME: Silver Surfer
 #TEAM: (Unaffiliated)
@@ -139,7 +136,6 @@ Double the Recruit you have.
 #COST: 7
 #FLAVOR: Finding extra power is not a problem for the Silver Surfer. His power is immeasurable.
 
-
 #CARDNAME: Thing
 #TEAM: Fantastic Four
 
@@ -175,7 +171,5 @@ Whenever you defeat a Villain in the Bank this turn, rescue a Bystander.
 {POWER Strength} You get +3 Attack for each other [Strength] card you played this turn.
 #COST: 8
 #FLAVOR: Thing doesn't wear a watch, but he's happy to tell you what time it is.
-
-
 
 

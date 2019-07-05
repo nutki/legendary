@@ -30,7 +30,6 @@ When Shriek feasts on a 0-cost Hero, each other player gains a Wound.
 #ATTACK: 6
 #VP: 4
 
-
 #CARDNAME: Sinister Six
 
 #SUBNAME: Chameleon
@@ -71,7 +70,5 @@ Sandman's Attack is twice the number of Villains in the city.
 #ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
 #ATTACK: 4
 #VP: 2
-
-
 
 

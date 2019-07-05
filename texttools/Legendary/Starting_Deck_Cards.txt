@@ -6,13 +6,11 @@
 #COST: 0
 #GUN: 1
 
-
 #CARDNAME: S.H.I.E.L.D. Trooper
 #COPIES: 4
 #TEAM: S.H.I.E.L.D.
 #ATTACK: 1
 #COST: 0
 #GUN: 1
-
 
 

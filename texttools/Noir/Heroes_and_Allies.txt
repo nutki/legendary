@@ -35,7 +35,6 @@ You get the printed Recruit and Attack of a Hero in the HQ. Then put that Hero o
 #ATTACK: 3
 #COST: 8
 
-
 #CARDNAME: Daredevil Noir
 #TEAM: Marvel Knights
 
@@ -71,7 +70,6 @@ Choose a number 1 or more. <b>Investigate</b> for a card of that cost.
 Discard a card from the top or bottom of your deck. If it costs 0, you get +1 Attack and repeat this process. If your deck runs out, stop.
 #ATTACK: 3+
 #COST: 7
-
 
 #CARDNAME: Iron Man Noir
 #TEAM: Avengers
@@ -110,7 +108,6 @@ Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
 #COST: 7
 #GUN: 1
 
-
 #CARDNAME: Luke Cage Noir
 #TEAM: Marvel Knights
 
@@ -130,19 +127,19 @@ You get +1 Recruit for each other card you played this turn that costs 4 or more
 #COST: 4
 #FLAVOR: The deeper he digs, the bigger the conspiracy becomes.
 
-Unbreakable Cage (3 copies)
+#SUBNAME: Unbreakable Cage
+#COPIES: 3
 #CLASS: [Strength]
 Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
 #ATTACK: 4
 #COST: 6
 
-#SUBNAME: Weight of the World (1 copy)
+#SUBNAME: Weight of the World
 #COPIES: 1
 #CLASS: [Strength]
 You get +2 Attack for each other card you played this turn that costs 4 or more.
 #ATTACK: 5+
 #COST: 8
-
 
 #CARDNAME: Spider-Man Noir
 #TEAM: Spider Friends
@@ -178,7 +175,5 @@ You get +2 Attack for each other card you played this turn that costs 4 or more.
 {TEAMPOWER Spider Friends} <b>Investigate</b> each player's deck for a card that costs 2 or less, play a copy of that card, then put it into their discard pile.
 #ATTACK: 1
 #COST: 2
-
-
 
 

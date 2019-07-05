@@ -20,5 +20,3 @@ During your turns, you may spend 4 Attack any number of times to play an additio
 <b>When the players win</b>: The Traitor reveals themself and loses.
 
 
-
-

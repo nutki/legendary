@@ -18,7 +18,6 @@ Charles Xavier gets +1 Attack for each Bystander in the HQ and city.
 #TACTIC: Corrupt Weak Minds
 #FIGHT: Each other player puts a random Bystander from their Victory Pile onto a Hero in the HQ as a <b>Hidden Witness</b>.
 
-
 #CARDNAME: The Goblin, Underworld Boss
 #START: The Goblin captures 2 <b>Hidden Witnesses</b>.
 #LEADS: Goblin's Freak Show
@@ -37,7 +36,5 @@ Charles Xavier gets +1 Attack for each Bystander in the HQ and city.
 
 #TACTIC: Blind Loyalty
 #FIGHT: <b>Investigate</b> the Villain Deck for a Goblin's Freak Show Villain and put it into your Victory Pile.
-
-
 
 

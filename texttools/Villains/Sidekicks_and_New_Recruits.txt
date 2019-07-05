@@ -6,4 +6,3 @@ Return this card to the New Recruit Stack. Draw a card. (You still get this New 
 #COST: 2
 
 
-

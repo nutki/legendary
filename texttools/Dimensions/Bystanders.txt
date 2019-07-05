@@ -22,4 +22,6 @@
 #CARDNAME: Photographer
 #COPIES: 1
 This Bystander is worth +1 Victory Points for each Hero you have that costs 7 Cost or more among all your cards at the end of the game.
+VP: 1*
+
 

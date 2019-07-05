@@ -30,7 +30,6 @@ To fight Primus, you must also discard a card that costs 2, 3, 5, or 7.
 #ATTACK: 3*
 #VP: 3
 
-
 #CARDNAME: Masters of Evil (WWII)
 
 #SUBNAME: Black Knight
@@ -62,7 +61,5 @@ To fight Primus, you must also discard a card that costs 2, 3, 5, or 7.
 #ESCAPE: Same effect.
 #ATTACK: 5
 #VP: 3
-
-
 
 

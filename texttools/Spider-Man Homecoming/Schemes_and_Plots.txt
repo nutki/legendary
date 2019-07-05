@@ -24,5 +24,3 @@
 #EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
 
 
-
-

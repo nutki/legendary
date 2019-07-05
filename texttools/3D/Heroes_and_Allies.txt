@@ -30,7 +30,6 @@ You get +1 Attack for each other Hero you played this turn with no team icon.
 Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
 #COST: 7
 
-
 #CARDNAME: Man-Thing
 #TEAM: (Unaffiliated)
 
@@ -63,7 +62,5 @@ You may move a Villain to another city space. If another Villain is already ther
 #ATTACK: 5+
 {POWER Strength} You get +1 Attack for each empty city space.
 #COST: 7
-
-
 
 

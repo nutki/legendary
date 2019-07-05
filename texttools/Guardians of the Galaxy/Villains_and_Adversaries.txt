@@ -46,7 +46,6 @@ Captain Atlas gets +1 Attack for each Shard on the Mastermind.
 #ATTACK: 3
 #VP: 2
 
-
 #CARDNAME: Infinity Gems
 
 #SUBNAME: Mind Gem
@@ -96,7 +95,5 @@ Artifact - Once per turn, you may move a Villain to another city space. If anoth
 Artifact - When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
 #ATTACK: 6
 #VP: 0
-
-
 
 

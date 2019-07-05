@@ -19,7 +19,6 @@ Villains in that space get +3 Attack.
 #TACTIC: Recall to Service
 #FIGHT: The Villain with the highest printed Attack in the Escape Pile enters the city space that Authoritarian Iron Man is fortifying.
 
-
 #CARDNAME: Baron Helmut Zemo
 
 Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
@@ -39,7 +38,6 @@ Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
 
 #TACTIC: Revenge for My Father
 #FIGHT: Each other player reveals their hand. Each player who revealed an Avengers Hero gains a Wound.
-
 
 #CARDNAME: Maria Hill, Director of S.H.I.E.L.D.
 
@@ -61,7 +59,6 @@ Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.
 #TACTIC: Rapid Response Team
 #FIGHT: Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
 
-
 #CARDNAME: Misty Knight
 
 {BRIBE}
@@ -82,7 +79,6 @@ Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.
 #TACTIC: Vibranium Cyber Arm
 #FIGHT: Each other player reveals a Marvel Knight Hero or gains a Wound.
 
-
 #CARDNAME: Ragnarok
 
 Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
@@ -102,7 +98,5 @@ Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
 
 #TACTIC: Unnatural Storm Clouds
 #FIGHT: Put all Heroes from the HQ on the bottom of the Hero Deck in random order.
-
-
 
 

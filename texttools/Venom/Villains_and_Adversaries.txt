@@ -39,7 +39,6 @@
 #ATTACK: 4
 #VP: 4
 
-
 #CARDNAME: Poisons
 
 #SUBNAME: Poison Captain America
@@ -50,7 +49,6 @@
 #CLASS: [Instinct]
 You get +1 Attack for each color of Hero you have. (including [Instinct] and grey)
 #ATTACK: 0+
-
 
 #SUBNAME: Poison Dr. Octopus
 #COPIES: 1
@@ -69,7 +67,6 @@ Draw a card.
 #CLASS: [Strength]
 {POWER Strength} You get +2 Attack.
 #ATTACK: 2+
-
 
 #SUBNAME: Poison Sabretooth
 #COPIES: 1
@@ -112,7 +109,4 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #AMBUSH: This Symbiote Bonds with the Mastermind. When you fight the Mastermind, defeat Symbiotic Armor and KO one of your Heroes instead of taking a Tactic.
 #ATTACK: 1
 #VP: 6
-
-
-
 

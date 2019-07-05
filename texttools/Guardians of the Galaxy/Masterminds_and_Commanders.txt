@@ -18,7 +18,6 @@
 #TACTIC: Guide Kree Evolution
 #FIGHT: The Supreme Intelligence and Kree Villains in the city each gain a Shard.
 
-
 #CARDNAME: Thanos
 
 #LEADS: Infinity Gems
@@ -38,7 +37,5 @@ Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any play
 
 #TACTIC: The Mad Titan
 #FIGHT: Each other player reveals their hand and discards all cards with the same card name as any card in Thanos' Bound Souls pile.
-
-
 
 

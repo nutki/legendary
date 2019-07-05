@@ -16,15 +16,15 @@
 
 #SUBNAME: Infini-Tendrils
 #COPIES: 2
-<b>Wounded Fury
-Ambush</b>: Infini-Tendrils captures a Bystander.
+<b>Wounded Fury</b>
+#AMBUSH: Infini-Tendrils captures a Bystander.
 #ATTACK: 6+
 #VP: 3
 
 #SUBNAME: Psychotic Break
 #COPIES: 1
-<b>Trap!
-Ambush</b>: Play another card from the Villain Deck.
+<b>Trap!</b>
+#AMBUSH: Play another card from the Villain Deck.
 <b>By End of Turn</b>: Defeat a Villain.
 <b>Or Suffer</b>: <i>(After you draw your new hand)</i> Psychotic Break becomes a Master Strike that takes effect immediately.
 #VP: 2
@@ -36,13 +36,12 @@ Ambush</b>: Play another card from the Villain Deck.
 #VP: 3
 #FLAVOR: Some briefly think the Shadow Man is the heroic Sentry. The thought doesn't last long.
 
-
 #CARDNAME: Code Red
 
 #SUBNAME: Caught Red-Handed
 #COPIES: 1
-<b>Trap!
-By End of Turn</b>: Recruit a [Covert] Hero or recruit any two Heroes.
+<b>Trap!</b>
+<b>By End of Turn</b>: Recruit a [Covert] Hero or recruit any two Heroes.
 <b>Or Suffer</b>: <i>(After you draw your new hand)</i> Each player reveals a [Covert] Hero or gains a Wound.
 #VP: 3
 
@@ -66,8 +65,8 @@ By End of Turn</b>: Recruit a [Covert] Hero or recruit any two Heroes.
 
 #SUBNAME: Red She-Hulk
 #COPIES: 1
-<b>Wounded Fury
-Fight</b>: Each player reveals a [Covert] Hero or gains a Wound.
+<b>Wounded Fury</b>
+#FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 6+
 #VP: 5
@@ -78,7 +77,6 @@ Thundra gets +2 Attack if there are any number of [Covert] Heroes in the HQ.
 #AMBUSH: Put each non-[Covert] Hero from the HQ on the bottom of the Hero Deck.
 #ATTACK: 4+
 #VP: 3
-
 
 #CARDNAME: Illuminati
 
@@ -104,32 +102,31 @@ This Villain gets +1 Attack for each Bystander in the city.
 
 #SUBNAME: Enchain the Hulk
 #COPIES: 1
-<b>Trap!
-By End of Turn</b>: Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
-<b>Or Suffer</b>: <i>(After you draw your new hand)</i> <b>Cross-Dimensional Hulk Rampage
-VP</b>: 4
-
-#SUBNAME:  Hulkbuster Iron Man
-#COPIES: 2
-Hulkbuster Iron Man gets +3 Attack unless you <b>Outwit</b> him.
-#ESCAPE: <b>Cross-Dimensional Illuminati Rampage
-Attack</b>: 6+
+<b>Trap!</b>
+<b>By End of Turn</b>: Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
+<b>Or Suffer</b>: <i>(After you draw your new hand)</i> {XDRAMPAGE Hulk}
 #VP: 4
 
+#SUBNAME: Hulkbuster Iron Man
+#COPIES: 2
+Hulkbuster Iron Man gets +3 Attack unless you <b>Outwit</b> him.
+#ESCAPE: {XDRAMPAGE Illuminati}
+#ATTACK: 6+
+#VP: 4
 
 #CARDNAME: Intelligencia
 
 #SUBNAME: Battle of Wits
 #COPIES: 2
-<b>Trap!
-By the End of the Turn</b>: <b>Outwit</b> this trap.
+<b>Trap!</b>
+<b>By the End of the Turn</b>: <b>Outwit</b> this trap.
 <b>Or Suffer</b>: <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
 #VP: 3
 
 #SUBNAME: Cosmic Hulk Robot
 #COPIES: 2
-<b>Wounded Fury
-Ambush</b>: Each player who can't <b>Outwit</b> Cosmic Hulk Robot gains a Wound.
+<b>Wounded Fury</b>
+#AMBUSH: Each player who can't <b>Outwit</b> Cosmic Hulk Robot gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 5+
 #VP: 4
@@ -148,13 +145,12 @@ Doc Samson has +4 Attack unless you <b>Outwit</b> him.
 #ATTACK: 5
 #VP: 3
 
-
 #CARDNAME: Sakaar Imperial Guard
 
 #SUBNAME: Gladiators' Colosseum
 #COPIES: 1
-<b>Trap!
-By the End of the Turn</b>: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
+<b>Trap!</b>
+<b>By the End of the Turn</b>: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
 <b>Or Suffer</b>: <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
 #VP: 4
 
@@ -184,7 +180,6 @@ Primus Vand gets +1 Attack for each Villain next to him.
 #ATTACK: 3+
 #VP: 3
 
-
 #CARDNAME: U-Foes
 
 #SUBNAME: Ironclad
@@ -209,8 +204,8 @@ Primus Vand gets +1 Attack for each Villain next to him.
 
 #SUBNAME: Unidentified Flying U-Foes
 #COPIES: 1
-<b>Trap!
-By End of Turn</b>: Discard a [Tech] Hero or discard three cards.
+<b>Trap!</b>
+<b>By End of Turn</b>: Discard a [Tech] Hero or discard three cards.
 <b>Or Suffer</b>: Play two extra cards from the Villain Deck next turn.
 #VP: 3
 
@@ -219,7 +214,6 @@ By End of Turn</b>: Discard a [Tech] Hero or discard three cards.
 #FIGHT: Each player who reveals a [Ranged] Hero may KO a card from their discard pile.
 #ATTACK: 5
 #VP: 3
-
 
 #CARDNAME: Warbound
 
@@ -250,18 +244,16 @@ By End of Turn</b>: Discard a [Tech] Hero or discard three cards.
 #VP: 3
 
 <i>No-Name, Brood Queen</i> )2 copies)
-<b>Wounded Fury
-Fight</b>: <b>Feast</b>. If this feasts on a non-grey Hero, draw two cards.
+<b>Wounded Fury</b>
+Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b>
 #ATTACK: 4+
 #VP: 3
 
 #SUBNAME: Warbound Rescue
 #COPIES: 1
-<b>Trap!
-By End of Turn</b>: Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
+<b>Trap!</b>
+<b>By End of Turn</b>: Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
 <b>Or Suffer</b>: Each player gains a Wound.
 #VP: 7
-
-
 
 

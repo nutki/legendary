@@ -3,7 +3,7 @@
 #SETUP: 11 Twists. 4-5 Players: Add another Hero.
 #TWIST: Put the top card of the Hero Deck next to the Scheme in an "Evolution" Pile. Then this Twist enters the city as an "Evolved Ultron" Villain.
 #RULE: Evolved Ultrons have 4 Attack and are <b>Empowered</b> by each color in the Evolution pile. They're worth 6VP.
-#EVILWINS: When 7 Evolved Ultrons are in the city and/or Escape Pile.[/q]
+#EVILWINS: When 7 Evolved Ultrons are in the city and/or Escape Pile.
 
 #CARDNAME: Pull Earth into Medieval Times
 #SETUP: 9 Twists.
@@ -21,7 +21,5 @@
 #RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
 #TWIST: Play two cards from the Villain Deck.
 #EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
-
-
 
 

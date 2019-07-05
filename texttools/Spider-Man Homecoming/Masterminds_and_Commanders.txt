@@ -27,7 +27,6 @@
 #TACTIC: The World's Changed
 #FIGHT: <b>Danger Sense 3</b>. Put all Henchmen Villains revealed this way into your Victory Pile, then do their "Fight" abilities.
 
-
 #TACTIC: Vulture
 <b>Striker</b>
 #LEADS: Vulture Tech
@@ -53,7 +52,5 @@
 
 #TACTIC: Winged Assault
 #FIGHT: Put two "Winged Assault" Wounds from under the HQ into each other player's discard pile.
-
-
 
 

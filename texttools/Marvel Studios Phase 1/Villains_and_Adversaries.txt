@@ -30,7 +30,6 @@
 #ATTACK: 4+
 #VP: 3
 
-
 #CARDNAME: Enemies of Asgard
 
 #SUBNAME: Destroyer
@@ -59,7 +58,6 @@
 #FIGHT: Choose a player. That player KOs any number of Wounds from their hand and discard pile.
 #ATTACK: 6
 #VP: 4
-
 
 #CARDNAME: Gamma Hunters
 
@@ -92,7 +90,6 @@ Each Player reveals their hand. Each player with any [Strength] cards must disca
 #ATTACK: 3+
 #VP: 2
 
-
 #CARDNAME: HYDRA
 
 #SUBNAME: Endless Armies of HYDRA
@@ -119,7 +116,6 @@ Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
 #ESCAPE: Same effect.
 #ATTACK: 5
 #VP: 3
-
 
 #CARDNAME: Iron Foes
 
@@ -149,7 +145,5 @@ Raza gets +1 Attack for each Bystander he has.
 #FIGHT: You get +2 Recruit usable only to recruit heroes in the HQ space under the bank.
 #ATTACK: 3+
 #VP: 2
-
-
 
 

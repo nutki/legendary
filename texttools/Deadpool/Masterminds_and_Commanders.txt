@@ -18,7 +18,6 @@
 #TACTIC: Stitched from Dead (Pool) Parts
 #FIGHT: Each other player discards the top card of their deck. Whoever discards the lowest-costing card (or tied for lowest) gains a Wound.
 
-
 #CARDNAME: Macho Gomez
 <b>Revenge for Deadpool's "Friends"</b>
 #LEADS: Deadpool's "Friends"
@@ -37,7 +36,5 @@
 
 #TACTIC: Super Macho Man
 #FIGHT: Rescue a Bystander for each "Bounty on Your Head" on other players.
-
-
 
 

@@ -15,11 +15,11 @@ When a card effect causes you to discard this card, rescue a Bystander and draw 
 Draw two cards, then discard a card.
 #COST: 3
 
-#SUBNAME: Drop Off a Friend
+#SUBNAME: Drop off a Friend
 #COPIES: 3
 #CLASS: [Instinct]
 #ATTACK: 2+
-You may discard a card. You get + Attack equal to that card's Cost.
+You may discard a card. You get +Attack equal to that card's Cost.
 #COST: 5
 
 #SUBNAME: Strength of Spirit
@@ -28,7 +28,6 @@ You may discard a card. You get + Attack equal to that card's Cost.
 #ATTACK: 4
 Discard any number of cards. Draw that many cards.
 #COST: 7
-
 
 #CARDNAME: Bishop
 #TEAM: X-Men
@@ -57,15 +56,14 @@ Draw a card.
 #COST: 5
 #FLAVOR: Bishop absorbs energy, channeling it back into devastating blasts.
 
-#SUBNAME: Firepower From the Future
+#SUBNAME: Firepower from the Future
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 4+
-Discard the top four cards of your deck. You get + Attack equal to those cards' printed Attack.
+Discard the top four cards of your deck. You get +Attack equal to those cards' printed Attack.
 {TEAMPOWER X-Men} KO any number of those cards.
 #COST: 7
 #GUN: 1
-
 
 #CARDNAME: Blade
 #TEAM: Marvel Knights
@@ -99,7 +97,6 @@ Whenever you defeat a Villain in the Sewers or Rooftops this turn, draw two card
 #ATTACK: 0+
 You get +1 Attack for each Villain in your Victory Pile.
 #COST: 7
-
 
 #CARDNAME: Cable
 #TEAM: X-Force
@@ -136,7 +133,6 @@ KO any number of cards from your hand. You get +1 Attack for each card KO'd this
 #COST: 8
 #GUN: 1
 
-
 #CARDNAME: Colossus
 #TEAM: X-Force
 
@@ -170,7 +166,6 @@ If you would gain a Wound, you may discard this card instead. If you do, draw tw
 If another player would gain a Wound, you may reveal this card to gain that Wound and draw a card.
 #COST: 8
 
-
 #CARDNAME: Daredevil
 #TEAM: Marvel Knights
 
@@ -201,7 +196,6 @@ Choose a number, then reveal the top card of your deck. If the card is that Cost
 #ATTACK: 7
 Choose a number, then reveal the top card of your deck. If the card is that Cost, draw it and repeat this process.
 #COST: 8
-
 
 #CARDNAME: Domino
 #TEAM: X-Force
@@ -242,7 +236,6 @@ You may discard a card from your hand. If that card had a Recruit icon, you get 
 {TEAMPOWER X-Force} This card and each other {VERSATILE} ability you use for the rest of this turn produces both Recruit and Attack.
 #COST: 7
 
-
 #CARDNAME: Elektra
 #TEAM: Marvel Knights
 
@@ -276,7 +269,6 @@ You get +1 Attack for each Hero you played this turn that costs 1 or 2.
 When you play Silent Meditation, the next Hero you recruit this turn goes into your hand.
 {TEAMPOWER Marvel Knights} You get +2 Recruit.
 #COST: 7
-
 
 #CARDNAME: Forge
 #TEAM: X-Force
@@ -315,7 +307,6 @@ When you play Silent Meditation, the next Hero you recruit this turn goes into y
 #FLAVOR: That's a BIG FREAKING GUN!!!!
 #GUN: 1
 
-
 #CARDNAME: Ghost Rider
 #TEAM: Marvel Knights
 
@@ -349,7 +340,6 @@ Each player KOs a Villain from their Victory Pile. You get +1 Attack for each Vi
 {TEAMPOWER Marvel Knights} Put one of those Villains into your Victory Pile.
 #COST: 8
 
-
 #CARDNAME: Iceman
 #TEAM: X-Men
 
@@ -381,7 +371,6 @@ Draw a card.
 #ATTACK: 7
 If a Villain, Master Strike, or Mastermind Tactic would cause you to gain any Wounds or discard any cards, you may reveal this card instead.
 #COST: 8
-
 
 #CARDNAME: Iron Fist
 #TEAM: Marvel Knights
@@ -416,7 +405,6 @@ Draw a card.
 Reveal cards from your deck until you have revealed two cards with the same Cost. Draw all the cards you revealed.
 #COST: 9
 
-
 #CARDNAME: Jean Grey
 #TEAM: X-Men
 
@@ -449,7 +437,6 @@ Whenever you rescue a Bystander this turn, draw a card.
 Whenever you rescue a Bystander this turn, you get +1 Attack.
 {TEAMPOWER X-Men} Rescue a Bystander for each other X-Men Hero you played this turn.
 #COST: 7
-
 
 #CARDNAME: Nightcrawler
 #TEAM: X-Men
@@ -486,7 +473,6 @@ Whenever you rescue a Bystander this turn, you get +1 Attack.
 When you play or {TELEPORT} this card, you may also {TELEPORT} up to three other cards from your hand.
 #COST: 7
 
-
 #CARDNAME: Professor X
 #TEAM: X-Men
 
@@ -518,9 +504,8 @@ Reveal the top card of the Villain Deck. If it's a Bystander, you may rescue it.
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 6
-Whenever you defeat a Villain this turn, you may gain it. It becomes a grey Hero with no text that gives + Attack equal to its Attack. (You still get its VP.)
+Whenever you defeat a Villain this turn, you may gain it. It becomes a grey Hero with no text that gives +Attack equal to its Attack. (You still get its VP.)
 #COST: 8
-
 
 #CARDNAME: Punisher
 #TEAM: Marvel Knights
@@ -538,7 +523,7 @@ Reveal the top card of your deck. If it costs 0, KO it.
 #COPIES: 5
 #CLASS: [Tech]
 #ATTACK: 2+
-Reveal the top card of the Villain Deck. If it's a Villain, you get + Attack equal to its printed VP.
+Reveal the top card of the Villain Deck. If it's a Villain, you get +Attack equal to its printed VP.
 {POWER Tech Tech} You may defeat that Villain for free.
 #COST: 5
 
@@ -555,7 +540,6 @@ Reveal the top card of the Villain Deck. If it's a Villain, you get + Attack equ
 #ATTACK: 4+
 Reveal cards from the Hero Deck until you have revealed two cards with the same Cost. You get +1 Attack for each card revealed this way. Put them on the bottom of the Hero Deck in random order.
 #COST: 8
-
 
 #CARDNAME: Wolverine
 #TEAM: X-Force
@@ -589,7 +573,5 @@ You may KO a card from your hand or discard pile.
 #ATTACK: 3
 Count the number of extra cards you drew this turn. Draw that many cards.
 #COST: 7
-
-
 
 

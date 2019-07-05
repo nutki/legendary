@@ -45,7 +45,6 @@ Overrun: Demolish each player.
 #VP: 4
 Elusive 7
 
-
 #CARDNAME: Defenders
 
 #SUBNAME: Daredevil
@@ -75,7 +74,6 @@ Overrun: Same Effects.
 #VP: 2
 #FIGHT: Each player reveals the top three cards of their deck. You choose which players discard them and which players put them back on top in the order of their choice.
 
-
 #CARDNAME: Marvel Knights
 
 #SUBNAME: Black Panther
@@ -103,7 +101,6 @@ Overrun: Each player reveals the top card of their deck and if it costs 1 Cost o
 #VP: 3
 #FIGHT: You may KO another Adversary from your Victory Pile. If you do, you get +3 Recruit.
 Overrun: Each player may KO an Adversary from their Victory Pile. Any player who does not do so gains a Bindings.
-
 
 #CARDNAME: Spider Friends
 
@@ -133,7 +130,6 @@ Overrun: Each player reveals the top card of their deck, and if it has an Attack
 #VP: 3
 #FIGHT: Reveal the top card of the Adversary Deck. If that card is worth 2 Victory Points or less, play it. If you play a card from the Adversary Deck this way, put Spider-Man back on top of the Adversary Deck.
 Overrun: Each player gains a Bindings.
-
 
 #CARDNAME: Uncanny Avengers
 
@@ -165,7 +161,6 @@ X-Treme Attack.
 Wolverine gets +1 Attack for each card you've drawn this turn.
 Overrun: Each player reveals an [Instinct] Ally or gains a Bindings. Then shuffle Wolverine back into the Adversary deck.
 
-
 #CARDNAME: Uncanny X-Men
 
 #SUBNAME: Colossus
@@ -196,7 +191,6 @@ Elusive 5
 X-Treme Attack.
 #AMBUSH: (After Storm enters the city.) Move Storm to the Rooftops. If another Adversary is already there, swap them.
 #FIGHT: If you fight Storm on the Rooftops, each other player gains a Bindings.
-
 
 #CARDNAME: X-Men First Class
 
@@ -235,7 +229,5 @@ X-Treme Attack.
 #VP: 4
 X-Treme Attack. To Fight Cyclops, you must also discard a card.
 Overrun: Each player reveals a Brotherhood Ally or discards a card.
-
-
 
 

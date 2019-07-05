@@ -33,7 +33,6 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 #ATTACK: 4+
 #VP: 3
 
-
 #CARDNAME: Evil Deadpool Corpse
 
 #SUBNAME: D.E.A.D.P.O.O.L.
@@ -68,7 +67,5 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 #ESCAPE: Same effect. Then, shuffle me back into the Villain Deck so I can kick your ass again!
 #ATTACK: 7+
 #VP: 6
-
-
 
 

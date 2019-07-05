@@ -19,7 +19,6 @@
 #TACTIC: Imperial Edict
 #FIGHT: Choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck in random order.
 
-
 #CARDNAME: King Hyperion
 
 #LEADS: Utopolis
@@ -40,7 +39,6 @@ Escape: Each player gains a wound. Put King Hyperion on the Mastermind space.
 #TACTIC: Rule with an Iron Fist
 #FIGHT: If King Hyperion is in the city, put him back on the Mastermind space and shuffle this Tactic back into his Tactics. If you do, you may defeat a Villain in the city for free.
 
-
 #CARDNAME: Shiklah, the Demon Bride
 
 #LEADS: Monster Metropolis
@@ -53,7 +51,7 @@ Escape: Each player gains a wound. Put King Hyperion on the Mastermind space.
 
 #TACTIC: Shiklah's Husband, Deadpool
 #FIGHT: Gain this as a Hero.
---------
+---
 #TEAM: (Unaffiliated)
 #CLASS: [Covert]
 You get +1 Attack for each Hero with an odd-numbered cost you played this turn. <i>(0 is even.)</i>
@@ -64,7 +62,6 @@ You get +1 Attack for each Hero with an odd-numbered cost you played this turn. 
 
 #TACTIC: Infernal Power
 #FIGHT: {FATEFULRESURRECTION}. If she resurrects, draw two cards.
-
 
 #CARDNAME: Spider-Queen
 
@@ -85,7 +82,5 @@ Spider-Queen gets +1 Attack for each Bystander in the Escape pile.
 
 #TACTIC: Web the Skyscrapers
 #FIGHT: Each other player reveals a Spider-Friend Hero or puts a Bystander from their Victory Pile into the Escape pile.
-
-
 
 

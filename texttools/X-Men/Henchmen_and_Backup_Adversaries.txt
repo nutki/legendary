@@ -27,4 +27,3 @@ This Villain gets +1 Attack for each Bystander in the KO pile.
 #VP: 1
 
 
-

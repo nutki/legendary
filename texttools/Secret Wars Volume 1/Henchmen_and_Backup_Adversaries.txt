@@ -15,9 +15,8 @@
 #ATTACK: 3
 #GAINABLE
 #TEAM: Avengers
-#CLASS: [Strength]/[Ranged]
+Class: [Strength], [Ranged]
 #RECRUIT: 2+
 {POWER Strength Ranged} You get +1 Recruit.
-
 
 

@@ -38,7 +38,6 @@
 #ATTACK: 4+
 #VP: 3
 
-
 #CARDNAME: Hellfire Club
 
 #SUBNAME: Corrupt the Phoenix Force
@@ -74,7 +73,6 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 3+
 #VP: 4
-
 
 #CARDNAME: Mojoverse
 
@@ -114,7 +112,6 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 3* Attack
 #VP: 2
 
-
 #CARDNAME: Murderworld
 
 #SUBNAME: Animatronic Killer Clowns
@@ -151,7 +148,6 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 <b>By End of Turn</b>: Have no Villains in the Sewers.
 <b>Or Suffer</b>: Each player gains a Wound.
 #VP: 2
-
 
 #CARDNAME: Shadow-X
 
@@ -207,7 +203,6 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 <b>X-Gene</b> [Covert]: Rescue a Bystander.
 #ATTACKG: 2
 
-
 #CARDNAME: Shi'ar Imperial Guard
 
 #SUBNAME: Blackthorn
@@ -245,7 +240,6 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 5
 #VP: 3
 
-
 #CARDNAME: Sisterhood of Mutants
 
 #SUBNAME: Lady Deathstrike
@@ -282,7 +276,6 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 3+
 #VP: 3
 
-
 #CARDNAME: Token Villains
 
 #SUBNAME: Animatronic Killer Clown
@@ -311,7 +304,5 @@ Villain --- Hellfire Club
 Villain --- Shi'ar Imperial Guard
 #ATTACK: 7
 #VP: 5
-
-
 
 

@@ -33,7 +33,6 @@ You get +5 Attack for each Commander Tactic in your Victory Pile.
 #COST: 7
 #GUN: 1
 
-
 #CARDNAME: Dr. Octopus
 #TEAM: Sinister Six
 
@@ -66,7 +65,6 @@ If this is the eighth card you played this turn, you get +2 Attack.
 #ATTACK: 0+
 Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don't shuffle). Then you get +1 Attack for each card you discarded this turn.
 #COST: 8
-
 
 #CARDNAME: Electro
 #TEAM: Sinister Six
@@ -104,7 +102,6 @@ All Adversaries and the Commander get -1 Attack this turn.
 {TEAMPOWER Sinister Six, Sinister Six} Same Effect
 #COST: 7
 
-
 #CARDNAME: Enchantress
 #TEAM: Foes of Asgard
 
@@ -119,7 +116,7 @@ All Adversaries and the Commander get -1 Attack this turn.
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 1+
-You may KO a card from your hand or discard pile. You get + Recruit equal to that card's Cost.
+You may KO a card from your hand or discard pile. You get +Recruit equal to that card's Cost.
 #COST: 4
 
 #SUBNAME: Irresistible Bribe
@@ -136,7 +133,6 @@ Choose an Adversary. You can spend any combination of Recruit and Attack to figh
 Draw three cards.
 {TEAMPOWER Foes of Asgard} Then put Unending Anguish on the bottom of your deck.
 #COST: 7
-
 
 #CARDNAME: Green Goblin
 #TEAM: Sinister Six
@@ -172,7 +168,6 @@ If you discarded any cards this turn, kidnap a Bystander.
 Return from your discard pile to your hand all the cards you discarded this turn.
 #COST: 7
 
-
 #CARDNAME: Juggernaut
 #TEAM: Brotherhood
 
@@ -205,7 +200,6 @@ To play this card, you must discard a card from your hand.
 Choose one: Each player KOs two cards from their hand, or each player KOs two cards from their discard pile. Then you get +1 Attack for each non-grey Ally KO'd this turn.
 #COST: 8
 
-
 #CARDNAME: Kingpin
 #TEAM: Crime Syndicate
 
@@ -235,7 +229,6 @@ You get +1 Attack for each New Recruit you played this turn.
 #CLASS: [Strength]
 {TEAMPOWER Crime Syndicate, Crime Syndicate} If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
 #COST: 8
-
 
 #CARDNAME: Kraven
 #TEAM: Sinister Six
@@ -268,10 +261,9 @@ Choose an Adversary and a direction. Move that Adversary as many adjacent, empty
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 0+
-You get + Attack equal to the Cost of the highest-cost Ally in the Lair.
+You get +Attack equal to the Cost of the highest-cost Ally in the Lair.
 #COST: 8
 #FLAVOR: No one's gonna ever keep him down.
-
 
 #CARDNAME: Loki
 #TEAM: Foes of Asgard
@@ -304,7 +296,6 @@ Look at the top two cards of another player's deck. Without revealing those card
 Each player reveals a Foes of Asgard Ally or reveals their hand. For each player that revealed their hand, you may swap a card from that hand with a card in the Lair of the same cost.
 #COST: 8
 
-
 #CARDNAME: Magneto
 #TEAM: Brotherhood
 
@@ -324,7 +315,7 @@ You may choose a Bindings from your hand or discard pile and have another player
 {POWER Strength} Choose a player. That player reveals a Brotherhood Ally or gains a Bindings. If a Bindings is gained this way, you get +1 Recruit.
 #COST: 4
 
-#SUBNAME: Weapons From Scrap Metal
+#SUBNAME: Weapons from Scrap Metal
 #COPIES: 3
 #CLASS: [Ranged]
 #ATTACK: 3
@@ -338,7 +329,6 @@ If you discarded any cards this turn, draw a card.
 #ATTACK: 4+
 {TEAMPOWER Brotherhood} For each other Brotherhood Ally you played this turn, choose a player to gain a Bindings. Then you get +2 Attack for each Bindings gained this turn.
 #COST: 7
-
 
 #CARDNAME: Mysterio
 #TEAM: Sinister Six
@@ -372,10 +362,9 @@ You get +1 Attack for each color of Ally in the Lair.
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-Put a card from the Lair on the bottom of the Ally Deck. You get + Recruit equal to that card's printed Recruit and + Attack equal to its printed Attack.
+Put a card from the Lair on the bottom of the Ally Deck. You get +Recruit equal to that card's printed Recruit and +Attack equal to its printed Attack.
 {TEAMPOWER Sinister Six} Then, for each other Sinister Six Ally you played this turn, do the same effect. (Use a different Ally from the Lair each time.)
 #COST: 7
-
 
 #CARDNAME: Mystique
 #TEAM: Brotherhood
@@ -410,7 +399,6 @@ Reveal the top card of the Ally Deck. You may play a copy of that card this turn
 Reveal the top five cards of the Ally Deck. You get + Attack equal to their total printed Attack. Then put them back in any order.
 #COST: 7
 
-
 #CARDNAME: Sabretooth
 #TEAM: Brotherhood
 
@@ -441,7 +429,6 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and put 
 Each player reveals a [Instinct] Ally or reveals the top card of their deck. Choose any number of those revealed top cards to be KO'd.
 {POWER Instinct} You get +1 Attack for each card KO'd this turn.
 #COST: 7
-
 
 #CARDNAME: Ultron
 #TEAM: (Unaffiliated)
@@ -477,7 +464,6 @@ Each other player reveals a [Tech] Ally or discards their hand. Each player who 
 {POWER Tech} You get +3 Attack for each Ally discarded this way that costs 7 Cost or more.
 #COST: 8
 
-
 #CARDNAME: Venom
 #TEAM: Sinister Six
 
@@ -512,7 +498,5 @@ Each Adversary with a 4 Attack or more guards a Bystander.
 Each other player reveals an [Instinct] Ally or KOs a Bystander from their Victory Pile.
 {POWER Instinct} Kidnap all Bystanders that were KO'd this turn. Then you get +1 Recruit for each Bystander you kidnapped this turn.
 #COST: 7
-
-
 
 

@@ -18,7 +18,7 @@
 #SUBNAME: Zombie Madame Hydra
 #COPIES: 1
 #AMBUSH: {RISEOFTHELIVINGDEAD}
-#FIGHT: KO one of your <span style="background-color: #AAAAAA;"><span style="color: #FFFFFF;">S.H.I.E.L.D.</span></span> Heroes or <span style="background-color: #AAAAAA;"><span style="color: #FFFFFF;">HYDRA</span></span> Allies.
+#FIGHT: KO one of your S.H.I.E.L.D. Heroes or HYDRA Allies.
 #ATTACK: 4
 #VP: 2
 
@@ -58,7 +58,6 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #ATTACK: 5*
 #VP: 3
 
-
 #CARDNAME: Domain of Apocalypse
 
 #SUBNAME: Apocalyptic Blink
@@ -87,7 +86,6 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #ESCAPE: {XDRAMPAGE Wolverine}
 #ATTACK: 7
 #VP: 5
-
 
 #CARDNAME: Limbo
 
@@ -118,7 +116,6 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #FIGHT: Up to two cards in your hand that have a Recruit icon gain {TELEPORT} this turn.
 #ATTACK: 4
 #VP: 2
-
 
 #CARDNAME: Manhattan (Earth-1610)
 
@@ -159,7 +156,6 @@ You get +1 Attack for each color of Hero you have
 {POWER Covert} You get +2 Attack.
 #ATTACKG: 2+
 
-
 #CARDNAME: Sentinel Territories
 
 #SUBNAME: Colossus of Future Past
@@ -187,7 +183,6 @@ You get +1 Attack for each color of Hero you have
 #ATTACK: 7
 #VP: 5
 
-
 #CARDNAME: Wasteland
 
 #SUBNAME: The Hulk Gang
@@ -214,7 +209,5 @@ You get +1 Attack for each color of Hero you have
 #FIGHT: Reveal the top card of your deck. If it costs 2 or less, KO it.
 #ATTACK: 4
 #VP: 2
-
-
 
 

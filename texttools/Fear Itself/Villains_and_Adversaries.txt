@@ -62,5 +62,3 @@ Overrun: Each player reveals an [Instinct] Ally or gains a Bindings. Then put Wo
 #VP: 6
 
 
-
-

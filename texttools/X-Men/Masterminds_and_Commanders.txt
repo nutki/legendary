@@ -25,7 +25,6 @@
 #TACTIC: Welcome to my Theme Park!
 #FIGHT: Arcade and each Murderworld Villain in the city capture two <b>Human Shields</b>.
 
-
 #CARDNAME: Dark Phoenix
 #LEADS: Hellfire Club
 #STRIKE: KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck.
@@ -51,7 +50,6 @@ Dark Phoenix Wins: When the Hero Deck is empty.
 
 #TACTIC: Worship Me as a God
 #FIGHT: Each other player gains two 0-cost cards from the KO pile.
-
 
 #CARDNAME: Deathbird
 Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
@@ -79,7 +77,6 @@ Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
 #TACTIC: Shi'ar Master Spies
 #FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "<b>Escape</b>: This card becomes a Scheme Twist that takes effect immediately."
 
-
 #CARDNAME: Mojo
 #START: Mojo captures 3 <b>Human Shields</b>. All Bystanders in Victory Piles are worth 3 VP.
 #LEADS: Mojoverse
@@ -105,7 +102,6 @@ Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
 
 #TACTIC: Mojo Branding Opportunity
 #FIGHT: Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a <b>Human Shield</b>.
-
 
 #CARDNAME: Onslaught
 Each player's hand size is 1 less.
@@ -133,7 +129,6 @@ Each player's hand size is 1 less.
 #TACTIC: Worldwide Mental Control
 #FIGHT: Onslaught Dominates four 0-cost Heroes from the KO pile. The next time a player fights Onslaught, KO those 0-cost Heroes.
 
-
 #CARDNAME: Shadow King
 #LEADS: Shadow-X
 #STRIKE: KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
@@ -158,7 +153,5 @@ Each player's hand size is 1 less.
 
 #TACTIC: Telepathic Betrayal
 #FIGHT: If the "Betrayal of the Shadow" Trap is in any Victory Pile or the KO pile, put it on top of the Villain Deck.
-
-
 
 

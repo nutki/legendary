@@ -1,5 +1,4 @@
 
-
 #CARDNAME: Amadeus Cho
 #TEAM: Champions
 
@@ -18,7 +17,7 @@ Draw a card.
 Then, if you drew two cards this turn, Transform this into Like Totally Smart Hulk.
 #COST: 3
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Like Totally Smart Hulk
 #COPIES: 5
 #CLASS: [Strength]
@@ -43,7 +42,6 @@ Whenever you use an <b>Outwit</b> ability this turn, you may use it an extra tim
 <b>Outwit</b>: Look at the top card of your deck. KO it or put it back.
 #COST: 8
 
-
 #CARDNAME: Bruce Banner
 #TEAM: Avengers
 
@@ -61,7 +59,7 @@ Whenever you use an <b>Outwit</b> ability this turn, you may use it an extra tim
 <b>Outwit</b>: <b>Transform</b> this into Savage Hulk Unleashed.
 #COST: 4
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Savage Hulk Unleashed
 #COPIES: 5
 #CLASS: [Strength]
@@ -84,7 +82,6 @@ Cost 5
 #ATTACK: 4
 <b>Outwit</b>: Look at the top three cards of your deck. Draw one of them, KO one, and put one back.
 #COST: 7
-
 
 #CARDNAME: Caiera
 #TEAM: Warbound
@@ -120,14 +117,13 @@ Double the Recruit you have.
 If there are at least 3 Heroes per player in the KO pile, <b>Transform</b> this into Vengeful Destructor.
 #COST: 7
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Vengeful Destructor
 #COPIES: 1
 #CLASS: [Strength]
 Double the Attack you have.
 #COST: 7
 #FLAVOR: The Red King betrayed her, causing the plague of Cytoplasm Spikes that destroyed her people.
-
 
 #CARDNAME: Gladiator Hulk
 #TEAM: Warbound
@@ -149,7 +145,7 @@ Draw a card.
 Then, if you discarded at least two cards this turn, <b>Transform</b> this into Hulk Is King and put it on top of your deck.
 #COST: 4
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Hulk Is King
 #COPIES: 5
 #CLASS: [Strength]
@@ -161,8 +157,8 @@ When a card effect causes you to discard this card, you may return this card to 
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 3+
-{POWER Strength} <b>Cross-Dimensional Hulk Rampage.</b>
-If any players gained a Wound this way, you get <b>Wounded Fury.</b>
+{POWER Strength} {XDRAMPAGE Hulk}.
+If any players gained a Wound this way, you get <b>Wounded Fury</b>.
 #COST: 5
 
 #SUBNAME: Double-Fisted Smashing
@@ -172,7 +168,6 @@ If any players gained a Wound this way, you get <b>Wounded Fury.</b>
 You get double Attack from each Smash this turn.
 <b>Smash 3</b>
 #COST: 8
-
 
 #CARDNAME: Hiroim
 #TEAM: Warbound
@@ -184,7 +179,7 @@ You get double Attack from each Smash this turn.
 {POWER Covert} The first time you defeat a Villain this turn, rescue a Bystander.
 #COST: 3
 
-#SUBNAME: Save From The Rubble
+#SUBNAME: Save from the Rubble
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 1
@@ -192,7 +187,7 @@ Draw a card.
 If there are at least two Bystanders in your Victory Pile, <b>Transform</b> this into Hiroim Redeemed.
 #COST: 4
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Hiroim Redeemed
 #COPIES: 5
 #CLASS: [Strength]
@@ -208,17 +203,16 @@ You get +1 Attack for every two Bystanders in your Victory Pile.
 {TEAMPOWER Warbound} You may KO a 0-cost card from any player's discard pile. If you KO a Wound this way, rescue a Bystander.
 #COST: 6
 
-#SUBNAME: Blade Of The People
+#SUBNAME: Blade of the People
 #COPIES: 1
 #CLASS: [Instinct]
 Choose one: Rescue three Bystanders, or defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in your Victory Pile.
 #COST: 7
 
-
 #CARDNAME: Hulkbuster Iron Man
 #TEAM: Avengers
 
-#SUBNAME: Pound For Pound
+#SUBNAME: Pound for Pound
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 0+
@@ -243,7 +237,7 @@ Draw a card.
 #COST: 5
 #FLAVOR: Tony Stark has specialized suits for many occasions. This one is specialized for may concussions.
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Ultra-Massive Armor
 #COPIES: 3
 #CLASS: [Tech]
@@ -259,7 +253,6 @@ Draw two cards.
 #ATTACK: 5+
 You get +2 Attack for each other [Tech] and/or [Strength] card you played this turn.
 #COST: 8
-
 
 #CARDNAME: Joe Fixit, Grey Hulk
 #TEAM: Crime Syndicate
@@ -286,7 +279,7 @@ Choose a Villain. You can spend any combination of Recruit and Attack to fight i
 When you defeat a Villain this turn that has 6 Attack or more, <b>Transform</b> this into Underworld Boss and put it on top of your deck.
 #COST: 6
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Underworld Boss
 #COPIES: 3
 #CLASS: [Instinct]
@@ -302,7 +295,6 @@ Choose a Villain in your Victory Pile, You get + Attack equal to it's printed VP
 You can spend any combination of Recruit and Attack to fight the Mastermind this turn.
 #COST: 7
 
-
 #CARDNAME: Korg
 #TEAM: Warbound
 
@@ -311,7 +303,7 @@ You can spend any combination of Recruit and Attack to fight the Mastermind this
 #CLASS: [Strength]
 #ATTACK: 0+
 Draw a card.
-{POWER Strength} <b>Smash 2.</b> If you <b>Smash</b> a Wound this way, KO it.
+{POWER Strength} <b>Smash 2</b>. If you <b>Smash</b> a Wound this way, KO it.
 #COST: 2
 
 #SUBNAME: Move Mountains
@@ -330,7 +322,7 @@ Draw a card.
 #COST: 3
 #FLAVOR: After a while, it gets hard to tell if you're being hit by fist-sized rocks or rock-sized fists.
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Lord of Granite
 #COPIES: 3
 #CLASS: [Covert]
@@ -347,7 +339,6 @@ Draw a card.
 Put all cards from the HQ on the bottom of the Hero Deck in random order. You get their total printed Attack.
 #COST: 8
 
-
 #CARDNAME: Miek, The Unhived
 #TEAM: Warbound
 
@@ -363,7 +354,7 @@ Put all cards from the HQ on the bottom of the Hero Deck in random order. You ge
 #CLASS: [Instinct]
 #RECRUIT: 2
 Look at the top card of your deck. Put it back on the top or bottom.
-{POWER Instinct} You may <b>Feast.</b>
+{POWER Instinct} You may <b>Feast</b>.
 #COST: 4
 
 #SUBNAME: Endless Appetite
@@ -378,17 +369,16 @@ Whenever a card is KO'd from your deck this turn, you may draw a card.
 #COPIES: 1
 #CLASS: [Covert]
 #RECRUIT: 5
-You may <b>Feast.</b> Then, if a card with an Attack icon was KO'd from your deck this turn, <b>Transform</b> this into Hive King Miek.
+You may <b>Feast</b>. Then, if a card with an Attack icon was KO'd from your deck this turn, <b>Transform</b> this into Hive King Miek.
 #COST: 7
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Hive King Miek
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 6
 Look at the top three cards of your deck and put them back in any order. Then you may <b>Feast</b>.
 #COST: 8
-
 
 #CARDNAME: Namora
 #TEAM: Champions
@@ -400,9 +390,9 @@ Look at the top three cards of your deck and put them back in any order. Then yo
 Draw a card.
 {POWER Ranged} <b>Smash 3</b>
 #COST: 3
-<span style="font-size: 8pt;">There's more than one way to smash a problem.<i></i></span>
+#FLAVOR: There's more than one way to smash a problem.
 
-#SUBNAME: Heart Of The Ocean
+#SUBNAME: Heart of the Ocean
 #COPIES: 5
 #CLASS: [Covert]
 #ATTACK: 2+
@@ -416,7 +406,7 @@ You get +1 Attack, usable only against Villains in the Sewers or Bridge or the M
 When you defeat a Villain in the Sewers or Bridge, <b>Transform</b> this into Master of Depths and put it on top of your deck.
 #COST: 5
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Master of Depths
 #COPIES: 3
 #CLASS: [Strength]
@@ -432,7 +422,6 @@ If you <b>Smash</b> a 0-cost Hero this way, KO it.
 {POWER Covert} If the Bridge is empty, you may move a Villain there from another city space. A Villain moved this way gets -3 Attack this turn.
 #COST: 7
 
-
 #CARDNAME: No-Name, Brood Queen
 #TEAM: Warbound
 
@@ -444,22 +433,22 @@ If this is the first card you played this turn, draw a card.
 #COST: 2
 #FLAVOR: When you block her teeth, tail, claws, wings, and tentacle, that's when she gets you with her other tentacle.
 
-#SUBNAME: Appetite For Destruction
+#SUBNAME: Appetite for Destruction
 #COPIES: 5
 #CLASS: [Covert]
 #ATTACK: 2
 Look at the top card of your deck. Discard it or put it back.
-{POWER Covert} You may <b>Feast.</b>
+{POWER Covert} You may <b>Feast</b>.
 #COST: 4
 
 #SUBNAME: Bursting With Life
 #COPIES: 3
 #CLASS: [Strength]
 #RECRUIT: 2
-You may <b>Feast.</b> Then, if a non-grey Hero was KO'd from you deck this turn, <b>Transform</b> this into Torrent of Broodlings.
+You may <b>Feast</b>. Then, if a non-grey Hero was KO'd from you deck this turn, <b>Transform</b> this into Torrent of Broodlings.
 #COST: 3
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Torrent of Broodlings
 #COPIES: 3
 #CLASS: [Covert]
@@ -475,7 +464,6 @@ Draw a card.
 Look at the top card of your deck. Then <b>Feast</b> up to three times. You get +2 Attack for each non-grey Hero that was KO'd from you deck this turn.
 #COST: 8
 
-
 #CARDNAME: Rick Jones
 #TEAM: S.H.I.E.L.D.
 
@@ -487,14 +475,14 @@ Look at the top card of your deck. Then <b>Feast</b> up to three times. You get 
 #COST: 3
 #FLAVOR: Rick jones has impressive skills even before life transformed him into a variety of superheroes.
 
-#SUBNAME: Seek The Nega-Bands
+#SUBNAME: Seek the Nega-Bands
 #COPIES: 5
 #CLASS: [Instinct]
 #RECRUIT: 2
 Reveal the top card of your deck. If it costs 3 or more, <b>Transform</b> this into Captain Marvel.
 #COST: 4
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Captain Marvel
 #COPIES: 5
 #CLASS: [Ranged]
@@ -510,7 +498,7 @@ Reveal the top card of your deck. If it costs 3 or more, draw it.
 If you have at least 5 Villains in your Victory Pile, <b>Transform</b> this into A-Bomb and put it on top of your deck.
 #COST: 5
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: A-Bomb
 #COPIES: 3
 #CLASS: [Strength]
@@ -526,13 +514,12 @@ If you have at least 5 Villains in your Victory Pile, <b>Transform</b> this into
 If you defeat two Villains this turn, <b>Transform</b> this into The Destiny Force and put it on top of your deck.
 #COST: 7
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: The Destiny Force
 #COPIES: 1
 #CLASS: [Ranged]
 Count the number of different printed VP values in your Victory Pile. Draw that many cards.
 #COST: 9
-
 
 #CARDNAME: Sentry
 #TEAM: Avengers
@@ -544,7 +531,7 @@ Count the number of different printed VP values in your Victory Pile. Draw that 
 #COST: 2
 #FLAVOR: If half the time you went out, you transformed into a terrifying demon, you'd have social anxiety too.
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Golden Guardian of Good
 #COPIES: 5
 #CLASS: [Strength]
@@ -566,7 +553,7 @@ You get +1 Attack for each card that <b>Transformed</b> this turn.
 Reveal the top card of your deck. If it costs 1 or more, <b>Transform</b> this into The Void Unchained and put it on top of your deck.
 #COST: 3
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: The Void Unchained
 #COPIES: 3
 #CLASS: [Covert]
@@ -582,7 +569,6 @@ Reveal the top card of your deck. If it costs 0, then <b>Feast</b>. Otherwise, <
 Reveal the top five cards of the Hero Deck, gain their total printed Attack, and put them on the bottom of that deck. If this card makes 12 Attack or more, then <b>Transform</b> this card into The Void Mastermind and add it to the game at the start of the next turn with one random Tactic.
 #COST: 8
 
-
 #CARDNAME: She-Hulk
 #TEAM: Avengers
 
@@ -593,7 +579,7 @@ Reveal the top five cards of the Hero Deck, gain their total printed Attack, and
 Once this turn, if you made at least 6 Recruit this turn, <b>Transform</b> this into Hurl Trucks.
 #COST: 3
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Hurl Trucks
 #COPIES: 5
 #CLASS: [Strength]
@@ -603,7 +589,7 @@ Once this turn, if you made at least 6 Recruit this turn, <b>Transform</b> this 
 #COST: 6
 #FLAVOR: Some courtroom opponents are afraid to make objections.
 
-#SUBNAME: Window Of Opportunity
+#SUBNAME: Window of Opportunity
 #COPIES: 5
 #CLASS: [Strength]
 #RECRUIT: 2
@@ -626,8 +612,7 @@ Once this turn, if you made at least 6 Recruit this turn, you may KO a card from
 For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, put it on the bottom of that deck, and you get that card's printed Attack.
 #COST: 8
 
-
-#CARDNAME: Skaar, Son Of Hulk
+#CARDNAME: Skaar, Son of Hulk
 #TEAM: Avengers
 
 #SUBNAME: Anger Management
@@ -642,7 +627,7 @@ For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, pu
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2+
-{POWER Instinct} <b>Wounded Fury.</b>
+{POWER Instinct} <b>Wounded Fury</b>
 #COST: 3
 #FLAVOR: Getting hurt makes Skaar stronger. Growing up without parents gave him a lot to work with.
 
@@ -654,7 +639,7 @@ For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, pu
 #COST: 5
 #FLAVOR: Skaar's moods swing wildly, from extremely angry to absolutely furious.
 
-<span style="color: #FF0000;">Transformed</span>
+Transformed
 #SUBNAME: Raging Savage
 #COPIES: 3
 #CLASS: [Strength]
@@ -670,7 +655,5 @@ For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, pu
 <b>Wounded Fury</b>
 Then, you may KO any number of Wounds from your hand and/or discard pile, then draw that many cards.
 #COST: 8
-
-
 
 

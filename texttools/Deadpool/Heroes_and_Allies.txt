@@ -35,7 +35,6 @@ Reveal the top card of your deck. If it's HYDRA or S.H.I.E.L.D., draw it.
 #COST: 8
 #GUN: 1
 
-
 #CARDNAME: Deadpool
 #TEAM: Mercs for Money
 
@@ -72,7 +71,6 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #COST: 7
 #FLAVOR: Hey Wolverine! I've had a breakthrough!
 
-
 #CARDNAME: Slapstick
 #TEAM: Mercs for Money
 
@@ -107,7 +105,6 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #ATTACK: 5
 #COST: 8
 
-
 #CARDNAME: Solo
 #TEAM: Mercs for Money
 #GUN: 1
@@ -123,7 +120,7 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #SUBNAME: Merc's Gotta Get Paid
 #COPIES: 5
 #CLASS: [Instinct]
-Excessive Violence: You get +1 Recruit.
+<b>Excessive Violence</b>: You get +1 Recruit.
 #RECRUIT: 0+
 #ATTACK: 2 1/2
 #COST: 3
@@ -141,11 +138,10 @@ Excessive Violence: You get +1 Recruit.
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 2 1/2
-Choose a Villalin. Cut its Attack in half this turn.
+Choose a Villain. Cut its Attack in half this turn.
 {TEAMPOWER Mercs for Money} Cut the Mastermind's Attack in half for one fight this turn.
 #COST: 7
 #FLAVOR: So 11 becomes 5 1/2. This is like 4th grade math - Try to keep up.
-
 
 #CARDNAME: Stingray
 #TEAM: Mercs for Money
@@ -182,7 +178,5 @@ You may KO a card from your hand or discard pile.
 {TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.
 #ATTACK: 4+
 #COST: 8
-
-
 
 

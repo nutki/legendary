@@ -23,5 +23,3 @@
 #EVILWINS: When 20 non-grey Heroes are KO'd.
 
 
-
-

@@ -62,4 +62,6 @@ Once this turn, if you made at least 6 Recruit, you get +2 Attack. Put this on t
 #CLASS: [Instinct]
 KO a card from your hand or discard pile. Put this on the bottom of the Sidekick Stack.
 #COST: 2
+#FLAVOR: Ka-Zar of the Savage Land saved Zabu's life from the beastly Maa-Gor.
+
 

@@ -5,7 +5,6 @@
 * Several Danger Sense cards also say they have additional effects when they reveal particular kinds of cards.
 * Sometimes you can use one Danger Sense card to put a particular card on top of the Villain Deck, and then use a different Danger Sense card to benefit from that card being on top of that deck.
 * Danger Sense can also be a good way to delay nasty Scheme Twists, Master Strikes, and powerful Villains. But you won't be able to avoid them forever!
-
 <b>Striker</b>: This keyword represents Villains and Masterminds that get more confident and powerful as the Mastermind smashes Heroes. It means "This gets +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind."
 * A couple of Hero cards also have the Striker ability and give you +Attack the same way.
 * A couple of cards say "Double Striker," meaning they get +2 Attack per Strike, or even "Triple Striker" meaning +3 Attack per Strike.
@@ -14,7 +13,6 @@ By default, most Master Strikes go to the KO pile when they occur. However, some
 * Macho Gomez - Count Master Strikes in front of all players.
 * Deathbird - Count Master Strikes in the city, Escape Pile, and all players' Victory Piles.
 * Mysterio - Count Master Strikes in all players' Victory Piles. Don't count Master Strikes shuffled into his Tactics, since they're not face up.
-
 <b>Coordinate</b>: This keyword represents how Tony Stark and May Parker act as mentors to Spider-Man in the movie, helping him reach his full potential and become a true hero.
 Coordinating allows you to let another player "borrow" one of your cards. It is a critical way to help other players defeat tough enemies. During another player's turn, you can Coordinate with them like this:
 * Discard a Coordinate card from your hand and then draw a new card to replace it.
@@ -24,5 +22,4 @@ You can only Coordinate one card to each player on their turn. However, multiple
 * Coordinate is printed on cards in red text to make it easier to notice during other players' turns.
 * When you offer to Coordinate a card to another player, that player can decline. If so, you don't discard that card and that player doesn't play a copy of it.
 * If you are playing with the Final Showdown, you can't Coordinate during that Showdown.
-
 

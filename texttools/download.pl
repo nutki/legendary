@@ -1,2 +1,2 @@
 #!/bin/bash
-wget 'https://boardgamegeek.com/article/17036828' -O input.html
+wget 'https://www.boardgamegeek.com/wiki/page/Legendary_Marvel_Complete_Card_Text' -O input.html

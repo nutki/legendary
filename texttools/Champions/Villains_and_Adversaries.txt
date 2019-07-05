@@ -57,7 +57,6 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 #ATTACK: 9*
 #VP: 5
 
-
 #CARDNAME: Wrecking Crew
 
 #SUBNAME: Bulldozer
@@ -84,7 +83,5 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 #AMBUSH: For each Wrecking Crew Villain in the city, (including this one), <b>Demolish</b> each player.
 #ATTACK: 7
 #VP: 5
-
-
 
 

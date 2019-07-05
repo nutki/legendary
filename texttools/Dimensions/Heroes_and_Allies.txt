@@ -30,7 +30,6 @@ You get +1 Attack for each other Hero you played this turn with no team icon.
 Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
 #COST: 7
 
-
 #CARDNAME: Jessica Jones
 #TEAM: Marvel Knights
 
@@ -47,7 +46,7 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #CLASS: [Covert]
 #ATTACK: 1
 <b>Switcheroo 5</b>
-<b>Investigate </b>for a card with an Attack icon.
+<b>Investigate</b> for a card with an Attack icon.
 #COST: 4
 
 #SUBNAME: Crack the Case
@@ -55,21 +54,20 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #CLASS: [Strength]
 #RECRUIT: 3
 <b>Switcheroo 6</b>
-<b>Investigate </b>for a card with a Recruit icon. You may draw that card or KO it.
+<b>Investigate</b> for a card with a Recruit icon. You may draw that card or KO it.
 #COST: 5
 
 #SUBNAME: Uncover Hidden Evil
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 4
-{POWER Covert} <b>Investigate </b>the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
+{POWER Covert} <b>Investigate</b> the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
 #COST: 7
-
 
 #CARDNAME: Man-Thing
 #TEAM: (Unaffiliated)
 
-#SUBNAME: Form From Ooze
+#SUBNAME: Form from Ooze
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 0+
@@ -99,7 +97,6 @@ You may move a Villain to another city space. If another Villain is already ther
 {POWER Strength} You get +1 Attack for each empty city space.
 #COST: 7
 
-
 #CARDNAME: Ms. America
 #TEAM: Avengers
 
@@ -116,7 +113,7 @@ You may move a Villain to another city space. If another Villain is already ther
 #COPIES: 5
 #CLASS: [Ranged]
 #RECRUIT: 2
-<b>Investigate </b>for an Avengers card and {TELEPORT} that card.
+<b>Investigate</b> for an Avengers card and {TELEPORT} that card.
 #COST: 4
 #FLAVOR: She hails from the Utopian Parallel to rally the Avengers with a warning.
 
@@ -136,7 +133,6 @@ You get +1 Attack for each other card in your hand.
 #COST: 7
 #FLAVOR: Her enemies are also cosmically aware - that she has pulverized them into star fragments.
 
-
 #CARDNAME: Squirrel Girl
 #TEAM: Avengers
 
@@ -144,7 +140,7 @@ You get +1 Attack for each other card in your hand.
 #COPIES: 5
 #CLASS: [Instinct]
 <b>Switcheroo 3</b>
-<b>Investigate </b>for a card that costs 3 or less.
+<b>Investigate</b> for a card that costs 3 or less.
 #COST: 2
 
 #SUBNAME: Nut Punch
@@ -171,7 +167,4 @@ You get +2 Attack if at least 2 cards entered the HQ this turn.
 You may choose a number from 1 to 5. A Hero in your hand gains <b>Switcheroo</b> for that number.
 {POWER Instinct Instinct} You may choose a number from 1 to 8 instead.
 #COST: 8
-
-
-
 

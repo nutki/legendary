@@ -23,5 +23,3 @@
 #EVILWINS: When the Mastermind has 10 Shards or when there are no more Shards in the supply.
 
 
-
-

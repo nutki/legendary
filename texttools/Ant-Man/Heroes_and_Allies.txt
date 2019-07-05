@@ -1,5 +1,4 @@
 
-
 #CARDNAME: Ant-Man
 #TEAM: Avengers
 
@@ -7,7 +6,7 @@
 #COPIES: 5
 #CLASS: [Tech]
 #ATTACK: 1
-<b>Size-changing</b>: [Tech]
+<b>Size-Changing</b>: [Tech]
 Draw a card.
 #COST: 4*
 #FLAVOR: Some consider Hank Pym an antihero.
@@ -24,7 +23,7 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 2+
-<b>Size-changing</b>: [Tech]
+<b>Size-Changing</b>: [Tech]
 You get +1 Attack for each extra card you drew this turn.
 #COST: 6*
 
@@ -32,10 +31,9 @@ You get +1 Attack for each extra card you drew this turn.
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 5
-<b>Microscopic Size-changing</b>: [Tech] [Tech] [Tech] [Tech] [Tech]
-A hero in the HQ without <b>Size-changing</b> abilities gain <b>Size-Chaning</b>: [Tech] this turn.
+<b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech] [Tech] [Tech]
+A hero in the HQ without <b>Size-Changing</b> abilities gain <b>Size-Changing</b>: [Tech] this turn.
 #COST: 9*
-
 
 #CARDNAME: Wasp
 #TEAM: Avengers
@@ -53,8 +51,8 @@ A hero in the HQ without <b>Size-changing</b> abilities gain <b>Size-Chaning</b>
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 2
-<b>Size-changing</b>: [Covert]
-<span style="background-color: #FF0000;"><span style="color: #FFFFFF;">Covert</span>:</span> Draw a card.
+<b>Size-Changing</b>: [Covert]
+{POWER Covert} Draw a card.
 #COST: 4*
 #FLAVOR: Crushing victories arrive in small packages.
 
@@ -62,7 +60,7 @@ A hero in the HQ without <b>Size-changing</b> abilities gain <b>Size-Chaning</b>
 #COPIES: 3
 #CLASS: [Ranged]
 #ATTACK: 2+
-<b>Size-changing</b>: [Covert]
+<b>Size-Changing</b>: [Covert]
 You get +1 Attack for each card you recruited this turn.
 #COST: 6*
 
@@ -70,10 +68,9 @@ You get +1 Attack for each card you recruited this turn.
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 4+
-<b>Microscopic Size-chaning</b>: [Covert] [Covert] [Covert] [Covert] [Covert]
+<b>Microscopic Size-Changing</b>: [Covert] [Covert] [Covert] [Covert] [Covert]
 {TEAMPOWER Avengers} You get +1 Attack for each other Avengers card you played this turn.
 #COST: 9*
-
 
 #CARDNAME: Jocasta
 #TEAM: Avengers
@@ -96,7 +93,7 @@ If your discard pile is empty, you get +2 Recruit. Otherwise, shuffle your disca
 #SUBNAME: Holographic Image Inducer
 #COPIES: 3
 #CLASS: [Tech]
-<b>Size-changing</b>: [Tech]
+<b>Size-Changing</b>: [Tech]
 Draw two cards.
 #COST: 6°
 #FLAVOR: Holograms allow Jocasta to appear human, as she searches for her own humanity.
@@ -108,7 +105,6 @@ Draw two cards.
 If your discard pile is empty, you get +2 Attack. Otherwise shuffle your discard pile into your deck.
 #COST: 7
 #GUN: 1
-
 
 #CARDNAME: Wonder Man
 #TEAM: Avengers
@@ -141,10 +137,9 @@ Put a card from the HQ on the bottom of the Hero Deck. If that card had a Recrui
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 4+
-<b>Size-changing</b> [Strength]
+<b>Size-Changing</b> [Strength]
 Choose any number of cards from the HQ. Put them on the bottom of the Hero Deck. Then you get <b>Empowered</b> by [Ranged] and [Strength].
 #COST: 8*
-
 
 #CARDNAME: Black Knight
 #TEAM: Avengers
@@ -178,7 +173,5 @@ When a Master Strike is played, before it takes effect, you may discard this car
 #ATTACK: 0+
 You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
 #COST: 7
-
-
 
 

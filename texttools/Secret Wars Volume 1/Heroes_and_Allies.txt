@@ -31,7 +31,6 @@ You get +1 Attack for each [Tech] Hero in the HQ.
 When any player defeats a Villain or Mastermind with a "Fight" effect, you may discard this card to cancel that fight effect. If you do, draw three cards.
 #COST: 7
 
-
 #CARDNAME: Black Bolt
 #TEAM: Illuminati
 
@@ -64,7 +63,6 @@ Choose a card you played this turn with no rules text. You get its Recruit and A
 #ATTACK: 3
 For each card with no rules text you played this turn, draw a card.
 #COST: 8
-
 
 #CARDNAME: Black Panther
 #TEAM: Illuminati
@@ -99,7 +97,6 @@ Whenever you defeat a Villain on the Rooftops or Streets this turn, you may KO o
 Gain three sidekicks.
 {TEAMPOWER Illuminati} Put them on top of your deck.
 #COST: 7
-
 
 #CARDNAME: Captain Marvel
 #TEAM: Avengers
@@ -136,7 +133,6 @@ Draw a card.
 #COST: 7
 #FLAVOR: You've heard of the power of the sun, right?
 
-
 #CARDNAME: Dr. Strange
 #TEAM: Illuminati
 
@@ -167,7 +163,6 @@ Draw a card.
 #CLASS: [Covert]
 Reveal the top three cards of your deck. Draw any number of them and {TELEPORT} the rest.
 #COST: 7
-
 
 #CARDNAME: Lady Thor
 #TEAM: Avengers
@@ -203,7 +198,6 @@ Once per turn, if you made at least 6 Recruit this turn, you get +2 Attack.
 One per turn, if you made at least 6 Recruit this turn, you get +6 Attack.
 #COST: 8
 #FLAVOR: Very few can wield Mjolnir. Even fewer can withstand a hit from it.
-
 
 #CARDNAME: Magik
 #TEAM: X-Men
@@ -241,7 +235,6 @@ For each Sidekick you played this turn, you get +1 Attack.
 Choose a Villain or Mastermind in your Victory Pile. You get +Attack equal to its printed VP.
 #COST: 7
 
-
 #CARDNAME: Maximus
 #TEAM: Cabal
 
@@ -276,7 +269,6 @@ Each other player reveals a [Tech] hero or chooses a Henchman Villain from their
 {TEAMPOWER Cabal} You get +1 Attack for each Henchman you defeated this turn.
 #COST: 7
 
-
 #CARDNAME: Namor, the Sub-Mariner
 #TEAM: Cabal
 
@@ -309,7 +301,6 @@ Defeat a Villain for free.
 {POWER Instinct Instinct Strength Strength} Instead, defeat the Mastermind once for free.
 #COST: 7
 
-
 #CARDNAME: Old Man Logan
 #TEAM: X-Men
 
@@ -341,7 +332,6 @@ If you don't recruit any heroes this turn, you get +2 Attack.
 #ATTACK: 5+
 Reveal your hand. You get +5 Attack if you haven't played any S.H.I.E.L.D. or HYDRA cards this turn and don't have any in your hand.
 #COST: 7
-
 
 #CARDNAME: Proxima Midnight
 #TEAM: Cabal
@@ -378,7 +368,6 @@ If the most recent Hero you have played this turn has a Recruit icon, you get +2
 {POWER Covert} You get +4 Recruit and +4 Attack.
 #COST: 8
 
-
 #CARDNAME: Superior Iron Man
 #TEAM: Illuminati
 
@@ -412,7 +401,6 @@ Draw a card.
 Draw a card for each other player who has fewer cards in their Victory Pile than you.
 #COST: 8
 
-
 #CARDNAME: Thanos
 #TEAM: Cabal
 
@@ -443,7 +431,6 @@ You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.
 #CLASS: [Ranged]
 KO six Bystanders from the Bystander Stack. Then, defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in the KO pile.
 #COST: 8
-
 
 #CARDNAME: Ultimate Spider-Man
 #TEAM: Spider Friends
@@ -477,7 +464,5 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #ATTACK: 0+
 You get +2 Attack for each other card you have played this turn that costs 1 or 2.
 #COST: 2
-
-
 
 

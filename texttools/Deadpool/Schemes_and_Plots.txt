@@ -26,5 +26,3 @@
 #EVILWINS: When 3 Villains per player have escaped.
 
 
-
-

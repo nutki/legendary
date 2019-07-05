@@ -31,7 +31,6 @@ If you control an <b>Artifact</b>, you get +2 Attack.
 You get +Attack equal to the total number of <b>Artifact</b>s controlled by players and <b>Artifact</b>s the Lair.
 #COST: 7
 
-
 #CARDNAME: Kuurth, Breaker of Stone
 #TEAM: Foes of Asgard
 
@@ -62,7 +61,6 @@ Reveal the top or bottom card of your deck. If it costs 4 or more, you get +2 Re
 #ATTACK: 0+
 Reveal a card from your hand, the top card of your deck, and the bottom card of your deck. You get +Attack equal to their total costs.
 #COST: 7
-
 
 #CARDNAME: Nerkkod, Breaker of Oceans
 #TEAM: Foes of Asgard
@@ -96,7 +94,6 @@ When you throw this, you get +3 Attack, usable only against Adversaries on the B
 {TEAMPOWER Foes of Asgard} Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each of those players' hands and put them into your hand.
 #COST: 7
 
-
 #CARDNAME: Nul, Breaker of Worlds
 #TEAM: Foes of Asgard
 
@@ -127,7 +124,6 @@ Say "NUL SMASH!" Then each player slaps a palm on the table. The last other play
 #ATTACK: 6
 KO up to two cards from your hand and/or discard pile. For each Bindings you KO this way, <b>demolish</b> each other player.
 #COST: 8
-
 
 #CARDNAME: Skadi
 #TEAM: HYDRA
@@ -162,7 +158,6 @@ When you throw this, you get +2 Attack for each card you discarded this turn.
 When you throw this, you get +1 Attack for each other HYDRA card you played this turn.
 #COST: 7
 
-
 #CARDNAME: Skirn, Breaker of Men
 #TEAM: Foes of Asgard
 
@@ -196,7 +191,5 @@ When you throw this, you get +1 Attack for each card you've drawn this turn.
 Each player reveals a [Covert] Ally or discards a card. For each card discarded this way, you draw a card.
 #COST: 7
 #GUN: 1
-
-
 
 

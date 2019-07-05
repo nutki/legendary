@@ -31,7 +31,6 @@ You get +1 Attack for each Bystander in your Victory pile.
 Defeat a Villain or Mastermind that has a Bystander.
 #COST: 7
 
-
 #CARDNAME: Captain America
 #TEAM: Avengers
 
@@ -63,7 +62,6 @@ If you would gain a Wound, you may reveal this card and draw a card instead.
 {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
 #COST: 7
 
-
 #CARDNAME: Cyclops
 #TEAM: X-Men
 
@@ -94,7 +92,6 @@ If a card effect makes you discard this card, you may return this card to your h
 #ATTACK: 6+
 {TEAMPOWER X-Men} You get +2 Attack for each other X-Men Hero you played this turn.
 #COST: 8
-
 
 #CARDNAME: Deadpool
 #TEAM: (Unaffiliated)
@@ -129,7 +126,6 @@ If this is the first Hero you played this turn, you may discard the rest of your
 #ATTACK: 6
 You may gain a Wound to your hand. Then each player passes a card from their hand to the player on their left.
 #COST: 7
-
 
 #CARDNAME: Emma Frost
 #TEAM: X-Men
@@ -166,7 +162,6 @@ Whenever you defeat a Villain or Mastermind this turn, you get +3 Recruit.
 #COST: 7
 #FLAVOR: A secondary mutation allows Emma Frost to transform into pure diamond.
 
-
 #CARDNAME: Gambit
 #TEAM: X-Men
 
@@ -195,9 +190,8 @@ Reveal the top card of your deck. Discard it or put it back.
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 4+
-Reveal the top card of your deck. You get + Attack equal to that card's cost.
+Reveal the top card of your deck. You get +Attack equal to that card's cost.
 #COST: 7
-
 
 #CARDNAME: Hawkeye
 #TEAM: Avengers
@@ -231,7 +225,6 @@ Draw a card.
 #ATTACK: 5
 Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
 #COST: 7
-
 
 #CARDNAME: Hulk
 #TEAM: Avengers
@@ -268,7 +261,6 @@ Each player gains a Wound.
 #COST: 8
 #FLAVOR: "PUNY HUMANS! HULK IS THE STRONGEST ONE THERE IS!"
 
-
 #CARDNAME: Iron Man
 #TEAM: Avengers
 
@@ -301,7 +293,6 @@ Draw two cards.
 {POWER Tech} Draw two more cards.
 #COST: 7
 
-
 #CARDNAME: Nick Fury
 #TEAM: S.H.I.E.L.D.
 #GUN: 1
@@ -332,7 +323,6 @@ You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 #CLASS: [Tech]
 Defeat any Villain or Mastermind whose Attack is less than the number of S.H.I.E.L.D. Heroes in the KO pile.
 #COST: 8
-
 
 #CARDNAME: Rogue
 #TEAM: X-Men
@@ -365,7 +355,6 @@ Play this card as a copy of another Hero you played this turn. This card is both
 Each player discards the top card of their deck. Play a copy of each of those cards.
 #COST: 8
 
-
 #CARDNAME: Spider-Man
 #TEAM: Spider Friends
 
@@ -395,7 +384,6 @@ Reveal the top card of your deck. If that card costs 2 or less, draw it.
 #CLASS: [Covert]
 Reveal the top three cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 #COST: 2
-
 
 #CARDNAME: Storm
 #TEAM: X-Men
@@ -429,7 +417,6 @@ You may move a Villain to a new city space. Rescue any Bystanders captured by th
 Any Villain you fight on the Bridge this turn gets -2 Attack.
 {POWER Ranged} The Mastermind gets -2 Attack this turn.
 #COST: 7
-
 
 #CARDNAME: Thor
 #TEAM: Avengers
@@ -467,7 +454,6 @@ You can use Recruit as Attack this turn.
 #COST: 8
 #FLAVOR: They call him the God of Thunder. His enemies better start praying.
 
-
 #CARDNAME: Wolverine
 #TEAM: X-Men
 
@@ -501,7 +487,5 @@ You may KO a Wound from your hand or discard pile. If you do, draw a card.
 Draw three cards.
 {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
 #COST: 8
-
-
 
 

@@ -2,7 +2,7 @@
 #CARDNAME: Iron Monger
 
 <b>Bank Conqueror 4</b>
-<b> Always Leads</b>: Iron Foes
+#LEADS: Iron Foes
 #STRIKE: If there is a Villain in the Bank, each player gains a Wound. Otherwise, put this Master Strike into the Bank as a 6 Attack “StaneTech Weaponry” Villain worth 4VP.
 #ATTACK: 9+
 #VP: 5
@@ -17,8 +17,7 @@
 #FIGHT: Each other player reveals a [Tech] Hero or discards down to 4 cards.
 
 #TACTIC: Unexpected Betrayal 
-#FIGHT: If the Bank is empty, the player on your right chooses a Villain from their Victory Pile. That Villain enters the Bank.[/q]
-
+#FIGHT: If the Bank is empty, the player on your right chooses a Villain from their Victory Pile. That Villain enters the Bank.
 
 #CARDNAME: Loki
 
@@ -39,7 +38,6 @@
 #TACTIC: Whispers and Lies
 #FIGHT: Each other player KOs two Bystanders from their Victory Pile.
 
-
 #CARDNAME: Red Skull
 
 #LEADS: HYDRA
@@ -58,7 +56,5 @@
 
 #TACTIC: Ruthless Dictator
 #FIGHT: Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
-
-
 
 

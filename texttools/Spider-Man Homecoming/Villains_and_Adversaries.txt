@@ -30,7 +30,6 @@
 #ATTACK: 4
 #VP: 2
 
-
 #CARDNAME: Vulture Tech
 
 #SUBNAME: Chitauri Weapon Assault
@@ -61,7 +60,5 @@
 #AMBUSH: Turbine Powered captures a Bystander. Then move this Villain to the Rooftops. If there's already a Villain there, swap them.
 #ATTACK: 5+
 #VP: 5
-
-
 
 

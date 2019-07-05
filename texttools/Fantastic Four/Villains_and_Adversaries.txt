@@ -30,7 +30,6 @@ Cosmic Threat: [Strength]
 #ATTACK: 11*
 #VP: 5
 
-
 #CARDNAME: Subterranea
 
 #SUBNAME: Giganto
@@ -60,7 +59,5 @@ Burrow
 Burrow
 #ATTACK: 4
 #VP: 2
-
-
 
 

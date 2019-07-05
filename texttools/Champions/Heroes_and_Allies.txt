@@ -35,7 +35,6 @@ Reveal the top card of the Bystander Deck. If it's a Special Bystander, rescue i
 <b>Demolish</b> each other player. For each player that discards a card this way, draw a card.
 #COST: 7
 
-
 #CARDNAME: Ms. Marvel
 #TEAM: Champions
 
@@ -74,7 +73,6 @@ Draw a card.
 {VERSATILE 4}
 <b>Cheering Crowds</b>
 #COST: 9*
-
 
 #CARDNAME: Nova
 #TEAM: Champions
@@ -117,7 +115,6 @@ Draw a card.
 For each other card you played this turn with a Recruit icon, you get +1 Recruit. For each other card you played this turn with an Attack icon, you get +1 Attack.
 #COST: 9*
 
-
 #CARDNAME: Totally Awesome Hulk
 #TEAM: Champions
 
@@ -154,7 +151,6 @@ If you have a Wound in your hand or discard pile, KO it and you get +2 Attack. O
 You get +1 Attack for each extra card you drew this turn.
 #COST: 9*
 
-
 #CARDNAME: Viv Vision
 #TEAM: Champions
 
@@ -190,7 +186,5 @@ You get +1 Attack for each extra card you drew this turn.
 <b>Size-Changing</b>: [Tech], [Ranged]
 Whenever you recruit a Hero this turn, you get +2 Attack.
 #COST: 9*
-
-
 
 

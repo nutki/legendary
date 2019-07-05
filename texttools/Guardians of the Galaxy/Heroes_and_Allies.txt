@@ -30,7 +30,6 @@ Look at the top card of your deck. Discard it or put it back.
 Double the Attack you have.
 #COST: 7
 
-
 #CARDNAME: Gamora
 #TEAM: Guardians of the Galaxy
 
@@ -64,7 +63,6 @@ A Villain of your choice gets no Attack from Shards this turn.
 Once per turn, gain two Shards. Once per turn, you may spend 5 Shards to get +10 Attack.
 #COST: 8
 
-
 #CARDNAME: Groot
 #TEAM: Guardians of the Galaxy
 
@@ -95,7 +93,6 @@ Gain two Shards. You may spend Shards to get Recruit this turn.
 #RECRUIT: 5
 When you recruit your next Hero this turn, you gain Shards equal to that Hero's cost.
 #COST: 8
-
 
 #CARDNAME: Rocket Raccoon
 #TEAM: Guardians of the Galaxy
@@ -129,7 +126,6 @@ Whenever a Master Strike or Villain's Ambush ability is completed, you may gain 
 {POWER Tech} You get +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind.
 #COST: 7
 
-
 #CARDNAME: Star-Lord
 #TEAM: Guardians of the Galaxy
 
@@ -162,7 +158,5 @@ Once per turn, draw a card.
 Once per turn, gain a Shard for each <b>Artifact</b> you control.
 #COST: 8
 #GUN: 1
-
-
 
 

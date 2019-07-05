@@ -36,7 +36,6 @@ KO up to two S.H.I.E.L.D. Heroes from your hand and/or discard pile.
 <b>Savior</b>: For each card KO'd this way, you get +1 Attack.
 #COST: 7
 
-
 #CARDNAME: Captain America (Falcon)
 #TEAM: Avengers
 
@@ -71,7 +70,6 @@ Once per turn, if a player would gain a Wound, you may reveal this card and resc
 You get +2 Attack for each Hero Class you have.
 <b>Savior</b>: You get +2 Recruit for each Hero Class you have.
 #COST: 7
-
 
 #CARDNAME: Captain America 1941
 #TEAM: Avengers
@@ -108,7 +106,6 @@ You get +1 Attack for each Hero class you have.
 #COST: 8
 #FLAVOR: 75 years later, Cap is still finding villainous faces calling out to be punched.
 
-
 #CARDNAME: Steve Rogers, Director of S.H.I.E.L.D.
 #TEAM: S.H.I.E.L.D.
 #GUN: 1
@@ -143,7 +140,6 @@ S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.: You may KO a S.H.I.E.L.D. Hero that yo
 Rescue a Bystander
 <b>Savior</b>: You get +3 Attack.
 #COST: 8
-
 
 #CARDNAME: Winter Soldier
 #TEAM: (Unaffiliated)
@@ -181,7 +177,5 @@ If you played at least 7 other cards this turn you get +2 Attack.
 A Hero in your hand gains <b>Man Out of Time</b> this turn.
 {POWER Tech} Another Hero in your hand gains <b>Man Out of Time</b> this turn.
 #COST: 7
-
-
 
 

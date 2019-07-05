@@ -3,7 +3,7 @@
 (Mastermind Tactics never return this way.)
 If you put a Villain with Bystanders into your Victory Pile, you choose the order.
 
-{XDRAMPAGE Rampage</b>: "Cross-Dimensional (Character) Rampage" means "Each player reveals one of their (Character) Heroes or a (Character) card in their Victory pile or gains a Wound." (Character) cards include any card with "(Character)" in its card name or Hero name.
+<b>Cross-Dimensional Rampage</b>: "Cross-Dimensional (Character) Rampage" means "Each player reveals one of their (Character) Heroes or a (Character) card in their Victory pile or gains a Wound." (Character) cards include any card with "(Character)" in its card name or Hero name.
 "Hulk" cards additionally include "Maestro" and "Nul, Breaker of Worlds."
 "Wolverine" cards additionally include any card with "Weapon X" or "Old Man Logan".
 

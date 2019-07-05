@@ -19,5 +19,3 @@ Command Strike: Demolish each player. Then stack this Strike next to Iron Man. U
 #FIGHT: Each other player reveals a [Tech] ally or gains a Bindings.
 
 
-
-

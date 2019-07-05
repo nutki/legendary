@@ -47,5 +47,3 @@
 #EVILWINS: When there are 3 Adversaries per player in the Overrun Pile.
 
 
-
-

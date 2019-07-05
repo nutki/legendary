@@ -19,7 +19,6 @@ Ultimate Abomination
 #TACTIC: Crush Pacifist Resistance
 #FIGHT: KO up to two of your Heroes that have less than 2 printed Attack.
 
-
 #CARDNAME: Baron Heinrich Zemo
 
 Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron Zemo gets +9 Attack unless you are a Savior.
@@ -39,7 +38,5 @@ Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron
 
 #TACTIC: Prisoners of War
 #FIGHT: Each other player reveals an Avengers Hero or chooses a Bystander from their Victory Pile, and you rescue that Bystander.
-
-
 
 

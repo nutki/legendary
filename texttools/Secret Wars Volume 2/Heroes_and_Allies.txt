@@ -42,7 +42,6 @@ For each other card you played this turn with a Attack icon, you get +1 Attack.
 (If another card has both Recruit and Attack, you get both bonuses.)
 #COST: 7
 
-
 #CARDNAME: Arkon the Magnificent
 #TEAM: (Unaffiliated)
 
@@ -79,7 +78,6 @@ If they're both empty, you get +1 Attack.
 {PATROL Rooftops}: If it's empty, you get +4 Recruit and +4 Attack. If it's not, defeat the Villain there for free.
 #COST: 7
 
-
 #CARDNAME: Beast
 #TEAM: Illuminati
 
@@ -115,7 +113,6 @@ For each other [Tech] card you played this turn, you get +1 Attack.
 #COST: 8
 #FLAVOR: If I calculate the precise rotational torque, I find I'm really thrashing you with considerable force.
 
-
 #CARDNAME: Black Swan
 #TEAM: Cabal
 
@@ -148,7 +145,6 @@ Reveal the top three cards of the Villain Deck. Rescue any Bystanders you reveal
 Reveal the top five cards of the Villain Deck. You get + Attack equal to the printed Victory Point of one of those cards. Put them back in any order.
 {TEAMPOWER Cabal} Instead, you get + Attack for two of those cards.
 #COST: 7
-
 
 #CARDNAME: The Captain and the Devil
 #TEAM: Avengers
@@ -184,7 +180,6 @@ Reveal the top five cards of the Villain Deck. You get + Attack equal to the pri
 Whenever you defeat a Villain this turn, each Villain and Mastermind adjacent to it gets -2 Attack this turn.
 #COST: 8
 
-
 #CARDNAME: Captain Britain
 #TEAM: Illuminati
 
@@ -215,7 +210,6 @@ You get +1 Recruit for each different team icon among your heroes.
 #CLASS: [Strength]
 When you draw a new hand of cards at the end of this turn, draw three extra cards.
 #COST: 7
-
 
 #CARDNAME: Corvus Glaive
 #TEAM: Cabal
@@ -251,7 +245,6 @@ KO a Bystander from the Bystander Deck. If it's a Special Bystander, you may use
 #ATTACK: 6+
 {TEAMPOWER Cabal} You may KO a Bystander from the Escape Pile and from each player's Victory Pile. You get +1 Attack for each Bystander KO'd this way.
 #COST: 8
-
 
 #CARDNAME: Dr. Punisher, Soldier Supreme
 #TEAM: Marvel Knights
@@ -290,7 +283,6 @@ For each space that's empty, you get +1 Attack.
 #FLAVOR: It's quiet. Too quiet.
 #GUN: 1
 
-
 #CARDNAME: Elsa Bloodstone
 #TEAM: S.H.I.E.L.D.
 
@@ -328,7 +320,6 @@ You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 #COST: 8
 #FLAVOR: Elsa's father threw her at monsters before she could walk, training her relentlessly to become the perfect weapon.
 
-
 #CARDNAME: Phoenix Force Cyclops
 #TEAM: X-Men
 
@@ -360,7 +351,6 @@ Gain a Hero that was KO'd this turn.
 #ATTACK: 4
 KO up to three cards from your hand. Draw that many cards.
 #COST: 8
-
 
 #CARDNAME: Ruby Summers
 #TEAM: X-Men
@@ -398,7 +388,6 @@ To play this card, you must discard a card from your hand.
 To play this card, you must discard three cards from your hand.
 #COST: 8
 
-
 #CARDNAME: Shang-Chi
 #TEAM: Marvel Knights
 
@@ -431,7 +420,6 @@ To play this card, you must discard three cards from your hand.
 {WALLCRAWL}
 Any time you are shuffling your deck with this card in it, you may set this card aside and put it on top of your deck at the end of the shuffle.
 #COST: 7
-
 
 #CARDNAME: Silk
 #TEAM: Spider Friends
@@ -467,7 +455,6 @@ Any time you are shuffling your deck with this card in it, you may set this card
 {SPECTRUM} Reveal the top four cards of your deck. Put any combination of those cards with a total cost of 2 or less into your hand. But the rest back in any order.
 #COST: 2
 
-
 #CARDNAME: Soulsword Colossus
 #TEAM: X-Men
 
@@ -499,7 +486,6 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 {TEAMPOWER X-Men} You may gain an X-Men Hero from the HQ or the KO pile to your hand.
 #COST: 7
 #FLAVOR: Every year, Colossus leads a team of X-Men into the Inferno to rescue his sister, Magik.
-
 
 #CARDNAME: Spider-Gwen
 #TEAM: Spider Friends
@@ -535,7 +521,6 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 Reveal the top three cards of your deck, then put them back in any order. You get +1 Attack for each card you revealed that costs 2 or less.
 #COST: 2
 
-
 #CARDNAME: Time-Traveling Jean Grey
 #TEAM: X-Men
 
@@ -565,7 +550,5 @@ You may move a villain to an adjacent city space. If another Villain is already 
 #ATTACK: 5
 {TEAMPOWER X-Men} {PATROL any city space}: If it's empty, gain the hero in the HQ space under it. Put that hero on top of your deck.
 #COST: 7
-
-
 
 

@@ -20,7 +20,6 @@ Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped
 #TACTIC: Immortal and Undefeated
 #FIGHT: If this is not the final Tactic, rescue six Bystanders and shuffle this Tactic back into the other Tactics.
 
-
 #CARDNAME: Kingpin
 
 {BRIBE}
@@ -40,7 +39,6 @@ Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped
 
 #TACTIC: Mob War
 #FIGHT: Each other player plays a Henchman Villain from their Victory Pile as if playing it from the Villain Deck.
-
 
 #CARDNAME: Mephisto
 
@@ -62,7 +60,6 @@ Whenever a player gains a Wound, put it on top of that player's deck.
 #TACTIC: The Price of Failure
 #FIGHT: Each other player without a Mastermind Tactic in their Victory Pile gains a Wound.
 
-
 #CARDNAME: Mr. Sinister
 
 Mr. Sinister gets +1 Attack for each Bystander he has.
@@ -83,7 +80,6 @@ Mr. Sinister gets +1 Attack for each Bystander he has.
 #TACTIC: Telepathic Manipulation
 #FIGHT: Mr. Sinister captures a Bystander from each other player's Victory Pile.
 
-
 #CARDNAME: Stryfe
 
 #LEADS: MLF
@@ -103,7 +99,5 @@ Stryfe gets +1 Attack for each Master Strike stacked next to him. Each player re
 
 #TACTIC: Tide of Retribution
 #FIGHT: Each other player reveals an X-Force Hero or gains a Wound.
-
-
 
 

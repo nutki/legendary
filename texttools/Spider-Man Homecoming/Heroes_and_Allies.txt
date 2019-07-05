@@ -5,7 +5,7 @@
 #SUBNAME: Head of Security
 #COPIES: 5
 #CLASS: [Instinct]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 KO all Wounds you gained this turn.
 #RECRUIT: 2
 #COST: 3
@@ -20,7 +20,7 @@ KO all Wounds you gained this turn.
 #SUBNAME: Loyal Friend
 #COPIES: 3
 #CLASS: [Tech]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 <b>Striker</b>
 #ATTACK: 0+
 #COST: 5
@@ -33,7 +33,6 @@ KO all Wounds you gained this turn.
 #ATTACK: 0+
 #COST: 5
 #FLAVOR: Many people don't understand why Iron Man would need a bodyguard. They haven't met Happy.
-
 
 #CARDNAME: High-Tech Spider-Man
 #TEAM: Spider Friends
@@ -65,11 +64,10 @@ Wall-Crawl
 #COPIES: 1
 #CLASS: [Tech]
 Wall-Crawl
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 You get +3 Attack usable only against the Mastermind or Villains on the Rooftops or Streets.
 #ATTACK: 0+
 #COST: 2
-
 
 #CARDNAME: Peter's Allies
 #TEAM: Spider Friends
@@ -84,7 +82,7 @@ You may choose a Villain or Mastermind. You can fight it using only Recruit this
 #SUBNAME: Ned
 #COPIES: 5
 #CLASS: [Covert]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 {POWER Covert} You get +2 Recruit
 #RECRUIT: 1+
 #COST: 2
@@ -92,18 +90,17 @@ You may choose a Villain or Mastermind. You can fight it using only Recruit this
 #SUBNAME: Liz
 #COPIES: 3
 #CLASS: [Instinct]
-Whenever you <span style="color: #CC0000;"><b>Coordinate</b></span> a card to another player, you may reveal this to draw two cards instead of one.
+Whenever you <b>Coordinate</b> a card to another player, you may reveal this to draw two cards instead of one.
 #RECRUIT: 4
 #COST: 6
 
 #SUBNAME: May Parker
 #COPIES: 1
 #CLASS: [Covert]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 {TEAMPOWER Spider Friends} Each Villain gets -2 Attack this turn. The next time you fight the Mastermind this turn, it gets -2 Attack.
 #RECRUIT: 5
 #COST: 7
-
 
 #CARDNAME: Peter Parker, Homecoming
 #TEAM: Spider Friends
@@ -111,7 +108,7 @@ Whenever you <span style="color: #CC0000;"><b>Coordinate</b></span> a card to an
 #SUBNAME: Avenger in Training
 #COPIES: 5
 #CLASS: [Instinct]
-Wall-Crawl
+{WALLCRAWL}
 {POWER Instinct} <b>Danger Sense 1</b>. If this revealed a Villain, you may fight it.
 #ATTACK: 2+
 #COST: 2
@@ -126,7 +123,7 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #SUBNAME: Homemade Web-Shooters
 #COPIES: 3
 #CLASS: [Tech]
-Wall-Crawl
+{WALLCRAWL}
 {POWER Tech} <b>Danger Sense 1</b>. If this revealed a Bystander, rescue it.
 #ATTACK: 2+
 #COST: 2
@@ -134,13 +131,12 @@ Wall-Crawl
 #SUBNAME: Something is Happening
 #COPIES: 1
 #CLASS: [Strength]
-Wall-Crawl
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+{WALLCRAWL}
+<b>Coordinate</b>
 <b>Danger Sense 4</b>
 If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #ATTACK: 0+
 #COST: 2
-
 
 #CARDNAME: Tony Stark
 #TEAM: Avengers
@@ -148,7 +144,7 @@ If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #SUBNAME: Genius, Billionaire ...
 #COPIES: 5
 #CLASS: [Tech]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 #RECRUIT: 1
 #ATTACK: 1
 #COST: 2
@@ -157,7 +153,7 @@ If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #SUBNAME: Stay Out of Trouble
 #COPIES: 5
 #CLASS: [Tech]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
+<b>Coordinate</b>
 {POWER Tech} <b>Danger Sense 2</b>
 #ATTACK: 2+
 #COST: 4
@@ -173,11 +169,9 @@ If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #SUBNAME: As Usual, I Did All the Work
 #COPIES: 1
 #CLASS: [Ranged]
-<span style="color: #CC0000;"><b>Coordinate</b></span>
-If another player accepts this <span style="color: #CC0000;"><b>Coordinate</b></span>, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
+<b>Coordinate</b>
+If another player accepts this <b>Coordinate</b>, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
 #ATTACK: 5
 #COST: 7
-
-
 
 

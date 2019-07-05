@@ -27,7 +27,6 @@ Size-Changing: Covert
 #ATTACK: 7*
 #VP: 4
 
-
 #CARDNAME: Great Lakes Avengers
 
 #SUBNAME: Big Bertha
@@ -57,7 +56,6 @@ You can't fight Squirrel Girl if you played more than one card this turn.
 #ESCAPE: Fortify the Sidekick Stack. While it's fortified, Sidekicks can't be recruited or gained.
 #ATTACK: 3*
 #VP: 2
-
 
 #CARDNAME: Heroes for Hire
 
@@ -90,7 +88,6 @@ You can't fight Squirrel Girl if you played more than one card this turn.
 #ATTACK: 7*
 #VP: 5
 
-
 #CARDNAME: Registration Enforcers
 
 #SUBNAME: Blade
@@ -120,7 +117,6 @@ Size-Changing: Instinct
 #FIGHT: KO one of your Heroes.
 #ATTACK: 6*
 #VP: 3
-
 
 #CARDNAME: S.H.I.E.L.D. Elite
 
@@ -153,7 +149,6 @@ S.H.I.E.L.D. Clearance
 #ATTACK: 6*
 #VP: 5
 
-
 #CARDNAME: Superhuman Registration Act
 
 #SUBNAME: Iron Spider
@@ -183,7 +178,6 @@ Size-Changing: Tech
 #ATTACK: 7*
 #VP: 4
 
-
 #CARDNAME: Thunderbolts
 
 #SUBNAME: Fixer
@@ -211,7 +205,5 @@ Size-Changing: Tech
 #ESCAPE: Same effect.
 #ATTACK: 5
 #VP: 3
-
-
 
 

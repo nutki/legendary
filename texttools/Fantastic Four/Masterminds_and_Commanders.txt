@@ -20,7 +20,6 @@ Galactus Wins: When the city is destroyed.
 #TACTIC: Sunder the Earth
 #FIGHT: Each other player KOs all Heroes from their discard pile with the same card name as a Hero in the HQ.
 
-
 #CARDNAME: Mole Man
 
 Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
@@ -40,7 +39,5 @@ Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
 
 #TACTIC: Underground Riches
 #FIGHT: You get +6 Recruit usable only to recruit Heroes in the HQ space under the Streets.
-
-
 
 

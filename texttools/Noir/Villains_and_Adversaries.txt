@@ -41,7 +41,6 @@
 #ATTACK: 1*
 #VP: 2
 
-
 #CARDNAME: X-Men Noir
 
 #SUBNAME: Bobby "Iceman" Drake
@@ -85,7 +84,5 @@
 #FIGHT: KO a Hero from the HQ. <b>Investigate</b> the Hero Deck for a card to put in that emptied HQ space.
 #ATTACK: 4
 #VP: 2
-
-
 
 

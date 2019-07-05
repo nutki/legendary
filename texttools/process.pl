@@ -24,19 +24,41 @@ Venomverse
 END
 $aff = "(?:".(join'|',map s/[().]/\\$&/gr, @aff).")";
 $class = "(?:Instinct|Ranged|Tech|Covert|Strength)";
+%IMG = (
+  26283 => 'Covert',
+  26284 => 'Instinct',
+  26285 => 'Ranged',
+  26286 => 'Strength',
+  26287 => 'Tech',
+);
+$imgkeys = "(?:".(join"|",keys%IMG).")";
 
 open A, "input.html";
+undef $/;
 while (<A>) {
-  @a = split/<span style="font-size: 16pt;"><b>/;
-  @a < 2 and next;
+  s/\bstrong>/b>/g;
+  s/\bem>/i>/g;
+  s/<!--.*?-->//g;
+  s/'(<[bi]>)(\d)/$1'$2/g;
+  s/&quot;/"/g;
+  s/&deg;/°/g;
+  s/&ndash;/–/g;
+  s/&rsquo;/’/g;
+  s/&amp;/&/g;
+  s/&hellip;/…/g;
+  s/&ldquo;/“/g;
+  s/&rdquo;/”/g;
+  s/&reg;/®/g;
+  s/<img .*?_(\d+)_.*?>/{IMG $1}/g;
+  s/{IMG ($imgkeys)}/[$IMG{$1}]/g;
+  @a = split/<h2><b>/;
   shift @a;
   for (@a) {
-    /(.*?)<.b><.span>(.*)/;
+    /(.*?)<.b><.h2><.p>(.*<).div><.div>/s;
     ($name, $_) = ($1, $2);
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<span style="background-color: #......;"><span style="color: #......;">($class)</span></span>![$1]!g;
     s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
@@ -44,9 +66,9 @@ while (<A>) {
     s!<b>Fateful Resurrection</b>!{FATEFULRESURRECTION}!g;
     s!<b>Charge</b>!{CHARGE}!g;
     s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
-    my @lines = split m!<br />!;
+    my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
-      s!^== (.*?) ==.*!#EXPANSION: $1! && next;
+      s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;
       s!^Cost: ?(.*?)$!#COST: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;
@@ -69,29 +91,28 @@ while (<A>) {
       s!^Unbreakable Cage$!#SUBNAME: $&\n#COPIES: 3! && next; #FIX
       s!^(Weight of the World) \(1 copy\)$!#SUBNAME: $&\n#COPIES: 1! && next; #FIX
 
-      s!^<span style="font-size: 10pt;"><i><b>(.*?)\s*</b></i></span>( \(first print run promo\))?$!#CARDNAME: $1! && next;
-      s!^<span style="font-size: 10pt;"><i><b>(.*?)\s*</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!#CARDNAME: $1\n#COPIES: $3! && next;
-      s!^<span style="font-size: 8pt;"><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
-      s!^<span style="font-size: 8pt;"><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
+      s!^<span style='font-size:14px;'><i><b>(.*?)\s*</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
+      s!^<span style='font-size:14px;'><i><b>(.*?)\s*</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;
+      s!^<span style='font-size:8px;'><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
+      s!^<span style='font-size:8px;'><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
 
-      s!^<a.*?>\(jump to top\)</a>$!! && next;
     }
     $_ = join"\n",@lines;
     if ($name =~ /^Bystanders/) {
       s!#ATTACK:!#ATTACKG:!g;
-      s!^-{6,}!#GAINABLE!mg;
+      s!^---$!#GAINABLE!mg;
       s!^(<b>)?VP(</b>)?: (\d+)$!#VP: $3!gm;
       s!^When you (?:rescue|kidnap) this Bystander,(?: |\n)(.*)!#RESCUE: $1!gm;
     }
     if ($name =~ /^Hench/) {
       s!#ATTACK:!#ATTACKG:!g;
-      s!^-{5,}!#GAINABLE!mg;
+      s!^---$!#GAINABLE!mg;
       s!^<b>(VP|Attack|Fight|Escape|Ambush)</b>: (.*)!"#" . uc($1) . ": $2"!gme;
       s!^Ambush: (.*)!#AMBUSH: $1!gm; #FIX
     }
     if ($name =~ /^Villains/) {
       s!#ATTACK:!#ATTACKG:!g;
-      s!^-{6,}!#GAINABLE!mg;
+      s!^---$!#GAINABLE!mg;
       s!^<i>Teleport</i>$!{TELEPORT}!m; #FIX
       s!^Burrow$!{BURROW}!;
       s!^<b>(VP|Attack|Fight|Escape|Ambush):?</b>:? ?(.*)!"#" . uc($1) . ": $2"!gme;
@@ -102,7 +123,7 @@ while (<A>) {
       s!^<[bi]>Always Leads(?::</[bi]>|</[bi]>:) (.*)!#LEADS: $1!gm;
       s!^<[bi]>Master Strike(?::</[bi]>|</[bi]>:) (.*)!#STRIKE: $1!gm;
       s!^<b>((?:Epic )?Vulture)</b>$!<i>$1</i>!gm; #FIX
-      s!^\n<i>(.*?)</i>$!\n#TACTIC: $1!gm;
+      s!^<i>(.*?)</i>$!\n#TACTIC: $1!gm;
       s!^<b>Fight(?::</b>|</b>:) (.*)$!#FIGHT: $1!gm;
       s!^<b>Start of Game</b>: (.*)$!#START: $1!gm;
     }
@@ -115,7 +136,7 @@ while (<A>) {
       s!^<b>(?:Good|Evil) Wins(?:</b>:|:</b>) (.*)!#EVILWINS: $1!gm;
     }
     if ($name =~ /^Hero/) {
-      s!<b>Divided</b>\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)-{6,}\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)\n\n!
+      s!<b>Divided</b>\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)---\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)\n\n!
         my $lhero = $2 && "#DIVHERO $2\n";
         my $lteam = $3 && "#DIVTEAM $3\n";
         my $rhero = $6 && "#DIVHERO $6\n";
@@ -125,6 +146,11 @@ while (<A>) {
       s!^<b>Divided.*\n.*!!mg and print STDERR "BUU $&";
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm
     }
+    if ($name =~ /^Keywords/) {
+      s/^\s*<li>\s*(.*?)<.li>/* $1/mg;
+      s/^\s*<.?ul>\s*\n//mg;
+    }
+    s/\n\n+/\n\n/g;
     print "$name";
     while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {
       mkdir $1 unless -e $1;

@@ -15,12 +15,11 @@ If Carnage feasts on a 0-cost Hero this way, repeat this process.
 
 #TACTIC: Feed Me
 {FEAST}
-You get + Recruit equal to the Cost of the card Carnage feasts on.
+You get +Recruit equal to the Cost of the card Carnage feasts on.
 
 #TACTIC: Om Nom Nom
 {FEAST}
 If Carnage feasts on a 0-cost Hero this way, each other player KOs a Bystander from their Victory Pile.
-
 
 #CARDNAME: Mysterio
 
@@ -40,7 +39,5 @@ If Carnage feasts on a 0-cost Hero this way, each other player KOs a Bystander f
 
 #TACTIC: Mists of Deception
 #FIGHT: If this is not the final Tactic, reveal the top five cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest on the bottom of that deck in random order.
-
-
 
 

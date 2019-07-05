@@ -6,10 +6,11 @@
 #COST: 0
 #GUN: 1
 
-
 #CARDNAME: HYDRA Soldier
 #COPIES: 4
 #TEAM: HYDRA
 #ATTACK: 1
 #COST: 0
+#GUN: 1
+
 

@@ -7,7 +7,7 @@
 #ATTACK: 6*
 #VP: 6
 
-#CARDNAME: Red Hulk <span style="color: #FF0000;">(Mastermind, Transformed)</span>
+#CARDNAME: Red Hulk (Mastermind, Transformed)
 
 <b>Wounded Fury</b>
 You can't fight Helicopters, and they don't stop you from fighting Red Hulk.
@@ -31,7 +31,6 @@ This Mastermind <b>Transforms</b>.
 #FIGHT: Put a random Bystander next to the Mastermind as a "Helicopter" from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
 This Mastermind <b>Transforms</b>.
 
-
 #CARDNAME: Illuminati, Secret Society
 
 This Mastermind gets +4 Attack unless you <b>Outwit</b> them.
@@ -40,7 +39,7 @@ This Mastermind gets +4 Attack unless you <b>Outwit</b> them.
 #ATTACK: 11+
 #VP: 7
 
-#CARDNAME: Illuminati, Open Warfare <span style="color: #FF0000;">(Mastermind, Transformed)</span>
+#CARDNAME: Illuminati, Open Warfare (Mastermind, Transformed)
 
 Whenever a card effect causes a player to draw any number of cards, that player must then also discard a card.
 #STRIKE: Each player reveals their hand and discards two cards that each cost between 5 and 8. The Illuminati <b>Transform</b>.
@@ -63,7 +62,6 @@ The Illuminati <b>Transform</b>.
 #FIGHT: Each other player reveals a [Covert] Hero or gains a Wound.
 The Illuminati <b>Transform</b>.
 
-
 #CARDNAME: King Hulk, Sakaarson
 
 King Hulk gets +1 Attack for each Warbound Villain in the city and in the Escape Pile.
@@ -72,7 +70,7 @@ King Hulk gets +1 Attack for each Warbound Villain in the city and in the Escape
 #ATTACK: 9+
 #VP: 6
 
-#CARDNAME: King Hulk, Worldbreaker <span style="color: #FF0000;">(Mastermind, Transformed}</span>
+#CARDNAME: King Hulk, Worldbreaker (Mastermind, Transformed)
 
 <b>Wounded Fury</b>
 #STRIKE: Each player reveals their hand, then KO's a card from their hand or discard pile that has the same card name as a card in the HQ. King Hulk <b>Transforms</b>.
@@ -87,14 +85,13 @@ King Hulk <b>Transforms</b>.
 #FIGHT: The Villain in the Escape Pile with the highest printed Attack enters the Sewers.
 King Hulk <b>Transforms</b>.
 
-#TACTIC: Revenge From the Stars
+#TACTIC: Revenge from the Stars
 #FIGHT: After you put this in your Victory Pile, {XDRAMPAGE Hulk}.
 King Hulk <b>Transforms</b>.
 
 #TACTIC: Rule By the Strongest
 #FIGHT: You get +1 Recruit for each of your [Strength] Heroes.
 King Hulk <b>Transforms</b>.
-
 
 #CARDNAME: M.O.D.O.K.
 All cards' <b>Outwit</b> abilities require four different costs instead of three.
@@ -103,8 +100,8 @@ All cards' <b>Outwit</b> abilities require four different costs instead of three
 #ATTACK: 9
 #VP: 6
 
-#CARDNAME: M.O.D.O.K., Network Nightmare <span style="color: #FF0000;">(Mastermind, Transformed)</span>
-You can only fight M.O.D.O.K with Recruit, not Attack.
+#CARDNAME: M.O.D.O.K., Network Nightmare (Mastermind, Transformed)
+You can only fight <a rel="nofollow" href="http://M.O.D.O.K" onclick="window.open(this.href, '_blank'); return false;">M.O.D.O.K</a> with Recruit, not Attack.
 #STRIKE: Each player who can't <b>Outwit</b> M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. <b>Transforms</b>.
 #ATTACK: 8*
 #VP: 6
@@ -125,7 +122,6 @@ M.O.D.O.K. <b>Transforms</b>.
 #FIGHT: Each other player reveals their hand and discards two cards that hand the same cost.
 M.O.D.O.K. <b>Transforms</b>.
 
-
 #CARDNAME: The Red King
 You can't fight the Red King while any Villains are in the city.
 #LEADS: Sakaar Imperial Guard.
@@ -133,7 +129,7 @@ You can't fight the Red King while any Villains are in the city.
 #ATTACK: 7*
 #VP: 6
 
-#CARDNAME: The Red King, Power Armored <span style="color: #FF0000;">(Mastermind, Transformed)</span>
+#CARDNAME: The Red King, Power Armored (Mastermind, Transformed)
 #STRIKE: The Red King Transforms, then play another card from the Villain Deck.
 #ATTACK: 10
 #VP: 6
@@ -154,7 +150,6 @@ The Red King <b>Transforms</b>.
 #FIGHT: If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
 The Red King <b>Transforms</b>.
 
-
 #CARDNAME: The Sentry
 #START: Shuffle 2 Wounds into each player's deck before drawing starting hands.
 #LEADS: Aspects of the Void.
@@ -162,7 +157,7 @@ The Red King <b>Transforms</b>.
 #ATTACK: 10
 #VP: 6
 
-#CARDNAME: The Void <span style="color: #FF0000;">(Mastermind, Transformed)</span>
+#CARDNAME: The Void (Mastermind, Transformed)
 <b>Wounded Fury</b>
 #STRIKE: <b>Feast</b> on each player. If this feasts on a player's grey Hero, that player gains a Wound.
 The Void <b>Transforms</b>.
@@ -184,7 +179,5 @@ This Mastermind <b>Transforms</b>.
 #TACTIC: Repressed Darkness
 #FIGHT: Each other player reveals a [Ranged] Hero or plays an Aspects of the Void Villain from their Victory Pile as if playing it from the Villain Deck.
 This Mastermind <b>Transforms</b>.
-
-
 
 

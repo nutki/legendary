@@ -7,7 +7,7 @@ While in the Sewers, Rooftops or Bridge, this is in "wolf form" and gets +2 Atta
 
 #CARDNAME: Magma Men
 #FIGHT: KO one of your Heroes.
-<span style="font-size: 10pt;"><i>{FATEFULRESURRECTION}</i></span>
+<span style='font-size:14px;'><i>{FATEFULRESURRECTION}</i></span>
 #ATTACK: 3
 #VP: 1
 
@@ -16,6 +16,5 @@ While in the Sewers, Rooftops or Bridge, this is in "wolf form" and gets +2 Atta
 #FIGHT: The next Hero you gain this turn has Wall-Crawl.
 #ATTACK: 3
 #VP: 1
-
 
 

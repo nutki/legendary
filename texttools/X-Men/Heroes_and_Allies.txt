@@ -43,7 +43,6 @@ All Heroes you recruit this turn have {SOARING FLIGHT}.
 #ATTACK: 0+
 #COST: 7
 
-
 #CARDNAME: Banshee
 #TEAM: X-Men
 
@@ -80,7 +79,6 @@ Draw a card.
 4 Piercing
 #COST: 8
 
-
 #CARDNAME: Beast
 #TEAM: X-Men
 
@@ -114,7 +112,6 @@ Look at the top card of your deck. Discard it or put it back.
 <b>X-Gene</b> X-Men: You may return a 0-cost, 3-cost, and 4-cost card from your discard pile to your hand.
 #ATTACK: 3+
 #COST: 8
-
 
 #CARDNAME: Cannonball
 #TEAM: X-Men
@@ -150,7 +147,6 @@ Look at the top card of your deck. Discard it or put it back.
 If you played at least 6 other cards this turn, you get +2 Attack.
 Attack: 4+
 #COST: 8
-
 
 #CARDNAME: Colossus & Wolverine
 #TEAM: X-Men
@@ -193,7 +189,6 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #ATTACK: 3+
 #COST: 7
 
-
 #CARDNAME: Dazzler
 #TEAM: X-Men
 
@@ -228,7 +223,6 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #ATTACK: 5
 #COST: 7
 
-
 #CARDNAME: Havok
 #TEAM: X-Men
 
@@ -261,7 +255,6 @@ To play this card, you must discard a card from your hand.
 <b>X-Gene</b> [Ranged]: You get the total printed Attack of all the [Ranged] cards in your discard pile.
 #ATTACK: 3+
 #COST: 7
-
 
 #CARDNAME: Jubilee
 #TEAM: X-Men
@@ -297,7 +290,6 @@ Draw a card.
 #ATTACK: 5+
 #COST: 7
 
-
 #CARDNAME: Kitty Pryde
 #TEAM: X-Men
 
@@ -331,7 +323,6 @@ You get +1 Attack for each different cost among the Heroes in the HQ.
 Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to its cost.
 #ATTACK: 0+
 #COST: 8
-
 
 #CARDNAME: Legion
 #TEAM: X-Men
@@ -381,7 +372,6 @@ Reveal the top three cards of the Hero Deck. You get their total printed Attack.
 #ATTACK: 3+
 #COST: 8
 
-
 #CARDNAME: Longshot
 #TEAM: X-Men
 
@@ -416,7 +406,6 @@ Reveal the top card of the Villain Deck. If it's a Villain, you may put it on th
 {TEAMPOWER X-Men} You get +Attack equal to the printed Victory Points of the card you revealed.
 #ATTACK: 5+
 #COST: 7
-
 
 #CARDNAME: Phoenix
 #TEAM: X-Men
@@ -453,7 +442,6 @@ KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, th
 #ATTACK: 6+
 #COST: 9
 
-
 #CARDNAME: Polaris
 #TEAM: X-Men
 
@@ -488,7 +476,6 @@ KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, th
 <b>X-Gene</b> X-Men: You can use Recruit as Attack this turn, and vice versa.
 #RECRUIT: 4
 #COST: 8
-
 
 #CARDNAME: Psylocke
 #TEAM: X-Men
@@ -526,7 +513,6 @@ Reveal the top card of the Hero Deck. The player of your choice puts it in their
 3 Piercing
 #COST: 7
 
-
 #CARDNAME: X-23
 #TEAM: X-Men
 
@@ -561,7 +547,5 @@ You may KO a Wound from your hand or discard pile.
 <b>X-Gene</b> [Instinct]: Count the [Instinct] cards in your discard pile. <b>Berserk</b> that many times.
 #ATTACK: 3+
 #COST: 7
-
-
 
 
