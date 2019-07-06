@@ -769,3 +769,67 @@ makeMastermindCard("Spider-Queen", 8, 6, "Spider-Infected", ev => {
   varDefense: c => c.printedDefense + gameState.escaped.count(isBystander)
 }),
 ]);
+addTemplates("MASTERMINDS", "Captain America 75th Anniversary", [
+// Ultimate Abomination
+makeMastermindCard("Arnim Zola", 6, 6, "Zola's Creations", ev => {
+// For each Hero in the HQ that has less than 2 printed Attack, put that Hero on the bottom of the Hero Deck, and each player discards a card of that Hero's cost.
+  hqHeroes().limit(c => (c.printedAttack || 0) < 2).each(c => {
+    moveCardEv(ev, c, gameState.herodeck, true);
+    eachPlayer(p => selectCardEv(ev, "Discard a card", p.hand.limit(v => v.cost === c.cost), c => discardEv(ev, c), p));
+  })
+}, [
+  [ "Dominate the Weak", ev => {
+  // The player of your choice gains a Hero from the HQ that has less than 2 printed Attack.
+    choosePlayerEv(ev, p => selectCardEv(ev, `Select a card for ${p.name} to gain`, hqHeroes().limit(c => (c.printedAttack || 0) < 2), c => gainEv(ev, c, p)));
+  } ],
+  [ "Computer-Uploaded Genius", ev => {
+  // Each other player reveals a [Tech] Hero or discards a card.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, p), p));
+  } ],
+  [ "Pet Projects", ev => {
+  // Each other player reveals a Zola's Creations Villain from their Victory Pile or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOrEv(ev, "Select a card", p.victory.limit(isGroup(ev.source.mastermind.leads)), () => {}, () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Crush Pacifist Resistance", ev => {
+  // KO up to two of your Heroes that have less than 2 printed Attack.
+    selectObjectsUpToEv(ev, "Choose up to two of your Heros", 2, yourHeroes().limit(c => (c.printedAttack || 0) < 2), c => KOEv(ev, c));
+  } ],
+], {
+  varDefense: ultimateAbominationVarDefense
+}),
+// Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron Zemo gets +9 Attack unless you are a Savior.
+makeMastermindCard("Baron Heinrich Zemo", 9, 6, "Masters of Evil (WWII)", ev => {
+// Each player KOs a Bystander from their Victory Pile. Any player who cannot do so gains a Wound.
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+}, [
+  [ "Fallen Idols", ev => {
+  // Each other player that is not a Savior discards a card.
+    eachOtherPlayerVM(p => saviorPower(p) || pickDiscardEv(ev, p));
+  } ],
+  [ "Finding Zemo", ev => {
+  // Reveal the top five cards of the Villain Deck. If you revealed any Bystanders, KO them and each other player gains a Wound. Put the rest back in random order.
+    revealVillainDeckEv(ev, 5, cards => {
+      cards.limit(isBystander).each(c => KOEv(ev, c));
+      cards.has(isBystander) && eachOtherPlayerVM(p => gainWoundEv(ev, p));
+    });
+  } ],
+  [ "Hatred for the Avengers", ev => {
+  // For each of your Avengers Heroes, rescue a Bystander.
+    rescueEv(ev, yourHeroes().count("Avengers"));
+  } ],
+  [ "Prisoners of War", ev => {
+  // Each other player reveals an Avengers Hero or chooses a Bystander from their Victory Pile, and you rescue that Bystander.
+    eachOtherPlayerVM(p => revealOrEv(ev, "Avengers", () => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => rescueEv(ev, c), p), p));
+  } ],
+], {
+  varDefense: c => c.printedDefense + (saviorPower() ? 0 : 9),
+  triggers: [ {
+    event: 'FIGHT',
+    match: ev => isVillain(ev.what),
+    after: ev => {
+      const action = new Ev(ev, 'EFFECT', { cost: { recruit: 2 }, func: ev => rescueEv(ev) });
+      canPayCost(action) && chooseMayEv(ev, "Rescue a Bystander for 2 Recruit", () => playEvent(action));
+    }
+  } ],
+}),
+]);

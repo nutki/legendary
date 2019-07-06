@@ -931,10 +931,141 @@ makeSchemeCard("Sinister Ambitions", { twists: 6 }, ev => {
   }
 }, escapeProgressTrigger(isGroup('Ambition')), () => {
   const isAmbition = (c: Card) => c.cardType === 'AMBITION';
-  addStatMod('defense', isAmbition, c => gameState.scheme.attached('TWIST').size);
+  addStatMod('defense', isAmbition, c => c.printedDefense + gameState.scheme.attached('TWIST').size);
   addStatSet('isVillain', isAmbition, () => true);
   addStatSet('villainGroup', isAmbition, () => "Ambition");
   addStatSet('escape', isAmbition, c => c.fight); // TODO add ambitions
   setSchemeTarget(4);
+}),
+]);
+addTemplates("SCHEMES", "Captain America 75th Anniversary", [
+// SETUP: 7 Twists. Add 12 S.H.I.E.L.D. Officers to the Villain Deck.
+// RULE: S.H.I.E.L.D. Officers in the Villain Deck are Villains. Their Attack is 3 plus the number of Twists stacked next to this Scheme. When you defeat a S.H.I.E.L.D. Officer, gain it as a Hero.
+// EVILWINS: When 5 S.H.I.E.L.D. Officers escape.
+makeSchemeCard("Brainwash the Military", { twists: 7 }, ev => {
+  if (ev.nr <= 6) {
+    // Twist 1-6 Stack this Twists next to the Scheme as a "Traitor Battalion." Play another card from the Villain Deck.
+    attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+    villainDrawEv(ev);
+  } else if (ev.nr === 7) {
+    // Twist 7 All S.H.I.E.L.D. Officers in the city escape.
+    cityVillains().limit(c => c.cardName === 'S.H.I.E.L.D. Officer').each(c => villainEscapeEv(ev, c));
+  }
+}, escapeProgressTrigger(c => c.cardName === 'S.H.I.E.L.D. Officer'), () => {
+  setSchemeTarget(5);
+  const isOfficer = (c: Card) => c.cardName === 'S.H.I.E.L.D. Officer';
+  repeat(12, () => moveCard(gameState.officer.top, gameState.villaindeck));
+  addStatMod('defense', isOfficer, c => 3 + gameState.scheme.attached('TWIST').size);
+  addStatSet('isVillain', isOfficer, () => true);
+  addStatSet('fight', isOfficer, () => (ev: Ev) => gainEv(ev, ev.source));
+  gameState.villaindeck.shuffle();
+}),
+// SETUP: 7 Twists. Add an extra Villain Group.
+// EVILWINS: When 3 capitals are conquered.
+makeSchemeCard<{current: string, conquered: string[], city: Deck[]}>("Change the Outcome of WWII", { twists: 7, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: The Axis invades a new country. Put all Villains and Bystanders from the city on the bottom of the Villain Deck. The number of city spaces changes. Play 2 cards from the Villain Deck. If any Villains escape this country, stack a Twist next to the scheme as a "conquered capital."
+  let size = 5;
+  if (ev.nr === 1) {
+    // Twist 1 Poland: 4 spaces.
+    ev.state.current = 'Poland'; size = 4;
+  } else if (ev.nr === 2) {
+    // Twist 2 France: 3 spaces.
+    ev.state.current = 'France'; size = 3;
+  } else if (ev.nr === 3) {
+    // Twist 3 USSR: 6 spaces.
+    ev.state.current = 'USSR'; size = 6;
+  } else if (ev.nr === 4) {
+    // Twist 4 England: 3 spaces.
+    ev.state.current = 'England'; size = 3;
+  } else if (ev.nr === 5) {
+    // Twist 5 USA: 5 spaces.
+    ev.state.current = 'USA'; size = 5;
+  } else if (ev.nr === 6) {
+    // Twist 6 Australia: 2 spaces.
+    ev.state.current = 'Australia'; size = 2;
+  } else if (ev.nr === 7) {
+    // Twist 7 Switzerland: 1 space.
+    ev.state.current = 'Switzerland'; size = 1;
+  }
+  cityVillains().each(c => moveCardEv(ev, c, gameState.villaindeck, true)); // TODO detach cards on move
+  cont(ev, () => CityCards().each(c => {})); // TODO handle other cards (Hyperion for now?)
+  cont(ev, () => {
+    gameState.city === ev.state.city.slice(-size);
+    makeCityAdjacent(gameState.city);
+  });
+  villainDrawEv(ev);
+  villainDrawEv(ev);
+}, {
+  event: "ESCAPE",
+  match: ev => isVillain(ev.what),
+  after: ev => {
+    const state:{current: string, conquered: string[]} = gameState.schemeState; 
+    if(state.current && !state.conquered.includes(state.current)) {
+      state.conquered.push(state.current);
+      gameState.ko.limit(isTwist).withFirst(c => attachCardEv(ev, c, gameState.scheme, 'TWIST'));
+      schemeProgressEv(ev, state.conquered.size);
+    }
+  }
+}, s => {
+  setSchemeTarget(3);
+  const extraSpace = new Deck("EXTRACITY", true);
+  s.city = [extraSpace].concat(gameState.city);
+}),
+// SETUP: 9 Twists. 8 Heroes in Hero deck.
+// RULE: Whenever a Hero is in the HQ whose Hero Name has been Purged from the Timestream, KO that Hero.
+// EVILWINS: When the Hero Deck runs out.
+makeSchemeCard("Go Back in Time to Slay Heroes' Ancestors", { twists: 9, heroes: 8 }, ev => {
+  // Twist: Put a Hero form the HQ next to the Scheme, "Purged from the Timestream."
+  selectCardEv(ev, "Select a Hero to purge from the Timestream", hqHeroes(), c => {
+    attachCardEv(ev, c, gameState.scheme, 'PURGED');
+    cont(ev, () => hqHeroes().each(c => gameState.scheme.attached('PURGED').map(c => c.heroName).includes(c.heroName)));
+  });
+}, [ runOutProgressTrigger("HERO"), {
+  event: 'MOVECARD',
+  match: ev => isHero(ev.what) && ev.to.isCity && gameState.scheme.attached('PURGED').map(c => c.heroName).includes(ev.what.heroName),
+  after: ev => KOEv(ev, ev.parent.what),
+} ], () => {
+  gameState.schemeProgress = gameState.herodeck.size;
+}),
+// SETUP: 6 Twists.
+// RULE: Whenever you fight a Villain, you may pay 1 Recruit to look at one of the face-down Enigma Cards. When you fight the Mastermind, first guess the color of each Enigma card, and then reveal them. If you guessed them right, fight the Mastermind as normal. If not, your turn ends, and mix up the Enigma cards face-down.
+makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Put a card from the Hero Deck face down next to the scheme as part of the "Enigma Code." Mix up those cards face-down.
+    gameState.herodeck.withTop(c => attachCardEv(ev, c, gameState.scheme, 'CODE'));
+    gameState.scheme.attachedDeck('CODE').shuffle();
+  }
+  // Twist 6 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+}, [{
+  event: 'FIGHT',
+  match: ev => isVillain(ev.what),
+  after: ev => {
+    const action = new Ev(ev, 'EFFECT', { cost: { recruit: 1 }, func: ev => {
+      gameState.scheme.attachedDeck('CODE').withTop(c => attachCardEv(ev, c, gameState.scheme, 'DECODED'));
+    } });
+    canPayCost(action) && chooseMayEv(ev, "Pay 1 Recruit to look at an Enigma Card", () => playEvent(action));
+  }
+}, {
+  event: 'FIGHT',
+  match: ev => isMastermind(ev.what),
+  replace: ev => {
+    let allGood = true;
+    gameState.scheme.attachedDeck('CODE').each(c => {
+      chooseColorEv(ev, col => allGood = allGood && c.isColor(col));
+      attachCardEv(ev, c, gameState.scheme, 'DECODED');
+    });
+    cont(ev, () => {
+      if (allGood) {
+        doReplacing(ev);
+      } else {
+        gameState.scheme.attachedDeck('DECODED').each(c => attachCardEv(ev, c, gameState.scheme, 'CODE'));
+        gameState.scheme.attachedDeck('CODE').shuffle();
+        turnState.endofturn = true;
+      }
+    });
+  }
+}], () => {
+  setSchemeTarget(6);
 }),
 ]);

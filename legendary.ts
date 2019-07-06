@@ -440,6 +440,7 @@ type EvType =
 // Expansion effects
 'URUENCHANTEDREVEAL' |
 'NTHCIRCLEREVEAL' |
+'PLAYOOT' |
 // Special
 'STATE' |
 'TURN' |
@@ -640,6 +641,7 @@ interface Player {
   left: Player
   right: Player
   hand: Deck
+  outOfTime: Deck
 }
 interface Turn extends Ev {
   recruit: number
@@ -971,6 +973,7 @@ playerState = {
   teleported: new Deck('TELEPORT0', true),
   artifact: new Deck('ARTIFACT0', true),
   shard: new Deck('SHARD0', true),
+  outOfTime: new Deck('OUTOFTIME0', true),
   left: undefined,
   right: undefined,
 };
@@ -1256,6 +1259,10 @@ function revealable(who = playerState) {
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
 function numColors(heroes: Card[] = yourHeroes()) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
+  return colors.count(color => heroes.some(hero => hero.isColor(color)));
+}
+function numClasses(heroes: Card[] = yourHeroes()) {
+  const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH];
   return colors.count(color => heroes.some(hero => hero.isColor(color)));
 }
 function sharesColor(c1: Card) {

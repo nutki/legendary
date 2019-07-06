@@ -2652,3 +2652,97 @@ addHeroTemplates("Secret Wars Volume 2", [
   })),
 },
 ]);
+addHeroTemplates("Captain America 75th Anniversary", [
+{
+  name: "Agent X-13",
+  team: "S.H.I.E.L.D.",
+// {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} {OUTOFTIME}
+// GUN: 1
+  c1: makeHeroCard("Agent X-13", "Sniper Squad", 3, 1, 1, Color.RANGED, "S.H.I.E.L.D.", "G", ev => superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && outOfTimeEv(ev)),
+// You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn that costs 1 or more.
+// GUN: 1
+  c2: makeHeroCard("Agent X-13", "Paramilitary Ops", 4, u, 2, Color.TECH, "S.H.I.E.L.D.", "GFD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit('S.H.I.E.L.D.').count(c => c.cost >= 1))),
+// Choose one: Gain a S.H.I.E.L.D. Officer, or you get +2 Attack.
+// {POWER Covert} {OUTOFTIME}.
+  uc: makeHeroCard("Agent X-13", "Spy Network", 4, u, 0, Color.COVERT, "S.H.I.E.L.D.", "D", [ ev => 0/* TODO */, ev => superPower(Color.COVERT) && outOfTimeEv(ev) ]),
+// KO up to two S.H.I.E.L.D. Heroes from your hand and/or discard pile.
+// {SAVIOR} For each card KO'd this way, you get +1 Attack.
+  ra: makeHeroCard("Agent X-13", "Mobilize for War", 7, u, 4, Color.INSTINCT, "S.H.I.E.L.D.", "", ev => {
+    selectObjectsUpToEv(ev, "KO up to two S.H.I.E.L.D. Heroes", 2, handOrDiscard().limit('S.H.I.E.L.D.'), c => discardEv(ev, c));
+    cont(ev, () => saviorPower() && addAttackEvent(ev, turnState.pastEvents.count(e => e.type === 'DISCARD' && e.parent === ev)));
+  }),
+},
+{
+  name: "Captain America (Falcon)",
+  team: "Avengers",
+// {POWER Instinct} Rescue a Bystander.
+  c1: makeHeroCard("Captain America (Falcon)", "Aerial Catch", 3, 2, u, Color.INSTINCT, "Avengers", "FD", ev => superPower(Color.INSTINCT) && rescueEv(ev)),
+// {SAVIOR} You get +2 Attack.
+  c2: makeHeroCard("Captain America (Falcon)", "Winged Salvation", 4, u, 2, Color.RANGED, "Avengers", "FD", ev => saviorPower() && addAttackEvent(ev, 2)),
+// Once per turn, if a player would gain a Wound, you may reveal this card and rescue a Bystander instead.
+  uc: makeHeroCard("Captain America (Falcon)", "Flying Shield Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !turnState.pastEvents.has(e => e.type === 'RESCUE' && e.getSource() === source),
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => rescueByEv(ev, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
+  }}),
+// You get +2 Attack for each Hero Class you have.
+// {SAVIOR} You get +2 Recruit for each Hero Class you have.
+  ra: makeHeroCard("Captain America (Falcon)", "Star-Spangled Hero", 7, 0, 0, Color.COVERT, "Avengers", "D", [
+    ev => addAttackEvent(ev, 2 * numClasses()),
+    ev => saviorPower() && addRecruitEvent(ev, 2 * numClasses()),
+  ]),
+},
+{
+  name: "Captain America 1941",
+  team: "Avengers",
+// Draw a card.
+// {POWER Strength} {OUTOFTIME}
+  c1: makeHeroCard("Captain America 1941", "Devoted Patriot", 3, u, u, Color.STRENGTH, "Avengers", "FD", [ ev => drawEv(ev, 1), ev => superPower(Color.STRENGTH) && outOfTimeEv(ev) ]),
+// You get +1 Attack for each Hero class you have.
+// {OUTOFTIME}.
+  c2: makeHeroCard("Captain America 1941", "Storm the Beachhead", 5, u, 0, Color.TECH, "Avengers", "", [ ev => addAttackEvent(ev, numClasses()), ev => outOfTimeEv(ev) ]),
+// {TEAMPOWER Avengers} Rescue a Bystander
+  uc: makeHeroCard("Captain America 1941", "Liberate the Prisoners", 6, u, 3, Color.COVERT, "Avengers", "F", ev => superPower("Avengers") && rescueEv(ev)),
+// {SAVIOR} {OUTOFTIME}
+  ra: makeHeroCard("Captain America 1941", "Punch Evil in the Face", 8, u, 5, Color.INSTINCT, "Avengers", "F", ev => saviorPower() && outOfTimeEv(ev)),
+},
+{
+  name: "Steve Rogers, Director of S.H.I.E.L.D.",
+  team: "S.H.I.E.L.D.",
+// You get +1 Recruit for each Hero Class you have.
+// {SAVIOR} You get +1 Attack for each Hero Class you have.
+  c1: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "International Strike Force", 3, u, u, Color.STRENGTH, "S.H.I.E.L.D.", "G", [
+    ev => addRecruitEvent(ev, numClasses()),
+    ev => saviorPower() && addAttackEvent(ev, numClasses()),
+ ]),
+// {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} You may KO a S.H.I.E.L.D. Hero that you played this turn. If you do, rescue a Bystander.
+  c2: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "Reassign to Civilian Duty", 5, u, 2, Color.INSTINCT, "S.H.I.E.L.D.", "GFD", ev => {
+    superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && selectCardOptEv(ev, "KO a S.H.I.E.L.D. Hero", playerState.playArea.limit('S.H.I.E.L.D.'), c => {
+      KOEv(ev, c); rescueEv(ev);
+    });
+  }),
+// {SAVIOR} {OUTOFTIME}
+  uc: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "Shadow of Wars Past", 4, u, 2, Color.COVERT, "S.H.I.E.L.D.", "GFD", ev => saviorPower() && outOfTimeEv(ev)),
+// Rescue a Bystander
+// {SAVIOR} You get +3 Attack.
+  ra: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "Save the World", 8, u, 4, Color.TECH, "S.H.I.E.L.D.", "G", [ ev => rescueEv(ev), ev => saviorPower() && addAttackEvent(ev, 3) ]),
+},
+{
+  name: "Winter Soldier",
+  team: "(Unaffiliated)",
+// {POWER Tech} {OUTOFTIME}.
+  c1: makeHeroCard("Winter Soldier", "Bionic Arm", 3, u, 2, Color.STRENGTH, u, "FD", ev => superPower(Color.TECH) && outOfTimeEv(ev)),
+// Draw a card.
+// {POWER Tech} {OUTOFTIME}
+// GUN: 1
+  c2: makeHeroCard("Winter Soldier", "Sniper Nest", 4, 1, u, Color.TECH, u, "GF", [ ev => drawEv(ev, 1), ev => superPower(Color.TECH) && outOfTimeEv(ev) ]),
+// If you played at least 7 other cards this turn you get +2 Attack.
+// GUN: 1
+  uc: makeHeroCard("Winter Soldier", "KGB Training", 5, u, 3, Color.COVERT, u, "GD", ev => turnState.cardsPlayed.size >= 7 && addAttackEvent(ev, 2)),
+// A Hero in your hand gains {OUTOFTIME} this turn.
+// {POWER Tech} Another Hero in your hand gains {OUTOFTIME} this turn.
+  ra: makeHeroCard("Winter Soldier", "2>4", 7, u, 4, Color.TECH, u, "D", ev => {
+    selectObjectsEv(ev, "Select a Hero", superPower(Color.TECH) ? 2 : 1, playerState.hand.limit(isHero), c => addTurnSet('fight', v => v === c, (c, prev) => combineHandlers(prev, outOfTimeEv)));
+  }),
+},
+]);

@@ -323,7 +323,7 @@ const chargeAmbushEffect = (n: number) => (ev: Ev) => villainChargeEv(ev, ev.sou
 // The card is discarded the second time you play it, so you play the card only twice total.
 // Play your returning Man Out of Time cards after the "Play a Villain Card" part of your turn and before you start playing out your hand.
 // You "played" a Man Out of Time card on both the first turn you played it and the second turn when you replayed it, so it can help activate your Superpower Abilities on both turns.
-function outOfTime(ev: Ev) {
+function outOfTimeEv(ev: Ev) {
   let e = ev;
   while (e && e.type !== 'PLAYOOT') e = e.parent;
   e || moveCardEv(ev, ev.source, playerState.outOfTime);

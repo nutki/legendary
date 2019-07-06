@@ -1554,3 +1554,82 @@ addVillainTemplates("Secret Wars Volume 2", [
   }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 2))],
 ]},
 ]);
+addVillainTemplates("Captain America 75th Anniversary", [
+{ name: "Zola's Creations", cards: [
+// Abomination
+// FIGHT: You get +1 Recruit for each Hero Class you have.
+// ATTACK: 6+
+// VP: 5
+  [ 2, makeVillainCard("Zola's Creations", "Captain Zolandia", 6, 5, {
+    fight: ev => addRecruitEvent(ev, numClasses()),
+    varDefense: abominationVarDefense,
+  })],
+// Abomination
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Zola's Creations", "Doughboy", 4, 3, {
+    fight: ev => selectCardAndKOEv(ev, playerState.hand.deck),
+    varDefense: abominationVarDefense,
+  })],
+// Abomination
+// FIGHT: If you fought Man-Fish in the Sewers or Bridge, then each other player gains a Wound.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Zola's Creations", "Man-Fish", 5, 4, {
+    fight: ev => isLocation(ev.where, 'BRIDGE', 'SEWERS') && eachOtherPlayerVM(p => gainWoundEv(ev, p)),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: abominationVarDefense,
+  })],
+// To fight Primus, you must also discard a card that costs 2, 3, 5, or 7.
+// ESCAPE: each player discards a Hero that costs 2, 3, 5, or 7.
+// ATTACK: 3*
+// VP: 3
+  [ 2, makeVillainCard("Zola's Creations", "Primus", 3, 3, {
+    fightCond: c => playerState.hand.has(c => [2, 3, 5, 7].includes(c.cost)),
+    fightCost: ev => selectCardEv(ev, "Discard a card", playerState.hand.limit(c => [2, 3, 5, 7].includes(c.cost)), c => discardEv(ev, c)),
+    escape: ev => eachPlayer(p => selectCardEv(ev, "Discard a card", p.hand.limit(isHero).limit(c => [2, 3, 5, 7].includes(c.cost)), c => discardEv(ev, c), p)),
+  })],
+]},
+{ name: "Masters of Evil (WWII)", cards: [
+// AMBUSH: Black Knight captures a Bystander.
+// FIGHT: Savior: KO one of your Heroes.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Masters of Evil (WWII)", "Black Knight", 4, 2, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => saviorPower() && selectCardAndKOEv(ev, playerState.hand.limit(isHero)),
+  })],
+// AMBUSH: Executioner captures a Bystander
+// FIGHT: Savior: Draw a card.
+// ESCAPE: KO a Bystander from each player's Victory Pile.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Masters of Evil (WWII)", "Executioner", 6, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => saviorPower() && drawEv(ev),
+    escape: ev => eachPlayer(p => selectCardAndKOEv(ev, p.victory.limit(isBystander))),
+  })],
+// AMBUSH: Melter captures a Bystander.
+// FIGHT: Savior: Each player reveals the top card of their deck. For each card, you choose to KO it or put it back.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Masters of Evil (WWII)", "Melter (WWII)", 5, 3, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => saviorPower() && eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => {
+      selectCardOptEv(ev, "KO a card", cards, c => KOEv(ev, c));
+    }, p)),
+  })],
+// AMBUSH: Radioactive Man captures a Bystander.
+// FIGHT: Each player who is not a Savior gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Masters of Evil (WWII)", "Radioactive Man", 5, 3, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
+    escape: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
+  })],
+]},
+]);
