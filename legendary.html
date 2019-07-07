@@ -113,6 +113,16 @@ div.card div.capturedHint {
     padding: 0 10px;
     font-size: 35px;
 }
+#source div.card {
+  border-radius: 20px;
+  width: 400px;
+  height: 560px;
+}
+#source img.cardface {
+    width:400px;
+    height: 560px;
+    position:absolute;
+}
 .popup {
   display: block;
   position: absolute;
@@ -207,6 +217,7 @@ tr.cityscape td:first-child:before {
 <td><div class="deck" data-id="BANK" data-mode="IMG"></div></td>
 <td><div class="deck" data-id="SEWERS" data-mode="IMG"></div></td>
 <td><div class="deck" data-id="SCHEME" data-mode="IMG"></div></td>
+<td rowspan="2"><div id="source"></div></td>
 </tr><tr>
 <td>
   <div class="deck small" data-id="SHIELDOFFICER" data-mode="IMG"></div>
@@ -225,7 +236,6 @@ tr.cityscape td:first-child:before {
   <div class="deck small bl" data-id="KO" data-mode="IMG" data-count="KO" data-popupid="popko"></div>
   <div class="deck small br" data-id="WOUNDS" data-mode="IMG" data-count="WOUNDS"></div>
 </td>
-<td><div id="source"></div></td>
 </tr></table>
 <img class="icon" src="icons/recruit.svg" width="50"><span class="number" id="recruit"></span>
 <img class="icon" src="icons/attack.svg"><span class="number" id="attack"></span><span class="number" id="shards"></span>

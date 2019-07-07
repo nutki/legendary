@@ -29,11 +29,20 @@ function makeDisplayCard(c: Card): string {
   let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
   return res + makeDisplayAttached(c);
 }
+function setSourceImg(name: string) {
+  const r = `<div class="card"><img class="cardface" src="${name}"><div class="frame"></div></div>`;
+  document.getElementById("source").innerHTML = r;
+}
+function clearSourceImg() {
+  document.getElementById("source").innerHTML = sourceOrg;
+}
 function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): string {
   const extraClasses = gone ? " gone" : "";
+  const src = back ? 'images/back.jpg' : cardImageName(c);
+  const hover = `onmouseover="setSourceImg('${src}')" onmouseleave="clearSourceImg()"`;
   let r = '';
-  r += id ? `<div class="card${extraClasses}" id="${c.id}">` : `<div class="card${extraClasses}">`;
-  r += `<img class="cardface" src="${back ? 'images/back.jpg' : cardImageName(c)}">`
+  r += id ? `<div ${hover} class="card${extraClasses}" id="${c.id}">` : `<div ${hover} class="card${extraClasses}">`;
+  r += `<img class="cardface" src="${src}">`
   if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
   if (isScheme(c) && getSchemeCountdown() !== undefined)
     r += `<div class="count">${getSchemeCountdown()}</div>`;
@@ -86,10 +95,11 @@ function eventSource(ev: Ev): string {
   const s = ev.getSource();
   return s instanceof Card ? makeDisplayCardImg(s, false, false, false) : "";
 }
+let sourceOrg = "";
 function displayGame(ev: Ev): void {
   const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard } = getDisplayInfo();
   displayDecks();
-  document.getElementById("source").innerHTML = eventSource(ev);
+  document.getElementById("source").innerHTML = sourceOrg = eventSource(ev);
   document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
   document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
   document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
