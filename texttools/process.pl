@@ -74,8 +74,7 @@ while (<A>) {
       s!^Cost: ?(.*?)$!#COST: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;
-      s!^<i>5th Circle of Kung-Fu</i> \(2 copies\)$!<i>5th Circle of Kung-Fu</i>!; #FIX
-      s!^<i>(.*?)\s*</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
+      s!^<i>(.*?)</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
       s!^(\[$class\](, \[$class\])?)$!#CLASS: $1! && next;
       s!^Class: (\[$class\](/\[$class\])?)$!#CLASS: $1! && next;
       s!^(?:Team: )?($aff)$!#TEAM: $1! && next;
@@ -92,11 +91,8 @@ while (<A>) {
       s!^<b>(?:Healing|Betrayal)</b>: (.*)!#HEAL: $1! && next;
       s!^<b>Spectrum</b>: (.*)$!{SPECTRUM} $1! && next;
 
-      s!^Unbreakable Cage$!#SUBNAME: $&\n#COPIES: 3! && next; #FIX
-      s!^(Weight of the World) \(1 copy\)$!#SUBNAME: $&\n#COPIES: 1! && next; #FIX
-
-      s!^<span style='font-size:14px;'><i><b>(.*?)\s*</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
-      s!^<span style='font-size:14px;'><i><b>(.*?)\s*</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;
+      s!^<span style='font-size:14px;'><i><b>(.*?)</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
+      s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;
       s!^<span style='font-size:8px;'><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
       s!^<span style='font-size:8px;'><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
 
