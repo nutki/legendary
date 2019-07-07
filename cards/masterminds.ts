@@ -659,11 +659,11 @@ makeMastermindCard("Immortal Emperor Zheng-Zhu", 7, 5, "K'un-Lun", ev => {
   } ],
   [ "Emperor's Justice", ev => {
   // Each other player reveals a Marvel Knight Hero or gains a Wound.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Marvel Knight", () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Marvel Knights", () => gainWoundEv(ev, p), p));
   } ],
   [ "Humble the Pretenders", ev => {
   // Each other player reveals a Marvel Knight Hero or discards a card that costs less than 7.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Marvel Knight", () => selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost < 7), c => discardEv(ev, c), p), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Marvel Knights", () => selectCardEv(ev, "Discard a card", p.hand.limit(c => c.cost < 7), c => discardEv(ev, c), p), p));
   } ],
   [ "Imperial Edict", ev => {
   // Choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck in random order.
@@ -759,11 +759,11 @@ makeMastermindCard("Spider-Queen", 8, 6, "Spider-Infected", ev => {
   } ],
   [ "Control Arachnid Genes", ev => {
   // You may gain a Spider-Friend Hero from the HQ.
-    selectCardOptEv(ev, "Gain a Spider-Friend", hqHeroes().limit("Spider-Friend"), c => gainEv(ev, c));
+    selectCardOptEv(ev, "Gain a Spider-Friend", hqHeroes().limit("Spider Friends"), c => gainEv(ev, c));
   } ],
   [ "Web the Skyscrapers", ev => {
   // Each other player reveals a Spider-Friend Hero or puts a Bystander from their Victory Pile into the Escape pile.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Spider-Friend", () => selectCardEv(ev, "Put a Bystander into the Escape pile", p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped)), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Spider Friends", () => selectCardEv(ev, "Put a Bystander into the Escape pile", p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped)), p));
   } ],
 ], {
   varDefense: c => c.printedDefense + gameState.escaped.count(isBystander)

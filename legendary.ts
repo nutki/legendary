@@ -316,7 +316,28 @@ function moveAll(from: Deck, to: Deck, bottom?: boolean): void {
   while (from.size) moveCard(from.top, to, bottom);
 }
 // Game primitives: Decks
-type Filter<T> = number | string | ((c: T) => boolean)
+type Affiliation =
+'Avengers' |
+'Brotherhood' |
+'Cabal' |
+'Crime Syndicate' |
+'Fantastic Four' |
+'Foes of Asgard' |
+'Guardians of the Galaxy' |
+'HYDRA' |
+'Illuminati' |
+'Marvel Knights' |
+'Mercs for Money' |
+'New Warriors' |
+'S.H.I.E.L.D.' |
+'Sinister Six' |
+'Spider Friends' |
+'X-Force' |
+'X-Men' |
+'Champions' |
+'Warbound' |
+'Venomverse';
+type Filter<T> = number | Affiliation | ((c: T) => boolean)
 class Deck {
   id: string
   owner: Player
@@ -1270,7 +1291,7 @@ function sharesColor(c1: Card) {
   return (c2: Card) => colors.has(color => c1.isColor(color) && c2.isColor(color));
 }
 
-function superPower(...f: (number | string)[]): number {
+function superPower(...f: (number | Affiliation)[]): number {
   if (f.length > 1) return f.count(c => superPower(c) < f.count(e => c === e)) === 0 ? 1 : 0;
   return count(turnState.cardsPlayed, f[0]);
 }

@@ -857,7 +857,7 @@ makeSchemeCard("The God-Emperor of Battleworld", { twists: 8 }, ev => {
     // Twist 1 This Scheme ascends to becomes (sic) a new 9-Attack "God-Emperor" Mastermind worth 9 VP. It has "<b>Master Strike</b>: Each player with exactly six cards in hand reveals a [Tech] Hero or puts two cards from their hand on top of their deck."
     moveCardEv(ev, ev.source, gameState.mastermind);
     addStatSet('strike', c => c === ev.source, () => ev => {
-      eachPlayer(p => p.hand.size === 6 && revealOrEv(ev, "Reveal a Hero", () => {
+      eachPlayer(p => p.hand.size === 6 && revealOrEv(ev, Color.TECH, () => {
         selectObjectsEv(ev, "Put two cards on top of your deck", 2, p.hand.deck, c => moveCardEv(ev, c, p.deck), p);
       }))
     });
