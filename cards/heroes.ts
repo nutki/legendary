@@ -2385,7 +2385,7 @@ addHeroTemplates("Secret Wars Volume 2", [
     cards.has(isTwist) ? addAttackEvent(ev, 2) : chooseMayEv(ev, "Put revealed on the bottom of the Villain Deck", () => cards.each(c => moveCardEv(ev, c, gameState.villaindeck, true)));
   })),
 // {POWER Instinct} You may KO a card from your hand or discard pile. If you do, draw a card.
-  c2: makeHeroCard("Black Swan", " Witness the End", 5, 2, u, Color.INSTINCT, "Cabal", "FD", ev => superPower(Color.INSTINCT) && KOHandOrDiscardEv(ev, undefined, () => drawEv(ev, 1))),
+  c2: makeHeroCard("Black Swan", "Witness the End", 5, 2, u, Color.INSTINCT, "Cabal", "FD", ev => superPower(Color.INSTINCT) && KOHandOrDiscardEv(ev, undefined, () => drawEv(ev, 1))),
 // Reveal the top three cards of the Villain Deck. Rescue any Bystanders you revealed, then put the rest back in any order.
   uc: makeHeroCard("Black Swan", "Dark Foretelling", 6, u, 4, Color.INSTINCT | Color.RANGED, "Cabal", "", ev => {
     revealVillainDeckEv(ev, 3, cards => cards.limit(isBystander).each(c => rescueEv(ev, c)), false);
@@ -2404,7 +2404,7 @@ addHeroTemplates("Secret Wars Volume 2", [
 // {SPECTRUM} You get +2 Attack.
   c2: makeHeroCard("The Captain and the Devil", "Patriotic Chomp", 4, u, 2, Color.INSTINCT, "Avengers", "FD", ev => spectrumPower() && addAttackEvent(ev, 2)),
 // {PATROL Streets}: If it's empty, you may KO a card from your hand or discard pile.
-  uc: makeHeroCard("The Captain and the Devil", " Feeding Grounds", 6, u, 3, Color.COVERT, "Avengers", "F", ev => patrolCity('STREETS', () => KOHandOrDiscardEv(ev, undefined))),
+  uc: makeHeroCard("The Captain and the Devil", "Feeding Grounds", 6, u, 3, Color.COVERT, "Avengers", "F", ev => patrolCity('STREETS', () => KOHandOrDiscardEv(ev, undefined))),
 // Whenever you defeat a Villain this turn, each Villain and Mastermind adjacent to it gets -2 Attack this turn.
   ra: makeHeroCard("The Captain and the Devil", "Dino-Roar of Triumph", 8, u, 6, Color.RANGED, "Avengers", "D", ev => {
     addTurnTrigger('DEFEAT', undefined, ev => cityAdjacent(ev.parent.where).each(l => l.limit(isEnemy).each(v => addTurnMod('defense', c => v === c, -2))));
