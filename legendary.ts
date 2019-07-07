@@ -85,7 +85,7 @@ interface Card {
   teleport?: boolean
   soaring?: boolean
   wallcrawl?: boolean
-  team: string
+  team: Affiliation
   flags?: string
   params?: SetupParams
   set?: string
@@ -166,7 +166,7 @@ class Card {
   }
   isHealable() { return this.cardType === "WOUND"; }
   isColor(c: number) { return (getModifiedStat(this, 'color', this.color) & c) !== 0; }
-  isTeam(t: string) { return this.team === t; }
+  isTeam(t: Affiliation) { return this.team === t; }
   isGroup(t: string) { return this.villainGroup === t; }
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
   hasWallCrawl() { return getModifiedStat(this, "wallcrawl", this.wallcrawl); }
@@ -183,7 +183,7 @@ let Color = {
   STRENGTH:16,
   GRAY:32,
 };
-function makeHeroCard(hero: string, name: string, cost: number, recruit: number, attack: number, color: number, team: string, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
+function makeHeroCard(hero: string, name: string, cost: number, recruit: number, attack: number, color: number, team: Affiliation, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
   let c = new Card("HERO", name);
   c.printedCost = cost;
   c.printedRecruit = recruit;
@@ -202,7 +202,7 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   }
   return c;
 }
-function makeGainableCard(c: Card, recruit: number, attack: number, color: number, team: string, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
+function makeGainableCard(c: Card, recruit: number, attack: number, color: number, team: Affiliation, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
   c.gainable = true;
   c.printedRecruit = recruit;
   c.printedAttack = attack;
@@ -1165,7 +1165,7 @@ function isEnemy(c: Card): boolean { return isVillain(c) || isMastermind(c); }
 function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER" && (!c.gainable || !owner(c)); }
 function isHealable(c: Card): boolean { return c.isHealable(); }
 function isColor(col: number): (c: Card) => boolean { return function (c) { return c.isColor(col); }; }
-function isTeam(team: string): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
+function isTeam(team: Affiliation): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
 function isGroup(group: string): (c: Card) => boolean { return c => c.isGroup(group); }
 function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
 function isArtifact(c: Card): boolean { return c.isArtifact; }
