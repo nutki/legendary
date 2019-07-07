@@ -272,7 +272,7 @@ function spectrumPower(p: Player = playerState) {
 // Other cards let you patrol even stranger places, like the Escape Pile or a Victory Pile. Similarly, you can use those Patrol abilities if that place has no cards in it.
 // If a Mastermind or Scheme causes a city space not to exist, you can't patrol that space.
 function patrolDeck(where: Deck, effect0: () => void, effect1?: (c: Card) => void) {
-  where.size ? effect0() : effect1 && effect1(where.top);
+  !where.size ? effect0() : effect1 && effect1(where.top);
 }
 function patrolCity(where: CityLocation, effect0: () => void, effect1?: (c: Card) => void) {
   withCity(where, d => patrolDeck(d, effect0, effect1));

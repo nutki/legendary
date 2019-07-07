@@ -181,7 +181,7 @@ addVillainTemplates("Legendary", [
 // ATTACK: 4
 // VP: 2
   [ 3, makeVillainCard("Skrulls", "Super-Skrull", 4, 2, {
-    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, revealable(p), p)),
+    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p), p)),
   })],
 ]},
 { name: "Spider-Foes", cards: [

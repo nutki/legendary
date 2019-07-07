@@ -1214,7 +1214,7 @@ function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
 }
 function fightableCards(): Card[] {
-  return [...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck].filter(c => c && isFightable(c));
+  return [...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c));
 }
 function heroBelow(c: Card) {
   return c.location && c.location.above ? c.location.above.limit(isHero) : [];
