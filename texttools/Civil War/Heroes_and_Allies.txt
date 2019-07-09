@@ -12,15 +12,15 @@ You get +1 Recruit for each Hero Class you have.
 
 #SUBNAME: Inspire a Nation/Inspire a Man
 #COPIES: 5
-#DIVIDED Inspire a Nation
-#DIVHERO Captain America, Secret Avenger
-#DIVTEAM Avengers
+#DIVIDED: Inspire a Nation
+#DIVHERO: Captain America, Secret Avenger
+#DIVTEAM: Avengers
 #CLASS: [Strength]
 Gain a Sidekick.
 #COST: 3
-#DIVIDED Inspire a Man
-#DIVHERO Captain America, Secret Avenger
-#DIVTEAM Avengers
+#DIVIDED: Inspire a Man
+#DIVHERO: Captain America, Secret Avenger
+#DIVTEAM: Avengers
 #CLASS: [Instinct]
 #ATTACK: 2
 #COST: 3
@@ -40,19 +40,19 @@ Whenever you play a Sidekick or another Avengers Hero this turn set that card as
 #COST: 7
 
 #CARDNAME: Cloak & Dagger
-Avengers/Marvel Knights
+#TEAM: Avengers | Marvel Knights
 
 #SUBNAME: Above/Below
 #COPIES: 5
-#DIVIDED Above
-#DIVHERO Cloak
-#DIVTEAM Avengers
+#DIVIDED: Above
+#DIVHERO: Cloak
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 #ATTACK: 2
 #COST: 3
-#DIVIDED Below
-#DIVHERO Dagger
-#DIVTEAM Marvel Knights
+#DIVIDED: Below
+#DIVHERO: Dagger
+#DIVTEAM: Marvel Knights
 #CLASS: [Ranged]
 #RECRUIT: 0+
 You get +3 Recruit usable only to recruit Heroes in the HQ space under the Sewers.
@@ -60,35 +60,35 @@ You get +3 Recruit usable only to recruit Heroes in the HQ space under the Sewer
 
 #SUBNAME: Flee/Fight
 #COPIES: 5
-#DIVIDED Flee
-#DIVHERO Cloak
-#DIVTEAM Avengers
+#DIVIDED: Flee
+#DIVHERO: Cloak
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 #RECRUIT: 2+
-<b>Phasing</b>
+{PHASING}
 {POWER Covert} You get +1 Recruit.
 #COST: 4
-#DIVIDED Fight
-#DIVHERO Dagger
-#DIVTEAM Marvel Knights
+#DIVIDED: Fight
+#DIVHERO: Dagger
+#DIVTEAM: Marvel Knights
 #CLASS: [Ranged]
 #ATTACK: 2+
-<b>Phasing</b>
+{PHASING}
 {POWER Ranged} You get +1 Attack.
 #COST: 4
 
 #SUBNAME: Darkness/Light
 #COPIES: 3
-#DIVIDED Darkness
-#DIVHERO Cloak
-#DIVTEAM Avengers
+#DIVIDED: Darkness
+#DIVHERO: Cloak
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 #ATTACK: 3
 {POWER Covert} Reveal the top card of your deck. If it costs 0, KO it.
 #COST: 6
-#DIVIDED Light
-#DIVHERO Dagger
-#DIVTEAM Marvel Knights
+#DIVIDED: Light
+#DIVHERO: Dagger
+#DIVTEAM: Marvel Knights
 #CLASS: [Ranged]
 #RECRUIT: 3
 {POWER Ranged} Reveal the top card of your deck. If it costs 1 or more, draw it.
@@ -102,7 +102,7 @@ Whenever you play a <b>Divided</b> card this turn: play both sides as if they we
 #COST: 7
 
 #CARDNAME: Daredevil
-Avengers/Marvel Knights
+#TEAM: Avengers | Marvel Knights
 
 #SUBNAME: Dual Existence
 #COPIES: 5
@@ -121,16 +121,16 @@ Choose a number, then reveal the top card of your deck. If that card is that cos
 
 #SUBNAME: Hidden Identity/Revealed Identity
 #COPIES: 3
-#DIVIDED Hidden Identity
-#DIVHERO Daredevil
-#DIVTEAM Avengers
+#DIVIDED: Hidden Identity
+#DIVHERO: Daredevil
+#DIVTEAM: Avengers
 #CLASS: [Instinct]
 #RECRUIT: 3
 The next Hero you recruit this turn goes on top of your deck.
 #COST: 6
-#DIVIDED Revealed Identity
-#DIVHERO Iron Fist
-#DIVTEAM Marvel Knights
+#DIVIDED: Revealed Identity
+#DIVHERO: Iron Fist
+#DIVTEAM: Marvel Knights
 #CLASS: [Strength]
 #ATTACK: 0+
 You get +1 Attack for each different cost of Hero you have.
@@ -156,16 +156,16 @@ Put a Hero from the HQ on the bottom of the Hero Deck.
 
 #SUBNAME: Talk with Birds/Squawk Back
 #COPIES: 5
-#DIVIDED Talk with Birds
-#DIVHERO Falcon
-#DIVTEAM Avengers
+#DIVIDED: Talk with Birds
+#DIVHERO: Falcon
+#DIVTEAM: Avengers
 #CLASS: [Ranged]
 #ATTACK: 2
 {POWER Ranged} Gain a Sidekick.
 #COST: 4
-#DIVIDED Squawk Back
-#DIVHERO Redwing
-#DIVTEAM Avengers
+#DIVIDED: Squawk Back
+#DIVHERO: Redwing
+#DIVTEAM: Avengers
 #CLASS: [Instinct]
 Look at the top three cards of your deck. Draw one. Put the rest back in any order.
 #COST: 4
@@ -190,22 +190,22 @@ You get +1 Attack for each card in the HQ with an Attack icon.
 
 #SUBNAME: Brilliant Biochemist/Massive Warrior
 #COPIES: 5
-#DIVIDED Brilliant Biochemist
+#DIVIDED: Brilliant Biochemist
 #CLASS: [Tech]
 #RECRUIT: 2
-<b>Size-Changing</b>: [Tech]
+{SIZECHANGING TECH}
 #COST: 4*
-#DIVIDED Massive Warrior
+#DIVIDED: Massive Warrior
 #CLASS: [Strength]
 #ATTACK: 2
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 #COST: 4*
 
 #SUBNAME: Growth Industry
 #COPIES: 5
 #CLASS: [Tech]
 #ATTACK: 2
-<b>Size-Changing</b>: [Tech]
+{SIZECHANGING TECH}
 {POWER Tech} Draw a card
 #COST: 5*
 #FLAVOR: Science keeps Goliath at the height of his power.
@@ -214,7 +214,7 @@ You get +1 Attack for each card in the HQ with an Attack icon.
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 3+
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 You get +1 for each other card you played this turn that costs 4 or more.
 #COST: 6*
 
@@ -222,7 +222,7 @@ You get +1 for each other card you played this turn that costs 4 or more.
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 0+
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 You get +Attack equal to the cost of another card you played this turn.
 #COST: 8
 
@@ -239,16 +239,16 @@ You get +Attack equal to the cost of another card you played this turn.
 
 #SUBNAME: Manly Dullard/Boy Genius
 #COPIES: 5
-#DIVIDED Manly Dullard
-#DIVHERO Hercules
-#DIVTEAM Avengers
+#DIVIDED: Manly Dullard
+#DIVHERO: Hercules
+#DIVTEAM: Avengers
 #CLASS: [Strength]
 #ATTACK: 3
 To play this, you must discard a card from your hand.
 #COST: 3
-#DIVIDED Boy Genius
-#DIVHERO Amadeus Cho
-#DIVTEAM Unaffiliated
+#DIVIDED: Boy Genius
+#DIVHERO: Amadeus Cho
+#DIVTEAM: Unaffiliated
 #CLASS: [Tech]
 Draw a card.
 #COST: 3
@@ -277,28 +277,28 @@ Rescue a Bystander. Then, you get +1 Attack for each Bystander in your Victory P
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 2+
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 You may KO a Wound from your hand or discard pile. If you do, you get +1 Attack.
 #COST: 5*
 
 #SUBNAME: Half-Kree/Half-Skrull
 #COPIES: 5
-#DIVIDED Half-Kree
+#DIVIDED: Half-Kree
 #CLASS: [Strength]
 #RECRUIT: 3
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 Gain a Wound.
 #COST: 4*
-#DIVIDED Half-Skrull
+#DIVIDED: Half-Skrull
 #CLASS: [Covert]
 #ATTACK: 2
-<b>Size-Changing</b>: [Covert]
+{SIZECHANGING COVERT}
 #COST: 4*
 
 #SUBNAME: Impersonate
 #COPIES: 3
 #CLASS: [Covert]
-<b>Size-Changing</b>: [Covert]
+{SIZECHANGING COVERT}
 Play this card as a copy of another Hero you played this turn. This card is both [Covert] and the class and color you copy.
 #COST: 6*
 #GUN: 1
@@ -307,7 +307,7 @@ Play this card as a copy of another Hero you played this turn. This card is both
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 4+
-<b>Size-Changing</b>: [Covert]
+{SIZECHANGING COVERT}
 {POWER Covert} You get +4 Attack.
 #COST: 8*
 #FLAVOR: Hulkling can shift into any form...but he prefers the big green classic.
@@ -326,15 +326,15 @@ If any player would gain a Wound, you may discard this card instead. If you do, 
 
 #SUBNAME: Cautious/Reckless
 #COPIES: 5
-#DIVIDED Cautious
-#DIVHERO Luke Cage
-#DIVTEAM Avengers
+#DIVIDED: Cautious
+#DIVHERO: Luke Cage
+#DIVTEAM: Avengers
 #CLASS: [Strength]
 #ATTACK: 2
 #COST: 3
-#DIVIDED Reckless
-#DIVHERO Jessica Jones
-#DIVTEAM Marvel Knights
+#DIVIDED: Reckless
+#DIVHERO: Jessica Jones
+#DIVTEAM: Marvel Knights
 #CLASS: [Instinct]
 #ATTACK: 3
 Gain a Wound.
@@ -373,16 +373,16 @@ You get +1 Recruit for each Hero Name among your non-S.H.I.E.L.D. Heroes.
 
 #SUBNAME: Incredible Effort/Effortless
 #COPIES: 3
-#DIVIDED Incredible Effort
-#DIVHERO Patriot
-#DIVTEAM Avengers
+#DIVIDED: Incredible Effort
+#DIVHERO: Patriot
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 #ATTACK: 1+
 {POWER Covert} You get +3 Attack
 #COST: 5
-#DIVIDED Effortless
-#DIVHERO Hawkeye
-#DIVTEAM Avengers
+#DIVIDED: Effortless
+#DIVHERO: Hawkeye
+#DIVTEAM: Avengers
 #CLASS: [Tech]
 #RECRUIT: 3
 #COST: 5
@@ -396,7 +396,7 @@ Reveal the top three cards of your deck. If you revealed at least three differen
 #COST: 8
 
 #CARDNAME: Peter Parker
-Avengers/Spider Friends
+#TEAM: Avengers | Spider Friends
 
 #SUBNAME: Conflicted Loyalties
 #COPIES: 5
@@ -418,16 +418,16 @@ Gain a Sidekick.
 
 #SUBNAME: Protect My Family/Hot Bowl of Soup
 #COPIES: 3
-#DIVIDED Protect My Family
-#DIVHERO Peter Parker
-#DIVTEAM Avengers
+#DIVIDED: Protect My Family
+#DIVHERO: Peter Parker
+#DIVTEAM: Avengers
 #CLASS: [Tech]
 #ATTACK: 1
 Rescue a Bystander.
 #COST: 2
-#DIVIDED Hot Bowl of Soup
-#DIVHERO Aunt May
-#DIVTEAM Spider-Friends
+#DIVIDED: Hot Bowl of Soup
+#DIVHERO: Aunt May
+#DIVTEAM: Spider-Friends
 #CLASS: [Instinct]
 #RECRUIT: 1
 You may KO a Wound from your hand or discard pile.
@@ -460,15 +460,15 @@ You may KO a Wound from your hand or discard pile.
 
 #SUBNAME: Double Down/Bubble Up
 #COPIES: 3
-#DIVIDED Double Down
-#DIVHERO Speedball
-#DIVTEAM New Warriors
+#DIVIDED: Double Down
+#DIVHERO: Speedball
+#DIVTEAM: New Warriors
 #CLASS: [Ranged]
 Draw two cards.
 #COST: 5
-#DIVIDED Bubble Up
-#DIVHERO Namorita
-#DIVTEAM New Warriors
+#DIVIDED: Bubble Up
+#DIVHERO: Namorita
+#DIVTEAM: New Warriors
 #CLASS: [Covert]
 #ATTACK: 0+
 You get +3 Attack usable only against Villains on the Bridge or against the Mastermind.
@@ -488,7 +488,7 @@ If a Master Strike would occur, you may reveal this card to KO that Master Strik
 #COPIES: 5
 #CLASS: [Tech]
 #ATTACK: 0+
-<b>Size-Changing</b>: [Tech]
+{SIZECHANGING TECH}
 Draw a card.
 {POWER Tech} You get +1 Attack.
 #COST: 2*
@@ -496,20 +496,20 @@ Draw a card.
 
 #SUBNAME: Crush Ants/Crush File Sizes
 #COPIES: 5
-#DIVIDED Crush Ants
-#DIVHERO Stature
-#DIVTEAM Avengers
+#DIVIDED: Crush Ants
+#DIVHERO: Stature
+#DIVTEAM: Avengers
 #CLASS: [Strength]
 #ATTACK: 2
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 {POWER Strength} Defeat a Villain that has 3 Attack or less.
 #COST: 5*
-#DIVIDED Crush File Sizes
-#DIVHERO Iron Lad
-#DIVTEAM Avengers
+#DIVIDED: Crush File Sizes
+#DIVHERO: Iron Lad
+#DIVTEAM: Avengers
 #CLASS: [Tech]
 #RECRUIT: 2
-<b>Size-Changing</b>: [Tech]
+{SIZECHANGING TECH}
 {POWER Tech} Draw a card.
 #COST: 5*
 
@@ -517,7 +517,7 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 2+
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 {POWER Strength} You get +1 Attack for each Villain in your Victory Pile that has a printed Attack 3 or less.
 #COST: 6*
 #FLAVOR: Ant-Man's daughter grew up pretty fast.
@@ -526,26 +526,26 @@ Draw a card.
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 5
-<b>Size-Changing</b>: [Strength]
+{SIZECHANGING STRENGTH}
 {POWER Strength} Defeat each Villain that has 4 Attack or less.
 #COST: 8*
 #GUN: 1
 
 #CARDNAME: Storm & Black Panther
-X-Men/Avengers
+#TEAM: X-Men | Avengers
 
 #SUBNAME: Gathering Rain Clouds/Gathering Clues
 #COPIES: 5
-#DIVIDED Gathering Rain Clouds
-#DIVHERO Storm
-#DIVTEAM X-Men
+#DIVIDED: Gathering Rain Clouds
+#DIVHERO: Storm
+#DIVTEAM: X-Men
 #CLASS: [Ranged]
 #RECRUIT: 1
 {POWER Ranged} Draw a card.
 #COST: 2
-#DIVIDED Gathering Clues
-#DIVHERO Black Panther
-#DIVTEAM Avengers
+#DIVIDED: Gathering Clues
+#DIVHERO: Black Panther
+#DIVTEAM: Avengers
 #CLASS: [Instinct]
 #ATTACK: 1
 {POWER Instinct} Draw a card.
@@ -553,16 +553,16 @@ X-Men/Avengers
 
 #SUBNAME: Lightning Strike/Pouncing Strike
 #COPIES: 5
-#DIVIDED Lightning Strike
-#DIVHERO Storm
-#DIVTEAM X-Men
+#DIVIDED: Lightning Strike
+#DIVHERO: Storm
+#DIVTEAM: X-Men
 #CLASS: [Ranged]
 #ATTACK: 2
 Any Villain you fight on the Rooftops this turn gets -1 Attack.
 #COST: 3
-#DIVIDED Pouncing Strike
-#DIVHERO Black Panther
-#DIVTEAM Avengers
+#DIVIDED: Pouncing Strike
+#DIVHERO: Black Panther
+#DIVTEAM: Avengers
 #CLASS: [Instinct]
 #RECRUIT: 2
 You may move a Villain to an adjacent empty city space.
@@ -570,16 +570,16 @@ You may move a Villain to an adjacent empty city space.
 
 #SUBNAME: Tsunami of Water/Tsunami of Justice
 #COPIES: 3
-#DIVIDED Tsunami of Water
-#DIVHERO Storm
-#DIVTEAM X-Men
+#DIVIDED: Tsunami of Water
+#DIVHERO: Storm
+#DIVTEAM: X-Men
 #CLASS: [Ranged]
 #ATTACK: 3
 {POWER Ranged} You get +2 attack usable only against the Mastermind.
 #COST: 5
-#DIVIDED Tsunami of Justice
-#DIVHERO Black Panther
-#DIVTEAM Avengers
+#DIVIDED: Tsunami of Justice
+#DIVHERO: Black Panther
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 #ATTACK: 3
 {POWER Covert} You may KO a card from your hand or discard pile.
@@ -599,16 +599,16 @@ Reveal any number of multi-class cards from your hand. Gain that many sidekicks.
 
 #SUBNAME: Friendship/Ferocity
 #COPIES: 5
-#DIVIDED Friendship
-#DIVHERO Tigra
-#DIVTEAM Avengers
+#DIVIDED: Friendship
+#DIVHERO: Tigra
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 #RECRUIT: 1
 {POWER Covert} Gain a Sidekick.
 #COST: 2
-#DIVIDED Ferocity
-#DIVHERO Tigra
-#DIVTEAM Avengers
+#DIVIDED: Ferocity
+#DIVHERO: Tigra
+#DIVTEAM: Avengers
 #CLASS: [Instinct]
 #ATTACK: 1
 {POWER Instinct} Draw a card.
@@ -646,7 +646,7 @@ Recruit a Hero from the HQ for free.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 1+
-<b>Phasing</b>
+{PHASING}
 {POWER Ranged} You get +2 Attack.
 #COST: 3
 #FLAVOR: You can't always touch the Vision, but he can always reach you.
@@ -655,34 +655,34 @@ Recruit a Hero from the HQ for free.
 #COPIES: 5
 #CLASS: [Tech]
 #RECRUIT: 2
-<b>Phasing</b>
+{PHASING}
 Choose a Hero Class. Reveal the top card of your deck. If it's the Hero class you named, then draw it.
 #COST: 4
 
 #SUBNAME: Lighter than Air/Harder than Diamond
 #COPIES: 3
-#DIVIDED Lighter than Air
-#DIVHERO Vision
-#DIVTEAM Avengers
+#DIVIDED: Lighter than Air
+#DIVHERO: Vision
+#DIVTEAM: Avengers
 #CLASS: [Ranged]
 #RECRUIT: 3
-<b>Size-Changing</b>: [Ranged]
-<b>Phasing</b>
+{SIZECHANGING RANGED}
+{PHASING}
 #COST: 6*
-#DIVIDED Harder than Diamond
-#DIVHERO Vision
-#DIVTEAM Avengers
+#DIVIDED: Harder than Diamond
+#DIVHERO: Vision
+#DIVTEAM: Avengers
 #CLASS: [Tech]
 #ATTACK: 3
-<b>Size-Changing</b>: [Tech]
-<b>Phasing</b>
+{SIZECHANGING TECH}
+{PHASING}
 #COST: 6*
 
 #SUBNAME: Insubstantial Accomplishments
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 4
-<b>Phasing</b>
+{PHASING}
 When you play this, you may swap a card from your hand with the top two cards of your deck.
 #COST: 7
 #GUN: 1
@@ -694,7 +694,7 @@ When you play this, you may swap a card from your hand with the top two cards of
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2+
-<b>Phasing</b>
+{PHASING}
 Choose a number, and then reveal the top card of your deck. If that card is that cost, then you get +1 Attack.
 #COST: 4
 
@@ -702,23 +702,23 @@ Choose a number, and then reveal the top card of your deck. If that card is that
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 1+
-<b>Phasing</b>
+{PHASING}
 {POWER Covert} You get +2 Recruit.
 #COST: 2
 #FLAVOR: Wiccan inherited his magic from his mother Scarlet Witch...and perhaps her madness.
 
 #SUBNAME: Supersonic Spells/Supersonic Speed
 #COPIES: 3
-#DIVIDED Supersonic Spells
-#DIVHERO Wiccan
-#DIVTEAM Avengers
+#DIVIDED: Supersonic Spells
+#DIVHERO: Wiccan
+#DIVTEAM: Avengers
 #CLASS: [Ranged]
 #ATTACK: 2
 {POWER Ranged} Draw a card.
 #COST: 4
-#DIVIDED Supersonic Speed
-#DIVHERO Speed
-#DIVTEAM Avengers
+#DIVIDED: Supersonic Speed
+#DIVHERO: Speed
+#DIVTEAM: Avengers
 #CLASS: [Covert]
 Draw a card.
 {POWER Covert} Draw another card.

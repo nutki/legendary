@@ -12,14 +12,14 @@
 
 #SUBNAME: Blazing Flare/Blazing Fists
 #COPIES: 5
-#DIVIDED Blazing Flare
-#DIVHERO Aurora
+#DIVIDED: Blazing Flare
+#DIVHERO: Aurora
 #CLASS: [Ranged]
 {LIGHTSHOW}: You get +2 Recruit.
 #RECRUIT: 2+
 #COST: 4
-#DIVIDED Blazing Fists
-#DIVHERO Northstar
+#DIVIDED: Blazing Fists
+#DIVHERO: Northstar
 #CLASS: [Strength]
 <b>Berserk</b>
 #ATTACK: 2+
@@ -153,13 +153,13 @@ Attack: 4+
 
 #SUBNAME: Reliable/Unpredictable
 #COPIES: 5
-#DIVIDED Reliable
-#DIVHERO Colossus
+#DIVIDED: Reliable
+#DIVHERO: Colossus
 #CLASS: [Strength]
 #RECRUIT: 2
 #COST: 3
-#DIVIDED Unpredictable
-#DIVHERO Wolverine
+#DIVIDED: Unpredictable
+#DIVHERO: Wolverine
 #CLASS: [Instinct]
 <b>Berserk</b>, <b>Berserk</b>
 #ATTACK: 1+
@@ -329,12 +329,12 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 
 #SUBNAME: Bend Steel/Bend Light
 #COPIES: 5
-#DIVIDED Bend Steel
+#DIVIDED: Bend Steel
 #CLASS: [Strength]
 <b>Berserk</b>
 #ATTACK: 1+
 #COST: 2
-#DIVIDED Bend Light
+#DIVIDED: Bend Light
 #CLASS: [Covert]
 {LIGHTSHOW}: You get +2 Recruit.
 #RECRUIT: 1+
@@ -342,11 +342,11 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 
 #SUBNAME: Split Personality/Split Eardrums
 #COPIES: 5
-#DIVIDED Split Personality
+#DIVIDED: Split Personality
 #CLASS: [Tech]
 #ATTACK: 2
 #COST: 3
-#DIVIDED Split Eardrums
+#DIVIDED: Split Eardrums
 #CLASS: [Ranged]
 <b>Piercing Energy</b>
 2 Piercing
@@ -354,11 +354,11 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 
 #SUBNAME: Channel Time/Channel Fire
 #COPIES: 3
-#DIVIDED Channel Time
+#DIVIDED: Channel Time
 #CLASS: [Instinct]
 Draw two cards.
 #COST: 5
-#DIVIDED Channel Fire
+#DIVIDED: Channel Fire
 #CLASS: [Tech]
 You get +1 Attack for each different Hero Class in your discard pile.
 #ATTACK: 0+

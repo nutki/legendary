@@ -32,7 +32,7 @@
 #SUBNAME: Ultron-Pym
 #COPIES: 1
 <b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech] [Tech] [Tech]
-#FIGHT: A Hero in the HQ with no <b>Size-Changing</b> abilites gains <b>Size-Changing</b>: [Tech] this turn.
+#FIGHT: A Hero in the HQ with no <b>Size-Changing</b> abilites gains {SIZECHANGING TECH} this turn.
 #ATTACK: 6*
 #VP: 3
 

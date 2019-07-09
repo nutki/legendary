@@ -59,7 +59,7 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow|Phasing)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
@@ -68,6 +68,9 @@ while (<A>) {
     s!<b>Savior</b>:!{SAVIOR}!g;
     s!<b>(Man|Woman) Out of Time</b>!{OUTOFTIME}!g;
     s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
+    s!<b>Size-Changing</b>: \[($class)\]!'{SIZECHANGING '.(uc$1).'}'!ge;
+    s!Size-Changing: ($class)!'{SIZECHANGING '.(uc$1).'}'!ge; # FIX CW villains
+    s!(<b>)S.H.I.E.L.D. Clearance(</b>)!{SHIELDCLEARANCE}!g; #FIX? no formatting in most cases
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;
@@ -78,6 +81,7 @@ while (<A>) {
       s!^(\[$class\](, \[$class\])?)$!#CLASS: $1! && next;
       s!^Class: (\[$class\](/\[$class\])?)$!#CLASS: $1! && next;
       s!^(?:Team: )?($aff)$!#TEAM: $1! && next;
+      s!^(?:Team: )?($aff)/($aff)$!#TEAM: $1 | $2! && next;
       s!^(Bribe|Feast)$!'{'.(uc$1).'}'!e && next;
       s!^<b>Focus (\d+) Recruit -&gt;</b>!{FOCUS $1}! && next;
 
@@ -137,11 +141,11 @@ while (<A>) {
     }
     if ($name =~ /^Hero/) {
       s!<b>Divided</b>\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)---\n<i>(.*?)(?: \((.*?)(?:: (.*?))?\))?</i>\n(.*?)\n\n!
-        my $lhero = $2 && "#DIVHERO $2\n";
-        my $lteam = $3 && "#DIVTEAM $3\n";
-        my $rhero = $6 && "#DIVHERO $6\n";
-        my $rteam = $7 && "#DIVTEAM $7\n";
-        print STDERR "Divided $1|$2|$3 ---- $5|$6|$7"; "#DIVIDED $1\n$lhero$lteam$4#DIVIDED $5\n$rhero$rteam$8\n\n"
+        my $lhero = $2 && "#DIVHERO: $2\n";
+        my $lteam = $3 && "#DIVTEAM: $3\n";
+        my $rhero = $6 && "#DIVHERO: $6\n";
+        my $rteam = $7 && "#DIVTEAM: $7\n";
+        print STDERR "Divided $1|$2|$3 ---- $5|$6|$7"; "#DIVIDED: $1\n$lhero$lteam$4#DIVIDED: $5\n$rhero$rteam$8\n\n"
       !sge;
       s!^<b>Divided.*\n.*!!mg and print STDERR "BUU $&";
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm

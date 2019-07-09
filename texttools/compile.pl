@@ -45,6 +45,8 @@ sub autopower {
     s/^{WALLCRAWL}$// and $ability = 'wallcrawl: true';
     s/^{TELEPORT}$// and $ability = 'teleport: true';
     s/^{DODGE}$// and $ability = 'cardActions: [ dodge ]';
+    s/^{PHASING}$// and $ability = 'cardActions: [ phasingActionEv ]';
+    s/^{SIZECHANGING (\w+)}$// and $ability = "sizeChanging: Color.$1";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
@@ -73,6 +75,30 @@ sub gainable() {
   $flags .= 'F' if $_{FLAVOR};
   $flags .= 'D' if /2/;
   return ("makeGainableCard(", ", $recruit, $attack, Color.$class, $pteam, \"$flags\"$autopower)");
+}
+sub makehero {
+  my ($heroname, $pteam) = @_;
+  my $autopower = autopower($_);
+  parse();
+  my $heroname2 = $_{DIVHERO} || $heroname;
+  my $cardname = $_{DIVIDED} || $_{SUBNAME};
+  my $pteam2 = $_{DIVTEAM} ? $_{DIVTEAM} eq "(Unaffiliated)" ? 'u' : "\"$_{DIVTEAM}\"" : $pteam;
+#  $_{COPIES} == $count or die "Bad number of copies for $pname: $_{COPIES}";
+  filterprint(qw(SUBNAME CLASS ATTACK RECRUIT COST FLAVOR));
+  my $attack = $_{ATTACK} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
+  my $recruit = $_{RECRUIT} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
+  my $cost = $_{COST} =~ s/[^0-9]//gr;
+  my $class = join' | ',map{'Color.'.uc}($_{CLASS} =~ /\[(\w+)\]/g);
+  $attack = 'u' if $attack eq '';
+  $recruit = 'u' if $recruit eq '';
+  my $flags = '';
+  # Deadpool flags
+  $flags .= 'G' if $hasgun || $_{GUN};
+  $flags .= 'F' if $_{FLAVOR};
+  $flags .= 'D' if /2/ || $heroname =~ /2/;
+  # SW1 Black Bolt flag (no rules text)
+  $flags .= 'N' if !/^[^#]/m;
+  return "makeHeroCard(\"$heroname2\", \"$cardname\", $cost, $recruit, $attack, $class, $pteam2, \"$flags\"$autopower)";
 }
 
   $content = $_;
@@ -125,24 +151,15 @@ sub gainable() {
         my $count = (5, 5, 3, 1)[$_];
         my $pname = qw(c1 c2 uc ra)[$_];
         $_ = $subitems[$_];
-        my $autopower = autopower($_);
-        parse();
-        $_{COPIES} == $count or die "Bad number of copies for $pname: $_{COPIES}";
-        filterprint(qw(SUBNAME CLASS ATTACK RECRUIT COST FLAVOR));
-        my $attack = $_{ATTACK} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
-        my $recruit = $_{RECRUIT} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
-        my $cost = $_{COST} =~ s/[^0-9]//gr;
-        my $class = join' | ',map{'Color.'.uc}($_{CLASS} =~ /\[(\w+)\]/g);
-        $attack = 'u' if $attack eq '';
-        $recruit = 'u' if $recruit eq '';
-        my $flags = '';
-        # Deadpool flags
-        $flags .= 'G' if $hasgun || $_{GUN};
-        $flags .= 'F' if $_{FLAVOR};
-        $flags .= 'D' if /2/ || $heroname =~ /2/;
-        # SW1 Black Bolt flag (no rules text)
-        $flags .= 'N' if !/^[^#]/m;
-        print "  $pname: makeHeroCard(\"$heroname\", \"$_{SUBNAME}\", $cost, $recruit, $attack, $class, $pteam, \"$flags\"$autopower),\n";
+        my @divided = split m/(?=#DIVIDED)/g;
+        my $hero = "";
+        if (@divided > 1) {
+          my @heros = map{makehero($heroname, $pteam)}"$divided[0,1]", "$divided[0,2]";
+          $hero = "makeDividedHeroCard(\n    $heros[0],\n    $heros[1],\n  )"
+        } else {
+          $hero = makehero($heroname, $pteam);
+        }
+        print "  $pname: $hero,\n";
       }
       print "},\n";
     } elsif ($type eq "MASTERMINDS") {

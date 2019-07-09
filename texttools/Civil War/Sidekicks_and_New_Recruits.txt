@@ -23,7 +23,7 @@ Put this on the bottom of the Sidekick Stack.
 #TEAM: Avengers
 #CLASS: [Ranged]
 #ATTACK: 2
-<b>Phasing</b>
+{PHASING}
 Put this on the bottom of the Sidekick Stack.
 #COST: 2
 #FLAVOR: Black Bolt's ally transports the Inhumans all over the galaxy.

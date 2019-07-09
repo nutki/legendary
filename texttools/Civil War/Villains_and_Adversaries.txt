@@ -22,7 +22,7 @@ Penance gets +1 Attack for each Villain in your Victory Pile.
 
 #SUBNAME: Venom
 #COPIES: 2
-Size-Changing: Covert
+{SIZECHANGING COVERT}
 #ESCAPE: Fortify the Bystander Stack. While it's fortified, if a Bystander would be rescued from there, KO that Bystander instead.
 #ATTACK: 7*
 #VP: 4
@@ -31,7 +31,7 @@ Size-Changing: Covert
 
 #SUBNAME: Big Bertha
 #COPIES: 2
-Size-Changing: Strength
+{SIZECHANGING STRENGTH}
 #FIGHT: Each player reveals a Strength Hero or gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 7*
@@ -39,7 +39,7 @@ Size-Changing: Strength
 
 #SUBNAME: Flatman
 #COPIES: 2
-Size-Changing: Covert
+{SIZECHANGING COVERT}
 #FIGHT: KO a card from your discard pile.
 #ATTACK: 5*
 #VP: 2
@@ -113,7 +113,7 @@ You can't fight Squirrel Girl if you played more than one card this turn.
 
 #SUBNAME: Micromax
 #COPIES: 2
-Size-Changing: Instinct
+{SIZECHANGING INSTINCT}
 #FIGHT: KO one of your Heroes.
 #ATTACK: 6*
 #VP: 3
@@ -166,14 +166,14 @@ S.H.I.E.L.D. Clearance
 
 #SUBNAME: She-Hulk
 #COPIES: 2
-Size-Changing: Strength
+{SIZECHANGING STRENGTH}
 #ESCAPE: Fortify the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.
 #ATTACK: 8*
 #VP: 5
 
 #SUBNAME: Yellowjacket
 #COPIES: 2
-Size-Changing: Tech
+{SIZECHANGING TECH}
 #ESCAPE: Fortify the Hero Deck. While it's fortified, whenever a Hero in the HQ costs 7 or more, KO that Hero.
 #ATTACK: 7*
 #VP: 4

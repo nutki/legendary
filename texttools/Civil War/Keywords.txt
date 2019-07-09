@@ -13,7 +13,7 @@ This keyword represents Heroes and Villains using superpowers to massively chang
 * Some Hero cards say, "Size-Changing: [Covert]." This means "You can recruit this card for 2 Recruit less if you played a [Covert] card this turn."
 * Likewise, some Villain cards say, "Size-Changing: [Tech]." This means "You can fight this Villain for 2 Attack less if you played a [Tech] card this turn."
 * Some Divided Cards say "Size-Changing: [Tech]" on one side and "Size-Changing: [Strength]" on the other side. You can recruit either side of the card with its own Size-Changing discount, but you can't get both discounts at once.
-<b>Phasing</b>
+{PHASING}
 This keyword represents Heroes becoming insubstantial and moving through solid objects.
 * During your turn, if a card with Phasing is in your hand, you may swap it with the top card of your deck.
 * This lets you get a different card instead, save a crucial Phasing card for the next turn, or set up a combo that cares about the top card of your deck.
@@ -23,7 +23,7 @@ This keyword represents Villains setting up nasty traps for the players.
 * Some Villains say things like "Escape: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought."
 * Put this Villain on or near the specified place. While it's there, it has the listed effect. Any player can fight that Villain as normal to end that Fortify effect and put that Villain into their Victory Pile.
 * If a card would fortify a place, don't do anything if there's already a Villain fortifying that place.
-<b>S.H.I.E.L.D. Clearance</b>
+{SHIELDCLEARANCE}
 This keyword represents pro-registration S.H.I.E.L.D. forces that can be only defeated with the help of S.H.I.E.L.D. information.
 * If a Villain says "S.H.I.E.L.D. Clearance," then you must discard a S.H.I.E.L.D. Hero as an additional cost to fight that Villain.
 * Likewise, if a Mastermind has "Double S.H.I.E.L.D. Clearance," then you must discard two S.H.I.E.L.D. Heroes each time you fight them.
