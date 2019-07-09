@@ -11,7 +11,7 @@ Earth's Fear Level starts at 8. The number of Allies in the Lair is always equal
 #RULE: While an Adversary is on the Rooftops, it gets +1 Attack for each StarkTech Defenses.
 #EVILWINS: When there are 13 non-grey Allies in the KO pile.
 
-#CARDNAME:  The Traitor
+#CARDNAME: The Traitor
 #SETUP: 2+ players only. 8 Twists. Shuffle a 'Betrayal Deck' of 3 Bindings per player and a 9th Twist.
 #TWISTNR: NR[1-3] If there is no revealed Traitor, each player puts a 'Betrayal Card' from the Betrayal Deck face down in front of them and looks at it.
 #RULE: During your turn, you may reveal a Twist from your Betrayal Cards to become 'the Traitor'. If you do, each other player gains all the Bindings from their Betrayal Cards.

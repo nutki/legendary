@@ -141,7 +141,7 @@ Raza gets +1 Attack for each Bystander he has.
 
 #SUBNAME: Justin Hammer
 #COPIES: 2
-<b> Bank Conqueror 2</b>
+<b>Bank Conqueror 2</b>
 #FIGHT: You get +2 Recruit usable only to recruit heroes in the HQ space under the bank.
 #ATTACK: 3+
 #VP: 2

@@ -144,7 +144,7 @@ Draw a card.
 #COST: 4
 #FLAVOR: "By the Hoary Hosts of Hoggoth!"
 
-#SUBNAME: Trust Me, I'm a Doctor 
+#SUBNAME: Trust Me, I'm a Doctor
 #COPIES: 5
 #CLASS: [Instinct], [Ranged]
 #RECRUIT: 1+
@@ -404,7 +404,7 @@ Draw a card for each other player who has fewer cards in their Victory Pile than
 #CARDNAME: Thanos
 #TEAM: Cabal
 
-#SUBNAME: Revel in Destruction 
+#SUBNAME: Revel in Destruction
 #COPIES: 5
 #CLASS: [Strength], [Ranged]
 #RECRUIT: 2+

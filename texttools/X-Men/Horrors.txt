@@ -57,5 +57,5 @@ This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind wort
 <b>Ambush</b>: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card and the player on your right gains a Wound.
 
 <b>Tyrant Mastermind</b>
-The Mastermind as +3 Attack.
+The Mastermind has +3 Attack.
 

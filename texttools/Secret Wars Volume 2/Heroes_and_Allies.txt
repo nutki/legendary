@@ -2,7 +2,7 @@
 #CARDNAME: Agent Venom
 #TEAM: Spider Friends
 
-#SUBNAME: Multi-Gun 
+#SUBNAME: Multi-Gun
 #COPIES: 5
 #CLASS: [Tech]
 #RECRUIT: 1+
@@ -123,7 +123,7 @@ For each other [Tech] card you played this turn, you get +1 Attack.
 {POWER Ranged} Reveal the top card of the Villain Deck. If it's a Scheme Twist, you get +2 Attack. Otherwise, put it back on the top or bottom.
 #COST: 3
 
-#SUBNAME:  Witness the End
+#SUBNAME: Witness the End
 #COPIES: 5
 #CLASS: [Instinct]
 #RECRUIT: 2
@@ -146,10 +146,10 @@ Reveal the top five cards of the Villain Deck. You get + Attack equal to the pri
 {TEAMPOWER Cabal} Instead, you get + Attack for two of those cards.
 #COST: 7
 
-#CARDNAME: The Captain and the Devil 
+#CARDNAME: The Captain and the Devil
 #TEAM: Avengers
 
-#SUBNAME: Jurassic America 
+#SUBNAME: Jurassic America
 #COPIES: 5
 #CLASS: [Strength], [Tech]
 #RECRUIT: 1+
@@ -165,7 +165,7 @@ Reveal the top five cards of the Villain Deck. You get + Attack equal to the pri
 #COST: 4
 #FLAVOR: The Captain and The Devil must journey through a sea of angry Hulks in the Battleworld region known as "Greenland."
 
-#SUBNAME:  Feeding Grounds
+#SUBNAME: Feeding Grounds
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3
@@ -246,7 +246,7 @@ KO a Bystander from the Bystander Deck. If it's a Special Bystander, you may use
 {TEAMPOWER Cabal} You may KO a Bystander from the Escape Pile and from each player's Victory Pile. You get +1 Attack for each Bystander KO'd this way.
 #COST: 8
 
-#CARDNAME: Dr. Punisher, Soldier Supreme 
+#CARDNAME: Dr. Punisher, Soldier Supreme
 #TEAM: Marvel Knights
 
 #SUBNAME: Sweep the Streets of Trash
@@ -320,7 +320,7 @@ You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 #COST: 8
 #FLAVOR: Elsa's father threw her at monsters before she could walk, training her relentlessly to become the perfect weapon.
 
-#CARDNAME: Phoenix Force Cyclops 
+#CARDNAME: Phoenix Force Cyclops
 #TEAM: X-Men
 
 #SUBNAME: Burn Out
@@ -334,7 +334,7 @@ You may KO this card. If you do, you gain +2 Attack.
 #SUBNAME: Reincarnate
 #COPIES: 5
 #CLASS: [Covert]
-KO this card. Gain a hero from the S.H.I.E.L.D. Office stack or HQ that costs 4 or less and put it into your hand.
+KO this card. Gain a hero from the S.H.I.E.L.D. Officer stack or HQ that costs 4 or less and put it into your hand.
 #COST: 3
 
 #SUBNAME: Rise from the Ashes
@@ -388,10 +388,10 @@ To play this card, you must discard a card from your hand.
 To play this card, you must discard three cards from your hand.
 #COST: 8
 
-#CARDNAME: Shang-Chi 
+#CARDNAME: Shang-Chi
 #TEAM: Marvel Knights
 
-#SUBNAME: Shuffling Footwork 
+#SUBNAME: Shuffling Footwork
 #COPIES: 5
 #CLASS: [Instinct]
 #RECRUIT: 2
@@ -424,7 +424,7 @@ Any time you are shuffling your deck with this card in it, you may set this card
 #CARDNAME: Silk
 #TEAM: Spider Friends
 
-#SUBNAME: Long-Range Spider-Sense 
+#SUBNAME: Long-Range Spider-Sense
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
@@ -521,7 +521,7 @@ If a player would gain a Wound, you may discard this card instead. If you do, dr
 Reveal the top three cards of your deck, then put them back in any order. You get +1 Attack for each card you revealed that costs 2 or less.
 #COST: 2
 
-#CARDNAME: Time-Traveling Jean Grey 
+#CARDNAME: Time-Traveling Jean Grey
 #TEAM: X-Men
 
 #SUBNAME: Throw Over the Railing

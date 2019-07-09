@@ -104,7 +104,7 @@ When you throw this, you get +3 Attack, usable only against Adversaries on the B
 {POWER Strength} Choose a player and <b>Demolish</b> them. If that player discards a card this way, draw a card.
 #COST: 3
 
-#SUBNAME: Otherworldly Mace
+#SUBNAME: Otherworldly Maul
 #COPIES: 5
 #CLASS: [Instinct]
 <b>Thrown Artifact</b>
