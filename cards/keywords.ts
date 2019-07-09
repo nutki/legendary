@@ -351,3 +351,27 @@ function abominationVarDefense(c: Card) {
 function ultimateAbominationVarDefense(c: Card) {
   return c.printedDefense + hqHeroes().limit(hasAttackIcon).sum(c => c.printedAttack);
 }
+
+// {PHASING}
+// This keyword represents Heroes becoming insubstantial and moving through solid objects.
+// * During your turn, if a card with Phasing is in your hand, you may swap it with the top card of your deck.
+// * This lets you get a different card instead, save a crucial Phasing card for the next turn, or set up a combo that cares about the top card of your deck.
+// * Swapping cards this way isn't "playing a card" or "drawing a card," so it doesn't count for other abilities that trigger on those things.
+function phasingActionEv(c: Card, ev: Ev) {
+  return new Ev(ev, 'DODGE', { what: c, func: ev => swapCardsEv(ev, ev.what, playerState.deck), cost: { cond: c => c.location === playerState.hand } });
+}
+
+// <b>Fortify</b>
+// This keyword represents Villains setting up nasty traps for the players.
+// * Some Villains say things like "Escape: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought."
+// * Put this Villain on or near the specified place. While it's there, it has the listed effect. Any player can fight that Villain as normal to end that Fortify effect and put that Villain into their Victory Pile.
+// * If a card would fortify a place, don't do anything if there's already a Villain fortifying that place.
+// {SHIELDCLEARANCE}
+// This keyword represents pro-registration S.H.I.E.L.D. forces that can be only defeated with the help of S.H.I.E.L.D. information.
+// * If a Villain says "S.H.I.E.L.D. Clearance," then you must discard a S.H.I.E.L.D. Hero as an additional cost to fight that Villain.
+// * Likewise, if a Mastermind has "Double S.H.I.E.L.D. Clearance," then you must discard two S.H.I.E.L.D. Heroes each time you fight them.
+// * If you are playing with HYDRA Heroes, you may discard them instead of S.H.I.E.L.D. Heroes.
+function shieldClearanceCond(n: number) { return () => playerState.hand.limit(isHero).count('S.H.I.E.L.D.') >= n; }
+function shieldClearanceCost(n: number) { return (ev: Ev) => selectObjectsEv(ev, "Discard S.H.I.E.L.D. Heros", n, playerState.hand.limit(isHero).limit('S.H.I.E.L.D.'), c => discardEv(ev, c)); }
+const shieldClearance = { fightCond: shieldClearanceCond(1), fightCost: shieldClearanceCost(1) };
+const doubleShieldClearance = { fightCond: shieldClearanceCond(2), fightCost: shieldClearanceCost(2) };

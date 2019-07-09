@@ -96,6 +96,8 @@ interface Card {
   artifactEffects?: ((ev: Ev) => void)[]
   gainable?: boolean
   printedNthCircle?: number
+  sizeChanging?: number
+  divided?: { left: Card, right: Card }
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -138,13 +140,14 @@ interface HeroCardAbillities {
   wallcrawl?: boolean
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   isArtifact?: boolean
+  sizeChanging?: number
 }
 class Card {
   constructor (t: string, n: string) {
     this.cardType = t;
     this.cardName = n;
   }
-  get cost() { return getModifiedStat(this, 'cost', this.printedCost || 0); }
+  get cost() { return getModifiedStat(this, 'cost', (this.gainable ? this.printedDefense : this.printedCost) || 0); }
   get attack() { return getModifiedStat(this, 'attack', this.printedAttack); }
   get recruit() { return this.printedRecruit; }
   get baseDefense() {
@@ -166,7 +169,7 @@ class Card {
   }
   isHealable() { return this.cardType === "WOUND"; }
   isColor(c: number) { return (getModifiedStat(this, 'color', this.color) & c) !== 0; }
-  isTeam(t: Affiliation) { return this.team === t; }
+  isTeam(t: Affiliation) { return this.divided ? this.divided.left.team === t || this.divided.right.team === t : this.team === t; }
   isGroup(t: string) { return this.villainGroup === t; }
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
   hasWallCrawl() { return getModifiedStat(this, "wallcrawl", this.wallcrawl); }
@@ -220,6 +223,20 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
       c.effects = [ playArtifact ];
     }
   }
+  return c;
+}
+function makeDividedHeroCard(c1: Card, c2: Card) {
+  let c = new Card("HERO", `${c1.cardName} / ${c2.cardName}`);
+  const sumPrintedStat = (a: number, b: number) => a === undefined ? b : a + (b || 0);
+  c.divided = { left: c1, right: c2 };
+  c.printedRecruit = sumPrintedStat(c1.printedRecruit, c2.printedRecruit);
+  c.printedAttack = sumPrintedStat(c1.printedAttack, c2.printedAttack);
+  c.printedCost = c1.printedCost;
+  c.color = c1.color | c2.color;
+  c.heroName; // TODO handle in ???
+  c.flags = c1.flags;
+  c.effects = c1.effects.concat(c2.effects);
+  c.sizeChanging = c1.sizeChanging | c2.sizeChanging;
   return c;
 }
 function makeVillainCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
@@ -294,6 +311,10 @@ function makeCardCopyPaste(c: Card, p: Card): Card {
   // TODO: copy other tmp state (MOoT?)
   // TODO: remove tmp state from result?
   return p;
+}
+function makeCardDividedChoice(c: Card, rightSide: boolean) {
+  if (c.ctype !== 'P') throw TypeError("need card in play");
+  Object.setPrototypeOf(c, Object.getPrototypeOf(rightSide ? c.divided.right : c.divided.left));
 }
 function moveCard(c: Card, where: Deck, bottom?: boolean): void {
   // Card copies do not have a location and cannot be moved
@@ -1400,10 +1421,14 @@ interface ActionCost {
   cond?: (c: Card) => boolean;
 }
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
-  return getModifiedStat(c, 'recruitCost', { recruit: c.cost, cond });
+  let recruit = c.cost;
+  if (c.sizeChanging && superPower(c.sizeChanging)) recruit = Math.min(0, recruit - 2);
+  return getModifiedStat(c, 'recruitCost', { recruit, cond });
 }
 function getFightCost(c: Card): ActionCost {
-  return getModifiedStat(c, 'fightCost', (c.bribe ? { either: c.defense, cond: c.fightCond } : { attack: c.defense, cond: c.fightCond }));
+  let attack = c.defense;
+  if (c.sizeChanging && superPower(c.sizeChanging)) attack = Math.min(0, attack - 2);
+  return getModifiedStat(c, 'fightCost', (c.bribe ? { either: attack, cond: c.fightCond } : { attack, cond: c.fightCond }));
 }
 function canPayCost(action: Ev) {
   const cost = action.cost;
@@ -1847,18 +1872,30 @@ function returnToStackEv(ev: Ev, deck: Deck) {
 function playCopyEv(ev: Ev, what: Card) {
   pushEv(ev, "PLAY", { func: playCard, what: makeCardCopy(what) });
 }
-function playCardEffects(ev: Ev, card?: Card) {
-  card = card || ev.what;
+function playCardEffects(ev: Ev, card: Card) {
+  if (card.attack) addAttackEvent(ev, card.attack);
+  if (card.recruit) addRecruitEvent(ev, card.recruit);
+  for (let i = 0; card.effects && i < card.effects.length; i++) {
+    pushEv(ev, "EFFECT",  { source: card, func: card.effects[i] } );
+  }
+}
+function playCard2(ev: Ev) {
+  const card = ev.what;
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
     if (card.playCostType === "DISCARD") repeat(card.playCost, () => pickDiscardEv(ev));
     if (card.playCostType === "TOPDECK") repeat(card.playCost, () => pickTopDeckEv(ev));
-    if (card.attack) addAttackEvent(ev, card.attack);
-    if (card.recruit) addRecruitEvent(ev, card.recruit);
-    for (let i = 0; card.effects && i < card.effects.length; i++) {
-      pushEv(ev, "EFFECT",  { source: card, func: card.effects[i] } );
-    }
+    playCardEffects(ev, ev.what);
     cont(ev, () => turnState.cardsPlayed.push(card));
   }});
+}
+function playCard1(ev: Ev) {
+  const d = ev.what.divided;
+  if (d) {
+    chooseOptionEv(ev, "Choose side to play", [{l:d.left.cardName, v:false}, {l:d.right.cardName, v:true}], v => {
+      makeCardDividedChoice(ev.what, v);
+      playCard2(ev);
+    });
+  } else playCard2(ev);
 }
 function playCard(ev: Ev): void {
   if (!canPlay(ev.what)) return;
@@ -1866,10 +1903,10 @@ function playCard(ev: Ev): void {
   if (ev.what.copyPasteCard) {
     selectCardEv(ev, "Choose a card to copy", turnState.cardsPlayed, target => {
       makeCardCopyPaste(target, ev.what);
-      if (canPlay(ev.what)) playCardEffects(ev);
+      if (canPlay(ev.what)) playCard1(ev);
     });
   } else {
-    playCardEffects(ev);
+    playCard1(ev);
   }
 }
 function buyCard(ev: Ev): void {
@@ -2254,7 +2291,6 @@ set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 rename lookAtDeck to revealPlayerDeck where applicable
 split schemeProgress and schemeTarget
-TODO SW1 extra masterminds setup params
 TODO SW1 fight card placement order
 TODO SW1 escape card special location (also to check which bystanders were carried)
 TODO SW1 render city dynamically
