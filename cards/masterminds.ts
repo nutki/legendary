@@ -889,9 +889,7 @@ makeMastermindCard("Baron Helmut Zemo", 16, 6, "Thunderbolts", ev => {
 // Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.H.I.E.L.D. Elite or Officers in the city.
 makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. Elite.", ev => {
 // Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
-  repeat(2, () => cont(ev, () => {
-    gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); });
-  }));
+  villainifyOfficers(ev, 2);
 }, [
   [ "Crash the Helicarrier", ev => {
   // KO any number of your S.H.I.E.L.D. Heroes.
@@ -899,9 +897,8 @@ makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. E
   } ],
   [ "Declare Martial Law", ev => {
   // Put a S.H.I.E.L.D. Officer into each empty city space as 3 Attack Villains. When you fight them, gain them as Heroes.
-    gameState.city.limit(d => !d.size).each(d => cont(ev, () => {
-      gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c, d); });
-    }));
+    const spaces = gameState.city.limit(d => !d.size);
+    villainifyOfficers(ev, spaces.size, spaces);
   } ],
   [ "Evacuation Code Epsilon", ev => {
   // Each other player reveals their hand and discards a S.H.I.E.L.D. card.
@@ -909,9 +906,7 @@ makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. E
   } ],
   [ "Rapid Response Team", ev => {
   // Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
-    repeat(2, () => cont(ev, () => {
-      gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); });
-    }));
+    villainifyOfficers(ev, 2);
   } ],
 ], {
   fightCond: c => shieldClearanceCond(2)() && !cityVillains().has(isGroup(c.leads)) && !cityVillains().has(c => c.cardName === 'S.H.I.E.L.D. Officer'),

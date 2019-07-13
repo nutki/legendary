@@ -1787,7 +1787,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 1*
 // VP: 2
   [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Agent Eric Marshall", 1, 2, {
-    ambush: ev => gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); }),
+    ambush: ev => villainifyOfficers(ev),
     ...shieldClearance,
   })],
 // S.H.I.E.L.D. Clearance
@@ -1795,7 +1795,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 2*
 // VP: 2
   [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Agent Gabe Jones", 2, 2, {
-    fight: ev => gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); }),
+    fight: ev => villainifyOfficers(ev),
     ...shieldClearance,
   })],
 // S.H.I.E.L.D. Clearance

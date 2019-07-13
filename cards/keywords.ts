@@ -396,3 +396,9 @@ function villainify(name: string, c: Card | ((c: Card) => boolean), defense: num
     addStatSet('fight', cond, () => reward);
   }
 }
+function villainifyOfficer(ev: Ev, where?: Deck) {
+  cont(ev, () => gameState.officer.withTop(c => { villainify(u, c, 3, 'GAIN'); enterCityEv(ev, c, where); }));
+}
+function villainifyOfficers(ev: Ev, n: number = 1, where?: Deck | Deck[]) {
+  repeat(n + gameState.officer.attached('FORTIFY').size, i => villainifyOfficer(ev, where instanceof Array ? where[i] : where));
+}

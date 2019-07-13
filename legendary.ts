@@ -1666,7 +1666,7 @@ function koOrEscapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f,
 function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS", useProgress: boolean = true): Trigger {
   return ({
     event: "MOVECARD",
-    match: ev => ev.from.id === d,
+    match: ev => ev.from.id === d || ev.to.id === d,
     after: useProgress ? ev => schemeProgressEv(ev, ev.parent.from.size) : ev => ev.parent.from.size || evilWinsEv(ev),
   })
 }

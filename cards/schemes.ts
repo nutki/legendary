@@ -1069,3 +1069,93 @@ makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
   setSchemeTarget(6);
 }),
 ]);
+addTemplates("SCHEMES", "Civil War", [
+// SETUP: 9 Twists. Hero Deck has 3 Heroes of one Team and 3 Heroes of another Team. (Avengers, X-Men, Spider-Friends, Marvel Knights, etc.)
+makeSchemeCard("Avengers vs. X-Men", { twists: 9 }, ev => {
+  // Twist: 1-7 Each player reveals their hand. Each player that has cards of both those teams gains a Wound.
+  eachPlayer(p => p.hand.limit(isNonGrayHero).uniqueCount(c => c.team) > 1 && gainWoundEv(ev, p));
+  // TODO divided teams
+  // Twist 8 Evil wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], () => setSchemeTarget(8)),
+// SETUP: 7 Twists.
+// EVILWINS: When there are 7 Officers next to the Mastermind.
+makeSchemeCard("Dark Reign of H.A.M.M.E.R. Officers", { twists: 7 }, ev => {
+  // Twist: Stack this Twist next to the Scheme. Then, for each Twist in that stack, put a S.H.I.E.L.D. Officer next to the Mastermind as a 3 Attack Villain with S.H.I.E.L.D. Clearance. You can fight them to gain them as Heroes.
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
+  cont(ev, () => villainifyOfficers(ev, gameState.scheme.attached('TWIST').size, gameState.mastermind.attachedDeck('OFFICER')));
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.mastermind.attachedDeck('OFFICER') || ev.from === gameState.mastermind.attachedDeck('OFFICER'),
+  after: ev => schemeProgressEv(ev, gameState.mastermind.attachedDeck('OFFICER').size),
+}, () => {
+  setSchemeTarget(7);
+  gameState.specialActions = ev => gameState.mastermind.attachedDeck('OFFICER').deck.map(c => fightActionEv(ev, c));
+}),
+// SETUP: 1 player: 4 Heroes in Hero Deck. 1-3 players: 9 Twists. 4-5 players: 6 Twists.
+// EVILWINS: When the Hero Deck runs out.
+makeSchemeCard("Epic Super Hero Civil War", { twists: [ 9, 9, 9, 6, 6 ] }, ev => {
+  // Twist: Stack this Twist next to the Scheme. Then, for each Twist in that stack, KO a Hero from the HQ and immediately refill that HQ space.
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
+  cont(ev, () => repeat(gameState.scheme.attached('TWIST').size, () => cont(ev, () => {
+    selectCardAndKOEv(ev, hqHeroes());
+  })));
+}, runOutProgressTrigger('HERO'), () => gameState.schemeProgress = gameState.herodeck.size),
+// SETUP: 11 Twists.
+// EVILWINS: When 3 Bystanders are in the KO pile and/or Escape Pile.
+makeSchemeCard("Imprison Unregistered Superhumans", { twists: 11 }, ev => {
+  if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5 || ev.nr === 7 || ev.nr === 9) {
+    // Twist 1, 3, 5, 7, 9 This Scheme fortifies the city space to its right starting with the Bridge. Villains in that space get +1 Attack.
+    const where = ev.source.location.adjacentRight;
+    if (where) {
+      fortifyEv(ev, ev.source, where);
+    } else {
+      withCity('BRIDGE', bridge => fortifyEv(ev, ev.source, bridge));
+    }
+  } else {
+    // If there's a Villain in that fortified city space, KO a bystander.
+    gameState.city.each(d => isFortifying(ev.source, d) && d.has(isVillain) && gameState.bystanders.withTop(c => KOEv(ev, c)));
+  }
+}, koOrEscapeProgressTrigger(isBystander), () => {
+  setSchemeTarget(3);
+  addStatMod('defense', c => isFortifying(gameState.scheme.top, c.location) && isVillain(c), 1);
+}),
+// SETUP: 8 Twists.
+// EVILWINS: When 15 Bystanders are in the KO pile and/or Escape Pile.
+makeSchemeCard("Nitro the Supervillain Threatens Crowds", { twists: 8 }, ev => {
+  // Twist: KO all Bystanders held by Villains. Then, the Villain with the highest Attack captures 3 Bystanders.
+  villains().each(c => c.captured.limit(isBystander).each(c => KOEv(ev, c)));
+  cont(ev, () => selectCardEv(ev, "Choose a Villain", cityVillains().highest(c => c.defense), c => captureEv(ev, c, 3)));
+}, koOrEscapeProgressTrigger(isBystander), () => setSchemeTarget(15)),
+// SETUP: 6 Twists. Add an extra Villain Group.
+// EVILWINS: When there are 2 Villains per player in the Escape Pile.
+makeSchemeCard("Predict Future Crime", { twists: 6, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: Reveal the top 3 cards of the Villain Deck. Play each Villain you revealed. Put the rest back in any order.
+  revealVillainDeckEv(ev, 3, cards => selectCardOrderEv(ev, "Play Villain cards", cards.limit(isVillain), c => villainDrawEv(ev, c)), false, false);
+}, escapeProgressTrigger(isVillain), () => setSchemeTarget(2, true)),
+// SETUP: 6 Twists. 7 Heroes in Hero Deck.
+// EVILWINS: When 5 Heroes are Unmasked.
+makeSchemeCard("Reveal Heroes' Secret Identities", { twists: 6, heroes: 7 }, ev => {
+  // Twist: Put a Hero from the HQ next to the Scheme as an "Unmasked" Hero. All cards with "Unmasked" Hero Names cost +1 Recruit to recruit. You can't Unmask a Hero Name that has already been Unmasked.
+  selectCardEv(ev, "Choose a Hero to unmask", hqHeroes().limit(c => !gameState.scheme.attached('UNMASKED').has(m => m.heroName === c.heroName)), c => attachCardEv(ev, c, gameState.scheme, 'UNMASKED'));
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('UNMASKED').size));
+  // TODO not heroName but templateName
+}, [], () => {
+  setSchemeTarget(5);
+  addStatMod('cost', c => isHero(c) && gameState.scheme.attached('UNMASKED').has(m => m.heroName === c.heroName), 1);
+}),
+// SETUP: 10 Twists.
+// EVILWINS: When there are 3 Western Victories or 3 Eastern Victories.
+makeSchemeCard("United States Split by Civil War", { twists: 10 }, ev => {
+  // Twist: If there is a Villain on the Streets or Bridge, put this Twist in a stack of "Western States Victories." Otherwise, if there is a Villain in the Sewers, put this Twist in a stack of "Eastern States Victories."
+  const west = cityVillains().has(c => isLocation(c.location, 'BRIDGE', 'STREETS'));
+  const east = cityVillains().has(c => isLocation(c.location, 'SEWERS'));
+  if (west) attachCardEv(ev, ev.source, gameState.scheme, 'WEST');
+  else if (east) attachCardEv(ev, ev.source, gameState.scheme, 'EAST');
+  cont(ev, () => {
+    const w = gameState.scheme.attached('WEST').size;
+    const e = gameState.scheme.attached('EAST').size;
+    schemeProgressEv(ev, Math.max(w, e));
+  });
+}, [], () => setSchemeTarget(3)),
+]);
