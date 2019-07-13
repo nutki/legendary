@@ -98,6 +98,7 @@ interface Card {
   printedNthCircle?: number
   sizeChanging?: number
   divided?: { left: Card, right: Card }
+  excessiveViolence?: Handler
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -117,6 +118,7 @@ interface VillainCardAbillities {
   xTremeAttack?: boolean
   printedNthCircle?: number
   sizeChanging?: number
+  excessiveViolence?: Handler
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -143,6 +145,7 @@ interface HeroCardAbillities {
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   isArtifact?: boolean
   sizeChanging?: number
+  excessiveViolence?: Handler
 }
 class Card {
   constructor (t: string, n: string) {
@@ -538,6 +541,7 @@ interface Ev<TSchemeState = any> {
   cost?: ActionCost
   effectName?: EffectStat
   failFunc?: (ev: Ev) => void
+  withViolence?: boolean
 }
 interface EvParams {
   where?: Deck
@@ -568,6 +572,7 @@ interface EvParams {
   cost?: ActionCost
   effectName?: EffectStat
   failFunc?: (ev: Ev) => void
+  withViolence?: boolean
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: EvType, params: EvParams | ((ev: Ev) => void)) {
@@ -1507,8 +1512,9 @@ function noOpActionEv(ev: Ev) {
 function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, where: c.location, cost: getRecruitCost(c) });
 }
-function fightActionEv(ev: Ev, what: Card) {
-  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: getFightCost(what), failFunc: what.fightFail });
+function fightActionEv(ev: Ev, what: Card, withViolence?: boolean) {
+  const cost = getFightCost(what);
+  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: { ...cost, attack: cost.attack + 1 }, failFunc: what.fightFail, withViolence });
 }
 function countPerTurn(key: string, c?: Card) {
   if (c) key += '-' + c.id;
@@ -1552,7 +1558,10 @@ function getActions(ev: Ev): Ev[] {
   // TODO any deck with recruitable
   p = p.concat(hqHeroes().map(d => recruitCardActionEv(ev, d)));
   // TODO any deck with fightable
-  p = p.concat(fightableCards().map(d => fightActionEv(ev, d)));
+  fightableCards().map(d => {
+    p.push(fightActionEv(ev, d));
+    if (canFightWithViolence(d)) p.push(fightActionEv(ev, d, true));
+  });
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
   gameState.sidekick.withTop(c => p.push(recruitSidekickActionEv(ev, c)));
   gameState.madame.withTop(c => p.push(recruitCardActionEv(ev, c)));
@@ -2051,6 +2060,7 @@ function villainFight(ev: Ev): void {
   textLog.log(`Fought ${c.cardName || c.id}`);
   if (c.fightCost) cont(ev, c.fightCost);
   defeatEv(ev, c);
+  if (ev.withViolence) playViolenceEv(ev);
 }
 function defeatEv(ev: Ev, c: Card) {
   pushEv(ev, "DEFEAT", { func: villainDefeat, what: c, where: c.location });

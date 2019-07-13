@@ -3238,3 +3238,114 @@ addHeroTemplates("Civil War", [
   ra: makeHeroCard("Wiccan", "Clairvoyance", 7, u, 3, Color.RANGED, "Avengers", "", ev => chooseCostEv(ev, n => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost == n) && (cards.each(c => drawCardEv(ev, c)), drawEv(ev))))),
 },
 ]);
+addHeroTemplates("Deadpool", [
+{
+  name: "Bob, Agent of HYDRA",
+  team: "HYDRA",
+// {VIOLENCE} Draw a card.
+// GUN: 1
+  c1: makeHeroCard("Bob, Agent of HYDRA", "Bullets Flying, Bob Hiding", 3, 2.5, u, Color.COVERT, "HYDRA", "GFD", [], { excessiveViolence: ev => drawEv(ev, 1) }),
+// Reveal the top card of your deck. If it's HYDRA or S.H.I.E.L.D., draw it.
+// GUN: 1
+  c2: makeHeroCard("Bob, Agent of HYDRA", "HYDRA Half-Wit", 2, u, 1.5, Color.TECH, "HYDRA", "GFD", ev => drawIfEv(ev, 'S.H.I.E.L.D.')),
+// {POWER Covert} Look at the top card of another player's deck. Ask them a yes or no question about it. If they guess right, then they draw that card. If not, then you draw a card.
+  uc: makeHeroCard("Bob, Agent of HYDRA", "How Do I Get Out of Here??", 6, u, 4, Color.COVERT, "HYDRA", "", ev => superPower(Color.COVERT) && chooseOtherPlayerEv(ev, p => {
+    lookAtDeckEv(ev, 1, () => {
+      p.revealed.each(c => chooseMayEv(ev, `Player ${p.name} draws this card`, () => drawCardEv(ev, c, p)));
+    }, playerState, p);
+  })),
+// {VIOLENCE} KO up to two HYDRA and/or S.H.I.E.L.D. Heroes from your discard pile. Draw a card for each Hero KO'd this way.
+// GUN: 1
+  ra: makeHeroCard("Bob, Agent of HYDRA", "Epic Middle Manager", 8, u, 5, Color.COVERT, "HYDRA", "G", [], { excessiveViolence: ev => {
+    selectObjectsUpToEv(ev, "Choose cards to KO", 2, playerState.discard.limit(isShieldOrHydra), c => { KOEv(ev, c); drawEv(ev); });
+  } }),
+},
+{
+  name: "Deadpool",
+  team: "Mercs for Money",
+// If you have a Wound in your hand or discard pile, KO it at you get +1 Attack. Otherwise, gain a Wound. These days, getting wounded mostly just pisses me off.
+  c1: makeHeroCard("Deadpool", "It'll Grow Back", 4, u, 2.5, Color.INSTINCT, "Mercs for Money", "D", ev => {
+    playerState.discard.has(isWound) ? addAttackEvent(ev, 1) : gainWoundEv(ev);
+  }),
+// If it's between 8 p.m. and midnight, you get +2 Attack. Otherwise, you get +2 Recruit.
+// {POWER Tech} Screw it, just take both!
+  c2: makeHeroCard("Deadpool", "Nighttime Is the Right Time", 3, 0, 0, Color.TECH, "Mercs for Money", "FD", ev => {
+    superPower(Color.TECH) ? (addAttackEvent(ev, 2), addRecruitEvent(ev, 2)) : chooseOneEv(ev, "Is it between 8 p.m. and midnight?",
+      ["Yes", () => addAttackEvent(ev, 2)],
+      ["No", () => addRecruitEvent(ev, 2)],
+    );
+  }),
+// You get +1/2 Attack for each other card with flavor text you played this turn. Now maybe you'll stop telling me to shut up.
+  uc: makeHeroCard("Deadpool", "Running Commentary", 5, u, 3.5, Color.COVERT, "Mercs for Money", "FD", ev => {
+    addAttackEvent(ev, turnState.cardsPlayed.count(hasFlag('F')) / 2);
+  }),
+// {VIOLENCE} Take another turn after this one. But don't use this ability more than once per game - trilogies are stupid.
+  ra: makeHeroCard("Deadpool", "Deadpool Rage!", 7, u, 5, Color.STRENGTH, "Mercs for Money", "F", [], { excessiveViolence: ev => {
+    gameState.extraTurn = true; // TODO once per game
+  } }),
+},
+{
+  name: "Slapstick",
+  team: "Mercs for Money",
+// {POWER Ranged} If any other players are taller than you, draw a card. If any other players are shorter than you, you get +1 Recruit. If both, get both!
+  c1: makeHeroCard("Slapstick", "Napoleon Complex", 4, 2, u, Color.RANGED, "Mercs for Money", "FD", ev => {
+    if (gameState.players.size > 1 && superPower(Color.RANGED)) {
+      chooseMayEv(ev, "Are there taller players?", () => addAttackEvent(ev, 1));
+      chooseMayEv(ev, "Are there shorter players?", () => addRecruitEvent(ev, 1));
+    }
+  }),
+// {VIOLENCE} Rescue a Bystander.
+  c2: makeHeroCard("Slapstick", "Saturday Morning Harpoons", 3, u, 2.5, Color.RANGED, "Mercs for Money", "FD", [], { excessiveViolence: ev => rescueEv(ev) }),
+// {VIOLENCE} When you have a new hand of cards at the end of this turn, draw an extra card.
+  uc: makeHeroCard("Slapstick", "Surprise Chainsaw", 6, u, 4.5, Color.STRENGTH, "Mercs for Money", "FD", [], { excessiveViolence: ev => addEndDrawMod(1) }),
+// {VIOLENCE} Recruit a Hero from the HQ for free. Then, you may shuffle your discard pile into your deck.
+  ra: makeHeroCard("Slapstick", "Electroplasmic Insanity", 8, u, 5, Color.RANGED, "Mercs for Money", "", [], { excessiveViolence: ev => {
+    selectCardEv(ev, "Select a Hero to gain", hqHeroes(), c => recruitForFreeEv(ev, c));
+    chooseMayEv(ev, "Shuffle discard into your deck?", () => shuffleIntoEv(ev, playerState.discard, playerState.deck));
+  } }),
+},
+{
+  name: "Solo",
+  team: "Mercs for Money",
+  c1: makeHeroCard("Solo", "Half-Cocked", 2, 1.5, 1.5, Color.TECH, "Mercs for Money", "FDN"),
+// {VIOLENCE} You get +1 Recruit.
+  c2: makeHeroCard("Solo", "Merc's Gotta Get Paid", 3, 0, 2.5, Color.INSTINCT, "Mercs for Money", "FD", [], { excessiveViolence: ev => addRecruitEvent(ev, 1) }),
+// {POWER Tech} Does the top card of your deck have a gun in the art? If so, draw that gun!
+  uc: makeHeroCard("Solo", "Guns on My Guns", 5, u, 3.5, Color.TECH, "Mercs for Money", "FD", ev => superPower(Color.TECH) && drawIfEv(ev, hasFlag("G"))),
+// Choose a Villain. Cut its Attack in half this turn.
+// {TEAMPOWER Mercs for Money} Cut the Mastermind's Attack in half for one fight this turn.
+  ra: makeHeroCard("Solo", "Cut in Half", 7, u, 2.5, Color.INSTINCT, "Mercs for Money", "FD", ev => {
+    selectCardEv(ev, "Choose a Villain", villains(), c => addTurnSet('defense', v => v === c, (c, n) => n / 2));
+    if (superPower("Mercs for Money")) {
+      let once = false;
+      addTurnSet('defense', isMastermind, (c, n) => once ? n : n / 2);
+      addTurnTrigger('FIGHT', ev => isMastermind(ev.what), () => once = true);
+    }
+  }),
+},
+{
+  name: "Stingray",
+  team: "Mercs for Money",
+// Draw a card.
+// You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+  c1: makeHeroCard("Stingray", "Deck Chairs on the Titanic", 4, u, 1.5, Color.TECH, "Mercs for Money", "D", [ ev => drawEv(ev, 1), ev => {
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    });
+  } ]),
+// Draw a card.
+// {POWER Tech} You get +2 Attack, usable only against Villains in the Sewers or Bridge or the Mastermind.
+  c2: makeHeroCard("Stingray", "Superpowered Swimsuit", 2, u, .5, Color.TECH, "Mercs for Money", "FD", [
+    ev => drawEv(ev, 1),
+    ev => superPower(Color.TECH) && addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'SEWERS', 'BRIDGE'), 2),
+  ]),
+// {VIOLENCE} You may KO one of your cards or a card from your discard pile.
+  uc: makeHeroCard("Stingray", "Sting of the Stingray's Sting", 5, 3, u, Color.RANGED, "Mercs for Money", "F", [], { excessiveViolence: ev => selectCardAndKOEv(ev, revealable().concat(playerState.discard.deck)) }),
+// You may KO a card from your hand or discard pile.
+// {TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.
+  ra: makeHeroCard("Stingray", "PhD in Oceanography", 8, u, 4, Color.TECH, "Mercs for Money", "D", [
+    ev => KOHandOrDiscardEv(ev, undefined),
+    ev => superPower("Mercs for Money") && addAttackEvent(ev, gameState.ko.count(isHero) / 2),
+  ]),
+},
+]);

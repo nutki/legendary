@@ -1899,3 +1899,104 @@ addVillainTemplates("Civil War", [
   })],
 ]},
 ]);
+addVillainTemplates("Deadpool", [
+{ name: "Deadpool's \"Friends\"", cards: [
+// {REVENGE Deadpool's "Friends"}
+// To fight Blind Al, you also gotta drop a Deuce <i>(discard a card with a "2" printed anywhere on it)</i>. Deuce is her dog, obviously.
+// ESCAPE: Everybody drop a Deuce.
+// ATTACK: 2+
+// VP: 3
+  [ 2, makeVillainCard("Deadpool's \"Friends\"", "Blind Al and Deuce", 2, 3, {
+    escape: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasFlag('D')), c => discardEv(ev, c), p)),
+    fightCond: c => playerState.hand.has(hasFlag('D')),
+    fightCost: ev => selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(hasFlag('D')), c => discardEv(ev, c)),
+    varDefense: revengeVarDefense,
+  })],
+// {REVENGE Deadpool's "Friends"}
+// FIGHT: {VIOLENCE} Gain the Hero from the HQ with the lowest cost <i>(or tied for lowest)</i>.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Deadpool's \"Friends\"", "Sluggo", 5, 4, {
+    excessiveViolence: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().highest(c => -c.cost), c => gainEv(ev, c)),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: revengeVarDefense,
+  })],
+// AMBUSH: Taskmaster captures a Bystander.
+// During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost Hero you played this turn.
+// ATTACK: 3+
+// VP: 4
+// FLAVOR: They call it Photographic Reflexes: I can copy any fighting move I've ever seen. And I've seen Howard the Duck."
+  [ 2, makeVillainCard("Deadpool's \"Friends\"", "Taskmaster", 3, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    varDefense: c => c.printedDefense + turnState.cardsPlayed.max(c => c.cost),
+  })],
+// {REVENGE Deadpool's "Friends"}
+// AMBUSH: Each player simultaneously passes a card from their hand to the player on their left.
+// FIGHT: Same effect.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Deadpool's \"Friends\"", "Weasel", 4, 3, {
+    ambush: ev => {
+      const s = new Map<Player, Card>();
+      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => s.set(p.left, c)));
+      cont(ev, () => eachPlayer(p => gainEv(ev, s.get(p), p)));
+    },
+    fight: ev => {
+      const s = new Map<Player, Card>();
+      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => s.set(p.left, c)));
+      cont(ev, () => eachPlayer(p => gainEv(ev, s.get(p), p)));
+    },
+    varDefense: revengeVarDefense,
+  })],
+]},
+{ name: "Evil Deadpool Corpse", cards: [
+// {REVENGE Evil Deadpool Corpse}
+// FIGHT: Excessive Violence: KO one of your Heroes. Remind them that if they were better at hero-ing, these accidents wouldn't happen.
+// ATTACK: 4+
+// VP: 3
+// FLAVOR: Destructive Engine of Assassination Despite Panpygoptosis Obsessed with Opponent Liquidation.
+  [ 2, makeVillainCard("Evil Deadpool Corpse", "D.E.A.D.P.O.O.L.", 4, 3, {
+    excessiveViolence: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: revengeVarDefense,
+  })],
+// {REVENGE Evil Deadpool Corpse}
+// ESCAPE: Old West Shootout. Each player reveals the top card of their deck. KO the card with the highest cost (or tied for highest.)
+// ATTACK: 5+
+// VP: 4
+// FLAVOR: If you're going to lose an 8-coster, distract the other players and cheat, varmint!
+  [ 2, makeVillainCard("Evil Deadpool Corpse", "The Deadpool Kid", 5, 4, {
+    escape: ev => {
+      const s: Card[] = [];
+      eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.each(c => s.push(c)), p));
+      cont(ev, () => s.highest(c => c.cost).each(c => KOEv(ev, c)));
+    },
+    varDefense: revengeVarDefense,
+  })],
+// {REVENGE Evil Deadpool Corpse}
+// FIGHT: Excessive Violence: Draw a card for each "Ultimate" in the HQ. You know, those totally kickass cards that cost 7 or more.
+// ESCAPE: KO all Ultimates from the HQ.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Evil Deadpool Corpse", "Ultimate Deadpool", 5, 4, {
+    excessiveViolence: ev => drawEv(ev, hqHeroes().count(c => c.cost >=7)),
+    escape: ev => hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
+    varDefense: revengeVarDefense,
+  })],
+// {REVENGE Evil Deadpool Corpse}
+// AMBUSH: Each player reveals a card with an odd-numbered cost or gains a Wound. Ya know, the number 0 is pretty weird, but it's not odd.
+// FIGHT: Same effect.
+// ESCAPE: Same effect. Then, shuffle me back into the Villain Deck so I can kick your ass again!
+// ATTACK: 7+
+// VP: 6
+  [ 2, makeVillainCard("Evil Deadpool Corpse", "Wolverinepool", 7, 6, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p)),
+    fight: ev => eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p)),
+    escape: ev => {
+      eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p));
+      shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+    },
+    varDefense: revengeVarDefense,
+  })],
+]},
+]);
