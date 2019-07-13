@@ -71,6 +71,8 @@ while (<A>) {
     s!<b>Size-Changing</b>: \[($class)\]!'{SIZECHANGING '.(uc$1).'}'!ge;
     s!Size-Changing: ($class)!'{SIZECHANGING '.(uc$1).'}'!ge; # FIX CW villains
     s!(<b>)S.H.I.E.L.D. Clearance(</b>)!{SHIELDCLEARANCE}!g; #FIX? no formatting in most cases
+    s!<b>Excessive Violence</b>:!{VIOLENCE}!g;
+    s!<b>Revenge for (.*?)</b>!{REVENGE $1}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

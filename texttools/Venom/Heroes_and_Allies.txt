@@ -6,7 +6,7 @@
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2
-<b>Excessive Violence</b>: Draw a card.
+{VIOLENCE} Draw a card.
 #COST: 3
 #FLAVOR: One good gaping wound deserves another.
 
@@ -23,14 +23,14 @@
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3
-<b>Excessive Violence</b>: Reveal the top card of your deck. You may KO it.
+{VIOLENCE} Reveal the top card of your deck. You may KO it.
 #COST: 6
 
 #SUBNAME: Feast or Famine
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 6
-<b>Excessive Violence</b>: Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
+{VIOLENCE} Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
 #COST: 8
 
 #CARDNAME: Venom
@@ -51,7 +51,7 @@
 #CLASS: [Strength]
 #RECRUIT: 0+
 #ATTACK: 2
-<b>Excessive Violence</b>: You get +2 Recruit.
+{VIOLENCE} You get +2 Recruit.
 #COST: 4
 #FLAVOR: The face that launched a thousand nightmares.
 
@@ -99,7 +99,7 @@ If a Master Strike or Villain that has an Ambush ability was played this turn, y
 #COPIES: 3
 #CLASS: [Ranged]
 #ATTACK: 2
-<b>Excessive Violence</b>: You may KO a card from your hand or discard pile.
+{VIOLENCE} You may KO a card from your hand or discard pile.
 #COST: 5
 
 #SUBNAME: Ultimate Survivor
@@ -168,7 +168,7 @@ Draw two cards. But you can't draw any more cards until the end of this turn.
 #CLASS: [Instinct]
 #ATTACK: 3
 Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extra time.
-<b>Excessive Violence</b>: "Rescue" a Bystander.
+{VIOLENCE} "Rescue" a Bystander.
 #COST: 5
 
 #SUBNAME: Play to the Crowd

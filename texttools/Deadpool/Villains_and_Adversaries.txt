@@ -3,7 +3,7 @@
 
 #SUBNAME: Blind Al and Deuce
 #COPIES: 2
-<b>Revenge for Deadpool's "Friends"</b>
+{REVENGE Deadpool's "Friends"}
 To fight Blind Al, you also gotta drop a Deuce <i>(discard a card with a "2" printed anywhere on it)</i>. Deuce is her dog, obviously.
 #ESCAPE: Everybody drop a Deuce.
 #ATTACK: 2+
@@ -11,8 +11,8 @@ To fight Blind Al, you also gotta drop a Deuce <i>(discard a card with a "2" pri
 
 #SUBNAME: Sluggo
 #COPIES: 2
-<b>Revenge for Deadpool's "Friends"</b>
-#FIGHT: <b>Excessive Violence</b>: Gain the Hero from the HQ with the lowest cost <i>(or tied for lowest)</i>.
+{REVENGE Deadpool's "Friends"}
+#FIGHT: {VIOLENCE} Gain the Hero from the HQ with the lowest cost <i>(or tied for lowest)</i>.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5+
 #VP: 4
@@ -27,7 +27,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 
 #SUBNAME: Weasel
 #COPIES: 2
-<b>Revenge for Deadpool's "Friends"</b>
+{REVENGE Deadpool's "Friends"}
 #AMBUSH: Each player simultaneously passes a card from their hand to the player on their left.
 #FIGHT: Same effect.
 #ATTACK: 4+
@@ -37,7 +37,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 
 #SUBNAME: D.E.A.D.P.O.O.L.
 #COPIES: 2
-<b>Revenge for Evil Deadpool Corpse</b>
+{REVENGE Evil Deadpool Corpse}
 #FIGHT: Excessive Violence: KO one of your Heroes. Remind them that if they were better at hero-ing, these accidents wouldn't happen.
 #ATTACK: 4+
 #VP: 3
@@ -45,7 +45,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 
 #SUBNAME: The Deadpool Kid
 #COPIES: 2
-<b>Revenge for Evil Deadpool Corpse</b>
+{REVENGE Evil Deadpool Corpse}
 #ESCAPE: Old West Shootout. Each player reveals the top card of their deck. KO the card with the highest cost (or tied for highest.)
 #ATTACK: 5+
 #VP: 4
@@ -53,7 +53,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 
 #SUBNAME: Ultimate Deadpool
 #COPIES: 2
-<b>Revenge for Evil Deadpool Corpse</b>
+{REVENGE Evil Deadpool Corpse}
 #FIGHT: Excessive Violence: Draw a card for each "Ultimate" in the HQ. You know, those totally kickass cards that cost 7 or more.
 #ESCAPE: KO all Ultimates from the HQ.
 #ATTACK: 5+
@@ -61,7 +61,7 @@ During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost
 
 #SUBNAME: Wolverinepool
 #COPIES: 2
-<b>Revenge for Evil Deadpool Corpse</b>
+{REVENGE Evil Deadpool Corpse}
 #AMBUSH: Each player reveals a card with an odd-numbered cost or gains a Wound. Ya know, the number 0 is pretty weird, but it's not odd.
 #FIGHT: Same effect.
 #ESCAPE: Same effect. Then, shuffle me back into the Villain Deck so I can kick your ass again!

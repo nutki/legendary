@@ -5,7 +5,7 @@
 #SUBNAME: Bullets Flying, Bob Hiding
 #COPIES: 5
 #CLASS: [Covert]
-<b>Excessive Violence</b>: Draw a card.
+{VIOLENCE} Draw a card.
 #RECRUIT: 2 1/2
 #COST: 3
 #FLAVOR: "When I'm involved in excessive violence, I'm usually the victim!"
@@ -30,7 +30,7 @@ Reveal the top card of your deck. If it's HYDRA or S.H.I.E.L.D., draw it.
 #SUBNAME: Epic Middle Manager
 #COPIES: 1
 #CLASS: [Covert]
-<b>Excessive Violence</b>: KO up to two HYDRA and/or S.H.I.E.L.D. Heroes from your discard pile. Draw a card for each Hero KO'd this way.
+{VIOLENCE} KO up to two HYDRA and/or S.H.I.E.L.D. Heroes from your discard pile. Draw a card for each Hero KO'd this way.
 #ATTACK: 5
 #COST: 8
 #GUN: 1
@@ -67,7 +67,7 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 5
-<b>Excessive Violence</b>: Take another turn after this one. But don't use this ability more than once per game - trilogies are stupid.
+{VIOLENCE} Take another turn after this one. But don't use this ability more than once per game - trilogies are stupid.
 #COST: 7
 #FLAVOR: Hey Wolverine! I've had a breakthrough!
 
@@ -86,14 +86,14 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2 1/2
-<b>Excessive Violence</b>: Rescue a Bystander.
+{VIOLENCE} Rescue a Bystander.
 #COST: 3
 #FLAVOR: And they say cartoons are too violent these days.
 
 #SUBNAME: Surprise Chainsaw
 #COPIES: 3
 #CLASS: [Strength]
-<b>Excessive Violence</b>: When you have a new hand of cards at the end of this turn, draw an extra card.
+{VIOLENCE} When you have a new hand of cards at the end of this turn, draw an extra card.
 #ATTACK: 4 1/2
 #COST: 6
 #FLAVOR: This card's a little hacky.
@@ -101,7 +101,7 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #SUBNAME: Electroplasmic Insanity
 #COPIES: 1
 #CLASS: [Ranged]
-<b>Excessive Violence</b>: Recruit a Hero from the HQ for free. Then, you may shuffle your discard pile into your deck.
+{VIOLENCE} Recruit a Hero from the HQ for free. Then, you may shuffle your discard pile into your deck.
 #ATTACK: 5
 #COST: 8
 
@@ -120,7 +120,7 @@ You get +1/2 Attack for each other card with flavor text you played this turn. N
 #SUBNAME: Merc's Gotta Get Paid
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Excessive Violence</b>: You get +1 Recruit.
+{VIOLENCE} You get +1 Recruit.
 #RECRUIT: 0+
 #ATTACK: 2 1/2
 #COST: 3
@@ -167,7 +167,7 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Ranged]
 #RECRUIT: 3
-<b>Excessive Violence</b>: You may KO one of your cards or a card from your discard pile.
+{VIOLENCE} You may KO one of your cards or a card from your discard pile.
 #COST: 5
 #FLAVOR: Wait, isn't shooting electricity underwater a terrible idea?
 

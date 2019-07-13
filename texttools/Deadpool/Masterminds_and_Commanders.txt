@@ -1,6 +1,6 @@
 
 #CARDNAME: Evil Deadpool
-<b>Revenge for Mastermind Tactics</b>
+{REVENGE Mastermind Tactics}
 #LEADS: Evil Deadpool Corpse
 #STRIKE: Without talking, each player simultaneously discards a card. Whoever discards the lowest-costing card <i>(or tied for lowest)</i> gains a Wound.
 #ATTACK: 11+
@@ -19,7 +19,7 @@
 #FIGHT: Each other player discards the top card of their deck. Whoever discards the lowest-costing card (or tied for lowest) gains a Wound.
 
 #CARDNAME: Macho Gomez
-<b>Revenge for Deadpool's "Friends"</b>
+{REVENGE Deadpool's "Friends"}
 #LEADS: Deadpool's "Friends"
 #STRIKE: Put this Strike in front of you as a "Bounty on Your Head." Then, each player gains a Wound for each Bounty on them. Any number of times during your turn, you may pay 1 Recruit to move a Bounty from you to the player on your left.
 #ATTACK: 9+

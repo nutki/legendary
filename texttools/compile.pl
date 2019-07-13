@@ -30,6 +30,7 @@ sub autopower {
     s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split", ",$1).")";
     s/^{SPECTRUM} *// and $cond = "spectrumPower()";
     s/^{SAVIOR} *// and $cond = "saviorPower()";
+    s/^{VIOLENCE} *// and $wrap = "excessiveViolence: ev => XXX";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -51,6 +52,7 @@ sub autopower {
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
     $effect = "$cond && $effect" if $cond && $effect;
+    $effect =~ /^\w+: / and ($effect, $ability) = (undef, $effect);
     push @r, $effect if $effect;
     push @ar, $ability if $ability;
     #print "$_\n" if !$effect;
@@ -100,7 +102,6 @@ sub makehero {
   $flags .= 'N' if !/^[^#]/m;
   return "makeHeroCard(\"$heroname2\", \"$cardname\", $cost, $recruit, $attack, $class, $pteam2, \"$flags\"$autopower)";
 }
-
   $content = $_;
   #print length$content, "\n";
   $content =~ s/^\n+//;
