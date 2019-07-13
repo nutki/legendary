@@ -36,3 +36,11 @@ addBystanderTemplates("Secret Wars Volume 2", [
 // RESCUE: a player of your choice gains a S.H.I.E.L.D. Officer.
 [ 3, makeBystanderCard("Undercover Agent", ev => choosePlayerEv(ev, p => gameState.officer.withTop(c => gainEv(ev, c)))) ],
 ]);
+addBystanderTemplates("Civil War", [
+// RESCUE: gain a Sidekick.
+[ 4, makeBystanderCard("Aspiring Hero", ev => gainSidekickEv(ev, undefined, ev.who)) ],
+// RESCUE: reveal the top three cards of the Hero Deck. The player of your choice gains one of them that costs 3 or less. Put the rest back in any order.
+[ 3, makeBystanderCard("Comic Shop Keeper", ev => revealHeroDeckEv(ev, 3, cards => {
+  choosePlayerEv(ev, p => selectCardEv(ev, "Select a card for that player to gain", cards.limit(c => c.cost <= 3), c => gainEv(ev, c, p), ev.who), ev.who)
+}, false, false)) ],
+]);

@@ -172,7 +172,7 @@ addHeroTemplates("Legendary", [
 // COST: 5
   uc: makeHeroCard("Hawkeye", "Covering Fire", 5, u, 3, Color.TECH, "Avengers", "", ev => { if (superPower(Color.TECH)) chooseOneEv(ev, "Each other player",
     ["draws a card", () => eachOtherPlayer(p => drawEv(ev, 1, p))],
-    ["discards a card", () => eachOtherPlayer(p => pickDiscardEv(ev, p))]
+    ["discards a card", () => eachOtherPlayer(p => pickDiscardEv(ev, 1, p))]
   );}),
 // ATTACK: 5
 // Whenever you defeat a Villain or Mastermind this turn, rescue three Bystanders.
@@ -1541,7 +1541,7 @@ addHeroTemplates("Villains", [
 // As you play this card, you may choose a class. This card is that class instead of [Covert] this turn.
 // COST: 3
   c2: makeHeroCard("Mystique", "Show Your True Colors", 3, 2, u, Color.COVERT, "Brotherhood", "D", ev => {
-    chooseColorEv(ev, color => addTurnSet('color', c => c === ev.source, () => color)); // TODO this may be too late in case of triggers on card played.
+    chooseClassEv(ev, color => addTurnSet('color', c => c === ev.source, () => color)); // TODO this may be too late in case of triggers on card played.
   }, { cardActions: [ dodge ] }),
 // Reveal the top card of the Ally Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Ally Deck.
 // COST: 4
@@ -2014,7 +2014,7 @@ addHeroTemplates("Fear Itself", [
 // COST: 7
 // GUN: 1
   ra: makeHeroCard("Skirn, Breaker of Men", "Break Your Hopes", 7, u, 4, Color.STRENGTH, "Foes of Asgard", "G", ev => {
-    eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, p), p));
+    eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p), p));
     cont(ev, () => drawEv(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev)));
   }),
 },
@@ -2744,5 +2744,497 @@ addHeroTemplates("Captain America 75th Anniversary", [
   ra: makeHeroCard("Winter Soldier", "2>4", 7, u, 4, Color.TECH, u, "D", ev => {
     selectObjectsEv(ev, "Select a Hero", superPower(Color.TECH) ? 2 : 1, playerState.hand.limit(isHero), c => addTurnSet('fight', v => v === c, (c, prev) => combineHandlers(prev, outOfTimeEv)));
   }),
+},
+]);
+addHeroTemplates("Civil War", [
+{
+  name: "Captain America, Secret Avenger",
+  team: "Avengers",
+// You get +1 Recruit for each Hero Class you have.
+  c1: makeHeroCard("Captain America, Secret Avenger", "Bold Leadership", 2, 0, u, Color.COVERT, "Avengers", "FD", ev => addRecruitEvent(ev, numClasses())),
+// DIVIDED: Inspire a Nation
+// Gain a Sidekick.
+// DIVIDED: Inspire a Man
+  c2: makeDividedHeroCard(
+    makeHeroCard("Captain America, Secret Avenger", "Inspire a Nation", 3, u, u, Color.STRENGTH, "Avengers", "", ev => gainSidekickEv(ev)),
+    makeHeroCard("Captain America, Secret Avenger", "Inspire a Man", 3, u, 2, Color.INSTINCT, "Avengers", "DN"),
+  ),
+// You get +1 Attack for each Sidekick and other Avengers Hero you played this turn.
+  uc: makeHeroCard("Captain America, Secret Avenger", "Secret Avengers Assemble!", 5, u, 2, Color.TECH, "Avengers", "D", ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => isTeam("Avengers")(c) || isSidekick(c)))),
+// Whenever you play a Sidekick or another Avengers Hero this turn set that card aside. At the end of your turn, put those cards on the bottom of your deck in random order before you draw your new hand.
+  ra: makeHeroCard("Captain America, Secret Avenger", "Freedom Never Dies", 7, u, 5, Color.RANGED, "Avengers", "", ev => {
+    addTurnTrigger('MOVECARD', ev => ev.from === playerState.playArea && (isSidekick(ev.what) || isTeam('Avengers')(ev.what)), { replace: () => {} });
+    addTurnTrigger('PLAY', ev => isSidekick(ev.what) || isTeam('Avengers')(ev.what), ev => {
+      attachCardEv(ev, ev.parent.what, playerState.deck, 'ASIDE');
+    });
+    addTurnTrigger('CLEANUP', undefined, { after: ev => {
+      playerState.deck.attachedDeck('ASIDE').shuffle();
+      playerState.deck.attached('ASIDE').each(c => moveCardEv(ev, c, playerState.deck, true));
+    }})
+  }),
+},
+{
+  name: "Cloak & Dagger",
+  team: "Avengers | Marvel Knights",
+// DIVIDED: Above
+// DIVIDED: Below
+// You get +3 Recruit usable only to recruit Heroes in the HQ space under the Sewers.
+  c1: makeDividedHeroCard(
+    makeHeroCard("Cloak", "Above", 3, u, 2, Color.COVERT, "Avengers", "DN"),
+    makeHeroCard("Dagger", "Below", 3, 0, u, Color.RANGED, "Marvel Knights", "", ev => addRecruitSpecialEv(ev, c => isLocation(c.location.below, 'SEWERS'), 3)),
+  ),
+// DIVIDED: Flee
+// {PHASING}
+// {POWER Covert} You get +1 Recruit.
+// DIVIDED: Fight
+// {PHASING}
+// {POWER Ranged} You get +1 Attack.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Cloak", "Flee", 4, 2, u, Color.COVERT, "Avengers", "D", ev => superPower(Color.COVERT) && addRecruitEvent(ev, 1), { cardActions: [ phasingActionEv ] }),
+    makeHeroCard("Dagger", "Fight", 4, u, 2, Color.RANGED, "Marvel Knights", "D", ev => superPower(Color.RANGED) && addAttackEvent(ev, 1), { cardActions: [ phasingActionEv ] }),
+  ),
+// DIVIDED: Darkness
+// {POWER Covert} Reveal the top card of your deck. If it costs 0, KO it.
+// DIVIDED: Light
+// {POWER Ranged} Reveal the top card of your deck. If it costs 1 or more, draw it.
+  uc: makeDividedHeroCard(
+    makeHeroCard("Cloak", "Darkness", 6, u, 3, Color.COVERT, "Avengers", "", ev => superPower(Color.COVERT) && revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c)))),
+    makeHeroCard("Dagger", "Light", 6, 3, u, Color.RANGED, "Marvel Knights", "", ev => superPower(Color.RANGED) && drawIfEv(ev, c => c.cost >= 1)),
+  ),
+// Whenever you play a <b>Divided</b> card this turn: play both sides as if they were two different cards.
+  ra: makeHeroCard("Cloak & Dagger", "Penumbra", 7, u, 4, Color.RANGED, "Avengers", "", ev => turnState.playDividedBoth = true),
+},
+{
+  name: "Daredevil",
+  team: "Avengers | Marvel Knights",
+// Look at the top two cards of your deck. Draw one and put the other back.
+  c1: makeHeroCard("Daredevil", "Dual Existence", 2, u, u, Color.INSTINCT, "Avengers", "FD", ev => lookAtDeckEv(ev, 2, () => selectCardEv(ev, "Choose a card to draw", playerState.revealed.deck, c => drawCardEv(ev, c)))),
+// Choose a number, then reveal the top card of your deck. If that card is that cost, gain a Sidekick.
+  c2: makeHeroCard("Daredevil", "Roundhouse Side Kick", 4, u, 2, Color.COVERT, "Avengers", "FD", ev => {
+    chooseCostEv(ev, n => revealPlayerDeckEv(ev, 1, () => playerState.revealed.has(c => c.cost === n) && gainSidekickEv(ev)));
+  }),
+// DIVIDED: Hidden Identity
+// The next Hero you recruit this turn goes on top of your deck.
+// DIVIDED: Revealed Identity
+// You get +1 Attack for each different cost of Hero you have.
+  uc: makeDividedHeroCard(
+    makeHeroCard("Daredevil", "Hidden Identity", 6, 3, u, Color.INSTINCT, "Avengers", "", ev => turnState.nextHeroRecruit = 'DECK'),
+    makeHeroCard("Iron Fist", "Revealed Identity", 6, u, 0, Color.STRENGTH, "Marvel Knights", "", ev => addAttackEvent(ev, yourHeroes().uniqueCount(c => c.cost))),
+  ),
+// {TEAMPOWER Avengers} Discard the top two cards of your deck. If they have different costs, you get +2 Attack, then repeat this process.
+  ra: makeHeroCard("Daredevil", "Master of Martial Arts", 8, u, 4, Color.COVERT, "Avengers", "D", ev => { if (superPower("Avengers")) {
+    const allCards = [...playerState.deck.deck, ...playerState.discard.deck];
+    const infinite = allCards.uniqueCount(c => c.cost) === allCards.size;
+    if (infinite) {
+      addAttackEvent(ev, 888);
+    } else {
+      const f = () => {
+        let again = false;
+        revealPlayerDeckEv(ev, 2, cards => {
+          cards.each(c => discardEv(ev, c));
+          again = cards.max(c => c.cost) !== cards.max(c => -c.cost);
+        });
+        if (again) {
+          addAttackEvent(ev, 2);
+          f();
+        }
+      }
+      f();
+    }
+  }}),
+},
+{
+  name: "Falcon",
+  team: "Avengers",
+// Put a Hero from the HQ on the bottom of the Hero Deck.
+// {POWER Tech} If that Hero had a Recruit icon, you get +1 Recruit.
+  c1: makeHeroCard("Falcon", "Rapid Reinforcements", 3, 2, u, Color.TECH, "Avengers", "D", ev => {
+    selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
+      moveCardEv(ev, c, gameState.herodeck, true);
+      superPower(Color.TECH) && hasRecruitIcon(c) && addRecruitEvent(ev, 1);
+    });
+  }),
+// DIVIDED: Talk with Birds
+// DIVHERO: Falcon
+// DIVTEAM: Avengers
+// {POWER Ranged} Gain a Sidekick.
+// DIVIDED: Squawk Back
+// DIVHERO: Redwing
+// DIVTEAM: Avengers
+// Look at the top three cards of your deck. Draw one. Put the rest back in any order.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Falcon", "Talk with Birds", 4, u, 2, Color.RANGED, "Avengers", "D", ev => superPower(Color.RANGED) && gainSidekickEv(ev)),
+    makeHeroCard("Redwing", "Squawk Back", 4, u, u, Color.INSTINCT, "Avengers", "", ev => lookAtDeckEv(ev, 3, () => selectCardEv(ev, "Choose a card to draw", playerState.revealed.deck, c => drawCardEv(ev, c)))),
+  ),
+// You get +1 Attack for each card in the HQ with an Attack icon.
+  uc: makeHeroCard("Falcon", "Scout the Battlefield", 6, u, 0, Color.RANGED, "Avengers", "F", ev => addAttackEvent(ev, hqCards().count(hasAttackIcon))),
+// {TEAMPOWER Avengers} You get +Attack equal to the printed Attack of a Hero in the HQ.
+  ra: makeHeroCard("Falcon", "Fly in a Friend", 7, u, 4, Color.INSTINCT, "Avengers", "", ev => superPower("Avengers") && selectCardEv(ev, "Choose a Hero", hqHeroes(), c => addAttackEvent(ev, c.printedAttack || 0))),
+},
+{
+  name: "Goliath",
+  team: "Avengers",
+// DIVIDED: Brilliant Biochemist
+// {SIZECHANGING TECH}
+// DIVIDED: Massive Warrior
+// {SIZECHANGING STRENGTH}
+  c1: makeDividedHeroCard(
+    makeHeroCard("Goliath", "Brilliant Biochemist", 4, 2, u, Color.TECH, "Avengers", "D", [], { sizeChanging: Color.TECH }),
+    makeHeroCard("Goliath", "Massive Warrior", 4, u, 2, Color.STRENGTH, "Avengers", "D", [], { sizeChanging: Color.STRENGTH }),
+  ),
+// {SIZECHANGING TECH}
+// {POWER Tech} Draw a card
+  c2: makeHeroCard("Goliath", "Growth Industry", 5, u, 2, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && drawEv(ev, 1), { sizeChanging: Color.TECH }),
+// {SIZECHANGING STRENGTH}
+// You get +1 for each other card you played this turn that costs 4 or more. TODO +1 what?
+  uc: makeHeroCard("Goliath", "Being Big is Best", 6, u, 3, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cost >= 4)), { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING STRENGTH}
+// You get +Attack equal to the cost of another card you played this turn.
+  ra: makeHeroCard("Goliath", "Enormous Implications", 8, u, 0, Color.STRENGTH, "Avengers", "", ev => selectCardEv(ev, "Choose a Hero", turnState.cardsPlayed, c => addAttackEvent(ev, c.cost)), { sizeChanging: Color.STRENGTH }),
+},
+{
+  name: "Hercules",
+  team: "Avengers",
+// {POWER Instinct} Whenever you defeat a Villain this turn, rescue a Bystander.
+  c1: makeHeroCard("Hercules", "Crowd Favorite", 4, u, 2, Color.INSTINCT, "Avengers", "FD", ev => superPower(Color.INSTINCT) && addTurnTrigger('DEFEAT',
+    ev => isVillain(ev.what),
+    ev => rescueEv(ev),
+  )),
+// DIVIDED: Manly Dullard
+// DIVHERO: Hercules
+// DIVTEAM: Avengers
+// To play this, you must discard a card from your hand.
+// DIVIDED: Boy Genius
+// DIVHERO: Amadeus Cho
+// DIVTEAM: Unaffiliated
+// Draw a card.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Hercules", "Manly Dullard", 3, u, 3, Color.STRENGTH, "Avengers", "", [], { playCost: 1, playCostType: 'DISCARD'}),
+    makeHeroCard("Amadeus Cho", "Boy Genius", 3, u, u, Color.TECH, u, "", ev => drawEv(ev, 1)),
+  ),
+// {POWER Strength} Reveal the top card of your deck. If it costs 0, KO it.
+  uc: makeHeroCard("Hercules", "Prince of Power", 5, 3, u, Color.STRENGTH, "Avengers", "F", ev => superPower(Color.STRENGTH) && revealPlayerDeckEv(ev, 1, cards => cards.filter(c => c.cost === 0).each(c => KOEv(ev, c)))),
+// Rescue a Bystander. Then, you get +1 Attack for each Bystander in your Victory Pile.
+// {TEAMPOWER Avengers} You get +1 Recruit for each Bystander in your Victory Pile.
+  ra: makeHeroCard("Hercules", "Son of Zeus", 7, 0, 0, Color.STRENGTH, "Avengers", "", [ ev => rescueEv(ev), ev => {
+    const n = playerState.victory.count(isBystander);
+    addAttackEvent(ev, n);
+    superPower("Avengers") && addRecruitEvent(ev, n)
+  } ]),
+},
+{
+  name: "Hulkling",
+  team: "Avengers",
+// {SIZECHANGING STRENGTH}
+// You may KO a Wound from your hand or discard pile. If you do, you get +1 Attack.
+  c1: makeHeroCard("Hulkling", "Cellular Regeneration", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => KOHandOrDiscardEv(ev, isWound, () => addAttackEvent(ev, 1)), { sizeChanging: Color.STRENGTH }),
+// DIVIDED: Half-Kree
+// {SIZECHANGING STRENGTH}
+// Gain a Wound.
+// DIVIDED: Half-Skrull
+// {SIZECHANGING COVERT}
+  c2: makeDividedHeroCard(
+    makeHeroCard("Hulkling", "Half-Kree", 4, 3, u, Color.STRENGTH, "Avengers", "", ev => gainWoundEv(ev), { sizeChanging: Color.STRENGTH }),
+    makeHeroCard("Hulkling", "Half-Skrull", 4, u, 2, Color.COVERT, "Avengers", "D", [], { sizeChanging: Color.COVERT }),
+  ),
+// {SIZECHANGING COVERT}
+// Play this card as a copy of another Hero you played this turn. This card is both [Covert] and the class and color you copy.
+// GUN: 1
+  uc: makeHeroCard("Hulkling", "Impersonate", 6, u, u, Color.COVERT, "Avengers", "G", [], { sizeChanging: Color.COVERT, copyPasteCard: true }),
+// {SIZECHANGING COVERT}
+// {POWER Covert} You get +4 Attack.
+// GUN: 1
+  ra: makeHeroCard("Hulkling", "Enormous Shapeshifter", 8, u, 4, Color.COVERT, "Avengers", "GF", ev => superPower(Color.COVERT) && addAttackEvent(ev, 4), { sizeChanging: Color.COVERT }),
+},
+{
+  name: "Luke Cage",
+  team: "Avengers",
+// If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+  c1: makeHeroCard("Luke Cage", "Take a Bullet for the Team", 4, 1, 1, Color.STRENGTH, "Avengers", "", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.hand,
+    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
+      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// DIVIDED: Cautious
+// DIVHERO: Luke Cage
+// DIVTEAM: Avengers
+// DIVIDED: Reckless
+// DIVHERO: Jessica Jones
+// DIVTEAM: Marvel Knights
+// Gain a Wound.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Luke Cage", "Cautious", 3, u, 2, Color.STRENGTH, "Avengers", "DN"),
+    makeHeroCard("Jessica Jones", "Reckless", 3, u, 3, Color.INSTINCT, "Marvel Knights", "", ev => gainWoundEv(ev)),
+  ),
+// {POWER Instinct} Look at the top three cards of your deck. Discard them all or put them back in any order.
+  uc: makeHeroCard("Luke Cage", "Sweet Christmas", 5, u, 3, Color.INSTINCT, "Avengers", "", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 3, () => chooseMayEv(ev, "Discard revealed cards", () => playerState.revealed.each(c => discardEv(ev, c))))),
+// {TEAMPOWER Avengers} <b>Fortify</b> the Wound Stack. While it's fortified, players can't gain Wounds. At the beginning of your next turn, put this card in your discard pile.
+  ra: makeHeroCard("Luke Cage", "Unbreakable Skin", 8, u, 6, Color.STRENGTH, "Avengers", "", ev => { if (superPower("Avengers")) {
+    fortifyEv(ev, ev.source, gameState.wounds);
+    addFutureTrigger(ev, () => moveCardEv(ev, ev.source, playerState.discard), playerState);
+  }}, { trigger : {
+    event: 'GAIN',
+    match: (ev: Ev, source: Card) => isWound(ev.what) && isFortifying(source, gameState.wounds),
+    replace: ev => {},
+  }}),
+},
+{
+  name: "Patriot",
+  team: "Avengers",
+// You get +1 Attack for each Hero Name among your non-S.H.I.E.L.D. Heroes.
+  c1: makeHeroCard("Patriot", "Intuitive Tactician", 3, u, 0, Color.INSTINCT, "Avengers", "F", ev => addAttackEvent(ev, numColors(yourHeroes().filter(c => !isTeam('S.H.I.E.L.D.')(c))))),
+// You get +1 Recruit for each Hero Name among your non-S.H.I.E.L.D. Heroes.
+  c2: makeHeroCard("Patriot", "New Generation of Heroes", 2, u, u, Color.STRENGTH, "Avengers", "D", ev => addRecruitEvent(ev, numColors(yourHeroes().filter(c => !isTeam('S.H.I.E.L.D.')(c))))),
+// DIVIDED: Incredible Effort
+// DIVHERO: Patriot
+// DIVTEAM: Avengers
+// {POWER Covert} You get +3 Attack
+// DIVIDED: Effortless
+// DIVHERO: Hawkeye
+// DIVTEAM: Avengers
+  uc: makeDividedHeroCard(
+    makeHeroCard("Patriot", "Incredible Effort", 5, u, 1, Color.COVERT, "Avengers", "", ev => superPower(Color.COVERT) && addAttackEvent(ev, 3)),
+    makeHeroCard("Hawkeye", "Effortless", 5, 3, u, Color.TECH, "Avengers", "FN"),
+  ),
+// Reveal the top three cards of your deck. If you revealed at least three different Hero Names this way, draw those three cards. Otherwise, put them back in any order.
+  ra: makeHeroCard("Patriot", "Lead the Young Avengers", 8, u, 3, Color.TECH, "Avengers", "", ev => revealPlayerDeckEv(ev, 3, cards => {
+    numHeroNames(cards) >= 3 && cards.each(c => drawCardEv(ev, c));
+  })),
+},
+{
+  name: "Peter Parker",
+  team: "Avengers | Spider Friends",
+// {POWER Tech} Reveal the top card of your deck. If it costs 2 or less, draw it.
+  c1: makeHeroCard("Peter Parker", "Conflicted Loyalties", 2, 1, 1, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && drawIfEv(ev, c => c.cost <= 2)),
+// Gain a Sidekick.
+// {POWER Instinct} Put that Sidekick on top of your deck.
+  c2: makeHeroCard("Peter Parker", "Spider-Man Unmasked", 2, u, 1, Color.INSTINCT, "Avengers", "FD", ev => gainSidekickEv(ev, superPower(Color.INSTINCT) ? 'DECK' : undefined)),
+// DIVIDED: Protect My Family
+// DIVHERO: Peter Parker
+// DIVTEAM: Avengers
+// Rescue a Bystander.
+// DIVIDED: Hot Bowl of Soup
+// DIVHERO: Aunt May
+// DIVTEAM: Spider-Friends
+// You may KO a Wound from your hand or discard pile.
+  uc: makeDividedHeroCard(
+    makeHeroCard("Peter Parker", "Protect My Family", 2, u, 1, Color.TECH, "Avengers", "D", ev => rescueEv(ev)),
+    makeHeroCard("Aunt May", "Hot Bowl of Soup", 2, 1, u, Color.INSTINCT, "Spider Friends", "D", ev => KOHandOrDiscardEv(ev, isWound)),
+  ),
+// {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
+  ra: makeHeroCard("Peter Parker", "Reluctant Celebrity", 2, u, 2, Color.INSTINCT, "Avengers", "D", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, turnState.cardsDrawn)),
+},
+{
+  name: "Speedball",
+  team: "New Warriors",
+// {POWER Covert} If there are any Bystanders in the city or KO pile, you get +2 Attack.
+  c1: makeHeroCard("Speedball", "Bounce Around", 4, u, 2, Color.COVERT, "New Warriors", "FD", ev => superPower(Color.COVERT) && gameState.ko.has(isBystander) && addAttackEvent(ev, 2)),
+// {POWER Ranged} Reveal the top card of the Villain Deck. If it's a Villain, rescue a Bystander. Otherwise, KO a Bystander from the Bystander Deck.
+  c2: makeHeroCard("Speedball", "Reckless Rescue Attempt", 3, 2, u, Color.RANGED, "New Warriors", "D", ev => superPower(Color.RANGED) && revealVillainDeckEv(ev, 1, c => {
+    c.has(isVillain) ? rescueEv(ev) : gameState.bystanders.withTop(c => KOEv(ev, c));
+  })),
+// DIVIDED: Double Down
+// DIVHERO: Speedball
+// DIVTEAM: New Warriors
+// Draw two cards.
+// DIVIDED: Bubble Up
+// DIVHERO: Namorita
+// DIVTEAM: New Warriors
+// You get +3 Attack usable only against Villains on the Bridge or against the Mastermind.
+  uc: makeDividedHeroCard(
+    makeHeroCard("Speedball", "Double Down", 5, u, u, Color.RANGED, "New Warriors", "", ev => drawEv(ev, 2)),
+    makeHeroCard("Namorita", "Bubble Up", 5, u, 0, Color.COVERT, "New Warriors", "", ev => addAttackSpecialEv(ev, c => isLocation(c.location, 'BRIDGE') || isMastermind(c), 3)),
+  ),
+// If a Master Strike would occur, you may reveal this card to KO that Master Strike, cancel its effects, and draw a card.
+  ra: makeHeroCard("Speedball", "Kinetic Force Field", 7, u, 5, Color.RANGED, "New Warriors", "", [], { trigger: {
+    event: 'STRIKE',
+    match: (ev, source: Card) => source.location === ev.who.hand,
+    replace: ev => selectCardOptEv(ev, "Reveal to cancel Master Strike", [ev.source], () => {
+      drawEv(ev, 1, owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+},
+{
+  name: "Stature",
+  team: "Avengers",
+// {SIZECHANGING TECH}
+// Draw a card.
+// {POWER Tech} You get +1 Attack.
+  c1: makeHeroCard("Stature", "Shrink to Nothing", 2, u, 0, Color.TECH, "Avengers", "FD", [ ev => drawEv(ev, 1), ev => superPower(Color.TECH) && addAttackEvent(ev, 1) ], { sizeChanging: Color.TECH }),
+// DIVIDED: Crush Ants
+// DIVHERO: Stature
+// DIVTEAM: Avengers
+// {SIZECHANGING STRENGTH}
+// {POWER Strength} Defeat a Villain that has 3 Attack or less.
+// DIVIDED: Crush File Sizes
+// DIVHERO: Iron Lad
+// DIVTEAM: Avengers
+// {SIZECHANGING TECH}
+// {POWER Tech} Draw a card.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Stature", "Crush Ants", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPower(Color.STRENGTH) && selectCardEv(ev, "Choose a Villain to defeat", villains().limit(c => c.defense <= 3), c => defeatEv(ev, c)), { sizeChanging: Color.STRENGTH }),
+    makeHeroCard("Iron Lad", "Crush File Sizes", 5, 2, u, Color.TECH, "Avengers", "D", ev => superPower(Color.TECH) && drawEv(ev, 1), { sizeChanging: Color.TECH }),
+  ),
+// {SIZECHANGING STRENGTH}
+// {POWER Strength} You get +1 Attack for each Villain in your Victory Pile that has a printed Attack 3 or less.
+  uc: makeHeroCard("Stature", "Growing Confidence", 6, u, 2, Color.STRENGTH, "Avengers", "FD", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, playerState.victory.limit(isVillain).count(c => c.defense <= 3)), { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING STRENGTH}
+// {POWER Strength} Defeat each Villain that has 4 Attack or less. // TODO is it 4?
+// GUN: 1
+  ra: makeHeroCard("Stature", "Trample the Tiny", 8, u, 5, Color.STRENGTH, "Avengers", "G", ev => superPower(Color.STRENGTH) && villains().limit(c => c.defense <= 3).each(c => defeatEv(ev, c)), { sizeChanging: Color.STRENGTH }),
+},
+{
+  name: "Storm & Black Panther",
+  team: "X-Men | Avengers",
+// DIVIDED: Gathering Rain Clouds
+// DIVHERO: Storm
+// DIVTEAM: X-Men
+// {POWER Ranged} Draw a card.
+// DIVIDED: Gathering Clues
+// DIVHERO: Black Panther
+// DIVTEAM: Avengers
+// {POWER Instinct} Draw a card.
+  c1: makeDividedHeroCard(
+    makeHeroCard("Storm", "Gathering Rain Clouds", 2, 1, u, Color.RANGED, "X-Men", "D", ev => superPower(Color.RANGED) && drawEv(ev, 1)),
+    makeHeroCard("Black Panther", "Gathering Clues", 2, u, 1, Color.INSTINCT, "Avengers", "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 1)),
+  ),
+// DIVIDED: Lightning Strike
+// DIVHERO: Storm
+// DIVTEAM: X-Men
+// Any Villain you fight on the Rooftops this turn gets -1 Attack.
+// DIVIDED: Pouncing Strike
+// DIVHERO: Black Panther
+// DIVTEAM: Avengers
+// You may move a Villain to an adjacent empty city space.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Storm", "Lightning Strike", 3, u, 2, Color.RANGED, "X-Men", "D", ev => addTurnMod('defense', c => isLocation(c.location, 'ROOFTOPS'), -1)),
+    makeHeroCard("Black Panther", "Pouncing Strike", 3, 2, u, Color.INSTINCT, "Avengers", "D", ev => {
+      selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+        selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location).limit(d => d.size === 0), dest => swapCardsEv(ev, v.location, dest));
+      });
+    }),
+  ),
+// DIVIDED: Tsunami of Water
+// DIVHERO: Storm
+// DIVTEAM: X-Men
+// {POWER Ranged} You get +2 attack usable only against the Mastermind.
+// DIVIDED: Tsunami of Justice
+// DIVHERO: Black Panther
+// DIVTEAM: Avengers
+// {POWER Covert} You may KO a card from your hand or discard pile.
+// GUN: 1
+  uc: makeDividedHeroCard(
+    makeHeroCard("Storm", "Tsunami of Water", 5, u, 3, Color.RANGED, "X-Men", "D", ev => superPower(Color.RANGED) && addAttackSpecialEv(ev, isMastermind, 2)),
+    makeHeroCard("Black Panther", "Tsunami of Justice", 5, u, 3, Color.COVERT, "Avengers", "G", ev => superPower(Color.COVERT) && KOHandOrDiscardEv(ev, undefined)),
+  ),
+// Storm & Black Panther
+// Reveal any number of multi-class cards from your hand. Gain that many sidekicks.
+  ra: makeHeroCard("Storm & Black Panther", "King & Queen of Wakanda", 7, u, 5, Color.TECH, "Avengers", "", ev => repeat(playerState.hand.count(c => numClasses([c]) > 1), () => gainSidekickEv(ev))),
+},
+{
+  name: "Tigra",
+  team: "Avengers",
+// DIVIDED: Friendship
+// DIVHERO: Tigra
+// DIVTEAM: Avengers
+// {POWER Covert} Gain a Sidekick.
+// DIVIDED: Ferocity
+// DIVHERO: Tigra
+// DIVTEAM: Avengers
+// {POWER Instinct} Draw a card.
+  c1: makeDividedHeroCard(
+    makeHeroCard("Tigra", "Friendship", 2, 1, u, Color.COVERT, "Avengers", "D", ev => superPower(Color.COVERT) && gainSidekickEv(ev)),
+    makeHeroCard("Tigra", "Ferocity", 2, u, 1, Color.INSTINCT, "Avengers", "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 1)),
+  ),
+// Look at the top card of your deck. Discard it or put it back.
+// {POWER Instinct Instinct} You may KO the card you discarded this way.
+// GUN: 1
+  c2: makeHeroCard("Tigra", "Supernatural Senses", 3, u, 2, Color.INSTINCT, "Avengers", "GD", ev => {
+    let cards: Card[] = [];
+    lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to discard", playerState.revealed.deck, c => cards.push(c)));
+    cont(ev, () => cards.each(c => {
+      discardEv(ev, c);
+      superPower(Color.INSTINCT, Color.INSTINCT) && chooseMayEv(ev, "KO the card discarded", () => KOEv(ev, c));
+    }));
+  }),
+// If an Ambush effect would occur, you may discard this card to cancel that effect and draw two cards.
+  uc: makeHeroCard("Tigra", "Can't Surprise a Cat", 5, u, 2, Color.COVERT, "Avengers", "D", [], { trigger: {
+    event: "EFFECT",
+    match: (ev, source: Card) => ev.effectName === 'ambush' && source.location === ev.who.hand,
+    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
+      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// Recruit a Hero from the HQ for free.
+// {TEAMPOWER Avengers} You get that Hero's printed Recruit and Attack.
+  ra: makeHeroCard("Tigra", "Mystic Talisman", 7, 0, 0, Color.COVERT, "Avengers", "", ev => {
+    selectCardEv(ev, "Choose a hero to recruit", hqHeroes(), c => {
+      gainEv(ev, c);
+      superPower("Avengers") && addAttackEvent(ev, c.printedAttack || 0);
+      superPower("Avengers") && addRecruitEvent(ev, c.printedRecruit || 0);
+    });
+  }),
+},
+{
+  name: "Vision",
+  team: "Avengers",
+// {PHASING}
+// {POWER Ranged} You get +2 Attack.
+  c1: makeHeroCard("Vision", "Solar Energy", 3, u, 1, Color.RANGED, "Avengers", "FD", ev => superPower(Color.RANGED) && addAttackEvent(ev, 2), { cardActions: [ phasingActionEv ] }),
+// {PHASING}
+// Choose a Hero Class. Reveal the top card of your deck. If it's the Hero class you named, then draw it.
+  c2: makeHeroCard("Vision", "Through Solid Objects", 4, 2, u, Color.TECH, "Avengers", "D", ev => chooseClassEv(ev, col => drawIfEv(ev, col)), { cardActions: [ phasingActionEv ] }),
+// DIVIDED: Lighter than Air
+// DIVHERO: Vision
+// DIVTEAM: Avengers
+// {SIZECHANGING RANGED}
+// {PHASING}
+// DIVIDED: Harder than Diamond
+// DIVHERO: Vision
+// DIVTEAM: Avengers
+// {SIZECHANGING TECH}
+// {PHASING}
+  uc: makeDividedHeroCard(
+    makeHeroCard("Vision", "Lighter than Air", 6, 3, u, Color.RANGED, "Avengers", "", [], { sizeChanging: Color.RANGED, cardActions: [ phasingActionEv ] }),
+    makeHeroCard("Vision", "Harder than Diamond", 6, u, 3, Color.TECH, "Avengers", "", [], { sizeChanging: Color.TECH, cardActions: [ phasingActionEv ] }),
+  ),
+// {PHASING}
+// When you play this, you may swap a card from your hand with the top two cards of your deck.
+// GUN: 1
+  ra: makeHeroCard("Vision", "Insubstantial Accomplishments", 7, u, 4, Color.TECH, "Avengers", "G", ev => {
+    selectCardOptEv(ev, "Choose a card to swap", playerState.hand.deck, c => {
+      lookAtDeckEv(ev, 2, () => {
+        playerState.revealed.each(c => moveCardEv(ev, c, playerState.hand));
+        moveCardEv(ev, c, playerState.deck);
+      })
+    })
+  }, { cardActions: [ phasingActionEv ] }),
+},
+{
+  name: "Wiccan",
+  team: "Avengers",
+// {PHASING}
+// Choose a number, and then reveal the top card of your deck. If that card is that cost, then you get +1 Attack.
+  c1: makeHeroCard("Wiccan", "Astral Projection", 4, u, 2, Color.RANGED, "Avengers", "D", ev => chooseCostEv(ev, n => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost == n) && addAttackEvent(ev, 1))), { cardActions: [ phasingActionEv ] }),
+// {PHASING}
+// {POWER Covert} You get +2 Recruit.
+  c2: makeHeroCard("Wiccan", "Sorcerous Illusions", 2, 1, u, Color.COVERT, "Avengers", "FD", ev => superPower(Color.COVERT) && addRecruitEvent(ev, 2), { cardActions: [ phasingActionEv ] }),
+// DIVIDED: Supersonic Spells
+// DIVHERO: Wiccan
+// DIVTEAM: Avengers
+// {POWER Ranged} Draw a card.
+// DIVIDED: Supersonic Speed
+// DIVHERO: Speed
+// DIVTEAM: Avengers
+// Draw a card.
+// {POWER Covert} Draw another card.
+  uc: makeDividedHeroCard(
+    makeHeroCard("Wiccan", "Supersonic Spells", 4, u, 2, Color.RANGED, "Avengers", "D", ev => superPower(Color.RANGED) && drawEv(ev, 1)),
+    makeHeroCard("Speed", "Supersonic Speed", 4, u, u, Color.COVERT, "Avengers", "", [ ev => drawEv(ev, 1), ev => superPower(Color.COVERT) && drawEv(ev, 1) ]),
+  ),
+// Choose a number, and then reveal the top card of your deck. If that card is that cost, draw it and draw another card.
+  ra: makeHeroCard("Wiccan", "Clairvoyance", 7, u, 3, Color.RANGED, "Avengers", "", ev => chooseCostEv(ev, n => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost == n) && (cards.each(c => drawCardEv(ev, c)), drawEv(ev))))),
 },
 ]);

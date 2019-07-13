@@ -61,7 +61,7 @@ const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
       cond: c => !countPerTurn('cosmicThreat', c) && revealable().has(color || isNonGrayHero)
     },
     func: (ev) => {
-      color ? doReveal(ev, color) : chooseColorEv(ev, color => doReveal(ev, color))
+      color ? doReveal(ev, color) : chooseClassEv(ev, color => doReveal(ev, color))
     },
     what,
   });
@@ -240,7 +240,7 @@ function xdRampageEv(ev: Ev, name: string, effect0?: (p: Player) => void) {
 }
 
 function isSidekick(c: Card) { return c.cardName === 'Sidekick'; }
-function gainSidekickEv(ev: Ev) { cont(ev, () => gameState.sidekick.withTop(c => gainEv(ev, c))); }
+function gainSidekickEv(ev: Ev, where: 'DECK' = undefined, p: Player = playerState) { cont(ev, () => gameState.sidekick.withTop(c => where === 'DECK' ? gainToDeckEv(ev, c, p) : gainEv(ev, c, p))); }
 function recruitSidekickActionEv(ev: Ev, what: Card) {
   const cost = getRecruitCost(what, () => limitPerTurn(e => e.type === 'RECRUIT' && isSidekick(e.what)));
   return new Ev(ev, 'RECRUIT', { what, where: what.location, func: ev => buyCard(ev), cost });
@@ -249,11 +249,11 @@ function recruitSidekickActionEv(ev: Ev, what: Card) {
 function ascendToMastermind(ev: Ev) {
   moveCardEv(ev, ev.source, gameState.mastermind);
 }
-function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void) {
-  let done: boolean = false;
+function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void, p?: Player) {
+  let done: boolean = false; // TODO maybe remove triggers instead
   gameState.triggers.push({
     event: 'TURN', // TODO turn start trigger
-    match: ev => !done,
+    match: ev => !done && (!p || playerState === p),
     after: ev => (effect(ev), done = true),
   })
 }
@@ -366,6 +366,12 @@ function phasingActionEv(c: Card, ev: Ev) {
 // * Some Villains say things like "Escape: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought."
 // * Put this Villain on or near the specified place. While it's there, it has the listed effect. Any player can fight that Villain as normal to end that Fortify effect and put that Villain into their Victory Pile.
 // * If a card would fortify a place, don't do anything if there's already a Villain fortifying that place.
+function isFortifying(c: Card, d: Deck) {
+  return d.attached('FORTIFY').includes(c);
+}
+function fortifyEv(ev: Ev, c: Card, d: Deck) {
+  attachCardEv(ev, c, d, 'FORTIFY');
+}
 // {SHIELDCLEARANCE}
 // This keyword represents pro-registration S.H.I.E.L.D. forces that can be only defeated with the help of S.H.I.E.L.D. information.
 // * If a Villain says "S.H.I.E.L.D. Clearance," then you must discard a S.H.I.E.L.D. Hero as an additional cost to fight that Villain.
@@ -374,4 +380,19 @@ function phasingActionEv(c: Card, ev: Ev) {
 function shieldClearanceCond(n: number) { return () => playerState.hand.limit(isHero).count('S.H.I.E.L.D.') >= n; }
 function shieldClearanceCost(n: number) { return (ev: Ev) => selectObjectsEv(ev, "Discard S.H.I.E.L.D. Heros", n, playerState.hand.limit(isHero).limit('S.H.I.E.L.D.'), c => discardEv(ev, c)); }
 const shieldClearance = { fightCond: shieldClearanceCond(1), fightCost: shieldClearanceCost(1) };
-const doubleShieldClearance = { fightCond: shieldClearanceCond(2), fightCost: shieldClearanceCost(2) };
+
+function villainify(name: string, c: Card | ((c: Card) => boolean), defense: number | ((c: Card) => number), reward?: number | 'GAIN' | 'RESCUE' | ((ev: Ev) => void)) {
+  const cond = c instanceof Card ? ((v: Card) => v === c) : c;
+  addStatSet('isVillain', cond, () => true);
+  addStatSet('defense', cond, typeof defense === "number" ? (() => defense) : defense);
+  name && addStatSet('villainGroup', cond, () => name);
+  if (typeof reward === "number") {
+    addStatSet('vp', cond, () => reward);
+  } else if (reward === "GAIN") {
+    addStatSet('fight', cond, () => ev => gainEv(ev, ev.source));
+  } else if (reward === "RESCUE") {
+    addStatSet('fight', cond, () => ev => rescueEv(ev, ev.source));
+  } else if (reward) {
+    addStatSet('fight', cond, () => reward);
+  }
+}

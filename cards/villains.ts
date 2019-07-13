@@ -255,8 +255,8 @@ addVillainTemplates("Dark City", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Four Horsemen", "Famine", 4, 2, {
-    fight: ev => eachOtherPlayerVM(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, p), p)),
+    fight: ev => eachOtherPlayerVM(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p), p)),
   })],
 // FIGHT: Each other player reveals the top three cards of their deck, discards each of those cards that costs 1 or more, and puts the rest back in any order.
 // ESCAPE: Each player does that same effect.
@@ -542,7 +542,7 @@ addVillainTemplates("Paint the Town Red", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Sinister Six", "Shocker", 5, 3, {
-    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, p), p)),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p), p)),
   })],
 // AMBUSH: (After Vulture enters the city) If there is a Villain on the Rooftops or Bridge, swap Vulture with one of those Villains.
 // ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
@@ -707,7 +707,7 @@ addVillainTemplates("Villains", [
 // X-Treme Attack.
 // AMBUSH: Each player who does not reveal a Ranged Ally discards two cards, then draws a card.
   [ 2, makeVillainCard("Uncanny Avengers", "Havok", 4, 2, {
-    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => { pickDiscardEv(ev, p); pickDiscardEv(ev, p); drawEv(ev, 2, p); })),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => { pickDiscardEv(ev, 2, p); drawEv(ev, 2, p); })),
     varDefense: xTremeAttack,
     xTremeAttack: true,
   })],
@@ -1019,7 +1019,7 @@ addVillainTemplates("Fear Itself", [
   [ 1, makeVillainCard("The Mighty", "Hawkeye", 3, 2, {
     fightFail: uruEnchantedFail,
     trigger: uruEnchantedTrigger(1),
-    fight: ev => chooseOptionEv(ev, "Choose one", [{ l: "Each other player draws a card", v: true }, { l: "Each other player discards a card", v: false }], r => eachOtherPlayerVM(p => r ? drawEv(ev, 1, p) : pickDiscardEv(ev, p))),
+    fight: ev => chooseOptionEv(ev, "Choose one", [{ l: "Each other player draws a card", v: true }, { l: "Each other player discards a card", v: false }], r => eachOtherPlayerVM(p => r ? drawEv(ev, 1, p) : pickDiscardEv(ev, 1, p))),
   })],
 // Uru-Enchanted Weapon
 // If his Uru-Enchanted Weapon revealed an Adversary, KO one of your Allies.
@@ -1167,7 +1167,7 @@ addVillainTemplates("Secret Wars Volume 1", [
   [ 1, makeVillainCard("Domain of Apocalypse", "Apocalyptic Magneto", 8, 6, {
     fight: ev => {},
     escape: ascendToMastermind,
-    strike: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => selectObjectsEv(ev, "Discard down to four cards", p.hand.size - 4, p.hand.deck, c => discardEv(ev, c)), p)),
+    strike: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => pickDiscardEv(ev, -4, p), p)),
   })],
 // FIGHT: Reveal the top card of the Hero deck. The player of your choice gains it.
 // ESCAPE: Reveal the top card of the Hero deck. Each player reveals their hand and discards a card of that class.
@@ -1316,7 +1316,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // VP: 4
   [ 2, makeVillainCard("Wasteland", "Wasteland Hawkeye", 6, 4, {
     ambush: ev => captureEv(ev, ev.source),
-    fight: ev => chooseOneEv(ev, "Each other player", ["draws a card", () => eachOtherPlayerVM(p => drawEv(ev, 1, p))], ["discards a card", () => eachOtherPlayerVM(p => pickDiscardEv(ev, p))]),
+    fight: ev => chooseOneEv(ev, "Each other player", ["draws a card", () => eachOtherPlayerVM(p => drawEv(ev, 1, p))], ["discards a card", () => eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p))]),
   })],
 // FIGHT: Reveal the top card of your deck. If it costs 2 or less, KO it.
 // ATTACK: 4
@@ -1411,7 +1411,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // VP: 5
   [ 2, makeVillainCard("K'un-lun", "Laughing Skull", 5, 5, {
     ...nthCircleParams(5),
-    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => pickDiscardEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => pickDiscardEv(ev, 1, p), p)),
   })],
 // {NTHCIRCLE 6}
 // ESCAPE: Each player reveals a Hero that costs 6 or more, or they gain a wound.
@@ -1479,7 +1479,7 @@ addVillainTemplates("Secret Wars Volume 2", [
   [ 3, makeVillainCard("Utopolis", "Doctor Spectrum", 6, 4, {
     ambush: chargeAmbushEffect(1),
     fight: ev => spectrumPower() && selectCardAndKOEv(ev, playerState.discard.deck),
-    escape: ev => eachPlayer(p => spectrumPower(p) || pickDiscardEv(ev, p)),
+    escape: ev => eachPlayer(p => spectrumPower(p) || pickDiscardEv(ev, 1, p)),
   })],
 // While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 // ESCAPE: Nighthawk becomes a Scheme Twist that takes effect immediately.
@@ -1630,6 +1630,272 @@ addVillainTemplates("Captain America 75th Anniversary", [
     ambush: ev => captureEv(ev, ev.source),
     fight: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
     escape: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
+  })],
+]},
+]);
+addVillainTemplates("Civil War", [
+{ name: "CSA Special Marshals", cards: [
+// FIGHT: KO one of your heroes with a Recruit icon.
+// ESCAPE: Each player KOs one of their Heroes that has printed Attack of 2 or more.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("CSA Special Marshals", "Bullseye", 6, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(hasRecruitIcon)),
+    escape: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p).limit(c => c.printedAttack >= 2))),
+  })],
+// FIGHT: Each other player discards two cards, and then draws a card.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("CSA Special Marshals", "Moonstone", 4, 2, {
+    fight: ev => eachOtherPlayerVM(p => { pickDiscardEv(ev, 2, p); drawEv(ev, 1, p); }),
+  })],
+// Penance gets +1 Attack for each Villain in your Victory Pile.
+// ATTACK: 2+
+// VP: 3
+  [ 2, makeVillainCard("CSA Special Marshals", "Penance", 2, 3, {
+    varDefense: c => c.printedDefense + playerState.victory.count(isVillain),
+  })],
+// {SIZECHANGING COVERT}
+// ESCAPE: Fortify the Bystander Stack. While it's fortified, if a Bystander would be rescued from there, KO that Bystander instead.
+// ATTACK: 7*
+// VP: 4
+  [ 2, makeVillainCard("CSA Special Marshals", "Venom", 7, 4, {
+    escape: ev => fortifyEv(ev, ev.source, gameState.bystanders),
+    trigger: {
+      event: 'RESCUE',
+      match: (ev, source) => isFortifying(source, gameState.bystanders) && !ev.what,
+      replace: ev => gameState.bystanders.withTop(c => KOEv(ev, c)),
+    },
+    sizeChanging: Color.COVERT,
+  })],
+]},
+{ name: "Great Lakes Avengers", cards: [
+// {SIZECHANGING STRENGTH}
+// FIGHT: Each player reveals a Strength Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 7*
+// VP: 4
+  [ 2, makeVillainCard("Great Lakes Avengers", "Big Bertha", 7, 4, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    sizeChanging: Color.STRENGTH,
+  })],
+// {SIZECHANGING COVERT}
+// FIGHT: KO a card from your discard pile.
+// ATTACK: 5*
+// VP: 2
+  [ 2, makeVillainCard("Great Lakes Avengers", "Flatman", 5, 2, {
+    fight: ev => selectCardAndKOEv(ev, playerState.discard.deck),
+    sizeChanging: Color.COVERT,
+  })],
+// FIGHT: Reveal the top card of the Villain Deck. If it's a Villain or Bystander, Mr. Immortal reenters the Sewers.
+// ATTACK: 2
+// VP: 2
+  [ 2, makeVillainCard("Great Lakes Avengers", "Mr. Immortal", 2, 2, {
+    fight: ev => revealVillainDeckEv(ev, 1, cards => (cards.has(isBystander) || cards.has(isVillain)) && withCity('SEWERS', sewers => enterCityEv(ev, ev.source, sewers))),
+  })],
+// You can't fight Squirrel Girl if you played more than one card this turn.
+// ESCAPE: Fortify the Sidekick Stack. While it's fortified, Sidekicks can't be recruited or gained.
+// ATTACK: 3*
+// VP: 2
+  [ 2, makeVillainCard("Great Lakes Avengers", "Squirrel Girl", 3, 2, {
+    escape: ev => fortifyEv(ev, ev.source, gameState.sidekick),
+    trigger: { event: 'GAIN', match: (ev, source) => isFortifying(source, gameState.sidekick) && isSidekick(ev.what), replace: () => {}},
+    fightCond: c => turnState.cardsPlayed.size <= 1,
+  })],
+]},
+{ name: "Heroes for Hire", cards: [
+// {BRIBE}
+// ESCAPE: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought.
+// ATTACK: 9*
+// VP: 5
+  [ 2, makeVillainCard("Heroes for Hire", "Colleen Wing", 9, 5, {
+    escape: ev => fortifyEv(ev, ev.source, gameState.mastermind), // TODO prevent fight and maybe recruit (see squirrel girl)
+    bribe: true,
+  })],
+// {BRIBE}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 5*
+// VP: 3
+  [ 2, makeVillainCard("Heroes for Hire", "Humbug", 5, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    bribe: true,
+  })],
+// {BRIBE}
+// FIGHT: If you have any cards in your discard pile, then shuffle them into your deck, and Shang-Chi reenters the Sewers.
+// ATTACK: 3*
+// VP: 2
+  [ 2, makeVillainCard("Heroes for Hire", "Shang-Chi", 3, 2, {
+    fight: ev => { if (playerState.discard.size) {
+      shuffleIntoEv(ev, playerState.discard, playerState.deck); // TODO
+      withCity('SEWERS', sewers => enterCityEv(ev, ev.source, sewers));
+    } },
+    bribe: true,
+  })],
+// {BRIBE}
+// FIGHT: Each player discards two cards or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 7*
+// VP: 5
+  [ 2, makeVillainCard("Heroes for Hire", "Tarantula", 7, 5, {
+    fight: ev => eachPlayer(p => p.hand.size < 2 ? gainWoundEv(ev, p) : chooseOptionEv(ev, "Choose one",
+      [ {l:"Gain a Wound", v: () => gainWoundEv(ev, p)},
+        {l:"Discard two cards", v:() => pickDiscardEv(ev, 2, p)}], f => f(), p)),
+    escape: ev => eachPlayer(p => p.hand.size < 2 ? gainWoundEv(ev, p) : chooseOptionEv(ev, "Choose one",
+      [ {l:"Gain a Wound", v: () => gainWoundEv(ev, p)},
+        {l:"Discard two cards", v:() => pickDiscardEv(ev, 2, p)}], f => f(), p)),
+    bribe: true,
+  })],
+]},
+{ name: "Registration Enforcers", cards: [
+// FIGHT: If you fight Blade in the Sewers or Rooftops, you get +2 Recruit.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Registration Enforcers", "Blade", 4, 2, {
+    fight: ev => isLocation(ev.where, 'ROOFTOPS', 'SEWERS') && addRecruitEvent(ev, 2),
+  })],
+// FIGHT: Each player swaps a card from their hand with the top card of their deck.
+// ESCAPE: Each player swaps their hand with the top four cards of their deck.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Registration Enforcers", "Captain Marvel", 6, 4, {
+    fight: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to swap", p.hand.deck, c => swapCardsEv(ev, c, p.deck), p)),
+    escape: ev => eachPlayer(p => {/*TODO*/}),
+  })],
+// AMBUSH: Each player reveals a card that costs 5 or discards down to 5 cards.
+// FIGHT: Same effect.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 5
+  [ 2, makeVillainCard("Registration Enforcers", "Deadpool", 5, 5, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, c => c.cost === 5, () => pickDiscardEv(ev, -5, p), p)),
+    fight: ev => eachPlayer(p => revealOrEv(ev, c => c.cost === 5, () => pickDiscardEv(ev, -5, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost === 5, () => pickDiscardEv(ev, -5, p), p)),
+  })],
+// {SIZECHANGING INSTINCT}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 6*
+// VP: 3
+  [ 2, makeVillainCard("Registration Enforcers", "Micromax", 6, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    sizeChanging: Color.INSTINCT,
+  })],
+]},
+{ name: "S.H.I.E.L.D. Elite", cards: [
+// S.H.I.E.L.D. Clearance
+// AMBUSH: A S.H.I.E.L.D. Officer enters the city as a 3 Attack Villain. When you fight it, gain it as a Hero.
+// ATTACK: 1*
+// VP: 2
+  [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Agent Eric Marshall", 1, 2, {
+    ambush: ev => gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); }),
+    ...shieldClearance,
+  })],
+// S.H.I.E.L.D. Clearance
+// FIGHT: A S.H.I.E.L.D. Officer enters the city as a 3 Attack Villain. When you fight it, gain it as a Hero.
+// ATTACK: 2*
+// VP: 2
+  [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Agent Gabe Jones", 2, 2, {
+    fight: ev => gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); }),
+    ...shieldClearance,
+  })],
+// S.H.I.E.L.D. Clearance
+// FIGHT: Each player with no S.H.I.E.L.D. Officers in their discard pile gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 4*
+// VP: 3
+  [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Dum Dum Dugan", 4, 3, {
+    fight: ev => eachPlayer(p => p.victory.has(c => c.cardName === 'S.H.I.E.L.D. Officer') || gainWoundEv(ev, p)),
+    escape: ev => eachPlayer(p => p.victory.has(c => c.cardName === 'S.H.I.E.L.D. Officer') || gainWoundEv(ev, p)),
+    ...shieldClearance,
+  })],
+// S.H.I.E.L.D. Clearance
+// ESCAPE: Fortify the S.H.I.E.L.D. Officer stack. While it's fortified, whenever any number of S.H.I.E.L.D. Officers become Villains, an extra one becomes a Villain.
+// ATTACK: 6*
+// VP: 5
+  [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Sharon Carter, Agent 13", 6, 5, {
+    escape: ev => fortifyEv(ev, ev.source, gameState.officer), // TODO
+    ...shieldClearance,
+  })],
+]},
+{ name: "Superhuman Registration Act", cards: [
+// AMBUSH: Fortify your deck. While Iron Spider fortifies a players deck, that player draws one fewer card at the end of their turn.
+// FIGHT: Reveal the top card of the Villain Deck. If that card is worth 2 VP or less, Iron Spider fortifies the deck of the player on your left.
+// ATTACK: 2
+// VP: 3
+  [ 2, makeVillainCard("Superhuman Registration Act", "Iron Spider", 2, 3, {
+    ambush: ev => fortifyEv(ev, ev.source, playerState.deck),
+    fight: ev => revealVillainDeckEv(ev, 1, cards => cards.has(c => c.vp <= 2) && fortifyEv(ev, ev.source, playerState.left.deck)),
+    // TODO
+  })],
+// ESCAPE: Fortify an HQ space. While its fortified, Heroes can't be gained from that space.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Superhuman Registration Act", "Ms. Marvel", 5, 3, {
+    escape: ev => selectCardEv(ev, "Choose an HQ space", gameState.hq, d => fortifyEv(ev, ev.source, d)),
+    // TODO
+  })],
+// {SIZECHANGING STRENGTH}
+// ESCAPE: Fortify the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.
+// ATTACK: 8*
+// VP: 5
+  [ 2, makeVillainCard("Superhuman Registration Act", "She-Hulk", 8, 5, {
+    escape: ev => fortifyEv(ev, ev.source, gameState.villaindeck),
+    trigger: { event: 'STRIKE', match: (ev, source) => isFortifying(source, gameState.villaindeck), after: ev => {
+      eachPlayer(p => gainWoundEv(ev, p));
+      withCity('SEWERS', sewers => enterCityEv(ev, ev.source, sewers));
+    }},
+    sizeChanging: Color.STRENGTH,
+  })],
+// {SIZECHANGING TECH}
+// ESCAPE: Fortify the Hero Deck. While it's fortified, whenever a Hero in the HQ costs 7 or more, KO that Hero.
+// ATTACK: 7*
+// VP: 4
+  [ 2, makeVillainCard("Superhuman Registration Act", "Yellowjacket", 7, 4, {
+    escape: ev => {
+      fortifyEv(ev, ev.source, gameState.herodeck);
+      hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c));
+    },
+    trigger: {
+      event: 'MOVECARD',
+      match: (ev, source) => isFortifying(source, gameState.herodeck) && ev.to.isHQ && isHero(ev.what) && ev.what.cost >= 7,
+      after: ev => KOEv(ev, ev.parent.what),
+    },
+    sizeChanging: Color.TECH,
+  })],
+]},
+{ name: "Thunderbolts", cards: [
+// FIGHT: Look at the top three cards of your deck. KO one and put the rest back in any order.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Thunderbolts", "Fixer", 4, 2, {
+    fight: ev => lookAtDeckEv(ev, 3, () => selectCardAndKOEv(ev, playerState.revealed.deck)),
+  })],
+// FIGHT: Each player reveals a Tech Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Thunderbolts", "Mach-IV", 5, 3, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
+  })],
+// ESCAPE: Fortify the Wound Stack. While it's fortified, whenever a player gains a Wound, that player gains an extra Wound.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Thunderbolts", "Radioactive Man", 6, 4, {
+    escape: ev => fortifyEv(ev, ev.source, gameState.wounds),
+    trigger: {
+      event: 'GAIN',
+      match: (ev, source) => isFortifying(source, gameState.wounds) && isWound(ev.what) && ev.getSource() !== source,
+      after: ev => gainWoundEv(ev, ev.parent.who),
+    }
+  })],
+// FIGHT: Each player without another Thunderbolts Villain in their Victory Pile gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Thunderbolts", "Songbird", 5, 3, {
+    fight: ev => eachPlayer(p => p.victory.limit(c => c !== ev.source).has(isGroup('Thunderbolts')) || gainWoundEv(ev, p)),
+    escape: ev => eachPlayer(p => p.victory.limit(c => c !== ev.source).has(isGroup('Thunderbolts')) || gainWoundEv(ev, p)),
   })],
 ]},
 ]);

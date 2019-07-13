@@ -2,7 +2,7 @@
 addTemplates("MASTERMINDS", "Legendary", [
 makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   // Each player with exactly 6 cards in hand reveals a [Tech] Hero or puts 2 cards from their hand on top of their deck.
-  eachPlayer(p => { if (p.hand.size === 6) revealOrEv(ev, Color.TECH, () => { pickTopDeckEv(ev, p); pickTopDeckEv(ev, p); }, p); });
+  eachPlayer(p => { if (p.hand.size === 6) revealOrEv(ev, Color.TECH, () => { pickTopDeckEv(ev, 2, p); }, p); });
 }, [
   // You may recruit a [Tech] or [Ranged] Hero from the HQ for free.
   [ "Dark Technology", ev => {
@@ -12,7 +12,7 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   [ "Monarch's Decree", ev => {
       chooseOneEv(ev, "Each other player",
       ["draws a card", ev => eachOtherPlayerVM(p => drawEv(ev, 1, p))],
-      ["discards a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, p))]
+      ["discards a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p))]
       );
   } ],
   // Take another turn after this one.
@@ -37,7 +37,7 @@ makeMastermindCard("Loki", 10, 5, "Enemies of Asgard", ev => {
 ]),
 makeMastermindCard("Magneto", 8, 5, "Brotherhood", ev => {
 // Each player reveals an X-Men Hero or discards down to four cards.
-  eachPlayer(p => revealOrEv(ev, 'X-Men', () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 4, p.hand.deck, sel => discardEv(ev, sel), p), p));
+  eachPlayer(p => revealOrEv(ev, 'X-Men', () => pickDiscardEv(ev, -4, p), p));
 }, [
   // Recruit an X-Men Hero from the HQ for free.
   [ "Bitter Captor", ev => selectCardEv(ev, "Recruit an X-Men for free", hqHeroes().limit('X-Men'), sel => recruitForFreeEv(ev, sel)) ],
@@ -223,7 +223,7 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
 }, [
   [ "Cosmic Entity", ev => {
   // Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then draws that many cards.
-    chooseColorEv(ev, color => eachPlayer(p => {
+    chooseClassEv(ev, color => eachPlayer(p => {
       let count = 0;
       selectObjectsAnyEv(ev, "Reveal cards", revealable(p).limit(color), () => count++, p);
       drawEv(ev, count, p);
@@ -236,7 +236,7 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
   } ],
   [ "Panicked Mobs", ev => {
   // Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then rescues that many Bystanders.
-    chooseColorEv(ev, color => eachPlayer(p => {
+    chooseClassEv(ev, color => eachPlayer(p => {
       selectObjectsAnyEv(ev, "Reveal cards", revealable(p).limit(color), () => rescueByEv(ev, p), p);
     }))
   } ],
@@ -404,7 +404,7 @@ makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
   } ],
   [ "Ride of the Valkyries", ev => {
   // Each other player reveals a Foes of Asgard Ally or discards a card for each Asgardian Warrior in the Overrun Pile.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => repeat(gameState.escaped.count(c => c.villainGroup === ev.source.mastermind.leads), () => pickDiscardEv(ev, p)), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => pickDiscardEv(ev, gameState.escaped.count(c => c.villainGroup === ev.source.mastermind.leads), p), p));
   } ],
 ], {
   varDefense: c => c.printedDefense + cityVillains().count(isGroup(c.leads)) + gameState.escaped.count(isGroup(c.leads)),
@@ -651,7 +651,7 @@ addTemplates("MASTERMINDS", "Secret Wars Volume 2", [
 // 7th Circle of Kung-Fu
 makeMastermindCard("Immortal Emperor Zheng-Zhu", 7, 5, "K'un-Lun", ev => {
 // Each player reveals a Hero that costs 7 or more, or they discard down to 3 cards.
-  eachPlayer(p => revealOrEv(ev, c => c.cost >= 7, () => selectObjectsEv(ev, "Discard down to 3 cards", p.hand.size - 3, p.hand.deck, c => discardEv(ev, c), p), p));
+  eachPlayer(p => revealOrEv(ev, c => c.cost >= 7, () => pickDiscardEv(ev, -3, p), p));
 }, [
   [ "Ultimate Kung-Fu Mastery", ev => {
   // Each other player reveals a card with "Circle of Kung-Fu" from their Victory Pile or gains a Wound.
@@ -784,7 +784,7 @@ makeMastermindCard("Arnim Zola", 6, 6, "Zola's Creations", ev => {
   } ],
   [ "Computer-Uploaded Genius", ev => {
   // Each other player reveals a [Tech] Hero or discards a card.
-    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, p), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, 1, p), p));
   } ],
   [ "Pet Projects", ev => {
   // Each other player reveals a Zola's Creations Villain from their Victory Pile or gains a Wound.
@@ -804,7 +804,7 @@ makeMastermindCard("Baron Heinrich Zemo", 9, 6, "Masters of Evil (WWII)", ev => 
 }, [
   [ "Fallen Idols", ev => {
   // Each other player that is not a Savior discards a card.
-    eachOtherPlayerVM(p => saviorPower(p) || pickDiscardEv(ev, p));
+    eachOtherPlayerVM(p => saviorPower(p) || pickDiscardEv(ev, 1, p));
   } ],
   [ "Finding Zemo", ev => {
   // Reveal the top five cards of the Villain Deck. If you revealed any Bystanders, KO them and each other player gains a Wound. Put the rest back in random order.
@@ -831,5 +831,143 @@ makeMastermindCard("Baron Heinrich Zemo", 9, 6, "Masters of Evil (WWII)", ev => 
       canPayCost(action) && chooseMayEv(ev, "Rescue a Bystander for 2 Recruit", () => playEvent(action));
     }
   } ],
+}),
+]);
+addTemplates("MASTERMINDS", "Civil War", [
+makeMastermindCard("Authoritarian Iron Man", 12, 6, "Superhuman Registration Act", ev => {
+// Authoritarian Iron Man fortifies the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space.
+// Villains in that space get +3 Attack.
+  const d = ev.source.location.isCity ? ev.source.location.adjacentRight && fortifyEv(ev, ev.source, ev.source.location.adjacentRight) :
+    withCity('BRIDGE', d => fortifyEv(ev, ev.source, d));
+}, [
+  [ "Armada of Armors", ev => {
+  // You get +6 Recruit usable only to recruit Ranged and/or Tech Heroes.
+    addRecruitSpecialEv(ev, isColor(Color.RANGED | Color.TECH), 6);
+  } ],
+  [ "Freeze Domestic Assets", ev => {
+  // Each other player reveals their hand and discards all their cards with Recruit icons.
+    eachOtherPlayerVM(p => p.hand.limit(hasRecruitIcon).each(c => discardEv(ev, c)))
+  } ],
+  [ "Man the Fortifications", ev => {
+  // Reveal the top card of the Villain Deck. If it's a Villain, it enters the city space that Authoritarian Iron Man is fortifying.
+    revealVillainDeckEv(ev, 1, c => c.limit(isVillain).each(c => {
+      gameState.city.limit(d => isFortifying(ev.source.mastermind, d)).each(d => enterCityEv(ev, c, d));
+    }))
+  } ],
+  [ "Recall to Service", ev => {
+  // The Villain with the highest printed Attack in the Escape Pile enters the city space that Authoritarian Iron Man is fortifying.
+    selectCardEv(ev, 'Select a Villain', gameState.escaped.limit(isVillain).highest(c => c.printedDefense), c => {
+      gameState.city.limit(d => isFortifying(ev.source.mastermind, d)).each(d => enterCityEv(ev, c, d));
+    });
+  } ],
+], { init: m => {
+  addStatMod('defense', c => isVillain(c) && isFortifying(m, c.location), 3);
+}}),
+// Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
+makeMastermindCard("Baron Helmut Zemo", 16, 6, "Thunderbolts", ev => {
+// Each player KOs a Villain from their Victory Pile. Any player who cannot do so gains a Wound.
+}, [
+  [ "Blasted Henchmen!", ev => {
+  // Each other player reveals a Tech Hero or KOs a Villain from their Victory Pile.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => selectCardAndKOEv(ev, p.victory.limit(isVillain), p), p))
+  } ],
+  [ "Cursed Dynasty", ev => {
+  // When you draw a new hand of cards at the end of this turn, draw two extra cards.
+    addEndDrawMod(2);
+  } ],
+  [ "Endless Minions", ev => {
+  // Each other player reveals a Tech Hero or chooses a Villain from their Victory Pile and it enters the city.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => selectCardEv(ev, "Choose a Villain to enter the city", p.victory.limit(isVillain), c => villainDrawEv(ev, c), p), p));
+  } ],
+  [ "Revenge for My Father", ev => {
+  // Each other player reveals their hand. Each player who revealed an Avengers Hero gains a Wound.
+    eachOtherPlayerVM(p => p.hand.has('Avengers') && gainWoundEv(ev, p));
+  } ],
+], {
+  varDefense: c => c.printedDefense - playerState.victory.count(isVillain),
+}),
+// Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.H.I.E.L.D. Elite or Officers in the city.
+makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. Elite.", ev => {
+// Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
+  repeat(2, () => cont(ev, () => {
+    gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); });
+  }));
+}, [
+  [ "Crash the Helicarrier", ev => {
+  // KO any number of your S.H.I.E.L.D. Heroes.
+    selectObjectsAnyEv(ev, 'Choose cards to KO', yourHeroes().limit('S.H.I.E.L.D.'), c => KOEv(ev, c));
+  } ],
+  [ "Declare Martial Law", ev => {
+  // Put a S.H.I.E.L.D. Officer into each empty city space as 3 Attack Villains. When you fight them, gain them as Heroes.
+    gameState.city.limit(d => !d.size).each(d => cont(ev, () => {
+      gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c, d); });
+    }));
+  } ],
+  [ "Evacuation Code Epsilon", ev => {
+  // Each other player reveals their hand and discards a S.H.I.E.L.D. card.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Discard a S.H.I.E.L.D. card", p.hand.limit('S.H.I.E.L.D.'), c => discardEv(ev, c), p));
+  } ],
+  [ "Rapid Response Team", ev => {
+  // Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
+    repeat(2, () => cont(ev, () => {
+      gameState.officer.withTop(c => { villainify(u, c, 3, "GAIN"); enterCityEv(ev, c); });
+    }));
+  } ],
+], {
+  fightCond: c => shieldClearanceCond(2)() && !cityVillains().has(isGroup(c.leads)) && !cityVillains().has(c => c.cardName === 'S.H.I.E.L.D. Officer'),
+  fightCost: shieldClearanceCost(2),
+}),
+// {BRIBE}
+makeMastermindCard("Misty Knight", 14, 6, "Heroes for Hire", ev => {
+// Each player reveals 4 cards with Recruit icons or gains a Wound.
+  eachPlayer(p => yourHeroes(p).count(hasRecruitIcon) >=4 || gainWoundEv(ev, p)); // TODO multiplayer reveal
+}, [
+  [ "Bionic Repulsor Field", ev => {
+  // Each other player reveals a Marvel Knight Hero or puts two cards from their hand on top of the deck.
+    eachOtherPlayerVM(p => revealOrEv(ev, 'Marvel Knights', () => selectObjectsEv(ev, "Put 2 cards on top of your deck", 2, p.hand.deck, c => moveCardEv(ev, c, p.deck))));
+  } ],
+  [ "Cyborg Detective", ev => {
+  // Reveal the top three cards of the Villain Deck. Put them back in any order.
+    revealVillainDeckEv(ev, 3, () => {}, false, false);
+  } ],
+  [ "Trusted Bodyguard", ev => {
+  // Going clockwise, the fist other player with Colleen Wing in their Victory Pile rescues 5 Bystanders and returns Colleen Wing to play fortifying Misty Knight.
+    gameState.players.map(p => p.victory.limit(c => c.cardName === "Colleen Wing")).merge().withFirst(c => {
+      rescueByEv(ev, owner(c), 5);
+      fortifyEv(ev, c, gameState.mastermind);
+    });
+  } ],
+  [ "Vibranium Cyber Arm", ev => {
+  // Each other player reveals a Marvel Knight Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, 'Marvel Knights', () => gainWoundEv(ev, p), p));
+  } ],
+], { bribe: true }),
+// Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
+makeMastermindCard("Ragnarok", 6, 6, "Registration Enforcers", ev => {
+// Each player says "zero" or "not zero." Then, each player discards all their cards with that cost.
+  eachPlayer(p => chooseOptionEv(ev, "Choose", [{l:"Zero",v:true}, {l:"Not zero",v:false}], v => {
+    p.hand.limit(c => (c.cost === 0) === v).each(c => discardEv(ev, c));
+  }, p))
+}, [
+  [ "Electrical Charge", ev => {
+  // Count how many Ranged Heroes you have. Draw that many cards.
+    drawEv(ev, yourHeroes().count(Color.RANGED));
+  } ],
+  [ "God of Cyborg Thunder", ev => {
+  // You can spend Recruit as Attack this turn.
+    turnState.attackWithRecruit = true;
+  } ],
+  [ "Hammer Goliath", ev => {
+  // KO each Hero from the HQ that costs 7 or more.
+    hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c));
+  } ],
+  [ "Unnatural Storm Clouds", ev => {
+  // Put all Heroes from the HQ on the bottom of the Hero Deck in random order.
+    const heroes = hqHeroes();
+    heroes.shuffle();
+    heroes.each(c => moveCardEv(ev, c, gameState.herodeck, true));
+  } ],
+], {
+  varDefense: c => c.baseDefense + 2 * numClasses(hqHeroes()),
 }),
 ]);

@@ -282,7 +282,7 @@ addTemplates("SCHEMES", "Paint the Town Red", [
 makeSchemeCard("The Clone Saga", { twists: 8 }, ev => {
   // Twist: Each player reveals two non-grey Heroes with the same card name or discards down to 3 cards.
   // TODO multiplayer reveal
-  eachPlayer(p => revealOrEv(ev, c => p.hand.deck.count(cc => cc.cardName === c.cardName) >= 2, () => selectObjectsEv(ev, "Choose cards to discard", p.hand.size - 3, p.hand.deck, sel => discardEv(ev, sel), p), p));
+  eachPlayer(p => revealOrEv(ev, c => p.hand.deck.count(cc => cc.cardName === c.cardName) >= 2, () => pickDiscardEv(ev, -3, p), p));
 }, [
   {
     event: 'ESCAPE',
@@ -1052,7 +1052,7 @@ makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
   replace: ev => {
     let allGood = true;
     gameState.scheme.attachedDeck('CODE').each(c => {
-      chooseColorEv(ev, col => allGood = allGood && c.isColor(col));
+      chooseClassEv(ev, col => allGood = allGood && c.isColor(col));
       attachCardEv(ev, c, gameState.scheme, 'DECODED');
     });
     cont(ev, () => {

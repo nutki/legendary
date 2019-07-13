@@ -116,6 +116,7 @@ interface VillainCardAbillities {
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   xTremeAttack?: boolean
   printedNthCircle?: number
+  sizeChanging?: number
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -126,6 +127,7 @@ interface MastermindCardAbillities {
   triggers?: Trigger[]
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   fightCond?: (c?: Card) => boolean
+  fightCost?: (ev: Ev) => void
   escape?: Handler | Handler[] // King Hyperion
   printedNthCircle?: number
 }
@@ -228,6 +230,8 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
 function makeDividedHeroCard(c1: Card, c2: Card) {
   let c = new Card("HERO", `${c1.cardName} / ${c2.cardName}`);
   const sumPrintedStat = (a: number, b: number) => a === undefined ? b : a + (b || 0);
+  const orStat = (a: number, b: number) => a === undefined ? b : a | (b || 0);
+  const mergeArrayStat = <T>(a: T[], b: T[]) => a === undefined ? b : b === undefined ? a : [...a, ...b].unique(a => a);
   c.divided = { left: c1, right: c2 };
   c.printedRecruit = sumPrintedStat(c1.printedRecruit, c2.printedRecruit);
   c.printedAttack = sumPrintedStat(c1.printedAttack, c2.printedAttack);
@@ -236,7 +240,10 @@ function makeDividedHeroCard(c1: Card, c2: Card) {
   c.heroName; // TODO handle in ???
   c.flags = c1.flags;
   c.effects = c1.effects.concat(c2.effects);
-  c.sizeChanging = c1.sizeChanging | c2.sizeChanging;
+  c.sizeChanging = orStat(c1.sizeChanging, c2.sizeChanging);
+  c.cardActions = mergeArrayStat(c1.cardActions, c2.cardActions);
+  // TODO handle flags
+  // TODO handle costs
   return c;
 }
 function makeVillainCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
@@ -706,6 +713,7 @@ interface Turn extends Ev {
   nextHeroRecruit?: "HAND" | "DECK" | "SOARING"
   turnActions?: Ev[]
   perTurn?: Map<string, number>
+  playDividedBoth?: boolean
 }
 interface Trigger {
   event: EvType
@@ -1311,6 +1319,10 @@ function sharesColor(c1: Card) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
   return (c2: Card) => colors.has(color => c1.isColor(color) && c2.isColor(color));
 }
+function numHeroNames(heroes: Card[]) {
+  return heroes.limit(isHero).uniqueCount(c => c.heroName || c.cardName);
+  // TODO CW
+}
 
 function superPower(...f: (number | Affiliation)[]): number {
   if (f.length > 1) return f.count(c => superPower(c) < f.count(e => c === e)) === 0 ? 1 : 0;
@@ -1518,6 +1530,7 @@ function canHeal(c: Card): boolean {
   return c.healCond ? c.healCond() : true;
 }
 function canPlay(c: Card): boolean {
+  if (c.divided) return canPlay(c.divided.left) || canPlay(c.divided.right);
   let type = c.playCostType;
   let val = c.playCost;
   if (type === undefined) return true;
@@ -1581,8 +1594,9 @@ function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   if (!what.instance) return;
   pushEv(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });
 }
-function shuffleIntoEv(ev: Ev, what: Card, where: Deck): void {
-  moveCardEv(ev, what, where);
+function shuffleIntoEv(ev: Ev, what: Card | Deck, where: Deck): void {
+  const cards = what instanceof Card ? [ what ] : what.deck;
+  cont(ev, () => cards.each(c => moveCard(c, where)));
   cont(ev, () => where.shuffle());
 }
 // Swaps contents of 2 city spaces
@@ -1782,7 +1796,7 @@ function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = pla
 function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
   gameState.players.length > 1 && _choosePlayerEv(ev, effect, gameState.players.limit(p => p !== agent), agent);
 }
-function chooseColorEv(ev: Ev, f: ((color: number) => void)) {
+function chooseClassEv(ev: Ev, f: ((color: number) => void)) {
   chooseOneEv(ev, "Choose hero class",
     ['Strength', () => f(Color.STRENGTH) ],
     ['Instinct', () => f(Color.INSTINCT) ],
@@ -1795,16 +1809,11 @@ function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false
   const options = fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
   options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);
 }
-function pickDiscardEv(ev: Ev, who?: Player, agent?: Player) {
-  who = who || playerState;
-  agent = agent || who;
-  selectCardEv(ev, "Choose a card to discard", who.hand.deck, sel => discardEv(ev, sel), agent);
+function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState) {
+  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", who.hand.deck, sel => discardEv(ev, sel), who));
 }
-function pickTopDeckEv(ev: Ev, who?: Player, agent?: Player) {
-  who = who || playerState;
-  agent = agent || who;
-  const name = agent === who ? "your" : who.name + "'s";
-  selectCardEv(ev, `Choose a card to put on top of ${name} deck`, who.hand.deck, sel => moveCardEv(ev, sel, who.deck), agent);
+function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState) {
+  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on top of your deck`, who.hand.deck, sel => moveCardEv(ev, sel, who.deck), who));
 }
 function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
@@ -1882,8 +1891,8 @@ function playCardEffects(ev: Ev, card: Card) {
 function playCard2(ev: Ev) {
   const card = ev.what;
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
-    if (card.playCostType === "DISCARD") repeat(card.playCost, () => pickDiscardEv(ev));
-    if (card.playCostType === "TOPDECK") repeat(card.playCost, () => pickTopDeckEv(ev));
+    if (card.playCostType === "DISCARD") pickDiscardEv(ev, card.playCost);
+    if (card.playCostType === "TOPDECK") pickTopDeckEv(ev, card.playCost);
     playCardEffects(ev, ev.what);
     cont(ev, () => turnState.cardsPlayed.push(card));
   }});
@@ -1891,9 +1900,15 @@ function playCard2(ev: Ev) {
 function playCard1(ev: Ev) {
   const d = ev.what.divided;
   if (d) {
+    const playBoth = turnState.playDividedBoth;
     chooseOptionEv(ev, "Choose side to play", [{l:d.left.cardName, v:false}, {l:d.right.cardName, v:true}], v => {
-      makeCardDividedChoice(ev.what, v);
-      playCard2(ev);
+      if (canPlay(ev.what)) {
+        makeCardDividedChoice(ev.what, v);
+        playCard2(ev);
+      }
+      if (playBoth) {
+        playCopyEv(ev, v ? ev.what.divided.left : ev.what.divided.right);
+      }
     });
   } else playCard2(ev);
 }
@@ -2012,8 +2027,8 @@ function villainDraw(ev: Ev): void {
     throw Error("dont know what to do with: " + c.id);
   }
 }
-function enterCityEv(ev: Ev, c: Card) {
-  moveCardEv(ev, c, gameState.cityEntry);
+function enterCityEv(ev: Ev, c: Card, d?: Deck) {
+  moveCardEv(ev, c, d || gameState.cityEntry);
   pushEffects(ev, c, 'ambush', c.ambush);
 }
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
@@ -2026,7 +2041,7 @@ function villainEscape(ev: Ev): void {
   cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   gameState.bystandersCarried += b.count(isBystander);
-  if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, p));
+  if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, 1, p));
   moveCardEv(ev, c, gameState.escaped);
   selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
   pushEffects(ev, c, "escape", c.escape);

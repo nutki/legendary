@@ -109,3 +109,19 @@ makeHenchmenCard("Spider-Infected", 3, {
   ambush: ev => turnState.nextHeroRecruit = 'DECK',
 }),
 ]);
+addTemplates("HENCHMEN", "Civil War", [
+// This gets +1 Attack for each other Mandroid in your Victory Pile.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+makeHenchmenCard("Mandroid", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: c => c.printedDefense + playerState.victory.count(isGroup("Mandroid")),
+}),
+// S.H.I.E.L.D. Clearance
+// FIGHT: KO a card from your discard pile.
+// ATTACK: 3*
+makeHenchmenCard("Cape-Killers", 3, {
+  fight: ev => selectCardAndKOEv(ev, playerState.discard.deck),
+  ...shieldClearance,
+}),
+]);
