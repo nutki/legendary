@@ -3349,3 +3349,98 @@ addHeroTemplates("Deadpool", [
   ]),
 },
 ]);
+addHeroTemplates("Noir", [
+{
+  name: "Angel Noir",
+  team: "X-Men",
+// {POWER Instinct} You get +1 Attack.
+// GUN: 1
+  c1: makeHeroCard("Angel Noir", "Impetuous Dive", 3, u, 2, Color.INSTINCT, "X-Men", "GFD", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 1)),
+// Choose a Hero Class. <b>Investigate</b> for a card of that Hero Class.
+  c2: makeHeroCard("Angel Noir", "Multitalented", 4, 1, 1, Color.STRENGTH, "X-Men", "F", ev => chooseClassEv(ev, col => investigateEv(ev, col))),
+// You get the printed Recruit and Attack of a Hero in the HQ. Then put that Hero on the bottom of the Hero Deck.
+  uc: makeHeroCard("Angel Noir", "Identical Twin Brother", 5, 0, 0, Color.INSTINCT, "X-Men", "", ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
+    addAttackEvent(ev, c.printedAttack || 0);
+    addRecruitEvent(ev, c.printedRecruit || 0);
+    moveCardEv(ev, c, gameState.herodeck, true);
+  })),
+// <b>Investigate</b> the Hero Deck for any card and put that card in your hand.
+  ra: makeHeroCard("Angel Noir", "Missing Person Case", 8, u, 3, Color.COVERT, "X-Men", "", ev => investigateEv(ev, u, gameState.herodeck, c => moveCardEv(ev, c, playerState.hand))),
+},
+{
+  name: "Daredevil Noir",
+  team: "Marvel Knights",
+// The next Hero you recruit this turn goes on top of your deck.
+  c1: makeHeroCard("Daredevil Noir", "Balancing Act", 3, 1, 1, Color.COVERT, "Marvel Knights", "F", ev => turnState.nextHeroRecruit = 'DECK'),
+// Choose a number 1 or more. <b>Investigate</b> for a card of that cost.
+// GUN: 1
+  c2: makeHeroCard("Daredevil Noir", "Listen for Heartbeats", 4, u, 2, Color.INSTINCT, "Marvel Knights", "GFD", ev => chooseCostEv(ev, n => investigateEv(ev, c => c.cost === n), 1)),
+// {POWER Covert} <b>Investigate</b> for a card that costs 0. KO that card.
+  uc: makeHeroCard("Daredevil Noir", "Discover the Bodies", 5, 3, u, Color.COVERT, "Marvel Knights", "F", ev => superPower(Color.COVERT) && investigateEv(ev, c => c.cost === 0, playerState.deck, c => KOEv(ev, c))),
+// Discard a card from the top or bottom of your deck. If it costs 0, you get +1 Attack and repeat this process. If your deck runs out, stop.
+  ra: makeHeroCard("Daredevil Noir", "Hitting Rock Bottom", 7, u, 3, Color.INSTINCT, "Marvel Knights", "", ev => {
+    const f = () => playerState.deck.size > 0 && chooseOptionEv(ev, "Reveal a card from", [{l:"Top",v:false},{l:"Bottom",v:true}], v => lookAtDeckTopOrBottomEv(ev, 1, v, () => playerState.revealed.each(c => {
+      discardEv(ev, c);
+      c.cost === 0 && (addAttackEvent(ev, 1), f());
+    })));
+  }),
+},
+{
+  name: "Iron Man Noir",
+  team: "Avengers",
+// To play this, you must put another card from your hand on top of your deck.
+// GUN: 1
+  c1: makeHeroCard("Iron Man Noir", "Steam-Powered Arsenal", 3, u, 3, Color.RANGED, "Avengers", "GF", [], { playCost: 1, playCostType: 'TOPDECK' }),
+// <b>Investigate</b> for a [Tech] card.
+// GUN: 1
+  c2: makeHeroCard("Iron Man Noir", "Mechanized Plate-Mail", 4, 2, u, Color.TECH, "Avengers", "GFD", ev => investigateEv(ev, Color.TECH)),
+// {POWER Tech} You may use the "Fight" ability of a Villain worth 1 VP in your Victory Pile.
+  uc: makeHeroCard("Iron Man Noir", "Learn from Enemies", 6, u, 3, Color.TECH, "Avengers", "", ev => superPower(Color.TECH) && selectCardOptEv(ev, "Choose a Villain", playerState.victory.limit(isVillain).limit(c => c.vp === 1), c => {
+    pushEffects(ev, c, 'fight', c.fight);
+  })),
+// Whenever you <b>Investigate</b> this turn, look a three cards instead of two.
+// Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
+// GUN: 1
+  ra: makeHeroCard("Iron Man Noir", "Adventurers Assemble!", 7, u, 4, Color.TECH, "Avengers", "G", [
+    ev => turnState.investigateAmount = 3,
+    ev => chooseOptionEv(ev, "Choose", [{l:"Recruit",v:hasRecruitIcon}, {l:"Attack",v:hasAttackIcon}], v => investigateEv(ev, v)),
+  ]),
+},
+{
+  name: "Luke Cage Noir",
+  team: "Marvel Knights",
+// <b>Investigate</b> for a card that costs 4 or more.
+  c1: makeHeroCard("Luke Cage Noir", "Private Investigations", 4, u, 2, Color.COVERT, "Marvel Knights", "FD", ev => investigateEv(ev, c => c.cost >= 4)),
+// You get +1 Recruit for each other card you played this turn that costs 4 or more.
+  c2: makeHeroCard("Luke Cage Noir", "Follow Big Leads", 4, 2, u, Color.STRENGTH, "Marvel Knights", "FD", ev => addRecruitEvent(ev, turnState.cardsPlayed.count(c => c.cost >= 4))),
+// Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
+  uc: makeHeroCard("Luke Cage Noir", "Unbreakable Cage", 6, u, 4, Color.STRENGTH, "Marvel Knights", "", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.hand && !turnState.pastEvents.has(e => e.type === 'DRAW' && e.getSource() === source),
+    replace: ev => selectCardOptEv(ev, "Reveal to Investigate", [ev.source], () => {
+      investigateEv(ev, u, owner(ev.source).deck, c => drawCardEv(ev, c, owner(c)), owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// You get +2 Attack for each other card you played this turn that costs 4 or more.
+  ra: makeHeroCard("Luke Cage Noir", "Weight of the World", 8, u, 5, Color.STRENGTH, "Marvel Knights", "D", ev => addAttackEvent(ev, 2 * turnState.cardsPlayed.count(c => c.cost >= 4))),
+},
+{
+  name: "Spider-Man Noir",
+  team: "Spider Friends",
+// <b>Investigate</b> for a card that costs 2 or less.
+// GUN: 1
+  c1: makeHeroCard("Spider-Man Noir", "Gumshoe's Revolver", 2, u, 1, Color.TECH, "Spider Friends", "GFD", ev => investigateEv(ev, c => c.cost <= 2)),
+// {POWER Ranged} You get 2+ Attack. FIX (+2)
+  c2: makeHeroCard("Spider-Man Noir", "Webs of Darkness", 2, u, 1, Color.RANGED, "Spider Friends", "FD", ev => superPower(Color.RANGED) && addAttackEvent(ev, 2)),
+// {POWER Instinct} <b>Investigate</b> the Bystander Stack for a Bystander and rescue it.
+// TODO revealed bytstander deck
+  uc: makeHeroCard("Spider-Man Noir", "Solve the Crime", 2, u, 2, Color.INSTINCT, "Spider Friends", "FD", ev => superPower(Color.INSTINCT) && investigateEv(ev, isBystander, gameState.bystanders, c => rescueEv(ev, c))),
+// {TEAMPOWER Spider Friends} <b>Investigate</b> each player's deck for a card that costs 2 or less, play a copy of that card, then put it into their discard pile.
+  ra: makeHeroCard("Spider-Man Noir", "Spider-Totem's Chosen", 2, u, 1, Color.STRENGTH, "Spider Friends", "D", ev => {
+    if (superPower("Spider Friends")) eachPlayer(p => investigateEv(ev, c => c.cost <= 2, p.deck, c => {
+      playCopyEv(ev, c);
+      discardEv(ev, c);
+    }))
+  }),
+},
+]);

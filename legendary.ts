@@ -719,6 +719,7 @@ interface Turn extends Ev {
   turnActions?: Ev[]
   perTurn?: Map<string, number>
   playDividedBoth?: boolean
+  investigateAmount?: number
 }
 interface Trigger {
   event: EvType
@@ -1861,6 +1862,19 @@ function lookAtDeckEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Pl
 }
 function lookAtDeckBottomEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   lookAtDeckTopOrBottomEv(ev, amount, true, action, who, agent);
+}
+function cleanupRevealedTopOrBottom(ev: Ev, src: Deck, dst: Deck, agent: Player) {
+  if (src.size === 0) return;
+  selectCardOptEv(ev, "Choose a card to put back on the bottom", src.deck,
+    sel => { moveCardEv(ev, sel, dst, true); cleanupRevealedTopOrBottom(ev, src, dst, agent); },
+    () => cleanupRevealed(ev, src, dst, false, agent), agent);
+};
+function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, action: (c: Card) => void = c => drawCardEv(ev, c), agent: Player = playerState, reveal: boolean = false) {
+  const dst = src.owner ? src.owner.revealed : src.revealed;
+  const amount = turnState.investigateAmount || 2;
+  for (let i = 0; i < amount; i++) cont(ev, ev => src.owner ? revealOne(ev, src.owner, false) : src.withTop(c => moveCardEv(ev, c, dst)));
+  cont(ev, () => selectCardEv(ev, "Choose a card", dst.limit(f), action, agent));
+  cont(ev, () => cleanupRevealedTopOrBottom(ev, dst, src, agent));
 }
 function revealOne(ev: Ev, who: Player, bottom: boolean) {
   if (!who.deck.size && !who.discard.size) {

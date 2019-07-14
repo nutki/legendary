@@ -425,3 +425,6 @@ function playViolenceEv(ev: Ev) {
 function revengeVarDefense(c: Card) {
   return c.printedDefense + playerState.victory.limit(isVillain).count(isGroup(c.leads || c.villainGroup));
 }
+function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
+  // TODO
+}

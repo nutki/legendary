@@ -2000,3 +2000,105 @@ addVillainTemplates("Deadpool", [
   })],
 ]},
 ]);
+addVillainTemplates("Noir", [
+{ name: "Goblin's Freak Show", cards: [
+// AMBUSH: The Vulture captures 2 <b>Hidden Witnesses</b>.
+// FIGHT: Each other player KOs a Bystander from their Victory Pile or gains a Wound.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5*
+// VP: 3
+  [ 2, makeVillainCard("Goblin's Freak Show", "Vulture, Carnival Cannibal", 5, 3, {
+    ambush: ev => captureWitnessEv(ev, ev.source, 2),
+    fight: ev => eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+  })],
+// AMBUSH: Chameleon captures a <b>Hidden Witness</b>.
+// FIGHT: Reveal the top card of the Villain Deck. If it's a Villain, it enters the city space where the Chameleon was.
+// ATTACK: 4*
+// VP: 2
+  [ 2, makeVillainCard("Goblin's Freak Show", "The Chameleon", 4, 2, {
+    ambush: ev => captureWitnessEv(ev, ev.source),
+    fight: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => enterCityEv(ev, c, ev.where))),
+  })],
+// AMBUSH: For each Hero in the HQ that costs 7 or more, Kraven captures a <b>Hidden Witness</b>. Kraven's Attack is equal to the cost of the highest-cost card in the HQ.
+// ATTACK: *
+// VP: 3
+  [ 1, makeVillainCard("Goblin's Freak Show", "Kraven, Animal Trainer", 0, 3, {
+    ambush: ev => captureWitnessEv(ev, ev.source, hqHeroes().count(c => c.cost >= 7)),
+    varDefense: c => hqHeroes().max(c => c.cost) || 0,
+  })],
+// AMBUSH: Each other player reveals a Strength Hero or Ox captures a random Bystander from their Victory Pile as a <b>Hidden Witness</b>.
+// ATTACK: 5*
+// VP: 3
+  [ 1, makeVillainCard("Goblin's Freak Show", "Ox", 5, 3, {
+    ambush: ev => eachOtherPlayerVM(p => revealOrEv(ev, Color.STRENGTH, () => p.victory.limit(isBystander).withRandom(c => captureWitnessEv(ev, ev.source, c)), p)),
+  })],
+// AMBUSH: Each Goblin's Freak Show Villain captures a <b>Hidden Witness</b>.
+// ATTACK: 4*
+// VP: 2
+  [ 1, makeVillainCard("Goblin's Freak Show", "Montana", 4, 2, {
+    ambush: ev => cityVillains().limit(isGroup(ev.source.villainGroup)).each(c => captureWitnessEv(ev, c)),
+  })],
+// AMBUSH: Fancy Dan captures 3 <b>Hidden Witnesses</b>.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 1*
+// VP: 2
+  [ 1, makeVillainCard("Goblin's Freak Show", "Fancy Dan", 1, 2, {
+    ambush: ev => captureWitnessEv(ev, ev.source, 3),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  })],
+]},
+{ name: "X-Men Noir", cards: [
+// FIGHT: <b>Investigate</b> for a card with a Recruit icon.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("X-Men Noir", "Bobby \"Iceman\" Drake", 4, 2, {
+    fight: ev => investigateEv(ev, hasRecruitIcon),
+  })],
+// FIGHT: <b>Investigate</b> for a Hero that costs 0 and KO it.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("X-Men Noir", "Comrade Rasputin, Steel Wall", 5, 3, {
+    fight: ev => investigateEv(ev, c => isHero(c) && c.cost === 0, playerState.deck, c => KOEv(ev, c)),
+  })],
+// FIGHT: <b>Investigate</b> for any card that's Tech or Strength.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("X-Men Noir", "Henry \"Beast\" McCoy", 5, 3, {
+    fight: ev => investigateEv(ev, Color.TECH | Color.STRENGTH),
+  })],
+// FIGHT: When you draw a new hand of cards at the end of your turn, <b>Investigate</b> for an extra card.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("X-Men Noir", "Jean Grey Noir", 5, 3, {
+    fight: ev => addTurnTrigger('CLEANUP', u, ev => investigateEv(ev, u)),
+  })],
+// ESCAPE: Each player <b>Investigates</b> their deck for a card that costs 1 or more and KOs it. Players reveal the cards they investigated.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("X-Men Noir", "Scott \"Cyclops\" Summers", 6, 4, {
+    escape: ev => {},
+  })],
+// ESCAPE: <b>Investigate</b> the Villain Deck for a Scheme Twist and play it. Reveal all the cards you <b>Investigated</b>.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("X-Men Noir", "Warden Emma Frost", 6, 4, {
+    escape: ev => investigateEv(ev, isScheme, gameState.villaindeck, c => villainDrawEv(ev, c), playerState, true),
+  })],
+// FIGHT: KO a Hero from the HQ. <b>Investigate</b> the Hero Deck for a card to put in that emptied HQ space.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("X-Men Noir", "Ororo Munroe, Storm-Tossed", 4, 2, {
+    fight: ev => {
+      selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
+        const l = c.location;
+        let on = true;
+        addTurnTrigger('MOVECARD', ev => ev.to === c.location && on, { replace: () => {}});
+        KOEv(ev, c);
+        cont(ev, () => on = false);
+        investigateEv(ev, u, gameState.herodeck, h => moveCardEv(ev, h, l));
+      });
+    },
+  })],
+]},
+]);
