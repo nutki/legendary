@@ -1026,3 +1026,55 @@ makeMastermindCard("Macho Gomez", 9, 6, "Deadpool's \"Friends\"", ev => {
   }, what: playerState.deck.attached('BOUNTY')[0] }) : noOpActionEv(ev) ]
 }),
 ]);
+addTemplates("MASTERMINDS", "Noir", [
+// Charles Xavier gets +1 Attack for each Bystander in the HQ and city.
+makeMastermindCard("Charles Xavier", 8, 6, "X-Men Noir", ev => {
+// Four Heroes in the HQ capture <b>Hidden Witnesses</b>.
+  selectObjectsEv(ev, "Choose four Heroes", 4, hqHeroes(), c => captureWitnessEv(ev, c));
+}, [
+  [ "X-Con Men", ev => {
+  // Each other player reveals an X-Men Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, 'X-Men', () => gainWoundEv(ev, p), p))
+  } ],
+  [ "Commit to the Asylum", ev => {
+  // Each other player <b>Investigates</b> their deck for a card with an Attack icon and KOs it. Players reveal all the cards they investigated.
+    eachOtherPlayerVM(p => investigateEv(ev, hasAttackIcon, p.deck, c => KOEv(ev, c), p, true))
+  } ],
+  [ "Master Manipulator", ev => {
+  // <b>Investigate</b> the Hero Deck for an X-Men card and put it into your discard pile.
+    investigateEv(ev, 'X-Men', gameState.herodeck, c => moveCardEv(ev, c, playerState.discard));
+  } ],
+  [ "Corrupt Weak Minds", ev => {
+  // Each other player puts a random Bystander from their Victory Pile onto a Hero in the HQ as a <b>Hidden Witness</b>.
+    eachOtherPlayerVM(p => p.victory.limit(isBystander).withRandom(b => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => captureWitnessEv(ev, c, b), p)));
+  } ],
+], {
+  varDefense: c => c.printedDefense + [...hqCards(), ...CityCards()].sum(c => (isBystander(c) ? 1 : 0) + c.captured.count(isBystander))
+}),
+// START: The Goblin captures 2 <b>Hidden Witnesses</b>.
+makeMastermindCard("The Goblin, Underworld Boss", 10, 6, "Goblin's Freak Show", ev => {
+// Two random Bystanders from each player's Victory Pile become <b>Hidden Witnesses</b> held by The Goblin. Any player who didn't have two Bystanders gains a Wound instead.
+  eachPlayer(p => p.victory.count(isBystander) >= 2 ? repeat(2, () => {
+    p.victory.limit(isBystander).withRandom(c => captureWitnessEv(ev, ev.source, c));
+  }) : gainWoundEv(ev, p));
+}, [
+  [ "Sinister Dreams", ev => {
+  // Each other player reveals a Sinister Six or Spider-Friends Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, c => isTeam('Sinister Six')(c) || isTeam('Spider Friends')(c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Blackmail the Judges", ev => {
+  // For each Goblin's Freak Show Villain in the city, The Goblin captures 2 <b>Hidden Witnesses</b>.
+    captureWitnessEv(ev, ev.source.mastermind, 2 * cityVillains().count(isGroup(ev.source.mastermind.leads)));
+  } ],
+  [ "Carnival of Carnage", ev => {
+  // For each Goblin's Freak Show Villain in the city, each other player discards a card.
+    eachOtherPlayerVM(p => pickDiscardEv(ev, cityVillains().count(isGroup(ev.source.mastermind.leads)), p));
+  } ],
+  [ "Blind Loyalty", ev => {
+  // <b>Investigate</b> the Villain Deck for a Goblin's Freak Show Villain and put it into your Victory Pile.
+    investigateEv(ev, isGroup(ev.source.mastermind.leads), gameState.villaindeck, c => moveCardEv(ev, c, playerState.victory));
+  } ],
+], {
+  init: c => repeat(2, () => gameState.bystanders.size && moveCard(gameState.bystanders.top, c.attachedDeck('WITNESS')))
+}),
+]);

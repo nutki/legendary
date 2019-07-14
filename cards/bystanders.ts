@@ -44,3 +44,9 @@ addBystanderTemplates("Civil War", [
   choosePlayerEv(ev, p => selectCardEv(ev, "Select a card for that player to gain", cards.limit(c => c.cost <= 3), c => gainEv(ev, c, p), ev.who), ev.who)
 }, false, false)) ],
 ]);
+addBystanderTemplates("Noir", [
+// RESCUE: <b>Investigate</b> the Villain Deck for a Villain worth 1 VP and put it in your Victory Pile.
+[ 1, makeBystanderCard("Detective Wolverine", ev => investigateEv(ev, c => isVillain(c) && c.vp === 1, gameState.villaindeck, c => {
+  moveCardEv(ev, c, ev.who.victory);
+}, ev.who)) ],
+]);
