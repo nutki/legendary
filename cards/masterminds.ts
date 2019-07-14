@@ -966,3 +966,63 @@ makeMastermindCard("Ragnarok", 6, 6, "Registration Enforcers", ev => {
   varDefense: c => c.baseDefense + 2 * numClasses(hqHeroes()),
 }),
 ]);
+addTemplates("MASTERMINDS", "Deadpool", [
+// {REVENGE Mastermind Tactics}
+makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
+// Without talking, each player simultaneously discards a card. Whoever discards the lowest-costing card <i>(or tied for lowest)</i> gains a Wound.
+  const s: Card[] = [];
+  eachPlayer(p => selectCardEv(ev, "Discard a card", p.hand.deck, c => s.push(c), p));
+  cont(ev, () => s.highest(c => -c.cost).each(c => { discardEv(ev, c); gainWoundEv(ev, owner(c)); }));
+}, [
+  [ "Evil Even Oddball", ev => {
+  // Each other player reveals their hand. Whoever has the fewest cards with odd-numbered costs (or tied for fewest) gains a Wound.
+    const lowest = -gameState.players.max(p => -p.hand.count(isCostOdd));
+    eachOtherPlayerVM(p => p.hand.count(isCostOdd) === lowest && gainWoundEv(ev, p));
+  } ],
+  [ "Hyper-Insane Healing Factor", ev => {
+  // If this is not the final Tactic, you get +6 Recruit and shuffle this Tactic back into the other Tactics.
+    if (!finalTactic(ev.source)) { addRecruitEvent(ev, 6); shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS")); }
+  } ],
+  [ "Of Course it's Corpse", ev => {
+  // The other player with the fewest Evil Deadpool Corpse Villains in their Victory Pile (or tied for fewest) gains a Wound.
+    const lowest = -gameState.players.max(p => -p.victory.count(isGroup(ev.source.mastermind.leads)));
+    eachOtherPlayerVM(p => p.victory.count(isGroup(ev.source.mastermind.leads)) === lowest && gainWoundEv(ev, p));
+  } ],
+  [ "Stitched from Dead (Pool) Parts", ev => {
+  // Each other player discards the top card of their deck. Whoever discards the lowest-costing card (or tied for lowest) gains a Wound.
+    const s: Card[] = [];
+    eachPlayer(p => revealPlayerDeckEv(ev, 1, c => c.each(c => s.push(c)), p));
+    cont(ev, () => s.highest(c => -c.cost).each(c => { discardEv(ev, c); gainWoundEv(ev, owner(c)); }));
+  } ],
+], {
+  varDefense: c => c.printedDefense + playerState.victory.count(isTactic),
+}),
+// {REVENGE Deadpool's "Friends"}
+makeMastermindCard("Macho Gomez", 9, 6, "Deadpool's \"Friends\"", ev => {
+// Put this Strike in front of you as a "Bounty on Your Head." Then, each player gains a Wound for each Bounty on them. Any number of times during your turn, you may pay 1 Recruit to move a Bounty from you to the player on your left.
+  attachCardEv(ev, ev.source, playerState.deck, 'BOUNTY');
+  cont(ev, () => eachPlayer(p => repeat(p.deck.attached('BOUNTY').size, () => gainWoundEv(ev, p))));
+}, [
+  [ "Bounty Payout", ev => {
+  // You get +1 Recruit for each "Bounty on Your Head" on other players.
+    addRecruitEvent(ev, gameState.players.limit(p => p != playerState).sum(p => p.deck.attached('BOUNTY').size));
+  } ],
+  [ "Interstellar Assassin", ev => {
+  // Each other player with at least one "Bounty on Your Head" discards down to 4 cards.
+    eachOtherPlayerVM(p => p.deck.attached('BOUNTY').size >= 0 && pickDiscardEv(ev, -4, p));
+  } ],
+  [ "Renegotiate the Contract", ev => {
+  // Redistribute the "Bounty on Your Head" cards among any number of players.
+    playerState.deck.attached('BOUNTY').each(c => choosePlayerEv(ev, p => attachCardEv(ev, c, p.deck, 'BOUNTY')));
+  } ],
+  [ "Super Macho Man", ev => {
+  // Rescue a Bystander for each "Bounty on Your Head" on other players.
+    rescueEv(ev, gameState.players.limit(p => p != playerState).sum(p => p.deck.attached('BOUNTY').size));
+  } ],
+], {
+  varDefense: revengeVarDefense,
+  cardActions: [ (c, ev) => playerState.deck.attached('BOUNTY').size ? new Ev(ev, 'EFFECT', { cost: { recruit: 1 }, func: ev => {
+    attachCardEv(ev, ev.what, playerState.left.deck, 'BOUNTY');
+  }, what: playerState.deck.attached('BOUNTY')[0] }) : noOpActionEv(ev) ]
+}),
+]);

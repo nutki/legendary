@@ -1159,3 +1159,54 @@ makeSchemeCard("United States Split by Civil War", { twists: 10 }, ev => {
   });
 }, [], () => setSchemeTarget(3)),
 ]);
+addTemplates("SCHEMES", "Deadpool", [
+// SETUP: Use Deadpool as one of the Heroes. 2 players: Use 4 Heroes total. 1-3 players: 6 Twists. 4-5 Players: 5 Twists.
+// EVILWINS: When the Hero Deck runs out.
+makeSchemeCard("Deadpool Kills the Marvel Universe", { twists: [ 6, 6, 6, 5, 5 ], heroes: [ 3, 4, 5, 5, 6 ] }, ev => {
+  // Twist: Reveal cards from the Hero Deck until you reveal a Deadpool card. KO all the cards you revealed.
+  revealHeroDeckEv(ev, c => c.has(c => c.heroName === 'Deadpool'), cards => cards.each(c => KOEv(ev, c)));
+}, runOutProgressTrigger("HERO"), () => gameState.schemeProgress = gameState.herodeck.size),
+// SETUP: 6 Twists. 12 total Bystanders in the Villain Deck. All Bystanders represent "Chimichangas." <i>(They're Bystanders too.)</i> 3-5 players: Add a Villain Group.
+// <b>Nobody Eats Just One Chimichanga!</b> Whenever you play a Chimichanga from the Villain Deck, play another card from the Villain Deck.
+// EVILWINS: When 6 Chimichangas are in the Escape Pile.
+makeSchemeCard("Deadpool Wants a Chimichanga", { twists: 6, vd_bystanders: 12, vd_villain: [ 1, 2, 4, 4, 5 ] }, ev => {
+  // Twist: Put each Chimichanga from the city into the Escape Pile. Then, each player shuffles a Chimichanga from their Victory Pile back into the Villain Deck. Any player who cannot do so gains a Wound.
+  CityCards().each(c => c.captured.limit(isBystander).each(c => moveCardEv(ev, c, gameState.escaped)));
+  CityCards().limit(isBystander).each(c => moveCardEv(ev, c, gameState.escaped));
+  cont(ev, () => eachPlayer(p => {
+    selectCardOrEv(ev, "Choose a Chimichanga", p.victory.limit(isBystander), c => shuffleIntoEv(ev, c, gameState.villaindeck), () => gainWoundEv(ev, p), p);
+  }));
+}, escapeProgressTrigger(isBystander), () => setSchemeTarget(6)),
+// SETUP: Hey, writing these doesn't seem so tough. Use the best Hero in the game: Deadpool! Add 6 Twists of Lemon, shake vigorously, and I'll make it up as I go.
+makeSchemeCard("Deadpool Writes a Scheme", { twists: 8 }, ev => {
+  if (ev.nr === 1) {
+    // Twist 1 Everybody draw 1 card. Wait, are these supposed to be bad?
+    eachPlayer(p => drawEv(ev, 1, p));
+  } else if (ev.nr === 2) {
+    // Twist 2 Anyone without a Deadpool in hand is doing it wrong -- discard 2 cards.
+    eachPlayer(p => p.hand.has(c => c.heroName === "Deadpool") || pickDiscardEv(ev, 2, p));
+  } else if (ev.nr === 3) {
+    // Twist 3 Play 3 cards from the Villain Deck. That sounds pretty bad, right?
+    villainDrawEv(ev); villainDrawEv(ev); villainDrawEv(ev);
+  } else if (ev.nr === 4) {
+    // Twist 4 Each Villain captures 4 Bystanders. Hey, I'm not a balance expert.
+    cityVillains().each(c => captureEv(ev, c, 4));
+  } else if (ev.nr === 5) {
+    // Twist 5 Each player gains 5 Wounds. Is that a good number?
+    eachPlayer(p => repeat(4, () => gainWoundEv(ev, p)));
+  }
+  // Twist 6 Deadpool wins 6 times! Wow, I'm way better at this game than you.
+  schemeProgressEv(ev, ev.nr);
+}, [], () => setSchemeTarget(6)),
+// SETUP: 6 Twists. Use at least 1 Mercs for Money Hero.
+// RULE: All Villains have Revenge for their own Villain Groups. (If they already have Revenge, double it.)
+// EVILWINS: When 3 Villains per player have escaped.
+makeSchemeCard("Everybody Hates Deadpool", { twists: 6 }, ev => {
+  // Twist: Everyone reveals their hand. Whoever reveals the fewest Mercs for Money cards (or tied for fewest) gains a Wound.
+  const fewest = -gameState.players.max(p => -p.hand.count("Mercs for Money"));
+  eachPlayer(p => p.hand.count("Mercs for Money") === fewest && gainWoundEv(ev, p));
+}, escapeProgressTrigger(isVillain), () => {
+  setSchemeTarget(3, true);
+  addStatMod('defense', isVillain, c => playerState.victory.count(isGroup(c.villainGroup)));
+}),
+]);
