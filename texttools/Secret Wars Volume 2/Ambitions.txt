@@ -1,43 +1,43 @@
 
-<b>Puzzle Trap</b>
+#CARDNAME: Puzzle Trap
 Choose a class. Other players can't recruit heroes of that class until the start of your next turn. Then, discard this card.
-<b>Attack</b>: 6
+#ATTACK: 6
 
-<b>Seize the High Ground</b>
+#CARDNAME: Seize the High Ground
 {PATROL Rooftops}: If there's a Villain there, then all Villains everywhere get +1 Attack until the start of your next turn.
 Then, discard this card.
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Hostage Situation</b>
+#CARDNAME: Hostage Situation
 {PATROL Streets}: If there's a Villain there, then each Villain in the city captures a Bystander.
-<b>Attack</b>: 2
+#ATTACK: 2
 
-<b>This is a Stickup</b>
+#CARDNAME: This is a Stickup
 {PATROL Bank}: If there's a Villain there, each other player reveals their hand and discards a card with a Recruit icon.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Shadowy Disciple</b>
+#CARDNAME: Shadowy Disciple
 This ambition ascends to become a new 9 Attack Mastermind worth 5 VP. It gains the ability: "<b>Master Strike</b>: Each player reveals a [Ranged] Hero or gains a Wound."
-<b>Attack</b>: 9
+#ATTACK: 9
 
-<b>Detonate the Bridge</b>
+#CARDNAME: Detonate the Bridge
 {PATROL Bridge}: If there's a Villain there, each player gains a Wound.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Short Escape Tunnels</b>
+#CARDNAME: Short Escape Tunnels
 {PATROL Sewers}: If there's a Villain there, it escapes.
-<b>Attack</b>: 5
+#ATTACK: 5
 
-<b>Crazed Charge</b>
+#CARDNAME: Crazed Charge
 A Villain in the city <b>charges</b> two spaces.
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Devastate S.H.I.E.L.D.</b>
+#CARDNAME: Devastate S.H.I.E.L.D.
 Every other player reveals their hand and discards all their cards that cost 0.
-<b>Attack</b>: 7
+#ATTACK: 7
 
-<b>Rack and Ruin</b>
+#CARDNAME: Rack and Ruin
 This card becomes a Master Strike that takes effect immediately. Then, this card becomes a Scheme Twist that takes effect immediately.
-<b>Attack</b>: 10
+#ATTACK: 10
 
 

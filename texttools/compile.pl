@@ -6,6 +6,8 @@
   BYSTANDERS => "Bystanders.txt",
   MASTERMINDS => "Masterminds_and_Commanders.txt",
   SCHEMES => "Schemes_and_Plots.txt",
+  SIDEKICKS => "Sidekicks_and_New_Recruits.txt",
+  AMBITIONS => "Ambitions.txt",
 );
 my ($type, $exp) = @ARGV;
 my $file = $input{$type};
@@ -83,10 +85,10 @@ sub makehero {
   my $autopower = autopower($_);
   parse();
   my $heroname2 = $_{DIVHERO} || $heroname;
-  my $cardname = $_{DIVIDED} || $_{SUBNAME};
+  my $cardname = $_{DIVIDED} || $_{SUBNAME} || $_{CARDNAME};
   my $pteam2 = $_{DIVTEAM} ? $_{DIVTEAM} eq "(Unaffiliated)" ? 'u' : "\"$_{DIVTEAM}\"" : $pteam;
 #  $_{COPIES} == $count or die "Bad number of copies for $pname: $_{COPIES}";
-  filterprint(qw(SUBNAME CLASS ATTACK RECRUIT COST FLAVOR));
+  filterprint(qw(SUBNAME CLASS ATTACK RECRUIT COST FLAVOR CARDNAME TEAM));
   my $attack = $_{ATTACK} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
   my $recruit = $_{RECRUIT} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
   my $cost = $_{COST} =~ s/[^0-9]//gr;
@@ -138,6 +140,11 @@ sub makehero {
       print ", ev => {}" if $_{RESCUE};
       print ")$ge ],\n";
       $_{VP} == 1 || !defined($_{VP}) or die "VP is not 1: $_{VP}";
+    } elsif ($type eq "SIDEKICKS") {
+      parse();
+      $copies = $_{COPIES} * 1 || 1;
+      my $h = makehero("Special Sidekick", $_{TEAM});
+      print "[ $copies, $h ],\n";
     } elsif ($type eq "HEROES") {
       ($_, my @subitems) = split/^\n+/m;
       parse();
@@ -236,6 +243,10 @@ sub makehero {
         print "\n";
       }
       print "}),\n";
+    } elsif ($type eq "AMBITIONS") {
+      parse();
+      filterprint(qw(CARDNAME ATTACK));
+      print "makeAmbitionCard(\"$_{CARDNAME}\", $_{ATTACK}, ev => {/* TODO */}),\n";
     }
   }
   print "]);\n";

@@ -156,6 +156,10 @@ while (<A>) {
       s/^\s*<li>\s*(.*?)<.li>/* $1/mg;
       s/^\s*<.?ul>\s*\n//mg;
     }
+    if ($name =~ /^Ambitions/) {
+      s!^<b>Attack</b>: (\d+)\n!#ATTACK: $1\n!mg;
+      s!(^|\n\n)<b>(.*?)</b>\n!$1#CARDNAME: $2\n!g;
+    }
     s/\n\n+/\n\n/g;
     print "$name";
     while(/^#EXPANSION: (.*)\n(((?!#EXPANSION:).*\n)*)/mg) {

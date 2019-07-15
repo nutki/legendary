@@ -1,124 +1,124 @@
 
-<b>Pure Evil</b>
+#CARDNAME: Pure Evil
 <i>Starting Ambition</i>
 Play a card from the Villain Deck. Keep this card in the Ambition Row.
 <i>(This card starts the game in the Ambition Row and cannot be discarded from the Ambition Row. You can use this card multiple times in the same turn.)</i>
-<b>Attack</b>: 5
+#ATTACK: 5
 
-<b>Crackdown</b>
+#CARDNAME: Crackdown
 Choose a class. Each other player reveals their hand and discards all cards of that class.
-<b>Attack</b>: 7
+#ATTACK: 7
 
-<b>Tide of Destruction</b>
+#CARDNAME: Tide of Destruction
 Play two cards from the Villain Deck.
-<b>Attack</b>: 8
+#ATTACK: 8
 
-<b>Abduction</b>
+#CARDNAME: Abduction
 Put a Hero from the HQ on the bottom of the Hero Deck.
-<b>Attack</b>: 2
+#ATTACK: 2
 
-<b>Secret Plans</b>
+#CARDNAME: Secret Plans
 Put this card under a Villain in the Sewers or Bank. When that Villain escapes, this card becomes a Scheme Twist that takes effect immediately. If that Villain leaves the city another way, discard this.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Wipe Out</b>
+#CARDNAME: Wipe Out
 Choose a class. Put all heroes of that class from the HQ on the bottom of the Hero Deck.
-<b>Attack</b>: 2
+#ATTACK: 2
 
-<b>Crush the Weak</b>
+#CARDNAME: Crush the Weak
 The other player with the fewest Villains in their Victory Pile gains a Wound. <i>(You choose how to break a tie.)</i>
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Identity Theft</b>
+#CARDNAME: Identity Theft
 Each other player that has exactly six cards reveals a [Tech] Hero or puts two cards from their hand on top of their deck.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Wave of Punishment</b>
+#CARDNAME: Wave of Punishment
 Each other player reveals a [Ranged] Hero or gains a Wound to the bottom of their deck.
-<b>Attack</b>: 5
+#ATTACK: 5
 
-<b>Force Field</b>
+#CARDNAME: Force Field
 Put this card under the Mastermind card. That Mastermind gets +3 Attack until the start of your next turn. Then, discard this card.
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Breakout</b>
+#CARDNAME: Breakout
 Choose a Villain from the Escape Pile. It enters the city.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Last-Minute Escape</b>
+#CARDNAME: Last-Minute Escape
 Pick a random Mastermind Tactic from all the ones in players' Victory Piles. Shuffle it back into the Mastermind's Tactics.
-<b>Attack</b>: 9
+#ATTACK: 9
 
-<b>Empower</b>
+#CARDNAME: Empower
 Put this card under a Villain in the city. Until the start of your next turn, that Villain gets +3 Attack. Then, discard this card.
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Deceive</b>
+#CARDNAME: Deceive
 Each other player reveals a [Covert] Hero or discards their hand and draws five cards.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Inflict Pain</b>
+#CARDNAME: Inflict Pain
 Each other player puts a Wound from their discard pile on top of their deck.
-<b>Attack</b>: 2
+#ATTACK: 2
 
-<b>Bank Robbery</b>
+#CARDNAME: Bank Robbery
 KO the Hero in the HQ space under the Bank. You get +Recruit equal to that Hero's printed Recruit.
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Pressure Point</b>
+#CARDNAME: Pressure Point
 Each other player reveals a [Instinct] Hero or gains a Wound to the top of their deck.
-<b>Attack</b>: 6
+#ATTACK: 6
 
-<b>Cleave</b>
+#CARDNAME: Cleave
 Choose a number besides 0. Each other player reveals their hand and discards all cards of that cost.
-<b>Attack</b>: 6
+#ATTACK: 6
 
-<b>Entrap</b>
+#CARDNAME: Entrap
 Put this card on a Hero in the HQ. Players can't recruit that Hero until the start of your next turn. Then, discard this card.
-<b>Attack</b>: 1
+#ATTACK: 1
 
-<b>Insane Twist</b>
+#CARDNAME: Insane Twist
 This card becomes a Scheme Twist that takes effect immediately.
-<b>Attack</b>: 9
+#ATTACK: 9
 
-<b>Kidnap</b>
+#CARDNAME: Kidnap
 A Villain in the city captures a Bystander.
-<b>Attack</b>: 2
+#ATTACK: 2
 
-<b>Thirst for Power</b>
+#CARDNAME: Thirst for Power
 Reveal the top two cards of the Villain Deck. Play a Scheme Twist you revealed. Put the rest back on the top and/or bottom in any order.
-<b>Attack</b>: 7
+#ATTACK: 7
 
-<b>Painful Choice</b>
+#CARDNAME: Painful Choice
 Each other player chooses Recruit or Attack, then discard all their cards with that icon.
-<b>Attack</b>: 8
+#ATTACK: 8
 
-<b>Crime Surge</b>
+#CARDNAME: Crime Surge
 Each Villain on the Rooftops and Streets captures a Bystander.
-<b>Attack</b>: 3
+#ATTACK: 3
 
-<b>Dark Apprentice</b>
+#CARDNAME: Dark Apprentice
 Add a random new Mastermind to the game with one Tactic.
-<b>Attack</b>: 10
+#ATTACK: 10
 
-<b>Collateral Damage</b>
+#CARDNAME: Collateral Damage
 Each other player KOs a Bystander from their Victory Pile or gains a Wound.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Ruthless Strike</b>
+#CARDNAME: Ruthless Strike
 This card becomes a Master Strike that takes effect immediately.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Infiltrate S.H.I.E.L.D.</b>
+#CARDNAME: Infiltrate S.H.I.E.L.D.
 Choose a 0-cost Hero from the KO pile for each other player. Those players gain those Heroes.
-<b>Attack</b>: 4
+#ATTACK: 4
 
-<b>Thirst for Vengeance</b>
+#CARDNAME: Thirst for Vengeance
 Reveal the top two cards of the Villain Deck. Play a Master Strike you revealed. Put the rest back on the top and/or bottom in any order.
-<b>Attack</b>: 6
+#ATTACK: 6
 
-<b>Pummel</b>
+#CARDNAME: Pummel
 Each other player reveals a [Strength] Hero or gains a Wound.
-<b>Attack</b>: 4
+#ATTACK: 4
 
 
