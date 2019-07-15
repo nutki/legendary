@@ -1898,7 +1898,7 @@ function returnToStackEv(ev: Ev, deck: Deck) {
   const c = ev.source;
   // Cannot return copies or copyPaste cards
   if (isCopy(c)) return false;
-  moveCardEv(ev, c, deck);
+  moveCardEv(ev, c, deck, true);
   return true;
 }
 function playCopyEv(ev: Ev, what: Card) {
@@ -2336,6 +2336,7 @@ TODO SW1 render city dynamically
 TODO SW1 make cardAction allow functions returning multiple actions
 TODO SW1 addFutureTrigger
 TODO SW2 make scheme card position independent
+TODO Noir hidden witness removal and limits (human shields at the same time)
 copy artifact should not count as cards played
 
 other sets base functions: divided cards

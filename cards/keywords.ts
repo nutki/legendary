@@ -239,7 +239,7 @@ function xdRampageEv(ev: Ev, name: string, effect0?: (p: Player) => void) {
   }, p))
 }
 
-function isSidekick(c: Card) { return c.cardName === 'Sidekick'; }
+function isSidekick(c: Card) { return c.cardName === 'Sidekick' || c.heroName === 'Special Sidekick'; }
 function gainSidekickEv(ev: Ev, where: 'DECK' = undefined, p: Player = playerState) { cont(ev, () => gameState.sidekick.withTop(c => where === 'DECK' ? gainToDeckEv(ev, c, p) : gainEv(ev, c, p))); }
 function recruitSidekickActionEv(ev: Ev, what: Card) {
   const cost = getRecruitCost(what, () => limitPerTurn(e => e.type === 'RECRUIT' && isSidekick(e.what)));
@@ -426,5 +426,14 @@ function revengeVarDefense(c: Card) {
   return c.printedDefense + playerState.victory.limit(isVillain).count(isGroup(c.leads || c.villainGroup));
 }
 function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
+  captureEv
   // TODO
+}
+
+function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
+  // TODO
+}
+function xGenePower(c: number) { return playerState.discard.has(c); }
+function berserkEv(ev: Ev) {
+  revealPlayerDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); discardEv(ev, c); }));
 }
