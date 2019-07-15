@@ -1210,3 +1210,68 @@ makeSchemeCard("Everybody Hates Deadpool", { twists: 6 }, ev => {
   addStatMod('defense', isVillain, c => playerState.victory.count(isGroup(c.villainGroup)));
 }),
 ]);
+addTemplates("SCHEMES", "Noir", [
+// SETUP: 8 Twists.
+// RULE: Whenever you defeat a Villain, you may pay 1 Attack extra to <b>Investigate</b> the Murder Suspects for a Bystander and rescue it.
+makeSchemeCard<{names: string[]}>("Find the Split Personality Killer", { twists: 8 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Shuffle 3 Bystanders from the Bystander Stack and the top card of the Hero Deck face down next to this Scheme as a deck of "Murder Suspects."
+    repeat(3, () => cont(ev, () => gameState.bystanders.withTop(c => attachCardEv(ev, c, gameState.scheme, 'SUSPECTS'))));
+    cont(ev, () => gameState.herodeck.withTop(c => attachCardEv(ev, c, gameState.scheme, 'SUSPECTS')));
+  } else if (ev.nr === 6) {
+    // Twist 6 Each player writes down their guess for which Hero Name is the Split Personality Killer. Reveal the entire Murder Suspects Deck. The Hero Name with the most cards in the Murder Suspect Deck (or tied for most) is the Split Personality Killer. Each player who guessed right wins. All other players lose.
+    const suspects = gameState.scheme.attached('SUSPECTS');
+    const killers = ev.state.names.highest(n => suspects.count(c => c.heroName === n));
+    const winners: Player[] = [];
+    eachPlayer(p => chooseOptionEv(ev, "Guess the Killer", ev.state.names.map(n => ({l:n, v:n})), v => killers.includes(v) && winners.push(p)));
+    cont(ev, () => {
+      gameOverEv(ev, winners.size ? "WIN" : "LOSS");
+    });
+  }
+}, {
+  event: 'DEFEAT',
+  match: ev => isVillain(ev.what) && canPayCost(new Ev(ev, 'EFFECT', { func: () => {}, cost: { attack: 1 } })),
+  after: ev => chooseMayEv(ev, "Pay 1 Attack to Investigate Murder Suspects", () => pushEv(ev, 'EFFECT', { func: ev => {
+    investigateEv(ev, isBystander, gameState.scheme.attachedDeck('SUSPECTS'), c => rescueEv(ev, c));
+  }, cost: { attack: 1 } })),
+}, s => {
+  s.names = gameState.herodeck.deck.unique(c => c.heroName).limit(c => c !== undefined);
+}),
+// SETUP: 6 Twists.
+// EVILWINS: When 6 Bystanders are in the Escape Pile.
+makeSchemeCard("Silence the Witnesses", { twists: 6 }, ev => {
+  // Twist: This Scheme captures 3 <b>Hidden Witnesses</b>. If it already had any <b>Hidden Witnesses</b>, put those into the Escape Pile.
+  ev.source.captured.each(c => moveCardEv(ev, c, gameState.escaped));
+  captureWitnessEv(ev, ev.source, 3);
+}, escapeProgressTrigger(isBystander), () => setSchemeTarget(6)),
+// SETUP: 8 Twists. Add two extra Villain Groups. Split the Villain Deck into 5 shuffled decks, one above each city space.
+// RULE: Each Villain Deck uses its own city of one city space. Each turn, you choose which Villain Deck plays a card.
+// EVILWINS: When 8 Villains escape or all Villain Decks run out.
+makeSchemeCard("Five Families of Crime", { twists: 8, vd_villain: [ 3, 4, 5, 5, 6 ] }, ev => { // TODO
+  // Twist: Play two cards from a Villain Deck.
+  villainDrawEv(ev); villainDrawEv(ev);
+}, escapeProgressTrigger(isVillain), () => {
+  setSchemeTarget(8);
+  gameState.city.each(d => d.next = undefined);
+}),
+// SETUP: 8 Twists. Shuffle the Mastermind Tactics into the Villain Deck as Villains.
+// RULE: If there are no Tactics in the city, you can win the game by fighting the Mastermind card.
+// EVILWINS: When 2 Tactics escape.
+makeSchemeCard("Hidden Heart of Darkness", { twists: 8 }, ev => {
+  // Twist: Each player shuffles a Tactic from their victory pile into the Villain Deck. Any player who did so draws two cards. Then, <b>Investigate</b> the Villain Deck for a Tactic and that Tactic enters the city. Reveal all the cards you <b>Investigated</b>.
+  eachPlayer(p => selectCardEv(ev, "Choose a Tactic", p.victory.limit(isTactic), c => {
+    shuffleIntoEv(ev, c, gameState.villaindeck);
+    drawEv(ev, 2, p);
+  }, p));
+  cont(ev, () => investigateEv(ev, isTactic, gameState.villaindeck, c => enterCityEv(ev, c)));
+}, escapeProgressTrigger(isTactic), () => {
+  setSchemeTarget(2);
+  gameState.mastermind.each(m => {
+    m.attached('TACTICS').each(c => moveCard(c, gameState.villaindeck));
+    addStatSet('isFightable', c => c === m, c => c.location === gameState.mastermind);
+    addStatSet('fightCost', c => c === m, (c, cost: ActionCost) => ({ ...cost, cond: c => cost.cond(c) && !cityVillains().has(isTactic) }));
+  });
+  addStatSet('isVillain', isTactic, () => true);
+  gameState.villaindeck.shuffle();
+}),
+]);
