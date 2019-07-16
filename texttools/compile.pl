@@ -8,6 +8,8 @@
   SCHEMES => "Schemes_and_Plots.txt",
   SIDEKICKS => "Sidekicks_and_New_Recruits.txt",
   AMBITIONS => "Ambitions.txt",
+  WOUNDS => "Wounds_and_Bindings.txt",
+  HORRORS => "Horrors.txt",
 );
 my ($type, $exp) = @ARGV;
 my $file = $input{$type};
@@ -247,6 +249,14 @@ sub makehero {
       parse();
       filterprint(qw(CARDNAME ATTACK));
       print "makeAmbitionCard(\"$_{CARDNAME}\", $_{ATTACK}, ev => {/* TODO */}),\n";
+    } elsif ($type eq "WOUNDS") {
+      parse();
+      filterprint(qw(CARDNAME COPIES));
+      print "[ $_{COPIES}, makeWoundCard(\"$_{CARDNAME}\", () => true, ev => {/* TODO */}) ],\n";
+    } elsif ($type eq "HORRORS") {
+      parse();
+      filterprint(qw(CARDNAME));
+      print "makeHorrorCard(\"$_{CARDNAME}\", ev => {/* TODO */}),\n";
     }
   }
   print "]);\n";
