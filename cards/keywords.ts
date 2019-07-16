@@ -360,7 +360,7 @@ function ultimateAbominationVarDefense(c: Card) {
 // * This lets you get a different card instead, save a crucial Phasing card for the next turn, or set up a combo that cares about the top card of your deck.
 // * Swapping cards this way isn't "playing a card" or "drawing a card," so it doesn't count for other abilities that trigger on those things.
 function phasingActionEv(c: Card, ev: Ev) {
-  return new Ev(ev, 'DODGE', { what: c, func: ev => swapCardsEv(ev, ev.what, playerState.deck), cost: { cond: c => c.location === playerState.hand } });
+  return new Ev(ev, 'EFFECT', { what: c, func: ev => swapCardsEv(ev, ev.what, playerState.deck), cost: { cond: c => c.location === playerState.hand } });
 }
 
 // <b>Fortify</b>
@@ -435,7 +435,15 @@ function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
 function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
   // TODO
 }
-function xGenePower(c: number) { return playerState.discard.has(c); }
-function berserkEv(ev: Ev) {
-  revealPlayerDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); discardEv(ev, c); }));
+function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
+function berserkEv(ev: Ev, n: number) {
+  repeat(n, () => {
+    revealPlayerDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); discardEv(ev, c); }));
+  });
+}
+function addPiercingEv(ev: Ev, amount: number) {
+  turnState.piercing += amount;
+}
+function lightShowActionEv(c: Card, ev: Ev) {
+  return new Ev(ev, 'EFFECT', { cost: { cond: () => turnState.cardsPlayed.count(c => c.lightShow !== undefined) >= 2 }, source: c, func: c.lightShow });
 }

@@ -50,6 +50,7 @@ interface Card {
   printedDefense: number
   printedVP: number
   printedCost: number
+  printedPiercing: number
   canPlay?: () => boolean
   playCostType?: "DISCARD" | "TOPDECK"
   playCost?: number
@@ -99,6 +100,7 @@ interface Card {
   sizeChanging?: number
   divided?: { left: Card, right: Card }
   excessiveViolence?: Handler
+  lightShow?: Handler
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -137,7 +139,7 @@ interface HeroCardAbillities {
   trigger?: Trigger
   triggers?: Trigger[]
   playCost?: number
-  playCostType?: string
+  playCostType?: 'TOPDECK' | 'DISCARD'
   copyPasteCard?: boolean
   teleport?: boolean
   soaring?: boolean
@@ -146,6 +148,8 @@ interface HeroCardAbillities {
   isArtifact?: boolean
   sizeChanging?: number
   excessiveViolence?: Handler
+  printedPiercing?: number
+  lightShow?: Handler
 }
 class Card {
   constructor (t: string, n: string) {
@@ -722,6 +726,9 @@ interface Turn extends Ev {
   perTurn?: Map<string, number>
   playDividedBoth?: boolean
   investigateAmount?: number
+  piercing: number
+  recruitWithAttack: boolean
+  piercingWithAttack: boolean
 }
 interface Trigger {
   event: EvType
@@ -1415,6 +1422,7 @@ function popEvent(): Ev {
   return eventQueue.shift() || new Ev(gameState, "TURN", <EvParams>{
     recruit: 0,
     attack: 0,
+    piercing: 0,
     recruitSpecial: [],
     attackSpecial: [],
     totalAttach: 0,
@@ -2340,8 +2348,6 @@ TODO SW1 addFutureTrigger
 TODO SW2 make scheme card position independent
 TODO Noir hidden witness removal and limits (human shields at the same time)
 copy artifact should not count as cards played
-
-other sets base functions: divided cards
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 
