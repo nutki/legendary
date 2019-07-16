@@ -5,13 +5,13 @@ const shieldTrooperTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Trooper', 0, u,
 const officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"DN");
 const twistTemplate = new Card("SCHEME TWIST", "Scheme Twist");
 const strikeTemplate = new Card("MASTER STRIKE", "Master Strike");
-const woundTemplate = makeWoundCard(function () {
+const woundTemplate = makeWoundCard("Wound", function () {
   return !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT");
 }, function (ev) {
   playerState.hand.limit(isWound).forEach(function (w) { KOEv(ev, w); });
   addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
   addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
-}, "Wound");
+});
 
 // EXPANSION Villains
 
@@ -22,12 +22,12 @@ const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.
   ev => returnToStackEv(ev, gameState.newRecruit),
   ev => drawEv(ev),
 ]);
-const bindingsTemplate = makeWoundCard(() => !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT"), ev => {
+const bindingsTemplate = makeWoundCard("Bindings", () => !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT"), ev => {
   KOEv(ev, ev.source);
   playerState.hand.limit(isBindings).limit(c => c !== ev.source).each(w => gainEv(ev, w, playerState.right));
   addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
   addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
-}, "Bindings", "BINDINGS");
+}, "BINDINGS");
 
 // EXPANSION Guardian of the Galaxy
 
@@ -115,6 +115,9 @@ makeAmbitionCard("Thirst for Vengeance", 6, ev => investigateEv(ev, isStrike, ga
 // Each other player reveals a [Strength] Hero or gains a Wound.
 makeAmbitionCard("Pummel", 4, ev => eachOtherPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p))),
 ]);
+
+// EXPANSION Secret Wars Volume 2
+
 addTemplates("AMBITIONS", "Secret Wars Volume 2", [
 // Choose a class. Other players can't recruit heroes of that class until the start of your next turn. Then, discard this card.
 makeAmbitionCard("Puzzle Trap", 6, ev => {/* TODO future statMod */}),
@@ -126,7 +129,7 @@ makeAmbitionCard("Hostage Situation", 2, ev => patrolCityForVillain('STREETS', (
 // {PATROL Bank}: If there's a Villain there, each other player reveals their hand and discards a card with a Recruit icon.
 makeAmbitionCard("This is a Stickup", 4, ev => patrolCityForVillain('BANK', () => eachOtherPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p)))), // TODO multiplayer reveal
 // This ambition ascends to become a new 9 Attack Mastermind worth 5 VP. It gains the ability: "<b>Master Strike</b>: Each player reveals a [Ranged] Hero or gains a Wound."
-makeAmbitionCard("Shadowy Disciple", 9, ev => {/* TODO */}),
+makeAmbitionCard("Shadowy Disciple", 9, ev => ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)), 5)),
 // {PATROL Bridge}: If there's a Villain there, each player gains a Wound.
 makeAmbitionCard("Detonate the Bridge", 4, ev => patrolCityForVillain('BRIDGE', () => eachPlayer(p => gainWoundEv(ev, p)))),
 // {PATROL Sewers}: If there's a Villain there, it escapes.
@@ -141,7 +144,22 @@ makeAmbitionCard("Rack and Ruin", 10, ev => { playStrikeEv(ev, ev.source); playT
 
 // EXPANSION Civil War
 
-// TODO CW Gravious Wounds
+const civilWarWounds: [number, Card][] =  [
+// HEAL: You may discard a card and have each other player discard a card. If you do, KO this Wound.
+[ 2, makeWoundCard("Blinding Flash", c => playerState.hand.count(i => i !== c) >= 2, ev => { eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(i => i !== ev.source), c => discardEv(ev, c), p)); KOEv(ev, ev.source); }) ],
+// HEAL: You may spend 5 Attack. If you do, KO this Wound.
+[ 2, makeWoundCard("Blunt Force Trauma", () => canPayCost(new Ev(u, 'EFFECT', {cost: {attack: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {attack: 5}}))) ],
+// HEAL: You may KO this Wound. If you do, gain another Wound.
+[ 2, makeWoundCard("Corrosive Webbing", () => true, ev => { KOEv(ev, ev.source); gainWoundEv(ev); }) ],
+// HEAL: You may KO a Hero that costs 1 or more from your hand or discard pile. If you do, KO this Wound.
+[ 2, makeWoundCard("Fatal Blow", () => handOrDiscard().limit(isHero).has(c => c.cost >= 1), ev => { selectCardAndKOEv(ev, handOrDiscard().limit(isHero).limit(c => c.cost >= 1)); KOEv(ev, ev.source); }) ],
+// HEAL: You may spend 5 Recruit. If you do, KO this Wound.
+[ 2, makeWoundCard("Psychic Trauma", () => canPayCost(new Ev(u, 'EFFECT', {cost: {recruit: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {recruit: 5}}))) ],
+// HEAL: You may have the player on your left gain this Wound.
+[ 3, makeWoundCard("Spreading Nanovirus", () => true, ev => gainEv(ev, ev.source, playerState.left)) ],
+// HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
+[ 2, makeWoundCard("Subdermal Tracker", () => true, ev => { villainDrawEv(ev); KOEv(ev, ev.source); }) ],
+];
 
 const specialSidekickTemplates: [number, Card][] = [
 // Draw a card.
@@ -170,4 +188,56 @@ const specialSidekickTemplates: [number, Card][] = [
 }, ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // KO a card from your hand or discard pile. Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Zabu", 2, u, u, Color.INSTINCT, "Avengers", "FD", [ ev => KOHandOrDiscardEv(ev), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
+];
+
+// EXPANSION X-Men
+
+function makeHorrorCard(name: string, func: Handler, abilities?: { trigger?: Trigger }) {
+  const card = new Card("HORROR", name);
+  card.ambush = func;
+  if (abilities) Object.assign(card, abilities);
+  return card;
+}
+
+const horrorTemplates = [
+// AMBUSH: Add a random new Mastermind to the game with one Tactic.
+makeHorrorCard("The Apprentice Rises", ev => {/* TODO */}),
+// Each non-Henchman Villain has +1 Attack.
+makeHorrorCard("Army of Evil", ev => addStatMod('defense', c => isVillain(c) && !isHenchman(c), 1)),
+// AMBUSH: Shuffle an additional Master Strike into the Villain Deck. Then, play another card from the Villain Deck.
+makeHorrorCard("The Blood Thickens", ev => { gameState.villaindeck.addNewCard(strikeTemplate); gameState.villaindeck.shuffle(); }),
+// Each players hand size is one less. (This applies when they draw a new hand.)
+makeHorrorCard("Empire of Oppression", ev => gameState.endDrawAmount--),
+// Whenever you complete a Scheme Twist, also play the Mastermind's Master Strike ability
+makeHorrorCard("Endless Hatred", ev => gameState.triggers.push({ event: 'TWIST', after: ev => { gameState.ko.has(isStrike) || gameState.ko.addNewCard(strikeTemplate); gameState.ko.limit(isStrike).withFirst(c => playStrikeEv(ev, c))} })),
+// The Mastermind has +2 Attack.
+makeHorrorCard("Enraged Mastermind", ev => addStatMod('defense', isMastermind, 2)),
+// After you defeat the Mastermind's four Tactics, you must still fight the Mastermind a fifth time to put the Mastermind card in your Victory Pile and win.
+makeHorrorCard("Fight to the End", ev => addStatSet('isFightable', isMastermind, c => c.location === gameState.mastermind)),
+// The Mastermind has +1 Attack for each Mastermind Tactic among all players' Victory Piles.
+makeHorrorCard("Growing Thread", ev => addStatMod('defense', isMastermind, () => gameState.players.sum(p => p.victory.count(isTactic)))),
+// Whenever you play a Henchman Villain from the Villain Deck, play another card from the Villain Deck.
+makeHorrorCard("Legions upon Legions", ev => gameState.triggers.push({ event: 'VILLAINDRAW', after: ev => isHenchman(ev.parent.what) && villainDrawEv(ev) })),
+// The Mastermind has +1 Attack.
+makeHorrorCard("Manical Mastermind", ev => addStatMod('defense', isMastermind, 1)),
+// Whenever you play a Bystander from the Villain Deck, play another card from the Villain Deck.
+makeHorrorCard("Misery upon Misery", ev => gameState.triggers.push({ event: 'VILLAINDRAW', after: ev => isBystander(ev.parent.what) && villainDrawEv(ev) })),
+// AMBUSH: Each player gains a Wound.
+makeHorrorCard("Opening Salvo", ev => eachPlayer(p => gainWoundEv(ev, p))),
+// Whenever you complete a Master Strike, play another card from the Villain Deck.
+makeHorrorCard("Pain upon Pain", ev => gameState.triggers.push({ event: 'STRIKE', after: ev => villainDrawEv(ev) })),
+// AMBUSH: Shuffle an additional Scheme Twist into the Villain Deck.
+makeHorrorCard("The Plot Thickens", ev => { gameState.villaindeck.addNewCard(twistTemplate); gameState.villaindeck.shuffle(); }),
+// Whenever you complete a Scheme Twist, play another card from the Villain Deck.
+makeHorrorCard("Plots upon Plots", ev => gameState.triggers.push({ event: 'TWIST', after: ev => villainDrawEv(ev) })),
+// AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card, then each player discards a card. TODO turn start trigger
+makeHorrorCard("Psychic Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURN', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); cont(ev, () => eachPlayer(p => pickDiscardEv(ev, 1, p))); }} }),
+// This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind worth 5 VP. It gains the ability "Master Strike: Each player reveals a Tech Hero or gains a Wound."
+makeHorrorCard("Shadow of the Disciple", ev => ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)), 5)),
+// AMBUSH: Play two cards from the Villain Deck.
+makeHorrorCard("Surprise Assault", ev => { villainDrawEv(ev); villainDrawEv(ev); }),
+// AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card and the player on your right gains a Wound.
+makeHorrorCard("Viral Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURN', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); gainWoundEv(ev, playerState.right); }} }),
+// The Mastermind has +3 Attack.
+makeHorrorCard("Tyrant Mastermind", ev => addStatMod('defense', isMastermind, 3)),
 ];

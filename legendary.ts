@@ -56,7 +56,7 @@ interface Card {
   fightCond?: (c?: Card) => boolean
   fightCost?: (ev: Ev) => void
   fightFail?: (ev: Ev) => void
-  healCond?: () => boolean
+  healCond?: (c: Card) => boolean
   instance: Card
   _attached: {[name: string]:Deck}
   tacticsTemplates?: Card[]
@@ -284,7 +284,7 @@ function makeBystanderCard(name: string, rescue?: (ev: Ev) => void) {
   c.rescue = rescue;
   return c;
 }
-function makeWoundCard(cond: () => boolean, heal: (ev: Ev) => void, name: string, customType?: string) {
+function makeWoundCard(name: string, cond: (c: Card) => boolean, heal: (ev: Ev) => void, customType?: string) {
   let c = new Card(customType || "WOUND", name);
   c.heal = heal;
   c.healCond = cond;
@@ -1536,7 +1536,7 @@ function limitPerTurn(f: (ev: Ev) => boolean, n: number = 1) {
 }
 function canHeal(c: Card): boolean {
   if (!c.isHealable()) return false;
-  return c.healCond ? c.healCond() : true;
+  return c.healCond ? c.healCond(c) : true;
 }
 function canPlay(c: Card): boolean {
   if (c.divided) return canPlay(c.divided.left) || canPlay(c.divided.right);

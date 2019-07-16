@@ -246,7 +246,9 @@ function recruitSidekickActionEv(ev: Ev, what: Card) {
   return new Ev(ev, 'RECRUIT', { what, where: what.location, func: ev => buyCard(ev), cost });
 }
 
-function ascendToMastermind(ev: Ev) {
+function ascendToMastermind(ev: Ev, strike?: Handler, vp?: number) {
+  if (strike) addStatSet('strike', c => c === ev.source, (c, prev) => combineHandlers(prev, strike));
+  if (vp) addStatSet('vp', c => c === ev.source, () => vp);
   moveCardEv(ev, ev.source, gameState.mastermind);
 }
 function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void, p?: Player) {
