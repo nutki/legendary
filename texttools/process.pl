@@ -59,7 +59,7 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Lightshow|Phasing)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
@@ -73,6 +73,7 @@ while (<A>) {
     s!(<b>)S.H.I.E.L.D. Clearance(</b>)!{SHIELDCLEARANCE}!g; #FIX? no formatting in most cases
     s!<b>Excessive Violence</b>:!{VIOLENCE}!g;
     s!<b>Revenge for (.*?)</b>!{REVENGE $1}!g;
+    s!<b>Berserk</b>!{BERSERK}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;
@@ -96,6 +97,9 @@ while (<A>) {
       s!^\[($class)\], \[($class)\], \[($class)\], \[($class)\]: (.*)$!{POWER $1 $2 $3 $4} $5! && next;
       s!^<b>(?:Healing|Betrayal)</b>: (.*)!#HEAL: $1! && next;
       s!^<b>Spectrum</b>: (.*)$!{SPECTRUM} $1! && next;
+      s!^<b>X-Gene</b> (.*):!{XGENE $1}! && next;
+      s!^<b>Piercing Energy</b>$!#PIERCING! && next;
+      s!^<b>Lightshow</b>: *!{LIGHTSHOW} ! && next;
 
       s!^<span style='font-size:14px;'><i><b>(.*?)</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
       s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;

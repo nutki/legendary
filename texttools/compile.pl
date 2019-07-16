@@ -34,11 +34,14 @@ sub autopower {
     s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split", ",$1).")";
     s/^{SPECTRUM} *// and $cond = "spectrumPower()";
     s/^{SAVIOR} *// and $cond = "saviorPower()";
+    s/^{XGENE \[(.*?)\]} *// and $cond = "xGenePower(Color.".(uc$1).")";
+    s/^{XGENE (.*?)} *// and $cond = "xGenePower(\"$1\")";
     s/^{VIOLENCE} *// and $wrap = "excessiveViolence: ev => XXX";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
+    s/^{LIGHTSHOW} *// and $wrap = "lightShow: ev => XXX, cardActions: [ lightShowActionEv ]";
 
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
     /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev, $num{$1})";
@@ -52,6 +55,10 @@ sub autopower {
     s/^{DODGE}$// and $ability = 'cardActions: [ dodge ]';
     s/^{PHASING}$// and $ability = 'cardActions: [ phasingActionEv ]';
     s/^{SIZECHANGING (\w+)}$// and $ability = "sizeChanging: Color.$1";
+    s/^(\d+)\+? Piercing$// and $ability = "printedPiercing: $1";
+    s/^[Yy]ou get \+(\d+) Piercing\.?$// and $effect = "addPiercingEv(ev, $1)";
+    s/^{BERSERK}(, \{BERSERK})*$// and $effect = "berserkEv(ev, ".((@zzz=$&=~/BERSERK/g)).")";
+    s/^{SOARING FLIGHT}$// and $ability = "soaring: true";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;

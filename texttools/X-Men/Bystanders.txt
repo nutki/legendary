@@ -84,7 +84,7 @@ Draw a card.
 --- New Mutants
 #RESCUE: gain it as a Hero.
 #GAINABLE
-<b>Berserk</b>, <b>Berserk</b>, <b>Berserk</b>
+{BERSERK}, {BERSERK}, {BERSERK}
 #ATTACKG: 0+
 #COST: 3
 

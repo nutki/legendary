@@ -6,7 +6,7 @@
 #COPIES: 5
 #CLASS: [Covert]
 {SOARING FLIGHT}
-{LIGHTSHOW}: Draw a card.
+{LIGHTSHOW} Draw a card.
 #ATTACK: 2
 #COST: 3
 
@@ -15,13 +15,13 @@
 #DIVIDED: Blazing Flare
 #DIVHERO: Aurora
 #CLASS: [Ranged]
-{LIGHTSHOW}: You get +2 Recruit.
+{LIGHTSHOW} You get +2 Recruit.
 #RECRUIT: 2+
 #COST: 4
 #DIVIDED: Blazing Fists
 #DIVHERO: Northstar
 #CLASS: [Strength]
-<b>Berserk</b>
+{BERSERK}
 #ATTACK: 2+
 #COST: 4
 
@@ -29,7 +29,7 @@
 #COPIES: 3
 #CLASS: [Ranged]
 {SOARING FLIGHT}
-{LIGHTSHOW}: You get +3 Attack
+{LIGHTSHOW} You get +3 Attack
 #ATTACK: 2+
 #COST: 5
 
@@ -38,7 +38,7 @@
 #CLASS: [Instinct]
 {SOARING FLIGHT}
 All Heroes you recruit this turn have {SOARING FLIGHT}.
-{LIGHTSHOW}: You get +2 Attack for each {LIGHTSHOW} card you played this turn.
+{LIGHTSHOW} You get +2 Attack for each <b>Lightshow</b> card you played this turn.
 #RECRUIT: 4
 #ATTACK: 0+
 #COST: 7
@@ -50,22 +50,22 @@ All Heroes you recruit this turn have {SOARING FLIGHT}.
 #COPIES: 5
 #CLASS: [Covert]
 Draw a card.
-<b>Piercing Energy</b>
-<b>X-Gene</b> [Covert]: You get +1 Piercing.
+#PIERCING
+{XGENE [Covert]} You get +1 Piercing.
 #COST: 2
 
 #SUBNAME: Speed of Sound
 #COPIES: 5
 #CLASS: [Ranged]
 {SOARING FLIGHT}
-<b>Piercing Energy</b>
+#PIERCING
 2 Piercing
 #COST: 3
 
 #SUBNAME: Sonic Blastwave
 #COPIES: 3
 #CLASS: [Ranged]
-<b>Piercing Energy</b>
+#PIERCING
 {POWER Ranged} You may have this card produce Piercing instead of Recruit.
 #RECRUIT: 3
 0+ Piercing
@@ -74,7 +74,7 @@ Draw a card.
 #SUBNAME: Bone-Shattering Howl
 #COPIES: 1
 #CLASS: [Ranged]
-<b>Piercing Energy</b>
+#PIERCING
 {POWER Ranged Covert} You may use Attack as if it were Piercing this turn.
 4 Piercing
 #COST: 8
@@ -85,15 +85,15 @@ Draw a card.
 #SUBNAME: Captivating Conundrum
 #COPIES: 5
 #CLASS: [Tech]
-<b>X-Gene</b> [Tech]: Draw a card.
+{XGENE [Tech]} Draw a card.
 #ATTACK: 1
 #COST: 2
 
 #SUBNAME: Furry Fury
 #COPIES: 5
 #CLASS: [Strength]
-<b>Berserk</b>
-<b>X-Gene</b> [Strength]: <b>Berserk</b>
+{BERSERK}
+{XGENE [Strength]} {BERSERK}
 #ATTACK: 2+
 #COST: 4
 
@@ -101,15 +101,15 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Tech]
 Look at the top card of your deck. Discard it or put it back.
-<b>Berserk</b>
+{BERSERK}
 #ATTACK: 3+
 #COST: 5
 
 #SUBNAME: Recursive Pummeling
 #COPIES: 1
 #CLASS: [Tech]
-<b>Berserk</b>
-<b>X-Gene</b> X-Men: You may return a 0-cost, 3-cost, and 4-cost card from your discard pile to your hand.
+{BERSERK}
+{XGENE X-Men} You may return a 0-cost, 3-cost, and 4-cost card from your discard pile to your hand.
 #ATTACK: 3+
 #COST: 8
 
@@ -161,7 +161,7 @@ Attack: 4+
 #DIVIDED: Unpredictable
 #DIVHERO: Wolverine
 #CLASS: [Instinct]
-<b>Berserk</b>, <b>Berserk</b>
+{BERSERK}, {BERSERK}
 #ATTACK: 1+
 #COST: 3
 
@@ -169,14 +169,14 @@ Attack: 4+
 #COPIES: 5
 #CLASS: [Strength]
 {SOARING FLIGHT}
-<b>X-Gene</b> [Instinct]: <b>Berserk</b>
+{XGENE [Instinct]} {BERSERK}
 #ATTACK: 2+
 #COST: 4
 
 #SUBNAME: Insane Disregard for Danger
 #COPIES: 3
 #CLASS: [Instinct]
-<b>Berserk</b>
+{BERSERK}
 If you have a Wound in your hand or discard pile, KO it. Otherwise, gain a Wound.
 #ATTACK: 4+
 #COST: 6
@@ -184,7 +184,7 @@ If you have a Wound in your hand or discard pile, KO it. Otherwise, gain a Wound
 #SUBNAME: Uncanny X-Men
 #COPIES: 1
 #CLASS: [Strength]
-<b>Berserk</b>, <b>Berserk</b>, <b>Berserk</b>
+{BERSERK}, {BERSERK}, {BERSERK}
 Then, draw a card for each X-Men card you <b>Berserked</b>.
 #ATTACK: 3+
 #COST: 7
@@ -195,8 +195,8 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Convert Sound to Light
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Piercing Energy</b>
-{LIGHTSHOW}: You get +1 Piercing for each {LIGHTSHOW} card you played this turn.
+#PIERCING
+{LIGHTSHOW} You get +1 Piercing for each <b>Lightshow</b> card you played this turn.
 #RECRUIT: 1
 0+ Piercing
 #COST: 3
@@ -204,14 +204,14 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Dazzling Glamour
 #COPIES: 5
 #CLASS: [Ranged]
-{LIGHTSHOW}: You get +2 Attack.
+{LIGHTSHOW} You get +2 Attack.
 #ATTACK: 2+
 #COST: 4
 
 #SUBNAME: City-Wide Mega Concert
 #COPIES: 3
 #CLASS: [Tech]
-{LIGHTSHOW}: When you draw a new hand of cards at the end of this turn, draw two extra cards.
+{LIGHTSHOW} When you draw a new hand of cards at the end of this turn, draw two extra cards.
 #ATTACK: 3
 #COST: 5
 #FLAVOR: Performing is her passion, fighting aliens is more of a nights-and-weekends thing.
@@ -219,7 +219,7 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Inspire the World
 #COPIES: 1
 #CLASS: [Ranged]
-{LIGHTSHOW}: Put a Hero from the HQ on top of your deck.
+{LIGHTSHOW} Put a Hero from the HQ on top of your deck.
 #ATTACK: 5
 #COST: 7
 
@@ -229,7 +229,7 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #SUBNAME: Blinding Burst
 #COPIES: 5
 #CLASS: [Ranged]
-{LIGHTSHOW}: You get +3 Attack usable only against the Mastermind.
+{LIGHTSHOW} You get +3 Attack usable only against the Mastermind.
 #RECRUIT: 2
 #COST: 3
 
@@ -237,22 +237,22 @@ Then, draw a card for each X-Men card you <b>Berserked</b>.
 #COPIES: 5
 #CLASS: [Ranged]
 To play this card, you must discard a card from your hand.
-<b>Berserk</b>, <b>Berserk</b>
+{BERSERK}, {BERSERK}
 #ATTACK: 2+
 #COST: 4
 
 #SUBNAME: Concussive Plasma
 #COPIES: 3
 #CLASS: [Ranged]
-<b>X-Gene</b> [Ranged]: You get +1 Attack for each [Ranged] card in your discard pile.
+{XGENE [Ranged]} You get +1 Attack for each [Ranged] card in your discard pile.
 #ATTACK: 2+
 #COST: 5
 
 #SUBNAME: Radiation Focus Array
 #COPIES: 1
 #CLASS: [Tech]
-<b>Berserk</b>
-<b>X-Gene</b> [Ranged]: You get the total printed Attack of all the [Ranged] cards in your discard pile.
+{BERSERK}
+{XGENE [Ranged]} You get the total printed Attack of all the [Ranged] cards in your discard pile.
 #ATTACK: 3+
 #COST: 7
 
@@ -263,7 +263,7 @@ To play this card, you must discard a card from your hand.
 #COPIES: 5
 #CLASS: [Covert]
 Draw a card.
-{LIGHTSHOW}: You get +1 Recruit for each {LIGHTSHOW} card you played this turn.
+{LIGHTSHOW} You get +1 Recruit for each <b>Lightshow</b> card you played this turn.
 #RECRUIT: 0+
 #COST: 2
 
@@ -271,21 +271,21 @@ Draw a card.
 #COPIES: 5
 #CLASS: [Ranged]
 Draw a card.
-{LIGHTSHOW}: You get +1 Attack for each {LIGHTSHOW} card you played this turn.
+{LIGHTSHOW} You get +1 Attack for each <b>Lightshow</b> card you played this turn.
 #ATTACK: 1+
 #COST: 4
 
 #SUBNAME: Unexpected Explosion
 #COPIES: 3
 #CLASS: [Instinct]
-{LIGHTSHOW}: Look at the top card of your deck. If it costs 0, KO it.
+{LIGHTSHOW} Look at the top card of your deck. If it costs 0, KO it.
 #ATTACK: 3
 #COST: 5
 
 #SUBNAME: Prismatic Cascade
 #COPIES: 1
 #CLASS: [Covert]
-{LIGHTSHOW}: You get +1 Recruit and +1 Attack for each {LIGHTSHOW} card you played this turn.
+{LIGHTSHOW} You get +1 Recruit and +1 Attack for each <b>Lightshow</b> card you played this turn.
 #RECRUIT: 0+
 #ATTACK: 5+
 #COST: 7
@@ -304,7 +304,7 @@ Put a card from the HQ on the bottom of the Hero deck. If that card had a Recrui
 #SUBNAME: Going through a Phase
 #COPIES: 5
 #CLASS: [Covert]
-<b>X-Gene</b> X-men: Draw a card.
+{XGENE X-men} Draw a card.
 #RECRUIT: 1
 #ATTACK: 1
 #COST: 4
@@ -331,12 +331,12 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 #COPIES: 5
 #DIVIDED: Bend Steel
 #CLASS: [Strength]
-<b>Berserk</b>
+{BERSERK}
 #ATTACK: 1+
 #COST: 2
 #DIVIDED: Bend Light
 #CLASS: [Covert]
-{LIGHTSHOW}: You get +2 Recruit.
+{LIGHTSHOW} You get +2 Recruit.
 #RECRUIT: 1+
 #COST: 2
 
@@ -348,7 +348,7 @@ Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to 
 #COST: 3
 #DIVIDED: Split Eardrums
 #CLASS: [Ranged]
-<b>Piercing Energy</b>
+#PIERCING
 2 Piercing
 #COST: 3
 
@@ -385,8 +385,8 @@ To play this card, you must put a card from your hand on top of your deck.
 #SUBNAME: Flurry of Blades
 #COPIES: 5
 #CLASS: [Tech]
-<b>Berserk</b>
-{POWER Tech} <b>Berserk</b>
+{BERSERK}
+{POWER Tech} {BERSERK}
 #ATTACK: 2+
 #COST: 4
 #FLAVOR: Longshot is supernaturally lucky. His enemies? Not so much.
@@ -422,7 +422,7 @@ You may KO a card from your hand or discard pile.
 #COPIES: 5
 #CLASS: [Ranged]
 {SOARING FLIGHT}
-<b>Piercing Energy</b>
+#PIERCING
 KO this card.
 4 Piercing
 #COST: 4
@@ -437,7 +437,7 @@ You may put a Hero that was KO'd this turn into your discard pile.
 #SUBNAME: Driven Mad by Power
 #COPIES: 1
 #CLASS: [Strength]
-<b>Berserk</b>, <b>Berserk</b>, <b>Berserk</b>, <b>Berserk</b>
+{BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}
 KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, then the Phoenix Force becomes corrupted by power and devours the Earth. You win, Evil wins, and all other players lose.
 #ATTACK: 6+
 #COST: 9
@@ -456,7 +456,7 @@ KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, th
 #SUBNAME: Electromagnetic Pulse
 #COPIES: 5
 #CLASS: [Ranged]
-<b>Piercing Energy</b>
+#PIERCING
 {POWER Ranged} Draw a card.
 2 Piercing
 #COST: 4
@@ -473,7 +473,7 @@ KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, th
 #COPIES: 1
 #CLASS: [Covert]
 {SOARING FLIGHT}
-<b>X-Gene</b> X-Men: You can use Recruit as Attack this turn, and vice versa.
+{XGENE X-Men} You can use Recruit as Attack this turn, and vice versa.
 #RECRUIT: 4
 #COST: 8
 
@@ -484,7 +484,7 @@ KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, th
 #COPIES: 5
 #CLASS: [Instinct]
 Draw a card.
-<b>Piercing Energy</b>
+#PIERCING
 {POWER Instinct} You get +1 Piercing.
 0+ Piercing
 #COST: 2
@@ -499,8 +499,8 @@ Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, d
 #SUBNAME: Butterfly Effect
 #COPIES: 3
 #CLASS: [Covert]
-<b>Piercing Energy</b>
-<b>X-Gene</b> [Covert]: You get +1 Piercing.
+#PIERCING
+{XGENE [Covert]} You get +1 Piercing.
 2+ Piercing
 #COST: 5
 #FLAVOR: The focused totality of her powers.
@@ -508,7 +508,7 @@ Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, d
 #SUBNAME: Telepathic Ninjutsu
 #COPIES: 1
 #CLASS: [Instinct]
-<b>Piercing Energy</b>
+#PIERCING
 Reveal the top card of the Hero Deck. The player of your choice puts it in their hand.
 3 Piercing
 #COST: 7
@@ -519,7 +519,7 @@ Reveal the top card of the Hero Deck. The player of your choice puts it in their
 #SUBNAME: Adamantium Footclaws
 #COPIES: 5
 #CLASS: [Tech]
-<b>X-Gene</b> [Instinct]: Draw a card.
+{XGENE [Instinct]} Draw a card.
 #ATTACK: 2
 #COST: 3
 #FLAVOR: Cloned from Wolverine's DNA, X-23 has extra Adamantium foot claws and almost as much savagery.
@@ -527,7 +527,7 @@ Reveal the top card of the Hero Deck. The player of your choice puts it in their
 #SUBNAME: Healing Factor Genome
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Berserk</b>
+{BERSERK}
 You may KO a Wound from your hand or discard pile.
 #ATTACK: 2+
 #COST: 4
@@ -535,16 +535,16 @@ You may KO a Wound from your hand or discard pile.
 #SUBNAME: Bioengineered Assassin
 #COPIES: 3
 #CLASS: [Covert]
-<b>Berserk</b>
-<b>X-Gene</b> [Instinct]: You may KO a card from your hand or discard pile.
+{BERSERK}
+{XGENE [Instinct]} You may KO a card from your hand or discard pile.
 #ATTACK: 2+
 #COST: 6
 
 #SUBNAME: Heir to Wolverine
 #COPIES: 1
 #CLASS: [Instinct]
-<b>Berserk</b>, <b>Berserk</b>
-<b>X-Gene</b> [Instinct]: Count the [Instinct] cards in your discard pile. <b>Berserk</b> that many times.
+{BERSERK}, {BERSERK}
+{XGENE [Instinct]} Count the [Instinct] cards in your discard pile. {BERSERK} that many times.
 #ATTACK: 3+
 #COST: 7
 

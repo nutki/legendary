@@ -16,7 +16,7 @@
 #GAINABLE
 #TEAM: X-Men
 #CLASS: [Ranged]
-<b>X-Gene</b> [Ranged]: You get +2 Attack.
+{XGENE [Ranged]} You get +2 Attack.
 #ATTACKG: 2+
 
 #SUBNAME: Nemesis
@@ -162,7 +162,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 4
 #GAINABLE
 #CLASS: [Instinct]
-<b>X-Gene</b> [Instinct]: The next Hero you recruit from the HQ has Soaring Flight.
+{XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
 #ATTACKG: 2
 
 #SUBNAME: Dark Beast
@@ -171,7 +171,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 5
 #GAINABLE
 #CLASS: [Tech]
-<b>X-Gene</b> [Tech]: You may KO a card from your hand or discard pile.
+{XGENE [Tech]} You may KO a card from your hand or discard pile.
 #ATTACKG: 2
 
 #SUBNAME: Dark Cyclops
@@ -181,7 +181,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 7
 #GAINABLE
 #CLASS: [Ranged]
-<b>X-Gene</b> [Ranged]: Return a [Ranged] Hero from your discard pile to your hand.
+{XGENE [Ranged]} Return a [Ranged] Hero from your discard pile to your hand.
 #ATTACKG: 3
 
 #SUBNAME: Dark Iceman
@@ -190,7 +190,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 5
 #GAINABLE
 #CLASS: [Strength]
-<b>X-Gene</b> [Strength]: Draw a card.
+{XGENE [Strength]} Draw a card.
 #ATTACKG: 2
 
 #SUBNAME: Dark Marvel Girl
@@ -200,7 +200,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #ATTACK: 4+
 #GAINABLE
 #CLASS: [Covert]
-<b>X-Gene</b> [Covert]: Rescue a Bystander.
+{XGENE [Covert]} Rescue a Bystander.
 #ATTACKG: 2
 
 #CARDNAME: Shi'ar Imperial Guard

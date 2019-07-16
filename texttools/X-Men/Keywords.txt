@@ -9,14 +9,14 @@ signature teamwork.
 * Some Heroes give you a new kind of points called "Piercing Energy," using the Piercing icon. You can fight a Villain or Mastermind by spending Piercing points equal to that enemy's printed Victory Points value (VP). You ignore that enemy's Attack and any Attack modifiers.
 * You can also ignore any special conditions for fighting that enemy, automatically rescuing any Human Shields.
 * You can't use Piercing Energy against cards that have no printed VP value, like Shadow-X Villains, or Master Strikes that become Villains.
-<b>Berserk</b>: This keyword represents some X-Men going into a berserker rage of unpredictable violence.
+{BERSERK}: This keyword represents some X-Men going into a berserker rage of unpredictable violence.
 * "Berserk" means "Discard the top card of your deck. You get +Attack equal to the discarded card's printed Attack." (So if the discarded card gives "2+ Attack", you just count 2.)
 * Some cards say "Berserk, Berserk, Berserk" so you discard three cards in a row.
 * Some cards say things like "Berserk. X-Gene [Tech]: You get +1 Attack." You do the card abilities in order, so Berserk might discard a [Tech] card from your deck, letting you use your X-Gene ability.
 * Berserk gives no benefit from discarding printed Recruit or Piercing values.
 {SOARING FLIGHT}: This ability represents X-Men flying into action as rapid reinforcements.
 * "Soaring Flight" means "When you recruit this Hero, set it aside. At the end of this turn, add it to your new hand as an extra card."
-{LIGHTSHOW}: This keyword represents X-Men using fireworks and blinding bursts in spectacular combinations.
+{LIGHTSHOW} This keyword represents X-Men using fireworks and blinding bursts in spectacular combinations.
 * Some Heroes say things like "Lightshow: You get +3 Attack." Once per turn, if you played at least two Lightshow cards this turn, you can use a single Lightshow ability from any of those cards.
 * If you play three, four, or more Lightshow cards you still use only a single Lightshow ability.
 <b>Dominate</b>: This keyword represents Villains using telepathy, sorcery, or illusions to twist Heroes' minds to evil.
