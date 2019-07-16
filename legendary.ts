@@ -622,6 +622,7 @@ interface Templates {
     templateId?: string
     cards: [number, Card][]
   }[]
+  AMBITIONS: Card[]
 }
 // Card definitions
 let cardTemplates: Templates = {
@@ -631,8 +632,9 @@ let cardTemplates: Templates = {
   MASTERMINDS: [],
   SCHEMES: [],
   BYSTANDERS: [],
+  AMBITIONS: [],
 };
-function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS', set: string, templates: Card[]) {
+function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS', set: string, templates: Card[]) {
   templates.forEach(t => {
     t.set = set;
     t.templateId = t.cardName;

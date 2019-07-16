@@ -44,7 +44,100 @@ const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u
   chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.sidekick) && drawEv(ev, 2));
 });
 
-// TODO SW1&2 Ambitions
+function makeAmbitionCard(name: string, defense: number, fight: Handler, starting: boolean = false) {
+  const card = new Card('AMBITION', name);
+  card.printedDefense = defense;
+  card.fight = fight;
+  if (starting) card.flags = "S";
+  return card;
+}
+addTemplates("AMBITIONS", "Secret Wars Volume 1", [
+// <i>Starting Ambition</i>
+// Play a card from the Villain Deck. Keep this card in the Ambition Row.
+// <i>(This card starts the game in the Ambition Row and cannot be discarded from the Ambition Row. You can use this card multiple times in the same turn.)</i>
+makeAmbitionCard("Pure Evil", 5, ev => villainDrawEv(ev), true),
+// Choose a class. Each other player reveals their hand and discards all cards of that class.
+makeAmbitionCard("Crackdown", 7, ev => chooseClassEv(ev, col => eachOtherPlayer(p => p.hand.limit(col).each(c => discardEv(ev, c))))),
+// Play two cards from the Villain Deck.
+makeAmbitionCard("Tide of Destruction", 8, ev => { villainDrawEv(ev); villainDrawEv(ev); }),
+// Put a Hero from the HQ on the bottom of the Hero Deck.
+makeAmbitionCard("Abduction", 2, ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true))),
+// Put this card under a Villain in the Sewers or Bank. When that Villain escapes, this card becomes a Scheme Twist that takes effect immediately. If that Villain leaves the city another way, discard this.
+makeAmbitionCard("Secret Plans", 4, ev => {/* TODO */}),
+// Choose a class. Put all heroes of that class from the HQ on the bottom of the Hero Deck.
+makeAmbitionCard("Wipe Out", 2, ev => chooseClassEv(ev, col => hqHeroes().limit(col).each(c => moveCardEv(ev, c, gameState.herodeck, true)))),
+// The other player with the fewest Villains in their Victory Pile gains a Wound. <i>(You choose how to break a tie.)</i>
+makeAmbitionCard("Crush the Weak", 3, ev => /* TODO only one */gameState.players.limit(p => p !== playerState).highest(p => -p.victory.count(isVillain)).each(p => gainWoundEv(ev, p))),
+// Each other player that has exactly six cards reveals a [Tech] Hero or puts two cards from their hand on top of their deck.
+makeAmbitionCard("Identity Theft", 4, ev => eachOtherPlayer(p => p.hand.size === 6 && revealOrEv(ev, Color.TECH, () => pickTopDeckEv(ev, 2, p), p))),
+// Each other player reveals a [Ranged] Hero or gains a Wound to the bottom of their deck.
+makeAmbitionCard("Wave of Punishment", 5, ev => eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p))), // TODO bottom
+// Put this card under the Mastermind card. That Mastermind gets +3 Attack until the start of your next turn. Then, discard this card.
+makeAmbitionCard("Force Field", 3, ev => {/* TODO future statMod */}),
+// Choose a Villain from the Escape Pile. It enters the city.
+makeAmbitionCard("Breakout", 4, ev => selectCardEv(ev, "Choose a Villain", gameState.escaped.limit(isVillain), c => enterCityEv(ev, c))),
+// Pick a random Mastermind Tactic from all the ones in players' Victory Piles. Shuffle it back into the Mastermind's Tactics.
+makeAmbitionCard("Last-Minute Escape", 9, ev => selectCardEv(ev, "Choose a Tactic card", gameState.players.map(p => p.victory.limit(isTactic)).merge(), c => shuffleIntoEv(ev, c, c.mastermind.attachedDeck('TACTICS')))),
+// Put this card under a Villain in the city. Until the start of your next turn, that Villain gets +3 Attack. Then, discard this card.
+makeAmbitionCard("Empower", 3, ev => {/* TODO future statMod */}),
+// Each other player reveals a [Covert] Hero or discards their hand and draws five cards.
+makeAmbitionCard("Deceive", 4, ev => eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => { discardHandEv(ev, p); drawEv(ev, 5, p); }, p))),
+// Each other player puts a Wound from their discard pile on top of their deck.
+makeAmbitionCard("Inflict Pain", 2, ev => eachOtherPlayer(p => selectCardEv(ev, "Choose a Wound", p.discard.limit(isWound), c => moveCardEv(ev, c, p.deck), p))),
+// KO the Hero in the HQ space under the Bank. You get +Recruit equal to that Hero's printed Recruit.
+makeAmbitionCard("Bank Robbery", 3, ev => withCity('BANK', bank => bank.below.limit(isHero).each(c => { KOEv(ev, c); addRecruitEvent(ev, c.printedRecruit || 0); }))),
+// Each other player reveals a [Instinct] Hero or gains a Wound to the top of their deck.
+makeAmbitionCard("Pressure Point", 6, ev => eachOtherPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p))), // TODO deck top
+// Choose a number besides 0. Each other player reveals their hand and discards all cards of that cost.
+makeAmbitionCard("Cleave", 6, ev => chooseCostEv(ev, n => eachOtherPlayer(p => p.hand.limit(c => c.cost === n).each(c => discardEv(ev, c))), 1)),
+// Put this card on a Hero in the HQ. Players can't recruit that Hero until the start of your next turn. Then, discard this card.
+makeAmbitionCard("Entrap", 1, ev => {/* TODO future statMod */}),
+// This card becomes a Scheme Twist that takes effect immediately.
+makeAmbitionCard("Insane Twist", 9, ev => playTwistEv(ev, ev.source)),
+// A Villain in the city captures a Bystander.
+makeAmbitionCard("Kidnap", 2, ev => selectCardEv(ev, "Choose a Villain", cityVillains(), c => captureEv(ev, c))),
+// Reveal the top two cards of the Villain Deck. Play a Scheme Twist you revealed. Put the rest back on the top and/or bottom in any order.
+makeAmbitionCard("Thirst for Power", 7, ev => investigateEv(ev, isTwist, gameState.villaindeck, c => playTwistEv(ev, c))), // TODO no modifier),
+// Each other player chooses Recruit or Attack, then discard all their cards with that icon.
+makeAmbitionCard("Painful Choice", 8, ev => {/* TODO */}),
+// Each Villain on the Rooftops and Streets captures a Bystander.
+makeAmbitionCard("Crime Surge", 3, ev => cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'STREETS')).each(c => captureEv(ev, c))),
+// Add a random new Mastermind to the game with one Tactic.
+makeAmbitionCard("Dark Apprentice", 10, ev => {/* TODO */}),
+// Each other player KOs a Bystander from their Victory Pile or gains a Wound.
+makeAmbitionCard("Collateral Damage", 4, ev => eachOtherPlayer(p => selectCardOrEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p))),
+// This card becomes a Master Strike that takes effect immediately.
+makeAmbitionCard("Ruthless Strike", 4, ev => playStrikeEv(ev, ev.source)),
+// Choose a 0-cost Hero from the KO pile for each other player. Those players gain those Heroes.
+makeAmbitionCard("Infiltrate S.H.I.E.L.D.", 4, ev => {/* TODO */}),
+// Reveal the top two cards of the Villain Deck. Play a Master Strike you revealed. Put the rest back on the top and/or bottom in any order.
+makeAmbitionCard("Thirst for Vengeance", 6, ev => investigateEv(ev, isStrike, gameState.villaindeck, c => playStrikeEv(ev, c))), // TODO no modifier
+// Each other player reveals a [Strength] Hero or gains a Wound.
+makeAmbitionCard("Pummel", 4, ev => eachOtherPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p))),
+]);
+addTemplates("AMBITIONS", "Secret Wars Volume 2", [
+// Choose a class. Other players can't recruit heroes of that class until the start of your next turn. Then, discard this card.
+makeAmbitionCard("Puzzle Trap", 6, ev => {/* TODO future statMod */}),
+// {PATROL Rooftops}: If there's a Villain there, then all Villains everywhere get +1 Attack until the start of your next turn.
+// Then, discard this card.
+makeAmbitionCard("Seize the High Ground", 3, ev => {/* TODO future statMod */}),
+// {PATROL Streets}: If there's a Villain there, then each Villain in the city captures a Bystander.
+makeAmbitionCard("Hostage Situation", 2, ev => patrolCityForVillain('STREETS', () => cityVillains().each(c => captureEv(ev, c)))),
+// {PATROL Bank}: If there's a Villain there, each other player reveals their hand and discards a card with a Recruit icon.
+makeAmbitionCard("This is a Stickup", 4, ev => patrolCityForVillain('BANK', () => eachOtherPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p)))), // TODO multiplayer reveal
+// This ambition ascends to become a new 9 Attack Mastermind worth 5 VP. It gains the ability: "<b>Master Strike</b>: Each player reveals a [Ranged] Hero or gains a Wound."
+makeAmbitionCard("Shadowy Disciple", 9, ev => {/* TODO */}),
+// {PATROL Bridge}: If there's a Villain there, each player gains a Wound.
+makeAmbitionCard("Detonate the Bridge", 4, ev => patrolCityForVillain('BRIDGE', () => eachPlayer(p => gainWoundEv(ev, p)))),
+// {PATROL Sewers}: If there's a Villain there, it escapes.
+makeAmbitionCard("Short Escape Tunnels", 5, ev => patrolCityForVillain('SEWERS', c => villainEscapeEv(ev, c))),
+// A Villain in the city <b>charges</b> two spaces.
+makeAmbitionCard("Crazed Charge", 3, ev => villainChargeEv(ev, ev.source, 2)),
+// Every other player reveals their hand and discards all their cards that cost 0.
+makeAmbitionCard("Devastate S.H.I.E.L.D.", 7, ev => eachOtherPlayer(p => p.hand.limit(c => c.cost === 0).each(c => discardEv(ev, c)))),
+// This card becomes a Master Strike that takes effect immediately. Then, this card becomes a Scheme Twist that takes effect immediately.
+makeAmbitionCard("Rack and Ruin", 10, ev => { playStrikeEv(ev, ev.source); playTwistEv(ev, ev.source); }),
+]);
 
 // EXPANSION Civil War
 
