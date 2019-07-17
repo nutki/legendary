@@ -145,7 +145,7 @@ Look at the top card of your deck. Discard it or put it back.
 #CLASS: [Strength]
 {SOARING FLIGHT}
 If you played at least 6 other cards this turn, you get +2 Attack.
-Attack: 4+
+#ATTACK: 4+
 #COST: 8
 
 #CARDNAME: Colossus & Wolverine
@@ -304,7 +304,7 @@ Put a card from the HQ on the bottom of the Hero deck. If that card had a Recrui
 #SUBNAME: Going through a Phase
 #COPIES: 5
 #CLASS: [Covert]
-{XGENE X-men} Draw a card.
+{XGENE X-Men} Draw a card.
 #RECRUIT: 1
 #ATTACK: 1
 #COST: 4

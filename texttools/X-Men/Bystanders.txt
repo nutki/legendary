@@ -1,5 +1,6 @@
 
 #CARDNAME: Cypher
+#TEAM: X-Men
 #CLASS: [Tech]
 --- New Mutants
 #RESCUE: gain it as a Hero.
@@ -16,6 +17,7 @@ Look at the top two cards of your deck. Draw one and discard the other.
 #COST: 3
 
 #CARDNAME: Karma
+#TEAM: X-Men
 #CLASS: [Covert]
 --- New Mutants
 #RESCUE: gain it as a Hero.
@@ -25,6 +27,7 @@ Reveal the top card of the Hero Deck. You get +Attack equal to its printed Attac
 #COST: 3
 
 #CARDNAME: Magik
+#TEAM: X-Men
 #CLASS: [Ranged]
 --- New Mutants
 #RESCUE: gain it as a Hero.
@@ -34,6 +37,7 @@ Teleport (Instead of playing this card, you may set it aside. At the end of the 
 #COST: 4
 
 #CARDNAME: Magma
+#TEAM: X-Men
 #CLASS: [Ranged]
 --- New Mutants
 #RESCUE: gain it as a Hero.
@@ -51,6 +55,7 @@ Draw a card.
 #COST: 3
 
 #CARDNAME: Mirage
+#TEAM: X-Men
 #CLASS: [Covert]
 --- New Mutants
 #RESCUE: gain it as a Hero.
@@ -70,6 +75,7 @@ Draw a card.
 #COST: 3
 
 #CARDNAME: Warlock
+#TEAM: X-Men
 #CLASS: [Tech]
 --- New Mutants
 #RESCUE: gain it as a Hero.

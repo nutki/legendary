@@ -156,7 +156,7 @@ You get +2 Attack for each other card you played this turn that costs 4 or more.
 #SUBNAME: Webs of Darkness
 #COPIES: 5
 #CLASS: [Ranged]
-{POWER Ranged} You get 2+ Attack.
+{POWER Ranged} You get +2 Attack.
 #ATTACK: 1+
 #COST: 2
 #FLAVOR: Spiders from a cursed totem gave Peter Parker dark powers to match his shadowed mission.
