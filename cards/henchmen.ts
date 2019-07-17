@@ -125,3 +125,34 @@ makeHenchmenCard("Cape-Killers", 3, {
   ...shieldClearance,
 }),
 ]);
+addTemplates("HENCHMEN", "X-Men", [
+// This Villain gets +1 Attack for each Bystander in the KO pile.
+// FIGHT: KO one of your Heroes. Then KO a Bystander from the Bystander Stack.
+// ATTACK: 1+
+makeHenchmenCard("The Brood", 1, {
+  fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), ev => gameState.bystanders.withTop(c => KOEv(ev, c)) ],
+  varDefense: c => c.printedDefense + gameState.ko.count(isBystander),
+}),
+// FIGHT: Reveal the top card of your deck. If it costs 0, KO it. Otherwise, you get +1 Recruit.
+// ATTACK: 3
+makeHenchmenCard("Hellfire Cult", 3, {
+  fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost === 0) ? cards.each(c => KOEv(ev, c)) : addRecruitEvent(ev, 1)),
+}),
+// FIGHT: KO one of your Heroes. Then, reveal the top card of the Villain Deck. If it's a Henchman Villain, play it.
+// ATTACK: 3
+makeHenchmenCard("Sapien League", 3, {
+  fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), ev => revealVillainDeckEv(ev, 1, cards => cards.limit(isHenchman).each(c => villainDrawEv(ev, c))) ],
+}),
+// AMBUSH: The Villain captures a Human Shield.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2*
+makeHenchmenCard("Shi'ar Death Commandos", 2, {
+  fight: ev => captureShieldEv(ev, ev.source),
+  ambush: ev => selectCardAndKOEv(ev, yourHeroes()),
+}),
+// FIGHT: The next Hero you recruit this turn has {SOARING FLIGHT}.
+// ATTACK: 3
+makeHenchmenCard("Shi'ar Patrol Craft", 3, {
+  fight: ev => turnState.nextHeroRecruit = "SOARING",
+}),
+]);

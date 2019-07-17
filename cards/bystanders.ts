@@ -50,3 +50,65 @@ addBystanderTemplates("Noir", [
   moveCardEv(ev, c, ev.who.victory);
 }, ev.who)) ],
 ]);
+addBystanderTemplates("X-Men", [
+// TEAM: X-Men
+// CLASS: [Tech]
+// Look at the top two cards of your deck. Draw one and discard the other.
+// COST: 2
+[ 1, makeGainableCard(makeBystanderCard("Cypher"), u, u, Color.TECH, "X-Men", "D", ev => lookAtDeckEv(ev, 2, () => {
+  selectCardEv(ev, "Choose a card to draw", playerState.revealed.deck, c => drawCardEv(ev, c));
+  cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
+}), { printedCost: 2 }) ],
+// CLASS: [Tech]
+// {POWER Tech} You may KO a card from your hand or discard pile.
+// RECRUIT: 2
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Heartless Computer Scientist"), 2, u, Color.TECH, u, "D", ev => superPower(Color.TECH) && KOHandOrDiscardEv(ev, undefined), { printedCost: 3 }) ],
+// TEAM: X-Men
+// CLASS: [Covert]
+// Reveal the top card of the Hero Deck. You get +Attack equal to its printed Attack.
+// ATTACKG: 0+
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Karma"), u, 0, Color.COVERT, "X-Men", "", ev => revealHeroDeckEv(ev, 1, cards => addAttackEvent(ev, cards.sum(c => c.printedAttack || 0))), { printedCost: 3 }) ],
+// TEAM: X-Men
+// CLASS: [Ranged]
+// Teleport (Instead of playing this card, you may set it aside. At the end of the turn, add it to your hand as an extra card.)
+// ATTACKG: 2
+// COST: 4
+[ 1, makeGainableCard(makeBystanderCard("Magik"), u, 2, Color.RANGED, "X-Men", "D", [], { teleport: true, printedCost: 4 }) ],
+// TEAM: X-Men
+// CLASS: [Ranged]
+// Chose one: Draw a card or you get +2 Attack.
+// ATTACKG: 0+
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Magma"), u, 0, Color.RANGED, "X-Men", "D", ev => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["Get +2 Attack", () => addAttackEvent(ev, 2)]), { printedCost: 3 }) ],
+// CLASS: [Instinct]
+// Draw a card.
+// ATTACKG: 1
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Martial Arts Master"), u, 1, Color.INSTINCT, u, "", ev => drawEv(ev, 1), { printedCost: 3 }) ],
+// TEAM: X-Men
+// CLASS: [Covert]
+// Draw a card.
+// RECRUIT: 1
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Mirage"), 1, u, Color.COVERT, "X-Men", "", ev => drawEv(ev, 1), { printedCost: 3 }) ],
+// TEAM: X-Men
+// CLASS: [Strength]
+// {POWER Strength} You get +1 Attack.
+// 2+ Attack. FIX
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Sunspot"), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 1), { printedCost: 3 }) ],
+// TEAM: X-Men
+// CLASS: [Tech]
+// {POWER Tech} Draw a card.
+// ATTACKG: 2
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Warlock"), u, 2, Color.TECH, "X-Men", "D", ev => superPower(Color.TECH) && drawEv(ev, 1), { printedCost: 3 }) ],
+// TEAM: X-Men
+// CLASS: [Instinct]
+// {BERSERK}, {BERSERK}, {BERSERK}
+// ATTACKG: 0+
+// COST: 3
+[ 1, makeGainableCard(makeBystanderCard("Wolfsbane"), u, 0, Color.INSTINCT, "X-Men", "", ev => berserkEv(ev, 3), { printedCost: 3 }) ],
+]);

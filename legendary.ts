@@ -214,7 +214,7 @@ function makeHeroCard(hero: string, name: string, cost: number, recruit: number,
   }
   return c;
 }
-function makeGainableCard(c: Card, recruit: number, attack: number, color: number, team: Affiliation, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
+function makeGainableCard(c: Card, recruit: number, attack: number, color: number, team: Affiliation, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities & { printedCost?: number }) {
   c.gainable = true;
   c.printedRecruit = recruit;
   c.printedAttack = attack;
@@ -222,8 +222,9 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
   c.color = color;
   c.team = team;
   c.flags = flags;
-  if (c.cardType === "VILLAIN" || c.cardType === "TACTIC") c.fight = ev => gainEv(ev, ev.source);
-  if (c.cardType === "BYSTANDER") c.rescue = ev => gainEv(ev, ev.source);
+  c.printedVP = undefined;
+  if (c.cardType === "VILLAIN" || c.cardType === "TACTIC" && !c.fight) c.fight = ev => gainEv(ev, ev.source);
+  if (c.cardType === "BYSTANDER" && !c.rescue) c.rescue = ev => gainEv(ev, ev.source);
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   if (abilities) {
     Object.assign(c, abilities);

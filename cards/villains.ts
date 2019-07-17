@@ -1328,7 +1328,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 ]);
 addVillainTemplates("Secret Wars Volume 2", [
 { name: "Deadpool's Secret Secret Wars", cards: [
-// {NTHCIRCLE 5} (2 copies) FIX
+// {NTHCIRCLE 5}
 // FIGHT: {FATEFULRESURRECTION}
 // ESCAPE: Deadpool ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals a Hero with an odd-numbered cost or gains a Wound." <i>(0 is even).</i>
 // ATTACK: 5+

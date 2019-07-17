@@ -78,7 +78,7 @@ sub gainable() {
   my $attack = $_{ATTACKG} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
   my $recruit = $_{RECRUIT} =~ s! ?1/2!.5!gr =~ s/[^0-9.]//gr;
   my $class = $_{CLASS} =~ s/\[(.*)\]/uc$1/er;
-  my $pteam = $_{TEAM} || 'u';
+  my $pteam = $_{TEAM} ? "\"$_{TEAM}\"" : 'u';
   my $autopower = autopower($_);
   $attack = 'u' if $attack eq '';
   $recruit = 'u' if $recruit eq '';

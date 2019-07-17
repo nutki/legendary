@@ -3430,7 +3430,7 @@ addHeroTemplates("Noir", [
 // <b>Investigate</b> for a card that costs 2 or less.
 // GUN: 1
   c1: makeHeroCard("Spider-Man Noir", "Gumshoe's Revolver", 2, u, 1, Color.TECH, "Spider Friends", "GFD", ev => investigateEv(ev, c => c.cost <= 2)),
-// {POWER Ranged} You get 2+ Attack. FIX (+2)
+// {POWER Ranged} You get 2+ Attack.
   c2: makeHeroCard("Spider-Man Noir", "Webs of Darkness", 2, u, 1, Color.RANGED, "Spider Friends", "FD", ev => superPower(Color.RANGED) && addAttackEvent(ev, 2)),
 // {POWER Instinct} <b>Investigate</b> the Bystander Stack for a Bystander and rescue it.
 // TODO revealed bytstander deck
@@ -3535,7 +3535,7 @@ addHeroTemplates("X-Men", [
   uc: makeHeroCard("Cannonball", "Natural Leader", 6, u, 3, Color.STRENGTH, "X-Men", "", ev => superPower(Color.STRENGTH) && selectCardEv(ev, "Choose a card to put in your hand", playerState.discard.limit(isHero).limit('S.H.I.E.L.D.'), c => moveCardEv(ev, c, playerState.hand)), { soaring: true }),
 // {SOARING FLIGHT}
 // If you played at least 6 other cards this turn, you get +2 Attack.
-// Attack: 4+ FIX
+// Attack: 4+
   ra: makeHeroCard("Cannonball", "Human Cannon", 8, u, 4, Color.STRENGTH, "X-Men", "D", ev => turnState.cardsPlayed.size >= 6 && addAttackEvent(ev, 2), { soaring: true }),
 },
 {
@@ -3616,7 +3616,7 @@ addHeroTemplates("X-Men", [
       moveCardEv(ev, c, gameState.herodeck, true);
     })
   }),
-// {XGENE X-men} Draw a card. FIX
+// {XGENE X-Men} Draw a card.
   c2: makeHeroCard("Kitty Pryde", "Going through a Phase", 4, 1, 1, Color.COVERT, "X-Men", "", ev => xGenePower("X-Men") && drawEv(ev, 1)),
 // You get +1 Attack for each different cost among the Heroes in the HQ.
   uc: makeHeroCard("Kitty Pryde", "Ghost in the Machine", 6, u, 0, Color.TECH, "X-Men", "", ev => addAttackEvent(ev, hqHeroes().uniqueCount(c => c.cost))),
