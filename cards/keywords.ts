@@ -436,9 +436,9 @@ function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
   // TODO
 }
 function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
-function berserkEv(ev: Ev, n: number) {
+function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {
   repeat(n, () => {
-    revealPlayerDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); discardEv(ev, c); }));
+    revealPlayerDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); f ? f(c) : discardEv(ev, c); }));
   });
 }
 function addPiercingEv(ev: Ev, amount: number) {
@@ -446,4 +446,7 @@ function addPiercingEv(ev: Ev, amount: number) {
 }
 function lightShowActionEv(c: Card, ev: Ev) {
   return new Ev(ev, 'EFFECT', { cost: { cond: () => turnState.cardsPlayed.count(c => c.lightShow !== undefined) >= 2 }, source: c, func: c.lightShow });
+}
+function hasLightShow(c: Card) {
+  return c.lightShow !== undefined;
 }

@@ -3471,7 +3471,7 @@ addHeroTemplates("X-Men", [
     turnState.nextHeroRecruit = 'SOARING';
     addTurnTrigger('GAIN', ev => ev.who === playerState && isHero(ev.what), () => turnState.nextHeroRecruit = 'SOARING');
   }, {
-    soaring: true, lightShow: ev => addAttackEvent(ev, 2 * turnState.cardsPlayed.count(c => c.lightShow !== undefined)), cardActions: [ lightShowActionEv ]
+    soaring: true, lightShow: ev => addAttackEvent(ev, 2 * turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ]
   }),
 },
 {
@@ -3569,7 +3569,7 @@ addHeroTemplates("X-Men", [
 // PIERCING
 // {LIGHTSHOW} You get +1 Piercing for each <b>Lightshow</b> card you played this turn.
 // 0+ Piercing
-  c1: makeHeroCard("Dazzler", "Convert Sound to Light", 3, 1, u, Color.INSTINCT, "X-Men", "", [], { lightShow: ev => addPiercingEv(ev, turnState.cardsPlayed.count(c => c.lightShow !== undefined)), cardActions: [ lightShowActionEv ], printedPiercing: 0 }),
+  c1: makeHeroCard("Dazzler", "Convert Sound to Light", 3, 1, u, Color.INSTINCT, "X-Men", "", [], { lightShow: ev => addPiercingEv(ev, turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ], printedPiercing: 0 }),
 // {LIGHTSHOW} You get +2 Attack.
   c2: makeHeroCard("Dazzler", "Dazzling Glamour", 4, u, 2, Color.RANGED, "X-Men", "D", [], { lightShow: ev => addAttackEvent(ev, 2), cardActions: [ lightShowActionEv ] }),
 // {LIGHTSHOW} When you draw a new hand of cards at the end of this turn, draw two extra cards.
@@ -3596,27 +3596,36 @@ addHeroTemplates("X-Men", [
   team: "X-Men",
 // Draw a card.
 // {LIGHTSHOW} You get +1 Recruit for each <b>Lightshow</b> card you played this turn.
-  c1: makeHeroCard("Jubilee", "Light a Spark", 2, 0, u, Color.COVERT, "X-Men", "D", ev => drawEv(ev, 1), { lightShow: ev => 0/* TODO */, cardActions: [ lightShowActionEv ] }),
+  c1: makeHeroCard("Jubilee", "Light a Spark", 2, 0, u, Color.COVERT, "X-Men", "D", ev => drawEv(ev, 1), { lightShow: ev => addRecruitEvent(ev, turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ] }),
 // Draw a card.
 // {LIGHTSHOW} You get +1 Attack for each <b>Lightshow</b> card you played this turn.
-  c2: makeHeroCard("Jubilee", "Blasting Fireworks", 4, u, 1, Color.RANGED, "X-Men", "", ev => drawEv(ev, 1), { lightShow: ev => 0/* TODO */, cardActions: [ lightShowActionEv ] }),
+  c2: makeHeroCard("Jubilee", "Blasting Fireworks", 4, u, 1, Color.RANGED, "X-Men", "", ev => drawEv(ev, 1), { lightShow: ev => addAttackEvent(ev, turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ] }),
 // {LIGHTSHOW} Look at the top card of your deck. If it costs 0, KO it.
-  uc: makeHeroCard("Jubilee", "Unexpected Explosion", 5, u, 3, Color.INSTINCT, "X-Men", "", [], { lightShow: ev => 0/* TODO */, cardActions: [ lightShowActionEv ] }),
+  uc: makeHeroCard("Jubilee", "Unexpected Explosion", 5, u, 3, Color.INSTINCT, "X-Men", "", [], { lightShow: ev => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(c => c.cost === 0).each(c => KOEv(ev, c))), cardActions: [ lightShowActionEv ] }),
 // {LIGHTSHOW} You get +1 Recruit and +1 Attack for each <b>Lightshow</b> card you played this turn.
-  ra: makeHeroCard("Jubilee", "Prismatic Cascade", 7, 0, 5, Color.COVERT, "X-Men", "", [], { lightShow: ev => 0/* TODO */, cardActions: [ lightShowActionEv ] }),
+  ra: makeHeroCard("Jubilee", "Prismatic Cascade", 7, 0, 5, Color.COVERT, "X-Men", "", [], { lightShow: ev => { const n = turnState.cardsPlayed.count(hasLightShow); addRecruitEvent(ev, n); addRecruitEvent(ev, n); }, cardActions: [ lightShowActionEv ] }),
 },
 {
   name: "Kitty Pryde",
   team: "X-Men",
 // Put a card from the HQ on the bottom of the Hero deck. If that card had a Recruit icon, get +2 Recruit. If that card had an Attack icon, you get +2 Attack. (If both, get both.)
-  c1: makeHeroCard("Kitty Pryde", "Intangible Qualities", 3, 0, 0, Color.INSTINCT, "X-Men", "D", ev => 0/* TODO */),
+  c1: makeHeroCard("Kitty Pryde", "Intangible Qualities", 3, 0, 0, Color.INSTINCT, "X-Men", "D", ev => {
+    selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
+      hasAttackIcon(c) && addAttackEvent(ev, 2);
+      hasRecruitIcon(c) && addRecruitEvent(ev, 2);
+      moveCardEv(ev, c, gameState.herodeck, true);
+    })
+  }),
 // {XGENE X-men} Draw a card. FIX
   c2: makeHeroCard("Kitty Pryde", "Going through a Phase", 4, 1, 1, Color.COVERT, "X-Men", "", ev => xGenePower("X-Men") && drawEv(ev, 1)),
 // You get +1 Attack for each different cost among the Heroes in the HQ.
-  uc: makeHeroCard("Kitty Pryde", "Ghost in the Machine", 6, u, 0, Color.TECH, "X-Men", "", ev => 0/* TODO */),
+  uc: makeHeroCard("Kitty Pryde", "Ghost in the Machine", 6, u, 0, Color.TECH, "X-Men", "", ev => addAttackEvent(ev, hqHeroes().uniqueCount(c => c.cost))),
 // {SOARING FLIGHT}
 // Put a card from the HQ on the bottom of the Hero Deck. You get +Attack equal to its cost.
-  ra: makeHeroCard("Kitty Pryde", "Lockheed, Kitty's Dragon", 8, u, 0, Color.RANGED, "X-Men", "", ev => 0/* TODO */, { soaring: true }),
+  ra: makeHeroCard("Kitty Pryde", "Lockheed, Kitty's Dragon", 8, u, 0, Color.RANGED, "X-Men", "", ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
+    addAttackEvent(ev, c.cost);
+    moveCardEv(ev, c, gameState.herodeck, true);
+  }), { soaring: true }),
 },
 {
   name: "Legion",
@@ -3643,61 +3652,77 @@ addHeroTemplates("X-Men", [
 // You get +1 Attack for each different Hero Class in your discard pile.
   uc: makeDividedHeroCard(
     makeHeroCard("Legion", "Channel Time", 5, u, u, Color.INSTINCT, "X-Men", "", ev => drawEv(ev, 2)),
-    makeHeroCard("Legion", "Channel Fire", 5, u, 0, Color.TECH, "X-Men", "", ev => 0/* TODO */),
+    makeHeroCard("Legion", "Channel Fire", 5, u, 0, Color.TECH, "X-Men", "", ev => addAttackEvent(ev, numClasses(playerState.discard.limit(isHero)))),
   ),
 // {SOARING FLIGHT}
 // Reveal the top three cards of the Hero Deck. You get their total printed Attack. Put them on the bottom of the Hero Deck.
-  ra: makeHeroCard("Legion", "Maelstrom of Clashing Powers", 8, u, 3, Color.COVERT, "X-Men", "", ev => 0/* TODO */, { soaring: true }),
+  ra: makeHeroCard("Legion", "Maelstrom of Clashing Powers", 8, u, 3, Color.COVERT, "X-Men", "", ev => revealHeroDeckEv(ev, 3, cards => addAttackEvent(ev, cards.sum(c => c.printedAttack || 0)), false, true), { soaring: true }),
 },
 {
   name: "Longshot",
   team: "X-Men",
 // To play this card, you must put a card from your hand on top of your deck.
-  c1: makeHeroCard("Longshot", "Fortune Favors the Bold", 3, u, 3, Color.INSTINCT, "X-Men", "", ev => 0/* TODO */),
+  c1: makeHeroCard("Longshot", "Fortune Favors the Bold", 3, u, 3, Color.INSTINCT, "X-Men", "", [], { playCost: 1, playCostType: 'TOPDECK' }),
 // {BERSERK}
 // {POWER Tech} {BERSERK}
   c2: makeHeroCard("Longshot", "Flurry of Blades", 4, u, 2, Color.TECH, "X-Men", "FD", [ ev => berserkEv(ev, 1), ev => superPower(Color.TECH) && berserkEv(ev, 1) ]),
 // Look at the top card of your deck. Discard it or put it back.
 // {POWER Covert} You may KO the card you discarded this way.
-  uc: makeHeroCard("Longshot", "Make My Own Luck", 6, u, 3, Color.COVERT, "X-Men", "", [ ev => 0/* TODO */, ev => superPower(Color.COVERT) && 0/* TODO */ ]),
+  uc: makeHeroCard("Longshot", "Make My Own Luck", 6, u, 3, Color.COVERT, "X-Men", "", ev => {
+    lookAtDeckEv(ev, 1, () => {
+      selectCardOptEv(ev, "Choose a card to discard", playerState.revealed.deck, c => {
+        discardEv(ev, c);
+        superPower(Color.COVERT) && chooseMayEv(ev, "KO discarded", () => KOEv(ev, c));
+      })
+    });
+  }),
 // Reveal the top card of the Villain Deck. If it's a Villain, you may put it on the bottom of that Deck.
 // {TEAMPOWER X-Men} You get +Attack equal to the printed Victory Points of the card you revealed.
-  ra: makeHeroCard("Longshot", "Escape from Mojo World", 7, u, 5, Color.TECH, "X-Men", "", [ ev => 0/* TODO */, ev => superPower("X-Men") && 0/* TODO */ ]),
+  ra: makeHeroCard("Longshot", "Escape from Mojo World", 7, u, 5, Color.TECH, "X-Men", "", ev => {
+    revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => {
+      moveCardEv(ev, c, gameState.villaindeck, true);
+      superPower("X-Men") && addAttackEvent(ev, c.vp);
+    }), false, false);
+  }),
 },
 {
   name: "Phoenix",
   team: "X-Men",
 // KO this card.
 // You may KO a card from your hand or discard pile.
-  c1: makeHeroCard("Phoenix", "Life & Death Incarnate", 3, 3, u, Color.STRENGTH, "X-Men", "", [ ev => 0/* TODO */, ev => KOHandOrDiscardEv(ev, undefined) ]),
+  c1: makeHeroCard("Phoenix", "Life & Death Incarnate", 3, 3, u, Color.STRENGTH, "X-Men", "", [ ev => KOEv(ev, ev.source), ev => KOHandOrDiscardEv(ev, undefined) ]),
 // {SOARING FLIGHT}
 // PIERCING
 // KO this card.
 // 4 Piercing
-  c2: makeHeroCard("Phoenix", "Obliterating Fire", 4, u, u, Color.RANGED, "X-Men", "", ev => 0/* TODO */, { soaring: true, printedPiercing: 4 }),
+  c2: makeHeroCard("Phoenix", "Obliterating Fire", 4, u, u, Color.RANGED, "X-Men", "", ev => KOEv(ev, ev.source), { soaring: true, printedPiercing: 4 }),
 // Draw two cards.
 // You may put a Hero that was KO'd this turn into your discard pile.
-  uc: makeHeroCard("Phoenix", "Reincarnating Phoenix", 6, u, u, Color.COVERT, "X-Men", "", [ ev => drawEv(ev, 2), ev => 0/* TODO */ ]),
+  uc: makeHeroCard("Phoenix", "Reincarnating Phoenix", 6, u, u, Color.COVERT, "X-Men", "", [ ev => drawEv(ev, 2), ev => selectCardOptEv(ev, "Choose a Hero", playerState.discard.limit(isHero).limit(c => turnState.pastEvents.has(e => e.type === 'KO' && e.what === c)), c => moveCardEv(ev, c, playerState.discard)) ]),
 // {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}
 // KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, then the Phoenix Force becomes corrupted by power and devours the Earth. You win, Evil wins, and all other players lose.
-  ra: makeHeroCard("Phoenix", "Driven Mad by Power", 9, u, 6, Color.STRENGTH, "X-Men", "", [ ev => berserkEv(ev, 4), ev => 0/* TODO */ ]),
+  ra: makeHeroCard("Phoenix", "Driven Mad by Power", 9, u, 6, Color.STRENGTH, "X-Men", "", ev => {
+    let n = 0;
+    berserkEv(ev, 4, c => { KOEv(ev, c); n += c.printedAttack || 0; });
+    cont(ev, () => n >= 13 && gameOverEv(ev, "LOSS", playerState));
+  }),
 },
 {
   name: "Polaris",
   team: "X-Men",
 // {SOARING FLIGHT}
 // {POWER Covert} When you draw a new hand of cards at the end of this turn, draw an extra card.
-  c1: makeHeroCard("Polaris", "Ride the Magnetic Waves", 3, 2, u, Color.COVERT, "X-Men", "D", ev => superPower(Color.COVERT) && 0/* TODO */, { soaring: true }),
+  c1: makeHeroCard("Polaris", "Ride the Magnetic Waves", 3, 2, u, Color.COVERT, "X-Men", "D", ev => superPower(Color.COVERT) && addEndDrawMod(1), { soaring: true }),
 // PIERCING
 // {POWER Ranged} Draw a card.
 // 2 Piercing
   c2: makeHeroCard("Polaris", "Electromagnetic Pulse", 4, u, u, Color.RANGED, "X-Men", "D", ev => superPower(Color.RANGED) && drawEv(ev, 1), { printedPiercing: 2 }),
 // {SOARING FLIGHT}
 // {POWER Covert} Look at the top two cards of your deck. You may KO one of them. Put the rest back in any order.
-  uc: makeHeroCard("Polaris", "Subtle Attunement", 6, u, 2, Color.COVERT, "X-Men", "D", ev => superPower(Color.COVERT) && 0/* TODO */, { soaring: true }),
+  uc: makeHeroCard("Polaris", "Subtle Attunement", 6, u, 2, Color.COVERT, "X-Men", "D", ev => superPower(Color.COVERT) && lookAtDeckEv(ev, 2, () => selectCardOptEv(ev, "Choose a card to KO", playerState.revealed.deck, c => KOEv(ev, c))), { soaring: true }),
 // {SOARING FLIGHT}
 // {XGENE X-Men} You can use Recruit as Attack this turn, and vice versa.
-  ra: makeHeroCard("Polaris", "Reverse Polarity", 8, 4, u, Color.COVERT, "X-Men", "", ev => xGenePower("X-Men") && 0/* TODO */, { soaring: true }),
+  ra: makeHeroCard("Polaris", "Reverse Polarity", 8, 4, u, Color.COVERT, "X-Men", "", ev => xGenePower("X-Men") && (turnState.attackWithRecruit = true, turnState.recruitWithAttack = true), { soaring: true }),
 },
 {
   name: "Psylocke",
@@ -3708,7 +3733,10 @@ addHeroTemplates("X-Men", [
 // 0+ Piercing
   c1: makeHeroCard("Psylocke", "Psychic Knife", 2, u, u, Color.INSTINCT, "X-Men", "D", [ ev => drawEv(ev, 1), ev => superPower(Color.INSTINCT) && addPiercingEv(ev, 1) ], { printedPiercing: 0 }),
 // Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, draw a card.
-  c2: makeHeroCard("Psylocke", "Precognition", 3, 2, u, Color.COVERT, "X-Men", "D", ev => 0/* TODO */),
+  c2: makeHeroCard("Psylocke", "Precognition", 3, 2, u, Color.COVERT, "X-Men", "D", ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+    addTurnSet('isFightable', v => v === c, () => true); // TODO isRecruitable
+    choosePlayerEv(ev, p => moveCardEv(ev, c, p.hand));
+  }))),
 // PIERCING
 // {XGENE [Covert]} You get +1 Piercing.
 // 2+ Piercing
@@ -3716,7 +3744,9 @@ addHeroTemplates("X-Men", [
 // PIERCING
 // Reveal the top card of the Hero Deck. The player of your choice puts it in their hand.
 // 3 Piercing
-  ra: makeHeroCard("Psylocke", "Telepathic Ninjutsu", 7, u, u, Color.INSTINCT, "X-Men", "", ev => 0/* TODO */, { printedPiercing: 3 }),
+  ra: makeHeroCard("Psylocke", "Telepathic Ninjutsu", 7, u, u, Color.INSTINCT, "X-Men", "", ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+    choosePlayerEv(ev, p => moveCardEv(ev, c, p.hand));
+  })), { printedPiercing: 3 }),
 },
 {
   name: "X-23",
@@ -3731,6 +3761,6 @@ addHeroTemplates("X-Men", [
   uc: makeHeroCard("X-23", "Bioengineered Assassin", 6, u, 2, Color.COVERT, "X-Men", "D", [ ev => berserkEv(ev, 1), ev => xGenePower(Color.INSTINCT) && KOHandOrDiscardEv(ev, undefined) ]),
 // {BERSERK}, {BERSERK}
 // {XGENE [Instinct]} Count the [Instinct] cards in your discard pile. {BERSERK} that many times.
-  ra: makeHeroCard("X-23", "Heir to Wolverine", 7, u, 3, Color.INSTINCT, "X-Men", "D", [ ev => berserkEv(ev, 2), ev => berserkEv(ev, xGenePower(Color.INSTINCT)),
+  ra: makeHeroCard("X-23", "Heir to Wolverine", 7, u, 3, Color.INSTINCT, "X-Men", "D", [ ev => berserkEv(ev, 2), ev => berserkEv(ev, xGenePower(Color.INSTINCT)) ]),
 },
 ]);

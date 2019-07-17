@@ -1447,6 +1447,7 @@ interface ActionCost {
   attack?: number;
   either?: number;
   cond?: (c: Card) => boolean;
+  piercing?: number;
 }
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   let recruit = c.cost;
@@ -1464,13 +1465,18 @@ function canPayCost(action: Ev) {
   if (cost.cond && !cost.cond(action.what)) return false;
   let usableRecruit = turnState.recruit;
   let usableAttack = turnState.attack;
-  const requiredRecruit = cost.recruit || 0;
+  const requiredRecruit = turnState.recruitWithAttack ? 0 : (cost.recruit || 0);
   const requiredAttack = turnState.attackWithRecruit ? 0 : (cost.attack || 0);
   const requiredTotal = (cost.either || 0) + (cost.recruit || 0) + (cost.attack || 0);
   if (action.type === 'RECRUIT')
     usableRecruit += turnState.recruitSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   if (action.type === 'FIGHT')
     usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
+  if (cost.piercing) { // simplified calculation assumes cost.attack and cost.recruit is zero
+    let usablePiercing = turnState.piercing;
+    if (turnState.piercingWithAttack) usablePiercing += usableAttack;
+    return usablePiercing >= cost.piercing;
+  }
   return usableRecruit >= requiredRecruit && usableAttack >= requiredAttack &&
     usableRecruit + usableAttack >= requiredTotal;
 }
@@ -1482,10 +1488,25 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
   }
   const cost = action.cost;
   if (!cost) return resolve(true);
+  if (cost.piercing) {
+    // assuming attack and recruit to pay are zero
+    let piercingToPay = cost.piercing;
+    if (turnState.piercingWithAttack) {
+      if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => piercingToPay -= payMin(a, attackToPay));
+      const attackAmount = Math.min(piercingToPay, turnState.attack);
+      turnState.attack -= attackAmount;
+      piercingToPay -= attackAmount;
+    }
+    const piercingAmount = Math.min(piercingToPay, turnState.piercing);
+    turnState.piercing -= piercingAmount;
+    piercingToPay -= piercingAmount;
+    return resolve(piercingToPay === 0);
+  }
   let attackToPay = cost.attack || 0;
   let recruitToPay = cost.recruit || 0;
   let eitherToPay = cost.either || 0;
   if (turnState.attackWithRecruit) { eitherToPay += attackToPay;  attackToPay = 0; }
+  if (turnState.recruitWithAttack) { eitherToPay += recruitToPay; recruitToPay = 0; }
   if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
     attackToPay -= payMin(a, attackToPay);
     eitherToPay -= payMin(a, eitherToPay);
@@ -1525,7 +1546,11 @@ function recruitCardActionEv(ev: Ev, c: Card) {
 }
 function fightActionEv(ev: Ev, what: Card, withViolence?: boolean) {
   const cost = getFightCost(what);
-  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: { ...cost, attack: cost.attack + 1 }, failFunc: what.fightFail, withViolence });
+  if (withViolence) cost.attack++;
+  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost, failFunc: what.fightFail, withViolence });
+}
+function fightPiercingActionEv(ev: Ev, what: Card) {
+  return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: { piercing: what.vp, cond: c => c.vp > 0 } }); // TODO some fight limitations may apply (for example wound healing)
 }
 function countPerTurn(key: string, c?: Card) {
   if (c) key += '-' + c.id;
@@ -1572,6 +1597,7 @@ function getActions(ev: Ev): Ev[] {
   fightableCards().map(d => {
     p.push(fightActionEv(ev, d));
     if (canFightWithViolence(d)) p.push(fightActionEv(ev, d, true));
+    if (turnState.piercing || turnState.piercingWithAttack) p.push(fightPiercingActionEv(ev, d));
   });
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
   gameState.sidekick.withTop(c => p.push(recruitSidekickActionEv(ev, c)));
@@ -2347,6 +2373,7 @@ TODO SW1 make cardAction allow functions returning multiple actions
 TODO SW1 addFutureTrigger
 TODO SW2 make scheme card position independent
 TODO Noir hidden witness removal and limits (human shields at the same time)
+TODO X-Men piercing attack
 copy artifact should not count as cards played
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
