@@ -113,6 +113,16 @@ sub makehero {
   $flags .= 'N' if !/^[^#]/m;
   return "makeHeroCard(\"$heroname2\", \"$cardname\", $cost, $recruit, $attack, $class, $pteam2, \"$flags\"$autopower)";
 }
+sub maketrap {
+  my ($groupname) = @_;
+  filterprint(qw(TRAP TRAPEFFECT TRAPCOND AMBUSH VP));
+  print "  [ $_{COPIES}, makeTrapCard(\"$groupname\", \"$_{SUBNAME}\", $_{VP},";
+  print "\n    // $_{AMBUSH}\n    ev => {},\n" if $_{AMBUSH};
+  print " u,\n" if !$_{AMBUSH};
+  print "    // $_{TRAPCOND}\n    ev => true,\n";
+  print "    // $_{TRAPEFFECT}\n    ev => {},\n";
+  print "  )],\n";
+}
   $content = $_;
   #print length$content, "\n";
   $content =~ s/^\n+//;
@@ -207,11 +217,12 @@ sub makehero {
       print "{ name: \"$groupname\", cards: [\n";
       for (@subitems) {
         parse();
+        $copies += $_{COPIES};
+        if ($_{TRAPEFFECT}) { maketrap($groupname); next; }
         my ($gs, $ge) = gainable();
         filterprint(qw(SUBNAME COPIES));
         my $vp = $_{VP} =~ s/[^0-9.]//gr || 'u';
         my $defense = $_{ATTACK} =~ s/[^0-9]//gr;
-        $copies += $_{COPIES};
         print "  [ $_{COPIES}, ${gs}makeVillainCard(\"$groupname\", \"$_{SUBNAME}\", $defense, $vp, {\n";
         print "    ambush: ev => {},\n" if $_{AMBUSH};
         print "    fight: ev => {},\n" if $_{FIGHT};

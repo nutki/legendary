@@ -23,10 +23,10 @@
 
 #SUBNAME: Psychotic Break
 #COPIES: 1
-<b>Trap!</b>
+#TRAP
 #AMBUSH: Play another card from the Villain Deck.
-<b>By End of Turn</b>: Defeat a Villain.
-<b>Or Suffer</b>: <i>(After you draw your new hand)</i> Psychotic Break becomes a Master Strike that takes effect immediately.
+#TRAPCOND: Defeat a Villain.
+#TRAPEFFECT: <i>(After you draw your new hand)</i> Psychotic Break becomes a Master Strike that takes effect immediately.
 #VP: 2
 
 #SUBNAME: Shadow Man
@@ -40,9 +40,9 @@
 
 #SUBNAME: Caught Red-Handed
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Recruit a [Covert] Hero or recruit any two Heroes.
-<b>Or Suffer</b>: <i>(After you draw your new hand)</i> Each player reveals a [Covert] Hero or gains a Wound.
+#TRAP
+#TRAPCOND: Recruit a [Covert] Hero or recruit any two Heroes.
+#TRAPEFFECT: <i>(After you draw your new hand)</i> Each player reveals a [Covert] Hero or gains a Wound.
 #VP: 3
 
 #SUBNAME: Crimson Dynamo
@@ -102,9 +102,9 @@ This Villain gets +1 Attack for each Bystander in the city.
 
 #SUBNAME: Enchain the Hulk
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
-<b>Or Suffer</b>: <i>(After you draw your new hand)</i> {XDRAMPAGE Hulk}
+#TRAP
+#TRAPCOND: Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
+#TRAPEFFECT: <i>(After you draw your new hand)</i> {XDRAMPAGE Hulk}
 #VP: 4
 
 #SUBNAME: Hulkbuster Iron Man
@@ -118,9 +118,9 @@ Hulkbuster Iron Man gets +3 Attack unless you <b>Outwit</b> him.
 
 #SUBNAME: Battle of Wits
 #COPIES: 2
-<b>Trap!</b>
-<b>By the End of the Turn</b>: <b>Outwit</b> this trap.
-<b>Or Suffer</b>: <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
+#TRAP
+#TRAPCOND: <b>Outwit</b> this trap.
+#TRAPEFFECT: <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
 #VP: 3
 
 #SUBNAME: Cosmic Hulk Robot
@@ -149,9 +149,9 @@ Doc Samson has +4 Attack unless you <b>Outwit</b> him.
 
 #SUBNAME: Gladiators' Colosseum
 #COPIES: 1
-<b>Trap!</b>
-<b>By the End of the Turn</b>: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
-<b>Or Suffer</b>: <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
+#TRAP
+#TRAPCOND: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
+#TRAPEFFECT: <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
 #VP: 4
 
 #SUBNAME: Great Devil Corker
@@ -204,9 +204,9 @@ Primus Vand gets +1 Attack for each Villain next to him.
 
 #SUBNAME: Unidentified Flying U-Foes
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Discard a [Tech] Hero or discard three cards.
-<b>Or Suffer</b>: Play two extra cards from the Villain Deck next turn.
+#TRAP
+#TRAPCOND: Discard a [Tech] Hero or discard three cards.
+#TRAPEFFECT: Play two extra cards from the Villain Deck next turn.
 #VP: 3
 
 #SUBNAME: X-Ray
@@ -251,9 +251,9 @@ Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b>
 
 #SUBNAME: Warbound Rescue
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
-<b>Or Suffer</b>: Each player gains a Wound.
+#TRAP
+#TRAPCOND: Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
+#TRAPEFFECT: Each player gains a Wound.
 #VP: 7
 
 

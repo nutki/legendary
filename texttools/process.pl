@@ -126,6 +126,9 @@ while (<A>) {
       s!^<i>Teleport</i>$!{TELEPORT}!m; #FIX
       s!^Burrow$!{BURROW}!;
       s!^<b>(VP|Attack|Fight|Escape|Ambush):?</b>:? ?(.*)!"#" . uc($1) . ": $2"!gme;
+      s:^<b>Trap!</b>:#TRAP:gm;
+      s!^<b>By (the )?End of (the )?Turn</b>:!#TRAPCOND:!gm;
+      s!^<b>Or Suffer</b>:!#TRAPEFFECT:!gm;
     }
     if ($name =~ /^Masterminds/) {
       s!^(?:<[bi]>)?Attack(?:</[bi]>)?: (.*)!#ATTACK: $1!gm;

@@ -27,9 +27,9 @@
 
 #SUBNAME: Psychic Subjugation
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Recruit the left-most and right-most Heroes in the HQ.
-<b>Or Suffer</b>: Each of those Heroes you didn't recruit enters the city as a Villain with Attack equal to that Hero's cost. When you fight one, you gain it.
+#TRAP
+#TRAPCOND: Recruit the left-most and right-most Heroes in the HQ.
+#TRAPEFFECT: Each of those Heroes you didn't recruit enters the city as a Villain with Attack equal to that Hero's cost. When you fight one, you gain it.
 #VP: 3
 
 #SUBNAME: Random
@@ -42,9 +42,9 @@
 
 #SUBNAME: Corrupt the Phoenix Force
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Have no Hellfire Villains in the city.
-<b>Or Suffer</b>: This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+#TRAP
+#TRAPCOND: Have no Hellfire Villains in the city.
+#TRAPEFFECT: This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
 #VP: 3
 
 #SUBNAME: Emma Frost (White Queen)
@@ -78,10 +78,10 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Mindwarping TV Broadcast
 #COPIES: 1
-<b>Trap!</b>
+#TRAP
 #AMBUSH: A Villain captures a Bystander.
-<b>By End of Turn</b>: Have no Bystanders in the city captured by Villains.
-<b>Or Suffer</b>: After you draw your new hand at end of turn, each player discards down to four cards in hand.
+#TRAPCOND: Have no Bystanders in the city captured by Villains.
+#TRAPEFFECT: After you draw your new hand at end of turn, each player discards down to four cards in hand.
 #VP: 3
 
 #SUBNAME: Minor Domo
@@ -116,16 +116,16 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Animatronic Killer Clowns
 #COPIES: 2
-<b>Trap!</b>
-<b>By End of Turn</b>: Recruit two Heroes.
-<b>Or Suffer</b>: This Trap enters the city as a 3 Attack "Animatronic Killer Clown" Token Villain that captures a <b>Human Shield</b>.
+#TRAP
+#TRAPCOND: Recruit two Heroes.
+#TRAPEFFECT: This Trap enters the city as a 3 Attack "Animatronic Killer Clown" Token Villain that captures a <b>Human Shield</b>.
 #VP: 2
 
 #SUBNAME: Guillotine Rollercoaster
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Have at least four different costs of Heroes in the HQ.
-<b>Or Suffer</b>: After you draw your new hand at the end of this turn, each palyer reveals their hand and discards each card with the same cost as the cards in the HQ.
+#TRAP
+#TRAPCOND: Have at least four different costs of Heroes in the HQ.
+#TRAPEFFECT: After you draw your new hand at the end of this turn, each palyer reveals their hand and discards each card with the same cost as the cards in the HQ.
 #VP: 3
 
 #SUBNAME: Miss Locke
@@ -136,25 +136,25 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Monstrous Pinball Machine
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: Pay any amount of Recruit. Then you must reveal the top card of the Hero Deck. If you paid enough, recruit that Hero and put this Trap in your Victory Pile.
-<b>Or Suffer</b>: KO that Hero. Play two extra cards from the Villain Deck next turn.
+#TRAP
+#TRAPCOND: Pay any amount of Recruit. Then you must reveal the top card of the Hero Deck. If you paid enough, recruit that Hero and put this Trap in your Victory Pile.
+#TRAPEFFECT: KO that Hero. Play two extra cards from the Villain Deck next turn.
 #VP: 3
 
 #SUBNAME: Sulfuric Acid Water Slide
 #COPIES: 2
-<b>Trap!</b>
+#TRAP
 #AMBUSH: Play another card from the Villain Deck.
-<b>By End of Turn</b>: Have no Villains in the Sewers.
-<b>Or Suffer</b>: Each player gains a Wound.
+#TRAPCOND: Have no Villains in the Sewers.
+#TRAPEFFECT: Each player gains a Wound.
 #VP: 2
 
 #CARDNAME: Shadow-X
 
 #SUBNAME: Betrayal of the Shadow
 #COPIES: 1
-<b>By End of Turn</b>: You may pay 6 Recruit.
-<b>Or Suffer</b>: Each player reveals their hand. Then, each player chooses a Shadow-X card from their hand or discard pile to enter the city as a Villain.
+#TRAPCOND: You may pay 6 Recruit.
+#TRAPEFFECT: Each player reveals their hand. Then, each player chooses a Shadow-X card from their hand or discard pile to enter the city as a Villain.
 
 #SUBNAME: Dark Angel
 #COPIES: 2
@@ -227,10 +227,10 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Shi'ar Trial by Combat
 #COPIES: 1
-<b>Trap!</b>
+#TRAP
 #AMBUSH: If the Bridge is empty, reveal the top card of the Villain Deck. If it's a Villain, put it on the Bridge.
-<b>By End of Turn</b>: Have no Villains on the Bridge.
-<b>Or Suffer</b>: After you draw a new hand at end of turn, each player KOs a non-grey Hero from their discard pile.
+#TRAPCOND: Have no Villains on the Bridge.
+#TRAPEFFECT: After you draw a new hand at end of turn, each player KOs a non-grey Hero from their discard pile.
 #VP: 2
 
 #SUBNAME: Smasher
@@ -257,9 +257,9 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Resurrect Madelyne Pryor
 #COPIES: 1
-<b>Trap!</b>
-<b>By End of Turn</b>: You may pay 3 Recruit. If you do, shuffle this Trap back into the Villain Deck, then play a card from the Villain Deck.
-<b>Or Suffer</b>: This Trap becomes a Scheme Twist that takes effect immediately.
+#TRAP
+#TRAPCOND: You may pay 3 Recruit. If you do, shuffle this Trap back into the Villain Deck, then play a card from the Villain Deck.
+#TRAPEFFECT: This Trap becomes a Scheme Twist that takes effect immediately.
 #VP: 0
 
 #SUBNAME: Selene
