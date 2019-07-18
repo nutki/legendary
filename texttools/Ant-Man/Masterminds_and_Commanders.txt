@@ -6,8 +6,7 @@
 #ATTACK: 9+
 #VP: 6
 
-#CARDNAME: Epic Ultron
-
+#EPICNAME: Ultron
 #LEADS: Ultron's Legacy
 #STRIKE: Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
 #ATTACK: 10+
@@ -33,8 +32,7 @@
 #ATTACK: 7*
 #VP: 6
 
-#CARDNAME: Epic Morgan Le Fay
-
+#EPICNAME: Morgan Le Fay
 <b>Chivalrous Duel</b>
 #LEADS: Queen's Vengeance
 #STRIKE: Each player in turn gains a Wound, then gains a 0-cost Hero from the KO pile.

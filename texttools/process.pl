@@ -131,6 +131,8 @@ while (<A>) {
       s!^<b>Or Suffer</b>:!#TRAPEFFECT:!gm;
     }
     if ($name =~ /^Masterminds/) {
+      s!^#CARDNAME: Epic (.*?)\n+!#EPICNAME: $1\n!gm;
+      s!^#CARDNAME: (.*?) \(Mastermind, Transformed\)\n*!#TRANSNAME: $1\n!gm;
       s!^(?:<[bi]>)?Attack(?:</[bi]>)?: (.*)!#ATTACK: $1!gm;
       s!^(?:<[bi]>)?VP(?:</[bi]>)?: (.*)!#VP: $1!gm;
       s!^<[bi]>Always Leads(?::</[bi]>|</[bi]>:) (.*)!#LEADS: $1!gm;

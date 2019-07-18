@@ -88,28 +88,28 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #COPIES: 2
 #AMBUSH: Minor Domo captures 2 <b>Human Shields</b>.
 #ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) gains a Wound.
-2* Attack
+#ATTACK: 2*
 #VP: 2
 
 #SUBNAME: Major Domo
 #COPIES: 2
 #AMBUSH: Major Domo captures a <b>Human Shield</b>.
 #ESCAPE: Each player simultaneously reveals a card from their hand. Whoever reveals the highest-costing card (or tied for highest) gains a Wound.
-4* Attack
+#ATTACK: 4*
 #VP: 3
 
 #SUBNAME: Spiral
 #COPIES: 1
 #AMBUSH: Each player reveals a [Covert] Hero or discards their hand. Each player who discarded their hand this way draws 5 cards.
 #ESCAPE: Same effect.
-#ATTACKG: 6
+#ATTACK: 6
 #VP: 4
 
 #SUBNAME: Warwolves
 #COPIES: 2
 #AMBUSH: These Warwolves capture a <b>Human Shield</b>.
 #FIGHT: KO one of your Heroes.
-3* Attack
+#ATTACK: 3*
 #VP: 2
 
 #CARDNAME: Murderworld
@@ -153,8 +153,10 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Betrayal of the Shadow
 #COPIES: 1
+#TRAP
 #TRAPCOND: You may pay 6 Recruit.
 #TRAPEFFECT: Each player reveals their hand. Then, each player chooses a Shadow-X card from their hand or discard pile to enter the city as a Villain.
+#VP: 4
 
 #SUBNAME: Dark Angel
 #COPIES: 2

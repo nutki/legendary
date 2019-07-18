@@ -71,7 +71,7 @@ Draw a card.
 #RESCUE: gain it as a Hero.
 #GAINABLE
 {POWER Strength} You get +1 Attack.
-2+ Attack.
+#ATTACKG: 2+
 #COST: 3
 
 #CARDNAME: Warlock

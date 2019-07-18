@@ -6,7 +6,7 @@ If you fight Hybrid while he's bonded to a Villain, defeat that Villain and resc
 #ATTACK: 6
 #VP: 6
 
-#CARDNAME: Epic Hybrid
+#EPICNAME: Hybrid
 If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
 #LEADS: Life Foundation
 #STRIKE: The highest Attack unbonded Villain from the city and/or Escape Pile <b>Symbiote Bonds</b> with Hybrid. If no new bond could occur, then each player gains a Wound instead.
@@ -32,7 +32,7 @@ Poison Thanos gets +1 Attack for each different cost among cards in his "Poisone
 #ATTACK: 12+
 #VP: 7
 
-#CARDNAME: Epic Poison Thanos
+#EPICNAME: Poison Thanos
 Poison Thanos gets +2 Attack for each different cost among cards in his "Poisoned Souls" pile.
 #LEADS: Poisons
 #STRIKE: Each player reveals their hand and puts half (round up) of their non-grey Heroes net to Thanos in a "Poisoned Souls" pile. Each player that lost no Heroes this way gains a Wound.

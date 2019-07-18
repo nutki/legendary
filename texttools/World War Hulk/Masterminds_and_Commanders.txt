@@ -7,8 +7,7 @@
 #ATTACK: 6*
 #VP: 6
 
-#CARDNAME: Red Hulk (Mastermind, Transformed)
-
+#TRANSNAME: Red Hulk
 <b>Wounded Fury</b>
 You can't fight Helicopters, and they don't stop you from fighting Red Hulk.
 #STRIKE: Red Hulk <b>Transforms</b>, then stack a random Bystander from each player's Victory Pile next to this as a Helicopter. Each player who didn't have a Bystander gains a Wound instead.
@@ -39,8 +38,7 @@ This Mastermind gets +4 Attack unless you <b>Outwit</b> them.
 #ATTACK: 11+
 #VP: 7
 
-#CARDNAME: Illuminati, Open Warfare (Mastermind, Transformed)
-
+#TRANSNAME: Illuminati, Open Warfare
 Whenever a card effect causes a player to draw any number of cards, that player must then also discard a card.
 #STRIKE: Each player reveals their hand and discards two cards that each cost between 5 and 8. The Illuminati <b>Transform</b>.
 #ATTACK: 13
@@ -70,8 +68,7 @@ King Hulk gets +1 Attack for each Warbound Villain in the city and in the Escape
 #ATTACK: 9+
 #VP: 6
 
-#CARDNAME: King Hulk, Worldbreaker (Mastermind, Transformed)
-
+#TRANSNAME: King Hulk, Worldbreaker
 <b>Wounded Fury</b>
 #STRIKE: Each player reveals their hand, then KO's a card from their hand or discard pile that has the same card name as a card in the HQ. King Hulk <b>Transforms</b>.
 #ATTACK: 10+
@@ -100,7 +97,7 @@ All cards' <b>Outwit</b> abilities require four different costs instead of three
 #ATTACK: 9
 #VP: 6
 
-#CARDNAME: M.O.D.O.K., Network Nightmare (Mastermind, Transformed)
+#TRANSNAME: M.O.D.O.K., Network Nightmare
 You can only fight <a rel="nofollow" href="http://M.O.D.O.K" onclick="window.open(this.href, '_blank'); return false;">M.O.D.O.K</a> with Recruit, not Attack.
 #STRIKE: Each player who can't <b>Outwit</b> M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. <b>Transforms</b>.
 #ATTACK: 8*
@@ -129,7 +126,7 @@ You can't fight the Red King while any Villains are in the city.
 #ATTACK: 7*
 #VP: 6
 
-#CARDNAME: The Red King, Power Armored (Mastermind, Transformed)
+#TRANSNAME: The Red King, Power Armored
 #STRIKE: The Red King Transforms, then play another card from the Villain Deck.
 #ATTACK: 10
 #VP: 6
@@ -157,7 +154,7 @@ The Red King <b>Transforms</b>.
 #ATTACK: 10
 #VP: 6
 
-#CARDNAME: The Void (Mastermind, Transformed)
+#TRANSNAME: The Void
 <b>Wounded Fury</b>
 #STRIKE: <b>Feast</b> on each player. If this feasts on a player's grey Hero, that player gains a Wound.
 The Void <b>Transforms</b>.

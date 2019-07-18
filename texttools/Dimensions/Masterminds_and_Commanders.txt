@@ -8,8 +8,7 @@
 #ATTACK: 4*
 #VP: 5
 
-#CARDNAME: Epic J. Jonah Jameson
-
+#EPICNAME: J. Jonah Jameson
 #START: Put 3 S.H.I.E.L.D. Officers per player into a face down "Angry Mobs" stack.
 <b>Special Rules</b>: You can spend 5 Attack to reveal a random Angry Mob and put it into any player's discard pile. You can't fight J. Jonah Jameson while he has Angry Mobs.
 #LEADS: Spider-Slayers

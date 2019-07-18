@@ -6,7 +6,7 @@
 #ATTACK: 20*
 #VP: 7
 
-#CARDNAME: Epic Fin Fang Foom
+#EPICNAME: Fin Fang Foom
 {SIZECHANGING STRENGTH}, [Instinct], [Covert], [Tech], [Ranged]
 #LEADS: Monsters Unleashed
 #STRIKE: <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile. KO all the Heroes <b>Demolished</b> this way.
@@ -32,7 +32,7 @@
 #ATTACK: 9
 #VP: 6
 
-#CARDNAME: Epic Pagliacci
+#EPICNAME: Pagliacci
 #LEADS: Wrecking Crew
 <b>Master Strike 1, 3, 5</b>: This card becomes a Scheme Twist that takes effect immediately.
 <b>Master Strike 2, 4</b>: <b>Demolish</b> each player.
