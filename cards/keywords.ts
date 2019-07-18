@@ -453,3 +453,18 @@ function hasLightShow(c: Card) {
 function dominateEv(ev: Ev, villain: Card, hero: Card) {
   attachCardEv(ev, hero, villain, 'DOMINATED');
 }
+function _chooseForEachPlayerEv(ev: Ev, desc: string, players: Player[], cards: Card[], effect1: (p: Player, c: Card) => void, effect0: (c: Card) => void, agent: Player = playerState) {
+  if (players.size > 0) {
+    selectCardEv(ev, desc, cards, c => {
+      _choosePlayerEv(ev, p => {
+        effect1(p, c);
+        _chooseForEachPlayerEv(ev, desc, players.limit(v => v !== p), cards.limit(v => v !== c), effect1, effect0, agent);
+      }, players, agent);
+    }, agent);
+  } else {
+    cards.each(effect0)
+  }
+}
+function chooseForEachPlayerEv(ev: Ev, desc: string, cards: Card[], effect1: (p: Player, c: Card) => void, effect0: (c: Card) => void = () => {}, agent: Player = playerState) {
+  _chooseForEachPlayerEv(ev, desc, gameState.players, cards, effect1, effect0, agent);
+}

@@ -3735,7 +3735,7 @@ addHeroTemplates("X-Men", [
 // Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, draw a card.
   c2: makeHeroCard("Psylocke", "Precognition", 3, 2, u, Color.COVERT, "X-Men", "D", ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
     addTurnSet('isFightable', v => v === c, () => true); // TODO isRecruitable
-    choosePlayerEv(ev, p => moveCardEv(ev, c, p.hand));
+    addTurnTrigger('RECRUIT', ev => ev.what === c && ev.where === gameState.herodeck, () => drawEv(ev));
   }))),
 // PIERCING
 // {XGENE [Covert]} You get +1 Piercing.

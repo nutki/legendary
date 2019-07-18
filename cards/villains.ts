@@ -2109,8 +2109,8 @@ addVillainTemplates("X-Men", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Dark Descendants", "Fatale", 5, 3, {
-    fight: ev => {},
-    escape: ev => {},
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    escape: ev => gameState.herodeck.withTop(c => withMastermind(ev, m => dominateEv(ev, m, c))),
   })],
 // FIGHT: Gain this as a Hero.
 // ESCAPE: Havok becomes a Hero Dominated by the Mastermind.
@@ -2121,14 +2121,13 @@ addVillainTemplates("X-Men", [
 // {XGENE [Ranged]} You get +2 Attack.
 // ATTACKG: 2+
   [ 2, makeGainableCard(makeVillainCard("Dark Descendants", "Havok, Brainwashed", 6, u, {
-    fight: ev => {},
-    escape: ev => {},
+    escape: ev => withMastermind(ev, m => dominateEv(ev, m, ev.source)),
   }), u, 2, Color.RANGED, "X-Men", "D", ev => xGenePower(Color.RANGED) && addAttackEvent(ev, 2))],
 // AMBUSH: Each player reveals their hand and chooses one of their non-grey Heroes. Nemesis Dominates those Heroes.
 // ATTACK: 5
 // VP: 5
   [ 1, makeVillainCard("Dark Descendants", "Nemesis", 5, 5, {
-    ambush: ev => {},
+    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p)),
   })],
 // SUBNAME: Psychic Subjugation
 // TRAP
@@ -2153,7 +2152,10 @@ addVillainTemplates("X-Men", [
 // ATTACK: 4+
 // VP: 3
   [ 2, makeVillainCard("Dark Descendants", "Random", 4, 3, {
-    ambush: ev => {},
+    ambush: ev => gameState.herodeck.withTop(c => {
+      dominateEv(ev, ev.source, c);
+      eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.hand.limit(v => v.cost === c.cost), c => dominateEv(ev, ev.source, c), p));
+    }),
   })],
 ]},
 { name: "Hellfire Club", cards: [
@@ -2173,7 +2175,7 @@ addVillainTemplates("X-Men", [
 // ATTACK: 4+
 // VP: 4
   [ 2, makeVillainCard("Hellfire Club", "Emma Frost (White Queen)", 4, 4, {
-    ambush: ev => {},
+    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.discard.limit("X-Men"), c => dominateEv(ev, ev.source, c), p)),
   })],
 // AMBUSH: Heroes cost 1 more to recruit this turn.
 // ESCAPE: Same effect.
@@ -2181,21 +2183,27 @@ addVillainTemplates("X-Men", [
 // VP: 3
 // FLAVOR: Increasing his opponents' mass to 20,000 pounds puts a real weight on their shoulders.
   [ 2, makeVillainCard("Hellfire Club", "Harry Leland (Black Bishop)", 5, 3, {
-    ambush: ev => {},
-    escape: ev => {},
+    ambush: ev => addTurnMod('cost', isHero, 1),
+    escape: ev => addTurnMod('cost', isHero, 1),
   })],
 // AMBUSH: The Villain ascends to become a new Mastermind. He gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Mastermind dominates the revealed Hero with the highest cost (and tied for highest.)
 // ATTACK: 8+
 // VP: 6
   [ 1, makeVillainCard("Hellfire Club", "Mastermind (Jason Wyngarde)", 8, 6, {
-    ambush: ev => {},
+    ambush: ev => ascendToMastermind(ev),
+    strike: ev => {
+      let cards: Card[] = [];
+      eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => cards.push(c), p));
+      cont(ev, () => cards.highest(c => c.cost).each(c => dominateEv(ev, ev.source, c)));
+    }
   })],
 // Sebastian Shaw has +1 Attack for each card you've played from your hand this turn.
 // ESCAPE: Each player gains a Wound.
 // ATTACK: 3+
 // VP: 4
   [ 2, makeVillainCard("Hellfire Club", "Sebastian Shaw (Black King)", 3, 4, {
-    escape: ev => {},
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: c => c.printedDefense + turnState.cardsPlayed.size,
   })],
 ]},
 { name: "Mojoverse", cards: [
@@ -2214,32 +2222,40 @@ addVillainTemplates("X-Men", [
 // 2* Attack FIX
 // VP: 2
   [ 2, makeVillainCard("Mojoverse", "Minor Domo", 2, 2, {
-    ambush: ev => {},
-    escape: ev => {},
+    ambush: ev => captureShieldEv(ev, ev.source, 2),
+    escape: ev => {
+      let cards: Card[] = [];
+      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => cards.push(c), p));
+      cont(ev, () => cards.highest(c => -c.cost).each(c => gainWoundEv(ev, owner(c))));
+    },
   })],
 // AMBUSH: Major Domo captures a <b>Human Shield</b>.
 // ESCAPE: Each player simultaneously reveals a card from their hand. Whoever reveals the highest-costing card (or tied for highest) gains a Wound.
 // 4* Attack FIX
 // VP: 3
   [ 2, makeVillainCard("Mojoverse", "Major Domo", 4 , 3, {
-    ambush: ev => {},
-    escape: ev => {},
+    ambush: ev => captureShieldEv(ev, ev.source),
+    escape: ev => {
+      let cards: Card[] = [];
+      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => cards.push(c), p));
+      cont(ev, () => cards.highest(c => -c.cost).each(c => gainWoundEv(ev, owner(c))));
+    },
   })],
 // AMBUSH: Each player reveals a [Covert] Hero or discards their hand. Each player who discarded their hand this way draws 5 cards.
 // ESCAPE: Same effect.
 // ATTACKG: 6 FIX
 // VP: 4
   [ 1, makeVillainCard("Mojoverse", "Spiral", 6, 4, {
-    ambush: ev => {},
-    escape: ev => {},
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, 5, p); })),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, 5, p); })),
   })],
 // AMBUSH: These Warwolves capture a <b>Human Shield</b>.
 // FIGHT: KO one of your Heroes.
 // 3* Attack FIX
 // VP: 2
   [ 2, makeVillainCard("Mojoverse", "Warwolves", 3, 2, {
-    ambush: ev => {},
-    fight: ev => {},
+    ambush: ev => captureShieldEv(ev, ev.source),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
   })],
 ]},
 { name: "Murderworld", cards: [
@@ -2340,7 +2356,6 @@ addVillainTemplates("X-Men", [
 // {XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Angel", 4, u, {
-    fight: ev => {},
   }), u, 2, Color.INSTINCT, u, "D", ev => xGenePower(Color.INSTINCT) && 0/* TODO */)],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
@@ -2349,7 +2364,6 @@ addVillainTemplates("X-Men", [
 // {XGENE [Tech]} You may KO a card from your hand or discard pile.
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Beast", 5, u, {
-    fight: ev => {},
   }), u, 2, Color.TECH, u, "D", ev => xGenePower(Color.TECH) && KOHandOrDiscardEv(ev, undefined))],
 // AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
 // FIGHT: Gain this as a Hero.
@@ -2359,8 +2373,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Ranged]} Return a [Ranged] Hero from your discard pile to your hand.
 // ATTACKG: 3
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Cyclops", 7, u, {
-    ambush: ev => {},
-    fight: ev => {},
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p))),
   }), u, 3, Color.RANGED, u, "", ev => xGenePower(Color.RANGED) && 0/* TODO */)],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
@@ -2369,7 +2382,6 @@ addVillainTemplates("X-Men", [
 // {XGENE [Strength]} Draw a card.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Iceman", 5, u, {
-    fight: ev => {},
   }), u, 2, Color.STRENGTH, u, "D", ev => xGenePower(Color.STRENGTH) && drawEv(ev, 1))],
 // AMBUSH: Dark Marvel Girl Dominates each X-Men Hero that costs 4 or less from the HQ.
 // FIGHT: Gain this as a Hero.
@@ -2379,8 +2391,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Covert]} Rescue a Bystander.
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Marvel Girl", 4, u, {
-    ambush: ev => {},
-    fight: ev => {},
+    ambush: ev => hqHeroes().limit('X-Men').limit(c => c.cost <= 4).each(c => dominateEv(ev, ev.source, c)),
   }), u, 2, Color.COVERT, u, "D", ev => xGenePower(Color.COVERT) && rescueEv(ev))],
 ]},
 { name: "Shi'ar Imperial Guard", cards: [
@@ -2389,22 +2400,25 @@ addVillainTemplates("X-Men", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Shi'ar Imperial Guard", "Blackthorn", 5, 3, {
-    fight: ev => {},
-    escape: ev => {},
+    fight: ev => isLocation(ev.where, 'SEWERS', 'STREETS') && eachOtherPlayerVM(p => gainWoundEv(ev, p)),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
 // AMBUSH: Each player discards an X-Men Hero or gains a Wound.
 // ESCAPE: Same effect.
 // ATTACK: 7
 // VP: 5
   [ 1, makeVillainCard("Shi'ar Imperial Guard", "Gladiator", 7, 5, {
-    ambush: ev => {},
-    escape: ev => {},
+    ambush: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
   })],
 // AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle Dominates those Heroes.
 // ATTACK: 4+
 // VP: 4
   [ 2, makeVillainCard("Shi'ar Imperial Guard", "Oracle", 4, 4, {
-    ambush: ev => {},
+    ambush: ev => eachPlayer(p => revealPlayerDeckEv(ev, 4, cards => {
+      cards.each(c => discardEv(ev, c));
+      selectCardEv(ev, "Choose a card", cards.limit(c => c.cost >= 1 && c.cost <= 4), c => dominateEv(ev, ev.source, c));
+    }, p)),
   })],
 // SUBNAME: Shi'ar Trial by Combat
 // TRAP
@@ -2421,8 +2435,8 @@ addVillainTemplates("X-Men", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Shi'ar Imperial Guard", "Smasher", 5, 3, {
-    ambush: ev => {},
-    fight: ev => {},
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => pickDiscardEv(ev, 1, p), p)),
+    fight: ev => selectCardAndKOEv(ev, playerState.discard.deck),
   })],
 ]},
 { name: "Sisterhood of Mutants", cards: [
@@ -2431,14 +2445,19 @@ addVillainTemplates("X-Men", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Sisterhood of Mutants", "Lady Deathstrike", 6, 4, {
-    fight: ev => {},
-    escape: ev => {},
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
   })],
 // AMBUSH: This Villain ascends to become a new Mastermind. She gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Lady Mastermind Dominates the revealed Hero with the lowest cost (and tied for lowest.)
 // ATTACK: 7+
 // VP: 5
   [ 1, makeVillainCard("Sisterhood of Mutants", "Lady Mastermind", 7, 5, {
-    ambush: ev => {},
+    ambush: ev => ascendToMastermind(ev),
+    strike: ev => {
+      let cards: Card[] = [];
+      eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => cards.push(c), p));
+      cont(ev, () => cards.highest(c => -c.cost).each(c => dominateEv(ev, ev.source, c)));
+    }
   })],
 // SUBNAME: Resurrect Madelyne Pryor
 // TRAP
@@ -2460,15 +2479,15 @@ addVillainTemplates("X-Men", [
 // ATTACK: 3+
 // VP: 3
   [ 2, makeVillainCard("Sisterhood of Mutants", "Selene", 3, 3, {
-    ambush: ev => {},
-    fight: ev => {},
-    escape: ev => {},
+    ambush: ev => gameState.ko.limit(isHero).limit(c => c.cost === 0).each(c => dominateEv(ev, ev.source, c)),
+    fight: ev => ev.source.attached('DOMINATED').each(c => KOEv(ev, c)),
+    escape: ev => chooseForEachPlayerEv(ev, "Choose a Hero", ev.source.attached('DOMINATED'), (p, c) => moveCardEv(ev, c, p.discard)),
   })],
 // AMBUSH: Each player reveals their hand and chooses a 3-cost Hero from it. Typhoid Mary Dominates those Heroes.
 // ATTACK: 3+
 // VP: 3
   [ 2, makeVillainCard("Sisterhood of Mutants", "Typhoid Mary", 3, 3, {
-    ambush: ev => {},
+    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a 3-cost Hero", p.hand.limit(isHero).limit(c => c.cost === 3), c => dominateEv(ev, ev.source, c), p)),
   })],
 ]},
 ]);
