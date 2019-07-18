@@ -450,3 +450,6 @@ function lightShowActionEv(c: Card, ev: Ev) {
 function hasLightShow(c: Card) {
   return c.lightShow !== undefined;
 }
+function dominateEv(ev: Ev, villain: Card, hero: Card) {
+  attachCardEv(ev, hero, villain, 'DOMINATED');
+}

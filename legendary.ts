@@ -101,6 +101,8 @@ interface Card {
   divided?: { left: Card, right: Card }
   excessiveViolence?: Handler
   lightShow?: Handler
+  trapCond?: (ev: Ev) => boolean
+  trapPenalty?: Handler
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -299,6 +301,15 @@ function makeWoundCard(name: string, cond: (c: Card) => boolean, heal: (ev: Ev) 
 function makeHenchmenCard(name: string, defense: number, abilities: VillainCardAbillities, vp: number = 1) {
   abilities.isHenchman = true;
   return makeVillainCard(name, name, defense, vp, abilities);
+}
+function makeTrapCard(group: string, name: string, vp: number, ambush: Handler, cond: (ev: Ev) => boolean, penalty: Handler) {
+  let c = new Card("TRAP", name);
+  c.printedVillainGroup = group;
+  c.ambush = ambush;
+  c.trapCond = cond;
+  c.trapPenalty = penalty;
+  c.printedVP = vp;
+  return c;
 }
 function makeCardInPlay(c: Card, where: Deck, bottom?: boolean) {
   if (c.ctype === "P") throw TypeError("need card template");
@@ -1219,6 +1230,7 @@ function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
 function hasFlag(flag: 'N' | 'D' | 'G' | 'F') { return (c: Card) => c.flags && c.flags.includes(flag); }
 function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("HYDRA")(c); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
+function isTrap(c: Card) { return c.cardType === "TRAP"; }
 function isFightable(c: Card): boolean {
   const res = isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :

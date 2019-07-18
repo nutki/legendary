@@ -2102,3 +2102,373 @@ addVillainTemplates("Noir", [
   })],
 ]},
 ]);
+addVillainTemplates("X-Men", [
+{ name: "Dark Descendants", cards: [
+// FIGHT: KO one of your Heroes.
+// ESCAPE: The Mastermind Dominates the top card of the Hero Deck.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Dark Descendants", "Fatale", 5, 3, {
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// FIGHT: Gain this as a Hero.
+// ESCAPE: Havok becomes a Hero Dominated by the Mastermind.
+// ATTACK: 6
+// GAINABLE
+// TEAM: X-Men
+// CLASS: [Ranged]
+// {XGENE [Ranged]} You get +2 Attack.
+// ATTACKG: 2+
+  [ 2, makeGainableCard(makeVillainCard("Dark Descendants", "Havok, Brainwashed", 6, u, {
+    fight: ev => {},
+    escape: ev => {},
+  }), u, 2, Color.RANGED, "X-Men", "D", ev => xGenePower(Color.RANGED) && addAttackEvent(ev, 2))],
+// AMBUSH: Each player reveals their hand and chooses one of their non-grey Heroes. Nemesis Dominates those Heroes.
+// ATTACK: 5
+// VP: 5
+  [ 1, makeVillainCard("Dark Descendants", "Nemesis", 5, 5, {
+    ambush: ev => {},
+  })],
+// SUBNAME: Psychic Subjugation
+// TRAP
+  [ 1, makeTrapCard("Dark Descendants", "Psychic Subjugation", 3, u,
+    // Recruit the left-most and right-most Heroes in the HQ.
+    ev => {
+      const left = turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.where === gameState.hq[0]);
+      const right = turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.where === gameState.hq[gameState.hq.size - 1]);
+      return left && right;
+    },
+    // Each of those Heroes you didn't recruit enters the city as a Villain with Attack equal to that Hero's cost. When you fight one, you gain it.
+    ev => {
+      const left = turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.where === gameState.hq[0]);
+      const right = turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.where === gameState.hq[gameState.hq.size - 1]);
+      hqHeroes().limit(c => c.location === gameState.hq[0] && left || c.location === gameState.hq[gameState.hq.size - 1] && right).each(c => {
+        villainify(u, c, c.cost, 'GAIN');
+        enterCityEv(ev, c);
+      });
+    },
+  )],
+// AMBUSH: Random Dominates the top card of the Hero Deck. Then, each player reveals their hand and chooses one of their Heroes with that same cost. Random Dominates those Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Dark Descendants", "Random", 4, 3, {
+    ambush: ev => {},
+  })],
+]},
+{ name: "Hellfire Club", cards: [
+// SUBNAME: Corrupt the Phoenix Force
+// TRAP
+  [ 1, makeTrapCard("Hellfire Club", "Corrupt the Phoenix Force", 3, u,
+    // Have no Hellfire Villains in the city.
+    ev => !cityVillains().has(isGroup("Hellfire Club")),
+    // This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht FIX enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+    ev => {
+      villainify('Phoenix Force', ev.source, 6, 'GAIN');
+      enterCityEv(ev, ev.source);
+      cont(ev, () => hqHeroes().limit(c => c.cost <= 6).each(c => dominateEv(ev, ev.source, c)))
+    },
+  )],
+// AMBUSH: Each player chooses an X-Men Hero from their discard pile. Emma Frost Dominates those Heroes.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Hellfire Club", "Emma Frost (White Queen)", 4, 4, {
+    ambush: ev => {},
+  })],
+// AMBUSH: Heroes cost 1 more to recruit this turn.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+// FLAVOR: Increasing his opponents' mass to 20,000 pounds puts a real weight on their shoulders.
+  [ 2, makeVillainCard("Hellfire Club", "Harry Leland (Black Bishop)", 5, 3, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: The Villain ascends to become a new Mastermind. He gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Mastermind dominates the revealed Hero with the highest cost (and tied for highest.)
+// ATTACK: 8+
+// VP: 6
+  [ 1, makeVillainCard("Hellfire Club", "Mastermind (Jason Wyngarde)", 8, 6, {
+    ambush: ev => {},
+  })],
+// Sebastian Shaw has +1 Attack for each card you've played from your hand this turn.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 3+
+// VP: 4
+  [ 2, makeVillainCard("Hellfire Club", "Sebastian Shaw (Black King)", 3, 4, {
+    escape: ev => {},
+  })],
+]},
+{ name: "Mojoverse", cards: [
+// SUBNAME: Mindwarping TV Broadcast
+// TRAP
+  [ 1, makeTrapCard("Mojoverse", "Mindwarping TV Broadcast", 3,
+    // A Villain captures a Bystander.
+    ev => selectCardEv(ev, "Choose a Villain", cityVillains(), c => captureEv(ev, c)),
+    // Have no Bystanders in the city captured by Villains.
+    () => !cityVillains().has(c => c.captured.has(isBystander)),
+    // After you draw your new hand at end of turn, each player discards down to four cards in hand.
+    ev => pickDiscardEv(ev, -4),
+  )],
+// AMBUSH: Minor Domo captures 2 <b>Human Shields</b>.
+// ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) gains a Wound.
+// 2* Attack FIX
+// VP: 2
+  [ 2, makeVillainCard("Mojoverse", "Minor Domo", 2, 2, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: Major Domo captures a <b>Human Shield</b>.
+// ESCAPE: Each player simultaneously reveals a card from their hand. Whoever reveals the highest-costing card (or tied for highest) gains a Wound.
+// 4* Attack FIX
+// VP: 3
+  [ 2, makeVillainCard("Mojoverse", "Major Domo", 4 , 3, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: Each player reveals a [Covert] Hero or discards their hand. Each player who discarded their hand this way draws 5 cards.
+// ESCAPE: Same effect.
+// ATTACKG: 6 FIX
+// VP: 4
+  [ 1, makeVillainCard("Mojoverse", "Spiral", 6, 4, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: These Warwolves capture a <b>Human Shield</b>.
+// FIGHT: KO one of your Heroes.
+// 3* Attack FIX
+// VP: 2
+  [ 2, makeVillainCard("Mojoverse", "Warwolves", 3, 2, {
+    ambush: ev => {},
+    fight: ev => {},
+  })],
+]},
+{ name: "Murderworld", cards: [
+// SUBNAME: Animatronic Killer Clowns
+// TRAP
+  [ 2, makeTrapCard("Murderworld", "Animatronic Killer Clowns", 2, u,
+    // Recruit two Heroes.
+    ev => turnState.pastEvents.count(e => e.type === 'RECRUIT') >= 2,
+    // This Trap enters the city as a 3 Attack "Animatronic Killer Clown" Token Villain that captures a <b>Human Shield</b>.
+    ev => {
+      villainify('Animatronic Killer Clown', ev.source, 3);
+      enterCityEv(ev, ev.source);
+      cont(ev, () => captureShieldEv(ev, ev.source));
+    },
+  )],
+// SUBNAME: Guillotine Rollercoaster
+// TRAP
+  [ 1, makeTrapCard("Murderworld", "Guillotine Rollercoaster", 3, u,
+    // Have at least four different costs of Heroes in the HQ.
+    ev => hqHeroes().uniqueCount(c => c.cost) >= 4,
+    // After you draw your new hand at the end of this turn, each palyer reveals their hand and discards each card with the same cost as the cards in the HQ.
+    ev => {
+      const hqCosts = hqHeroes().unique(c => c.cost);
+      eachPlayer(p => p.hand.limit(c => hqCosts.includes(c.cost)).each(c => discardEv(ev, c)));
+    },
+  )],
+// AMBUSH: Miss Locke captures 2 <b>Human Shields</b>. Then reveal the top card of the Villain Deck. If it's a Trap or Master Strike, play it.
+// ATTACK: 2*
+// VP: 2
+  [ 2, makeVillainCard("Murderworld", "Miss Locke", 2, 2, {
+    ambush: ev => {
+      captureShieldEv(ev, ev.source, 2);
+      revealVillainDeckEv(ev, 1, cards => cards.limit(c => isStrike(c) || isTrap(c)).each(c => villainDrawEv(ev, c)));
+    },
+  })],
+// SUBNAME: Monstrous Pinball Machine
+// TRAP
+  [ 1, makeTrapCard("Murderworld", "Monstrous Pinball Machine", 3,
+    ev => {
+      addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, func: ev => {
+        gameState.herodeck.withTop(c => {
+          const fail = () => {
+            KOEv(ev, c);
+            addFutureTrigger(ev, ev => { villainDrawEv(ev); villainDrawEv(ev); })
+          };
+          const success = () => {
+            gainEv(ev, c);
+            moveCardEv(ev, ev.source, playerState.victory);
+          };
+          const actions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => {
+            return n >= c.cost ?
+              new Ev(ev, 'RECRUIT', { what: c, func: success, cost: { recruit: n }}) :
+              new Ev(ev, 'EFFECT', { what: c, func: fail, cost: { recruit: n }});
+          }).filter(ev => canPayCost(ev));
+          const options: [string, Handler][] = actions.map(a => [a.cost.recruit.toString(), ev => playEvent(a)]);
+          chooseOneEv(ev, "Choose amount to pay", ...options);
+        });
+      }}));
+    },
+    // Pay any amount of Recruit. Then you must reveal the top card of the Hero Deck. If you paid enough, recruit that Hero and put this Trap in your Victory Pile.
+    ev => false,
+    // KO that Hero. Play two extra cards from the Villain Deck next turn.
+    ev => {
+      gameState.herodeck.withTop(c => KOEv(ev, c));
+      addFutureTrigger(ev, ev => { villainDrawEv(ev); villainDrawEv(ev); })
+    },
+  )],
+// SUBNAME: Sulfuric Acid Water Slide
+// TRAP
+  [ 2, makeTrapCard("Murderworld", "Sulfuric Acid Water Slide", 2,
+    // Play another card from the Villain Deck.
+    ev => villainDrawEv(ev),
+    // Have no Villains in the Sewers.
+    () => !gameState.city.limit(d => isLocation(d, 'SEWERS')).has(d => d.has(isVillain)),
+    // Each player gains a Wound.
+    ev => eachPlayer(p => gainWoundEv(ev, p)),
+  )],
+]},
+{ name: "Shadow-X", cards: [
+// SUBNAME: Betrayal of the Shadow
+// VP: 4 FIX
+// TRAP FIX
+  [ 1, makeTrapCard("Shadow-X", "Betrayal of the Shadow", 4,
+    ev => {
+      addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 6 }, func: ev => {
+        moveCardEv(ev, ev.what, playerState.victory);
+      }}));
+    },
+    // You may pay 6 Recruit.
+    ev => false,
+    // Each player reveals their hand. Then, each player chooses a Shadow-X card from their hand or discard pile to enter the city as a Villain.
+    ev => eachPlayer(p => selectCardEv(ev, "Choose a Villain", [...p.hand.deck, ...p.victory.deck].limit(isGroup("Shadow-X")), c => enterCityEv(ev, c), p)),
+  )],
+// FIGHT: Gain this as a Hero.
+// ATTACK: 4
+// GAINABLE
+// CLASS: [Instinct]
+// {XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
+// ATTACKG: 2
+  [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Angel", 4, u, {
+    fight: ev => {},
+  }), u, 2, Color.INSTINCT, u, "D", ev => xGenePower(Color.INSTINCT) && 0/* TODO */)],
+// FIGHT: Gain this as a Hero.
+// ATTACK: 5
+// GAINABLE
+// CLASS: [Tech]
+// {XGENE [Tech]} You may KO a card from your hand or discard pile.
+// ATTACKG: 2
+  [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Beast", 5, u, {
+    fight: ev => {},
+  }), u, 2, Color.TECH, u, "D", ev => xGenePower(Color.TECH) && KOHandOrDiscardEv(ev, undefined))],
+// AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
+// FIGHT: Gain this as a Hero.
+// ATTACK: 7
+// GAINABLE
+// CLASS: [Ranged]
+// {XGENE [Ranged]} Return a [Ranged] Hero from your discard pile to your hand.
+// ATTACKG: 3
+  [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Cyclops", 7, u, {
+    ambush: ev => {},
+    fight: ev => {},
+  }), u, 3, Color.RANGED, u, "", ev => xGenePower(Color.RANGED) && 0/* TODO */)],
+// FIGHT: Gain this as a Hero.
+// ATTACK: 5
+// GAINABLE
+// CLASS: [Strength]
+// {XGENE [Strength]} Draw a card.
+// ATTACKG: 2
+  [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Iceman", 5, u, {
+    fight: ev => {},
+  }), u, 2, Color.STRENGTH, u, "D", ev => xGenePower(Color.STRENGTH) && drawEv(ev, 1))],
+// AMBUSH: Dark Marvel Girl Dominates each X-Men Hero that costs 4 or less from the HQ.
+// FIGHT: Gain this as a Hero.
+// ATTACK: 4+
+// GAINABLE
+// CLASS: [Covert]
+// {XGENE [Covert]} Rescue a Bystander.
+// ATTACKG: 2
+  [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Marvel Girl", 4, u, {
+    ambush: ev => {},
+    fight: ev => {},
+  }), u, 2, Color.COVERT, u, "D", ev => xGenePower(Color.COVERT) && rescueEv(ev))],
+]},
+{ name: "Shi'ar Imperial Guard", cards: [
+// FIGHT: If you fought Blackthorn in the Sewers or Streets, each other player gains a Wound.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Shi'ar Imperial Guard", "Blackthorn", 5, 3, {
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: Each player discards an X-Men Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Shi'ar Imperial Guard", "Gladiator", 7, 5, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle Dominates those Heroes.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Shi'ar Imperial Guard", "Oracle", 4, 4, {
+    ambush: ev => {},
+  })],
+// SUBNAME: Shi'ar Trial by Combat
+// TRAP
+  [ 1, makeTrapCard("Shi'ar Imperial Guard", "Shi'ar Trial by Combat", 2,
+    // If the Bridge is empty, reveal the top card of the Villain Deck. If it's a Villain, put it on the Bridge.
+    ev => withCity('BRIDGE', bridge => bridge.size || revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => enterCityEv(ev, c, bridge)))),
+    // Have no Villains on the Bridge.
+    ev => !gameState.city.limit(d => isLocation(d, 'BRIDGE')).has(d => d.has(isVillain)),
+    // After you draw a new hand at end of turn, each player KOs a non-grey Hero from their discard pile.
+    ev => eachPlayer(p => selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p)),
+  )],
+// AMBUSH: Each player reveals a [Strength] Hero or discards a card.
+// FIGHT: KO a card from your discard pile.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Shi'ar Imperial Guard", "Smasher", 5, 3, {
+    ambush: ev => {},
+    fight: ev => {},
+  })],
+]},
+{ name: "Sisterhood of Mutants", cards: [
+// FIGHT: KO one of your Heroes.
+// ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Sisterhood of Mutants", "Lady Deathstrike", 6, 4, {
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: This Villain ascends to become a new Mastermind. She gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Lady Mastermind Dominates the revealed Hero with the lowest cost (and tied for lowest.)
+// ATTACK: 7+
+// VP: 5
+  [ 1, makeVillainCard("Sisterhood of Mutants", "Lady Mastermind", 7, 5, {
+    ambush: ev => {},
+  })],
+// SUBNAME: Resurrect Madelyne Pryor
+// TRAP
+  [ 1, makeTrapCard("Sisterhood of Mutants", "Resurrect Madelyne Pryor", 0,
+    ev => {
+      addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 3 }, func: ev => {
+        shuffleIntoEv(ev, ev.what, gameState.villaindeck);
+        villainDrawEv(ev);
+      }}));
+    },
+    // You may pay 3 Recruit. If you do, shuffle this Trap back into the Villain Deck, then play a card from the Villain Deck.
+    ev => false,
+    // This Trap becomes a Scheme Twist that takes effect immediately.
+    ev => playTwistEv(ev, ev.source),
+  )],
+// AMBUSH: Selene Dominates all of the 0-cost Heroes from the KO pile.
+// FIGHT: KO all the Heroes Dominated by Selene.
+// ESCAPE: Put one Hero Dominated by Selene into each player's discard pile.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Sisterhood of Mutants", "Selene", 3, 3, {
+    ambush: ev => {},
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: Each player reveals their hand and chooses a 3-cost Hero from it. Typhoid Mary Dominates those Heroes.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Sisterhood of Mutants", "Typhoid Mary", 3, 3, {
+    ambush: ev => {},
+  })],
+]},
+]);
