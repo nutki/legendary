@@ -197,9 +197,22 @@ sub maketrap {
       my $leads = $_{LEADS};
       my $vp = $_{VP};
       my $defense = $_{ATTACK} =~  s/[^0-9.]//gr;
+      my $strike = $_{STRIKE};
       filterprint(qw(LEADS STRIKE VP ATTACK CARDNAME));
-      print "makeMastermindCard(\"$mastermindname\", $defense, $vp, \"$leads\", ev => {\n";
-      print "// $_{STRIKE}\n";
+      $_ = shift @subitems and parse() if $subitems[0] =~ '#EPIC';
+      my $epicstrike = $_{EPICNAME} && $_{STRIKE};
+      my $make = $_{EPICNAME} ? "...makeEpic" : "make";
+      if ($_{EPICNAME}) {
+        filterprint(qw(LEADS STRIKE VP ATTACK));
+        $vp ne $_{VP} and die "epic vp differ for $mastermindname";
+        $leads ne $_{LEADS} and die "epic leads differ for $mastermindname";
+        $mastermindname ne $_{EPICNAME} and die "epic name differ for $mastermindname";
+        my $epicdefense = $_{ATTACK} =~  s/[^0-9.]//gr;
+        $defense = "[ $defense, $epicdefense ]" if $epicdefense;
+      }
+      print "${make}MastermindCard(\"$mastermindname\", $defense, $vp, \"$leads\", ev => {\n";
+      print "// $strike\n";
+      print "// $epicstrike\n" if $epicstrike;
       print "}, [\n";
       for (@subitems) {
         parse();
