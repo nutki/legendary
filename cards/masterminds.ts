@@ -1078,3 +1078,219 @@ makeMastermindCard("The Goblin, Underworld Boss", 10, 6, "Goblin's Freak Show", 
   init: c => repeat(2, () => gameState.bystanders.size && moveCard(gameState.bystanders.top, c.attachedDeck('WITNESS')))
 }),
 ]);
+addTemplates("MASTERMINDS", "X-Men", [
+// START: Arcade captures 5 <b>Human Shields</b>.
+// EPICNAME: Arcade
+// START: Arcade captures 8 <b>Human Shields</b>. Play a random Horror.
+...makeEpicMastermindCard("Arcade", [ 3, 4 ], 5, "Murderworld", ev => {
+// Arcade captures a random Bystander from each player's Victory Pile as a <b>Human Shield</b>. Each player who didn't have a Bystander gains a Wound instead.
+// Arcade captures two random Bystanders from each player's Victory Pile as a <b>Human Shield</b>. Each player who didn't have two Bystanders gains a Wound instead.
+  eachPlayer(p => {
+    p.victory.count(isBystander) < (ev.source.epic ? 2 : 1) && gainWoundEv(ev, p);
+    repeat(ev.source.epic ? 2 : 1, () => cont(ev, () => p.victory.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source, c))));
+  })
+}, [
+  [ "I Love a Parade!", ev => {
+  // Arcade captures two <b>Human Shields</b>. Play an extra card from the Villain Deck next turn.
+    captureShieldEv(ev, ev.source.mastermind, 2); villainDrawEv(ev);
+  } ],
+  [ "I Need an Audience", ev => {
+  // Arcade captures <b>Human Shields</b> equal to the number of Villains in the city.
+    captureShieldEv(ev, ev.source.mastermind, cityVillains().size);
+  } ],
+  [ "Roulette Wheel of Death", ev => {
+  // Arcade captures a random Bystander as a <b>Human Shield</b> from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
+    gameState.bystanders.withRandom(c => captureShieldEv(ev, ev.source.mastermind, c));
+    gameState.ko.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c));
+    gameState.city.each(d => d.limit(isVillain).each(c => c.captured.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c))));
+    eachOtherPlayerVM(p => p.victory.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c)));
+  } ],
+  [ "Welcome to my Theme Park!", ev => {
+  // Arcade and each Murderworld Villain in the city capture two <b>Human Shields</b>.
+    captureShieldEv(ev, ev.source.mastermind, 2);
+    cityVillains().limit(isGroup(ev.source.mastermind.leads)).each(c => captureShieldEv(ev, c));
+  } ],
+], {
+  init: c => addFutureTrigger(ev => {
+    captureShieldEv(ev, c, c.epic ? 8 : 5);
+    ev.source.epic && playHorrorEv(ev);
+  }),
+}),
+// Dark Phoenix Wins: When the Hero Deck is empty.
+// EPICNAME: Dark Phoenix
+// Dark Phoenix Wins: When the Hero Deck is empty.
+...makeEpicMastermindCard("Dark Phoenix", [ 13, 15 ], 7, "Hellfire Club", ev => {
+// KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck.
+// KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck. Then, each player plays a Hellfire Club card from their victory Pile. Next, play a random Horror.
+  gameState.herodeck.withTop(c => {
+    gameState.herodeck.limit(sharesColor(c)).each(c => KOEv(ev, c));
+  });
+  ev.source.epic && cont(ev, () => {
+    eachPlayer(p => selectCardEv(ev, "Choose a Villain to play", p.victory.limit(isGroup(ev.source.leads)), c => villainDrawEv(ev, c), p));
+    playHorrorEv(ev);
+  });
+}, [
+  [ "Burn the World to Ashes", ev => {
+  // Each other player discards each card from their hand that has the same name as any card in the KO pile.
+    const koNames = gameState.ko.deck.unique(c => c.cardName);
+    eachOtherPlayerVM(p => p.hand.limit(c => koNames.includes(c.cardName)).each(c => discardEv(ev, c)));
+  } ],
+  [ "Consume an Entire Galaxy", ev => {
+  // Each other player chooses a card from their discard pile that costs 1 or more and KOs it.
+    eachOtherPlayerVM(p => selectCardAndKOEv(ev, p.discard.limit(c => c.cost >= 1), p));
+  } ],
+  [ "Fiery Reincarnation", ev => {
+  // Gain a Hero from the KO pile that costs 7 or more.
+    selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(c => c.cost >= 7), c => gainEv(ev, c));
+  } ],
+  [ "Worship Me as a God", ev => {
+  // Each other player gains two 0-cost cards from the KO pile.
+    eachOtherPlayerVM(p => cont(ev, () => selectObjectsEv(ev, "Choose 2 cards to gain", 2, gameState.ko.limit(c => c.cost === 0), c => gainEv(ev, c))));
+  } ],
+], {
+  trigger: { event: 'MOVECARD', match: ev => ev.from === gameState.herodeck, after: ev => gameState.herodeck.size || gameOverEv(ev, 'LOSS', ev.source) }
+}),
+// Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
+// EPICNAME: Deathbird
+// Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
+...makeEpicMastermindCard("Deathbird", [ 8, 8 ], 6, "Shi'ar Imperial Guard and a Shi'ar Henchmen Group.", ev => {
+// If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
+// If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
+  cityVillains().has(isGroup(ev.source.leads)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
+  villainify("Shi'ar Battle Cruiser", ev.what, ev.source.epic ? 9 : 7, ev.source.epic ? 6 : 5);
+  enterCityEv(ev, ev.what);
+}, [
+  [ "Shi'ar Elite Bodyguards", ev => {
+  // Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "<b>Escape</b>: Shuffle this card back into Deathbird's Mastermind Tactics as another Tactic."
+    rescueEv(ev, 4);
+    addStatSet('isVillain', c => c === ev.source, () => true);
+    addStatSet('escape', c => c === ev.source, () => ev => shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck('TACTICS')));
+    enterCityEv(ev, ev.source);
+  } ],
+  [ "Shi'ar Extermination Legion", ev => {
+  // Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is: "<b>Escape</b>: Each player discards two cards."
+    rescueEv(ev, 4);
+    addStatSet('isVillain', c => c === ev.source, () => true);
+    addStatSet('escape', c => c === ev.source, () => ev => eachPlayer(p => pickDiscardEv(ev, 2, p)));
+    enterCityEv(ev, ev.source);
+  } ],
+  [ "Shi'ar Hovertake Battalion", ev => {
+  // Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is: "<b>Escape</b>: Each player gains a Wound."
+    rescueEv(ev, 4);
+    addStatSet('isVillain', c => c === ev.source, () => true);
+    addStatSet('escape', c => c === ev.source, () => ev => eachPlayer(p => gainWoundEv(ev, p)));
+    enterCityEv(ev, ev.source);
+  } ],
+  [ "Shi'ar Master Spies", ev => {
+  // Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "<b>Escape</b>: This card becomes a Scheme Twist that takes effect immediately."
+    rescueEv(ev, 4);
+    addStatSet('isVillain', c => c === ev.source, () => true);
+    addStatSet('escape', c => c === ev.source, () => ev => playTwistEv(ev, ev.source));
+    enterCityEv(ev, ev.source);
+  } ],
+], {
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.escaped.count(isGroup(c.leads))
+}),
+// START: Mojo captures 3 <b>Human Shields</b>. All Bystanders in Victory Piles are worth 3 VP.
+// EPICNAME: Mojo
+// START: Mojo captures 6 <b>Human Shields</b>. Play a random Horror. All Bystanders in Victory Piles are worth 4 VP.
+...makeEpicMastermindCard("Mojo", [ 6, 7 ], 5, "Mojoverse", ev => {
+// Mojo captures a <b>Human Shield</b>. Each player reveals a [Tech] Hero or discards a card at random.
+// Mojo and each Mojoverse Villain capture a <b>Human Shield</b>. Each player reveals a [Tech] Hero or discards down to 4 cards each.
+  captureShieldEv(ev, ev.source);
+  ev.source.epic && cityVillains().limit(isGroup(ev.source.leads)).each(c => captureShieldEv(ev, c));
+  eachPlayer(p => revealOrEv(ev, Color.TECH, ev.source.epic ? () => pickDiscardEv(ev, -4, p) : () => p.hand.deck.withRandom(c => discardEv(ev, c)), p));
+}, [
+  [ "Billions of TV Viewers", ev => {
+  // Each player reveals a [Tech] Hero or chooses a random Bystander from their Victory Pile. Mojo captures those Bystanders as <b>Human Shields</b>.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => p.victory.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c)), p));
+  } ],
+  [ "Brain-Melting TV Marathon", ev => {
+  // Each other player without a Mojo Tactic in their Victory Pile gains a Wound.
+    eachOtherPlayerVM(p => p.victory.limit(isTactic).has(c => c.mastermind === ev.source.mastermind) || gainWoundEv(ev, p));
+  } ],
+  [ "Cross-Dimensional Marketing", ev => {
+  // You get +1 Recruit for each Bystander in your Victory Pile. Mojo captures a <b>Human Shield</b>.
+    addRecruitEvent(ev, playerState.victory.count(isBystander));
+    captureShieldEv(ev, ev.source.mastermind);
+  } ],
+  [ "Mojo Branding Opportunity", ev => {
+  // Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a <b>Human Shield</b>.
+    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    captureShieldEv(ev, ev.source.mastermind);
+  } ],
+], {
+  init: c => {
+    addFutureTrigger(ev => captureShieldEv(ev, c, c.epic ? 6 : 3));
+    c.epic && addFutureTrigger(ev => playHorrorEv(ev));
+    addStatSet('vp', c => isBystander(c) && c.location.owner && c.location === c.location.owner.victory, () => c.epic ? 4 : 3);
+  }
+}),
+// Each player's hand size is 1 less.
+// EPICNAME: Onslaught
+// Each player's hand size is 1 less.
+...makeEpicMastermindCard("Onslaught", [ 10, 12 ], 7, "Dark Descendants", ev => {
+// KO all Heroes Dominated by Onslaught. Then each player reveals their hand and chooses one of their non-grey Heroes. Onslaught Dominates those Heroes.
+// KO all Heroes Dominated by Onslaught. Then each player reveals their hand and chooses two of their non-grey Heroes. Onslaught Dominates those Heroes. Then play a random Horror.
+  ev.source.attached('DOMINATED').each(c => KOEv(ev, c));
+  eachPlayer(p => ev.source.epic ?
+    selectObjectsEv(ev, "Choose two Heroes", 2, p.hand.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p) :
+    selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p))
+  ev.source.epic && playHorrorEv(ev);
+}, [
+  [ "Godlike Psionic Entity", ev => {
+  // Onslaught Dominates all five Heroes from the HQ.
+    hqHeroes().each(c => dominateEv(ev, ev.source.mastermind, c));
+  } ],
+  [ "Sins of X-Men Past", ev => {
+  // Each other player reveals the top six cards of their deck and chooses an X-Men Hero revealed this way. Onslaught Dominates those Heroes. Put the rest back in random order.
+    eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 6, cards => selectCardEv(ev, "Choose an X-Men Hero", cards.limit('X-Men'), c => dominateEv(ev, ev.source.mastermind, c), p), p)); // TODO random
+  } ],
+  [ "Xavier and Magneto Combined", ev => {
+  // Reveal the top three cards of the Hero Deck. Onslaught Dominates all the X-Men and Brotherhood Heroes you revealed. Put the rest back in random order.
+    revealHeroDeckEv(ev, 3, cards => cards.limit(c => isTeam('X-Men')(c) || isTeam('Brotherhood')(c)).each(c => dominateEv(ev, ev.source.mastermind, c)));
+  } ],
+  [ "Worldwide Mental Control", ev => {
+  // Onslaught Dominates four 0-cost Heroes from the KO pile. The next time a player fights Onslaught, KO those 0-cost Heroes.
+    gameState.ko.limit(isHero).limit(c => c.cost === 0).each(c => dominateEv(ev, ev.source.mastermind, c));
+  } ],
+], {
+  init: () => {
+    gameState.endDrawAmount--;
+  },
+  trigger: {
+    event: 'DEFEAT',
+    match: (ev, source) => ev.what === source,
+    before: ev => ev.parent.what.attached('DOMINATED').limit(c => c.cost === 0).each(c => KOEv(ev, c)),
+  }
+}),
+// EPICNAME: Shadow King
+// START: Play two random Horrors.
+...makeEpicMastermindCard("Shadow King", [ 7, 9 ], 6, "Shadow-X", ev => {
+// KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+// KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+  ev.source.attached('DOMINATED').each(c => KOEv(ev, c));
+  eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p));
+}, [
+  [ "Fiend of the Astral Plane", ev => {
+  // Each other player reveals their hand and shuffles two cards with Recruit icons from their hand back into their deck.
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose two cards", 2, p.hand.limit(hasRecruitIcon), c => shuffleIntoEv(ev, c, p.deck), p));
+  } ],
+  [ "Poison their Minds", ev => {
+  // Each other player reveals their hand and chooses one of their non-grey Heroes. Shadow King Dominates those Heroes.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Select a Hero", p.hand.limit(isNonGrayHero), c => dominateEv(ev, ev.source.mastermind, c), p));
+  } ],
+  [ "Psychic Seduction", ev => {
+  // Shadow King Dominates each Hero that costs 5 or less from the HQ.
+    hqHeroes().limit(c => c.cost <= 5).each(c => dominateEv(ev, ev.source.mastermind, c));
+  } ],
+  [ "Telepathic Betrayal", ev => {
+  // If the "Betrayal of the Shadow" Trap is in any Victory Pile or the KO pile, put it on top of the Villain Deck.
+    [gameState.ko, ...gameState.players.map(p => p.victory)].each(d => d.limit(c => c.cardName === "Betrayal of the Shadow").each(c => moveCardEv(ev, c, gameState.villaindeck)));
+  } ],
+], {
+  init: c => {
+    c.epic && addFutureTrigger(ev => (playHorrorEv(ev), playHorrorEv(ev)));
+  }
+}),
+]);

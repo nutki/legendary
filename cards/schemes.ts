@@ -1275,3 +1275,133 @@ makeSchemeCard("Hidden Heart of Darkness", { twists: 8 }, ev => {
   gameState.villaindeck.shuffle();
 }),
 ]);
+addTemplates("SCHEMES", "X-Men", [
+// SETUP: 8 Twists. Add 10 Brood as extra Henchmen. No Bystanders in Villain Deck.
+// RULE: Cards are played from the Villain Deck face-down. You may spend 1 Attack to "scan" a face-down card in the city, turning it face-up and doing any Ambush effect, Twist, Trap, or Master Strike. If a face-down card would escape, scan it, and then it escapes if it's a Villain.
+// EVILWINS: When 3 Villains per player have escaped.
+makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], required: { henchmen: 'Brood' } }, ev => {
+  // Twist: The player on your right gains this Twist as a "Brood Infection." When drawn, they KO it and gain 2 Wounds.
+  gainEv(ev, ev.source, playerState.right);
+}, [
+  escapeProgressTrigger(isVillain), {
+    event: 'MOVECARD',
+    match: ev => ev.parent.type === 'DRAW' && isTwist(ev.what),
+    after: ev => {
+      KOEv(ev, ev.parent.what);
+      gainWoundEv(ev, ev.parent.to.owner);
+      gainWoundEv(ev, ev.parent.to.owner);
+    },
+  }, {
+    event: 'VILLAINDRAW',
+    match: ev => !ev.what,
+    replace: ev => gameState.villaindeck.withTop(c => {
+      const scan = (ev: Ev, c: Card) => {
+        const where = c.location;
+        where.remove(c);
+        c.attached('HIDDEN').each(c => {
+          isVillain(c) ? enterCityEv(ev, c, where) : villainDrawEv(ev, c)
+        });
+      };
+      const tokenTemplate = new Card('HIDDEN', 'Unknown');
+      tokenTemplate.cardActions = [
+        (c, ev) => new Ev(ev, 'EFFECT', { what: c, cost: { recruit: 1 }, func: ev => scan(ev, ev.what) })
+      ];
+      tokenTemplate.escape = ev => scan(ev, ev.source);
+      const token = gameState.villaindeck.addNewCard(tokenTemplate);
+      moveCard(c, token.attachedDeck('HIDDEN'));
+      enterCityEv(ev, token);
+    }),
+  }
+], () => setSchemeTarget(3, true)),
+// SETUP: 11 Twists. 30 Wounds.
+// RULE: At the start of your turn, for each Angry Mob in your hand, the player on your right gains a Wound and gains that Angry Mob.
+// EVILWINS: When the Wound Stack or Villain Deck runs out.
+makeSchemeCard("Anti-Mutant Hatred", { twists: 11, wounds: 30 }, ev => {
+  // Twist: Put this Twist into your discard pile as an "Angry Mob."
+  moveCardEv(ev, ev.source, playerState.discard);
+}, [ runOutProgressTrigger('WOUNDS'), runOutProgressTrigger('VILLAIN', false), {
+  event: 'TURN',
+  match: ev => playerState.hand.has(isTwist),
+  after: ev => playerState.hand.limit(isTwist).each(c => {
+    gainWoundEv(ev, playerState.right);
+    gainEv(ev, c, playerState.right);
+  })
+} ], () => gameState.schemeProgress = 30),
+// SETUP: 10 Twists. Include Hellfire Club as one of the Villain Groups. Add 14 Jean Grey Hero cards to the Villain Deck.
+// RULE: Jean Grey cards in the Villain Deck are Villains with attack equal to their cost, "Ambush: Play another Villain card" and "Fight: Gain this as a Hero."
+// EVILWINS: When 5 Jean Grey cards have escaped.
+// TODO can use any version of Jean Grey (Phoenix or Time travelling)
+makeSchemeCard("The Dark Phoenix Saga", { twists: 10, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Jean Grey", villains: "Hellfire Club" } }, ev => {
+  // Twist: Shuffle all Jean Grey cards from the KO pile and from all players' hands and discard piles into the Villain Deck.
+  [gameState.ko.deck, ...gameState.players.map(p => handOrDiscard(p))].each(d => d.each(c => shuffleIntoEv(ev, c, gameState.villaindeck)));
+}, escapeProgressTrigger(c => c.heroName === "Jean Grey"), () => {
+  setSchemeTarget(5);
+  const isJeanGrey = (c: Card) => c.heroName === "Jean Grey";
+  gameState.herodeck.limit(isJeanGrey).each(c => moveCard(c, gameState.villaindeck));
+  gameState.villaindeck.shuffle();
+  villainify(u, isJeanGrey, c => c.cost, 'GAIN');
+  addStatSet('ambush', isJeanGrey, () => ev => villainDrawEv(ev));
+}),
+// SETUP: 6 Twists
+makeSchemeCard("Horror of Horrors", { twists: 6 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Play a random Horror.
+    playHorrorEv(ev);
+  }
+  // Twist 6 Evil wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], () => setSchemeTarget(6)),
+// SETUP: 9 Twists. Include 10 Sentinels as extra Henchmen (or substitute another Henchman group.)
+// RULE: All Sentinels get +1 Attack for each Sentinel Upgrade next to the Scheme.
+// EVILWINS: When 3 Sentinels have Escaped.
+makeSchemeCard("Mutant-Hunting Super Sentinels", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], required: { henchmen: 'Sentinel' }}, ev => {
+  // Twist: Stack this Twist next to the Scheme as a "Sentinel Upgrade." Shuffle all Sentinels from players' Victory Piles into the Villain Deck. Play another card from the Villain Deck.
+  attachCardEv(ev, ev.source, gameState.scheme, 'UPGRADE');
+  gameState.players.each(p => p.victory.limit(c => c.cardName === "Sentinel").each(c => shuffleIntoEv(ev, c, gameState.villaindeck)));
+  villainDrawEv(ev);
+}, escapeProgressTrigger(c => c.cardName === "Sentinel"), () => {
+  setSchemeTarget(3);
+  addStatMod('defense', c => c.cardName === "Sentinel", () => gameState.scheme.attached('UPGRADE').size);
+}),
+// SETUP: 5 Twists
+// EVILWINS: When the city is destroyed.
+makeSchemeCard("Nuclear Armageddon", { twists: 5 }, ev => {
+  // Twist: Destroy the city space closest to the Mastermind. Any Villain There escapes. Put this Twist there.
+  // Copied from Galactus' master strike
+  const space = gameState.city[0];
+  destroyCity(space);
+  if (!gameState.city.size) evilWinsEv(ev, ev.source);
+  space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
+  moveCardEv(ev, ev.source, space);
+}),
+// SETUP: 11 Twists. 6 Wounds per player in Wound Stack.
+// EVILWINS: When the Wound Stack or Villain Deck runs out.
+// FAQ https://boardgamegeek.com/thread/1820963/televised-death-traps-timing
+makeSchemeCard("Televised Deathtraps of Mojoworld", { twists: 11, wounds: [ 6, 12, 18, 24, 30 ] }, ev => {
+  // Twist: Stack this Twist next to the Scheme as a "Deathtrap.' This turn, you may pay 1 Attack for each Deathtrap stacked there. If you don't, each player gains a Wound.
+  attachCardEv(ev, ev.source, gameState.scheme, 'DEATHTRAP');
+  cont(ev, () => {
+    const recruit = gameState.scheme.attached('DEATHTRAP').size;
+    let paid = false;
+    addTurnAction(new Ev(ev, 'EFFECT', { what: gameState.scheme.top, cost: { recruit }, func: ev => paid = true }))
+    addTurnTrigger('CLEANUP', () => true, ev => paid || eachPlayer(p => gainWoundEv(ev, p)));
+  });
+}, [ runOutProgressTrigger('WOUNDS'), runOutProgressTrigger('VILLAIN', false)], () => gameState.schemeProgress = 6 * gameState.players.size),
+// SETUP: 8 Twists.
+// EVILWINS: When there are 5 Airborne Neurotoxins.
+makeSchemeCard("X-Men Danger Room Goes Berserk", { twists: 8 }, ev => {
+  // Twist: Trap! By End of Turn: You may pay 2 Recruit. If you do, shuffle this Twist back into the Villain Deck, then play a card from the Villain Deck. Or Suffer: Stack this Twist next to the scheme as an "Airborne Neurotoxin."
+  let paid = false;
+  const c = ev.source;
+  moveCardEv(ev, c, gameState.trap);
+  addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 2 }, func: ev => {
+    paid = true;
+    shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+    villainDrawEv(ev);
+  } }))
+  addTurnTrigger('CLEANUP', () => !paid, ev => {
+    attachCardEv(ev, c, gameState.scheme, 'TOXIN');
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TOXIN').size));
+  });
+}, [], () => setSchemeTarget(5)),
+]);

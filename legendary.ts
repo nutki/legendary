@@ -103,6 +103,7 @@ interface Card {
   lightShow?: Handler
   trapCond?: (ev: Ev) => boolean
   trapPenalty?: Handler
+  epic?: boolean
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -269,6 +270,14 @@ function makeTacticsCard(name: string, fight?: Handler) {
   if (fight) t.fight = fight;
   return t;
 }
+function makeEpicMastermindCard(name: string, defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
+  const m1 = makeMastermindCard(name, defense[0], vp, leads, strike, tactics, abilities);
+  const m2 = makeMastermindCard(`Epic ${name}`, defense[1], vp, leads, strike, tactics, abilities);
+  m2.epic = true;
+  // Epic masterminds use unchanged defense on tactics (may be relevant for some schemes).
+  m2.tacticsTemplates = m1.tacticsTemplates;
+  return [m1, m2];
+}
 function makeMastermindCard(name: string, defense: number, vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
   let c = new Card("MASTERMIND", name);
   c.printedDefense = defense;
@@ -279,7 +288,6 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
     const t = e instanceof Card ? e : makeTacticsCard(e[0], e[1]);
     t.printedVP = vp;
     t.printedDefense = defense;
-    t.mastermind = c;
     return t;
   });
   if (abilities) Object.assign(c, abilities);
@@ -782,6 +790,8 @@ interface Game extends Ev {
   hq: Deck[]
   city: Deck[]
   shard: Deck
+  horror: Deck
+  trap: Deck
   triggers: Trigger[]
   endDrawAmount: number
   modifiers: Modifiers
@@ -1079,6 +1089,8 @@ gameState = {
   scheme: new Deck('SCHEME', true),
   bystanders: new Deck('BYSTANDERS', true),
   shard: new Deck('SHARD', true),
+  trap: new Deck('TRAP', true),
+  horror: new Deck('HORROR'),
   hq: [
     new Deck("HQ1", true),
     new Deck("HQ2", true),
@@ -1189,10 +1201,10 @@ gameState.villaindeck.shuffle();
 // Init Mastermind
 gameSetup.mastermind.forEach((m, i) => {
   let mastermind = gameState.mastermind.addNewCard(findMastermindTemplate(m));
-  let tactics = gameState.mastermind.top.attachedDeck('TACTICS');
+  let tactics = mastermind.attachedDeck('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
-  tactics.each(t => t.mastermind = gameState.mastermind.top);
+  tactics.each(t => t.mastermind = mastermind);
     if (i === 0 && gameState.players.size === 1 &&
       !gameSetup.villains.includes(mastermind.leads) &&
       !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
@@ -2087,7 +2099,7 @@ function villainDraw(ev: Ev): void {
     playTwistEv(ev, c);
   } else if (c.cardType === "BYSTANDER" || c.cardType === "HERO") { // only X-Cutioner's Song puts non villain heroes in the Villain Deck
     let i = gameState.cityEntry;
-    while (i && !i.size) i = i.next;
+    while (i && !i.has(isVillain)) i = i.next;
     if (i) {
       captureEv(ev, i.top, c);
     } else if (fightableCards().has(isMastermind)) {
@@ -2374,19 +2386,20 @@ top villain deck card select (prof x uncommon)
 ENGINE:
 replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
 remodel triggers to attach on resolution not queuing?
-count escape pile conditions properly (not just trigger on escape, but also not count cards temporarly in the escape pile).
+count escape pile conditions properly (do not count cards temporarly in the escape pile).
 set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 rename lookAtDeck to revealPlayerDeck where applicable
-split schemeProgress and schemeTarget
+revealed without moving decks?
+TODO CA75 man out of time play and start of turn triggers (use in future triggers and more)
 TODO SW1 fight card placement order
 TODO SW1 escape card special location (also to check which bystanders were carried)
 TODO SW1 render city dynamically
 TODO SW1 make cardAction allow functions returning multiple actions
-TODO SW1 addFutureTrigger
 TODO SW2 make scheme card position independent
-TODO Noir hidden witness removal and limits (human shields at the same time)
-TODO X-Men piercing attack
+TODO Noir hidden witness removal and limits (human shields at the same time) (also return them with Card.captured)
+TODO X-Men rework extra masterminds
+TODO X-Men bring back canFight/canRectuit as general fightCost.cond mods will not affect piercing attacks
 copy artifact should not count as cards played
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many

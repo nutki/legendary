@@ -2973,7 +2973,7 @@ addHeroTemplates("Civil War", [
 // {TEAMPOWER Avengers} <b>Fortify</b> the Wound Stack. While it's fortified, players can't gain Wounds. At the beginning of your next turn, put this card in your discard pile.
   ra: makeHeroCard("Luke Cage", "Unbreakable Skin", 8, u, 6, Color.STRENGTH, "Avengers", "", ev => { if (superPower("Avengers")) {
     fortifyEv(ev, ev.source, gameState.wounds);
-    addFutureTrigger(ev, () => moveCardEv(ev, ev.source, playerState.discard), playerState);
+    addFutureTrigger(() => moveCardEv(ev, ev.source, playerState.discard), playerState);
   }}, { trigger : {
     event: 'GAIN',
     match: (ev: Ev, source: Card) => isWound(ev.what) && isFortifying(source, gameState.wounds),

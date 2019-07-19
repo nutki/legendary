@@ -251,7 +251,7 @@ function ascendToMastermind(ev: Ev, strike?: Handler, vp?: number) {
   if (vp) addStatSet('vp', c => c === ev.source, () => vp);
   moveCardEv(ev, ev.source, gameState.mastermind);
 }
-function addFutureTrigger(ev: Ev, effect: (ev: Ev) => void, p?: Player) {
+function addFutureTrigger(effect: (ev: Ev) => void, p?: Player) {
   let done: boolean = false; // TODO maybe remove triggers instead
   gameState.triggers.push({
     event: 'TURN', // TODO turn start trigger
@@ -467,4 +467,12 @@ function _chooseForEachPlayerEv(ev: Ev, desc: string, players: Player[], cards: 
 }
 function chooseForEachPlayerEv(ev: Ev, desc: string, cards: Card[], effect1: (p: Player, c: Card) => void, effect0: (c: Card) => void = () => {}, agent: Player = playerState) {
   _chooseForEachPlayerEv(ev, desc, gameState.players, cards, effect1, effect0, agent);
+}
+function playHorrorEv(ev: Ev) {
+  cont(ev, () => {
+    gameState.horror.withTop(c => {
+      moveCardEv(ev, c, gameState.horror, true);
+      pushEffects(ev, c, undefined, c.ambush);
+    })
+  })
 }

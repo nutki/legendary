@@ -1259,7 +1259,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Sentinel Territories", "Colossus of Future Past", 5, 3, {
-    fight: ev => addFutureTrigger(ev, ev => {
+    fight: ev => addFutureTrigger(ev => {
       addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
     }),
   })],
@@ -1269,7 +1269,7 @@ addVillainTemplates("Secret Wars Volume 1", [
   [ 2, makeVillainCard("Sentinel Territories", "Kate Pryde of Future Past", 4, 2, {
     fight: [
       ev => addRecruitEvent(ev, 1),
-      ev => addFutureTrigger(ev, ev => addRecruitEvent(ev, 1)),
+      ev => addFutureTrigger(ev => addRecruitEvent(ev, 1)),
     ]
   })],
 // FIGHT: <i>Rachel Summers alters the future:</i> During the next player's turn, all Villains and the Mastermind get -1 Attack.
@@ -1277,7 +1277,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Sentinel Territories", "Rachel Summers of Future Past", 6, 4, {
-    fight: ev => addFutureTrigger(ev, ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1)),
+    fight: ev => addFutureTrigger(ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1)),
     escape: ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1),
   })],
 // FIGHT: <i>Wolverine alters the future:</i> At the start of the next player's turn, you draw a card, and that player draws a card.
@@ -1285,7 +1285,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 7
 // VP: 5
   [ 2, makeVillainCard("Sentinel Territories", "Wolverine of Future Past", 7, 5, {
-    fight: ev => addFutureTrigger(ev, ev => {
+    fight: ev => addFutureTrigger(ev => {
       drawEv(ev, 1, owner(ev.source));
       drawEv(ev);
     }),
@@ -2299,7 +2299,7 @@ addVillainTemplates("X-Men", [
         gameState.herodeck.withTop(c => {
           const fail = () => {
             KOEv(ev, c);
-            addFutureTrigger(ev, ev => { villainDrawEv(ev); villainDrawEv(ev); })
+            addFutureTrigger(ev => { villainDrawEv(ev); villainDrawEv(ev); })
           };
           const success = () => {
             gainEv(ev, c);
@@ -2320,7 +2320,7 @@ addVillainTemplates("X-Men", [
     // KO that Hero. Play two extra cards from the Villain Deck next turn.
     ev => {
       gameState.herodeck.withTop(c => KOEv(ev, c));
-      addFutureTrigger(ev, ev => { villainDrawEv(ev); villainDrawEv(ev); })
+      addFutureTrigger(ev => { villainDrawEv(ev); villainDrawEv(ev); })
     },
   )],
 // SUBNAME: Sulfuric Acid Water Slide
