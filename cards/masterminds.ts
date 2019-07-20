@@ -536,7 +536,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
   } ],
   [ "Corrupted Clone of Jean Grey", ev => {
   // Each other player reveals an X-Men Hero or gains a Wound.
-    eachOtherPlayerVM(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p)))
+    eachOtherPlayerVM(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p), p))
   } ],
   [ "Everyone's a Demon on the Inside", ev => {
   // Madelyne captures a Bystander from each other player's Victory Pile.
@@ -1292,5 +1292,78 @@ addTemplates("MASTERMINDS", "X-Men", [
   init: c => {
     c.epic && addFutureTrigger(ev => (playHorrorEv(ev), playHorrorEv(ev)));
   }
+}),
+]);
+addTemplates("MASTERMINDS", "Spider-Man Homecoming", [
+// {STRIKER 2}
+// EPICNAME: Adrian Toomes
+// {STRIKER 3}
+...makeEpicMastermindCard("Adrian Toomes", [ 5, 5 ], 6, "Salvagers", ev => {
+// Starting from the Sewers, each Villain in the city uses its "Escape" ability.
+// Starting from the Sewers, each Villain in the city uses its "Ambush" ability, then its "Escape" ability.
+  gameState.city.reverse().each(d => d.limit(isVillain).each(c => { // TODO reverse 
+    ev.source.epic && pushEffects(ev, c, 'ambush', c.ambush);
+    pushEffects(ev, c, 'escape', c.escape);
+  }));
+}, [
+  [ "Don't Interfere", ev => {
+  // {DANGERSENSE 4}. If this revealed any Bystanders, rescue them.
+    dangerSenseEv(ev, 4, cards => cards.limit(isBystander).each(c => rescueEv(ev, c)));
+  } ],
+  [ "More Harm than Good", ev => {
+  // Each other player discards a Spider Friends Hero or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a card to discard", p.hand.limit('Spider Friends'), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Take Everything", ev => {
+  // You may put a card from your discard pile on top of your deck.
+    selectCardOptEv(ev, "Choose a card to put on to of your deck", playerState.discard.deck, c => moveCardEv(ev, c, playerState.deck));
+  } ],
+  [ "The World's Changed", ev => {
+  // {DANGERSENSE 3}. Put all Henchmen Villains revealed this way into your Victory Pile, then do their "Fight" abilities.
+    dangerSenseEv(ev, 3, cards => cards.limit(isHenchman).each(c => {
+      moveCardEv(ev, c, playerState.victory);
+      pushEffects(ev, c, 'fight', c.fight, { where: gameState.villaindeck });
+    }))
+  } ],
+], {
+  varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * strikerCount()
+}),
+// {STRIKER 1}
+// EPICNAME: Vulture
+// {STRIKER 1}
+...makeEpicMastermindCard("Vulture", [ 8, 10 ], 6, "Vulture Tech", ev => {
+// Put a Wound from the Wound Stack below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space.
+// Put a Wound from the Wound Stack or KO pile below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space, putting it on top of their deck.
+}, [
+  [ "Bird of Prey", ev => {
+  // Each other player discards a Spider Friends Hero or discards two cards.
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a card to discard", p.hand.limit('Spider Friends'), c => discardEv(ev, c), () => pickDiscardEv(ev, 2, p), p));
+  } ],
+  [ "Lurking Shadow", ev => {
+  // {DANGERSENSE 2}. If the Rooftops are empty, a Villain you revealed enters the Rooftops.
+    dangerSenseEv(ev, 2, cards => {
+      withCity('ROOFTOPS', rooftops => rooftops.size || selectCardEv(ev, "Choose a Villain", cards.limit(isVillain), c => enterCityEv(ev, c, rooftops)));
+    })
+  } ],
+  [ "Mid Air Heist", ev => {
+  // You get +5 Recruit usable only to recruit [Tech] Heroes.
+    addRecruitSpecialEv(ev, isColor(Color.TECH), 5);
+  } ],
+  [ "Winged Assault", ev => {
+  // Put two "Winged Assault" Wounds from under the HQ into each other player's discard pile.
+    let w = gameState.hq.map(c => c.attached('WINGED_ASSAULT')).merge();
+    eachOtherPlayerVM(p => cont(ev, () => selectObjectsEv(ev, `Choose Wound for ${p.name} to gain`, 2, w, c => (moveCardEv(ev, c, p.discard), w = w.limit(v => v !== c)))));
+  } ],
+], {
+  varDefense: strikerVarDefense,
+  triggers: [{
+    event: 'GAIN',
+    match: ev => ev.what.location.isHQ && ev.what.location.attached('WINGED_ASSAULT').size > 0,
+    after: ev => ev.parent.what.location.attached('WINGED_ASSAULT').withFirst(c => gainWoundEv(ev, ev.parent.who.right)),
+  }, {
+    event: 'KO',
+    match: ev => ev.what.location.isHQ && ev.what.location.attached('WINGED_ASSAULT').size > 0,
+    after: ev => ev.parent.what.location.attached('WINGED_ASSAULT').withFirst(c => gainWoundEv(ev, playerState.right)),
+  }]
 }),
 ]);

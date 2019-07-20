@@ -2408,8 +2408,8 @@ addVillainTemplates("X-Men", [
 // ATTACK: 7
 // VP: 5
   [ 1, makeVillainCard("Shi'ar Imperial Guard", "Gladiator", 7, 5, {
-    ambush: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
-    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
+    ambush: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
   })],
 // AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle Dominates those Heroes.
 // ATTACK: 4+
@@ -2488,6 +2488,83 @@ addVillainTemplates("X-Men", [
 // VP: 3
   [ 2, makeVillainCard("Sisterhood of Mutants", "Typhoid Mary", 3, 3, {
     ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a 3-cost Hero", p.hand.limit(isHero).limit(c => c.cost === 3), c => dominateEv(ev, ev.source, c), p)),
+  })],
+]},
+]);
+addVillainTemplates("Spider-Man Homecoming", [
+{ name: "Salvagers", cards: [
+// {STRIKER 1}
+// FIGHT: KO one of your 0-cost Heroes.
+// ESCAPE: The current player reveals a Ranged Hero or gains a 0-cost Hero from the KO pile.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Salvagers", "Hybrid Alien Tech", 4, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(c => c.cost === 0)),
+    escape: ev => revealOrEv(ev, Color.RANGED, () => selectCardEv(ev, "Choose a 0-cost Hero", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainEv(ev, c))),
+    varDefense: strikerVarDefense,
+  })],
+// {STRIKER 1}
+// ESCAPE: Each player reveals an Instinct Hero or discards a card.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Salvagers", "Shocker #1", 3, 3, {
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p))),
+    varDefense: strikerVarDefense,
+  })],
+// AMBUSH: Each player reveals their hand and discards all cards with the same card name as a card in the HQ.
+// ESCAPE: <i>(After the normal HQ KO for this escaping)</i> Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Salvagers", "Shocker #2", 5, 3, {
+    ambush: ev => eachPlayer(p => p.hand.limit(c => hqHeroes().map(c => c.cardName).includes(c.cardName)).each(c =>discardEv(ev, c))),
+    escape: ev => eachPlayer(p => p.hand.limit(c => hqHeroes().map(c => c.cardName).includes(c.cardName)).each(c =>discardEv(ev, c))),
+  })],
+// FIGHT: You get +1 Recruit for each Tech Hero in the HQ.
+// ESCAPE: Each player reveals a Tech Hero or gains a Wound.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Salvagers", "Tinkerer", 4, 2, {
+    fight: ev => addRecruitEvent(ev, hqHeroes().count(Color.TECH)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
+  })],
+]},
+{ name: "Vulture Tech", cards: [
+// {STRIKER 1}
+// FIGHT: KO one of your Heroes with a Recruit icon.
+// ESCAPE: Each player discards a card with a Recruit icon.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Vulture Tech", "Chitauri Weapon Assault", 4, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(hasRecruitIcon)),
+    escape: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p)),
+    varDefense: strikerVarDefense,
+  })],
+// {STRIKER 1}
+// FIGHT: Danger Sense 3
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Vulture Tech", "High Tech Helmet", 3, 3, {
+    fight: ev => dangerSenseEv(ev, 3),
+    varDefense: strikerVarDefense,
+  })],
+// {STRIKER 1}
+// FIGHT: The next Hero you gain this turn has Wall Crawl.
+// VP: 2
+// ATTACK: 2+
+  [ 2, makeVillainCard("Vulture Tech", "Razor Talons", 2, 2, {
+    fight: ev => turnState.nextHeroRecruit = 'DECK',
+    varDefense: strikerVarDefense,
+  })],
+// {STRIKER 1}
+// AMBUSH: Turbine Powered captures a Bystander. Then move this Villain to the Rooftops. If there's already a Villain there, swap them.
+// ATTACK: 5+
+// VP: 5
+  [ 2, makeVillainCard("Vulture Tech", "Turbine Powered", 5, 5, {
+    ambush: ev => {
+      captureEv(ev, ev.source);
+      withCity('ROOFTOPS', rooftops => ev.source.location !== rooftops && swapCardsEv(ev, ev.source, rooftops));
+    },
+    varDefense: strikerVarDefense,
   })],
 ]},
 ]);
