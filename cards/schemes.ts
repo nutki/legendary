@@ -1405,3 +1405,80 @@ makeSchemeCard("X-Men Danger Room Goes Berserk", { twists: 8 }, ev => {
   });
 }, [], () => setSchemeTarget(5)),
 ]);
+addTemplates("SCHEMES", "Spider-Man Homecoming", [
+// SETUP: 8 Twists. Use at least one Spider Friends Hero.
+// EVILWINS: When there have been 5 Villainous Interruptions.
+makeSchemeCard("Distract the Hero", { twists: 8 }, ev => {
+  // Comunity ruling https://boardgamegeek.com/thread/2092842/distract-hero-what-does-it-mean-get-some-vp
+  // Twist: If you get any Victory Points this turn, put this Twist on the bottom of the Villain Deck. Otherwise, stack this Twist next to the Scheme as a Villainous Interruption.
+  let done = false;
+  const twist = ev.source;
+  addTurnTrigger('MOVECARD', ev => ev.to === playerState.victory && ev.what.vp > 0, ev => {
+    done = true;
+    moveCardEv(ev, twist, gameState.villaindeck, true);
+  })
+  addTurnTrigger('CLEANUP', () => !done, ev => {
+    attachCardEv(ev, twist, gameState.scheme, 'TWIST');
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TWIST').size));
+  })
+}, [], () => setSchemeTarget(5)),
+// SETUP: 8 Twists. Shuffle 18 Bystanders and 14 Wounds, then deal them evenly into eight decks. Put these decks in a row, as Floors of the Washington Monument.
+// RULE: Whenever you fight a Villain, you may reveal any face-down card from any Floor. If it's a Bystander, rescue it. If it's a Wound, put it back face-up.
+// EVILWINS: When 10 Bystanders are in the KO pile and/or Escape Pile, or all Floors are KO'd.
+makeSchemeCard("Explosion at the Washington Monument", { twists: 8 }, ev => {
+  // Twist: KO the topmost Floor of the Washington Monument. You gain one of the Wounds KO'd this way.
+  if (ev.nr <= 8) {
+    const d = gameState.scheme.attachedDeck(`FLOOR${9-ev.nr}`);
+    const cards = [...d.deck, ...d.attached('WOUNDS')];
+    let gain : Card;
+    cards.limit(isWound).withFirst(c => gain = c);
+    cards.each(c => c === gain ? gainEv(ev, c) : KOEv(ev, c));
+    if (ev.nr === 8) gameOverEv(ev, "LOSS");
+  }
+}, [ koOrEscapeProgressTrigger(isBystander), {
+  event: 'FIGHT',
+  match: ev => isVillain(ev.what),
+  after: ev => {
+    const cards: Card[] = [1, 2, 3, 4, 5, 6, 7, 8].map(i => gameState.scheme.attachedDeck(`FLOOR${i}`)).limit(d => d.size >= 0).map(d => d.top);
+    selectCardOptEv(ev, "Choose a card to reveal", cards, c => {
+      isBystander(c) ? rescueEv(ev, c) : attachCardEv(ev, c, c.location, 'WOUNDS');
+    });
+  }
+}], () => {
+  const floors: Deck[] = [];
+  repeat(8, i => floors.push(gameState.scheme.attachedDeck(`FLOOR${i+1}`)));
+  repeat(18, () => gameState.bystanders.withTop(c => moveCard(c, floors[0])));
+  repeat(14, () => gameState.wounds.withTop(c => moveCard(c, floors[0])));
+  floors[0].shuffle();
+  repeat(4, () => floors.each(d => floors[0].withTop(c => moveCard(c, d))));
+  setSchemeTarget(10);
+}),
+// SETUP: 9 Twists. Put the Bystander Stack above the Sewers as the "Ferry."
+// EVILWINS: When 7 Bystanders are in the KO pile and/or Escape Pile.
+makeSchemeCard<{ferryPos: Deck}>("Ferry Disaster", { twists: 9 }, ev => {
+  if (ev.nr <= 4) {
+    // Twist 1-4 If there's a Villain in the city space below the Ferry, KO 2 Bystanders from the Ferry. Whether you KO'd or not, the Ferry moves one space left.
+    if (ev.state.ferryPos.has(isVillain)) repeat(2, () => gameState.bystanders.withTop(c => KOEv(ev, c)));
+    if (ev.state.ferryPos.adjacentLeft) ev.state.ferryPos = ev.state.ferryPos.adjacentLeft;
+  } else if (ev.nr >= 5 && ev.nr <= 8) {
+    // Twist 5-8 Same effect, but it moves right.
+    if (ev.state.ferryPos.has(isVillain)) repeat(2, () => gameState.bystanders.withTop(c => KOEv(ev, c)));
+    if (ev.state.ferryPos.adjacentRight) ev.state.ferryPos = ev.state.ferryPos.adjacentRight;
+  } else if (ev.nr === 9) {
+    // Twist 9 KO half the Bystanders from the Bystander deck, rounding up.
+    repeat(Math.ceil(gameState.bystanders.size / 2), () => cont(ev, () => gameState.bystanders.withTop(c => KOEv(ev, c))));
+  }
+}, koOrEscapeProgressTrigger(isBystander), s => {
+  setSchemeTarget(7);
+  withCity('SEWERS', sewers => s.ferryPos = sewers);
+}),
+// SETUP: 7 Twists. Add an extra Henchmen Group of 10 cards as Smugglers.
+// RULE: Smugglers have Striker.
+// EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+makeSchemeCard("Scavenge Alien Weaponry", { twists: 7, vd_henchmen_counts: [[3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]] }, ev => {
+  // Twist: Play two cards from the Villain Deck.
+  villainDrawEv(ev); villainDrawEv(ev);
+}, [ runOutProgressTrigger('VILLAIN', false), escapeProgressTrigger(isVillain)], () => {
+  addStatMod('defense', c => c.cardName === extraHenchmenName(), () => strikerCount());
+}),
+]);
