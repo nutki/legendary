@@ -59,6 +59,9 @@ sub autopower {
     s/^[Yy]ou get \+(\d+) Piercing\.?$// and $effect = "addPiercingEv(ev, $1)";
     s/^{BERSERK}(, \{BERSERK})*$// and $effect = "berserkEv(ev, ".((@zzz=$&=~/BERSERK/g)).")";
     s/^{SOARING FLIGHT}$// and $ability = "soaring: true";
+    s/^{COORDINATE}$// and $ability = "coordinate: true";
+    s/^{STRIKER (\d+)}$// and $effect = "strikerHeroEv(ev, $1)";
+    s/^{DANGERSENSE (\d+)}($|\. If this revealed (.*)$)// and $effect = "dangerSenseEv(ev, $1" . ($2 ? ", cards => {/* TODO $3 */})" : ")");
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;

@@ -12,7 +12,7 @@
 
 #CARDNAME: Splice Humans with Spider DNA
 #SETUP: 8 Twists. Include Sinister Six as one of the Villain Groups.
-#RULE: Sinister Six Villains get +3 Attack. All Hero cards have Wall-Crawl.
+#RULE: Sinister Six Villains get +3 Attack. All Hero cards have {WALLCRAWL}.
 #TWIST: Each player puts a Sinister Six Villain from their Victory Pile on top of the Villain Deck. No matter how many players did so, play a single card from the Villain Deck.
 #EVILWINS: When 6 Sinister Six Villains have escaped or the Villain Deck runs out.
 

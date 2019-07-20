@@ -1,20 +1,20 @@
 
 #CARDNAME: Adrian Toomes
-<b>Double Striker</b>
+{STRIKER 2}
 #LEADS: Salvagers
 #STRIKE: Starting from the Sewers, each Villain in the city uses its "Escape" ability.
 #ATTACK: 5+
 #VP: 6
 
 #EPICNAME: Adrian Toomes
-<b>Triple Striker</b>
+{STRIKER 3}
 #LEADS: Salvagers
 #STRIKE: Starting from the Sewers, each Villain in the city uses its "Ambush" ability, then its "Escape" ability.
 #ATTACK: 5+
 #VP: 6
 
 #TACTIC: Don't Interfere
-#FIGHT: <b>Danger Sense 4</b>. If this revealed any Bystanders, rescue them.
+#FIGHT: {DANGERSENSE 4}. If this revealed any Bystanders, rescue them.
 
 #TACTIC: More Harm than Good
 #FIGHT: Each other player discards a Spider Friends Hero or gains a Wound.
@@ -25,17 +25,17 @@
 #FLAVOR: "The world's changed. Time we change with it."
 
 #TACTIC: The World's Changed
-#FIGHT: <b>Danger Sense 3</b>. Put all Henchmen Villains revealed this way into your Victory Pile, then do their "Fight" abilities.
+#FIGHT: {DANGERSENSE 3}. Put all Henchmen Villains revealed this way into your Victory Pile, then do their "Fight" abilities.
 
 #CARDNAME: Vulture
-<b>Striker</b>
+{STRIKER 1}
 #LEADS: Vulture Tech
 #STRIKE: Put a Wound from the Wound Stack below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space.
 #ATTACK: 8+
 #VP: 6
 
 #EPICNAME: Vulture
-<b>Striker</b>
+{STRIKER 1}
 #LEADS: Vulture Tech
 #STRIKE: Put a Wound from the Wound Stack or KO pile below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space, putting it on top of their deck.
 #ATTACK: 10+
@@ -45,7 +45,7 @@
 #FIGHT: Each other player discards a Spider Friends Hero or discards two cards.
 
 #TACTIC: Lurking Shadow
-#FIGHT: <b>Danger Sense 2</b>. If the Rooftops are empty, a Villain you revealed enters the Rooftops.
+#FIGHT: {DANGERSENSE 2}. If the Rooftops are empty, a Villain you revealed enters the Rooftops.
 
 #TACTIC: Mid Air Heist
 #FIGHT: You get +5 Recruit usable only to recruit [Tech] Heroes.

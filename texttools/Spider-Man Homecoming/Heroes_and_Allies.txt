@@ -5,7 +5,7 @@
 #SUBNAME: Head of Security
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Coordinate</b>
+{COORDINATE}
 KO all Wounds you gained this turn.
 #RECRUIT: 2
 #COST: 3
@@ -13,15 +13,15 @@ KO all Wounds you gained this turn.
 #SUBNAME: Watchful Eye
 #COPIES: 5
 #CLASS: [Instinct]
-{POWER Instinct} <b>Danger Sense 2</b>. If this revealed any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile.
+{POWER Instinct} {DANGERSENSE 2}. If this revealed any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile.
 #ATTACK: 2+
 #COST: 4
 
 #SUBNAME: Loyal Friend
 #COPIES: 3
 #CLASS: [Tech]
-<b>Coordinate</b>
-<b>Striker</b>
+{COORDINATE}
+{STRIKER 1}
 #ATTACK: 0+
 #COST: 5
 #FLAVOR: "Don't I look happy to you?"
@@ -29,7 +29,7 @@ KO all Wounds you gained this turn.
 #SUBNAME: Asset Management
 #COPIES: 1
 #CLASS: [Instinct]
-<b>Double Striker</b>
+{STRIKER 2}
 #ATTACK: 0+
 #COST: 5
 #FLAVOR: Many people don't understand why Iron Man would need a bodyguard. They haven't met Happy.
@@ -47,15 +47,15 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #SUBNAME: Recon Drone Connection
 #COPIES: 5
 #CLASS: [Tech]
-Wall-Crawl
-<b>Danger Sense 3</b>
+{WALLCRAWL}
+{DANGERSENSE 3}
 #ATTACK: 0+
 #COST: 2
 
 #SUBNAME: Spider-Grip
 #COPIES: 3
 #CLASS: [Tech]
-Wall-Crawl
+{WALLCRAWL}
 {POWER Tech} Choose two Villains in adjacent city spaces. Each of them gets -1 Attack this turn.
 #ATTACK: 2
 #COST: 2
@@ -63,8 +63,8 @@ Wall-Crawl
 #SUBNAME: Friendly Neighborhood ...
 #COPIES: 1
 #CLASS: [Tech]
-Wall-Crawl
-<b>Coordinate</b>
+{WALLCRAWL}
+{COORDINATE}
 You get +3 Attack usable only against the Mastermind or Villains on the Rooftops or Streets.
 #ATTACK: 0+
 #COST: 2
@@ -82,7 +82,7 @@ You may choose a Villain or Mastermind. You can fight it using only Recruit this
 #SUBNAME: Ned
 #COPIES: 5
 #CLASS: [Covert]
-<b>Coordinate</b>
+{COORDINATE}
 {POWER Covert} You get +2 Recruit
 #RECRUIT: 1+
 #COST: 2
@@ -90,14 +90,14 @@ You may choose a Villain or Mastermind. You can fight it using only Recruit this
 #SUBNAME: Liz
 #COPIES: 3
 #CLASS: [Instinct]
-Whenever you <b>Coordinate</b> a card to another player, you may reveal this to draw two cards instead of one.
+Whenever you {COORDINATE} a card to another player, you may reveal this to draw two cards instead of one.
 #RECRUIT: 4
 #COST: 6
 
 #SUBNAME: May Parker
 #COPIES: 1
 #CLASS: [Covert]
-<b>Coordinate</b>
+{COORDINATE}
 {TEAMPOWER Spider Friends} Each Villain gets -2 Attack this turn. The next time you fight the Mastermind this turn, it gets -2 Attack.
 #RECRUIT: 5
 #COST: 7
@@ -109,14 +109,14 @@ Whenever you <b>Coordinate</b> a card to another player, you may reveal this to 
 #COPIES: 5
 #CLASS: [Instinct]
 {WALLCRAWL}
-{POWER Instinct} <b>Danger Sense 1</b>. If this revealed a Villain, you may fight it.
+{POWER Instinct} {DANGERSENSE 1}. If this revealed a Villain, you may fight it.
 #ATTACK: 2+
 #COST: 2
 
 #SUBNAME: Heightened Senses
 #COPIES: 5
 #CLASS: [Covert]
-<b>Danger Sense 2</b>
+{DANGERSENSE 2}
 Reveal the top card of your deck. If it costs 2 or less, draw it.
 #COST: 2
 
@@ -124,7 +124,7 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #COPIES: 3
 #CLASS: [Tech]
 {WALLCRAWL}
-{POWER Tech} <b>Danger Sense 1</b>. If this revealed a Bystander, rescue it.
+{POWER Tech} {DANGERSENSE 1}. If this revealed a Bystander, rescue it.
 #ATTACK: 2+
 #COST: 2
 
@@ -132,8 +132,8 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #COPIES: 1
 #CLASS: [Strength]
 {WALLCRAWL}
-<b>Coordinate</b>
-<b>Danger Sense 4</b>
+{COORDINATE}
+{DANGERSENSE 4}
 If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #ATTACK: 0+
 #COST: 2
@@ -144,7 +144,7 @@ If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #SUBNAME: Genius, Billionaire ...
 #COPIES: 5
 #CLASS: [Tech]
-<b>Coordinate</b>
+{COORDINATE}
 #RECRUIT: 1
 #ATTACK: 1
 #COST: 2
@@ -153,8 +153,8 @@ If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #SUBNAME: Stay Out of Trouble
 #COPIES: 5
 #CLASS: [Tech]
-<b>Coordinate</b>
-{POWER Tech} <b>Danger Sense 2</b>
+{COORDINATE}
+{POWER Tech} {DANGERSENSE 2}
 #ATTACK: 2+
 #COST: 4
 #FLAVOR: I know you want to save the world, but you're not ready yet.
@@ -162,15 +162,15 @@ If this revealed any Scheme Twists, you may shuffle the Villain Deck.
 #SUBNAME: Little Grey Area
 #COPIES: 3
 #CLASS: [Ranged]
-{TEAMPOWER Avengers} <b>Danger Sense 1</b>. If this revealed a Villain, then Villains from that same Villain Group get -1 Attack this turn.
+{TEAMPOWER Avengers} {DANGERSENSE 1}. If this revealed a Villain, then Villains from that same Villain Group get -1 Attack this turn.
 #ATTACK: 3+
 #COST: 5
 
 #SUBNAME: As Usual, I Did All the Work
 #COPIES: 1
 #CLASS: [Ranged]
-<b>Coordinate</b>
-If another player accepts this <b>Coordinate</b>, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
+{COORDINATE}
+If another player accepts this {COORDINATE}, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
 #ATTACK: 5
 #COST: 7
 

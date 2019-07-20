@@ -9,7 +9,7 @@ This new keyword represents how Heroes like Squirrel Girl and Jessica Jones unpr
 * It’s totally fine to Switcheroo into a card of a different Hero Name.
 * You can only use Switcheroo during your turn, when you could play cards from your hand. So you can’t use it during other players’ turns, and you can’t use it while playing a card from the Villain Deck, like during a Master Strike, Scheme Twist, or Villain’s Ambush ability.
 * You can’t Switcheroo into S.H.I.E.L.D. Officers or Sidekicks, since they aren’t in the HQ.
-* Switcheroo doesn’t count as “recruiting” a Hero, so you can’t use abilities like Wall-Crawl or Soaring Flight when you Switcheroo.
+* Switcheroo doesn’t count as “recruiting” a Hero, so you can’t use abilities like {WALLCRAWL} or Soaring Flight when you Switcheroo.
 * Switcheroo uses the “printed cost” of cards in the HQ, so even if special abilities make cards in the HQ cost more or less, Switcheroo still uses the cost number literally printed on the card.
 <b>Investigate</b>
 See Noir.

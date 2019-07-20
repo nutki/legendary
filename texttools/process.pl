@@ -74,6 +74,12 @@ while (<A>) {
     s!<b>Excessive Violence</b>:!{VIOLENCE}!g;
     s!<b>Revenge for (.*?)</b>!{REVENGE $1}!g;
     s!<b>Berserk</b>!{BERSERK}!g;
+    s!<b>Danger Sense (\d+)</b>!{DANGERSENSE $1}!g;
+    s!<b>Striker</b>!{STRIKER 1}!g;
+    s!<b>Double Striker</b>!{STRIKER 2}!g;
+    s!<b>Triple Striker</b>!{STRIKER 3}!g;
+    s!<b>Coordinate</b>!{COORDINATE}!g;
+    s!Wall-Crawl!{WALLCRAWL}!g; #FIX
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

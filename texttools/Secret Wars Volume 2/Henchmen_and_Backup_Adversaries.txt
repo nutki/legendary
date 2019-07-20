@@ -13,7 +13,7 @@ While in the Sewers, Rooftops or Bridge, this is in "wolf form" and gets +2 Atta
 
 #CARDNAME: Spider-Infected
 #AMBUSH: This captures a Bystander.
-#FIGHT: The next Hero you gain this turn has Wall-Crawl.
+#FIGHT: The next Hero you gain this turn has {WALLCRAWL}.
 #ATTACK: 3
 #VP: 1
 
