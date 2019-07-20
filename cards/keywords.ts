@@ -476,3 +476,12 @@ function playHorrorEv(ev: Ev) {
     })
   })
 }
+function strikerHeroEv(ev: Ev, n: number = 1) {
+  // TODO
+}
+function dangerSenseEv(ev: Ev, n: number, f?: (cards: Card[]) => void) {
+  revealVillainDeckEv(ev, n, cards => {
+    addAttackEvent(ev, cards.count(isVillain));
+    f && f(cards);
+  }, false, false);
+}

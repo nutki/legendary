@@ -3764,3 +3764,119 @@ addHeroTemplates("X-Men", [
   ra: makeHeroCard("X-23", "Heir to Wolverine", 7, u, 3, Color.INSTINCT, "X-Men", "D", [ ev => berserkEv(ev, 2), ev => berserkEv(ev, xGenePower(Color.INSTINCT)) ]),
 },
 ]);
+addHeroTemplates("Spider-Man Homecoming", [
+{
+  name: "Happy Hogan",
+  team: "(Unaffiliated)",
+// {COORDINATE}
+// KO all Wounds you gained this turn.
+  c1: makeHeroCard("Happy Hogan", "Head of Security", 3, 2, u, Color.INSTINCT, u, "D", ev => {
+    const w = turnState.pastEvents.limit(e => e.type === 'GAIN' && isWound(ev.what) && ev.who === playerState).map(e => e.what);
+    handOrDiscard().limit(isWound).limit(c => w.includes(c)).each(c => KOEv(ev, c));
+  }, { coordinate: true }),
+// {POWER Instinct} {DANGERSENSE 2}. If this revealed any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile.
+  c2: makeHeroCard("Happy Hogan", "Watchful Eye", 4, u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && dangerSenseEv(ev, 2, cards => {
+    /* TODO any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile. */
+    cards.has(isStrike) && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c));
+    cards.limit(isStrike).each(c => KOEv(ev, c));
+  })),
+// {COORDINATE}
+// {STRIKER 1}
+  uc: makeHeroCard("Happy Hogan", "Loyal Friend", 5, u, 0, Color.TECH, u, "F", ev => strikerHeroEv(ev, 1), { coordinate: true }),
+// {STRIKER 2}
+  ra: makeHeroCard("Happy Hogan", "Asset Management", 5, u, 0, Color.INSTINCT, u, "FD", ev => strikerHeroEv(ev, 2)),
+},
+{
+  name: "High-Tech Spider-Man",
+  team: "Spider Friends",
+// Reveal the top card of your deck. If it costs 2 or less, draw it.
+// {POWER Covert} Draw a card.
+  c1: makeHeroCard("High-Tech Spider-Man", "Advanced Targeting System", 2, u, u, Color.COVERT, "Spider Friends", "D", [ ev => drawIfEv(ev, c => c.cost <= 2), ev => superPower(Color.COVERT) && drawEv(ev, 1) ]),
+// {WALLCRAWL}
+// {DANGERSENSE 3}
+  c2: makeHeroCard("High-Tech Spider-Man", "Recon Drone Connection", 2, u, 0, Color.TECH, "Spider Friends", "D", ev => dangerSenseEv(ev, 3), { wallcrawl: true }),
+// {WALLCRAWL}
+// {POWER Tech} Choose two Villains in adjacent city spaces. Each of them gets -1 Attack this turn.
+  uc: makeHeroCard("High-Tech Spider-Man", "Spider-Grip", 2, u, 2, Color.TECH, "Spider Friends", "D", ev => superPower(Color.TECH) && selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
+    selectCardEv(ev, "Choose an adjecent space", cityAdjacent(c.location).limit(d => d.has(isVillain)), d => {
+      [c, ...d.limit(isVillain)].each(c => addTurnMod('defense', v => v === c, -1));
+    });
+  }), { wallcrawl: true }),
+// {WALLCRAWL}
+// {COORDINATE}
+// You get +3 Attack usable only against the Mastermind or Villains on the Rooftops or Streets.
+  ra: makeHeroCard("High-Tech Spider-Man", "Friendly Neighborhood ...", 2, u, 0, Color.TECH, "Spider Friends", "D", ev => addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'ROOFTOPS', 'STREETS'), 3), { wallcrawl: true, coordinate: true }),
+},
+{
+  name: "Peter's Allies",
+  team: "Spider Friends",
+// You may choose a Villain or Mastermind. You can fight it using only Recruit this turn.
+  c1: makeHeroCard("Peter's Allies", "Michelle", 3, 2, u, Color.COVERT, "Spider Friends", "D", ev => selectCardEv(ev, "Choose an Enemy", fightableCards().limit(isEnemy), c => {
+    const a = fightActionEv(ev, c);
+    a.cost.recruit = (a.cost.recruit || 0) + (a.cost.attack || 0) + (a.cost.either || 0);
+    a.cost.attack = 0;
+    a.cost.either = 0;
+    addTurnAction(a);
+  })),
+// {COORDINATE}
+// {POWER Covert} You get +2 Recruit
+  c2: makeHeroCard("Peter's Allies", "Ned", 2, 1, u, Color.COVERT, "Spider Friends", "D", ev => superPower(Color.COVERT) && addRecruitEvent(ev, 2), { coordinate: true }),
+// Whenever you {COORDINATE} a card to another player, you may reveal this to draw two cards instead of one.
+  uc: makeHeroCard("Peter's Allies", "Liz", 6, 4, u, Color.INSTINCT, "Spider Friends", "", [], { trigger: {
+    event: 'COORDINATE',
+    match: (ev, source) => source.location === owner(ev.what).hand && owner(ev.what) === owner(source),
+    after: ev => revealAndEv(ev, c => c === ev.source, () => drawEv(ev, 1, ev.parent.who)),
+  }}),
+// {COORDINATE}
+// {TEAMPOWER Spider Friends} Each Villain gets -2 Attack this turn. The next time you fight the Mastermind this turn, it gets -2 Attack.
+  ra: makeHeroCard("Peter's Allies", "May Parker", 7, 5, u, Color.COVERT, "Spider Friends", "D", ev => { if (superPower("Spider Friends")) {
+    let once = false;
+    addTurnSet('defense', isEnemy, (c, n) => isVillain(c) || !once ? -2 : 0);
+    addTurnTrigger('FIGHT', ev => isMastermind(ev.what), () => once = true);
+  }}, { coordinate: true }),
+},
+{
+  name: "Peter Parker, Homecoming",
+  team: "Spider Friends",
+// {WALLCRAWL}
+// {POWER Instinct} {DANGERSENSE 1}. If this revealed a Villain, you may fight it.
+  c1: makeHeroCard("Peter Parker, Homecoming", "Avenger in Training", 2, u, 2, Color.INSTINCT, "Spider Friends", "D", ev => superPower(Color.INSTINCT) && dangerSenseEv(ev, 1, cards => {
+    /* TODO a Villain, you may fight it. */
+  }), { wallcrawl: true }),
+// {DANGERSENSE 2}
+// Reveal the top card of your deck. If it costs 2 or less, draw it.
+  c2: makeHeroCard("Peter Parker, Homecoming", "Heightened Senses", 2, u, u, Color.COVERT, "Spider Friends", "D", [ ev => dangerSenseEv(ev, 2), ev => drawIfEv(ev, c => c.cost <= 2) ]),
+// {WALLCRAWL}
+// {POWER Tech} {DANGERSENSE 1}. If this revealed a Bystander, rescue it.
+  uc: makeHeroCard("Peter Parker, Homecoming", "Homemade Web-Shooters", 2, u, 2, Color.TECH, "Spider Friends", "D", ev => superPower(Color.TECH) && dangerSenseEv(ev, 1, cards => {
+    cards.limit(isBystander).each(c => rescueEv(ev, c));
+  }), { wallcrawl: true }),
+// {WALLCRAWL}
+// {COORDINATE}
+// {DANGERSENSE 4}
+// If this revealed any Scheme Twists, you may shuffle the Villain Deck.
+  ra: makeHeroCard("Peter Parker, Homecoming", "Something is Happening", 2, u, 0, Color.STRENGTH, "Spider Friends", "D", ev => dangerSenseEv(ev, 4, cards => {
+    cards.has(isTwist) && chooseMayEv(ev, "Shuffle the Villain Deck", () => gameState.villaindeck.shuffle());
+  }), { wallcrawl: true, coordinate: true }),
+},
+{
+  name: "Tony Stark",
+  team: "Avengers",
+// {COORDINATE}
+  c1: makeHeroCard("Tony Stark", "Genius, Billionaire ...", 2, 1, 1, Color.TECH, "Avengers", "FD", [], { coordinate: true }),
+// {COORDINATE}
+// {POWER Tech} {DANGERSENSE 2}
+  c2: makeHeroCard("Tony Stark", "Stay Out of Trouble", 4, u, 2, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && dangerSenseEv(ev, 2), { coordinate: true }),
+// {TEAMPOWER Avengers} {DANGERSENSE 1}. If this revealed a Villain, then Villains from that same Villain Group get -1 Attack this turn.
+  uc: makeHeroCard("Tony Stark", "Little Grey Area", 5, u, 3, Color.RANGED, "Avengers", "", ev => superPower("Avengers") && dangerSenseEv(ev, 1, cards => {/* TODO a Villain, then Villains from that same Villain Group get -1 Attack this turn. */})),
+// {COORDINATE}
+// If another player accepts this {COORDINATE}, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
+  ra: makeHeroCard("Tony Stark", "As Usual, I Did All the Work", 7, u, 5, Color.RANGED, "Avengers", "", [], { coordinate: true, trigger: {
+    event: 'COORDINATE',
+    match: (ev, source) => ev.what === source,
+    after: ev => addTurnTrigger('CLEANUP', () => true, () => {
+      turnState.pastEvents.limit(e => e.type === 'MOVECARD' && ev.to === playerState.victory && e.what.location === e.to).each(e => moveCardEv(ev, e.what, owner(ev.source).victory))
+    }),
+  } }),
+},
+]);

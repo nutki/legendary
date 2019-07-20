@@ -112,3 +112,7 @@ addBystanderTemplates("X-Men", [
 // COST: 3
 [ 1, makeGainableCard(makeBystanderCard("Wolfsbane"), u, 0, Color.INSTINCT, "X-Men", "", ev => berserkEv(ev, 3), { printedCost: 3 }) ],
 ]);
+addBystanderTemplates("Spider-Man Homecoming", [
+// RESCUE: reveal the top two cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
+[ 1, makeBystanderCard("Damage Control", ev => revealPlayerDeckEv(ev, 2, cards => cards.limit(c => c.cost <= 2).each(c => moveCardEv(ev, c, ev.who.hand)), ev.who)) ],
+]);

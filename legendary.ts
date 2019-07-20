@@ -104,6 +104,7 @@ interface Card {
   trapCond?: (ev: Ev) => boolean
   trapPenalty?: Handler
   epic?: boolean
+  coordinate?: boolean
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -153,6 +154,7 @@ interface HeroCardAbillities {
   excessiveViolence?: Handler
   printedPiercing?: number
   lightShow?: Handler
+  coordinate?: boolean
 }
 class Card {
   constructor (t: string, n: string) {
@@ -517,6 +519,7 @@ type EvType =
 'URUENCHANTEDREVEAL' |
 'NTHCIRCLEREVEAL' |
 'PLAYOOT' |
+'COORDINATE' |
 // Special
 'STATE' |
 'TURN' |
