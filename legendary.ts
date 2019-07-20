@@ -155,6 +155,7 @@ interface HeroCardAbillities {
   printedPiercing?: number
   lightShow?: Handler
   coordinate?: boolean
+  cheeringCrowds?: boolean
 }
 class Card {
   constructor (t: string, n: string) {
@@ -2403,6 +2404,10 @@ TODO SW2 make scheme card position independent
 TODO Noir hidden witness removal and limits (human shields at the same time) (also return them with Card.captured)
 TODO X-Men rework extra masterminds
 TODO X-Men bring back canFight/canRectuit as general fightCost.cond mods will not affect piercing attacks
+TODO Homecoming striker
+TODO Homecoming coordinate
+TODO Champions multiple size-changing
+TODO Champions cheering crowds
 copy artifact should not count as cards played
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many

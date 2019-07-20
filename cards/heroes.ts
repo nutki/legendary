@@ -3776,7 +3776,6 @@ addHeroTemplates("Spider-Man Homecoming", [
   }, { coordinate: true }),
 // {POWER Instinct} {DANGERSENSE 2}. If this revealed any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile.
   c2: makeHeroCard("Happy Hogan", "Watchful Eye", 4, u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && dangerSenseEv(ev, 2, cards => {
-    /* TODO any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile. */
     cards.has(isStrike) && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c));
     cards.limit(isStrike).each(c => KOEv(ev, c));
   })),
@@ -3841,7 +3840,10 @@ addHeroTemplates("Spider-Man Homecoming", [
 // {WALLCRAWL}
 // {POWER Instinct} {DANGERSENSE 1}. If this revealed a Villain, you may fight it.
   c1: makeHeroCard("Peter Parker, Homecoming", "Avenger in Training", 2, u, 2, Color.INSTINCT, "Spider Friends", "D", ev => superPower(Color.INSTINCT) && dangerSenseEv(ev, 1, cards => {
-    /* TODO a Villain, you may fight it. */
+    cards.limit(isVillain).each(c => {
+      const a = fightActionEv(ev, c);
+      if (canPayCost(a)) chooseMayEv(ev, "Fight revealed villain", () => playEvent(a));
+    });
   }), { wallcrawl: true }),
 // {DANGERSENSE 2}
 // Reveal the top card of your deck. If it costs 2 or less, draw it.
@@ -3868,7 +3870,9 @@ addHeroTemplates("Spider-Man Homecoming", [
 // {POWER Tech} {DANGERSENSE 2}
   c2: makeHeroCard("Tony Stark", "Stay Out of Trouble", 4, u, 2, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && dangerSenseEv(ev, 2), { coordinate: true }),
 // {TEAMPOWER Avengers} {DANGERSENSE 1}. If this revealed a Villain, then Villains from that same Villain Group get -1 Attack this turn.
-  uc: makeHeroCard("Tony Stark", "Little Grey Area", 5, u, 3, Color.RANGED, "Avengers", "", ev => superPower("Avengers") && dangerSenseEv(ev, 1, cards => {/* TODO a Villain, then Villains from that same Villain Group get -1 Attack this turn. */})),
+  uc: makeHeroCard("Tony Stark", "Little Grey Area", 5, u, 3, Color.RANGED, "Avengers", "", ev => superPower("Avengers") && dangerSenseEv(ev, 1, cards => {
+    cards.limit(isVillain).each(c =>addTurnMod('defense', isGroup(c.villainGroup), -1));
+  })),
 // {COORDINATE}
 // If another player accepts this {COORDINATE}, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
   ra: makeHeroCard("Tony Stark", "As Usual, I Did All the Work", 7, u, 5, Color.RANGED, "Avengers", "", [], { coordinate: true, trigger: {
@@ -3878,5 +3882,103 @@ addHeroTemplates("Spider-Man Homecoming", [
       turnState.pastEvents.limit(e => e.type === 'MOVECARD' && ev.to === playerState.victory && e.what.location === e.to).each(e => moveCardEv(ev, e.what, owner(ev.source).victory))
     }),
   } }),
+},
+]);
+addHeroTemplates("Champions", [
+{
+  name: "Gwenpool",
+  team: "Champions",
+// {VERSATILE 1}
+// {POWER Covert} Instead, {VERSATILE 3}.
+  c1: makeHeroCard("Gwenpool", "Come On, Nobody Reads Card Names", 2, 0, 0, Color.COVERT, "Champions", "FD", ev => versatileEv(ev, superPower(Color.COVERT) ? 3 : 1)),
+// Reveal the top card of the Bystander Deck. If it's a Special Bystander, rescue it. Otherwise, put it on the bottom of that deck.
+  c2: makeHeroCard("Gwenpool", "I'll Rescue You If I Feel Like It", 3, u, 2, Color.INSTINCT, "Champions", "D", ev => gameState.bystanders.withTop(c => {
+    c.rescue ? rescueEv(ev, c) : moveCardEv(ev, c, gameState.bystanders, true);
+  })),
+// {SIZECHANGING INSTINCT}
+// {POWER Instinct} Draw a card.
+// {CHEERING CROWDS}
+  uc: makeHeroCard("Gwenpool", "I Heard Keywords Are Powerful", 6, u, 2, Color.INSTINCT, "Champions", "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 1), { sizeChanging: Color.INSTINCT, cheeringCrowds: true }),
+// <b>Demolish</b> each other player. For each player that discards a card this way, draw a card.
+  ra: makeHeroCard("Gwenpool", "I'm the Best at Board Games", 7, u, 5, Color.INSTINCT, "Champions", "", ev => {
+    demolishOtherEv(ev);
+    cont(ev, () => drawEv(ev, turnState.pastEvents.count(e => e.type === 'DISCARD' && e.parent === ev)));
+  }),
+},
+{
+  name: "Ms. Marvel",
+  team: "Champions",
+// {SIZECHANGING COVERT}
+// Draw a card.
+// {POWER Covert} Rescue a Bystander.
+  c1: makeHeroCard("Ms. Marvel", "Long Arm of the Law", 3, u, u, Color.COVERT, "Champions", "", [ ev => drawEv(ev, 1), ev => superPower(Color.COVERT) && rescueEv(ev) ], { sizeChanging: Color.COVERT }),
+// {SIZECHANGING STRENGTH}
+// {VERSATILE 2}
+  c2: makeHeroCard("Ms. Marvel", "Big Impact", 4, 0, 0, Color.STRENGTH, "Champions", "D", ev => versatileEv(ev, 2), { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING COVERT}
+// {TEAMPOWER Champions} You may KO a card from your hand or discard pile.
+// {CHEERING CROWDS}
+  uc: makeHeroCard("Ms. Marvel", "Need to Stretch My Legs", 6, u, 2, Color.COVERT, "Champions", "D", ev => superPower("Champions") && KOHandOrDiscardEv(ev, undefined), { sizeChanging: Color.COVERT, cheeringCrowds: true }),
+// {SIZECHANGING STRENGTH COVERT}
+// {VERSATILE 4}
+// {CHEERING CROWDS}
+  ra: makeHeroCard("Ms. Marvel", "Rising Hope", 9, 0, 0, Color.STRENGTH, "Champions", "", ev => versatileEv(ev, 4), { sizeChanging: Color.STRENGTH | Color.COVERT, cheeringCrowds: true }),
+},
+{
+  name: "Nova",
+  team: "Champions",
+// {VERSATILE 1}
+// {TEAMPOWER Champions} Rescue a Bystander.
+  c1: makeHeroCard("Nova", "Space Cop", 2, 0, 0, Color.STRENGTH, "Champions", "FD", [ ev => versatileEv(ev, 1), ev => superPower("Champions") && rescueEv(ev) ]),
+// {VERSATILE 2}
+// {CHEERING CROWDS}
+  c2: makeHeroCard("Nova", "Interstellar Hero", 4, 0, 0, Color.RANGED, "Champions", "FD", ev => versatileEv(ev, 2), { cheeringCrowds: true }),
+// {POWER Ranged} {VERSATILE 3}
+  uc: makeHeroCard("Nova", "Holographic Projection", 5, 0, 2, Color.RANGED, "Champions", "FD", ev => superPower(Color.RANGED) && versatileEv(ev, 3)),
+// {SIZECHANGING RANGED STRENGTH}
+// For each other card you played this turn with a Recruit icon, you get +1 Recruit. For each other card you played this turn with an Attack icon, you get +1 Attack.
+  ra: makeHeroCard("Nova", "Growing Nova Force", 9, 0, 0, Color.RANGED, "Champions", "", ev => {
+    addRecruitEvent(ev, turnState.cardsPlayed.count(hasRecruitIcon));
+    addAttackEvent(ev, turnState.cardsPlayed.count(hasAttackIcon));
+  }, { sizeChanging: Color.RANGED | Color.STRENGTH }),
+},
+{
+  name: "Totally Awesome Hulk",
+  team: "Champions",
+// {SIZECHANGING STRENGTH}
+// {POWER Strength} The first time you defeat a Villain this turn, rescue a Bystander.
+  c1: makeHeroCard("Totally Awesome Hulk", "Beloved Behemoth", 4, u, 2, Color.STRENGTH, "Champions", "D", ev => {
+    let once = false;
+    superPower(Color.STRENGTH) && addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !once, ev => { once = true; rescueEv(ev); });
+  }, { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING TECH}
+// Draw a card.
+// {CHEERING CROWDS}
+  c2: makeHeroCard("Totally Awesome Hulk", "Incredible Mind, Awesome Body", 4, 1, u, Color.TECH, "Champions", "", ev => drawEv(ev, 1), { sizeChanging: Color.TECH, cheeringCrowds: true }),
+// {SIZECHANGING STRENGTH}
+// If you have a Wound in your hand or discard pile, KO it and you get +2 Attack. Otherwise, gain a Wound.
+  uc: makeHeroCard("Totally Awesome Hulk", "Growing Pains", 5, u, 2, Color.STRENGTH, "Champions", "D", ev => {
+    handOrDiscard().has(isWound) ? addAttackEvent(ev, 2) : gainWoundEv(ev);
+  }, { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING TECH STRENGTH}
+// You get +1 Attack for each extra card you drew this turn.
+  ra: makeHeroCard("Totally Awesome Hulk", "7th Smartest Man in the World", 9, u, 5, Color.TECH, "Champions", "", ev => {
+    addAttackEvent(ev, turnState.cardsDrawn);
+  }, { sizeChanging: Color.TECH | Color.STRENGTH }),
+},
+{
+  name: "Viv Vision",
+  team: "Champions",
+// {POWER Tech} Whenever you recruit a Hero from the HQ this turn, rescue a Bystander.
+  c1: makeHeroCard("Viv Vision", "Walking Wi-Fi", 3, 2, u, Color.TECH, "Champions", "D", ev => superPower(Color.TECH) && addTurnTrigger('RECRUIT', ev => ev.where.isHQ, ev => rescueEv(ev))),
+// {SIZECHANGING TECH}
+// {POWER Tech} When you draw a new hand of cards at the end of this turn, draw an extra card.
+  c2: makeHeroCard("Viv Vision", "Expanding Neural Network", 4, u, 2, Color.TECH, "Champions", "D", ev => superPower(Color.TECH) && addEndDrawMod(1), { sizeChanging: Color.TECH }),
+// {VERSATILE 3}
+// {CHEERING CROWDS}
+  uc: makeHeroCard("Viv Vision", "Crowdsourcing", 6, 0, 0, Color.RANGED, "Champions", "", ev => versatileEv(ev, 3), { cheeringCrowds: true }),
+// {SIZECHANGING TECH RANGED}
+// Whenever you recruit a Hero this turn, you get +2 Attack.
+  ra: makeHeroCard("Viv Vision", "Alter Molecular Density", 9, 5, 0, Color.TECH, "Champions", "D", ev => addTurnTrigger('RECRUIT', () => true, ev => addAttackEvent(ev, 2)), { sizeChanging: Color.TECH | Color.RANGED }),
 },
 ]);

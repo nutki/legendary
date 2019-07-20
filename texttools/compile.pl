@@ -54,7 +54,7 @@ sub autopower {
     s/^{TELEPORT}$// and $ability = 'teleport: true';
     s/^{DODGE}$// and $ability = 'cardActions: [ dodge ]';
     s/^{PHASING}$// and $ability = 'cardActions: [ phasingActionEv ]';
-    s/^{SIZECHANGING (\w+)}$// and $ability = "sizeChanging: Color.$1";
+    s/^{SIZECHANGING (.+?)}$// and $ability = "sizeChanging: ".(join' | ',map{"Color.".$_}split" ",$1);
     s/^(\d+)\+? Piercing$// and $ability = "printedPiercing: $1";
     s/^[Yy]ou get \+(\d+) Piercing\.?$// and $effect = "addPiercingEv(ev, $1)";
     s/^{BERSERK}(, \{BERSERK})*$// and $effect = "berserkEv(ev, ".((@zzz=$&=~/BERSERK/g)).")";
@@ -62,6 +62,7 @@ sub autopower {
     s/^{COORDINATE}$// and $ability = "coordinate: true";
     s/^{STRIKER (\d+)}$// and $effect = "strikerHeroEv(ev, $1)";
     s/^{DANGERSENSE (\d+)}($|\. If this revealed (.*)$)// and $effect = "dangerSenseEv(ev, $1" . ($2 ? ", cards => {/* TODO $3 */})" : ")");
+    s/^{CHEERING CROWDS}$// and $ability = "cheeringCrowds: true";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
