@@ -1,20 +1,20 @@
 
 #CARDNAME: Fin Fang Foom
-{SIZECHANGING STRENGTH}, [Instinct], [Covert], [Tech], [Ranged]
+{SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}
 #LEADS: Monsters Unleashed
 #STRIKE: <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile.
 #ATTACK: 20*
 #VP: 7
 
 #EPICNAME: Fin Fang Foom
-{SIZECHANGING STRENGTH}, [Instinct], [Covert], [Tech], [Ranged]
+{SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}
 #LEADS: Monsters Unleashed
 #STRIKE: <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile. KO all the Heroes <b>Demolished</b> this way.
 #ATTACK: 24*
 #VP: 7
 
 #TACTIC: Alien Dragon Technology
-#FIGHT: A Hero in the HQ gets {SIZECHANGING STRENGTH}, [Instinct], [Covert], [Tech], [Ranged] this turn.
+#FIGHT: A Hero in the HQ gets {SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED} this turn.
 
 #TACTIC: Flammable Acid Breath
 #FIGHT: KO the top card of the Hero Deck. Then each other player KOs a Hero of that Hero class from their discard pile ([Strength] [Instinct] [Covert] [Tech] [Ranged] ).

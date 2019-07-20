@@ -10,14 +10,14 @@
 
 #SUBNAME: Groot from Planet X
 #COPIES: 1
-{SIZECHANGING STRENGTH}, [Covert]
+{SIZECHANGING STRENGTH COVERT}
 #FIGHT: Two Bystanders from the Bystander Stack enter the city as 3 Attack "Splintered Half-Groot" Villains. When you fight one, rescue it as a Bystander.
 #ATTACK: 6*
 #VP: 2
 
 #SUBNAME: Monsteroso
 #COPIES: 1
-{SIZECHANGING STRENGTH}, [Instinct]
+{SIZECHANGING STRENGTH INSTINCT}
 #FIGHT: When you draw a new hand of cards at the end of this turn, draw an extra card.
 #ATTACK: 5*
 #VP: 2
@@ -30,21 +30,21 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 
 #SUBNAME: Sporr
 #COPIES: 1
-{SIZECHANGING TECH}, [Ranged]
-#FIGHT: A Hero in the HQ gains {SIZECHANGING TECH}, [Ranged] Recruit this turn.
+{SIZECHANGING TECH RANGED}
+#FIGHT: A Hero in the HQ gains {SIZECHANGING TECH RANGED} Recruit this turn.
 #ATTACK: 7*
 #VP: 3
 
 #SUBNAME: Tim Boo Ba
 #COPIES: 1
-{SIZECHANGING STRENGTH}, [Instinct], [Covert], [Tech], [Ranged]
+{SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}
 #FIGHT: All Heroes currently in the HQ cost 1 less this turn.
 #ATTACK: 12*
 #VP: 5
 
 #SUBNAME: Trull the Unhuman
 #COPIES: 1
-{SIZECHANGING COVERT}, [Tech]
+{SIZECHANGING COVERT TECH}
 #AMBUSH: Trull captures a Bystander. Then <b>Demolish</b> each player.
 #ATTACK: 8*
 #VP: 4
@@ -52,7 +52,7 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 
 #SUBNAME: Zzutak
 #COPIES: 1
-{SIZECHANGING RANGED}, [Instinct]
+{SIZECHANGING RANGED INSTINCT}
 #ESCAPE: <b>Demolish</b> each player.
 #ATTACK: 9*
 #VP: 5

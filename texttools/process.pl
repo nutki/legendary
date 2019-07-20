@@ -59,7 +59,7 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
@@ -68,7 +68,7 @@ while (<A>) {
     s!<b>Savior</b>:!{SAVIOR}!g;
     s!<b>(Man|Woman) Out of Time</b>!{OUTOFTIME}!g;
     s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
-    s!<b>Size-Changing</b>: \[($class)\]!'{SIZECHANGING '.(uc$1).'}'!ge;
+    s!<b>Size-Changing</b>: (\[($class)\](, \[($class)\])*)!'{SIZECHANGING '.(uc$1)=~s/[^a-z ]//gir.'}'!ge;
     s!Size-Changing: ($class)!'{SIZECHANGING '.(uc$1).'}'!ge; # FIX CW villains
     s!(<b>)S.H.I.E.L.D. Clearance(</b>)!{SHIELDCLEARANCE}!g; #FIX? no formatting in most cases
     s!<b>Excessive Violence</b>:!{VIOLENCE}!g;

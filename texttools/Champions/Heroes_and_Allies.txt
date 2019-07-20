@@ -25,7 +25,7 @@ Reveal the top card of the Bystander Deck. If it's a Special Bystander, rescue i
 #ATTACK: 2
 {SIZECHANGING INSTINCT}
 {POWER Instinct} Draw a card.
-<b>Cheering Crowds</b>
+{CHEERING CROWDS}
 #COST: 6*
 
 #SUBNAME: I'm the Best at Board Games
@@ -61,7 +61,7 @@ Draw a card.
 #ATTACK: 2
 {SIZECHANGING COVERT}
 {TEAMPOWER Champions} You may KO a card from your hand or discard pile.
-<b>Cheering Crowds</b>
+{CHEERING CROWDS}
 #COST: 6*
 
 #SUBNAME: Rising Hope
@@ -69,9 +69,9 @@ Draw a card.
 #CLASS: [Strength]
 #RECRUIT: 0+
 #ATTACK: 0+
-{SIZECHANGING STRENGTH}, [Covert]
+{SIZECHANGING STRENGTH COVERT}
 {VERSATILE 4}
-<b>Cheering Crowds</b>
+{CHEERING CROWDS}
 #COST: 9*
 
 #CARDNAME: Nova
@@ -93,7 +93,7 @@ Draw a card.
 #RECRUIT: 0+
 #ATTACK: 0+
 {VERSATILE 2}
-<b>Cheering Crowds</b>
+{CHEERING CROWDS}
 #COST: 4
 #FLAVOR: "The best part about being Nova-famous is I can take off my helmet and nobody knows it's me."
 
@@ -111,7 +111,7 @@ Draw a card.
 #CLASS: [Ranged]
 #RECRUIT: 0+
 #ATTACK: 0+
-{SIZECHANGING RANGED}, [Strength]
+{SIZECHANGING RANGED STRENGTH}
 For each other card you played this turn with a Recruit icon, you get +1 Recruit. For each other card you played this turn with an Attack icon, you get +1 Attack.
 #COST: 9*
 
@@ -132,7 +132,7 @@ For each other card you played this turn with a Recruit icon, you get +1 Recruit
 #RECRUIT: 1
 {SIZECHANGING TECH}
 Draw a card.
-<b>Cheering Crowds</b>
+{CHEERING CROWDS}
 #COST: 4*
 
 #SUBNAME: Growing Pains
@@ -147,7 +147,7 @@ If you have a Wound in your hand or discard pile, KO it and you get +2 Attack. O
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 5+
-{SIZECHANGING TECH}, [Strength]
+{SIZECHANGING TECH STRENGTH}
 You get +1 Attack for each extra card you drew this turn.
 #COST: 9*
 
@@ -175,7 +175,7 @@ You get +1 Attack for each extra card you drew this turn.
 #RECRUIT: 0+
 #ATTACK: 0+
 {VERSATILE 3}
-<b>Cheering Crowds</b>
+{CHEERING CROWDS}
 #COST: 6
 
 #SUBNAME: Alter Molecular Density
@@ -183,7 +183,7 @@ You get +1 Attack for each extra card you drew this turn.
 #CLASS: [Tech]
 #RECRUIT: 5
 #ATTACK: 0+
-{SIZECHANGING TECH}, [Ranged]
+{SIZECHANGING TECH RANGED}
 Whenever you recruit a Hero this turn, you get +2 Attack.
 #COST: 9*
 
