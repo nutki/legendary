@@ -254,7 +254,7 @@ function makeDividedHeroCard(c1: Card, c2: Card) {
   c.heroName; // TODO handle in ???
   c.flags = c1.flags;
   c.effects = c1.effects.concat(c2.effects);
-  c.sizeChanging = orStat(c1.sizeChanging, c2.sizeChanging);
+  c.sizeChanging = orStat(c1.sizeChanging, c2.sizeChanging); // TODO this works differently in Champions
   c.cardActions = mergeArrayStat(c1.cardActions, c2.cardActions);
   // TODO handle flags
   // TODO handle costs
@@ -1397,6 +1397,14 @@ interface ModifiableStats {
   wallcrawl?: boolean
   strike?: Handler | Handler[]
   nthCircle?: number
+  sizeChanging?: number
+}
+
+function safePlus(a: number, b: number) {
+  return a === undefined ? b === undefined ? undefined : b : a + (b || 0);
+}
+function safeOr(a: number, b: number) {
+  return a === undefined ? b === undefined ? undefined : b : a | (b || 0);
 }
 
 type NumericStat = 'defense' | 'vp' | 'cost';

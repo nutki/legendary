@@ -2568,3 +2568,104 @@ addVillainTemplates("Spider-Man Homecoming", [
   })],
 ]},
 ]);
+addVillainTemplates("Champions", [
+{ name: "Monsters Unleashed", cards: [
+// AMBUSH: Goom captures a Bystander.
+// FIGHT: KO one of your Heroes.
+// VP: 4
+// ATTACK: 6
+  [ 1, makeVillainCard("Monsters Unleashed", "Goom", 6, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  })],
+// {SIZECHANGING STRENGTH COVERT}
+// FIGHT: Two Bystanders from the Bystander Stack enter the city as 3 Attack "Splintered Half-Groot" Villains. When you fight one, rescue it as a Bystander.
+// ATTACK: 6*
+// VP: 2
+  [ 1, makeVillainCard("Monsters Unleashed", "Groot from Planet X", 6, 2, {
+    fight: ev => repeat(2, () => cont(ev, () => gameState.bystanders.withTop(c => {
+      villainify("Splintered Half-Groot", c, 3, "RESCUE");
+      enterCityEv(ev, c);
+    }))),
+    sizeChanging: Color.STRENGTH | Color.COVERT,
+  })],
+// {SIZECHANGING STRENGTH INSTINCT}
+// FIGHT: When you draw a new hand of cards at the end of this turn, draw an extra card.
+// ATTACK: 5*
+// VP: 2
+  [ 1, makeVillainCard("Monsters Unleashed", "Monsteroso", 5, 2, {
+    fight: ev => addEndDrawMod(1),
+    sizeChanging: Color.STRENGTH | Color.INSTINCT,
+  })],
+// You can't fight Orrgo unless you have already defeated another Villain this turn.
+// ATTACK: 2*
+// VP: 2
+  [ 1, makeVillainCard("Monsters Unleashed", "Orrgo", 2, 2, {
+    fightCond: c => turnState.pastEvents.has(e => e.type === 'DEFEAT' && isVillain(e.what)),
+  })],
+// {SIZECHANGING TECH RANGED}
+// FIGHT: A Hero in the HQ gains {SIZECHANGING TECH RANGED} Recruit this turn.
+// ATTACK: 7*
+// VP: 3
+  [ 1, makeVillainCard("Monsters Unleashed", "Sporr", 7, 3, {
+    fight: ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => addTurnSet('sizeChanging', v => v == c, (c, prev) => safeOr(prev, Color.TECH | Color.RANGED))),
+    sizeChanging: Color.TECH | Color.RANGED,
+  })],
+// {SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}
+// FIGHT: All Heroes currently in the HQ cost 1 less this turn.
+// ATTACK: 12*
+// VP: 5
+  [ 1, makeVillainCard("Monsters Unleashed", "Tim Boo Ba", 12, 5, {
+    fight: ev => hqHeroes().each(c => addTurnMod('cost', v => v === c, -1)),
+    sizeChanging: Color.STRENGTH | Color.INSTINCT | Color.COVERT | Color.TECH | Color.RANGED,
+  })],
+// {SIZECHANGING COVERT TECH}
+// AMBUSH: Trull captures a Bystander. Then <b>Demolish</b> each player.
+// ATTACK: 8*
+// VP: 4
+// FLAVOR: Why yes, that is an alien entity possessing the world's most terrifying steam shovel.
+  [ 1, makeVillainCard("Monsters Unleashed", "Trull the Unhuman", 8, 4, {
+    ambush: [ ev => captureEv(ev, ev.source), ev => demolishEv(ev) ],
+    sizeChanging: Color.COVERT | Color.TECH,
+  })],
+// {SIZECHANGING RANGED INSTINCT}
+// ESCAPE: <b>Demolish</b> each player.
+// ATTACK: 9*
+// VP: 5
+  [ 1, makeVillainCard("Monsters Unleashed", "Zzutak", 9, 5, {
+    escape: ev => demolishEv(ev),
+    sizeChanging: Color.RANGED | Color.INSTINCT,
+  })],
+]},
+{ name: "Wrecking Crew", cards: [
+// AMBUSH: Bulldozer moves an extra space forward. If this pushes any Villains forward, <b>Demolish</b> each player.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Wrecking Crew", "Bulldozer", 4, 2, {
+    ambush: ev => {
+      ev.source.location.next ? moveCardEv(ev, ev.source, ev.source.location.next) : villainEscapeEv(ev, ev.source);
+      ev.source.location.next && ev.source.location.next.has(isVillain) && demolishEv(ev);
+    },
+  })],
+// FIGHT: KO one of your Heroes.
+// ESCAPE: <b>Demolish</b> each player.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Wrecking Crew", "Piledriver", 6, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    escape: ev => demolishEv(ev),
+  })],
+// FIGHT: If you fight THunderball in the Sewers or Bank, <b>Demolish</b> each other player. FIX THunderball
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Wrecking Crew", "Thunderball", 5, 3, {
+    fight: ev => isLocation(ev.where, 'SEWERS', 'BANK') && demolishEv(ev)
+  })],
+// AMBUSH: For each Wrecking Crew Villain in the city, (including this one), <b>Demolish</b> each player.
+// ATTACK: 7
+// VP: 5
+  [ 2, makeVillainCard("Wrecking Crew", "The Wrecker", 7, 5, {
+    ambush: ev => cityVillains().limit(isGroup("Wrecking Crew")).each(() => demolishEv(ev)),
+  })],
+]},
+]);
