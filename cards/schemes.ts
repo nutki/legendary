@@ -1501,16 +1501,46 @@ makeSchemeCard("Clash of the Monsters Unleashed", { twists: 10, wounds: [ 6, 12,
 // SETUP: 8 Twists. 7 Heroes. Sort the Hero Deck by Hero Class. [Strength] [Instinct] [Covert] [Tech] [Ranged] (If a card has multiple Classes, break ties at random.) Put these 5 smaller, shuffled Hero Decks beneath the 5 HQ Spaces.
 // RULE: Whenever an HQ Space is empty, fill it with the top card of the Hero Deck below that space.
 // EVILWINS: When all Hero Decks are gone.
-makeSchemeCard("Divide and Conquer", { twists: 8, heroes: 7 }, ev => {
+makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twists: 8, heroes: 7 }, ev => {
   if (ev.nr <= 3) {
     // Twist 1-3 KO all Heroes in the HQ.
+    hqHeroes().each(c => KOEv(ev, c));
   } else if (ev.nr >= 4 && ev.nr <= 8) {
     // Twist 4-8 KO one of the Hero Decks.
+    selectCardEv(ev, "Choose a deck to KO", gameState.hq.limit(d => d.attachedDeck('HEROES').size > 0), d => d.attached('HEROES').each(c => KOEv(ev, c)));
   }
-}, [], () => {
+}, [{
+  event: 'MOVECARD',
+  match: ev => ev.from === gameState.herodeck && ev.to !== gameState.herodeck.revealed,
+  after: ev => {
+    const d = gameState.hq.map(d => d.attachedDeck('HEROES')).find(d => d.size > 0);
+    d ? (gameState.herodeck = d) : evilWinsEv(ev);
+  }
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.from === gameState.herodeck && ev.to.isHQ && ev.to.attachedDeck('HEROES') !== gameState.herodeck,
+  replace: ev => {
+    ev.to.attachedDeck('HEROES').withTop(c => moveCardEv(ev, c, ev.parent.to));
+  },
+}, {
+  event: 'MOVECARD',
+  match: ev => ev.to === gameState.herodeck && ev.from !== gameState.herodeck && ev.from !== gameState.herodeck.revealed,
+  replace: ev => {
+    const state: {decks: { col: number, d: Deck }[]} = gameState.schemeState;
+    state.decks.limit(({col}) => isColor(col)(ev.parent.what)).withRandom(({d}) => moveCardEv(ev, ev.parent.what, d));
+  },
+}], s => {
+  const classes = [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED];
+  s.decks = classes.map((col, i) => ({col, d:gameState.hq[i].attachedDeck('HEROES')}));
   gameState.herodeck.each(c => {
-    // TODO
+    s.decks.limit(({col}) => isColor(col)(c)).withRandom(({d}) => moveCard(c, d));
   })
+  gameState.herodeck = gameState.hq.map(d => d.attachedDeck('HEROES')).find(d => d.size > 0);
+  gameState.specialActions = ev => [
+    new Ev(ev, "EFFECT", ev => {
+      selectCardEv(ev, "Choose Hero deck", gameState.hq.limit(d => d.attachedDeck('HEROES').size > 0), d => gameState.herodeck = d);
+    })
+  ];
 }),
 // SETUP: 8 Twists. Add another Henchman Villain Group. No Bystanders in the Villain Deck.
 // EVILWINS: When 8 Villains are in the Escape pile.

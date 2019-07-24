@@ -475,7 +475,7 @@ Object.defineProperty(Array.prototype, 'first', { get: function() { return this[
 Object.defineProperty(Array.prototype, 'last', { get: function() { return this[this.size-1]; }, set: function(v) { return this[this.size - 1] = v; } });
 Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); };
 Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
-Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[gameState.gameRand.nextRange(0, this.size)]); };
+Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[this.size === 1 ? 0 : gameState.gameRand.nextRange(0, this.size)]); };
 Array.prototype.firstOnly = function () { return this.length ? [ this[0] ] : [] };
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
