@@ -2310,8 +2310,8 @@ addVillainTemplates("X-Men", [
               new Ev(ev, 'RECRUIT', { what: c, func: success, cost: { recruit: n }}) :
               new Ev(ev, 'EFFECT', { what: c, func: fail, cost: { recruit: n }});
           }).filter(ev => canPayCost(ev));
-          const options: [string, Handler][] = actions.map(a => [a.cost.recruit.toString(), ev => playEvent(a)]);
-          chooseOneEv(ev, "Choose amount to pay", ...options);
+          const options = actions.map(a => ({l:a.cost.recruit.toString(), v:a}));
+          chooseOptionEv(ev, "Choose amount to pay", options, a => playEvent(a));
         });
       }}));
     },
