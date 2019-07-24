@@ -1482,3 +1482,64 @@ makeSchemeCard("Scavenge Alien Weaponry", { twists: 7, vd_henchmen_counts: [[3, 
   addStatMod('defense', c => c.cardName === extraHenchmenName(), () => strikerCount());
 }),
 ]);
+addTemplates("SCHEMES", "Champions", [
+// SETUP: 10 Twists. 6 Wounds per player in the Wound Stack. Shuffle 8 Monsters Unleashed Villains into a face-down "Monster Pit" deck.
+// EVILWINS: When the Wound Stack or Monster Pit Deck runs out.
+makeSchemeCard("Clash of the Monsters Unleashed", { twists: 10, wounds: [ 6, 12, 18, 24, 30 ], vd_villain: [ 2, 3, 4, 4, 5 ], required: { villains: "Monsters Unleashed" } }, ev => {
+  if (ev.nr >= 3 && ev.nr <= 10) {
+    // Twist 3-10 Each player chooses a Villain from their Victory Pile as their "Gladiator." Then the top card of the Monster Pit enteres the city. Each player whose Gladiator has a lower printed Attack than that Monster gains a Wound.
+    gameState.scheme.attachedDeck('PIT').withTop(c => {
+      enterCityEv(ev, c);
+      eachPlayer(p => p.victory.limit(isVillain).max(c => c.printedDefense) < c.printedDefense && gainWoundEv(ev, p));
+    });
+  }
+  cont(ev, () => gameState.scheme.attached('PIT').size === 0 && evilWinsEv(ev));
+}, runOutProgressTrigger('WOUNDS'), () => {
+  gameState.schemeProgress = gameState.wounds.size;
+  gameState.villaindeck.limit(isGroup("Monsters Unleashed")).each(c => moveCard(c, gameState.scheme.attachedDeck('PIT')));
+}),
+// SETUP: 8 Twists. 7 Heroes. Sort the Hero Deck by Hero Class. [Strength] [Instinct] [Covert] [Tech] [Ranged] (If a card has multiple Classes, break ties at random.) Put these 5 smaller, shuffled Hero Decks beneath the 5 HQ Spaces.
+// RULE: Whenever an HQ Space is empty, fill it with the top card of the Hero Deck below that space.
+// EVILWINS: When all Hero Decks are gone.
+makeSchemeCard("Divide and Conquer", { twists: 8, heroes: 7 }, ev => {
+  if (ev.nr <= 3) {
+    // Twist 1-3 KO all Heroes in the HQ.
+  } else if (ev.nr >= 4 && ev.nr <= 8) {
+    // Twist 4-8 KO one of the Hero Decks.
+  }
+}, [], () => {
+  gameState.herodeck.each(c => {
+    // TODO
+  })
+}),
+// SETUP: 8 Twists. Add another Henchman Villain Group. No Bystanders in the Villain Deck.
+// EVILWINS: When 8 Villains are in the Escape pile.
+makeSchemeCard("Hypnotize Every Human", { twists: 8, vd_bystanders: 0, vd_villain: [ 2, 3, 4, 4, 5 ], }, ev => {
+  if (ev.nr <= 6) {
+    // Twist 1-6 Put a Bystander from the Bystander Stack above each city space as a facedown 2 Attack "Hypno-Thrall" Villain. They don't move. When you fight one, rescue it as a Bystander. You can't fight a Villain in a city space that has any Hypno-Thralls above it.
+    gameState.city.each(d => cont(ev, () =>{
+      gameState.bystanders.withTop(c => {
+        villainify("Hypno-Thrall", c, 2, "RESCUE");
+        attachCardEv(ev, c, d, 'THRALL');
+      });
+    }));
+  } else if (ev.nr >= 7 && ev.nr <= 8) {
+    // Twist 7-8 Each player puts a Villain from their Victory Pile into the Escape pile.
+    eachPlayer(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain), c => moveCardEv(ev, c, gameState.escaped), p));
+  }
+}, escapeProgressTrigger(isVillain), () => {
+  setSchemeTarget(8);
+  gameState.specialActions = ev => {
+    return gameState.city.map(d => d.attached('THRALL').map(c => fightActionEv(ev, c))).merge();
+  };
+  addStatSet('fightCost', c => c.location.isCity && c.location.attached('THRALL').size > 0, (c, prev) => ({ ...prev, cond: () => false }));
+}),
+// SETUP: 8 Twists. The "Oxygen Level" starts at 8.
+// EVILWINS: When 20 non-grey Heroes are KO'd.
+makeSchemeCard("Steal All Oxygen on Earth", { twists: 8 }, ev => {
+  // Twist: Stack this Twist next to the Scheme. The Oxygen Level decreases by 1. Then KO each Hero from the HQ whose cost is greater than the Oxygen Level.
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
+  const level = 8 - ev.nr;
+  hqHeroes().limit(c => c.cost > level).each(c => KOEv(ev, c));
+}, koProgressTrigger(isNonGrayHero), () => setSchemeTarget(20)),
+]);

@@ -143,6 +143,7 @@ while (<A>) {
       s!^(?:<[bi]>)?VP(?:</[bi]>)?: (.*)!#VP: $1!gm;
       s!^<[bi]>Always Leads(?::</[bi]>|</[bi]>:) (.*)!#LEADS: $1!gm;
       s!^<[bi]>Master Strike(?::</[bi]>|</[bi]>:) (.*)!#STRIKE: $1!gm;
+      s!^<b>Master Strikes? (\d+(?:-\d+|(?:, (?:and )?\d+)+)?)(?:</b>:|:</b>) (.*)!#STRIKE: NR[$1] $2!gm;
       s!^<b>((?:Epic )?Vulture)</b>$!<i>$1</i>!gm; #FIX
       s!^<i>(.*?)</i>$!\n#TACTIC: $1!gm;
       s!^<b>Fight(?::</b>|</b>:) (.*)$!#FIGHT: $1!gm;

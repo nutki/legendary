@@ -138,6 +138,7 @@ interface MastermindCardAbillities {
   fightCost?: (ev: Ev) => void
   escape?: Handler | Handler[] // King Hyperion
   printedNthCircle?: number
+  sizeChanging?: number
 }
 interface HeroCardAbillities {
   trigger?: Trigger
@@ -811,6 +812,7 @@ interface Game extends Ev {
   schemeTarget?: number
   gameSetup: Setup
   turnNum: number
+  strikeCount: number
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1141,6 +1143,7 @@ gameState = {
   schemeState: {},
   gameSetup,
   turnNum: 0,
+  strikeCount: 0,
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -2093,7 +2096,7 @@ function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStr
 function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
-  fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what }));
+  fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr: ++gameState.strikeCount }));
 }
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {

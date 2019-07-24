@@ -1367,3 +1367,68 @@ addTemplates("MASTERMINDS", "Spider-Man Homecoming", [
   }]
 }),
 ]);
+addTemplates("MASTERMINDS", "Champions", [
+// {SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}
+// EPICNAME: Fin Fang Foom
+// {SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}
+...makeEpicMastermindCard("Fin Fang Foom", [ 20, 24 ], 7, "Monsters Unleashed", ev => {
+// <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile.
+// <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile. KO all the Heroes <b>Demolished</b> this way.
+  repeat(1 + [...cityVillains(), ...gameState.escaped.deck].count(isGroup(ev.source.leads)), () => demolishEv(ev));
+  ev.source.epic && cont(ev, () => turnState.pastEvents.limit(e => e.type === 'DISCARD' && e.parent === ev).each(e => KOEv(ev, e.what)));
+}, [
+  [ "Alien Dragon Technology", ev => {
+  // A Hero in the HQ gets {SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED} this turn.
+    selectCardEv(ev, "Choose a Hero to gain Size-Changing", hqHeroes(), c => addTurnSet('sizeChanging', v => v === c, (c, prev) => safeOr(prev, Color.STRENGTH | Color.INSTINCT | Color.COVERT | Color.TECH | Color.RANGED)));
+  } ],
+  [ "Flammable Acid Breath", ev => {
+  // KO the top card of the Hero Deck. Then each other player KOs a Hero of that Hero class from their discard pile ([Strength] [Instinct] [Covert] [Tech] [Ranged] ).
+    revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+      KOEv(ev, c);
+      eachOtherPlayerVM(p => selectCardAndKOEv(ev, p.discard.limit(sharesColor(c)), p));
+    }));
+  } ],
+  [ "Multipronged Assault", ev => {
+  // Each other player reveals at least 3 Hero Classes ([Strength] [Instinct] [Covert] [Tech] [Ranged] ) or gains a Wound.
+    eachOtherPlayerVM(p => numClasses(yourHeroes(p)) >= 3 || gainWoundEv(ev, p)); // TODO multiplayer reveal
+  } ],
+  [ "Supersonic Dive Attack", ev => {
+  // KO the top card of the Hero Deck. Then each other player reveals their hand and discards a Hero of that Hero Class ([Strength] [Instinct] [Covert] [Tech] [Ranged] ).
+    revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+      KOEv(ev, c);
+      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to discard", p.hand.limit(isHero).limit(sharesColor(c)), c => discardEv(ev, c), p)); // TODO multiplayer reveal
+    }));
+  } ],
+], {
+  sizeChanging: Color.STRENGTH | Color.INSTINCT | Color.COVERT | Color.TECH | Color.RANGED,
+}),
+// EPICNAME: Pagliacci
+...makeEpicMastermindCard("Pagliacci", [ 9, 11 ], 6, "Wrecking Crew", ev => {
+// NR[1, 5] This card becomes a Scheme Twist that takes effect immediately.|NR[2, 3, 4] <b>Demolish</b> each player.
+// NR[1, 3, 5] This card becomes a Scheme Twist that takes effect immediately.|NR[2, 4] <b>Demolish</b> each player.
+  if (ev.nr <= 5) (ev.source.epic ? [1, 3, 5] : [1, 5]).includes(ev.nr) ? playTwistEv(ev, ev.source) : demolishEv(ev);
+}, [
+  [ "Commedia Dell'Morte", ev => {
+  // Each other player may gain two Wounds. <b>Demolish</b> each of those players who does not.
+    const players = new Set<Player>();
+    eachOtherPlayerVM(p => cont(ev, () => gameState.wounds.size >= 2 && chooseMayEv(ev, "Gain two Wounds", () => { gainWoundEv(ev, p); gainWoundEv(ev, p); players.add(p)}, p)));
+    cont(ev, () => demolishEv(ev, p => !players.has(p)));
+  } ],
+  [ "Creative Assassin", ev => {
+  // You get {VERSATILE 3}.
+    versatileEv(ev, 3);
+  } ],
+  [ "Insane Clown Has a Posse", ev => {
+  // Each other player may KO a Wrecking Crew Villain from their Victory Pile. <b>Demolish</b> each of those players who does not.
+    const players = new Set<Player>();
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => KOEv(ev, c), () => players.add(p), p));
+    cont(ev, () => demolishEv(ev, p => players.has(p)));
+  } ],
+  [ "Jester of a Twisted Opera", ev => {
+  // Each other player may KO a card from their discard pile that costs 1 or more. <b>Demolish</b> each of those players who does not.
+    const players = new Set<Player>();
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a card to KO", p.discard.limit(c => c.cost >= 1), c => KOEv(ev, c), () => players.add(p), p));
+    cont(ev, () => demolishEv(ev, p => players.has(p)));
+  } ],
+]),
+]);
