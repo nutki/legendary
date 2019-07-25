@@ -3,178 +3,178 @@
 
 #START: Stack 8 Bystanders next to General Ross as "Helicopter" Villains with 2 Attack. You can fight them to rescue them as Bystanders. You can't fight General Ross while he has any Helicopters.
 #LEADS: Code Red
-#STRIKE:  General Ross Transforms, then {XDRAMPAGE Hulk}.
+#STRIKE:  General Ross {TRANSFORM} then {XDRAMPAGE Hulk}.
 #ATTACK: 6*
 #VP: 6
 
 #TRANSNAME: Red Hulk
-<b>Wounded Fury</b>
+{WOUNDED FURY}
 You can't fight Helicopters, and they don't stop you from fighting Red Hulk.
-#STRIKE: Red Hulk <b>Transforms</b>, then stack a random Bystander from each player's Victory Pile next to this as a Helicopter. Each player who didn't have a Bystander gains a Wound instead.
+#STRIKE: Red Hulk {TRANSFORM}, then stack a random Bystander from each player's Victory Pile next to this as a Helicopter. Each player who didn't have a Bystander gains a Wound instead.
 #ATTACK: 9+
 #VP: 6
 
 #TACTIC: Bust You Down to Private
 #FIGHT: Each other player puts a non-grey Hero from their hand on the bottom of the Hero Deck, then puts a 0-cost Hero from the KO pile into their hand.
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #TACTIC: Call Out the Army
 #FIGHT: Put 3 Bystanders from the Bystander Stack next to this Mastermind as "Helicopters."
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #TACTIC: Personal Arsenal
 #FIGHT: For each Master Strike in the KO pile, put a Bystander from the Bystander Stack next to the Mastermind as a "Helicopter."
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #TACTIC: Urban Warfare
 #FIGHT: Put a random Bystander next to the Mastermind as a "Helicopter" from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #CARDNAME: Illuminati, Secret Society
 
-This Mastermind gets +4 Attack unless you <b>Outwit</b> them.
+This Mastermind gets +4 Attack unless you {OUTWIT} them.
 #LEADS: Illuminati.
-#STRIKE: Each player reveals their hand and discards two cards that each cost between 1 and 4. The Illuminati <b>Transform</b>.
+#STRIKE: Each player reveals their hand and discards two cards that each cost between 1 and 4. The Illuminati {TRANSFORM}.
 #ATTACK: 11+
 #VP: 7
 
 #TRANSNAME: Illuminati, Open Warfare
 Whenever a card effect causes a player to draw any number of cards, that player must then also discard a card.
-#STRIKE: Each player reveals their hand and discards two cards that each cost between 5 and 8. The Illuminati <b>Transform</b>.
+#STRIKE: Each player reveals their hand and discards two cards that each cost between 5 and 8. The Illuminati {TRANSFORM}.
 #ATTACK: 13
 #VP: 7
 
 #TACTIC: Black Bolt's Omni-Shout
 #FIGHT: Each other player reveals their hand and discards two cards with no rules text.
-The Illuminati <b>Transform</b>.
+The Illuminati {TRANSFORM}.
 
 #TACTIC: Dr. Strange's Orb of Agamotto
 #FIGHT: Each other player reveals their hand and discards a [Ranged] or [Instinct] Hero.
-The Illuminati <b>Transform</b>.
+The Illuminati {TRANSFORM}.
 
 #TACTIC: Hulkbuster's Hammer Fist
 #FIGHT: Each other player reveals their hand and KOs a [Tech] or [Strength] Hero from their hand or discard pile.
-The Illuminati <b>Transform</b>.
+The Illuminati {TRANSFORM}.
 
 #TACTIC: Zom's Manacles of Living Bondage
 #FIGHT: Each other player reveals a [Covert] Hero or gains a Wound.
-The Illuminati <b>Transform</b>.
+The Illuminati {TRANSFORM}.
 
 #CARDNAME: King Hulk, Sakaarson
 
 King Hulk gets +1 Attack for each Warbound Villain in the city and in the Escape Pile.
 #LEADS: Warbound.
-#STRIKE: Each player KO's a Warbound Villain from their Victory Pile or gains a Wound. King Hulk <b>Transforms</b>.
+#STRIKE: Each player KO's a Warbound Villain from their Victory Pile or gains a Wound. King Hulk {TRANSFORM}.
 #ATTACK: 9+
 #VP: 6
 
 #TRANSNAME: King Hulk, Worldbreaker
-<b>Wounded Fury</b>
-#STRIKE: Each player reveals their hand, then KO's a card from their hand or discard pile that has the same card name as a card in the HQ. King Hulk <b>Transforms</b>.
+{WOUNDED FURY}
+#STRIKE: Each player reveals their hand, then KO's a card from their hand or discard pile that has the same card name as a card in the HQ. King Hulk {TRANSFORM}.
 #ATTACK: 10+
 #VP: 6
 
 #TACTIC: Fury of the Green Scar
 #FIGHT: Each other player reveals their hand and discards a Hero that isn't grey and isn't [Strength].
-King Hulk <b>Transforms</b>.
+King Hulk {TRANSFORM}.
 
 #TACTIC: Oath of the Warbound
 #FIGHT: The Villain in the Escape Pile with the highest printed Attack enters the Sewers.
-King Hulk <b>Transforms</b>.
+King Hulk {TRANSFORM}.
 
 #TACTIC: Revenge from the Stars
 #FIGHT: After you put this in your Victory Pile, {XDRAMPAGE Hulk}.
-King Hulk <b>Transforms</b>.
+King Hulk {TRANSFORM}.
 
 #TACTIC: Rule By the Strongest
 #FIGHT: You get +1 Recruit for each of your [Strength] Heroes.
-King Hulk <b>Transforms</b>.
+King Hulk {TRANSFORM}.
 
 #CARDNAME: M.O.D.O.K.
-All cards' <b>Outwit</b> abilities require four different costs instead of three.
+All cards' {OUTWIT} abilities require four different costs instead of three.
 #LEADS: Intelligencia.
-#STRIKE: Each player who can't <b>Outwit</b> M.O.D.O.K. gains a Wound, then M.O.D.O.K. <b>Transforms</b>.
+#STRIKE: Each player who can't {OUTWIT} M.O.D.O.K. gains a Wound, then M.O.D.O.K. {TRANSFORM}.
 #ATTACK: 9
 #VP: 6
 
 #TRANSNAME: M.O.D.O.K., Network Nightmare
 You can only fight <a rel="nofollow" href="http://M.O.D.O.K" onclick="window.open(this.href, '_blank'); return false;">M.O.D.O.K</a> with Recruit, not Attack.
-#STRIKE: Each player who can't <b>Outwit</b> M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. <b>Transforms</b>.
+#STRIKE: Each player who can't {OUTWIT} M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. {TRANSFORM}.
 #ATTACK: 8*
 #VP: 6
 
 #TACTIC: Brain Scramble
 #FIGHT: Each other player discards their hand, then draws as many cards as they discarded.
-M.O.D.O.K. <b>Transforms</b>.
+M.O.D.O.K. {TRANSFORM}.
 
 #TACTIC: Designed Only For...K.O.ING
 #FIGHT: Reveal the top three cards of your deck. KO one of them, draw one, and discard one.
-M.O.D.O.K. <b>Transforms</b>.
+M.O.D.O.K. {TRANSFORM}.
 
 #TACTIC: Don't Get a Big head About It
 #FIGHT: Draw a card for each Intelligencia Villain in your Victory Pile.
-M.O.D.O.K. <b>Transforms</b>.
+M.O.D.O.K. {TRANSFORM}.
 
 #TACTIC: Redundancy Algorithim
 #FIGHT: Each other player reveals their hand and discards two cards that hand the same cost.
-M.O.D.O.K. <b>Transforms</b>.
+M.O.D.O.K. {TRANSFORM}.
 
 #CARDNAME: The Red King
 You can't fight the Red King while any Villains are in the city.
 #LEADS: Sakaar Imperial Guard.
-#STRIKE: The Red King <b>Transforms</b>, then each player reveals a [Tech] card or gains a Wound.
+#STRIKE: The Red King {TRANSFORM}, then each player reveals a [Tech] card or gains a Wound.
 #ATTACK: 7*
 #VP: 6
 
 #TRANSNAME: The Red King, Power Armored
-#STRIKE: The Red King Transforms, then play another card from the Villain Deck.
+#STRIKE: The Red King {TRANSFORM} then play another card from the Villain Deck.
 #ATTACK: 10
 #VP: 6
 
 #TACTIC: Haughty Spite
 #FIGHT: Each other player without a Red King Tactic in their Victory Pile gains a Wound.
-The Red King <b>Transforms</b>.
+The Red King {TRANSFORM}.
 
 #TACTIC: Royal Bodyguard
 #FIGHT: Reveal cards from the Villain Deck until you reveal a Sakaar Imperial Guard. If you find one, play it. Either way, shuffle all the other revealed cards back into the Villain Deck.
-The Red King <b>Transforms</b>.
+The Red King {TRANSFORM}.
 
 #TACTIC: Treasury of Sakaar
 #FIGHT: You get +1 Recruit for each Sakaar Imperial Guard and Red King Tactic in your Victory Pile, including this one.
-The Red King <b>Transforms</b>.
+The Red King {TRANSFORM}.
 
 #TACTIC: Vast Armies of Sakaar
 #FIGHT: If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
-The Red King <b>Transforms</b>.
+The Red King {TRANSFORM}.
 
 #CARDNAME: The Sentry
 #START: Shuffle 2 Wounds into each player's deck before drawing starting hands.
 #LEADS: Aspects of the Void.
-#STRIKE: The Sentry <b>Transforms</b>, then {XDRAMPAGE Void}.
+#STRIKE: The Sentry {TRANSFORM}, then {XDRAMPAGE Void}.
 #ATTACK: 10
 #VP: 6
 
 #TRANSNAME: The Void
-<b>Wounded Fury</b>
-#STRIKE: <b>Feast</b> on each player. If this feasts on a player's grey Hero, that player gains a Wound.
-The Void <b>Transforms</b>.
+{WOUNDED FURY}
+#STRIKE: {FEAST} on each player. If this feasts on a player's grey Hero, that player gains a Wound.
+The Void {TRANSFORM}.
 #ATTACK: 11+
 #VP: 6
 
 #TACTIC: Pacifying Light
 #FIGHT: Each other player reveals their hand and discard two cards with Recruit icons.
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #TACTIC: Power of a Million Exploding Suns
 #FIGHT: Put all Heroes from the HQ on the bottom of the Hero Deck. Each other player reveals their hand and discards each card with the same card name as any of those cards.
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #TACTIC: Reflexive Teleportation
 #FIGHT: Choose one of your Heroes that costs 5 or less. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as an extra card.
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 #TACTIC: Repressed Darkness
 #FIGHT: Each other player reveals a [Ranged] Hero or plays an Aspects of the Void Villain from their Victory Pile as if playing it from the Villain Deck.
-This Mastermind <b>Transforms</b>.
+This Mastermind {TRANSFORM}.
 
 

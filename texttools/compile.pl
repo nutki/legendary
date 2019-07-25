@@ -42,6 +42,7 @@ sub autopower {
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
     s/^{LIGHTSHOW} *// and $wrap = "lightShow: ev => XXX, cardActions: [ lightShowActionEv ]";
+    s/^{OUTWIT}: *// and $wrap = "mayOutwitEv(ev, () => XXX)";
 
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
     /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev, $num{$1})";
@@ -63,6 +64,8 @@ sub autopower {
     s/^{STRIKER (\d+)}$// and $effect = "strikerHeroEv(ev, $1)";
     s/^{DANGERSENSE (\d+)}($|\. If this revealed (.*)$)// and $effect = "dangerSenseEv(ev, $1" . ($2 ? ", cards => {/* TODO $3 */})" : ")");
     s/^{CHEERING CROWDS}$// and $ability = "cheeringCrowds: true";
+    s/^{WOUNDED FURY}$// and $effect = "woundedFuryEv(ev)";
+    s/^{SMASH (\d)}$// and $effect = "smashEv(ev, $1)";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
@@ -183,8 +186,12 @@ sub maketrap {
         my $pname = qw(c1 c2 uc ra)[$_];
         $_ = $subitems[$_];
         my @divided = split m/(?=#DIVIDED)/g;
+        my @transformed = split m/(?=#TRANSFORMED\n)/g;
         my $hero = "";
-        if (@divided > 1) {
+        if (@transformed > 1) {
+          my @heros = map{makehero($heroname, $pteam)}@transformed;
+          $hero = "makeTransformingHeroCard(\n    $heros[0],\n    $heros[1],\n  )"
+        } elsif (@divided > 1) {
           my @heros = map{makehero($heroname, $pteam)}"$divided[0,1]", "$divided[0,2]";
           $hero = "makeDividedHeroCard(\n    $heros[0],\n    $heros[1],\n  )"
         } else {

@@ -2,7 +2,7 @@
 {WALLCRAWL}: "When you recruit this Hero, you may put it on top of your deck."
 Remember: When you use {WALLCRAWL} to put a card on top of your deck, don't use any other abilities on that card until it gets drawn from your deck. If you "gain" a Hero through some special ability like Skrull Shapeshifters, you can't use {WALLCRAWL} because you didn't "recruit" that Hero.
 
-<b>Feast</b>: "Fight: KO the top card of your deck."
+{FEAST}: "Fight: KO the top card of your deck."
 Carnage's Master Strike starts with "Feast on each player." That means each player does the "Feast" effect.
 Note that Carnage's Master Strike is the only effect that feasts on every player. The "Maximum Carnage" Villains and Carnage's Mastermind Tactic each feast on only one player.
 

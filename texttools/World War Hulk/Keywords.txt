@@ -1,8 +1,8 @@
 
-<b>Transform</b>: This keyword represents the themes of duality and transformation in Hulk stories.
+{TRANSFORM}: This keyword represents the themes of duality and transformation in Hulk stories.
 Heroes:
 * Each Hero in this set has some special "Transformed" cards that go along with it. When you use these Heroes, <b>don't</b> shuffle their "Transformed" cards into the Hero Deck. Instead, set them aside in a special Transformation Pile. You can't recruit cards from this pile. Instead, you transform other cards into them.
-* Some Hero cards like "Bruce Banner: Gamma Ray Experiments" say things like "...Transform this into Savage Hulk Unleashed."
+* Some Hero cards like "Bruce Banner: Gamma Ray Experiments" say things like "...{TRANSFORM} this into Savage Hulk Unleashed."
 * When you play a Hero card that says it transforms into another card, you complete all effects on the card you played and get its normal Recruit and Attack.
 * Then remove the transforming card from the game (putting it in the Transformation Pile) and put the newly transformed card into your hand instead (from the Transformation Pile). You can play the new Transformed card immediately that same turn.
 * You still count as having played the transforming card you played and removed from the game, including effects like "You get +1 Attack for each [Tech] card you played this turn." But if an effect asks you to reveal one of your cards, you can only reveal the new, transformed card, not the old card that you removed from the game.
@@ -14,15 +14,15 @@ Masterminds: Each Mastermind in this set is a double-sided "Transforming Masterm
 * The side with the "Always Leads" ability starts face up.
 * When a Master Strike or Mastermind Tactic ability occurs, it will tell you to "Transform" the Mastermind, meaning flip it over to its other side. (Don't also do the Master Strike ability of the new side.)
 * A Mastermind only uses the abilities and Attack of its currently face up side. Ignore the special abilities and values on the currently face down side.
-<b>Outwit</b>: This keyword represents how Bruce Banner, Amadeus Cho, the Illuminati, and the Intelligencia are among the smartest characters in the Marvel universe.
+{OUTWIT}: This keyword represents how Bruce Banner, Amadeus Cho, the Illuminati, and the Intelligencia are among the smartest characters in the Marvel universe.
 * Some Heroes say things like "Outwit: Draw a card."
 * <b>You can use this Outwit ability only if you reveal Heroes with 3 different costs.</b>
 * You can count the Outwit card itself. So you can reveal a 2-cost Hero in your hand, plus a 6-cost Outwit card and 0-cost S.H.I.E.L.D. Agent Hero you already played.
 * Some Villains and Masterminds also say they get stronger or harm you in special ways if you fail to Outwit them. For example: "<b>Ambush</b>: If you can't Outwit the Leader, play the top card of the Villain Deck."
 * You can choose not to Outwit, even if you are able.
-<b>Smash</b>: This keyword represents how when Hulks get angry, they SMASH hard, no matter what they have to toss aside.
+{SMASH}: This keyword represents how when Hulks get angry, they SMASH hard, no matter what they have to toss aside.
 * Some Heroes say things like "Smash 3." This means <b>"You may discard another card from your hand. If you do, you get +3 Attack."</b>
-<b>Wounded Fury</b>: This keyword represents how wounding a Hulk often just makes it ANGRIER and STRONGER! It also includes Villains attacking with more furious bloodlust as they wound you.
+{WOUNDED FURY}: This keyword represents how wounding a Hulk often just makes it ANGRIER and STRONGER! It also includes Villains attacking with more furious bloodlust as they wound you.
 * When a Hero card says "Wounded Fury", it means <b>"You get +1 Attack for each Wound in your discard pile."</b>
 * Likewise, when a Villain or Mastermind says "Wounded Fury", it means <b>"It gets +1 Attack for each Wound in your discard pile."</b>
 <b>Cross-Dimensional Rampage</b>: As different Hulks rampage across planets and dimensions, only another Hulk can stop them! This keyword debuted in Legendary: Secret Wars.

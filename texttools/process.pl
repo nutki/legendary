@@ -80,6 +80,13 @@ while (<A>) {
     s!<b>Triple Striker</b>!{STRIKER 3}!g;
     s!<b>Coordinate</b>!{COORDINATE}!g;
     s!Wall-Crawl!{WALLCRAWL}!g; #FIX
+    s!Transform this into!<b>Transform</b> this into!g; #FIX
+    s!Transforms, then!<b>Transforms</b> then!g; #FIX
+    s!<b>Transforms?</b>!{TRANSFORM}!g;
+    s!<b>Outwit</b>!{OUTWIT}!g;
+    s!<b>Smash( \d)?</b>!{SMASH$1}!g;
+    s!<b>Wounded Fury</b>!{WOUNDED FURY}!g;
+    s!<b>Feast</b>!{FEAST}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;
@@ -166,6 +173,7 @@ while (<A>) {
         print STDERR "Divided $1|$2|$3 ---- $5|$6|$7"; "#DIVIDED: $1\n$lhero$lteam$4#DIVIDED: $5\n$rhero$rteam$8\n\n"
       !sge;
       s!^<b>Divided.*\n.*!!mg and print STDERR "BUU $&";
+      s!\n*Transformed!\n#TRANSFORMED!g;
 #      s!^#CARDNAME: .*\n($aff|$aff/$aff)\n(#GUN: 1\n)?\n(#SUBNAME: .*\n#COPIES: \d\n\[$class\](, \[$class\])?\n(.+\n)+\n+){4}!OK $3\n!gm
     }
     if ($name =~ /^Keywords/) {

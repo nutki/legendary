@@ -10,13 +10,13 @@
 
 #SUBNAME: Demonform
 #COPIES: 1
-#FIGHT: <b>Feast</b>. If Demonform feasts on a non-grey Hero, gain a Hero from the HQ of that cost or less.
+#FIGHT: {FEAST}. If Demonform feasts on a non-grey Hero, gain a Hero from the HQ of that cost or less.
 #ATTACK: 7
 #VP: 5
 
 #SUBNAME: Infini-Tendrils
 #COPIES: 2
-<b>Wounded Fury</b>
+{WOUNDED FURY}
 #AMBUSH: Infini-Tendrils captures a Bystander.
 #ATTACK: 6+
 #VP: 3
@@ -65,7 +65,7 @@
 
 #SUBNAME: Red She-Hulk
 #COPIES: 1
-<b>Wounded Fury</b>
+{WOUNDED FURY}
 #FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 6+
@@ -89,7 +89,7 @@ During your turn, any number of times, you may discard a card that has no rules 
 
 #SUBNAME: Dr. Strange
 #COPIES: 2
-#AMBUSH: Each player who can't <b>Outwit</b> Dr. Strange discards a card.
+#AMBUSH: Each player who can't {OUTWIT} Dr. Strange discards a card.
 #ATTACK: 5
 #VP: 3
 
@@ -109,7 +109,7 @@ This Villain gets +1 Attack for each Bystander in the city.
 
 #SUBNAME: Hulkbuster Iron Man
 #COPIES: 2
-Hulkbuster Iron Man gets +3 Attack unless you <b>Outwit</b> him.
+Hulkbuster Iron Man gets +3 Attack unless you {OUTWIT} him.
 #ESCAPE: {XDRAMPAGE Illuminati}
 #ATTACK: 6+
 #VP: 4
@@ -119,28 +119,28 @@ Hulkbuster Iron Man gets +3 Attack unless you <b>Outwit</b> him.
 #SUBNAME: Battle of Wits
 #COPIES: 2
 #TRAP
-#TRAPCOND: <b>Outwit</b> this trap.
+#TRAPCOND: {OUTWIT} this trap.
 #TRAPEFFECT: <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
 #VP: 3
 
 #SUBNAME: Cosmic Hulk Robot
 #COPIES: 2
-<b>Wounded Fury</b>
-#AMBUSH: Each player who can't <b>Outwit</b> Cosmic Hulk Robot gains a Wound.
+{WOUNDED FURY}
+#AMBUSH: Each player who can't {OUTWIT} Cosmic Hulk Robot gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 5+
 #VP: 4
 
 #SUBNAME: Doc Samson
 #COPIES: 2
-Doc Samson has +4 Attack unless you <b>Outwit</b> him.
+Doc Samson has +4 Attack unless you {OUTWIT} him.
 #FIGHT: KO one of your Heroes.
 #ATTACK: 4+
 #VP: 3
 
 #SUBNAME: The Leader, Gamma Fiend
 #COPIES: 2
-#AMBUSH: If you can't <b>Outwit</b> the Leader, play the top card of the Villain Deck.
+#AMBUSH: If you can't {OUTWIT} the Leader, play the top card of the Villain Deck.
 #FIGHT: Same effect.
 #ATTACK: 5
 #VP: 3
@@ -156,7 +156,7 @@ Doc Samson has +4 Attack unless you <b>Outwit</b> him.
 
 #SUBNAME: Great Devil Corker
 #COPIES: 2
-#FIGHT: Look at the top three cards of your deck. Put them back in any order. Then <b>Feast</b>.
+#FIGHT: Look at the top three cards of your deck. Put them back in any order. Then {FEAST}.
 #ATTACK: 6
 #VP: 4
 
@@ -169,7 +169,7 @@ During your turn, Headman Charr gets +1 Attack for each Villain in your Victory 
 
 #SUBNAME: Lieutenant Caiera
 #COPIES: 1
-#FIGHT: If you <b>Outwit</b> Lieutenant Caiera draw two cards.
+#FIGHT: If you {OUTWIT} Lieutenant Caiera draw two cards.
 #ATTACK: 7
 #VP: 5
 
@@ -239,12 +239,12 @@ Primus Vand gets +1 Attack for each Villain next to him.
 
 #SUBNAME: Miek The Unhived
 #COPIES: 2
-#FIGHT: Look at the top two cards of your deck. Put them back on the top and/or bottom. Then <b>Feast</b>.
+#FIGHT: Look at the top two cards of your deck. Put them back on the top and/or bottom. Then {FEAST}.
 #ATTACK: 5
 #VP: 3
 
 <i>No-Name, Brood Queen</i> )2 copies)
-<b>Wounded Fury</b>
+{WOUNDED FURY}
 Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b>
 #ATTACK: 4+
 #VP: 3
