@@ -24,6 +24,10 @@ sub mkdir_and_copy {
   BYSTANDERS => "Bystanders.txt",
   MASTERMINDS => "Masterminds_and_Commanders.txt",
   SCHEMES => "Schemes_and_Plots.txt",
+  SIDEKICKS => "Sidekicks_and_New_Recruits.txt",
+  AMBITIONS => "Ambitions.txt",
+  WOUNDS => "Wounds_and_Bindings.txt",
+  HORRORS => "Horrors.txt",
 );
 my ($exp, $tmpDir) = @ARGV;
 for $type (sort {$a cmp $b} keys %input) {
@@ -103,6 +107,18 @@ for $type (sort {$a cmp $b} keys %input) {
     } elsif ($type eq "SCHEMES") {
       parse();
       checkimage("schemes", $_{CARDNAME});
+    } elsif ($type eq "SIDEKICKS") {
+      parse();
+      checkimage("sidekicks", $_{CARDNAME});
+    } elsif ($type eq "AMBITIONS") {
+      parse();
+      checkimage("ambitions", $_{CARDNAME});
+    } elsif ($type eq "WOUNDS") {
+      parse();
+      checkimage("wounds", $_{CARDNAME});
+    } elsif ($type eq "HORRORS") {
+      parse();
+      checkimage("horrors", $_{CARDNAME});
     }
   }
 }
