@@ -103,7 +103,7 @@ makeAmbitionCard("Painful Choice", 8, ev => {/* TODO */}),
 // Each Villain on the Rooftops and Streets captures a Bystander.
 makeAmbitionCard("Crime Surge", 3, ev => cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'STREETS')).each(c => captureEv(ev, c))),
 // Add a random new Mastermind to the game with one Tactic.
-makeAmbitionCard("Dark Apprentice", 10, ev => {/* TODO */}),
+makeAmbitionCard("Dark Apprentice", 10, ev => addMastermindEv(ev)),
 // Each other player KOs a Bystander from their Victory Pile or gains a Wound.
 makeAmbitionCard("Collateral Damage", 4, ev => eachOtherPlayer(p => selectCardOrEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p))),
 // This card becomes a Master Strike that takes effect immediately.
@@ -201,7 +201,7 @@ function makeHorrorCard(name: string, func: Handler, abilities?: { trigger?: Tri
 
 const horrorTemplates = [
 // AMBUSH: Add a random new Mastermind to the game with one Tactic.
-makeHorrorCard("The Apprentice Rises", ev => {/* TODO */}),
+makeHorrorCard("The Apprentice Rises", ev => addMastermindEv(ev)),
 // Each non-Henchman Villain has +1 Attack.
 makeHorrorCard("Army of Evil", ev => addStatMod('defense', c => isVillain(c) && !isHenchman(c), 1)),
 // AMBUSH: Shuffle an additional Master Strike into the Villain Deck. Then, play another card from the Villain Deck.

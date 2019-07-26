@@ -492,3 +492,34 @@ function dangerSenseEv(ev: Ev, n: number, f?: (cards: Card[]) => void) {
     f && f(cards);
   }, false, false);
 }
+
+function makeTransformingHeroCard(c1: Card, c2: Card) {
+  c1.transformed = c2;
+  c2.transformed = c1;
+  return c1;
+}
+function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
+  selectCardOptEv(ev, "Select card to Smash", playerState.hand.deck, c => {
+    discardEv(ev, c);
+    addAttackEvent(ev, n * (turnState.smashMultiplier || 1));
+    effect1 && effect1(c);
+  });
+}
+function mayOutwitEv(ev: Ev, func: () => void) {
+  yourHeroes().uniqueCount(c => c.cost) >= (turnState.outwitAmount || 3) && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', { func }));
+}
+function woundedFuryEv(ev: Ev) {
+  addAttackEvent(ev, playerState.discard.count(isWound));
+}
+function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' = 'HAND') {
+  const to: Deck = where === 'DECK' ? playerState.deck : where === 'DISCARD' ? playerState.discard : playerState.hand;
+  if (what.location !== gameState.transformed) {
+    pushEv(ev, 'TRANSFORM', { what, to, func: ev => {
+      moveCardEv(ev, ev.what, gameState.transformed);
+      what.transformed && gameState.transformed.limit(c => c.cardName === what.transformed.cardName).withFirst(c => moveCardEv(ev, c, ev.to));
+    } });
+  }
+}
+function addMastermindEv(ev: Ev, name?: string) {
+  // TODO
+}

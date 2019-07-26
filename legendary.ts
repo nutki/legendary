@@ -105,6 +105,7 @@ interface Card {
   trapPenalty?: Handler
   epic?: boolean
   coordinate?: boolean
+  transformed?: Card
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -457,11 +458,11 @@ interface Array<T> {
   withLast: (f: (c: T) => void) => void
   withRandom: (f: (c: T) => void) => void
   firstOnly: () => T[]
-  shuffle: () => void
+  shuffled: () => T[]
 }
 Array.prototype.count = function (f) { return count(this, f); };
 Object.defineProperty(Array.prototype, 'size', { get: function() { return this.length; } });
-Array.prototype.shuffle = function () { shuffleArray(this, gameState.gameRand); };
+Array.prototype.shuffled = function () { const r = Array(this); shuffleArray(r, gameState.gameRand); return r; };
 Array.prototype.limit = function (f) { return limit(this, f); };
 Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U) { return this.forEach(f); };
@@ -522,6 +523,8 @@ type EvType =
 'NTHCIRCLEREVEAL' |
 'PLAYOOT' |
 'COORDINATE' |
+'OUTWIT' |
+'TRANSFORM' |
 // Special
 'STATE' |
 'TURN' |
@@ -754,6 +757,8 @@ interface Turn extends Ev {
   piercing: number
   recruitWithAttack: boolean
   piercingWithAttack: boolean
+  outwitAmount?: number
+  smashMultiplier?: number
 }
 interface Trigger {
   event: EvType
@@ -797,6 +802,7 @@ interface Game extends Ev {
   shard: Deck
   horror: Deck
   trap: Deck
+  transformed: Deck
   triggers: Trigger[]
   endDrawAmount: number
   modifiers: Modifiers
@@ -1097,6 +1103,7 @@ gameState = {
   shard: new Deck('SHARD', true),
   trap: new Deck('TRAP', true),
   horror: new Deck('HORROR'),
+  transformed: new Deck('TRANSFORMED', true),
   hq: [
     new Deck("HQ1", true),
     new Deck("HQ2", true),
@@ -1338,6 +1345,9 @@ function villainIn(...where: CityLocation[]): Card[] {
 }
 function withCity(where: CityLocation, f: (d: Deck) => void) {
   gameState.city.limit(e => e.id === where).each(f);
+}
+function isCityEmpty(d: Deck) {
+  return d.size === 0;
 }
 function isLocation(where: Deck, ...locations: CityLocation[]) {
   return where ? locations.some(l => where.id === l) : false;
@@ -1714,7 +1724,7 @@ function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: P
     lookAtDeckEv(ev, 1, () => card = who.revealed.limit(cond)[0], who);
     cont(ev, () => { if (card) { drawEv(ev, 1, who); if (func) func(card); } } );
 }
-function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
+function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, where: card.location, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
 function evilWinsEv(ev: Ev, mastermind?: Card | Player): void { gameOverEv(ev, 'LOSS', mastermind); }
 function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card | Player) {
   const winnerName = mastermind instanceof Card ? mastermind.cardName : mastermind ? `Evil ${mastermind.name}` : "Evil";

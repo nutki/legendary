@@ -3982,3 +3982,376 @@ addHeroTemplates("Champions", [
   ra: makeHeroCard("Viv Vision", "Alter Molecular Density", 9, 5, 0, Color.TECH, "Champions", "D", ev => addTurnTrigger('RECRUIT', () => true, ev => addAttackEvent(ev, 2)), { sizeChanging: Color.TECH | Color.RANGED }),
 },
 ]);
+addHeroTemplates("World War Hulk", [
+{
+  name: "Amadeus Cho",
+  team: "Champions",
+// {OUTWIT}: Draw a card.
+  c1: makeHeroCard("Amadeus Cho", "Extrapolate", 2, 1, u, Color.INSTINCT, "Champions", "FD", ev => mayOutwitEv(ev, () => drawEv(ev, 1))),
+// Draw a card.
+// Then, if you drew two cards this turn, {TRANSFORM} this into Like Totally Smart Hulk.
+// TRANSFORMED
+// {OUTWIT}: You get +2 Attack.
+  c2: makeTransformingHeroCard(
+    makeHeroCard("Amadeus Cho", "Gamma-Draining Nanites", 3, u, u, Color.TECH, "Champions", "", [ ev => drawEv(ev, 1), ev => turnState.cardsDrawn >= 2 && transformHeroEv(ev, ev.source) ]),
+    makeHeroCard("Amadeus Cho", "Like Totally Smart Hulk", 5, u, 2, Color.STRENGTH, "Champions", "FD", ev => mayOutwitEv(ev, () => addAttackEvent(ev, 2))),
+  ),
+// You get +1 Attack for each different cost of Hero you have.
+// {OUTWIT}: Draw a card.
+  uc: makeHeroCard("Amadeus Cho", "Renegade Genius", 6, u, 0, Color.TECH, "Champions", "", [ ev => addAttackEvent(ev, yourHeroes().uniqueCount(c => c.cost)), ev => mayOutwitEv(ev, () => drawEv(ev, 1)) ]),
+// Whenever you use an {OUTWIT} ability this turn, you may use it an extra time.
+// {OUTWIT}: Look at the top card of your deck. KO it or put it back.
+  ra: makeHeroCard("Amadeus Cho", "Visualize The Variables", 8, u, 4, Color.TECH, "Champions", "", [
+    () => addTurnTrigger('OUTWIT', () => true, ev => chooseMayEv(ev, "Use the ability an extra time", () => ev.parent.func(ev))),
+    ev => mayOutwitEv(ev, () => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to KO", playerState.revealed.deck, c => KOEv(ev, c)))) ]),
+},
+{
+  name: "Bruce Banner",
+  team: "Avengers",
+// {OUTWIT}: When you draw a new hand of cards at the end of this turn, draw an extra card.
+  c1: makeHeroCard("Bruce Banner", "Solve The Impossible", 2, u, 1, Color.TECH, "Avengers", "D", ev => mayOutwitEv(ev, () => addEndDrawMod(1))),
+// {OUTWIT}: {TRANSFORM} this into Savage Hulk Unleashed.
+// TRANSFORMED
+// {SMASH 4}
+// Cost 5 // FIX
+  c2: makeTransformingHeroCard(
+    makeHeroCard("Bruce Banner", "Gamma Bomb Disaster", 4, 2, u, Color.TECH, "Avengers", "D", ev => mayOutwitEv(ev, () => transformHeroEv(ev, ev.source))),
+    makeHeroCard("Bruce Banner", "Savage Hulk Unleashed", 5, u, 0, Color.STRENGTH, "Avengers", "F", ev => smashEv(ev, 4)),
+  ),
+// {POWER Tech} Reveal the top card of your deck. If it costs 0, KO it.
+  uc: makeHeroCard("Bruce Banner", "Dangerous Testing", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPower(Color.TECH) && revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c)))),
+// {OUTWIT}: Look at the top three cards of your deck. Draw one of them, KO one, and put one back.
+  ra: makeHeroCard("Bruce Banner", "Gamma Ray Experiment", 7, u, 4, Color.TECH, "Avengers", "", ev => mayOutwitEv(ev, () => 0/* TODO */)),
+},
+{
+  name: "Caiera",
+  team: "Warbound",
+// {OUTWIT}: Draw a card.
+  c1: makeHeroCard("Caiera", "Shadow Queen", 2, u, 1, Color.COVERT, "Warbound", "FD", ev => mayOutwitEv(ev, () => drawEv(ev, 1))),
+// {POWER Covert} {SMASH 2}
+  c2: makeHeroCard("Caiera", "Shadowforged Blade", 4, u, 2, Color.COVERT, "Warbound", "FD", ev => superPower(Color.COVERT) && smashEv(ev, 2)),
+// {OUTWIT}: You may KO a card from your hand or discard pile.
+  uc: makeHeroCard("Caiera", "Focus The Old Power", 6, u, 2, Color.STRENGTH, "Warbound", "FD", ev => mayOutwitEv(ev, () => KOHandOrDiscardEv(ev, undefined))),
+// Double the Recruit you have.
+// If there are at least 3 Heroes per player in the KO pile, {TRANSFORM} this into Vengeful Destructor.
+// TRANSFORMED
+// Double the Attack you have.
+  ra: makeTransformingHeroCard(
+    makeHeroCard("Caiera", "Dutiful Protector", 7, u, u, Color.INSTINCT, "Warbound", "", [ ev => doubleRecruitEv(ev), ev => gameState.ko.count(isHero) >= 3 * gameState.players.size && transformHeroEv(ev, ev.source)]),
+    makeHeroCard("Caiera", "Vengeful Destructor", 7, u, u, Color.STRENGTH, "Warbound", "F", ev => doubleAttackEv(ev)),
+  ),
+},
+{
+  name: "Gladiator Hulk",
+  team: "Warbound",
+// Draw a card.
+// {SMASH 2}
+  c1: makeHeroCard("Gladiator Hulk", "Don't Make Me Angry", 3, u, 0, Color.STRENGTH, "Warbound", "FD", [ ev => drawEv(ev, 1), ev => smashEv(ev, 2) ]),
+// {SMASH 3}
+// Then, if you discarded at least two cards this turn, {TRANSFORM} this into Hulk Is King and put it on top of your deck.
+// TRANSFORMED
+// When a card effect causes you to discard this card, you may return this card to your hand.
+  c2: makeTransformingHeroCard(
+    makeHeroCard("Gladiator Hulk", "Seize The Throne", 4, u, 0, Color.INSTINCT, "Warbound", "", [ ev => smashEv(ev, 3), ev => turnState.cardsDiscarded.size >= 2 && transformHeroEv(ev, ev.source, 'DECK') ]),
+    makeHeroCard("Gladiator Hulk", "Hulk Is King", 5, u, 3, Color.STRENGTH, "Warbound", "", ev => [], { trigger: {
+      event: 'DISCARD',
+      match: (ev, source) => ev.what === source && ev.getSource() instanceof Card && owner(source) !== undefined,
+      after: ev => chooseMayEv(ev, "Return to hand", () => moveCardEv(ev, ev.source, owner(ev.source).hand), owner(ev.source)),
+    }}),
+  ),
+// {POWER Strength} {XDRAMPAGE Hulk}.
+// If any players gained a Wound this way, you get {WOUNDED FURY}.
+  uc: makeHeroCard("Gladiator Hulk", "The Green Scar", 5, u, 3, Color.STRENGTH, "Warbound", "", ev => {
+    superPower(Color.STRENGTH) && xdRampageEv(ev, 'Hulk');
+    cont(ev, () => turnState.pastEvents.has(e => e.type === 'GAIN' && isWound(e.what) && e.parent === ev) && woundedFuryEv(ev));
+  }),
+// You get double Attack from each Smash this turn.
+// {SMASH 3}
+  ra: makeHeroCard("Gladiator Hulk", "Double-Fisted Smashing", 8, u, 0, Color.STRENGTH, "Warbound", "", [ ev => turnState.smashMultiplier = 2, ev => smashEv(ev, 3) ]),
+},
+{
+  name: "Hiroim",
+  team: "Warbound",
+// {POWER Covert} The first time you defeat a Villain this turn, rescue a Bystander.
+  c1: makeHeroCard("Hiroim", "Seek Redemption", 3, u, 2, Color.COVERT, "Warbound", "D", ev => {
+    let done = false;
+    superPower(Color.COVERT) && addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !done, ev => {
+      done = true;
+      rescueEv(ev);
+    })
+  }),
+// Draw a card.
+// If there are at least two Bystanders in your Victory Pile, {TRANSFORM} this into Hiroim Redeemed.
+// TRANSFORMED
+// You get +1 Attack for every two Bystanders in your Victory Pile.
+  c2: makeTransformingHeroCard(
+    makeHeroCard("Hiroim", "Save from the Rubble", 4, 1, u, Color.COVERT, "Warbound", "", [ ev => drawEv(ev, 1), ev => playerState.victory.count(isBystander) >= 2 && transformHeroEv(ev, ev.source) ]),
+    makeHeroCard("Hiroim", "Hiroim Redeemed", 5, u, 1, Color.STRENGTH, "Warbound", "F", ev => addAttackEvent(ev, Math.floor(playerState.victory.count(isBystander) / 2))),
+  ),
+// {TEAMPOWER Warbound} You may KO a 0-cost card from any player's discard pile. If you KO a Wound this way, rescue a Bystander.
+  uc: makeHeroCard("Hiroim", "Mystic Shadow Priest", 6, u, 2, Color.COVERT, "Warbound", "D", ev => superPower("Warbound") && selectCardOptEv(ev, "Choose a card to KO", gameState.players.map(p => p.discard.limit(c => c.cost === 0)).merge(), c => {
+    KOEv(ev, c);
+    isWound(c) && rescueEv(ev);
+  })),
+// Choose one: Rescue three Bystanders, or defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in your Victory Pile.
+  ra: makeHeroCard("Hiroim", "Blade of the People", 7, u, u, Color.INSTINCT, "Warbound", "", ev => {
+    chooseOneEv(ev, "Choose one",
+      ["Rescue three Bystanders", () => rescueEv(ev, 3)],
+      ["Defeat a Villain or Mastermind", () => selectCardEv(ev, "Choose a Villain or Mastermind to defeat", fightableCards().limit(c => c.defense < playerState.victory.count(isBystander)), c => defeatEv(ev, c))],
+    );
+  }),
+},
+{
+  name: "Hulkbuster Iron Man",
+  team: "Avengers",
+// Draw a card.
+// {POWER Tech} You get +2 Attack.
+  c1: makeHeroCard("Hulkbuster Iron Man", "Pound for Pound", 2, u, 0, Color.STRENGTH, "Avengers", "FD", [ ev => drawEv(ev, 1), ev => superPower(Color.TECH) && addAttackEvent(ev, 2) ]),
+// {OUTWIT}: {SMASH 2}
+  c2: makeHeroCard("Hulkbuster Iron Man", "Attune Techtonic Transducer", 4, u, 2, Color.TECH, "Avengers", "FD", ev => mayOutwitEv(ev, () => smashEv(ev, 2))),
+// {POWER Tech Strength} {TRANSFORM} this into Ultra-Massive Armor
+// TRANSFORMED
+// Draw two cards.
+// {SMASH 2}
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Hulkbuster Iron Man", "Build The Suit", 5, 3, u, Color.TECH, "Avengers", "F", ev => superPower(Color.TECH, Color.STRENGTH) && transformHeroEv(ev, ev.source)),
+    makeHeroCard("Hulkbuster Iron Man", "Ultra-Massive Armor", 6, u, 0, Color.TECH, "Avengers", "FD", [ ev => drawEv(ev, 2), ev => smashEv(ev, 2) ]),
+  ),
+// You get +2 Attack for each other [Tech] and/or [Strength] card you played this turn.
+  ra: makeHeroCard("Hulkbuster Iron Man", "Final Battle", 8, u, 5, Color.TECH, "Avengers", "D", ev => addAttackEvent(ev, 2 * turnState.cardsPlayed.count(c => isColor(Color.TECH)(c) || isColor(Color.STRENGTH)(c)))),
+},
+{
+  name: "Joe Fixit, Grey Hulk",
+  team: "Crime Syndicate",
+// {POWER Strength} {SMASH 2}
+  c1: makeHeroCard("Joe Fixit, Grey Hulk", "Carefully Considered Smashing", 3, 2, 0, Color.STRENGTH, "Crime Syndicate", "D", ev => superPower(Color.STRENGTH) && smashEv(ev, 2)),
+// Choose a Villain. You can spend any combination of Recruit and Attack to fight it this turn.
+  c2: makeHeroCard("Joe Fixit, Grey Hulk", "Threaten And Bribe", 4, 2, u, Color.COVERT, "Crime Syndicate", "D", ev => {
+    selectCardEv(ev, "Choose a Villain", villains(), c => addTurnSet('fightCost', v => v === c, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)})));
+  }),
+// When you defeat a Villain this turn that has 6 Attack or more, {TRANSFORM} this into Underworld Boss and put it on top of your deck.
+// TRANSFORMED
+// Choose a Villain in your Victory Pile, You get + Attack equal to it's printed VP.
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Joe Fixit, Grey Hulk", "Ambitious Enforcer", 6, u, 3, Color.STRENGTH, "Crime Syndicate", "", ev => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && ev.what.defense >= 6, ev => transformHeroEv(ev, ev.source, 'DECK'))),
+    makeHeroCard("Joe Fixit, Grey Hulk", "Underworld Boss", 6, u, 0, Color.INSTINCT, "Crime Syndicate", "F", ev => selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => addAttackEvent(ev, c.printedVP || 0))),
+  ),
+// You can spend any combination of Recruit and Attack to fight the Mastermind this turn.
+  ra: makeHeroCard("Joe Fixit, Grey Hulk", "Hulk Runs This Town", 7, u, 4, Color.COVERT, "Crime Syndicate", "", ev => {
+    addTurnSet('fightCost', isMastermind, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)}));
+  }),
+},
+{
+  name: "Korg",
+  team: "Warbound",
+// Draw a card.
+// {POWER Strength} {SMASH 2}. If you {SMASH} a Wound this way, KO it.
+  c1: makeHeroCard("Korg", "Nothing Beats Rock", 2, u, 0, Color.STRENGTH, "Warbound", "D", [ ev => drawEv(ev, 1), ev => superPower(Color.STRENGTH) && smashEv(ev, 2, c => isWound(c) && KOEv(ev, c))]),
+// {OUTWIT}: Draw a card.
+  c2: makeHeroCard("Korg", "Move Mountains", 4, u, 2, Color.STRENGTH, "Warbound", "FD", ev => mayOutwitEv(ev, () => drawEv(ev, 1))),
+// {POWER Strength} {TRANSFORM} this into Lord of Granite.
+// TRANSFORMED
+// Draw a card.
+// {SMASH 3}
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Korg", "Forged By Fire", 3, 2, u, Color.STRENGTH, "Warbound", "FD", ev => superPower(Color.STRENGTH) && transformHeroEv(ev, ev.source)),
+    makeHeroCard("Korg", "Lord of Granite", 5, u, 0, Color.COVERT, "Warbound", "F", [ ev => drawEv(ev, 1), ev => smashEv(ev, 3) ]),
+  ),
+// Put all cards from the HQ on the bottom of the Hero Deck in random order. You get their total printed Attack.
+  ra: makeHeroCard("Korg", "Kronan Tactician", 8, u, 0, Color.STRENGTH, "Warbound", "", ev => hqCards().shuffled().each(c => { addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, gameState.herodeck, true); })),
+},
+{
+  name: "Miek, The Unhived",
+  team: "Warbound",
+// {SMASH 1}
+  c1: makeHeroCard("Miek, The Unhived", "This Bug Smashes You", 3, u, 2, Color.INSTINCT, "Warbound", "D", ev => smashEv(ev, 1)),
+// Look at the top card of your deck. Put it back on the top or bottom.
+// {POWER Instinct} You may {FEAST}.
+  c2: makeHeroCard("Miek, The Unhived", "Devouring Frenzy", 4, 2, u, Color.INSTINCT, "Warbound", "D", [
+    ev => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to put on the bottom of your deck", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.deck, true))),
+    ev => superPower(Color.INSTINCT) && chooseMayEv(ev, "Feast", () => feastEv(ev)),
+  ]),
+// Whenever a card is KO'd from your deck this turn, you may draw a card.
+  uc: makeHeroCard("Miek, The Unhived", "Endless Appetite", 5, u, 3, Color.INSTINCT, "Warbound", "F", ev => addTurnTrigger('KO', ev => ev.where === playerState.deck, ev => drawEv(ev))),
+// You may {FEAST}. Then, if a card with an Attack icon was KO'd from your deck this turn, {TRANSFORM} this into Hive King Miek.
+// TRANSFORMED
+// Look at the top three cards of your deck and put them back in any order. Then you may {FEAST}.
+  ra: makeTransformingHeroCard(
+    makeHeroCard("Miek, The Unhived", "Metamorphosis", 7, 5, u, Color.COVERT, "Warbound", "", [
+      ev => chooseMayEv(ev, "Feast", () => feastEv(ev)),
+      ev => turnState.pastEvents.has(e => e.type === 'KO' && ev.where === playerState.deck && hasAttackIcon(ev.what)) && transformHeroEv(ev, ev.source),
+    ]),
+    makeHeroCard("Miek, The Unhived", "Hive King Miek", 8, u, 6, Color.STRENGTH, "Warbound", "", [
+      ev => lookAtDeckEv(ev, 3, () => {}),
+      ev => chooseMayEv(ev, "Feast", () => feastEv(ev)),
+    ]),
+  ),
+},
+{
+  name: "Namora",
+  team: "Champions",
+// Draw a card.
+// {POWER Ranged} {SMASH 3}
+  c1: makeHeroCard("Namora", "Crushing Tsunami", 3, u, 0, Color.RANGED, "Champions", "F", [ ev => drawEv(ev, 1), ev => superPower(Color.RANGED) && smashEv(ev, 3) ]),
+// You get +1 Attack, usable only against Villains in the Sewers or Bridge or the Mastermind.
+  c2: makeHeroCard("Namora", "Heart of the Ocean", 4, u, 2, Color.COVERT, "Champions", "D", ev => addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'SEWERS', 'BRIDGE'), 1)),
+// When you defeat a Villain in the Sewers or Bridge, {TRANSFORM} this into Master of Depths and put it on top of your deck.
+// TRANSFORMED
+// {SMASH 3}
+// If you {SMASH} a 0-cost Hero this way, KO it.
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Namora", "Herculean Effort", 5, 3, u, Color.RANGED, "Champions", "", ev => addTurnTrigger('DEFEAT', ev => isLocation(ev.where, 'SEWERS', 'BRIDGE') && isVillain(ev.what), ev => transformHeroEv(ev, ev.source, 'DECK'))),
+    makeHeroCard("Namora", "Master of Depths", 6, u, 0, Color.STRENGTH, "Champions", "", ev => smashEv(ev, 3, c => c.cost === 0 && KOEv(ev, c))),
+  ),
+// {POWER Covert} If the Bridge is empty, you may move a Villain there from another city space. A Villain moved this way gets -3 Attack this turn.
+  ra: makeHeroCard("Namora", "Turning The Tide", 7, u, 5, Color.COVERT, "Champions", "", ev => superPower(Color.COVERT) && withCity('BRIDGE', bridge => isCityEmpty(bridge) && selectCardOptEv(ev, "Choose a Villain to move to the Bridge", cityVillains(), c => {
+    moveCardEv(ev, c, bridge);
+    addTurnMod('defense', v => v === c, -3);
+  }))),
+},
+{
+  name: "No-Name, Brood Queen",
+  team: "Warbound",
+// If this is the first card you played this turn, draw a card.
+  c1: makeHeroCard("No-Name, Brood Queen", "Surprise Attack", 2, u, 1, Color.COVERT, "Warbound", "FD", ev => turnState.cardsPlayed.size === 0 && drawEv(ev)),
+// Look at the top card of your deck. Discard it or put it back.
+// {POWER Covert} You may {FEAST}.
+  c2: makeHeroCard("No-Name, Brood Queen", "Appetite for Destruction", 4, u, 2, Color.COVERT, "Warbound", "D", [
+    ev => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to discard", playerState.revealed.deck, c => discardEv(ev, c))),
+    ev => superPower(Color.COVERT) && chooseMayEv(ev, "Feast", () => feastEv(ev))
+  ]),
+// You may {FEAST}. Then, if a non-grey Hero was KO'd from you deck this turn, {TRANSFORM} this into Torrent of Broodlings.
+// TRANSFORMED
+// Draw a card.
+  uc: makeTransformingHeroCard(
+    makeHeroCard("No-Name, Brood Queen", "Bursting With Life", 3, 2, u, Color.STRENGTH, "Warbound", "D", [
+      ev => chooseMayEv(ev, "Feast", () => feastEv(ev)),
+      ev => turnState.pastEvents.has(e => e.type === 'KO' && ev.where === playerState.deck && isNonGrayHero(ev.what)) && transformHeroEv(ev, ev.source),
+    ]),
+    makeHeroCard("No-Name, Brood Queen", "Torrent of Broodlings", 5, u, 2, Color.COVERT, "Warbound", "FD", ev => drawEv(ev, 1)),
+  ),
+// Look at the top card of your deck. Then {FEAST} up to three times. You get +2 Attack for each non-grey Hero that was KO'd from you deck this turn.
+  ra: makeHeroCard("No-Name, Brood Queen", "World Spanning Hunger", 8, u, 4, Color.INSTINCT, "Warbound", "D", [
+    ev => lookAtDeckEv(ev, 1, () => selectCardEv(ev, "Put the card back", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.deck))),
+    ev => chooseMayEv(ev, "Feast", () => { feastEv(ev); chooseMayEv(ev, "Feast again", () => { feastEv(ev); chooseMayEv(ev, "Feast again", () => feastEv(ev)); })}),
+    ev => addAttackEvent(ev, 2 * turnState.pastEvents.count(e => e.type === 'KO' && ev.where === playerState.deck)),
+  ]),
+},
+{
+  name: "Rick Jones",
+  team: "S.H.I.E.L.D.",
+// {POWER Tech} Reveal the top card of your deck. If it's a S.H.I.E.L.D., draw it.
+  c1: makeHeroCard("Rick Jones", "Hacktivist", 3, u, 2, Color.TECH, "S.H.I.E.L.D.", "FD", ev => superPower(Color.TECH) && drawIfEv(ev, 'S.H.I.E.L.D.')),
+// Reveal the top card of your deck. If it costs 3 or more, {TRANSFORM} this into Captain Marvel.
+// TRANSFORMED
+// Reveal the top card of your deck. If it costs 3 or more, draw it.
+  c2: makeTransformingHeroCard(
+    makeHeroCard("Rick Jones", "Seek the Nega-Bands", 4, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "D", ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost >= 3) && transformHeroEv(ev, ev.source))),
+    makeHeroCard("Rick Jones", "Captain Marvel", 5, u, 2, Color.RANGED, "S.H.I.E.L.D.", "FD", ev => drawIfEv(ev, c => c.cost >= 3)),
+  ),
+// If you have at least 5 Villains in your Victory Pile, {TRANSFORM} this into A-Bomb and put it on top of your deck.
+// TRANSFORMED
+// {SMASH 5}
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Rick Jones", "Irradiated Blood", 5, u, 3, Color.TECH, "S.H.I.E.L.D.", "", ev => playerState.victory.count(isVillain) && transformHeroEv(ev, ev.source)),
+    makeHeroCard("Rick Jones", "A-Bomb", 6, u, 0, Color.STRENGTH, "S.H.I.E.L.D.", "F", ev => smashEv(ev, 5)),
+  ),
+// If you defeat two Villains this turn, {TRANSFORM} this into The Destiny Force and put it on top of your deck.
+// TRANSFORMED
+// Count the number of different printed VP values in your Victory Pile. Draw that many cards.
+  ra: makeTransformingHeroCard(
+    makeHeroCard("Rick Jones", "Caught In Kree-Skrull War", 7, u, 4, Color.COVERT, "S.H.I.E.L.D.", "", ev => turnState.pastEvents.count(e => e.type === 'DEFEAT' && isVillain(e.what)) >= 2 && transformHeroEv(ev, ev.source, 'DECK')),
+    makeHeroCard("Rick Jones", "The Destiny Force", 9, u, u, Color.RANGED, "S.H.I.E.L.D.", "", ev => drawEv(ev, playerState.victory.limit(c => c.printedVP !== undefined).uniqueCount(c => c.printedVP))),
+  ),
+},
+{
+  name: "Sentry",
+  team: "Avengers",
+// {TRANSFORM} this into Golden Guardian of Good and put it in your discard pile.
+// TRANSFORMED
+// You may {TRANSFORM} this into Agoraphobia and put it in your discard pile. If you do, you get +4 Attack.
+  c1: makeTransformingHeroCard(
+    makeHeroCard("Sentry", "Agoraphobia", 2, u, u, Color.COVERT, "Avengers", "FD", ev => transformHeroEv(ev, ev.source, 'DISCARD')),
+    makeHeroCard("Sentry", "Golden Guardian of Good", 6, u, 0, Color.STRENGTH, "Avengers", "", ev => chooseMayEv(ev, "Transform back into Agoraphobia", () => { transformHeroEv(ev, ev.source, 'DISCARD'); addAttackEvent(ev, 4); })),
+  ),
+// You get +1 Attack for each card that <b>
+// TRANSFORMED</b> this turn.
+  c2: makeHeroCard("Sentry", "Rival Personalities", 4, u, 2, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev, turnState.pastEvents.count(e => e.type === 'TRANSFORM'))),
+// Reveal the top card of your deck. If it costs 1 or more, {TRANSFORM} this into The Void Unchained and put it on top of your deck.
+// TRANSFORMED
+// Reveal the top card of your deck. If it costs 0, then {FEAST}. Otherwise, {TRANSFORM} this into Mournful Sentinel and put it in your discard pile.
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Sentry", "Mournful Sentinel", 3, 2, u, Color.RANGED, "Avengers", "D", ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost >= 1) && transformHeroEv(ev, ev.source, 'DECK'))),
+    makeHeroCard("Sentry", "The Void Unchained", 5, u, 3, Color.COVERT, "Avengers", "", ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost === 0) ? feastEv(ev) : transformHeroEv(ev, ev.source, 'DISCARD'))),
+  ),
+// Reveal the top five cards of the Hero Deck, gain their total printed Attack, and put them on the bottom of that deck. If this card makes 12 Attack or more, then {TRANSFORM} this card into The Void Mastermind and add it to the game at the start of the next turn with one random Tactic.
+  ra: makeHeroCard("Sentry", "Vast Unstable Power", 8, u, 0, Color.RANGED, "Avengers", "D", ev => revealHeroDeckEv(ev, 5, cards => {
+    const n = cards.sum(c => c.printedAttack || 0);
+    addAttackEvent(ev, n);
+    if (n > 12) {
+      transformHeroEv(ev, ev.source);
+      addFutureTrigger(ev => addMastermindEv(ev, 'The Void'));
+    }
+  }, false, true)),
+},
+{
+  name: "She-Hulk",
+  team: "Avengers",
+// Once this turn, if you made at least 6 Recruit this turn, {TRANSFORM} this into Hurl Trucks.
+// TRANSFORMED
+// {SMASH 2}
+// {SMASH 2}
+  c1: makeTransformingHeroCard(
+    makeHeroCard("She-Hulk", "Hurl Legal Objections", 3, 2, u, Color.INSTINCT, "Avengers", "D", ev => {
+      let done = false;
+      addTurnAction(new Ev(ev, 'EFFECT', {
+        cost: { cond: () => !done && turnState.totalRecruit >= 6 },
+        func: ev => { done = true; transformHeroEv(ev, ev.source); },
+        what: ev.source,
+        source: ev.source,
+      }));  
+    }),
+    makeHeroCard("She-Hulk", "Hurl Trucks", 6, u, 2, Color.STRENGTH, "Avengers", "FD", [ ev => smashEv(ev, 2), ev => smashEv(ev, 2) ]),
+  ),
+// {OUTWIT}: Draw a card.
+  c2: makeHeroCard("She-Hulk", "Window of Opportunity", 4, 2, u, Color.STRENGTH, "Avengers", "FD", ev => mayOutwitEv(ev, () => drawEv(ev, 1))),
+// Once this turn, if you made at least 6 Recruit this turn, you may KO a card from your hand or discard pile.
+  uc: makeHeroCard("She-Hulk", "Radioactive Riot", 6, u, 3, Color.STRENGTH, "Avengers", "", ev => {
+    let done = false;
+    addTurnAction(new Ev(ev, 'EFFECT', {
+      cost: { cond: () => !done && turnState.totalRecruit >= 6 },
+      func: ev => { done = true; selectCardAndKOEv(ev, handOrDiscard()); },
+      what: ev.source,
+    }));  
+}),
+// For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, put it on the bottom of that deck, and you get that card's printed Attack.
+  ra: makeHeroCard("She-Hulk", "Jade Giantess", 8, 4, 0, Color.STRENGTH, "Avengers", "D", ev => {
+    repeat(Math.floor(turnState.totalRecruit / 2), () => revealHeroDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, playerState.deck, true); }), false, true));
+  }),
+},
+{
+  name: "Skaar, Son of Hulk",
+  team: "Avengers",
+// {POWER Strength} {SMASH 3}
+  c1: makeHeroCard("Skaar, Son of Hulk", "Anger Management", 3, u, 1, Color.STRENGTH, "Avengers", "F", ev => superPower(Color.STRENGTH) && smashEv(ev, 3)),
+// {POWER Instinct} {WOUNDED FURY}
+  c2: makeHeroCard("Skaar, Son of Hulk", "Scarred Past", 3, u, 2, Color.INSTINCT, "Avengers", "FD", ev => superPower(Color.INSTINCT) && woundedFuryEv(ev)),
+// {POWER Instinct} You may gain a Wound. If you do, {TRANSFORM} this into Raging Savage.
+// TRANSFORMED
+// {WOUNDED FURY}
+  uc: makeTransformingHeroCard(
+    makeHeroCard("Skaar, Son of Hulk", "Mood Swings", 5, 3, u, Color.INSTINCT, "Avengers", "F", ev => superPower(Color.INSTINCT) && chooseMayEv(ev, "Gain a Wound and Transform", () => {
+      gainWoundEv(ev);
+      transformHeroEv(ev, ev.source);
+    })),
+    makeHeroCard("Skaar, Son of Hulk", "Raging Savage", 6, u, 3, Color.STRENGTH, "Avengers", "F", ev => woundedFuryEv(ev)),
+  ),
+// {WOUNDED FURY}
+// Then, you may KO any number of Wounds from your hand and/or discard pile, then draw that many cards.
+  ra: makeHeroCard("Skaar, Son of Hulk", "Planetary-Level Revenge", 8, u, 4, Color.STRENGTH, "Avengers", "", [ ev => woundedFuryEv(ev), ev => {
+    let count = 0;
+    selectObjectsAnyEv(ev, "Choose Wounds to KO", handOrDiscard(), c => { KOEv(ev, c); count++; });
+    cont(ev, () => drawEv(ev, count));
+  } ]),
+},
+]);

@@ -423,7 +423,7 @@ makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
   } ],
   [ "Mental Dominance", ev => {
   // Stack the top three cards of the Ally Deck next to Professor X in random order as "Telepathic Pawns."
-    revealHeroDeckEv(ev, 3, cards => { cards.shuffle(); cards.each(c => attachCardEv(ev, c, ev.source.mastermind, "PAWN"))});
+    revealHeroDeckEv(ev, 3, cards => cards.shuffled().each(c => attachCardEv(ev, c, ev.source.mastermind, "PAWN")));
   } ],
   [ "Mightiest Mutant Mind", ev => {
   // Each other player reveals a Brotherhood Ally or stacks a non-grey Ally from their hand next to Professor X as a "Telepathic Pawn."
@@ -669,10 +669,7 @@ makeMastermindCard("Immortal Emperor Zheng-Zhu", 7, 5, "K'un-Lun", ev => {
   // Choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck in random order.
     const cards: Card[] = [];
     selectObjectsAnyEv(ev, "Put Heroes on the bottom of the Hero Deck", hqHeroes(), c => cards.push(c));
-    cont(ev, () => {
-      cards.shuffle();
-      cards.each(c => moveCardEv(ev, c, gameState.herodeck, true));
-    });
+    cont(ev, () => cards.shuffled().each(c => moveCardEv(ev, c, gameState.herodeck, true)));
   } ],
 ], {
   ...nthCircleParams(7),
@@ -958,9 +955,7 @@ makeMastermindCard("Ragnarok", 6, 6, "Registration Enforcers", ev => {
   } ],
   [ "Unnatural Storm Clouds", ev => {
   // Put all Heroes from the HQ on the bottom of the Hero Deck in random order.
-    const heroes = hqHeroes();
-    heroes.shuffle();
-    heroes.each(c => moveCardEv(ev, c, gameState.herodeck, true));
+    hqHeroes().shuffled().each(c => moveCardEv(ev, c, gameState.herodeck, true));
   } ],
 ], {
   varDefense: c => c.baseDefense + 2 * numClasses(hqHeroes()),
