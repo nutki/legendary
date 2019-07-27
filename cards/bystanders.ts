@@ -116,3 +116,25 @@ addBystanderTemplates("Spider-Man Homecoming", [
 // RESCUE: reveal the top two cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
 [ 1, makeBystanderCard("Damage Control", ev => revealPlayerDeckEv(ev, 2, cards => cards.limit(c => c.cost <= 2).each(c => moveCardEv(ev, c, ev.who.hand)), ev.who)) ],
 ]);
+addBystanderTemplates("World War Hulk", [
+// RESCUE: choose a Hero in the HQ that costs 4 or less. You get its printed Recruit and Attack.
+[ 1, makeBystanderCard("Actor", ev => playerState === ev.who && selectCardEv(ev, "Choose a Hero", hqHeroes().limit(c => c.cost <= 4), c => {
+  addAttackEvent(ev, c.printedAttack || 0);
+  addRecruitEvent(ev, c.printedRecruit || 0);
+})) ],
+// RESCUE: each [Instinct] and/or [Covert] Hero currently in the HQ costs 1 less this turn.
+[ 1, makeBystanderCard("Animal Trainer", ev => hqHeroes().limit(c => isColor(Color.INSTINCT)(c) || isColor(Color.COVERT)(c)).each(c => {
+  addTurnMod('cost', v => v === c, -1);
+})) ],
+// RESCUE: you get +1 Recruit if the Rooftops are empty and +1 Recruit if the Bridge is empty.
+[ 1, makeBystanderCard("Tourist Couple", ev => {
+  withCity('ROOFTOPS', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
+  withCity('BRIDGE', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
+}) ],
+// RESCUE: look at the top three cards of your deck. KO one, discard one, and put one back.
+[ 1, makeBystanderCard("Triage Nurse", ev => lookAtDeckEv(ev, 3, () => {
+  let card: Card;
+  selectCardEv(ev, "Choose a card to KO", playerState.revealed.deck, c => { card = c; KOEv(ev, c); });
+  cont(ev, () => selectCardEv(ev, "Choose a card to discard", playerState.revealed.limit(c => c !== card), c => discardEv(ev, c)));
+})) ],
+]);

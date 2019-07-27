@@ -156,3 +156,23 @@ makeHenchmenCard("Shi'ar Patrol Craft", 3, {
   fight: ev => turnState.nextHeroRecruit = "SOARING",
 }),
 ]);
+addTemplates("HENCHMEN", "World War Hulk", [
+// FIGHT: {FEAST}. If Cytoplasm Spikes feasts on a non-grey Hero, you get +2 Recruit.
+// ATTACK: 3
+makeHenchmenCard("Cytoplasm Spikes", 3, {
+  fight: ev => feastEv(ev, c => isNonGrayHero(c) && addRecruitEvent(ev, 2)),
+}),
+// FIGHT: If you {OUTWIT} these Death's Heads, KO one of your cards that costs 0.
+// ATTACK: 3
+makeHenchmenCard("Death's Heads", 3, {
+  fight: ev => mayOutwitEv(ev, () => selectCardAndKOEv(ev, revealable().limit(c => c.cost === 0))),
+}),
+// FIGHT: Look at the top card of your deck. Put it back on the top or bottom. Then {FEAST}.
+// ATTACK: 3
+makeHenchmenCard("Sakaaran Hivelings", 3, {
+  fight: [
+    ev => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to put on the bottom of your deck", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.deck, true))),
+    feastEv,
+  ]
+}),
+]);
