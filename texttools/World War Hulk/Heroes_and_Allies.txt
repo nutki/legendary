@@ -63,7 +63,7 @@ Whenever you use an {OUTWIT} ability this turn, you may use it an extra time.
 #CLASS: [Strength]
 #ATTACK: 0+
 {SMASH 4}
-Cost 5
+#COST: 5
 #FLAVOR: After all, he doesn't shout "Hulk gently tap."
 
 #SUBNAME: Dangerous Testing
@@ -435,7 +435,7 @@ Look at the top card of your deck. Discard it or put it back.
 #COPIES: 3
 #CLASS: [Strength]
 #RECRUIT: 2
-You may {FEAST}. Then, if a non-grey Hero was KO'd from you deck this turn, {TRANSFORM} this into Torrent of Broodlings.
+You may {FEAST}. Then, if a non-grey Hero was KO'd from your deck this turn, {TRANSFORM} this into Torrent of Broodlings.
 #COST: 3
 #TRANSFORMED
 #SUBNAME: Torrent of Broodlings
@@ -450,7 +450,7 @@ Draw a card.
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 4+
-Look at the top card of your deck. Then {FEAST} up to three times. You get +2 Attack for each non-grey Hero that was KO'd from you deck this turn.
+Look at the top card of your deck. Then {FEAST} up to three times. You get +2 Attack for each non-grey Hero that was KO'd from your deck this turn.
 #COST: 8
 
 #CARDNAME: Rick Jones

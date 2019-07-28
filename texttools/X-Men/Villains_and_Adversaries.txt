@@ -44,7 +44,7 @@
 #COPIES: 1
 #TRAP
 #TRAPCOND: Have no Hellfire Villains in the city.
-#TRAPEFFECT: This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+#TRAPEFFECT: This Trap becomes a 6 Attack "Phoenix Force" Token Villain that enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
 #VP: 3
 
 #SUBNAME: Emma Frost (White Queen)

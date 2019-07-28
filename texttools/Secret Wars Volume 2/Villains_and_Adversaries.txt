@@ -127,7 +127,8 @@ When in the Sewers, Rooftops or Bridge, he is in "wolf form" and gets +3 Attack.
 #SUBNAME: Doctor Spectrum
 #COPIES: 3
 #AMBUSH: {CHARGE} one space.
-#FIGHT: <b>Spectrum</b>: KO a card from your discard pile. <b>Escape</b>: Each player who doesn't have <b>Spectrum</b> discards a card.
+#FIGHT: <b>Spectrum</b>: KO a card from your discard pile.
+#ESCAPE: Each player who doesn't have <b>Spectrum</b> discards a card.
 #ATTACK: 6
 #VP: 4
 
@@ -148,7 +149,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #SUBNAME: Whizzer
 #COPIES: 2
 #AMBUSH: {CHARGE} three spaces.
-<i>Fight</i> <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound.
+#FIGHT: <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5
 #VP: 3
@@ -168,7 +169,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #SUBNAME: '92 Jubilee
 #COPIES: 3
 #FIGHT: Gain this as a Hero.
-#ATTACKG: 4
+#ATTACK: 4
 #GAINABLE
 #CLASS: [Ranged]
 {SPECTRUM} You get +2 Attack.

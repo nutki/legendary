@@ -74,7 +74,7 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 
 #SUBNAME: Thunderball
 #COPIES: 2
-#FIGHT: If you fight THunderball in the Sewers or Bank, <b>Demolish</b> each other player.
+#FIGHT: If you fight Thunderball in the Sewers or Bank, <b>Demolish</b> each other player.
 #ATTACK: 5
 #VP: 3
 

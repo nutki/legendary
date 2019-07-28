@@ -243,9 +243,10 @@ Primus Vand gets +1 Attack for each Villain next to him.
 #ATTACK: 5
 #VP: 3
 
-<i>No-Name, Brood Queen</i> )2 copies)
+#SUBNAME: No-Name, Brood Queen
+#COPIES: 2
 {WOUNDED FURY}
-Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b>
+#FIGHT: {FEAST}. If this feasts on a non-grey Hero, draw two cards.
 #ATTACK: 4+
 #VP: 3
 
