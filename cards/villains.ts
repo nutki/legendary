@@ -1473,7 +1473,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 { name: "Utopolis", cards: [
 // AMBUSH: {CHARGE} one space.
 // FIGHT: {SPECTRUM}: KO a card from your discard pile.
-// ESCAPE: Each player who doesn't have {SPECTRUM} discards a card. FIX
+// ESCAPE: Each player who doesn't have {SPECTRUM} discards a card.
 // ATTACK: 6
 // VP: 4
   [ 3, makeVillainCard("Utopolis", "Doctor Spectrum", 6, 4, {
@@ -1499,7 +1499,7 @@ addVillainTemplates("Secret Wars Volume 2", [
     strike: ev => patrolCityForVillain('BANK', () => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p))),
   })],
 // AMBUSH: {CHARGE} three spaces.
-// FIGHT: <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound. FIX
+// FIGHT: <i>(After he goes to your victory pile.)</i> {PATROL Bridge}: If there's a Villain there, each other player gains a Wound.
 // ESCAPE: Each player gains a Wound.
 // ATTACK: 5
 // VP: 3
@@ -1521,7 +1521,7 @@ addVillainTemplates("Secret Wars Volume 2", [
     ambush: chargeAmbushEffect(1),
   }), u, 2, Color.STRENGTH, u, "D", ev => superPower(Color.TECH) && drawEv(ev, 1))],
 // FIGHT: Gain this as a Hero.
-// ATTACKG: 4 FIX
+// ATTACKG: 4
 // GAINABLE
 // CLASS: [Ranged]
 // <i>Spectrum:</i> You get +2 Attack.
@@ -2164,7 +2164,7 @@ addVillainTemplates("X-Men", [
   [ 1, makeTrapCard("Hellfire Club", "Corrupt the Phoenix Force", 3, u,
     // Have no Hellfire Villains in the city.
     ev => !cityVillains().has(isGroup("Hellfire Club")),
-    // This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht FIX enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+    // This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
     ev => {
       villainify('Phoenix Force', ev.source, 6, 'GAIN');
       enterCityEv(ev, ev.source);
@@ -2219,7 +2219,7 @@ addVillainTemplates("X-Men", [
   )],
 // AMBUSH: Minor Domo captures 2 <b>Human Shields</b>.
 // ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) gains a Wound.
-// 2* Attack FIX
+// 2* Attack
 // VP: 2
   [ 2, makeVillainCard("Mojoverse", "Minor Domo", 2, 2, {
     ambush: ev => captureShieldEv(ev, ev.source, 2),
@@ -2231,7 +2231,7 @@ addVillainTemplates("X-Men", [
   })],
 // AMBUSH: Major Domo captures a <b>Human Shield</b>.
 // ESCAPE: Each player simultaneously reveals a card from their hand. Whoever reveals the highest-costing card (or tied for highest) gains a Wound.
-// 4* Attack FIX
+// 4* Attack
 // VP: 3
   [ 2, makeVillainCard("Mojoverse", "Major Domo", 4 , 3, {
     ambush: ev => captureShieldEv(ev, ev.source),
@@ -2243,7 +2243,7 @@ addVillainTemplates("X-Men", [
   })],
 // AMBUSH: Each player reveals a [Covert] Hero or discards their hand. Each player who discarded their hand this way draws 5 cards.
 // ESCAPE: Same effect.
-// ATTACKG: 6 FIX
+// ATTACKG: 6
 // VP: 4
   [ 1, makeVillainCard("Mojoverse", "Spiral", 6, 4, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, 5, p); })),
@@ -2251,7 +2251,7 @@ addVillainTemplates("X-Men", [
   })],
 // AMBUSH: These Warwolves capture a <b>Human Shield</b>.
 // FIGHT: KO one of your Heroes.
-// 3* Attack FIX
+// 3* Attack
 // VP: 2
   [ 2, makeVillainCard("Mojoverse", "Warwolves", 3, 2, {
     ambush: ev => captureShieldEv(ev, ev.source),
@@ -2336,8 +2336,8 @@ addVillainTemplates("X-Men", [
 ]},
 { name: "Shadow-X", cards: [
 // SUBNAME: Betrayal of the Shadow
-// VP: 4 FIX
-// TRAP FIX
+// VP: 4
+// TRAP
   [ 1, makeTrapCard("Shadow-X", "Betrayal of the Shadow", 4,
     ev => {
       addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 6 }, func: ev => {
@@ -2655,7 +2655,7 @@ addVillainTemplates("Champions", [
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
     escape: ev => demolishEv(ev),
   })],
-// FIGHT: If you fight THunderball in the Sewers or Bank, <b>Demolish</b> each other player. FIX THunderball
+// FIGHT: If you fight Thunderball in the Sewers or Bank, <b>Demolish</b> each other player.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Wrecking Crew", "Thunderball", 5, 3, {
@@ -2667,5 +2667,300 @@ addVillainTemplates("Champions", [
   [ 2, makeVillainCard("Wrecking Crew", "The Wrecker", 7, 5, {
     ambush: ev => cityVillains().limit(isGroup("Wrecking Crew")).each(() => demolishEv(ev)),
   })],
+]},
+]);
+addVillainTemplates("World War Hulk", [
+{ name: "Aspects of the Void", cards: [
+// FIGHT: Each player simultaneously puts a card from their discard pile into the discard pile of the player to their right.
+// ESCAPE: Same effect.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Aspects of the Void", "Black Anti-Hurricane", 6, 4, {
+    fight: ev => {
+      const cards = new Map<Player, Card>();
+      eachPlayer(p => selectCardEv(ev, "Chooose a card", p.discard.deck, c => cards.set(p.right, c)));
+      cont(ev, () => { for(let [p, c] of cards) moveCardEv(ev, c, p.discard); })
+    },
+    escape: sameEffect,
+  })],
+// FIGHT: {FEAST}. If Demonform feasts on a non-grey Hero, gain a Hero from the HQ of that cost or less.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Aspects of the Void", "Demonform", 7, 5, {
+    fight: ev => feastEv(ev, c => isNonGrayHero(c) && selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(v => v.cost <= c.cost), c => gainEv(ev, c))),
+  })],
+// {WOUNDED FURY}
+// AMBUSH: Infini-Tendrils captures a Bystander.
+// ATTACK: 6+
+// VP: 3
+  [ 2, makeVillainCard("Aspects of the Void", "Infini-Tendrils", 6, 3, {
+    ambush: ev => captureEv(ev, ev.source),
+    varDefense: woundedFuryVarDefense,
+  })],
+// SUBNAME: Psychotic Break
+// TRAP
+  [ 1, makeTrapCard("Aspects of the Void", "Psychotic Break", 2,
+    // Play another card from the Villain Deck.
+    ev => villainDrawEv(ev),
+    // Defeat a Villain.
+    ev => pastEvWhat('DEFEAT').has(isVillain),
+    // <i>(After you draw your new hand)</i> Psychotic Break becomes a Master Strike that takes effect immediately.
+    ev => playStrikeEv(ev, ev.source),
+  )],
+// FIGHT: You get +2 Recruit.
+// ATTACK: 5
+// VP: 3
+// FLAVOR: Some briefly think the Shadow Man is the heroic Sentry. The thought doesn't last long.
+  [ 2, makeVillainCard("Aspects of the Void", "Shadow Man", 5, 3, {
+    fight: ev => addRecruitEvent(ev, 2),
+  })],
+]},
+{ name: "Code Red", cards: [
+// SUBNAME: Caught Red-Handed
+// TRAP
+  [ 1, makeTrapCard("Code Red", "Caught Red-Handed", 3, u,
+    // Recruit a [Covert] Hero or recruit any two Heroes.
+    ev => pastEvWhat('RECRUIT').has(Color.COVERT) || pastEvents('RECRUIT').size >= 2,
+    // <i>(After you draw your new hand)</i> Each player reveals a [Covert] Hero or gains a Wound.
+    ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p)),
+  )],
+// FIGHT: Choose a [Covert] Hero in the HQ. It costs 2 less this turn.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Code Red", "Crimson Dynamo", 4, 2, {
+    fight: ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(Color.COVERT), c => addTurnMod('cost', v => v === c, -2)),
+  })],
+// FIGHT: If you played a [Covert] Hero this turn, KO one of your Heroes.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Code Red", "Elektra, Red Blades", 5, 3, {
+    fight: ev => turnState.cardsPlayed.has(Color.COVERT) && selectCardAndKOEv(ev, yourHeroes()),
+  })],
+// FIGHT: Reveal the top card of your deck. If it costs 0, KO it. If it's [Covert], draw it.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Code Red", "Punisher, Red Dot Sniper", 6, 4, {
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => {
+      cards.each(c => c.cost === 0 ? KOEv(ev, c) : isColor(Color.COVERT)(c) && drawCardEv(ev, c));
+    }),
+  })],
+// {WOUNDED FURY}
+// FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Code Red", "Red She-Hulk", 6, 5, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
+    varDefense: woundedFuryVarDefense,
+  })],
+// Thundra gets +2 Attack if there are any number of [Covert] Heroes in the HQ.
+// AMBUSH: Put each non-[Covert] Hero from the HQ on the bottom of the Hero Deck.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Code Red", "Thundra", 4, 3, {
+    ambush: ev => selectCardOrderEv(ev, "Put a Hero on the bottom of the Hero deck", hqHeroes().limit(Color.COVERT), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    varDefense: c => c.printedDefense + (hqHeroes().has(Color.COVERT) ? 2 : 0),
+  })],
+]},
+{ name: "Illuminati", cards: [
+// During your turn, any number of times, you may discard a card that has no rules text to give Black Bolt -2 Attack this turn.
+// ESCAPE: Each player discards a card with no rules text.
+// ATTACK: 13*
+// VP: 5
+  [ 2, makeVillainCard("Illuminati", "Black Bolt", 13, 5, {
+    escape: ev => {},
+    varDefense: c => c.printedDefense - 2 * pastEvents('DISCARD').count(e => e.source === c),
+    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', ev => {
+      selectCardEv(ev, "Discard a card with no rules text", playerState.hand.limit(hasFlag('N')), c => discardEv(ev, c));
+    })],
+  })],
+// AMBUSH: Each player who can't {OUTWIT} Dr. Strange discards a card.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Illuminati", "Dr. Strange", 5, 3, {
+    ambush: ev => eachPlayer(p => outwitOrEv(ev, () => pickDiscardEv(ev, 1, p), p)),
+  })],
+// This Villain gets +1 Attack for each Bystander in the city.
+// AMBUSH: This Villain captures 3 Bystanders.
+// ATTACK: 5+
+// VP: 3
+  [ 1, makeVillainCard("Illuminati", "Dr. Strange, Possessed by Zom", 5, 3, {
+    ambush: ev => captureEv(ev, ev.source, 3),
+    varDefense: c => c.printedDefense + CityCards().sum(c => c.captured.count(isBystander)), // TODO count city bystanders
+  })],
+// SUBNAME: Enchain the Hulk
+// TRAP
+  [ 1, makeTrapCard("Illuminati", "Enchain the Hulk", 4, u,
+    // Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
+    ev => true,
+    // <i>(After you draw your new hand)</i> {XDRAMPAGE Hulk}
+    ev => xdRampageEv(ev, 'Hulk'),
+  )],
+// Hulkbuster Iron Man gets +3 Attack unless you {OUTWIT} him.
+// ESCAPE: {XDRAMPAGE Illuminati}
+// ATTACK: 6+
+// VP: 4
+  [ 2, makeVillainCard("Illuminati", "Hulkbuster Iron Man", 6, 4, {
+    escape: ev => xdRampageEv,
+    varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 3),
+    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() }, what: c, func: ev => {
+      outwitOrEv(ev, () => {});
+    }}) ]
+  })],
+]},
+{ name: "Intelligencia", cards: [
+// SUBNAME: Battle of Wits
+// TRAP
+  [ 2, makeTrapCard("Intelligencia", "Battle of Wits", 3, u,
+    // {OUTWIT} this trap.
+    ev => true,
+    // <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
+    ev => {},
+  )],
+// {WOUNDED FURY}
+// AMBUSH: Each player who can't {OUTWIT} Cosmic Hulk Robot gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Intelligencia", "Cosmic Hulk Robot", 5, 4, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// Doc Samson has +4 Attack unless you {OUTWIT} him.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Intelligencia", "Doc Samson", 4, 3, {
+    fight: ev => {},
+  })],
+// AMBUSH: If you can't {OUTWIT} the Leader, play the top card of the Villain Deck.
+// FIGHT: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Intelligencia", "The Leader, Gamma Fiend", 5, 3, {
+    ambush: ev => {},
+    fight: ev => {},
+  })],
+]},
+{ name: "Sakaar Imperial Guard", cards: [
+// SUBNAME: Gladiators' Colosseum
+// TRAP
+  [ 1, makeTrapCard("Sakaar Imperial Guard", "Gladiators' Colosseum", 4, u,
+    // Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
+    ev => true,
+    // <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
+    ev => {},
+  )],
+// FIGHT: Look at the top three cards of your deck. Put them back in any order. Then {FEAST}.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Sakaar Imperial Guard", "Great Devil Corker", 6, 4, {
+    fight: ev => {},
+  })],
+// During your turn, Headman Charr gets +1 Attack for each Villain in your Victory Pile.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 2+
+// VP: 2
+  [ 2, makeVillainCard("Sakaar Imperial Guard", "Headman Charr", 2, 2, {
+    escape: ev => {},
+  })],
+// FIGHT: If you {OUTWIT} Lieutenant Caiera draw two cards.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Sakaar Imperial Guard", "Lieutenant Caiera", 7, 5, {
+    fight: ev => {},
+  })],
+// Primus Vand gets +1 Attack for each Villain next to him.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Sakaar Imperial Guard", "Primus Vand", 3, 3, {
+    fight: ev => {},
+  })],
+]},
+{ name: "U-Foes", cards: [
+// FIGHT: Each player reveals a [Strength] Hero of KO's a Hero that costs 1 or more from their discard pile.
+// ESCAPE: Same effect.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("U-Foes", "Ironclad", 6, 4, {
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("U-Foes", "Vapor", 4, 2, {
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// FIGHT: Each player who reveals an [Instinct] Hero draws a card.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("U-Foes", "Vector", 4, 2, {
+    fight: ev => {},
+  })],
+// SUBNAME: Unidentified Flying U-Foes
+// TRAP
+  [ 1, makeTrapCard("U-Foes", "Unidentified Flying U-Foes", 3, u,
+    // Discard a [Tech] Hero or discard three cards.
+    ev => true,
+    // Play two extra cards from the Villain Deck next turn.
+    ev => {},
+  )],
+// FIGHT: Each player who reveals a [Ranged] Hero may KO a card from their discard pile.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("U-Foes", "X-Ray", 5, 3, {
+    fight: ev => {},
+  })],
+]},
+{ name: "Warbound", cards: [
+// FIGHT: Draw a card. Another player of your choice also draws a card.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Warbound", "Elloe Kaifi", 5, 3, {
+    fight: ev => {},
+  })],
+// FIGHT: KO a card from the HQ. Each player reveals their hand and KO's a card with that same cost.
+// ESCAPE: Same effect.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Warbound", "Hiroim", 7, 5, {
+    fight: ev => {},
+    escape: ev => {},
+  })],
+// AMBUSH: KO a Hero from the HQ. Each player reveals their hand and discards a card with that same cost.
+// ESCAPE: Same effect.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Warbound", "Korg", 6, 4, {
+    ambush: ev => {},
+    escape: ev => {},
+  })],
+// FIGHT: Look at the top two cards of your deck. Put them back on the top and/or bottom. Then {FEAST}.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Warbound", "Miek The Unhived", 5, 3, {
+    fight: ev => {},
+  })],
+// {WOUNDED FURY}
+// Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b>
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Warbound", "No-Name, Brood Queen", 4, 3, {
+    fight: ev => {},
+    varDefense: woundedFuryVarDefense,
+  })],
+// SUBNAME: Warbound Rescue
+// TRAP
+  [ 1, makeTrapCard("Warbound", "Warbound Rescue", 7, u,
+    // Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
+    ev => true,
+    // Each player gains a Wound.
+    ev => {},
+  )],
 ]},
 ]);

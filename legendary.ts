@@ -262,12 +262,15 @@ function makeDividedHeroCard(c1: Card, c2: Card) {
   // TODO handle costs
   return c;
 }
+const sameEffect: Handler = () => { throw Error('Unresolved sameEffect') };
 function makeVillainCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
   let c = new Card("VILLAIN", name);
   c.printedDefense = defense;
   c.printedVP = vp;
   c.printedVillainGroup = group;
   if (abilities) Object.assign(c, abilities);
+  if (c.fight === sameEffect) c.fight = c.ambush;
+  if (c.escape === sameEffect) c.escape = c.fight || c.ambush;
   return c;
 }
 function makeTacticsCard(name: string, fight?: Handler) {
@@ -1616,6 +1619,12 @@ function incPerTurn(key: string, c?: Card) {
 }
 function limitPerTurn(f: (ev: Ev) => boolean, n: number = 1) {
   return turnState.pastEvents.count(f) < n;
+}
+function pastEvents(t: EvType) {
+  return turnState.pastEvents.limit(e => e.type === t);
+}
+function pastEvWhat(t: EvType) {
+  return pastEvents(t).map(e => e.what);
 }
 function canHeal(c: Card): boolean {
   if (!c.isHealable()) return false;

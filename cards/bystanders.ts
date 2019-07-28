@@ -96,7 +96,7 @@ addBystanderTemplates("X-Men", [
 // TEAM: X-Men
 // CLASS: [Strength]
 // {POWER Strength} You get +1 Attack.
-// 2+ Attack. FIX
+// 2+ Attack.
 // COST: 3
 [ 1, makeGainableCard(makeBystanderCard("Sunspot"), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 1), { printedCost: 3 }) ],
 // TEAM: X-Men

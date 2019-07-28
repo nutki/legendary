@@ -4013,7 +4013,6 @@ addHeroTemplates("World War Hulk", [
 // {OUTWIT}: {TRANSFORM} this into Savage Hulk Unleashed.
 // TRANSFORMED
 // {SMASH 4}
-// Cost 5 // FIX
   c2: makeTransformingHeroCard(
     makeHeroCard("Bruce Banner", "Gamma Bomb Disaster", 4, 2, u, Color.TECH, "Avengers", "D", ev => mayOutwitEv(ev, () => transformHeroEv(ev, ev.source))),
     makeHeroCard("Bruce Banner", "Savage Hulk Unleashed", 5, u, 0, Color.STRENGTH, "Avengers", "F", ev => smashEv(ev, 4)),

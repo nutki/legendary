@@ -505,11 +505,20 @@ function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
     effect1 && effect1(c);
   });
 }
+function canOutwit(p: Player = playerState) {
+  return yourHeroes(p).uniqueCount(c => c.cost) >= (turnState.outwitAmount || 3);
+}
 function mayOutwitEv(ev: Ev, func: () => void) {
-  yourHeroes().uniqueCount(c => c.cost) >= (turnState.outwitAmount || 3) && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', { func }));
+  canOutwit() && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', { func }));
+}
+function outwitOrEv(ev: Ev, func: () => void, p: Player = playerState) {
+  canOutwit(p) ? pushEv(ev, 'OUTWIT', () => {}) : func(); // TODO optional
 }
 function woundedFuryEv(ev: Ev) {
   addAttackEvent(ev, playerState.discard.count(isWound));
+}
+function woundedFuryVarDefense(c: Card) {
+  return c.printedDefense + playerState.discard.count(isWound);
 }
 function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' = 'HAND') {
   const to: Deck = where === 'DECK' ? playerState.deck : where === 'DISCARD' ? playerState.discard : playerState.hand;

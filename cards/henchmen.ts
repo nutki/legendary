@@ -96,7 +96,7 @@ makeHenchmenCard("Khonshu Guardians", 3, {
   varDefense: c => c.printedDefense + (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 2 : 0),
 }),
 // FIGHT: KO one of your Heroes.
-// {FATEFULRESURRECTION} FIX
+// {FATEFULRESURRECTION}
 // ATTACK: 3
 makeHenchmenCard("Magma Men", 3, {
   fight: [ ev => selectCardAndKOEv(ev, yourHeroes()), fatefulResurrectionEv ],
