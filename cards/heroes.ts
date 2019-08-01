@@ -2742,7 +2742,7 @@ addHeroTemplates("Captain America 75th Anniversary", [
 // A Hero in your hand gains {OUTOFTIME} this turn.
 // {POWER Tech} Another Hero in your hand gains {OUTOFTIME} this turn.
   ra: makeHeroCard("Winter Soldier", "2>4", 7, u, 4, Color.TECH, u, "D", ev => {
-    selectObjectsEv(ev, "Select a Hero", superPower(Color.TECH) ? 2 : 1, playerState.hand.limit(isHero), c => addTurnSet('fight', v => v === c, (c, prev) => combineHandlers(prev, outOfTimeEv)));
+    selectObjectsEv(ev, "Select a Hero", superPower(Color.TECH) ? 2 : 1, playerState.hand.limit(isHero), c => addTurnSet('effects', v => v === c, (c, prev) => addHandler(prev, outOfTimeEv)));
   }),
 },
 ]);

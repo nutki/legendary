@@ -255,7 +255,7 @@ function makeDividedHeroCard(c1: Card, c2: Card) {
   c.color = c1.color | c2.color;
   c.heroName; // TODO handle in ???
   c.flags = c1.flags;
-  c.effects = c1.effects.concat(c2.effects);
+  c.effects = c1.effects ? c2.effects ? c1.effects.concat(c2.effects) : c1.effects : undefined;
   c.sizeChanging = orStat(c1.sizeChanging, c2.sizeChanging); // TODO this works differently in Champions
   c.cardActions = mergeArrayStat(c1.cardActions, c2.cardActions);
   // TODO handle flags
@@ -524,7 +524,6 @@ type EvType =
 // Expansion effects
 'URUENCHANTEDREVEAL' |
 'NTHCIRCLEREVEAL' |
-'PLAYOOT' |
 'COORDINATE' |
 'OUTWIT' |
 'TRANSFORM' |
@@ -1082,6 +1081,7 @@ playerState = {
 playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState.revealed.owner = playerState;
 playerState.playArea.owner = playerState;
 playerState.artifact.owner = playerState.shard.owner = playerState.teleported.owner = playerState;
+playerState.outOfTime.owner = playerState;
 playerState.left = playerState.right = playerState;
 gameState = {
   type: "STATE",
@@ -1414,6 +1414,7 @@ interface ModifiableStats {
   strike?: Handler | Handler[]
   nthCircle?: number
   sizeChanging?: number
+  effects?: Handler[]
 }
 
 function safePlus(a: number, b: number) {
@@ -1449,6 +1450,9 @@ function combineHandlers(prev: Handler | Handler[], h: Handler) {
   if (!prev) return h;
   if (prev instanceof Array) return prev.includes(h) ? prev : [...prev, h];
   return prev === h ? prev : [prev, h];
+}
+function addHandler(prev: Handler[], h: Handler) {
+  return prev ? [...prev, h] : [h];
 }
 // Game engine functions
 function attachedDeck(name: string, where: Deck | Card) {
@@ -1797,6 +1801,7 @@ function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func)
 function pushEv(ev: Ev, name: EvType, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
 type Handler = (ev: Ev) => void;
 function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler | Handler[], params: EvParams = {}) {
+  const b = c[effectName];
   effects = getModifiedStat(c, effectName, effects);
   function f(e: Handler): void {
     let p = { source: c, func: e, effectName };
@@ -2002,8 +2007,9 @@ function playCopyEv(ev: Ev, what: Card) {
 function playCardEffects(ev: Ev, card: Card) {
   if (card.attack) addAttackEvent(ev, card.attack);
   if (card.recruit) addRecruitEvent(ev, card.recruit);
-  for (let i = 0; card.effects && i < card.effects.length; i++) {
-    pushEv(ev, "EFFECT",  { source: card, func: card.effects[i] } );
+  const effects = getModifiedStat(card, "effects", card.effects);
+  for (let i = 0; effects && i < effects.length; i++) {
+    pushEv(ev, "EFFECT",  { source: card, func: effects[i] } );
   }
 }
 function playCard2(ev: Ev) {
@@ -2011,7 +2017,7 @@ function playCard2(ev: Ev) {
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
     if (card.playCostType === "DISCARD") pickDiscardEv(ev, card.playCost);
     if (card.playCostType === "TOPDECK") pickTopDeckEv(ev, card.playCost);
-    playCardEffects(ev, ev.what);
+    playCardEffects(ev, card);
     cont(ev, () => turnState.cardsPlayed.push(card));
   }});
 }
@@ -2262,6 +2268,7 @@ function playTurn(ev: Turn) {
   textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
   villainDrawEv(ev);
+  playOutOfTimeEv(ev);
   pushEv(ev, "ACTIONS", ev => {
     if (!ev.endofturn) {
       pushEv(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), ui: true });

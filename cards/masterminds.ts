@@ -1148,7 +1148,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 // Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
 // EPICNAME: Deathbird
 // Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
-...makeEpicMastermindCard("Deathbird", [ 8, 8 ], 6, "Shi'ar Imperial Guard and a Shi'ar Henchmen Group.", ev => {
+...makeEpicMastermindCard("Deathbird", [ 8, 8 ], 6, "Shi'ar Imperial Guard and a Shi'ar Henchmen Group.", ev => { // TODO double leads
 // If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
 // If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
   cityVillains().has(isGroup(ev.source.leads)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
