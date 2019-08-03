@@ -1371,9 +1371,9 @@ function numColors(heroes: Card[] = yourHeroes()) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
   return colors.count(color => heroes.some(hero => hero.isColor(color)));
 }
+const classes = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH];
 function numClasses(heroes: Card[] = yourHeroes()) {
-  const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH];
-  return colors.count(color => heroes.some(hero => hero.isColor(color)));
+  return classes.count(color => heroes.some(hero => hero.isColor(color)));
 }
 function sharesColor(c1: Card) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
@@ -1801,7 +1801,6 @@ function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func)
 function pushEv(ev: Ev, name: EvType, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
 type Handler = (ev: Ev) => void;
 function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler | Handler[], params: EvParams = {}) {
-  const b = c[effectName];
   effects = getModifiedStat(c, effectName, effects);
   function f(e: Handler): void {
     let p = { source: c, func: e, effectName };
@@ -1906,13 +1905,14 @@ function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = pla
 function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
   gameState.players.length > 1 && _choosePlayerEv(ev, effect, gameState.players.limit(p => p !== agent), agent);
 }
-function chooseClassEv(ev: Ev, f: ((color: number) => void)) {
-  chooseOneEv(ev, "Choose hero class",
-    ['Strength', () => f(Color.STRENGTH) ],
-    ['Instinct', () => f(Color.INSTINCT) ],
-    ['Covert', () => f(Color.COVERT) ],
-    ['Tech', () => f(Color.TECH) ],
-    ['Ranged', () => f(Color.RANGED) ],
+function chooseClassEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean) {
+  chooseOptionEv(ev, "Choose a Hero Class",
+    [{l:'Strength', v:Color.STRENGTH},
+    {l:'Instinct', v:Color.INSTINCT},
+    {l:'Covert', v:Color.COVERT},
+    {l:'Tech', v:Color.TECH},
+    {l:'Ranged', v:Color.RANGED}].filter(o => !limit || limit(o.v)),
+    f
   );
 }
 function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {

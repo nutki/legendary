@@ -2791,9 +2791,16 @@ addVillainTemplates("World War Hulk", [
   })],
 // SUBNAME: Enchain the Hulk
 // TRAP
-  [ 1, makeTrapCard("Illuminati", "Enchain the Hulk", 4, u,
+  [ 1, makeTrapCard("Illuminati", "Enchain the Hulk", 4,
+    ev => {
+      addTrapAction(ev, 'Discard two Heroes', c => classes.has(col => playerState.hand.count(col) >= 2), ev => {
+        chooseClassEv(ev, col => {
+          selectObjectsEv(ev, 'Choose Heroes to discard', 2, playerState.hand.limit(col), c => discardEv(ev, c));
+        }, col => playerState.hand.count(col) >= 2);
+      });
+    },
     // Discard two cards of the same Hero Class or recruit two cards of the same Hero Class. ([Strength], [Instinct], [Covert], [Tech], [Ranged], but not grey)
-    ev => true,
+    ev => classes.has(col => pastEvWhat('RECRUIT').count(col) >= 2),
     // <i>(After you draw your new hand)</i> {XDRAMPAGE Hulk}
     ev => xdRampageEv(ev, 'Hulk'),
   )],
@@ -2804,7 +2811,7 @@ addVillainTemplates("World War Hulk", [
   [ 2, makeVillainCard("Illuminati", "Hulkbuster Iron Man", 6, 4, {
     escape: ev => xdRampageEv,
     varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 3),
-    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() }, what: c, func: ev => {
+    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
       outwitOrEv(ev, () => {});
     }}) ]
   })],
@@ -2812,11 +2819,12 @@ addVillainTemplates("World War Hulk", [
 { name: "Intelligencia", cards: [
 // SUBNAME: Battle of Wits
 // TRAP
-  [ 2, makeTrapCard("Intelligencia", "Battle of Wits", 3, u,
+  [ 2, makeTrapCard("Intelligencia", "Battle of Wits", 3,
     // {OUTWIT} this trap.
-    ev => true,
+    ev => addTrapAction(ev, 'Outwit this trap', c => canOutwit(), ev => outwitOrEv(ev, () => {})),
+    ev => false,
     // <i>(After you draw your new turn)</i> Each player discards down to 4 cards.
-    ev => {},
+    ev => eachPlayer(p => pickDiscardEv(ev, -4, p)),
   )],
 // {WOUNDED FURY}
 // AMBUSH: Each player who can't {OUTWIT} Cosmic Hulk Robot gains a Wound.
@@ -2824,23 +2832,28 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 5+
 // VP: 4
   [ 2, makeVillainCard("Intelligencia", "Cosmic Hulk Robot", 5, 4, {
-    ambush: ev => {},
-    escape: ev => {},
+    ambush: ev => eachPlayer(p => outwitOrEv(ev, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
+    varDefense: woundedFuryVarDefense,
   })],
 // Doc Samson has +4 Attack unless you {OUTWIT} him.
 // FIGHT: KO one of your Heroes.
 // ATTACK: 4+
 // VP: 3
   [ 2, makeVillainCard("Intelligencia", "Doc Samson", 4, 3, {
-    fight: ev => {},
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 4),
+    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
+      outwitOrEv(ev, () => {});
+    }}) ]
   })],
 // AMBUSH: If you can't {OUTWIT} the Leader, play the top card of the Villain Deck.
 // FIGHT: Same effect.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Intelligencia", "The Leader, Gamma Fiend", 5, 3, {
-    ambush: ev => {},
-    fight: ev => {},
+    ambush: ev => outwitOrEv(ev, () => villainDrawEv(ev)),
+    fight: sameEffect,
   })],
 ]},
 { name: "Sakaar Imperial Guard", cards: [
@@ -2848,35 +2861,40 @@ addVillainTemplates("World War Hulk", [
 // TRAP
   [ 1, makeTrapCard("Sakaar Imperial Guard", "Gladiators' Colosseum", 4, u,
     // Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
-    ev => true,
+    ev => turnState.cardsPlayed.uniqueCount(c => c.team) <= 1, // TODO team => teams
     // <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
-    ev => {},
+    // TODO could be simplified affiliations.filter(a => p.hand.has(a))
+    ev => eachPlayer(p => chooseOptionEv(ev, "Choose a team", p.hand.deck.unique(c => c.team).map(t => ({l:t, v:t})), v => {
+      p.hand.limit(c => !isTeam(v)(c)).each(c => discardEv(ev, c));
+    }, p)),
   )],
 // FIGHT: Look at the top three cards of your deck. Put them back in any order. Then {FEAST}.
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Sakaar Imperial Guard", "Great Devil Corker", 6, 4, {
-    fight: ev => {},
+    fight: [ ev => lookAtDeckEv(ev, 3, () => {}), feastEv ],
   })],
 // During your turn, Headman Charr gets +1 Attack for each Villain in your Victory Pile.
 // ESCAPE: Each player gains a Wound.
 // ATTACK: 2+
 // VP: 2
   [ 2, makeVillainCard("Sakaar Imperial Guard", "Headman Charr", 2, 2, {
-    escape: ev => {},
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: c => c.printedDefense + playerState.victory.count(isVillain),
   })],
 // FIGHT: If you {OUTWIT} Lieutenant Caiera draw two cards.
 // ATTACK: 7
 // VP: 5
   [ 1, makeVillainCard("Sakaar Imperial Guard", "Lieutenant Caiera", 7, 5, {
-    fight: ev => {},
+    fight: ev => mayOutwitEv(ev, () => drawEv(ev, 2)),
   })],
 // Primus Vand gets +1 Attack for each Villain next to him.
 // FIGHT: KO one of your Heroes.
 // ATTACK: 3+
 // VP: 3
   [ 2, makeVillainCard("Sakaar Imperial Guard", "Primus Vand", 3, 3, {
-    fight: ev => {},
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: c => c.printedDefense + cityAdjacent(c.location).count(d => d.has(isVillain)),
   })],
 ]},
 { name: "U-Foes", cards: [
@@ -2885,36 +2903,44 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("U-Foes", "Ironclad", 6, 4, {
-    fight: ev => {},
-    escape: ev => {},
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => selectCardAndKOEv(ev, p.victory.limit(isHero).limit(c => c.cost >= 1), p), p)),
+    escape: sameEffect,
   })],
 // FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
 // ESCAPE: Same effect.
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("U-Foes", "Vapor", 4, 2, {
-    fight: ev => {},
-    escape: ev => {},
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
   })],
 // FIGHT: Each player who reveals an [Instinct] Hero draws a card.
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("U-Foes", "Vector", 4, 2, {
-    fight: ev => {},
+    fight: ev => eachPlayer(p => revealAndEv(ev, Color.INSTINCT, () => drawEv(ev, 1, p), p)),
   })],
 // SUBNAME: Unidentified Flying U-Foes
 // TRAP
-  [ 1, makeTrapCard("U-Foes", "Unidentified Flying U-Foes", 3, u,
+  [ 1, makeTrapCard("U-Foes", "Unidentified Flying U-Foes", 3,
+    ev => {
+      addTrapAction(ev, 'Discard a [Tech] Hero', c => playerState.hand.limit(isHero).has(Color.TECH), ev => {
+        selectCardEv(ev, 'Select a Hero to discard', playerState.hand.limit(isHero).limit(Color.TECH), c => discardEv(ev, c));
+      });
+      addTrapAction(ev, 'Discard 3 cards', c => playerState.hand.size >= 3, ev => {
+        selectObjectsEv(ev, 'Select cards to discard', 3, playerState.hand.deck, c => discardEv(ev, c));
+      });
+    },
     // Discard a [Tech] Hero or discard three cards.
-    ev => true,
+    ev => false,
     // Play two extra cards from the Villain Deck next turn.
-    ev => {},
+    ev => addFutureTrigger(ev => { villainDrawEv(ev); villainDrawEv(ev); }),
   )],
 // FIGHT: Each player who reveals a [Ranged] Hero may KO a card from their discard pile.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("U-Foes", "X-Ray", 5, 3, {
-    fight: ev => {},
+    fight: ev => eachPlayer(p => revealAndEv(ev, Color.RANGED, () => selectCardAndKOEv(ev, p.discard.deck, p), p)),
   })],
 ]},
 { name: "Warbound", cards: [
@@ -2922,45 +2948,61 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Warbound", "Elloe Kaifi", 5, 3, {
-    fight: ev => {},
+    fight: ev => {
+      drawEv(ev);
+      chooseOtherPlayerEv(ev, p => drawEv(ev, 1, p));
+    },
   })],
 // FIGHT: KO a card from the HQ. Each player reveals their hand and KO's a card with that same cost.
 // ESCAPE: Same effect.
 // ATTACK: 7
 // VP: 5
   [ 1, makeVillainCard("Warbound", "Hiroim", 7, 5, {
-    fight: ev => {},
-    escape: ev => {},
+    fight: ev => selectCardEv(ev, 'Choose a card to KO', hqCards(), c => {
+      KOEv(ev, c);
+      eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(v => v.cost === c.cost), p));
+    }),
+    escape: sameEffect,
   })],
 // AMBUSH: KO a Hero from the HQ. Each player reveals their hand and discards a card with that same cost.
 // ESCAPE: Same effect.
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("Warbound", "Korg", 6, 4, {
-    ambush: ev => {},
-    escape: ev => {},
+    fight: ev => selectCardEv(ev, 'Choose a card to KO', hqCards(), c => {
+      discardEv(ev, c);
+      eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(v => v.cost === c.cost), p));
+    }),
+    escape: sameEffect,
   })],
 // FIGHT: Look at the top two cards of your deck. Put them back on the top and/or bottom. Then {FEAST}.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Warbound", "Miek The Unhived", 5, 3, {
-    fight: ev => {},
+    fight: [ ev => investigateEv(ev, c => false), feastEv ], // TODO almost investigate
   })],
 // {WOUNDED FURY}
-// Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b>
+// Fight<b></b>: Feast<b>. If this feasts on a non-grey Hero, draw two cards.</b> // FIX
 // ATTACK: 4+
 // VP: 3
   [ 2, makeVillainCard("Warbound", "No-Name, Brood Queen", 4, 3, {
-    fight: ev => {},
+    fight: ev => feastEv(ev, c => isNonGrayHero(c) && drawEv(ev, 2)),
     varDefense: woundedFuryVarDefense,
   })],
 // SUBNAME: Warbound Rescue
 // TRAP
-  [ 1, makeTrapCard("Warbound", "Warbound Rescue", 7, u,
+  [ 1, makeTrapCard("Warbound", "Warbound Rescue", 7,
+    ev => addTrapAction(ev,
+      'Put Warbound and Henchman into the city',
+      c => playerState.victory.has(isHenchman) && playerState.victory.has(isGroup("Warbound")),
+      ev => {
+        selectCardEv(ev, 'Choose a Villain', playerState.victory.limit(isGroup('Warbound')), c => enterCityEv(ev, c));
+        selectCardEv(ev, 'Choose a Henchman', playerState.victory.limit(isHenchman), c => enterCityEv(ev, c))
+      }),
     // Put a Warbound Villain and Henchman Villain from your Victory Pile back into the city.
-    ev => true,
+    ev => false,
     // Each player gains a Wound.
-    ev => {},
+    ev => eachPlayer(p => gainWoundEv(ev, p)),
   )],
 ]},
 ]);

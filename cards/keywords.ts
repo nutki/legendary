@@ -476,6 +476,14 @@ function playHorrorEv(ev: Ev) {
     })
   })
 }
+function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: Handler) {
+  addTurnAction(new Ev(ev, 'EFFECT', {
+    what: ev.source,
+    desc,
+    cost: { cond: c => c.location === gameState.trap && cond(c) },
+    func: ev => { func(ev); moveCardEv(ev, ev.what, playerState.victory); },
+  }));
+}
 function strikerCount() {
   // TODO
   return 0;
