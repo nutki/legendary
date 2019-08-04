@@ -221,6 +221,15 @@ sub maketrap {
         my $epicdefense = $_{ATTACK} =~  s/[^0-9.]//gr;
         $defense = "[ $defense, $epicdefense ]" if $epicdefense;
       }
+      $_ = shift @subitems and parse() if $subitems[0] =~ '#TRANS';
+      my $makeend = "";
+      if ($_{TRANSNAME}) {
+        filterprint(qw(STRIKE VP ATTACK));
+        $vp ne $_{VP} and die "transformed vp differ for $mastermindname";
+        $make = "makeTransformingMastermindCard(make";
+        my $transdefense = $_{ATTACK} =~  s/[^0-9.]//gr;
+        $makeend = "]), \"$_{TRANSNAME}\", $transdefense, ev => {\n// $_{STRIKE}\n";
+      }
       print "${make}MastermindCard(\"$mastermindname\", $defense, $vp, \"$leads\", ev => {\n";
       print "// $strike\n";
       print "// $epicstrike\n" if $epicstrike;
@@ -232,6 +241,7 @@ sub maketrap {
         print "  // $_{FIGHT}\n";
         print "  } ],\n";
       }
+      print $makeend;
       print "]),\n";
     } elsif ($type eq "VILLAINS") {
       ($_, my @subitems) = split/^\n+/m;
