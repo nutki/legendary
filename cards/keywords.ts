@@ -506,6 +506,18 @@ function makeTransformingHeroCard(c1: Card, c2: Card) {
   c2.transformed = c1;
   return c1;
 }
+function makeTransformingMastermindCard(c1: Card, name: string, defense: number, strike: Handler, abilities?: MastermindCardAbillities) {
+  const c2 = makeMastermindCard(name, defense, c1.printedVP, c1.leads, strike, [], abilities);
+  c2.backSide = c1;
+  c1.backSide = c2;
+  return c1;
+}
+function transformMastermindEv(ev: Ev, c?: Card) {
+  const m = c || (isTactic(ev.source) ? ev.source.mastermind : ev.source);
+  cont(ev, () => {
+    Object.setPrototypeOf(m, Object.getPrototypeOf(m.backSide));
+  });
+}
 function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
   selectCardOptEv(ev, "Select card to Smash", playerState.hand.deck, c => {
     discardEv(ev, c);
@@ -514,7 +526,7 @@ function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
   });
 }
 function canOutwit(p: Player = playerState) {
-  return yourHeroes(p).uniqueCount(c => c.cost) >= (turnState.outwitAmount || 3);
+  return yourHeroes(p).uniqueCount(c => c.cost) >= (gameState.outwitAmount || 3);
 }
 function mayOutwitEv(ev: Ev, func: () => void) {
   canOutwit() && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', { func }));

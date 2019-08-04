@@ -1427,3 +1427,303 @@ addTemplates("MASTERMINDS", "Champions", [
   } ],
 ]),
 ]);
+addTemplates("MASTERMINDS", "World War Hulk", [
+// START: Stack 8 Bystanders next to General Ross as "Helicopter" Villains with 2 Attack. You can fight them to rescue them as Bystanders. You can't fight General Ross while he has any Helicopters.
+// TRANSNAME: Red Hulk
+// {WOUNDED FURY}
+// You can't fight Helicopters, and they don't stop you from fighting Red Hulk.
+makeTransformingMastermindCard(makeMastermindCard("General Ross", 6, 6, "Code Red", ev => {
+//  General Ross {TRANSFORM} then {XDRAMPAGE Hulk}.
+  transformMastermindEv(ev);
+  xdRampageEv(ev, 'Hulk');
+}, [
+// This Mastermind {TRANSFORM}.
+  [ "Bust You Down to Private", ev => {
+  // Each other player puts a non-grey Hero from their hand on the bottom of the Hero Deck, then puts a 0-cost Hero from the KO pile into their hand.
+    eachOtherPlayerVM(p => {
+      selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.herodeck, true));
+      selectCardEv(ev, "Choose a Hero", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => moveCardEv(ev, c, p.hand));
+    })
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Call Out the Army", ev => {
+  // Put 3 Bystanders from the Bystander Stack next to this Mastermind as "Helicopters."
+    repeat(3, () => cont(ev, () => gameState.bystanders.withTop(c => {
+      villainify("Helicopter", c, 2, "RESCUE");
+      moveCardEv(ev, c, ev.source.mastermind.attachedDeck("HELICOPTERS"));
+    })));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Personal Arsenal", ev => {
+  // For each Master Strike in the KO pile, put a Bystander from the Bystander Stack next to the Mastermind as a "Helicopter."
+    repeat(gameState.ko.count(isStrike), () => cont(ev, () => gameState.bystanders.withTop(c => {
+      villainify("Helicopter", c, 2, "RESCUE");
+      moveCardEv(ev, c, ev.source.mastermind.attachedDeck("HELICOPTERS"));
+    })));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Urban Warfare", ev => {
+  // Put a random Bystander next to the Mastermind as a "Helicopter" from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
+    const cards = new Array<Card>();
+    [ gameState.bystanders.deck, gameState.escaped.deck, ...gameState.players.map(p => p.victory.deck) ].each(d => d.withRandom(c => cards.push(c)));
+    // TODO bystanders in city
+    cont(ev, () => cards.each(c => {
+      villainify("Helicopter", c, 2, "RESCUE");
+      moveCardEv(ev, c, ev.source.mastermind.attachedDeck("HELICOPTERS"));
+    }));
+    transformMastermindEv(ev);
+  } ],
+], {
+  init: m => {
+    repeat(8, () => gameState.bystanders.withTop(c => {
+      villainify("Helicopter", c, 2, "RESCUE");
+      moveCard(c, m.attachedDeck("HELICOPTERS"));
+    }));
+  },
+  fightCond: c => c.attachedDeck("HELICOPTERS").size === 0,
+  cardActions: [
+    (c, ev) => c.attached("HELICOPTERS").size ? fightActionEv(ev, c.attached("HELICOPTERS")[0]) : noOpActionEv(ev), // TODO cardAction array return
+  ],
+}), "Red Hulk", 9, ev => {
+// Red Hulk {TRANSFORM}, then stack a random Bystander from each player's Victory Pile next to this as a Helicopter. Each player who didn't have a Bystander gains a Wound instead.
+  transformMastermindEv(ev);
+  eachPlayer(p => {
+    p.victory.limit(isBystander).withRandom(c => {
+      villainify("Helicopter", c, 2, "RESCUE");
+      attachCardEv(ev, c, ev.source, "HELICOPTERS");
+    });
+    p.victory.has(isBystander) || gainWoundEv(ev, p);
+  })
+}, {
+  varDefense: woundedFuryVarDefense,
+}),
+// This Mastermind gets +4 Attack unless you {OUTWIT} them.
+// TRANSNAME: Illuminati, Open Warfare
+// Whenever a card effect causes a player to draw any number of cards, that player must then also discard a card.
+makeTransformingMastermindCard(makeMastermindCard("Illuminati, Secret Society", 11, 7, "Illuminati", ev => {
+// Each player reveals their hand and discards two cards that each cost between 1 and 4. The Illuminati {TRANSFORM}.
+  eachPlayer(p => pickDiscardEv(ev, 2, p, c => c.cost >= 1 && c.cost <= 4));
+  transformMastermindEv(ev);
+}, [
+// The Illuminati {TRANSFORM}.
+  [ "Black Bolt's Omni-Shout", ev => {
+  // Each other player reveals their hand and discards two cards with no rules text.
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 2, p, hasFlag("N")));
+    transformMastermindEv(ev);
+  } ],
+// The Illuminati {TRANSFORM}.
+  [ "Dr. Strange's Orb of Agamotto", ev => {
+  // Each other player reveals their hand and discards a [Ranged] or [Instinct] Hero.
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p, isColor(Color.RANGED | Color.INSTINCT)));
+    transformMastermindEv(ev);
+  } ],
+// The Illuminati {TRANSFORM}.
+  [ "Hulkbuster's Hammer Fist", ev => {
+  // Each other player reveals their hand and KOs a [Tech] or [Strength] Hero from their hand or discard pile.
+    eachOtherPlayerVM(p => selectCardAndKOEv(ev, handOrDiscard(p).limit(Color.TECH | Color.STRENGTH), p));
+    transformMastermindEv(ev);
+  } ],
+// The Illuminati {TRANSFORM}.
+  [ "Zom's Manacles of Living Bondage", ev => {
+  // Each other player reveals a [Covert] Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p));
+    transformMastermindEv(ev);
+  } ],
+], {
+  cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
+    outwitOrEv(ev, () => {});
+  }}) ],
+  varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 4),  
+}), "Illuminati, Open Warfare", 13, ev => {
+// Each player reveals their hand and discards two cards that each cost between 5 and 8. The Illuminati {TRANSFORM}.
+  eachPlayer(p => pickDiscardEv(ev, 2, p, c => c.cost >= 5 && c.cost <= 8));
+  transformMastermindEv(ev);
+}, {
+  trigger: {
+    event: 'DRAW', // TODO draw N
+    after: ev => pickDiscardEv(ev, 1, ev.parent.who),
+  }
+}),
+// King Hulk gets +1 Attack for each Warbound Villain in the city and in the Escape Pile.
+// TRANSNAME: King Hulk, Worldbreaker
+// {WOUNDED FURY}
+makeTransformingMastermindCard(makeMastermindCard("King Hulk, Sakaarson", 9, 6, "Warbound", ev => {
+// Each player KO's a Warbound Villain from their Victory Pile or gains a Wound. King Hulk {TRANSFORM}.
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(isGroup(ev.source.leads)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  transformMastermindEv(ev);
+}, [
+// King Hulk {TRANSFORM}.
+  [ "Fury of the Green Scar", ev => {
+  // Each other player reveals their hand and discards a Hero that isn't grey and isn't [Strength].
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p, c => isNonGrayHero(c) && !isColor(Color.STRENGTH)(c)));
+    transformMastermindEv(ev);
+  } ],
+// King Hulk {TRANSFORM}.
+  [ "Oath of the Warbound", ev => {
+  // The Villain in the Escape Pile with the highest printed Attack enters the Sewers.
+    selectCardEv(ev, "Choose a Villain", gameState.escaped.limit(isVillain).highest(c => c.printedDefense), c => enterCityEv(ev, c));
+    transformMastermindEv(ev);
+  } ],
+// King Hulk {TRANSFORM}.
+  [ "Revenge from the Stars", ev => {
+  // After you put this in your Victory Pile, {XDRAMPAGE Hulk}.
+    xdRampageEv(ev, 'Hulk');
+    transformMastermindEv(ev);
+  } ],
+// King Hulk {TRANSFORM}.
+  [ "Rule By the Strongest", ev => {
+  // You get +1 Recruit for each of your [Strength] Heroes.
+    addRecruitEvent(ev, yourHeroes().count(Color.STRENGTH));
+    transformMastermindEv(ev);
+  } ],
+], {
+  varDefense: c => c.printedDefense + cityVillains().count(isGroup(c.leads)) + gameState.escaped.count(isGroup(c.leads)),
+}), "King Hulk, Worldbreaker", 10, ev => {
+// Each player reveals their hand, then KO's a card from their hand or discard pile that has the same card name as a card in the HQ. King Hulk {TRANSFORM}.
+  const names = hqCards().map(c => c.cardName);
+  eachPlayer(p => selectCardAndKOEv(ev, handOrDiscard(p).limit(c => names.includes(c.cardName)), p)); // multiplayer reveal
+  transformMastermindEv(ev);
+}, {
+  varDefense: woundedFuryVarDefense,
+}),
+// All cards' {OUTWIT} abilities require four different costs instead of three.
+// TRANSNAME: M.O.D.O.K., Network Nightmare
+// You can only fight M.O.D.O.K with Recruit, not Attack. // TODO
+makeTransformingMastermindCard(makeMastermindCard("M.O.D.O.K.", 9, 6, "Intelligencia", ev => {
+// Each player who can't {OUTWIT} M.O.D.O.K. gains a Wound, then M.O.D.O.K. {TRANSFORM}.
+  eachPlayer(p => outwitOrEv(ev, () => gainWoundEv(ev, p), p));
+  transformMastermindEv(ev);
+}, [
+// M.O.D.O.K. {TRANSFORM}.
+  [ "Brain Scramble", ev => {
+  // Each other player discards their hand, then draws as many cards as they discarded.
+    eachOtherPlayerVM(p => { discardHandEv(ev, p); drawEv(ev, p.hand.size, p); })
+    transformMastermindEv(ev);
+  } ],
+// M.O.D.O.K. {TRANSFORM}.
+  [ "Designed Only For...K.O.ING", ev => {
+  // Reveal the top three cards of your deck. KO one of them, draw one, and discard one.
+   // TODO
+    transformMastermindEv(ev);
+  } ],
+// M.O.D.O.K. {TRANSFORM}.
+  [ "Don't Get a Big head About It", ev => {
+  // Draw a card for each Intelligencia Villain in your Victory Pile.
+    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    transformMastermindEv(ev);
+  } ],
+// M.O.D.O.K. {TRANSFORM}.
+  [ "Redundancy Algorithim", ev => {
+  // Each other player reveals their hand and discards two cards that hand the same cost. // FIX
+    eachOtherPlayerVM(p => {
+      const costs = p.hand.deck.unique(c => c.cost).limit(cost => p.hand.count(c => c.cost === cost) > 1);
+      selectCardEv(ev, "Choose a card to discard", p.hand.limit(c => costs.includes(c.cost)), c => {
+        cont(ev, () => selectCardEv(ev, "Choose a card to discard", p.hand.limit(v => v !== c && v.cost === c.cost), v => {
+          discardEv(ev, c);
+          discardEv(ev, v);
+        }, p));
+      }, p);
+    });
+    transformMastermindEv(ev);
+  } ],
+], {
+  init: c => gameState.outwitAmount = 4, // TODO only on non-transformed side
+}), "M.O.D.O.K., Network Nightmare", 8, ev => {
+// Each player who can't {OUTWIT} M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. {TRANSFORM}.
+  eachPlayer(p => outwitOrEv(ev, () => selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p), p));
+  transformMastermindEv(ev);
+}),
+// You can't fight the Red King while any Villains are in the city.
+// TRANSNAME: The Red King, Power Armored
+makeTransformingMastermindCard(makeMastermindCard("The Red King", 7, 6, "Sakaar Imperial Guard", ev => {
+// The Red King {TRANSFORM}, then each player reveals a [Tech] card or gains a Wound.
+  transformMastermindEv(ev);
+  eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p));
+}, [
+// The Red King {TRANSFORM}.
+  [ "Haughty Spite", ev => {
+  // Each other player without a Red King Tactic in their Victory Pile gains a Wound.
+    eachOtherPlayerVM(p => p.victory.has(c => isTactic(c) && c.mastermind === ev.source.mastermind) || gainWoundEv(ev, p));
+    transformMastermindEv(ev);
+  } ],
+// The Red King {TRANSFORM}.
+  [ "Royal Bodyguard", ev => {
+  // Reveal cards from the Villain Deck until you reveal a Sakaar Imperial Guard. If you find one, play it. Either way, shuffle all the other revealed cards back into the Villain Deck.
+    revealVillainDeckEv(ev, cards => !cards.has(isGroup(ev.source.mastermind.leads)), cards => {
+      cards.limit(c => !isGroup(ev.source.mastermind.leads)(c)).each(c => shuffleIntoEv(ev, c, gameState.villaindeck)); 
+      cards.limit(isGroup(ev.source.mastermind.leads)).each(c => villainDrawEv(ev, c));
+    });
+    transformMastermindEv(ev);
+  } ],
+// The Red King {TRANSFORM}.
+  [ "Treasury of Sakaar", ev => {
+  // You get +1 Recruit for each Sakaar Imperial Guard and Red King Tactic in your Victory Pile, including this one.
+    addRecruitEvent(ev, playerState.victory.count(c => isGroup(ev.source.mastermind.leads)(c) || isTactic(c) && c.mastermind === ev.source.mastermind));
+    transformMastermindEv(ev);
+  } ],
+// The Red King {TRANSFORM}.
+  [ "Vast Armies of Sakaar", ev => {
+  // If this is not the final Tactic, reveal the top three cards of the Villain Deck. Play all the Villains you revealed. Put the rest back in random order.
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 3, cards => {
+      selectCardOrderEv(ev, 'Choose a Villain', cards.limit(isVillain), c => enterCityEv(ev, c));
+    }, true, false);
+    transformMastermindEv(ev);
+  } ],
+], {
+  fightCond: c => cityVillains().size > 0,
+}), "The Red King, Power Armored", 10, ev => {
+// The Red King {TRANSFORM} then play another card from the Villain Deck.
+  transformMastermindEv(ev);
+  villainDrawEv(ev);
+}),
+// START: Shuffle 2 Wounds into each player's deck before drawing starting hands.
+makeTransformingMastermindCard(makeMastermindCard("The Sentry", 10, 6, "Aspects of the Void", ev => {
+// The Sentry {TRANSFORM}, then {XDRAMPAGE Void}.
+  transformMastermindEv(ev);
+  xdRampageEv(ev, 'Void');
+}, [
+// This Mastermind {TRANSFORM}.
+  [ "Pacifying Light", ev => {
+  // Each other player reveals their hand and discard two cards with Recruit icons.
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 2, p, hasRecruitIcon));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Power of a Million Exploding Suns", ev => {
+  // Put all Heroes from the HQ on the bottom of the Hero Deck. Each other player reveals their hand and discards each card with the same card name as any of those cards.
+    const names = hqHeroes().unique(c => c.cardName);
+    hqHeroes().each(c => moveCardEv(ev, c, gameState.herodeck, true));
+    eachOtherPlayerVM(p => p.hand.limit(c => names.includes(c.cardName)).each(c => discardEv(ev, c)));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Reflexive Teleportation", ev => {
+  // Choose one of your Heroes that costs 5 or less. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as an extra card.
+    selectCardEv(ev, "Choose a Hero", yourHeroes().limit(c => c.cost <= 5), sel => addTurnTrigger("CLEANUP", undefined, ev => moveCardEv(ev, sel, playerState.hand)));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Repressed Darkness", ev => {
+  // Each other player reveals a [Ranged] Hero or plays an Aspects of the Void Villain from their Victory Pile as if playing it from the Villain Deck.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.RANGED, () => selectCardEv(ev, "Choose a Villain", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => enterCityEv(ev, c)), p));
+    transformMastermindEv(ev);
+  } ],
+// TRANSNAME: The Void
+// {WOUNDED FURY}
+// The Void {TRANSFORM}.
+], {
+  init: c => {
+    eachPlayer(p => repeat(2, () => gameState.wounds.withTop(c => moveCard(c, p.deck))));
+    eachPlayer(p => p.deck.shuffle());
+  },
+}), "The Void", 11, ev => {
+// {FEAST} on each player. If this feasts on a player's grey Hero, that player gains a Wound.
+  eachPlayer(p => feastEv(ev, c => isColor(Color.GRAY)(c) && gainWoundEv(ev, p), p));
+  transformMastermindEv(ev);
+}, {
+  varDefense: woundedFuryVarDefense,
+}),
+]);

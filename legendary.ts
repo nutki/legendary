@@ -106,6 +106,7 @@ interface Card {
   epic?: boolean
   coordinate?: boolean
   transformed?: Card
+  backSide?: Card
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -759,7 +760,6 @@ interface Turn extends Ev {
   piercing: number
   recruitWithAttack: boolean
   piercingWithAttack: boolean
-  outwitAmount?: number
   smashMultiplier?: number
 }
 interface Trigger {
@@ -821,6 +821,7 @@ interface Game extends Ev {
   gameSetup: Setup
   turnNum: number
   strikeCount: number
+  outwitAmount?: number
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1226,10 +1227,10 @@ gameSetup.mastermind.forEach((m, i) => {
       !gameSetup.villains.includes(mastermind.leads) &&
       !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
 });
-// Draw initial hands
-for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
 if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
+// Draw initial hands
+for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 // Populate HQ
 gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
 }
@@ -1919,8 +1920,9 @@ function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false
   const options = fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
   options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);
 }
-function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState) {
-  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", who.hand.deck, sel => discardEv(ev, sel), who));
+function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined) {
+  const cards = cond ? who.hand.deck : who.hand.limit(cond);
+  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", cards, sel => discardEv(ev, sel), who));
 }
 function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState) {
   repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on top of your deck`, who.hand.deck, sel => moveCardEv(ev, sel, who.deck), who));
