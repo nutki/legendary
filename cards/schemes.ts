@@ -1573,3 +1573,78 @@ makeSchemeCard("Steal All Oxygen on Earth", { twists: 8 }, ev => {
   hqHeroes().limit(c => c.cost > level).each(c => KOEv(ev, c));
 }, koProgressTrigger(isNonGrayHero), () => setSchemeTarget(20)),
 ]);
+addTemplates("SCHEMES", "World War Hulk", [
+// SETUP: 9 Twists. 7 Heroes.
+// EVILWINS: When 25 non-grey Heroes are KO'd.
+makeSchemeCard("Break the Planet Asunder", { twists: 9 }, ev => {
+  // Twist: Stack this Twist next to the Scheme as a "Tectonic Break." Then KO each Hero from the HQ whose printed Attack is less than the number of Tectonic Breaks (no printed Attack counts as 0).
+  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  cont(ev, () => {
+    const n = gameState.scheme.attached('TWIST').size;
+    hqHeroes().limit(c => !c.printedAttack || c.printedAttack < n).each(c => KOEv(ev, c));
+  })
+}, escapeProgressTrigger(isNonGrayHero), () => setSchemeTarget(25)),
+// SETUP: 10 Twists. Shuffle together 20 Bystanders and 10 Cytoplasm Spike Henchmen as an "Infected Deck."
+// EVILWINS: When the KO pile and Escape Pile combine to have 18 Bystanders and/or Spikes.
+makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], required: { henchmen: "Cytoplasm Spike" } }, ev => {
+  // Twist: Reveal the top three cards of the Infected Deck. KO all Bystanders you revealed. All Spikes you revealed enter the city.
+  const infected = gameState.scheme.attachedDeck('INFECTED');
+  repeat(3, () => cont(ev, () => {
+    infected.withTop(c => {
+      isBystander(c) && KOEv(ev, c);
+      c.cardName === extraHenchmenName() && enterCityEv(ev, c);
+    })
+  }));
+}, koOrEscapeProgressTrigger(c => isBystander(c) || c.cardName == extraHenchmenName()), () => {
+  setSchemeTarget(18);
+  const infected = gameState.scheme.attachedDeck('INFECTED');
+  gameState.villaindeck.limit(c => c.cardName === extraHenchmenName()).each(c => moveCard(c, infected));
+  repeat(20, () => gameState.bystanders.withTop(c => moveCard(c, infected)));
+  infected.shuffle();
+}),
+// SETUP: 10 Twists. 6 Wounds per player in Wound Stack. Use exactly two Heroes with "Hulk" in their Hero Names.
+// EVILWINS: When the Wound Stack runs out.
+makeSchemeCard("Fall of the Hulks", { twists: 10, wounds: [6, 12, 18, 24, 30] }, ev => { // TODO use 2 Hulk
+  if (ev.nr >= 3 && ev.nr <= 6) {
+    // Twist 3-6 <b>Cross-Dimension Hulk Rampage</b>. FIX
+    xdRampageEv(ev, 'Hulk');
+  } else if (ev.nr >= 7 && ev.nr <= 10) {
+    // Twist 7-10 Each player gains a Wound.
+    eachPlayer(p => gainWoundEv(ev, p));
+  }
+}, runOutProgressTrigger('WOUNDS'), () => gameState.schemeProgress = gameState.wounds.size),
+// SETUP: 6 Twists.
+// EVILWINS: When 2 Villains per player have escaped or the Villain Deck runs out.
+makeSchemeCard("Gladiator Pits of Sakaar", { twists: 6 }, ev => {
+  // Twist: Until the start of your next turn, each player can only play cards from a single Team of their choice during their turn. (e.g. S.H.I.E.L.D., Avengers, X-Men, Warbound, etc.)
+}),
+// SETUP: 7 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Put them in a face-up "Mutation Pile."
+makeSchemeCard("Mutating Gamma Rays", { twists: 7 }, ev => {
+  if (ev.nr <= 6) {
+    // Twist 1-6 Each player in turn does the following: Put a non-grey Hero from your hand into the Mutation Pile. Then you may put a different card name with the same cost from the Mutation Pile into your discard pile.
+  } else if (ev.nr === 7) {
+    // Twist 7 Evil Wins!
+  }
+}),
+// SETUP: 8 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Shuffle them into a "Hulk Deck."
+// RULE: You may recruit the top card of the Prison Ship stack.
+// EVILWINS: When there are 10 cards in the Prison Ship or the Hulk Deck runs out.
+makeSchemeCard("Shoot Hulk into Space", { twists: 8 }, ev => {
+  // Twist: Put 2 cards from the Hulk Deck into a face-up "Prison Ship" stack next to the S.H.I.E.L.D. Officer Stack.
+}),
+// SETUP: 11 Twists.
+// RULE: To recruit a Hero in the HQ, you must also pay 1 Recruit for each Obedience Disk under it.
+// EVILWINS: When each HQ space has 2 Obedience Disks.
+makeSchemeCard("Subjugate with Obedience Disks", { twists: 11 }, ev => {
+  // Twist: Put this Twist under an HQ space as an "Obedience Disk." No space can have two more Obedience Disks than any other space.
+}),
+// SETUP: 9 Twists. Put three additional Masterminds out of play, "Lurking." Each of the four Masterminds has two random Tactics.
+// RULE: When you defeat all of a Mastermind's Tactics, KO its face card and a random Lurking Mastermind enters play.
+makeSchemeCard("World War Hulk", { twists: 9 }, ev => {
+  if (ev.nr <= 8) {
+    // Twist 1-8 Swap the current Mastermind with a random Lurking Mastermind.
+  } else if (ev.nr === 9) {
+    // Twist 9 Evil Wins!
+  }
+}),
+]);
