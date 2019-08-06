@@ -2123,7 +2123,9 @@ function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStr
 function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
-  fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr: ++gameState.strikeCount }));
+  const nr = ++gameState.strikeCount;
+  fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr }));
+  if (gameState.advancedSolo) villainDrawEv(ev);
 }
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
@@ -2136,7 +2138,6 @@ function villainDraw(ev: Ev): void {
     pushEffects(ev, c, 'ambush', c.ambush);
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
-    if (gameState.advancedSolo) villainDrawEv(ev); // TODO also on non villainDraw strikes?
   } else if (c.cardType === "SCHEME TWIST") {
     playTwistEv(ev, c);
   } else if (c.cardType === "BYSTANDER" || c.cardType === "HERO") { // only X-Cutioner's Song puts non villain heroes in the Villain Deck
