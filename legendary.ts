@@ -2190,8 +2190,8 @@ function villainDefeat(ev: Ev): void {
   // TODO choose move order
   // TODO all the move effects should happen first
   // Handle GotG shards
-  c.attached('SHARD').withFirst(c => gainShardEv(ev, c));
-  cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
+  ev.what.attached('SHARD').withFirst(c => gainShardEv(ev, c));
+  cont(ev, () => ev.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   b.each(bc => rescueEv(ev, bc));
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
