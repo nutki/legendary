@@ -1750,7 +1750,7 @@ function schemeProgressEv(ev: Ev, amount: number) {
   cont(ev, () => {
     if (amount < 0) amount = 0;
     gameState.schemeProgress = amount;
-    if (amount === 0) evilWinsEv(ev);
+    if (getSchemeCountdown() <= 0) evilWinsEv(ev);
   });
 }
 function getSchemeCountdown() {
