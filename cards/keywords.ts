@@ -552,3 +552,10 @@ function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' 
 function addMastermindEv(ev: Ev, name?: string) {
   // TODO
 }
+
+function empowerEv(ev: Ev, color: number) {
+  addAttackEvent(ev, hqCards().count(color));
+}
+function empowerVarDefense(color: number, amount: number = 1) {
+  return (c: Card) => c.printedDefense + hqCards().count(color) * amount;
+}

@@ -4354,3 +4354,107 @@ addHeroTemplates("World War Hulk", [
   } ]),
 },
 ]);
+addHeroTemplates("Ant-Man", [
+{
+  name: "Ant-Man",
+  team: "Avengers",
+// {SIZECHANGING TECH}
+// Draw a card.
+  c1: makeHeroCard("Ant-Man", "Ride the Ants", 4, u, 1, Color.TECH, "Avengers", "F", ev => drawEv(ev, 1), { sizeChanging: Color.TECH }),
+// {USIZECHANGING TECH 3}
+// {POWER Tech} You may discard a card. If you do, draw a card.
+  c2: makeHeroCard("Ant-Man", "Risky Science", 5, u, 2, Color.TECH, "Avengers", "D", ev => superPower(Color.TECH) && selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => {
+    discardEv(ev, c); drawEv(ev);
+  }), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
+// {SIZECHANGING TECH}
+// You get +1 Attack for each extra card you drew this turn.
+  uc: makeHeroCard("Ant-Man", "Giant Ego", 6, u, 2, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev, pastEvents('DRAW').count(e => e.who === playerState)), { sizeChanging: Color.TECH }),
+// {USIZECHANGING TECH 5}
+// A hero in the HQ without <b>Size-Changing</b> abilities gain {SIZECHANGING TECH} this turn.
+  ra: makeHeroCard("Ant-Man", "Pym Particles", 9, u, 5, Color.TECH, "Avengers", "", ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(c => !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging), c => {
+    addTurnSet('sizeChanging', v => v === c, (c, n) => safeOr(n, Color.TECH));
+  }), { uSizeChanging: { color: Color.TECH, amount: 5 } }),
+},
+{
+  name: "Wasp",
+  team: "Avengers",
+// {USIZECHANGING COVERT 2}
+// {POWER Covert} You get +2 Attack.
+  c1: makeHeroCard("Wasp", "Bio-Electric Sting", 3, u, 1, Color.COVERT, "Avengers", "FD", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2), { uSizeChanging: { color: Color.COVERT, amount: 2 } }),
+// {SIZECHANGING COVERT}
+// {POWER Covert} Draw a card.
+  c2: makeHeroCard("Wasp", "Tiny Winged Justice", 4, 2, u, Color.COVERT, "Avengers", "FD", ev => superPower(Color.COVERT) && drawEv(ev, 1), { sizeChanging: Color.COVERT }),
+// {SIZECHANGING COVERT}
+// You get +1 Attack for each card you recruited this turn.
+  uc: makeHeroCard("Wasp", "Swarm Tactics", 6, u, 2, Color.RANGED, "Avengers", "D", ev => addAttackEvent(ev, pastEvents('RECRUIT').size), { sizeChanging: Color.COVERT }),
+// {USIZECHANGING COVERT 5}
+// {TEAMPOWER Avengers} You get +1 Attack for each other Avengers card you played this turn.
+  ra: makeHeroCard("Wasp", "Founding Avenger", 9, u, 4, Color.COVERT, "Avengers", "", ev => addAttackEvent(ev, superPower("Avengers")), { uSizeChanging: { color: Color.COVERT, amount: 5 } }),
+},
+{
+  name: "Jocasta",
+  team: "Avengers",
+// {POWER Tech} You get <b>Empowered</b> by [Tech].
+  c1: makeHeroCard("Jocasta", "Creation of Ultron", 3, u, 2, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && empowerEv(ev, Color.TECH)),
+// If your discard pile is empty, you get +2 Recruit. Otherwise, shuffle your discard pile into your deck.
+  c2: makeHeroCard("Jocasta", "Reprocess", 4, 2, u, Color.RANGED, "Avengers", "D", ev => {
+    playerState.discard.size ? addRecruitEvent(ev, 2) : shuffleIntoEv(ev, playerState.discard, playerState.deck);
+  }),
+// {SIZECHANGING TECH}
+// Draw two cards.
+  uc: makeHeroCard("Jocasta", "Holographic Image Inducer", 6, u, u, Color.TECH, "Avengers", "F", ev => drawEv(ev, 2), { sizeChanging: Color.TECH }),
+// If your discard pile is empty, you get +2 Attack. Otherwise shuffle your discard pile into your deck.
+// GUN: 1
+  ra: makeHeroCard("Jocasta", "Electromagnetic Eyebeams", 7, u, 5, Color.RANGED, "Avengers", "GD", ev => {
+    playerState.discard.size ? addAttackEvent(ev, 2) : shuffleIntoEv(ev, playerState.discard, playerState.deck);
+  }),
+},
+{
+  name: "Wonder Man",
+  team: "Avengers",
+// Chose one: Draw a card, or you get <b>Empowered</b> by [Strength].
+  c1: makeHeroCard("Wonder Man", "One-Hit Wonder", 2, u, 0, Color.STRENGTH, "Avengers", "FD", ev => chooseOneEv(ev, "Choose one",
+    ['Draw a card', ev => drawEv(ev)],
+    ['Get Empowered', ev => empowerEv(ev, Color.STRENGTH)],
+  )),
+// You may put a card from the HQ on the bottom of the Hero Deck.
+// {POWER Ranged} You get <b>Empowered</b> by [Ranged].
+  c2: makeHeroCard("Wonder Man", "Ionic Energy", 4, u, 2, Color.RANGED, "Avengers", "D", [
+    ev => selectCardOptEv(ev, "Choose a card to put on the bottom of the Hero Deck", hqCards(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => superPower(Color.RANGED) && empowerEv(ev, Color.RANGED),
+  ]),
+// Put a card from the HQ on the bottom of the Hero Deck. If that card had a Recruit icon, you get +3 Recruit. If that card had an Attack icon, you get +3 Attack. (if both, get both).
+  uc: makeHeroCard("Wonder Man", "Absorb Ambient Power", 5, 0, 0, Color.RANGED, "Avengers", "", ev => {
+    selectCardEv(ev, "Choose a card to put on the bottom of the Hero Deck", hqCards(), c => {
+      moveCardEv(ev, c, gameState.herodeck, true);
+      hasRecruitIcon(c) && addRecruitEvent(ev, 3);
+      hasAttackIcon(c) && addAttackEvent(ev, 3);
+    });
+  }),
+// <b>Size-Changing</b> [Strength] // FIX
+// Choose any number of cards from the HQ. Put them on the bottom of the Hero Deck. Then you get <b>Empowered</b> by [Ranged] and [Strength].
+  ra: makeHeroCard("Wonder Man", "8th Wonder of the World", 8, u, 4, Color.STRENGTH, "Avengers", "", ev => {
+    selectObjectsAnyEv(ev, "Choose any number of cards", hqCards(), c => moveCardEv(ev, c, gameState.herodeck, true));
+    cont(ev, () => empowerEv(ev, Color.RANGED | Color.STRENGTH));
+  }, { sizeChanging: Color.STRENGTH }),
+},
+{
+  name: "Black Knight",
+  team: "Avengers",
+// You get <b>Empowered</b> by the color of your choice.
+  c1: makeHeroCard("Black Knight", "Amulet of Avalon", 3, u, 0, Color.INSTINCT, "Avengers", "F", ev => chooseClassEv(ev, c => empowerEv(ev, c))), // TODO choose color
+// {POWER Strength} Return a 0-cost card from your discard pile to your hand.
+// GUN: 1
+  c2: makeHeroCard("Black Knight", "Defend the Weak", 3, 2, u, Color.STRENGTH, "Avengers", "GD", ev => superPower(Color.STRENGTH) && selectCardEv(ev, "Choose a card to return to your hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand))),
+// When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
+  uc: makeHeroCard("Black Knight", "Flying Steed", 6, u, 3, Color.COVERT, "Avengers", "", [], { trigger: {
+    event: 'STRIKE',
+    match: (ev, source) => source.location === owner(source).hand,
+    before: ev => chooseMayEv(ev, "Discard Black Knight to draw extra cards", () => { discardEv(ev, ev.source); addEndDrawMod(3); })
+  }}),
+// You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
+  ra: makeHeroCard("Black Knight", "The Ebony Blade", 7, u, 0, Color.INSTINCT, "Avengers", "", ev => selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => {
+    addAttackEvent(ev, c.printedDefense);
+  })),
+},
+]);

@@ -107,6 +107,7 @@ interface Card {
   coordinate?: boolean
   transformed?: Card
   backSide?: Card
+  uSizeChanging?: { color: number, amount: number }
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -127,6 +128,7 @@ interface VillainCardAbillities {
   printedNthCircle?: number
   sizeChanging?: number
   excessiveViolence?: Handler
+  uSizeChanging?: { color: number, amount: number }
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -154,6 +156,7 @@ interface HeroCardAbillities {
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   isArtifact?: boolean
   sizeChanging?: number
+  uSizeChanging?: { color: number, amount: number }
   excessiveViolence?: Handler
   printedPiercing?: number
   lightShow?: Handler
@@ -1510,11 +1513,13 @@ interface ActionCost {
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   let recruit = c.cost;
   if (c.sizeChanging && superPower(c.sizeChanging)) recruit = Math.min(0, recruit - 2);
+  // TODO uSizeChaning, fix double size changing from champions
   return getModifiedStat(c, 'recruitCost', { recruit, cond });
 }
 function getFightCost(c: Card): ActionCost {
   let attack = c.defense;
   if (c.sizeChanging && superPower(c.sizeChanging)) attack = Math.min(0, attack - 2);
+  // TODO uSizeChaning
   return getModifiedStat(c, 'fightCost', (c.bribe ? { either: attack, cond: c.fightCond } : { attack, cond: c.fightCond }));
 }
 function canPayCost(action: Ev) {
