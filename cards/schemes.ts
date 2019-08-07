@@ -1615,36 +1615,104 @@ makeSchemeCard("Fall of the Hulks", { twists: 10, wounds: [6, 12, 18, 24, 30] },
 }, runOutProgressTrigger('WOUNDS'), () => gameState.schemeProgress = gameState.wounds.size),
 // SETUP: 6 Twists.
 // EVILWINS: When 2 Villains per player have escaped or the Villain Deck runs out.
-makeSchemeCard("Gladiator Pits of Sakaar", { twists: 6 }, ev => {
+makeSchemeCard<{enabledUntil: Player, team: Map<Player, Affiliation>}>("Gladiator Pits of Sakaar", { twists: 6 }, ev => {
   // Twist: Until the start of your next turn, each player can only play cards from a single Team of their choice during their turn. (e.g. S.H.I.E.L.D., Avengers, X-Men, Warbound, etc.)
+  ev.state.enabledUntil = playerState;
+}, [escapeProgressTrigger(isVillain), runOutProgressTrigger("VILLAIN", false), {
+  event: "TURN", // TODO turn start trigger
+  match: ev => playerState === gameState.schemeState.enabledUntil,
+  after: ev => {
+    gameState.schemeState.team = new Map();
+    gameState.schemeState.enabledUntil = undefined;
+  }
+}, {
+  event: "PLAY",
+  match: ev => gameState.schemeState.enabledUntil !== undefined,
+  after: ev => gameState.schemeState.put(playerState, ev.what.team), // TODO multi team cards?
+}], s => {
+  s.team = new Map();
+  addStatSet('fightCost', () => true, (c, p) => { // TODO playCost mod
+    if (!s.team.has(playerState)) return p;
+    return { ...p, cond: c => p.cond(c) && isTeam(s.team.get(playerState))(c) };
+  })
 }),
 // SETUP: 7 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Put them in a face-up "Mutation Pile."
-makeSchemeCard("Mutating Gamma Rays", { twists: 7 }, ev => {
+makeSchemeCard("Mutating Gamma Rays", { twists: 7, heroes: [ 4, 6, 6, 6, 7 ] }, ev => { // TODO use HULK
   if (ev.nr <= 6) {
     // Twist 1-6 Each player in turn does the following: Put a non-grey Hero from your hand into the Mutation Pile. Then you may put a different card name with the same cost from the Mutation Pile into your discard pile.
-  } else if (ev.nr === 7) {
-    // Twist 7 Evil Wins!
+    eachPlayer(p => cont(ev, () => {
+      selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => {
+        const mutation = gameState.scheme.attachedDeck('MUTATION');
+        moveCardEv(ev, c, mutation);
+        selectCardOptEv(ev, "Choose a Hero to put in your discard", mutation.limit(v => c.cost === v.cost), c => {
+          moveCardEv(ev, c, p.discard);
+        }, () => {}, p);
+      }, p);
+    }));
   }
+  // Twist 7 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  const mutation = gameState.scheme.attachedDeck('MUTATION');
+  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, mutation));
+  setSchemeTarget(7);
 }),
 // SETUP: 8 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Shuffle them into a "Hulk Deck."
 // RULE: You may recruit the top card of the Prison Ship stack.
 // EVILWINS: When there are 10 cards in the Prison Ship or the Hulk Deck runs out.
-makeSchemeCard("Shoot Hulk into Space", { twists: 8 }, ev => {
+makeSchemeCard("Shoot Hulk into Space", { twists: 8, heroes: [ 4, 6, 6, 6, 7 ] }, ev => { // TODO use HULK
   // Twist: Put 2 cards from the Hulk Deck into a face-up "Prison Ship" stack next to the S.H.I.E.L.D. Officer Stack.
+  const hulkDeck = gameState.scheme.attachedDeck('HULK');
+  const prison = gameState.officer.attachedDeck('PRISON');
+  repeat(2, () => cont(ev, () => hulkDeck.withTop(c => moveCardEv(ev, c, prison))));
+  cont(ev, () => {
+    schemeProgressEv(ev, prison.size);
+    hulkDeck.size === 0 && evilWinsEv(ev);
+  });
+}, [], () => {
+  const hulkDeck = gameState.scheme.attachedDeck('HULK');
+  gameState.officer.attachedDeck('PRISON');
+  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, hulkDeck));
+  setSchemeTarget(10);
 }),
 // SETUP: 11 Twists.
 // RULE: To recruit a Hero in the HQ, you must also pay 1 Recruit for each Obedience Disk under it.
 // EVILWINS: When each HQ space has 2 Obedience Disks.
 makeSchemeCard("Subjugate with Obedience Disks", { twists: 11 }, ev => {
   // Twist: Put this Twist under an HQ space as an "Obedience Disk." No space can have two more Obedience Disks than any other space.
+  const spaces = gameState.hq.highest(d => -d.attached('DISK').size);
+  selectCardEv(ev, 'Choose an HQ space', spaces, d => attachCardEv(ev, ev.source, d, 'DISK'));
+  cont(ev, () => schemeProgressEv(ev, gameState.hq.sum(d => d.attached('DISK').size)));
+}, [], () => {
+  setSchemeTarget(gameState.hq.size * 2);
+  addStatSet('recruitCost', c => c.location.isHQ, (c, p) => ({
+    ...p, recruit: (p.recruit || 0) + c.location.attached('DISK').size,
+  }));
 }),
 // SETUP: 9 Twists. Put three additional Masterminds out of play, "Lurking." Each of the four Masterminds has two random Tactics.
 // RULE: When you defeat all of a Mastermind's Tactics, KO its face card and a random Lurking Mastermind enters play.
-makeSchemeCard("World War Hulk", { twists: 9 }, ev => {
+makeSchemeCard("World War Hulk", { twists: 9, extra_masterminds: 3 }, ev => {
+  const lurking = gameState.scheme.attachedDeck('LURKING');
   if (ev.nr <= 8) {
     // Twist 1-8 Swap the current Mastermind with a random Lurking Mastermind.
-  } else if (ev.nr === 9) {
-    // Twist 9 Evil Wins!
+    withMastermind(ev, m1 => lurking.withRandom(m2 => {
+      moveCardEv(ev, m2, gameState.mastermind);
+      moveCardEv(ev, m1, lurking);
+    }));
   }
+  // Twist 9 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+}, {
+  event: 'DEFEAT',
+  match: ev => isMastermind(ev.what) && ev.what.attached('TACTICS').size === 1,
+  before: ev => gameState.scheme.attachedDeck('LURKING').withRandom(m => moveCardEv(ev, m, gameState.mastermind)),
+  after: ev => KOEv(ev, ev.parent.what),
+}, () => {
+  setSchemeTarget(9);
+  const lurking = gameState.scheme.attachedDeck('LURKING');
+  gameState.mastermind.deck.forEach((m, i) => {
+    m.attachedDeck('TACTICS').deck.splice(2);
+    if (i > 0) moveCard(m, lurking);
+  });
 }),
 ]);
