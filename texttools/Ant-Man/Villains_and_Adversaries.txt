@@ -3,7 +3,7 @@
 
 #SUBNAME: Ultron Roboticks
 #COPIES: 1
-<b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech]
+{USIZECHANGING TECH 3}
 #FIGHT: KO one of your Heroes.
 #ATTACK: 3*
 #VP: 2
@@ -31,7 +31,7 @@
 
 #SUBNAME: Ultron-Pym
 #COPIES: 1
-<b>Microscopic Size-Changing</b>: [Tech] [Tech] [Tech] [Tech] [Tech]
+{USIZECHANGING TECH 5}
 #FIGHT: A Hero in the HQ with no <b>Size-Changing</b> abilites gains {SIZECHANGING TECH} this turn.
 #ATTACK: 6*
 #VP: 3
@@ -62,7 +62,7 @@
 
 #SUBNAME: Daystar
 #COPIES: 1
-<b>Microscopic Size-Changing</b>: [Ranged] [Ranged] [Ranged] [Ranged] [Ranged]
+{USIZECHANGING RANGED 5}
 #FIGHT: Reveal the top card of your deck. You may KO it.
 #ATTACK: 5*
 #VP: 2
@@ -76,7 +76,7 @@
 
 #SUBNAME: Gigantus
 #COPIES: 1
-<b>Microscopic Size-Changing</b>: [Strength] [Strength] [Strength] [Strength] [Strength]
+{USIZECHANGING STRENGTH 5}
 #FIGHT: KO one of your Heroes.
 #ATTACK: 7*
 #VP: 4
@@ -104,7 +104,7 @@
 
 #SUBNAME: Pixie
 #COPIES: 1
-<b>Microscopic Size-Changing</b>: [Covert] [Covert] [Covert] [Covert].
+{USIZECHANGING COVERT 4}
 #FIGHT: Reveal a [Covert] Hero or play another card from the Villain Deck.
 #ATTACK: 3*
 #VP: 2

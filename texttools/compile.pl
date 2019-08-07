@@ -56,6 +56,7 @@ sub autopower {
     s/^{DODGE}$// and $ability = 'cardActions: [ dodge ]';
     s/^{PHASING}$// and $ability = 'cardActions: [ phasingActionEv ]';
     s/^{SIZECHANGING (.+?)}$// and $ability = "sizeChanging: ".(join' | ',map{"Color.".$_}split" ",$1);
+    s/^{USIZECHANGING (\w+) (\d+)}$// and $ability = "uSizeChanging: { color: Color.$1, amount: $2 }";
     s/^(\d+)\+? Piercing$// and $ability = "printedPiercing: $1";
     s/^[Yy]ou get \+(\d+) Piercing\.?$// and $effect = "addPiercingEv(ev, $1)";
     s/^{BERSERK}(, \{BERSERK})*$// and $effect = "berserkEv(ev, ".((@zzz=$&=~/BERSERK/g)).")";
