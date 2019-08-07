@@ -4371,7 +4371,7 @@ addHeroTemplates("Ant-Man", [
   uc: makeHeroCard("Ant-Man", "Giant Ego", 6, u, 2, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev, pastEvents('DRAW').count(e => e.who === playerState)), { sizeChanging: Color.TECH }),
 // {USIZECHANGING TECH 5}
 // A hero in the HQ without <b>Size-Changing</b> abilities gain {SIZECHANGING TECH} this turn.
-  ra: makeHeroCard("Ant-Man", "Pym Particles", 9, u, 5, Color.TECH, "Avengers", "", ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(c => !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging), c => {
+  ra: makeHeroCard("Ant-Man", "Pym Particles", 9, u, 5, Color.TECH, "Avengers", "", ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(hasNoSizeChanging), c => {
     addTurnSet('sizeChanging', v => v === c, (c, n) => safeOr(n, Color.TECH));
   }), { uSizeChanging: { color: Color.TECH, amount: 5 } }),
 },

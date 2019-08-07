@@ -107,7 +107,8 @@ interface Card {
   coordinate?: boolean
   transformed?: Card
   backSide?: Card
-  uSizeChanging?: { color: number, amount: number }
+  uSizeChanging?: { color: number, amount: number } // TODO
+  chivalrousDuel?: boolean // TODO
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -129,6 +130,7 @@ interface VillainCardAbillities {
   sizeChanging?: number
   excessiveViolence?: Handler
   uSizeChanging?: { color: number, amount: number }
+  chivalrousDuel?: boolean
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -143,6 +145,7 @@ interface MastermindCardAbillities {
   escape?: Handler | Handler[] // King Hyperion
   printedNthCircle?: number
   sizeChanging?: number
+  chivalrousDuel?: boolean
 }
 interface HeroCardAbillities {
   trigger?: Trigger

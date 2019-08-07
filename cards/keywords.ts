@@ -559,3 +559,6 @@ function empowerEv(ev: Ev, color: number) {
 function empowerVarDefense(color: number, amount: number = 1) {
   return (c: Card) => c.printedDefense + hqCards().count(color) * amount;
 }
+function hasNoSizeChanging(c: Card) {
+  return !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging
+}

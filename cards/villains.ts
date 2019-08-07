@@ -3006,3 +3006,145 @@ addVillainTemplates("World War Hulk", [
   )],
 ]},
 ]);
+addVillainTemplates("Ant-Man", [
+{ name: "Ultron's Legacy", cards: [
+// {USIZECHANGING TECH 3}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3*
+// VP: 2
+  [ 1, makeVillainCard("Ultron's Legacy", "Ultron Roboticks", 3, 2, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    uSizeChanging: { color: Color.TECH, amount: 3 },
+  })],
+// <b>Empowered</b> by [Ranged]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 2
+  [ 1, makeVillainCard("Ultron's Legacy", "Original Ultron-1", 3, 2, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: empowerVarDefense(Color.RANGED),
+  })],
+// <b>Empowered</b> by [Tech]
+// FIGHT: Draw a card.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Ultron's Legacy", "Legions of Ultron", 4, 3, {
+    fight: ev => drawEv(ev),
+    varDefense: empowerVarDefense(Color.TECH),
+  })],
+// <b>Empowered</b> by [Instinct]
+// FIGHT: KO a card from your discard pile.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Ultron's Legacy", "Alkhema", 4, 3, {
+    fight: ev => selectCardAndKOEv(ev, playerState.discard.deck),
+    varDefense: empowerVarDefense(Color.INSTINCT),
+  })],
+// {USIZECHANGING TECH 5}
+// FIGHT: A Hero in the HQ with no <b>Size-Changing</b> abilites gains {SIZECHANGING TECH} this turn.
+// ATTACK: 6*
+// VP: 3
+  [ 1, makeVillainCard("Ultron's Legacy", "Ultron-Pym", 6, 3, {
+    fight: ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(hasNoSizeChanging), c => {
+      addTurnSet('sizeChanging', v => v === c, (c, p) => safeOr(p, Color.TECH));
+    }),
+    uSizeChanging: { color: Color.TECH, amount: 5 },
+  })],
+// <b>Double Empowered</b> by [Tech]
+// AMBUSH: Put all non-[Tech] Heroes from the HQ on the bottom of the Hero Deck.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Ultron's Legacy", "Future Ultron Prime", 5, 5, {
+    ambush: ev => hqHeroes().limit(c => !isColor(Color.TECH)(c)).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+    varDefense: empowerVarDefense(Color.TECH, 2),
+  })],
+// <b>Empowered</b> by [Strength]
+// FIGHT: Each player reveals a [Strength] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Ultron's Legacy", "Brutish Ultron-14", 5, 4, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
+    varDefense: empowerVarDefense(Color.STRENGTH),
+  })],
+// <b>Empowered</b> by [Covert]
+// AMBUSH: Crimson Cowl captures a Bystander.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Ultron's Legacy", "Crimson Cowl", 5, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    varDefense: empowerVarDefense(Color.COVERT),
+  })],
+]},
+{ name: "Queen's Vengeance", cards: [
+// {USIZECHANGING RANGED 5}
+// FIGHT: Reveal the top card of your deck. You may KO it.
+// ATTACK: 5*
+// VP: 2
+  [ 1, makeVillainCard("Queen's Vengeance", "Daystar", 5, 2, {
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))),
+    uSizeChanging: { color: Color.RANGED, amount: 5 },
+  })],
+// <b>Chivalrous Duel</b>
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3*
+// VP: 3
+  [ 1, makeVillainCard("Queen's Vengeance", "Blackbird", 3, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    chivalrousDuel: true,
+  })],
+// {USIZECHANGING STRENGTH 5}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 7*
+// VP: 4
+  [ 1, makeVillainCard("Queen's Vengeance", "Gigantus", 7, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    uSizeChanging: { color: Color.STRENGTH, amount: 5 },
+  })],
+// <b>Chivalrous Duel</b>
+// ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
+// ATTACK: 4*
+// VP: 4
+  [ 1, makeVillainCard("Queen's Vengeance", "Iron Knight", 4, 4, {
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
+    chivalrousDuel: true,
+  })],
+// <b>Chivalrous Duel</b>
+// FIGHT: You get +1 Recruit for each color of Hero you have (including grey).
+// ATTACK: 5*
+// VP: 5
+  [ 1, makeVillainCard("Queen's Vengeance", "Yoeman America", 5, 5, {
+    fight: ev => addRecruitEvent(ev, numColors()),
+    chivalrousDuel: true,
+  })],
+// <b>Chivalrous Duel</b>
+// FIGHT: KO a card from your discard pile.
+// ATTACK: 3*
+// VP: 3
+  [ 1, makeVillainCard("Queen's Vengeance", "Star-Knight", 3, 3, {
+    fight: ev => selectCardAndKOEv(ev, playerState.discard.deck),
+    chivalrousDuel: true,
+  })],
+// {USIZECHANGING COVERT 4}
+// FIGHT: Reveal a [Covert] Hero or play another card from the Villain Deck.
+// ATTACK: 3*
+// VP: 2
+  [ 1, makeVillainCard("Queen's Vengeance", "Pixie", 3, 2, {
+    fight: ev => revealOrEv(ev, Color.COVERT, () => villainDrawEv(ev)),
+    uSizeChanging: { color: Color.COVERT, amount: 4 },
+  })],
+// FIGHT: Choose a card in your discard pile. The player to your right gains it.
+// ESCAPE: Each player simultaneously does that same effect.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Queen's Vengeance", "Mordred the Evil", 5, 3, {
+    fight: ev => selectCardEv(ev, "Choose a card", playerState.discard.deck, c => gainEv(ev, c, playerState.right)),
+    escape: ev => {
+      const cards = new Map<Player, Card>();
+      eachPlayer(p => selectCardEv(ev, "Choose a card", p.discard.deck, c => cards.set(p.right, c)));
+      cont(ev, () => cards.forEach((c, p) => gainEv(ev, c, p)));
+    },
+  })],
+]},
+]);
