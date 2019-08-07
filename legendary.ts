@@ -828,6 +828,7 @@ interface Game extends Ev {
   turnNum: number
   strikeCount: number
   outwitAmount?: number
+  reversePlayerOrder?: boolean
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];

@@ -1727,3 +1727,70 @@ makeTransformingMastermindCard(makeMastermindCard("The Sentry", 10, 6, "Aspects 
   varDefense: woundedFuryVarDefense,
 }),
 ]);
+addTemplates("MASTERMINDS", "Ant-Man", [
+// EPICNAME: Ultron
+...makeEpicMastermindCard("Ultron", [ 9, 10 ], 6, "Ultron's Legacy", ev => {
+// Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Empowered</b> by each color in his Threat Analysis pile.
+// Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
+  const threat = ev.source.attachedDeck('THREAT');
+  eachPlayer(p => revealOrEv(ev, Color.TECH, () => {
+    selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => moveCardEv(ev, c, threat));
+  }, p));
+}, [
+  [ "Arrogant Blindspot", ev => {
+  // You may gain a Hero from Ultron's Threat Analysis pile.
+    selectCardOptEv(ev, "Choose a Hero to gain", ev.source.mastermind.attached('THREAT'), c => gainEv(ev, c));
+  } ],
+  [ "Paralyzing Encephalo-Ray", ev => {
+  // Each other player reveals their hand and discards each card that has the same card name as any card in Ultron's Threat Analysis pile.
+    const names = ev.source.mastermind.attached('THREAT').unique(c => c.cardName);
+    eachOtherPlayerVM(p => p.hand.limit(c => names.includes(c.cardName)).each(c => discardEv(ev, c)));
+  } ],
+  [ "Predictive Analysis", ev => {
+  // Put the top three cards of the Hero Deck into Ultron's Threat Analysis pile.
+    const threat = ev.source.attachedDeck('THREAT');
+    revealHeroDeckEv(ev, 3, cards => cards.each(c => moveCardEv(ev, c, threat)));
+  } ],
+  [ "Self-Repairing Legions", ev => {
+  // Each other player in turn reveals a [Tech] Hero or puts an Ultron's Legacy Villain from the Victory Pile into an empty city space.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => {
+      gameState.city.has(isCityEmpty) && selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain).limit(isGroup(ev.source.mastermind.leads)), c => {
+        selectCardEv(ev, "Choose a city space", gameState.city.limit(isCityEmpty), d => enterCityEv(ev, c, d), p);
+      }, p);
+    }, p));
+  } ],
+], {
+  varDefense: c => empowerVarDefense(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c), c.epic ? 3 : 1)(c),
+}),
+// <b>Chivalrous Duel</b>
+// EPICNAME: Morgana Le Fay // FIX Morgan
+// <b>Chivalrous Duel</b>
+...makeEpicMastermindCard("Morgana Le Fay", [ 7, 9 ], 6, "Queen's Vengeance", ev => {
+// Each player in turn reveals a [Covert] Hero or gains a 0-cost Hero or Wound from the KO pile.
+// Each player in turn gains a Wound, then gains a 0-cost Hero from the KO pile.
+  const gainHero = (p: Player) => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainEv(ev, c), p);
+  eachPlayer(p => ev.source.epic ? (gainWoundEv(ev, p), gainHero(p)) : revealOrEv(ev, Color.COVERT, () => gainHero(p)));
+}, [
+  [ "Reverse the Flow of Time", ev => {
+  // For the rest of the game, players take turns in the opposite order around the table.
+    gameState.reversePlayerOrder = true;
+  } ],
+  [ "Sorcerous Blasts", ev => {
+  // Each other player discards a [Covert] Hero or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Stolen Tomes of Merlin", ev => {
+  // You get +4 Recruit usable only for recruiting [Covert] and/or [Ranged] Heroes.
+    addRecruitSpecialEv(ev, isColor(Color.COVERT | Color.RANGED), 4);
+  } ],
+  [ "Transmogrify", ev => {
+  // Each other player in turn KOs a non-grey Hero from their discard pile, then gains a card from the KO pile that has a lower cost.
+    eachOtherPlayerVM(p => cont(ev, () => {
+      selectCardEv(ev, "Choose a Hero to KO", p.discard.limit(isNonGrayHero), c => {
+        KOEv(ev, c);
+        selectCardEv(ev, "Choose a card to gain", gameState.ko.limit(v => v.cost < c.cost), c => gainEv(ev, c));
+      }, p);
+    }));
+  } ],
+], { chivalrousDuel: true }),
+]);
