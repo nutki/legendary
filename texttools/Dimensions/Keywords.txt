@@ -1,7 +1,7 @@
 
 <b>Switcheroo</b>
 This new keyword represents how Heroes like Squirrel Girl and Jessica Jones unpredictably switch up their tactics. Sometimes they instantly switch to new fighting stances, while other times they switch in new Heroes altogether.
-* Some Hero cards say things like "<b>Switcheroo 4</b>."
+* Some Hero cards say things like "{SWITCHEROO 4}."
 * This means “You can reveal this card from your hand and put it on the bottom of the Hero Deck. If you do, you may put a Hero of the specified printed cost from the HQ into your hand.”
 * So when you have a Switcheroo card in your hand, you can choose to play it for its normal Recruit, Attack, and other effects. Or you can choose to permanently swap it for another card in the HQ instead.
 * You use Switcheroo <i>instead</i> of playing the card. So when you Switcheroo, you don’t get any Recruit, Attack, or other effects from the Switcheroo card that you put on the bottom of the Hero Deck.

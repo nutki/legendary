@@ -37,7 +37,7 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 2
-<b>Switcheroo 4</b>
+{SWITCHEROO 4}
 #COST: 3
 #FLAVOR: No one suspected Jessica would ever trade her leather jacket for a sequined bodysuit as the flashy Avenger "Jewel."
 
@@ -45,7 +45,7 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #COPIES: 5
 #CLASS: [Covert]
 #ATTACK: 1
-<b>Switcheroo 5</b>
+{SWITCHEROO 5}
 <b>Investigate</b> for a card with an Attack icon.
 #COST: 4
 
@@ -53,7 +53,7 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #COPIES: 3
 #CLASS: [Strength]
 #RECRUIT: 3
-<b>Switcheroo 6</b>
+{SWITCHEROO 6}
 <b>Investigate</b> for a card with a Recruit icon. You may draw that card or KO it.
 #COST: 5
 
@@ -139,7 +139,7 @@ You get +1 Attack for each other card in your hand.
 #SUBNAME: Find Tiny Friends
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Switcheroo 3</b>
+{SWITCHEROO 3}
 <b>Investigate</b> for a card that costs 3 or less.
 #COST: 2
 
@@ -147,7 +147,7 @@ You get +1 Attack for each other card in your hand.
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 1+
-<b>Switcheroo 4</b>
+{SWITCHEROO 4}
 {POWER Instinct} You get +2 Attack.
 #COST: 3
 #FLAVOR: Some Villains fear this attack more than any other.
@@ -156,7 +156,7 @@ You get +1 Attack for each other card in your hand.
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 2+
-<b>Switcheroo 5</b>
+{SWITCHEROO 5}
 You get +2 Attack if at least 2 cards entered the HQ this turn.
 #COST: 4
 

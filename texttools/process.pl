@@ -88,6 +88,7 @@ while (<A>) {
     s!<b>Smash( \d)?</b>!{SMASH$1}!g;
     s!<b>Wounded Fury</b>!{WOUNDED FURY}!g;
     s!<b>Feast</b>!{FEAST}!g;
+    s!<b>Switcheroo (\d+)</b>!{SWITCHEROO $1}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

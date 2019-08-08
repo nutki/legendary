@@ -70,6 +70,7 @@ sub autopower {
     s/^{CHEERING CROWDS}$// and $ability = "cheeringCrowds: true";
     s/^{WOUNDED FURY}$// and $effect = "woundedFuryEv(ev)";
     s/^{SMASH (\d)}$// and $effect = "smashEv(ev, $1)";
+    s/^{SWITCHEROO (\d+)}$// and $ability = "cardActions: [ switcherooActionEv($1) ]";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
