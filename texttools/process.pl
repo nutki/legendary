@@ -114,6 +114,8 @@ while (<A>) {
       s!^<b>X-Gene</b> (.*):!{XGENE $1}! && next;
       s!^<b>Piercing Energy</b>$!#PIERCING! && next;
       s!^<b>Lightshow</b>: *!{LIGHTSHOW} ! && next;
+      s!^<b>Digest (\d+)</b>: *!{DIGEST $1} ! && next;
+      s!^<b>Indigestion</b>: *!{INDIGESTION} ! && next;
 
       s!^<span style='font-size:14px;'><i><b>(.*?)</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
       s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;

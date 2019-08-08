@@ -19,7 +19,7 @@ $_ = <A>;
 close A;
 #print length,"\n";
 sub autopower {
-  my %num = (a => 1, another => 1, two => 2, three => 3);
+  my %num = (a => '', another => '', two => ', 2', three => ', 3');
   my %filt = (card => 'undefined', Wound => 'isWound');
   my @a = split"\n",shift;
   my @r = ();
@@ -30,6 +30,7 @@ sub autopower {
     my $cond = undef;
     my $wrap = undef;
     my $ability = undef;
+    my $ind = 0;
     s/^{POWER (.*?)} *// and $cond = "superPower(".(join', ',map{"Color.".uc}split" ",$1).")";
     s/^{TEAMPOWER (.*?)} *// and $cond = "superPower(".(join', ',map{"\"$_\""}split", ",$1).")";
     s/^{SPECTRUM} *// and $cond = "spectrumPower()";
@@ -43,11 +44,13 @@ sub autopower {
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
     s/^{LIGHTSHOW} *// and $wrap = "lightShow: ev => XXX, cardActions: [ lightShowActionEv ]";
     s/^{OUTWIT}: *// and $wrap = "mayOutwitEv(ev, () => XXX)";
+    s/^{DIGEST (\d)} *// and $wrap = "digestEv(ev, $1, () => XXX)";
+    s/^{INDIGESTION} *// and $wrap = "() => XXX", $ind = 1;
 
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
-    /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev, $num{$1})";
+    /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev$num{$1})";
     /^[Yy]ou get \+(\d+) (Attack|Recruit)\.?$/ and $effect = "add$2Event(ev, $1)";
-    /^(Rescue|Kidnap) a Bystander\.?$/ and $effect = "rescueEv(ev)";
+    /^("?Rescue"?|Kidnap) a Bystander\.?$/ and $effect = "rescueEv(ev)";
     /^[Gg]ain a(nother)? Sidekick\.?$/ and $effect = "gainSidekickEv(ev)";
     /^{OUTOFTIME}\.?$/ and $effect = "outOfTimeEv(ev)";
     /^{VERSATILE (\d+)}$/ and $effect = "versatileEv(ev, $1)";
@@ -72,6 +75,7 @@ sub autopower {
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
     $effect = "$cond && $effect" if $cond && $effect;
     $effect =~ /^\w+: / and ($effect, $ability) = (undef, $effect);
+    $ind and @r[-1] =~ s/\)$/, $effect)/, $effect = undef;
     push @r, $effect if $effect;
     push @ar, $ability if $ability;
     #print "$_\n" if !$effect;

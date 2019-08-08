@@ -14,8 +14,8 @@
 #COPIES: 5
 #CLASS: [Strength]
 #RECRUIT: 0+
-<b>Digest 4</b>: Draw two cards.
-<b>Indigestion</b>: You get +2 Recruit.
+{DIGEST 4} Draw two cards.
+{INDIGESTION} You get +2 Recruit.
 #COST: 4
 #FLAVOR: He'd be willing to eat a Groot salad too.
 
@@ -41,8 +41,8 @@
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Digest 3</b>: You get +2 Attack.
-<b>Indigestion</b>: You get +2 Recruit.
+{DIGEST 3} You get +2 Attack.
+{INDIGESTION} You get +2 Recruit.
 {POWER Instinct} Instead, you get both.
 #COST: 3
 
@@ -70,8 +70,8 @@
 #CLASS: [Instinct]
 #RECRUIT: 0+
 #ATTACK: 0+
-<b>Digest 8</b>: KO a card from your Victory Pile. You get +6 Attack.
-<b>Indigestion</b>: KO a card from your hand or discard pile. You get +6 Recruit.
+{DIGEST 8} KO a card from your Victory Pile. You get +6 Attack.
+{INDIGESTION} KO a card from your hand or discard pile. You get +6 Recruit.
 {TEAMPOWER Venomverse, Venomverse} Instead, do both.
 #COST: 8
 
@@ -82,7 +82,7 @@
 #COPIES: 5
 #CLASS: [Instinct]
 #ATTACK: 2
-<b>Digest 3</b>: You may discard a card. If you do, draw a card.
+{DIGEST 3} You may discard a card. If you do, draw a card.
 #COST: 3
 #FLAVOR: And thirsty for vengeance.
 #GUN: 1
@@ -117,7 +117,7 @@ When a Master Strike is played, before it takes effect, you may put Ultimate Sur
 #COPIES: 5
 #CLASS: [Ranged]
 #RECRUIT: 1
-<b>Digest 2</b>: Draw a card.
+{DIGEST 2} Draw a card.
 #COST: 2
 #FLAVOR: Through it, he scried other symbiotes across the dimensions.
 
@@ -150,8 +150,8 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 0+
-<b>Digest 2</b>: You get +2 Attack.
-<b>Indigestion</b>: "Rescue" a Bystander.
+{DIGEST 2} You get +2 Attack.
+{INDIGESTION} "Rescue" a Bystander.
 {POWER Strength} Instead, you get both.
 #COST: 2
 
@@ -175,8 +175,8 @@ Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extr
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 4+
-<b>Digest 7</b>: You get +1 Attack for each two Bystanders in your Victory Pile.
-<b>Indigestion</b>: "Rescue" two Bystanders.
+{DIGEST 7} You get +1 Attack for each two Bystanders in your Victory Pile.
+{INDIGESTION} "Rescue" two Bystanders.
 {TEAMPOWER Venomverse, Venomverse} Instead, do both (in order).
 #COST: 7
 
