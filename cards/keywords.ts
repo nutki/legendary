@@ -568,3 +568,18 @@ function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, d
   if (hasDigest || doBoth) effect1(ev);
   if (effect0 && (!hasDigest || doBoth)) effect0(ev);
 }
+
+function symbioteBondEv(ev: Ev, to: Card, what: Card, unbound?: Handler) {
+ // TODO
+}
+function wasBonded(c: Card) {
+  return false;
+}
+function poisonBondEv(ev: Ev, to: Card[]) {
+  const cards = to.limit(c => c !== ev.source && !wasBonded(c));
+  if (wasBonded(ev.source) || cards.size === 0) {
+    gainEv(ev, ev.source);
+  } else {
+    selectCardEv(ev, "Choose a Villain to Bond with", cards, c => symbioteBondEv(ev, c, ev.source));
+  }
+}

@@ -3148,3 +3148,123 @@ addVillainTemplates("Ant-Man", [
   })],
 ]},
 ]);
+addVillainTemplates("Venom", [
+{ name: "Life Foundation", cards: [
+// AMBUSH: Reveal the top three cards of the Villain Deck. A Villain you revealed <b>Symbiote Bonds</b> with Agony. Put the rest back in any order.
+// ESCAPE: Each player reveals a [Covert]  Hero or gains a Wound.
+// ATTACK: 3
+// VP: 3
+  [ 1, makeVillainCard("Life Foundation", "Agony", 3, 3, {
+    ambush: ev => revealVillainDeckEv(ev, 3, cards => selectCardEv(ev, "Choose a Villain", cards.limit(isVillain), c => {
+      symbioteBondEv(ev, ev.source, c);
+    }), false, false),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p)),
+  })],
+// FIGHT: Each [Instinct] and [Tech] Hero currently in the HQ costs 1 less this turn.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Life Foundation", "Dr. Carlton Drake", 5, 3, {
+    fight: ev => {
+      const cards = hqHeroes().limit(Color.INSTINCT | Color.TECH);
+      addTurnMod('cost', c => cards.includes(c), -1);
+    },
+  })],
+// AMBUSH: A Henchman Villain from your Victory Pile <b>Symbiote Bonds</b> with Lasher.
+// ATTACK: 2
+// VP: 2
+  [ 2, makeVillainCard("Life Foundation", "Lasher", 2, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a Henchman", playerState.victory.limit(isHenchman), c => symbioteBondEv(ev, ev.source, c)),
+  })],
+// AMBUSH: A Villain from the Escape Pile or your Victory Pile <b>Symbiote Bonds</b> with Phage.
+// ATTACK: 3
+// VP: 3
+  [ 1, makeVillainCard("Life Foundation", "Phage", 3, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a Villain", [...gameState.escaped.deck, ...playerState.victory.deck].limit(isVillain), c => symbioteBondEv(ev, ev.source, c)),
+  })],
+// AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, it <b>Symbiote Bonds</b> with Riot.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2
+// VP: 2
+  [ 2, makeVillainCard("Life Foundation", "Riot", 2, 2, {
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => symbioteBondEv(ev, ev.source, c))),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  })],
+// AMBUSH: Reveal the top card of the Villain Deck. If it's a Henchman or Life Foundation Villain, it <b>Symbiote Bonds</b> with Scream.
+// ATTACK: 4
+// VP: 4
+  [ 1, makeVillainCard("Life Foundation", "Scream", 4, 4, {
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(c => isHenchman(c) || isGroup("Life Foundation")(c)).each(c => symbioteBondEv(ev, ev.source, c))),
+  })],
+]},
+{ name: "Poisons", cards: [
+// FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 4
+// GAINABLE
+// CLASS: [Instinct]
+// You get +1 Attack for each color of Hero you have. (including [Instinct] and grey)
+// ATTACKG: 0+
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Captain America", 4, u, {
+    fight: ev => poisonBondEv(ev, cityVillains()),
+  }), u, 0, Color.INSTINCT, u, "", ev => addAttackEvent(ev, numColors()))],
+// FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Bank. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 3
+// GAINABLE
+// CLASS: [Tech]
+// Draw a card.
+// ATTACKG: 1
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Dr. Octopus", 3, u, {
+    fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'BANK'))),
+  }), u, 1, Color.TECH, u, "", ev => drawEv(ev))],
+// FIGHT: This <b>Symbiote Bonds</b> with a Henchman Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 5
+// GAINABLE
+// CLASS: [Strength]
+// {POWER Strength} You get +2 Attack.
+// ATTACKG: 2+
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Hulk", 5, u, {
+    fight: ev => poisonBondEv(ev, cityVillains().limit(isHenchman)),
+  }), u, 2, Color.STRENGTH, u, "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 2))],
+// FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Streets. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 4
+// GAINABLE
+// CLASS: [Instinct]
+// {POWER Instinct} Look at the top card of your deck. You may KO it.
+// ATTACKG: 2
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Sabretooth", 4, u, {
+    fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'STREETS'))),
+  }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to KO", playerState.revealed.deck, c => KOEv(ev, c))))],
+// FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 3
+// GAINABLE
+// CLASS: [Covert]
+// Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is even.)
+// ATTACKG: 2
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Scarlet Witch", 3, u, {
+    fight: ev => poisonBondEv(ev, cityVillains().limit(c => c.defense % 2 === 1)),
+  }), u, 2, Color.COVERT, u, "D", ev => drawIfEv(ev, isCostOdd))],
+// FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 2
+// GAINABLE
+// CLASS: [Covert]
+// Reveal the top card of your deck. If it costs 2 or less, draw it.
+// ATTACK: 2
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Spider-Man", 2, u, {
+    fight: ev => poisonBondEv(ev, cityVillains()),
+  }), u, 2, Color.COVERT, u, "D", ev => drawIfEv(ev, c => c.cost <= 2))],
+// FIGHT: This <b>Symbiote Bonds</b> with a Villain on the Rooftops or Bridge. If already bonded or unable to bond, gain this as a Hero instead.
+// ATTACK: 3
+// GAINABLE
+// CLASS: [Ranged]
+// {POWER Ranged} You get +2 Attack usable only against the Mastermind.
+// ATTACK: 2+
+  [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Storm", 3, u, {
+    fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'BRIDGE'))),
+  }), u, 2, Color.RANGED, u, "D", ev => superPower(Color.RANGED) && addAttackSpecialEv(ev, isMastermind, 2))],
+// AMBUSH: This Symbiote Bonds with the Mastermind. When you fight the Mastermind, defeat Symbiotic Armor and KO one of your Heroes instead of taking a Tactic.
+// ATTACK: 1
+// VP: 6
+  [ 1, makeVillainCard("Poisons", "Symbiotic Armor", 1, 6, {
+    ambush: ev => withMastermind(ev, m => symbioteBondEv(ev, m, ev.source, ev => selectCardAndKOEv(ev, yourHeroes()))),
+  })],
+]},
+]);
