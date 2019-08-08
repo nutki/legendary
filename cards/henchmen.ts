@@ -176,3 +176,20 @@ makeHenchmenCard("Sakaaran Hivelings", 3, {
   ]
 }),
 ]);
+addTemplates("HENCHMEN", "Dimensions", [
+// FIGHT: Reveal the top card of your deck. If it costs 0 Cost, KO it. Otherwise, draw it.
+// ATTACK: 3
+makeHenchmenCard("Circus of Crime", 3, {
+  fight: ev => revealPlayerDeckEv(ev, 1, cards => {
+    cards.limit(c => c.cost === 0).each(c => KOEv(ev, c));
+    cards.limit(c => c.cost !== 0).each(c => drawCardEv(ev, c));
+  }),
+}),
+// FIGHT: Reveal the top two cards of your deck. Put any that cost 2 Cost or less into your hand. Put the rest back in any order.
+// ATTACK: 3
+makeHenchmenCard("Spider-Slayer", 3, {
+  fight: ev => revealPlayerDeckEv(ev, 2, cards => {
+    cards.limit(c => c.cost <= 2).each(c => moveCardEv(ev, c, playerState.hand));
+  }),
+}),
+]);
