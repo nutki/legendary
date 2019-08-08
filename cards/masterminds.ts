@@ -1860,3 +1860,58 @@ addTemplates("MASTERMINDS", "Venom", [
   varDefense: c => c.attached('SOULS').uniqueCount(c => c.cost) * (c.epic ? 2 : 1)
 }),
 ]);
+addTemplates("MASTERMINDS", "Dimensions", [
+// START: Put 2 S.H.I.E.L.D. Officers per player into a face down "Angry Mobs" stack.
+// <b>Special Rules</b>: You can spend 4 Attack to reveal a random Angry Mob and put it into any player's discard pile. You can't fight J. Jonah Jameson while he has Angry Mobs.
+// EPICNAME: J. Jonah Jameson
+// START: Put 3 S.H.I.E.L.D. Officers per player into a face down "Angry Mobs" stack.
+// <b>Special Rules</b>: You can spend 5 Attack to reveal a random Angry Mob and put it into any player's discard pile. You can't fight J. Jonah Jameson while he has Angry Mobs.
+...makeEpicMastermindCard("J. Jonah Jameson", [ 4, 5 ], 5, "Spider-Slayers", ev => {
+// Each player <b>Investigates</b> their deck for a card and puts it into the Angry Mobs stack.
+// Each player <b>Investigates</b> their deck for a card and puts it into the Angry Mobs stack. If that card cost 0, that player gains a Wound.
+  eachPlayer(p => investigateEv(ev, () => true, p.deck, c => {
+    attachCardEv(ev, c, ev.source, 'MOBS');
+    ev.source.epic && c.cost === 0 && gainWoundEv(ev, p);
+  }));
+}, [
+// Incite Violent Riots // FIX
+  [ "Incite Violent Riots", ev => {
+  // Each player puts a Wound from the Wound Stack into the Angry Mobs stack.
+    eachPlayer(p => cont(ev, () => gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source.mastermind, 'MOBS'))));
+  } ],
+  [ "Promote Spider-Slayer Security", ev => {
+  // Each other player puts a Spider-Slayer from their Victory Pile into the Angry Mobs stack. When a Spider-Slayer is revealed from the Angry Mobs, it enters the city.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => {
+      attachCardEv(ev, c, ev.source.mastermind, 'MOBS');
+    }, p));
+  } ],
+  [ "Slanderous Editorial", ev => {
+  // Each other player <b>Investigates</b> their deck for a non-grey Hero and puts it into the Angry Mobs stack. Players reveal all the cards they investigated.
+    eachOtherPlayerVM(p => investigateEv(ev, isNonGrayHero, p.deck, c => {
+      attachCardEv(ev, c, ev.source.mastermind, 'MOBS');
+    }, p, true));
+  } ],
+  [ "That Menace Spider-Man!", ev => {
+  // Each other player reveals their hand and discard a Spider-Friends Hero. Any player who cannot must instead put a non-grey card from their hand into the Angry Mobs stack.
+    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit('Spider Friends'), c => discardEv(ev, c), () => {
+      selectCardEv(ev, "Choose a Hero to put into the Angry Mobs stack", p.hand.limit(isNonGrayHero), c => { // TODO not just heroes
+        attachCardEv(ev, c, ev.source.mastermind, 'MOBS');
+      }, p);
+    }, p));
+  } ],
+], {
+  init: c => {
+    repeat(c.epic ? 3 : 2, () => gameState.officer.withTop(c => moveCard(c, c.attachedDeck('MOBS'))))
+  },
+  cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', {
+    source: c,
+    what: c,
+    cost: { recruit: c.epic ? 5 : 4, cond: c => c.attached('MOBS').size > 0 },
+    desc: "Reveal Angry Mobs",
+    func: ev => c.attached('MOBS').withRandom(c => {
+      isVillain(c) && isGroup(c.leads) ? enterCityEv(ev, c) : choosePlayerEv(ev, p => moveCardEv(ev, c, p.discard));
+    }),
+  }) ],
+  fightCond: c => c.attached('MOBS').size === 0,
+}),
+]);
