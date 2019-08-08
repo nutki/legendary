@@ -3155,9 +3155,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 3
 // VP: 3
   [ 1, makeVillainCard("Life Foundation", "Agony", 3, 3, {
-    ambush: ev => revealVillainDeckEv(ev, 3, cards => selectCardEv(ev, "Choose a Villain", cards.limit(isVillain), c => {
-      symbioteBondEv(ev, ev.source, c);
-    }), false, false),
+    ambush: ev => revealVillainDeckEv(ev, 3, cards => symbioteBondEv(ev, ev.source, cards), false, false),
     escape: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p)),
   })],
 // FIGHT: Each [Instinct] and [Tech] Hero currently in the HQ costs 1 less this turn.
@@ -3173,13 +3171,13 @@ addVillainTemplates("Venom", [
 // ATTACK: 2
 // VP: 2
   [ 2, makeVillainCard("Life Foundation", "Lasher", 2, 2, {
-    ambush: ev => selectCardEv(ev, "Choose a Henchman", playerState.victory.limit(isHenchman), c => symbioteBondEv(ev, ev.source, c)),
+    ambush: ev => symbioteBondEv(ev, ev.source, playerState.victory.limit(isHenchman)),
   })],
 // AMBUSH: A Villain from the Escape Pile or your Victory Pile <b>Symbiote Bonds</b> with Phage.
 // ATTACK: 3
 // VP: 3
   [ 1, makeVillainCard("Life Foundation", "Phage", 3, 3, {
-    ambush: ev => selectCardEv(ev, "Choose a Villain", [...gameState.escaped.deck, ...playerState.victory.deck].limit(isVillain), c => symbioteBondEv(ev, ev.source, c)),
+    ambush: ev => symbioteBondEv(ev, ev.source, [...gameState.escaped.deck, ...playerState.victory.deck].limit(isVillain)),
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, it <b>Symbiote Bonds</b> with Riot.
 // FIGHT: KO one of your Heroes.

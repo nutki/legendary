@@ -1794,3 +1794,69 @@ addTemplates("MASTERMINDS", "Ant-Man", [
   } ],
 ], { chivalrousDuel: true }),
 ]);
+addTemplates("MASTERMINDS", "Venom", [
+// If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
+// EPICNAME: Hybrid
+// If you fight Hybrid while he's bonded to a Villain, defeat that Villain and rescue three Bystanders instead of taking a Tactic.
+...makeEpicMastermindCard("Hybrid", [ 6, 8 ], 6, "Life Foundation", ev => {
+// A Villain from the city <b>Symbiote Bonds</b> with Hybrid, If Hybrid was already bonded, then each player gains a Wound instead.
+// The highest Attack unbonded Villain from the city and/or Escape Pile <b>Symbiote Bonds</b> with Hybrid. If no new bond could occur, then each player gains a Wound instead.
+  const cards = ev.source.epic ? [...cityVillains(), ...gameState.escaped.limit(isVillain)].highest(c => c.defense) : cityVillains();
+  const cond = wasBonded(ev.source) || (ev.source.epic && cards.size === 0);
+  cond ? eachPlayer(p => gainWoundEv(ev, p)) : symbioteBondEv(ev, ev.source, cards, ev => rescueEv(ev, 3));
+}, [
+// Alien Awakening FIX
+  [ "Alien Awakening", ev => {
+  // If this is not the final tactic, a Henchman Villain from any Victory Pile <b>Symbiote Bonds</b> with Hybrid.
+    finalTactic(ev.source) || symbioteBondEv(ev, ev.source.mastermind, gameState.players.map(p => p.victory.limit(isHenchman)).merge());
+  } ],
+  [ "Escaped Monstrosity", ev => {
+  // If this is not the final Tactic, a Villain from the city or Escape Pile <b>Symbiote Bonds</b> with Hybrid.
+    finalTactic(ev.source) || symbioteBondEv(ev, ev.source.mastermind, [...cityVillains(), ...gameState.escaped.limit(isVillain)]);
+  } ],
+  [ "Life Foundation Research", ev => {
+  // You get +1 Recruit for each Life Foundation Villain in your Victory Pile.
+    addRecruitEvent(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+  } ],
+  [ "Symbiotic Call", ev => {
+  // If this is not the final Tactic, reveal the top four cards of the Villain Deck. A Henchman Villain you revealed <b>Symbiote Bonds</b> with Hybrid. Put the rest back in any order.
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 4, cards => symbioteBondEv(ev, ev.source.mastermind, cards), false, false);
+  } ],
+]),
+// Poison Thanos gets +1 Attack for each different cost among cards in his "Poisoned Souls" pile.
+// EPICNAME: Poison Thanos
+// Poison Thanos gets +2 Attack for each different cost among cards in his "Poisoned Souls" pile.
+...makeEpicMastermindCard("Poison Thanos", [ 12, 13 ], 7, "Poisons", ev => {
+// Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Poisoned Souls: pile. // FIX Souls:
+// Each player reveals their hand and puts half (round up) of their non-grey Heroes net to Thanos in a "Poisoned Souls" pile. Each player that lost no Heroes this way gains a Wound.
+  eachPlayer(p => {
+    if (ev.source.epic) {
+      const n = Math.ceil(yourHeroes(p).count(isNonGrayHero) / 2);
+      selectObjectsEv(ev, "Choose a Hero", n, yourHeroes(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'SOULS'), p);
+      n === 0 && gainWoundEv(ev, p);
+    } else {
+      selectCardEv(ev, "Choose a Hero", yourHeroes(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'SOULS'), p);
+    }
+  });
+}, [
+// Desperate Rescue FIX
+  [ "Desperate Rescue", ev => {
+  // You may gain a Hero from Poison Thanos' "Poisoned Souls" pile.
+    selectCardOptEv(ev, "Choose a Hero to gain", ev.source.mastermind.attached('SOULS'), c => gainEv(ev, c));
+  } ],
+  [ "Poisoned Loyalties", ev => {
+  // Each other player puts a Poisons card from their discard pile into Poison Thanos' "Poisoned Souls" pile.
+    eachOtherPlayerVM(p => selectCardEv(ev, 'Choose a card', p.discard.limit(isGroup(ev.source.mastermind.leads)), c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
+  } ],
+  [ "Searing Poisons", ev => {
+  // Each other player discards a Poisons card from their hand or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOrEv(ev, 'Choose a card', p.hand.limit(isGroup(ev.source.mastermind.leads)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Soul Seize", ev => {
+  // Put all Heroes that cost 5 or more from the HQ into Poison Thanos' "Poisoned Souls" pile.
+    hqHeroes().limit(c => c.cost >= 5).each(c => attachCardEv(ev, c, ev.source, 'SOULS'));
+  } ],
+], {
+  varDefense: c => c.attached('SOULS').uniqueCount(c => c.cost) * (c.epic ? 2 : 1)
+}),
+]);

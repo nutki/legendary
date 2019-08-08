@@ -569,8 +569,13 @@ function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, d
   if (effect0 && (!hasDigest || doBoth)) effect0(ev);
 }
 
-function symbioteBondEv(ev: Ev, to: Card, what: Card, unbound?: Handler) {
- // TODO
+function symbioteBondEv(ev: Ev, to: Card, what: Card | Card[], unbound?: Handler) {
+  if (wasBonded(to)) return;
+  if (what instanceof Array) {
+    selectCardEv(ev, 'Choose a Vilain to bond with', what, c => symbioteBondEv(ev, to, c, unbound));
+  } else {
+   // TODO
+  }
 }
 function wasBonded(c: Card) {
   return false;
