@@ -133,8 +133,6 @@ addBystanderTemplates("World War Hulk", [
 }) ],
 // RESCUE: look at the top three cards of your deck. KO one, discard one, and put one back.
 [ 1, makeBystanderCard("Triage Nurse", ev => lookAtDeckEv(ev, 3, () => {
-  let card: Card;
-  selectCardEv(ev, "Choose a card to KO", playerState.revealed.deck, c => { card = c; KOEv(ev, c); });
-  cont(ev, () => selectCardEv(ev, "Choose a card to discard", playerState.revealed.limit(c => c !== card), c => discardEv(ev, c)));
+  lookAtThreeEv(ev, 'KO', 'DISCARD');
 })) ],
 ]);

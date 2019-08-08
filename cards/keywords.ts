@@ -562,3 +562,9 @@ function empowerVarDefense(color: number, amount: number = 1) {
 function hasNoSizeChanging(c: Card) {
   return !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging
 }
+
+function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, doBoth?: number) {
+  const hasDigest = playerState.victory.size >= amount;
+  if (hasDigest || doBoth) effect1(ev);
+  if (effect0 && (!hasDigest || doBoth)) effect0(ev);
+}

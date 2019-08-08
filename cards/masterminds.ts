@@ -66,7 +66,7 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   [ "Negablast Grenades", ev => addAttackEvent(ev, 3) ],
   // Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
   [ "Ruthless Dictator", ev => {
-    lookAtDeckEv(ev, 3, () => { selectCardEv(ev, "Choose a card to KO", playerState.revealed.deck, sel => KOEv(ev, sel)); selectCardEv(ev, "Choose a card to discard", playerState.revealed.deck, sel => discardEv(ev, sel)); });
+    lookAtThreeEv(ev, 'KO', 'DISCARD');
   } ],
 ]),
 ]);
@@ -1606,7 +1606,7 @@ makeTransformingMastermindCard(makeMastermindCard("M.O.D.O.K.", 9, 6, "Intellige
 // M.O.D.O.K. {TRANSFORM}.
   [ "Designed Only For...K.O.ING", ev => {
   // Reveal the top three cards of your deck. KO one of them, draw one, and discard one.
-   // TODO
+    lookAtThreeEv(ev, 'KO', 'DRAW', 'DISCARD');
     transformMastermindEv(ev);
   } ],
 // M.O.D.O.K. {TRANSFORM}.

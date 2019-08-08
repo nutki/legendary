@@ -1962,6 +1962,28 @@ function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), act
 function revealPlayerDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   lookAtDeckEv(ev, amount, () => action(who.revealed.deck), who, agent);
 }
+type RevealThreeAction = 'KO' | 'DISCARD' | 'DRAW';
+function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction) {
+  const actions = {
+    KO: { desc: "KO", handler: KOEv },
+    DISCARD: { desc: "Discard", handler: discardEv },
+    DRAW: { desc: "Draw", handler: drawCardEv },
+  }
+  revealPlayerDeckEv(ev, 3, cards => {
+    selectCardEv(ev, `Choose a card to ${actions[a1].desc}`, cards, c1 => {
+      actions[a1].handler(ev, c1);
+      selectCardEv(ev, `Choose a card to ${actions[a2].desc}`, cards.limit(c => c !== c1), c2 => {
+        actions[a2].handler(ev, c2);
+        a3 && selectCardEv(ev, `Choose a card to ${actions[a3].desc}`, cards.limit(c => c !== c1 && c !== c2), c3 => {
+          actions[a1].handler(ev, c3);
+        });
+      });
+    });
+  });
+}
+function lookAtThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction) {
+  revealThreeEv(ev, a1, a2, a3);
+}
 function lookAtDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   who = who || playerState;
   agent = agent || who;

@@ -1586,10 +1586,7 @@ addHeroTemplates("Villains", [
 // Reveal the top three cards of your deck. Draw one of them, discard one, and put the other back on top of your deck.
 // COST: 2
   uc: makeHeroCard("Sabretooth", "Stealthy Predator", 2, u, u, Color.COVERT, "Brotherhood", "D", ev => {
-    lookAtDeckEv(ev, 3, () => {
-      selectCardEv(ev, "Choose a card to KO", playerState.revealed.deck, c => KOEv(ev, c));
-      selectCardEv(ev, "Choose a card to discard", playerState.revealed.deck, c => discardEv(ev, c));
-    });
+    revealThreeEv(ev, 'DRAW', 'DISCARD');
   }),
 // ATTACK: 4+
 // Each player reveals a [Instinct] Ally or reveals the top card of their deck. Choose any number of those revealed top cards to be KO'd.
@@ -4020,7 +4017,7 @@ addHeroTemplates("World War Hulk", [
 // {POWER Tech} Reveal the top card of your deck. If it costs 0, KO it.
   uc: makeHeroCard("Bruce Banner", "Dangerous Testing", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPower(Color.TECH) && revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c)))),
 // {OUTWIT}: Look at the top three cards of your deck. Draw one of them, KO one, and put one back.
-  ra: makeHeroCard("Bruce Banner", "Gamma Ray Experiment", 7, u, 4, Color.TECH, "Avengers", "", ev => mayOutwitEv(ev, () => 0/* TODO */)),
+  ra: makeHeroCard("Bruce Banner", "Gamma Ray Experiment", 7, u, 4, Color.TECH, "Avengers", "", ev => mayOutwitEv(ev, () => lookAtThreeEv(ev, 'DRAW', 'KO'))),
 },
 {
   name: "Caiera",
@@ -4456,5 +4453,131 @@ addHeroTemplates("Ant-Man", [
   ra: makeHeroCard("Black Knight", "The Ebony Blade", 7, u, 0, Color.INSTINCT, "Avengers", "", ev => selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => {
     addAttackEvent(ev, c.printedDefense);
   })),
+},
+]);
+addHeroTemplates("Venom", [
+{
+  name: "Carnage",
+  team: "Venomverse",
+// {VIOLENCE} Draw a card.
+  c1: makeHeroCard("Carnage", "Rending Claws", 3, u, 2, Color.INSTINCT, "Venomverse", "FD", [], { excessiveViolence: ev => drawEv(ev) }),
+// {DIGEST 4} Draw two cards.
+// {INDIGESTION} You get +2 Recruit.
+  c2: makeHeroCard("Carnage", "Carnivore", 4, 0, u, Color.STRENGTH, "Venomverse", "FD", ev => digestEv(ev, 4, () => drawEv(ev, 2), () => addRecruitEvent(ev, 2))),
+// {VIOLENCE} Reveal the top card of your deck. You may KO it.
+  uc: makeHeroCard("Carnage", "Gruesome Feast", 6, u, 3, Color.COVERT, "Venomverse", "", [], { excessiveViolence: ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))) }),
+// {VIOLENCE} Reveal the top card of your deck. If it costs 0, KO it and you may repeat this process.
+  ra: makeHeroCard("Carnage", "Feast or Famine", 8, u, 6, Color.COVERT, "Venomverse", "", [], { excessiveViolence: ev => {
+    const f = () => {
+      let again = false;
+      revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => {
+        KOEv(ev, c);
+        chooseMayEv(ev, "Repeat", () => again = true);
+      }));
+      cont(ev, () => again && f());
+    };
+    f();
+  } }),
+},
+{
+  name: "Venom",
+  team: "Venomverse",
+// {DIGEST 3} You get +2 Attack.
+// {INDIGESTION} You get +2 Recruit.
+// {POWER Instinct} Instead, you get both.
+  c1: makeHeroCard("Venom", "Devouring Drool", 3, 0, 0, Color.INSTINCT, "Venomverse", "D", ev => digestEv(ev, 3, () => addAttackEvent(ev, 2), () => addRecruitEvent(ev, 2), superPower(Color.INSTINCT))),
+// {VIOLENCE} You get +2 Recruit.
+  c2: makeHeroCard("Venom", "Razor Teeth", 4, 0, 2, Color.STRENGTH, "Venomverse", "FD", [], { excessiveViolence: ev => addRecruitEvent(ev, 2) }),
+// <b>Choose one</b>:
+// - You get +1 Recruit for each other card you played this turn with a Recruit icon.
+// - Or you get +1 Attack for each other card you played this turn with an Attack icon.
+  uc: makeHeroCard("Venom", "Symbiotic Adaptation", 6, 0, 0, Color.INSTINCT, "Venomverse", "", ev => chooseOneEv(ev, "Choose one",
+    ['Recruit', () => addRecruitEvent(ev, turnState.cardsPlayed.count(hasRecruitIcon))],
+    ['Attack', () => addAttackEvent(ev, turnState.cardsPlayed.count(hasAttackIcon))],
+  )),
+// {DIGEST 8} KO a card from your Victory Pile. You get +6 Attack.
+// {INDIGESTION} KO a card from your hand or discard pile. You get +6 Recruit.
+// {TEAMPOWER Venomverse, Venomverse} Instead, do both.
+  ra: makeHeroCard("Venom", "Insatiable Hunger", 8, 0, 0, Color.INSTINCT, "Venomverse", "", ev => digestEv(ev, 8, () => {
+    selectCardAndKOEv(ev, playerState.victory.deck);
+    addAttackEvent(ev, 6);
+  }, () => {
+    selectCardAndKOEv(ev, handOrDiscard());
+    addRecruitEvent(ev, 6);
+  }, superPower("Venomverse", "Venomverse"))),
+},
+{
+  name: "Venom Rocket",
+  team: "Venomverse",
+// {DIGEST 3} You may discard a card. If you do, draw a card.
+// GUN: 1
+  c1: makeHeroCard("Venom Rocket", "Hungry for Action", 3, u, 2, Color.INSTINCT, "Venomverse", "GFD", ev => digestEv(ev, 3, () => {
+    selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
+  })),
+// If a Master Strike or Villain that has an Ambush ability was played this turn, you get +1 Attack.
+  c2: makeHeroCard("Venom Rocket", "Spring the Trap", 4, u, 2, Color.TECH, "Venomverse", "FD", ev => {
+    (pastEvents('STRIKE').size || pastEvents('EFFECT').has(e => e.effectName === 'ambush')) && addAttackEvent(ev, 1); // TODO has ambush
+  }),
+// {VIOLENCE} You may KO a card from your hand or discard pile.
+  uc: makeHeroCard("Venom Rocket", "Serious Overkill", 5, u, 2, Color.RANGED, "Venomverse", "D", [], { excessiveViolence: ev => KOHandOrDiscardEv(ev) }),
+// When a Master Strike is played, before it takes effect, you may put Ultimate Survivor from your hand on top of your deck. If you do, you may put any card from the HQ into your hand.
+// GUN: 1
+  ra: makeHeroCard("Venom Rocket", "Ultimate Survivor", 7, u, 5, Color.TECH, "Venomverse", "G", [], { trigger: {
+    event: 'STRIKE',
+    match: (ev, source) => owner(source) && source.location === owner(source).hand,
+    before: ev => {
+      chooseMayEv(ev, "Put Ultimate Survivor on the top of your deck", () => {
+        moveCardEv(ev, ev.source, owner(ev.source).deck);
+        selectCardOptEv(ev, "Choose a card", hqCards(), c => moveCardEv(ev, c, owner(ev.source).hand), () => {}, owner(ev.source));
+      }, owner(ev.source));
+    }
+  }}),
+},
+{
+  name: "Venomized Dr. Strange",
+  team: "Venomverse",
+// {DIGEST 2} Draw a card.
+  c1: makeHeroCard("Venomized Dr. Strange", "Cauldron of the Cosmos", 2, 1, u, Color.RANGED, "Venomverse", "FD", ev => digestEv(ev, 2, () => drawEv(ev))),
+// {POWER Ranged} Reveal the top card of your deck. If it costs 0, discard it and you get +2 Attack.
+  c2: makeHeroCard("Venomized Dr. Strange", "See Future Timelines", 4, u, 2, Color.RANGED, "Venomverse", "D", ev => superPower(Color.RANGED) && revealPlayerDeckEv(ev, 1, cards => {
+    cards.limit(c => c.cost === 0).each(c => { discardEv(ev, c); addAttackEvent(ev, 2); });
+  })),
+// If you played a 4-cost card and a 2-cost card this turn, you get +2 Attack.
+  uc: makeHeroCard("Venomized Dr. Strange", "Complete the Grand Ritual", 6, u, 4, Color.INSTINCT, "Venomverse", "D", ev => {
+    turnState.cardsPlayed.has(c => c.cost === 4) && turnState.cardsPlayed.has(c => c.cost === 2) && addAttackEvent(ev, 2);
+  }),
+// Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
+// {TEAMPOWER Venomverse, Venomverse} Do this ability again.
+  ra: makeHeroCard("Venomized Dr. Strange", "Crystal of Kadavus", 8, u, 4, Color.RANGED, "Venomverse", "", ev => {
+    repeat(superPower("Venomverse", "Venomverse") ? 2 : 1, () => revealThreeEv(ev, 'DRAW', 'DISCARD', 'KO'));
+  }),
+},
+{
+  name: "Venompool",
+  team: "Venomverse",
+// {DIGEST 2} You get +2 Attack.
+// {INDIGESTION} "Rescue" a Bystander.
+// {POWER Strength} Instead, you get both.
+  c1: makeHeroCard("Venompool", "Digest That Chimichanga", 2, u, 0, Color.STRENGTH, "Venomverse", "D", ev => digestEv(ev, 2, () => addAttackEvent(ev, 2), () => rescueEv(ev), superPower(Color.STRENGTH))),
+// Draw two cards. But you can't draw any more cards until the end of this turn.
+// GUN: 1
+  c2: makeHeroCard("Venompool", "Shenanigans", 3, u, u, Color.TECH, "Venomverse", "GF", ev => {
+    drawEv(ev, 2);
+    cont(ev, () => addTurnTrigger('DRAW', ev => ev.who === playerState && ev.parent.type !== 'CLEANUP', { replace: () => {} }));
+  }),
+// Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extra time.
+// {VIOLENCE} "Rescue" a Bystander.
+  uc: makeHeroCard("Venompool", "Can I Get a Little Gratitude", 5, u, 3, Color.INSTINCT, "Venomverse", "", ev => {
+    addTurnTrigger('RESCUE', ev => ev.who === playerState, ev => {
+      const rescue = getModifiedStat(ev.parent.what, 'rescue', ev.parent.what.rescue);
+      if (rescue) pushEv(ev, "EFFECT", { source: ev.parent.what, func: rescue, who: playerState });
+    });
+  }, { excessiveViolence: ev => rescueEv(ev) }),
+// {DIGEST 7} You get +1 Attack for each two Bystanders in your Victory Pile.
+// {INDIGESTION} "Rescue" two Bystanders.
+// {TEAMPOWER Venomverse, Venomverse} Instead, do both (in order).
+  ra: makeHeroCard("Venompool", "Play to the Crowd", 7, u, 4, Color.STRENGTH, "Venomverse", "", ev => digestEv(ev, 7, () => {
+    addAttackEvent(ev, Math.floor(playerState.victory.count(isBystander) / 2));
+  }, () => rescueEv(ev, 2), superPower("Venomverse", "Venomverse"))),
 },
 ]);
