@@ -1777,3 +1777,55 @@ makeSchemeCard("Trap Heroes in the Microverse", { twists: 11, heroes: [ 3, 6, 6,
   addStatSet('sizeChanging', c => c.heroName === extraHeroName(), c => c.color);
 }),
 ]);
+addTemplates("SCHEMES", "Venom", [
+// SETUP: 8 Twists. Add an extra Henchman Group.
+// EVILWINS: When the Escape Pile has 3 cards per player, or the Villain Deck runs out.
+makeSchemeCard("Invasion of the Venom Symbiotes", { twists: 8, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ] }, ev => {
+  // Twist: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush</b>: This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
+  villainify('Symbiote', ev.source, 3, 3);
+  addStatSet('ambush', c => c === ev.source, () => ev => symbioteBondEv(ev, cityVillains().limit(v => v !== ev.source), ev.source));
+  villainDrawEv(ev);
+}, escapeProgressTrigger(c => true), () => {
+  setSchemeTarget(3, true);
+}),
+// SETUP: 10 Twists. Wound Stack has 6 Wounds per player.
+// RULE: "Possessed Psychotics" have Attack equal to the number of Twists next to the Scheme. When you fight one, rescue it as a Bystander.
+// EVILWINS: When there are 6 Bystanders in the Escape Pile or the Wound Stack runs out.
+makeSchemeCard("Maximum Carnage", { twists: 10, wounds: [6, 12, 18, 24, 30] }, ev => {
+  // Twist: Stack this Twist next to the Scheme. If the Streets are empty, put a Bystander there as a "Possessed Psychotic" Villain. If the Streets weren't empty, each player gains a Wound.
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
+  withCity('STREETS', streets => isCityEmpty(streets) ? gameState.bystanders.withTop(c => {
+    villainify('Possesed Psychotic', c, () => gameState.scheme.attached('TWIST').size, 'RESCUE');
+    enterCityEv(ev, c, streets);
+  }) : eachPlayer(p => gainWoundEv(ev, p)))
+}),
+// SETUP: 6 Twists. All Bystanders are also "Biochemists."
+makeSchemeCard("Paralyzing Venom", { twists: 6 }, ev => {
+  // Twist: Each player Kos a Biochemist from their Victory Pile or discards down to 4 cards in hand. // FIX Kos
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Biochemist", p.victory.limit(isBystander), c => KOEv(ev, c), () => pickDiscardEv(ev, -4, p), p)); // TODO or optional
+  // Twist 6 Evil Wins!
+  schemeProgressEv(ev, ev.nr)
+}, [], () => setSchemeTarget(6)),
+// SETUP: 11 Twists. Set aside a second "Drained" Mastermind and its 4 Tactics, out of play. Add its "Always Leads" Villains as an extra Villain Group.
+// RULE: If Tactics or Master Strikes mention the Drained Mastermind, use the main Mastermind instead.
+makeSchemeCard<{drained: Card}>("Symbiotic Absorption", { twists: 11, extra_masterminds: 1, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  if (ev.nr <= 4) {
+    // Twist 1-4 Shuffle one of the Drained Mastermind's Tactics into the main Mastermind's Tactics.
+    withMastermind(ev, m => {
+      ev.state.drained.attached('TACTICS').withRandom(c => {
+        c.mastermind = m;
+        shuffleIntoEv(ev, c, m.attachedDeck('TACTICS'));
+      });
+    }, true);
+  } else if (ev.nr === 6 || ev.nr === 8 || ev.nr === 10) {
+    // Twist 6, 8, 10 The Mastermind uses this Twist to copy the Master Strike ability of the Drained Mastermind.
+    withMastermind(ev, m => pushEffects(ev, m, "strike", ev.state.drained.strike, { what: ev.what, nr: 0 }), true); // TODO abstrract next to playStrike for better discoverability
+  }
+  // Twist 11 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], s => {
+  setSchemeTarget(11);
+  s.drained = gameState.mastermind.deck[1]; // TODO init extra masterminds attached to scheme already
+  moveCard(s.drained, gameState.scheme.attachedDeck('DRAINED'));
+}),
+]);

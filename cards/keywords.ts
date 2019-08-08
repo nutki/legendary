@@ -569,22 +569,29 @@ function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, d
   if (effect0 && (!hasDigest || doBoth)) effect0(ev);
 }
 
-function symbioteBondEv(ev: Ev, to: Card, what: Card | Card[], unbound?: Handler) {
-  if (wasBonded(to)) return;
-  if (what instanceof Array) {
-    selectCardEv(ev, 'Choose a Vilain to bond with', what, c => symbioteBondEv(ev, to, c, unbound));
-  } else {
-   // TODO
+function symbioteBondEv(ev: Ev, to: Card | Card[], what: Card | Card[], unbound?: Handler) {
+  if (to instanceof Array) {
+    selectCardEv(ev, "Choose a Villain to Bond with", to.limit(c => !isBonded(c)), c => symbioteBondEv(ev, c, what, unbound));
+    return;
   }
+  if (what instanceof Array) {
+    selectCardEv(ev, 'Choose a Villain to Bond with', what.limit(c => !isBonded(c)), c => symbioteBondEv(ev, to, c, unbound));
+    return;
+  }
+  if (isBonded(to) || isBonded(what)) return;
+ // TODO
+}
+function isBonded(c: Card) {
+  return false;
 }
 function wasBonded(c: Card) {
   return false;
 }
 function poisonBondEv(ev: Ev, to: Card[]) {
-  const cards = to.limit(c => c !== ev.source && !wasBonded(c));
+  const cards = to.limit(c => c !== ev.source);
   if (wasBonded(ev.source) || cards.size === 0) {
     gainEv(ev, ev.source);
   } else {
-    selectCardEv(ev, "Choose a Villain to Bond with", cards, c => symbioteBondEv(ev, c, ev.source));
+    symbioteBondEv(ev, cards, ev.source);
   }
 }

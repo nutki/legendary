@@ -1802,7 +1802,7 @@ addTemplates("MASTERMINDS", "Venom", [
 // A Villain from the city <b>Symbiote Bonds</b> with Hybrid, If Hybrid was already bonded, then each player gains a Wound instead.
 // The highest Attack unbonded Villain from the city and/or Escape Pile <b>Symbiote Bonds</b> with Hybrid. If no new bond could occur, then each player gains a Wound instead.
   const cards = ev.source.epic ? [...cityVillains(), ...gameState.escaped.limit(isVillain)].highest(c => c.defense) : cityVillains();
-  const cond = wasBonded(ev.source) || (ev.source.epic && cards.size === 0);
+  const cond = isBonded(ev.source) || (ev.source.epic && cards.size === 0);
   cond ? eachPlayer(p => gainWoundEv(ev, p)) : symbioteBondEv(ev, ev.source, cards, ev => rescueEv(ev, 3));
 }, [
 // Alien Awakening FIX
