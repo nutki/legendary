@@ -128,11 +128,39 @@ addBystanderTemplates("World War Hulk", [
 })) ],
 // RESCUE: you get +1 Recruit if the Rooftops are empty and +1 Recruit if the Bridge is empty.
 [ 1, makeBystanderCard("Tourist Couple", ev => {
-  withCity('ROOFTOPS', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
-  withCity('BRIDGE', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
+  playerState === ev.who && withCity('ROOFTOPS', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
+  playerState === ev.who && withCity('BRIDGE', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
 }) ],
 // RESCUE: look at the top three cards of your deck. KO one, discard one, and put one back.
-[ 1, makeBystanderCard("Triage Nurse", ev => lookAtDeckEv(ev, 3, () => {
-  lookAtThreeEv(ev, 'KO', 'DISCARD');
-})) ],
+[ 1, makeBystanderCard("Triage Nurse", ev => lookAtThreeEv(ev, 'KO', 'DISCARD', undefined, ev.who)) ],
+]);
+addBystanderTemplates("Dimensions", [
+// RESCUE: you may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+[ 1, makeBystanderCard("Bulldozer Driver", ev => {
+  selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+    selectCardEv(ev, "Choose a new city space", gameState.city, dest => swapCardsEv(ev, v.location, dest), ev.who);
+  }, () => {}, ev.who);
+}) ],
+// RESCUE: play a copy of one of your S.H.I.E.L.D. Heroes or HYDRA Allies.
+[ 1, makeBystanderCard("Double Agent of S.H.I.E.L.D.", ev => {
+  playerState === ev.who && selectCardEv(ev, "Choose a Hero to copy", yourHeroes().limit(isShieldOrHydra), c => playCopyEv(ev, c));
+}) ],
+// RESCUE: put any number of Heroes from the HQ on the bottom of the Hero Deck.
+[ 1, makeBystanderCard("Forklift Driver", ev => {
+  selectObjectsAnyEv(ev, "Choose Heroes to put on the bottom of the Hero Deck", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true), ev.who);
+}) ],
+// RESCUE: guess "zero" or "not zero." Then reveal the top card of your deck and check its cost. If you guessed right, draw that card.
+[ 1, makeBystanderCard("Fortune Teller", ev => {
+  chooseOptionEv(ev, "Guess", [{l:"Zero",v:true}, {l:"Not zero", v:false}], v => drawIfEv(ev, c => (c.cost === 0) === v, undefined, ev.who), ev.who);
+}) ],
+// This Bystander is worth +1 Victory Points for each Hero you have that costs 7 Cost or more among all your cards at the end of the game.
+// VP: 1*
+[ 1, makeBystanderCard("Photographer", () => {}, c => c.printedVP + owned(owner(c)).limit(isHero).count(c => c.printedCost >= 7)) ],
+// RESCUE: say a Hero name. Then reveal the top three cards of your deck. Put one of those cards with that exact Hero name into your hand. Put the rest back in any order.
+[ 1, makeBystanderCard("Stan Lee", ev => {
+  const names = owned(ev.who).limit(isHero).unique(c => c.heroName).map(n => ({l:n, v:n}));
+  chooseOptionEv(ev, "Choose a Hero name", names, n => revealPlayerDeckEv(ev, 3, cards => cards.limit(c => c.heroName === n).each(c => {
+    moveCardEv(ev, c, playerState.hand);
+  }), ev.who), ev.who);
+}) ],
 ]);

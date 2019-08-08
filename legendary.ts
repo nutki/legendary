@@ -308,10 +308,11 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
   if (abilities) Object.assign(c, abilities);
   return c;
 }
-function makeBystanderCard(name: string, rescue?: (ev: Ev) => void) {
+function makeBystanderCard(name: string, rescue?: (ev: Ev) => void, vp?: (c: Card) => number) {
   let c = new Card("BYSTANDER", name);
   c.printedVP = 1;
   c.rescue = rescue;
+  if (vp) c.varVP = vp;
   return c;
 }
 function makeWoundCard(name: string, cond: (c: Card) => boolean, heal: (ev: Ev) => void, customType?: string) {
@@ -1963,7 +1964,7 @@ function revealPlayerDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => v
   lookAtDeckEv(ev, amount, () => action(who.revealed.deck), who, agent);
 }
 type RevealThreeAction = 'KO' | 'DISCARD' | 'DRAW';
-function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction) {
+function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction, who?: Player) {
   const actions = {
     KO: { desc: "KO", handler: KOEv },
     DISCARD: { desc: "Discard", handler: discardEv },
@@ -1976,13 +1977,13 @@ function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?
         actions[a2].handler(ev, c2);
         a3 && selectCardEv(ev, `Choose a card to ${actions[a3].desc}`, cards.limit(c => c !== c1 && c !== c2), c3 => {
           actions[a1].handler(ev, c3);
-        });
-      });
-    });
-  });
+        }, who);
+      }, who);
+    }, who);
+  }, who);
 }
-function lookAtThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction) {
-  revealThreeEv(ev, a1, a2, a3);
+function lookAtThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction, who?: Player) {
+  revealThreeEv(ev, a1, a2, a3, who);
 }
 function lookAtDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (ev: Ev) => void, who?: Player, agent?: Player) {
   who = who || playerState;
