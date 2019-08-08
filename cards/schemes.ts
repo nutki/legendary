@@ -1716,3 +1716,64 @@ makeSchemeCard("World War Hulk", { twists: 9, extra_masterminds: 3 }, ev => {
   });
 }),
 ]);
+addTemplates("SCHEMES", "Ant-Man", [
+// SETUP: 11 Twists. 4-5 Players: Add another Hero.
+// RULE: Evolved Ultrons have 4 Attack and are <b>Empowered</b> by each color in the Evolution pile. They're worth 6VP.
+// EVILWINS: When 7 Evolved Ultrons are in the city and/or Escape Pile.
+makeSchemeCard("Age of Ultron", { twists: 11, heroes: [ 3, 5, 5, 6, 7 ] }, ev => {
+  // Twist: Put the top card of the Hero Deck next to the Scheme in an "Evolution" Pile. Then this Twist enters the city as an "Evolved Ultron" Villain.
+  const evolution = gameState.scheme.attachedDeck('EVOLUTION');
+  gameState.herodeck.withTop(c => moveCardEv(ev, c, evolution));
+  villainify('Evolved Ultron', ev.source, c => 4 + empowerVarDefense(evolution.deck.map(c => c.color).reduce((p, c) => p | c))(c), 6);
+  enterCityEv(ev, ev.source);
+}, koOrEscapeProgressTrigger(c => isTwist(c) && isVillain(c)), () => {
+  setSchemeTarget(7);
+}),
+// SETUP: 9 Twists.
+// EVILWINS: When 3 Villains per player have escaped.
+makeSchemeCard("Pull Earth into Medieval Times", { twists: 9 }, ev => {
+  if (ev.nr <= 6) {
+    // Twist 1-6 Until the start of your next turn, all Villains and Mastermind everywhere have <b>Chivalrous Duel</b>.
+    let enabled = true;
+    addStatSet('chivalrousDuel', isEnemy, (c, p) => enabled || p);
+    addFutureTrigger(() => enabled = false, playerState);
+  } else if (ev.nr >= 7 && ev.nr <= 9) {
+    // Twist 7-9 Each player puts a Villains from the Victory Pile into the Escape Pile.
+    eachPlayer(p => selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => moveCardEv(ev, c, gameState.escaped), p));
+  }
+}, escapeProgressTrigger(isVillain), () => {
+  setSchemeTarget(3, true);
+}),
+// SETUP: Twists equal to the number of players plus 6.
+// EVILWINS: When ther are 10 Giant Ants next to the Mastermind.
+makeSchemeCard("Transform Commuters into Giant Ants", { twists: [7, 8, 9, 10, 11] }, ev => {
+  // Twist: STack this Twist next to the Scheme. Then for each Twist in that stack, put a Bystander face down next to the Mastermind as a 2A "Giant Ant" Villain. When you fight one, rescue it as a Bystander. // FIX 2A STack
+  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  cont(ev, () => {
+    const amount = gameState.scheme.attached('TWIST').size;
+    repeat(amount, () => cont(ev, () => {
+      gameState.bystanders.withTop(c => {
+        villainify("Giant Ant", c, 2, "RESCUE");
+        attachCardEv(ev, c, gameState.scheme, 'ANT');
+      });
+    }));
+  });
+}, [], () => {
+  // TODO make ants face down
+  // TODO remake excessive violence to work here
+  gameState.specialActions = ev => gameState.scheme.attached('ANT').map(c => fightActionEv(ev, c));
+}),
+// SETUP: 11 Twists. Add all 14 cards for and extra Hero the Villain Deck.
+// RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
+// EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+makeSchemeCard("Trap Heroes in the Microverse", { twists: 11, heroes: [ 3, 6, 6, 6, 7 ] }, ev => {
+  // Twist: Play two cards from the Villain Deck.
+  villainDrawEv(ev); villainDrawEv(ev);
+}, [ escapeProgressTrigger(isVillain), runOutProgressTrigger('VILLAIN', false) ], () => {
+  setSchemeTarget(3, true);
+  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, gameState.villaindeck));
+  gameState.villaindeck.shuffle();
+  villainify("Giant Ant", c => c.heroName === extraHeroName(), c => c.printedCost, ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)));
+  addStatSet('sizeChanging', c => c.heroName === extraHeroName(), c => c.color);
+}),
+]);

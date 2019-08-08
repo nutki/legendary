@@ -1423,6 +1423,7 @@ interface ModifiableStats {
   nthCircle?: number
   sizeChanging?: number
   effects?: Handler[]
+  chivalrousDuel?: boolean
 }
 
 function safePlus(a: number, b: number) {
