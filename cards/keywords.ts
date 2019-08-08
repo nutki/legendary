@@ -595,3 +595,15 @@ function poisonBondEv(ev: Ev, to: Card[]) {
     symbioteBondEv(ev, cards, ev.source);
   }
 }
+
+function switcherooActionEv(n: number) {
+  return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', {
+    what: c,
+    desc: 'Switcheroo',
+    source: c,
+    func: ev => {
+      moveCardEv(ev, ev.source, gameState.herodeck, true);
+      selectCardOptEv(ev, "Choose a Hero", hqHeroes().limit(c => c.cost === n), c => moveCardEv(ev, c, playerState.hand));
+    }
+  })
+}

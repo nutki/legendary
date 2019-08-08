@@ -4581,3 +4581,108 @@ addHeroTemplates("Venom", [
   }, () => rescueEv(ev, 2), superPower("Venomverse", "Venomverse"))),
 },
 ]);
+addHeroTemplates("Dimensions", [
+{
+  name: "Howard the Duck",
+  team: "(Unaffiliated)",
+// Reveal the top card of the Bystander Deck. If it's a Special Bystander, rescue it. Otherwise, put it on the bottom of that deck.
+// This is a copy of Gwenpool card effect
+  c1: makeHeroCard("Howard the Duck", "Traveling Companion", 3, 2, u, Color.INSTINCT, u, "D", ev => gameState.bystanders.withTop(c => {
+    c.rescue ? rescueEv(ev, c) : moveCardEv(ev, c, gameState.bystanders, true);
+  })),
+// Reveal the top card of your deck. If it costs 0 Cost or has no team icon, draw it.
+  c2: makeHeroCard("Howard the Duck", "Rebel Without a Cause", 4, u, 2, Color.COVERT, u, "D", ev => drawIfEv(ev, c => c.cost === 0 || !c.team)),
+// You get +1 Attack for each other Hero you played this turn with no team icon.
+  uc: makeHeroCard("Howard the Duck", "Right Place, Wrong Time", 5, u, 3, Color.INSTINCT, u, "", ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => !c.team))),
+// Reveal the top three cards of your deck. Draw one of them, discard one, and KO one.
+  ra: makeHeroCard("Howard the Duck", "Interplanetary Visitor", 7, u, 4, Color.TECH, u, "", ev => revealThreeEv(ev, 'DRAW', 'DISCARD', 'KO')),
+},
+{
+  name: "Jessica Jones",
+  team: "Marvel Knights",
+// {SWITCHEROO 4}
+  c1: makeHeroCard("Jessica Jones", "Alter Ego", 3, u, 2, Color.STRENGTH, "Marvel Knights", "FD", [], { cardActions: [ switcherooActionEv(4) ] }),
+// {SWITCHEROO 5}
+// <b>Investigate</b> for a card with an Attack icon.
+  c2: makeHeroCard("Jessica Jones", "Alias Investigations", 4, u, 1, Color.COVERT, "Marvel Knights", "", ev => investigateEv(ev, hasAttackIcon), { cardActions: [ switcherooActionEv(5) ] }),
+// {SWITCHEROO 6}
+// <b>Investigate</b> for a card with a Recruit icon. You may draw that card or KO it.
+  uc: makeHeroCard("Jessica Jones", "Crack the Case", 5, 3, u, Color.STRENGTH, "Marvel Knights", "", ev => investigateEv(ev, hasRecruitIcon, playerState.deck, c => {
+    chooseOneEv(ev, "Choose", ["Draw", () => drawCardEv(ev, c)], ["KO", () => KOEv(ev, c)]);
+  }), { cardActions: [ switcherooActionEv(6) ] }),
+// {POWER Covert} <b>Investigate</b> the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
+  ra: makeHeroCard("Jessica Jones", "Uncover Hidden Evil", 7, u, 4, Color.COVERT, "Marvel Knights", "", ev => {
+    superPower(Color.COVERT) && investigateEv(ev, isVillain, gameState.villaindeck, c => {
+      chooseOneEv(ev, "Put the Villain",
+        ["Your Victory Pile", () => {
+          moveCardEv(ev, c, playerState.victory);
+          pushEffects(ev, c, 'fight', c.fight); // TODO abstract this
+        }],
+        ["Top of the Villain Deck", () => moveCardEv(ev, c, gameState.villaindeck)],
+        ["Bottom of the Villain Deck", () => moveCardEv(ev, c, gameState.villaindeck, true)],
+      )
+    });
+  }),
+},
+{
+  name: "Man-Thing",
+  team: "(Unaffiliated)",
+// {TELEPORT}
+// You get +2 Attack, usable only against Villains in the Sewers or the Mastermind
+  c1: makeHeroCard("Man-Thing", "Form from Ooze", 2, u, 0, Color.STRENGTH, u, "D", ev => addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'SEWERS'), 2), { teleport: true }),
+// Choose a Villain or Mastermind. If there are no other Villains adjacent to it, it gets -1 Attack this turn.
+  c2: makeHeroCard("Man-Thing", "Burn the Fearful", 4, u, 2, Color.INSTINCT, u, "D", ev => {
+    const cards = cityVillains().limit(c => !cityAdjacent(c.location).has(d => d.has(isVillain)));
+    gameState.city[0].has(isVillain) || gameState.mastermind.each(c => cards.push(c));
+    selectCardEv(ev, "Choose a Villain or Mastermind", cards, c => addTurnMod('defense', v => v === c, -1));
+  }),
+// {TELEPORT}
+// You may move a Villain to another city space. If another Villain is already there, swap them.
+  uc: makeHeroCard("Man-Thing", "Travel the Nexus of Realities", 5, 3, u, Color.COVERT, u, "", ev => {
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", gameState.city, dest => swapCardsEv(ev, v.location, dest));
+    });
+  }, { teleport: true }),
+// {POWER Strength} You get +1 Attack for each empty city space.
+  ra: makeHeroCard("Man-Thing", "Eternity of Solitude", 7, u, 5, Color.STRENGTH, u, "", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, gameState.city.count(isCityEmpty))),
+},
+{
+  name: "Ms. America",
+  team: "Avengers",
+// {TELEPORT}
+// {POWER Strength} You get +2 Attack.
+  c1: makeHeroCard("Ms. America", "Star Power", 3, u, 1, Color.STRENGTH, "Avengers", "FD", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 2), { teleport: true }),
+// <b>Investigate</b> for an Avengers card and {TELEPORT} that card.
+  c2: makeHeroCard("Ms. America", "Search Parallel Dimensions", 4, 2, u, Color.RANGED, "Avengers", "FD", ev => investigateEv(ev, 'Avengers', playerState.deck, c => teleportEv(ev, c))),
+// {POWER Strength} Reveal the top card of your deck. KO it or {TELEPORT} it.
+  uc: makeHeroCard("Ms. America", "Kick a Hole in Reality", 6, u, 3, Color.STRENGTH, "Avengers", "F", ev => superPower(Color.STRENGTH) && revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+    chooseOneEv(ev, "Choose", ["KO", () => KOEv(ev, c)], ["Teleport", () => teleportEv(ev, c)]);
+  }))),
+// You get +1 Attack for each other card in your hand.
+  ra: makeHeroCard("Ms. America", "Hyper-Cosmic Awareness", 7, u, 0, Color.COVERT, "Avengers", "F", ev => addAttackEvent(ev, playerState.hand.size)),
+},
+{
+  name: "Squirrel Girl",
+  team: "Avengers",
+// {SWITCHEROO 3}
+// <b>Investigate</b> for a card that costs 3 or less.
+  c1: makeHeroCard("Squirrel Girl", "Find Tiny Friends", 2, u, u, Color.INSTINCT, "Avengers", "D", ev => investigateEv(ev, c => c.cost <= 3), { cardActions: [ switcherooActionEv(3) ] }),
+// {SWITCHEROO 4}
+// {POWER Instinct} You get +2 Attack.
+  c2: makeHeroCard("Squirrel Girl", "Nut Punch", 3, u, 1, Color.INSTINCT, "Avengers", "FD", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 2), { cardActions: [ switcherooActionEv(4) ] }),
+// {SWITCHEROO 5}
+// You get +2 Attack if at least 2 cards entered the HQ this turn.
+  uc: makeHeroCard("Squirrel Girl", "Squirrelgility", 4, u, 2, Color.COVERT, "Avengers", "D", ev => {
+    pastEvents('MOVECARD').count(e => e.to.isHQ) >= 2 && addAttackEvent(ev, 2);
+  }, { cardActions: [ switcherooActionEv(5) ] }),
+// You may choose a number from 1 to 5. A Hero in your hand gains <b>Switcheroo</b> for that number.
+// {POWER Instinct Instinct} You may choose a number from 1 to 8 instead.
+  ra: makeHeroCard("Squirrel Girl", "Unbeatable Squirrel Girl", 8, u, 5, Color.INSTINCT, "Avengers", "", ev => {
+    chooseNumberEv(ev, "Choose a number", 1, superPower(Color.INSTINCT, Color.INSTINCT) ? 8 : 5, n => {
+      selectCardEv(ev, "Choose a Hero", playerState.hand.limit(isHero), c => {
+        addTurnAction(switcherooActionEv(n)(c, ev));
+      })
+    });
+  }),
+},
+]);
