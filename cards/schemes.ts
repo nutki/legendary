@@ -708,7 +708,7 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
 }, [
   koProgressTrigger(isNonGrayHero),
   {
-    event: 'VILLAINDRAW', // TODO turn start
+    event: 'VILLAINDRAW', // TODO turn start trigger
     before: ev => {
       gameState.cityEntry = gameState.city[playerState.nr];
       swapDecks(gameState.villaindeck, gameState.villaindeck.attachedDeck('REALITY' + playerState.nr));
@@ -1819,7 +1819,7 @@ makeSchemeCard<{drained: Card}>("Symbiotic Absorption", { twists: 11, extra_mast
     }, true);
   } else if (ev.nr === 6 || ev.nr === 8 || ev.nr === 10) {
     // Twist 6, 8, 10 The Mastermind uses this Twist to copy the Master Strike ability of the Drained Mastermind.
-    withMastermind(ev, m => pushEffects(ev, m, "strike", ev.state.drained.strike, { what: ev.what, nr: 0 }), true); // TODO abstrract next to playStrike for better discoverability
+    withMastermind(ev, m => pushEffects(ev, m, "strike", ev.state.drained.strike, { what: ev.what, nr: 0 }), true); // TODO abstract next to playStrike for better discoverability
   }
   // Twist 11 Evil Wins!
   schemeProgressEv(ev, ev.nr);

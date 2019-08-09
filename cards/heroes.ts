@@ -1472,7 +1472,12 @@ addHeroTemplates("Villains", [
 // {DODGE}
 // You may choose a Bindings from your hand or discard pile and have another player gain that Bindings. If you do, you get +2 Attack.
 // COST: 3
-  c1: makeHeroCard("Magneto", "Magnetic Levitation", 3, u, 1, Color.RANGED, "Brotherhood", "D", ev => /*TODO*/'You may choose a Bindings from your hand or discard pile and have another player gain that Bindings. If you do, you get +2 Attack.', { cardActions: [ dodge ] }),
+  c1: makeHeroCard("Magneto", "Magnetic Levitation", 3, u, 1, Color.RANGED, "Brotherhood", "D", ev => {
+    gameState.players.size > 1 && selectCardOptEv(ev, "Choose a Bindings for another player to gain", handOrDiscard().limit(isBindings), c => {
+      chooseOtherPlayerEv(ev, p => gainEv(ev, c, p));
+      addAttackEvent(ev, 2);
+    });
+  }, { cardActions: [ dodge ] }),
 // RECRUIT: 2+
 // {DODGE}
 // {POWER Strength} Choose a player. That player reveals a Brotherhood Ally or gains a Bindings. If a Bindings is gained this way, you get +1 Recruit.
@@ -2661,7 +2666,9 @@ addHeroTemplates("Captain America 75th Anniversary", [
   c2: makeHeroCard("Agent X-13", "Paramilitary Ops", 4, u, 2, Color.TECH, "S.H.I.E.L.D.", "GFD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit('S.H.I.E.L.D.').count(c => c.cost >= 1))),
 // Choose one: Gain a S.H.I.E.L.D. Officer, or you get +2 Attack.
 // {POWER Covert} {OUTOFTIME}.
-  uc: makeHeroCard("Agent X-13", "Spy Network", 4, u, 0, Color.COVERT, "S.H.I.E.L.D.", "D", [ ev => 0/* TODO */, ev => superPower(Color.COVERT) && outOfTimeEv(ev) ]),
+  uc: makeHeroCard("Agent X-13", "Spy Network", 4, u, 0, Color.COVERT, "S.H.I.E.L.D.", "D", [ ev => {
+    chooseOneEv(ev, "Choose one", ["Gain S.H.I.E.L.D. Officer", () => gameState.officer.withTop(c => gainEv(ev, c))],["Get +2 Attack", () => addAttackEvent(ev, 2)]);
+  }, ev => superPower(Color.COVERT) && outOfTimeEv(ev) ]),
 // KO up to two S.H.I.E.L.D. Heroes from your hand and/or discard pile.
 // {SAVIOR} For each card KO'd this way, you get +1 Attack.
   ra: makeHeroCard("Agent X-13", "Mobilize for War", 7, u, 4, Color.INSTINCT, "S.H.I.E.L.D.", "", ev => {
@@ -3078,7 +3085,7 @@ addHeroTemplates("Civil War", [
 // {POWER Strength} You get +1 Attack for each Villain in your Victory Pile that has a printed Attack 3 or less.
   uc: makeHeroCard("Stature", "Growing Confidence", 6, u, 2, Color.STRENGTH, "Avengers", "FD", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, playerState.victory.limit(isVillain).count(c => c.defense <= 3)), { sizeChanging: Color.STRENGTH }),
 // {SIZECHANGING STRENGTH}
-// {POWER Strength} Defeat each Villain that has 4 Attack or less. // TODO is it 4?
+// {POWER Strength} Defeat each Villain that has 4 Attack or less.
 // GUN: 1
   ra: makeHeroCard("Stature", "Trample the Tiny", 8, u, 5, Color.STRENGTH, "Avengers", "G", ev => superPower(Color.STRENGTH) && villains().limit(c => c.defense <= 3).each(c => defeatEv(ev, c)), { sizeChanging: Color.STRENGTH }),
 },

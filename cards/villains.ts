@@ -28,7 +28,7 @@ addVillainTemplates("Legendary", [
 // VP: 3
   [ 2, makeVillainCard("Brotherhood", "Sabretooth", 5, 3, {
     fight: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
   })],
 ]},
 { name: "Enemies of Asgard", cards: [
@@ -52,7 +52,7 @@ addVillainTemplates("Legendary", [
 // VP: 2
   [ 3, makeVillainCard("Enemies of Asgard", "Frost Giant", 4, 2, {
     fight: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
   })],
 // AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
 // FIGHT: Choose a player. That player KOs any number of Wounds from their hand and discard pile.
@@ -88,7 +88,7 @@ addVillainTemplates("Legendary", [
 // VP: 3
   [ 1, makeVillainCard("HYDRA", "Viper", 5, 3, {
     fight: ev => eachPlayer(p => { if (!p.victory.has(isGroup("HYDRA"))) gainWoundEv(ev, p); }),
-    escape: ev => eachPlayer(p => { if (!p.victory.has(isGroup("HYDRA"))) gainWoundEv(ev, p); }),
+    escape: sameEffect,
   })],
 ]},
 { name: "Masters of Evil", cards: [
@@ -144,7 +144,7 @@ addVillainTemplates("Legendary", [
 // VP: 3
   [ 2, makeVillainCard("Radiation", "Zzzax", 5, 3, {
     fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
   })],
 ]},
 { name: "Skrulls", cards: [
@@ -381,8 +381,8 @@ addVillainTemplates("Dark City", [
 // VP: 4
   [ 2, makeVillainCard("Underworld", "Blackheart", 6, 4, {
     ambush: ev => revealOrEv(ev, "Marvel Knights", () => gainWoundEv(ev, playerState.right), playerState.right),
-    fight: ev => revealOrEv(ev, "Marvel Knights", () => gainWoundEv(ev, playerState.right), playerState.right),
-    escape: ev => revealOrEv(ev, "Marvel Knights", () => gainWoundEv(ev, playerState.right), playerState.right),
+    fight: sameEffect,
+    escape: sameEffect,
   })],
 // AMBUSH: Dracula captures the top card of the Hero Deck. Dracula gets + Attack equal to that card's Cost.
 // FIGHT: Gain that card.
@@ -410,7 +410,7 @@ addVillainTemplates("Fantastic Four", [
 // VP: 4
   [ 2, makeVillainCard("Heralds of Galactus", "Firelord", 9, 4, {
     fight: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
     cardActions: [ cosmicThreatAction(Color.RANGED) ],
   })],
 // Cosmic Threat: [Instinct]
@@ -569,7 +569,7 @@ addVillainTemplates("Villains", [
 // ESCAPE: Demolish each player.
   [ 1, makeVillainCard("Avengers", "Captain America", 4, 5, {
     ambush: ev => eachPlayer(p => numColors(yourHeroes(p)) >= 3 || gainBindingsEv(ev, p)),
-    fight: ev => eachPlayer(p => numColors(yourHeroes(p)) >= 3 || gainBindingsEv(ev, p)),
+    fight: sameEffect,
     escape: demolishEv,
     varDefense: c => c.printedDefense + numColors(hqHeroes()),
   })],
@@ -580,8 +580,8 @@ addVillainTemplates("Villains", [
 // ESCAPE: Same effect.
   [ 1, makeVillainCard("Avengers", "Hulk", 8, 6, {
     ambush: [ demolishEv, demolishEv ],
-    fight: [ demolishEv, demolishEv ],
-    escape: [ demolishEv, demolishEv ],
+    fight: sameEffect,
+    escape: sameEffect,
   })],
 // ATTACK: 7
 // VP: 5
@@ -590,7 +590,7 @@ addVillainTemplates("Villains", [
 // ESCAPE: Demolish each player.
   [ 1, makeVillainCard("Avengers", "Iron Man", 7, 5, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p))),
-    fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p))),
+    fight: sameEffect,
     escape: demolishEv,
   })],
 // ATTACK: 7
@@ -600,7 +600,7 @@ addVillainTemplates("Villains", [
 // ESCAPE: Demolish each player.
   [ 1, makeVillainCard("Avengers", "Thor", 7, 5, {
     ambush: ev => hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
-    fight: ev => hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c)),
+    fight: sameEffect,
     escape: demolishEv,
   })],
 // ATTACK: 1*
@@ -888,15 +888,7 @@ addVillainTemplates("Guardians of the Galaxy", [
         gameState.players.limit(p => counts.get(p) === max).each(p => gainWoundEv(ev, p));
       });
     },
-    escape: ev => {
-      const counts = new Map<Player, number>();
-      gameState.players.each(p => counts.set(p, 0));
-      eachPlayer(p => chooseOtherPlayerEv(ev, cp => counts.set(cp, counts.get(cp) + 1), p));
-      cont(ev, () => {
-        const max = [...counts.values()].max(v => v);
-        gameState.players.limit(p => counts.get(p) === max).each(p => gainWoundEv(ev, p));
-      });
-    },
+    escape: sameEffect,
   })],
 // FIGHT: Put a Shard on each Hero in the HQ. When a player gains that Hero, they gain that Shard. If that Hero leaves the HQ some other way, return that Shard to the supply.
 // ATTACK: 5
@@ -1299,7 +1291,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // VP: 3
   [ 3, makeVillainCard("Wasteland", "The Hulk Gang", 5, 3, {
     fight: ev => xdRampageEv(ev, 'Hulk'),
-    escape: ev => xdRampageEv(ev, 'Hulk'),
+    escape: sameEffect,
   })],
 // ESCAPE: Kingpin ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals an [Instinct] Hero or discards their hand and draws 5 cards."
 // ATTACK: 11*
@@ -1629,7 +1621,7 @@ addVillainTemplates("Captain America 75th Anniversary", [
   [ 2, makeVillainCard("Masters of Evil (WWII)", "Radioactive Man", 5, 3, {
     ambush: ev => captureEv(ev, ev.source),
     fight: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
-    escape: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
+    escape: sameEffect,
   })],
 ]},
 ]);
@@ -1677,7 +1669,7 @@ addVillainTemplates("Civil War", [
 // VP: 4
   [ 2, makeVillainCard("Great Lakes Avengers", "Big Bertha", 7, 4, {
     fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
     sizeChanging: Color.STRENGTH,
   })],
 // {SIZECHANGING COVERT}
@@ -1727,7 +1719,7 @@ addVillainTemplates("Civil War", [
 // VP: 2
   [ 2, makeVillainCard("Heroes for Hire", "Shang-Chi", 3, 2, {
     fight: ev => { if (playerState.discard.size) {
-      shuffleIntoEv(ev, playerState.discard, playerState.deck); // TODO
+      shuffleIntoEv(ev, playerState.discard, playerState.deck);
       withCity('SEWERS', sewers => enterCityEv(ev, ev.source, sewers));
     } },
     bribe: true,
@@ -1741,9 +1733,7 @@ addVillainTemplates("Civil War", [
     fight: ev => eachPlayer(p => p.hand.size < 2 ? gainWoundEv(ev, p) : chooseOptionEv(ev, "Choose one",
       [ {l:"Gain a Wound", v: () => gainWoundEv(ev, p)},
         {l:"Discard two cards", v:() => pickDiscardEv(ev, 2, p)}], f => f(), p)),
-    escape: ev => eachPlayer(p => p.hand.size < 2 ? gainWoundEv(ev, p) : chooseOptionEv(ev, "Choose one",
-      [ {l:"Gain a Wound", v: () => gainWoundEv(ev, p)},
-        {l:"Discard two cards", v:() => pickDiscardEv(ev, 2, p)}], f => f(), p)),
+    escape: sameEffect,
     bribe: true,
   })],
 ]},
@@ -1760,7 +1750,7 @@ addVillainTemplates("Civil War", [
 // VP: 4
   [ 2, makeVillainCard("Registration Enforcers", "Captain Marvel", 6, 4, {
     fight: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to swap", p.hand.deck, c => swapCardsEv(ev, c, p.deck), p)),
-    escape: ev => eachPlayer(p => {/*TODO*/}),
+    escape: ev => eachPlayer(p => {/*TODO swap hand with top*/}),
   })],
 // AMBUSH: Each player reveals a card that costs 5 or discards down to 5 cards.
 // FIGHT: Same effect.
@@ -1769,8 +1759,8 @@ addVillainTemplates("Civil War", [
 // VP: 5
   [ 2, makeVillainCard("Registration Enforcers", "Deadpool", 5, 5, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, c => c.cost === 5, () => pickDiscardEv(ev, -5, p), p)),
-    fight: ev => eachPlayer(p => revealOrEv(ev, c => c.cost === 5, () => pickDiscardEv(ev, -5, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost === 5, () => pickDiscardEv(ev, -5, p), p)),
+    fight: sameEffect,
+    escape: sameEffect,
   })],
 // {SIZECHANGING INSTINCT}
 // FIGHT: KO one of your Heroes.
@@ -1805,7 +1795,7 @@ addVillainTemplates("Civil War", [
 // VP: 3
   [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Dum Dum Dugan", 4, 3, {
     fight: ev => eachPlayer(p => p.victory.has(c => c.cardName === 'S.H.I.E.L.D. Officer') || gainWoundEv(ev, p)),
-    escape: ev => eachPlayer(p => p.victory.has(c => c.cardName === 'S.H.I.E.L.D. Officer') || gainWoundEv(ev, p)),
+    escape: sameEffect,
     ...shieldClearance,
   })],
 // S.H.I.E.L.D. Clearance
@@ -1876,7 +1866,7 @@ addVillainTemplates("Civil War", [
 // VP: 3
   [ 2, makeVillainCard("Thunderbolts", "Mach-IV", 5, 3, {
     fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
   })],
 // ESCAPE: Fortify the Wound Stack. While it's fortified, whenever a player gains a Wound, that player gains an extra Wound.
 // ATTACK: 6
@@ -1895,7 +1885,7 @@ addVillainTemplates("Civil War", [
 // VP: 3
   [ 2, makeVillainCard("Thunderbolts", "Songbird", 5, 3, {
     fight: ev => eachPlayer(p => p.victory.limit(c => c !== ev.source).has(isGroup('Thunderbolts')) || gainWoundEv(ev, p)),
-    escape: ev => eachPlayer(p => p.victory.limit(c => c !== ev.source).has(isGroup('Thunderbolts')) || gainWoundEv(ev, p)),
+    escape: sameEffect,
   })],
 ]},
 ]);
@@ -1942,11 +1932,7 @@ addVillainTemplates("Deadpool", [
       eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => s.set(p.left, c)));
       cont(ev, () => eachPlayer(p => gainEv(ev, s.get(p), p)));
     },
-    fight: ev => {
-      const s = new Map<Player, Card>();
-      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => s.set(p.left, c)));
-      cont(ev, () => eachPlayer(p => gainEv(ev, s.get(p), p)));
-    },
+    fight: sameEffect,
     varDefense: revengeVarDefense,
   })],
 ]},
@@ -1991,7 +1977,7 @@ addVillainTemplates("Deadpool", [
 // VP: 6
   [ 2, makeVillainCard("Evil Deadpool Corpse", "Wolverinepool", 7, 6, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p)),
-    fight: ev => eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p)),
+    fight: sameEffect,
     escape: ev => {
       eachPlayer(p => revealOrEv(ev, isCostOdd, () => gainWoundEv(ev, p), p));
       shuffleIntoEv(ev, ev.source, gameState.villaindeck);
@@ -2184,7 +2170,7 @@ addVillainTemplates("X-Men", [
 // FLAVOR: Increasing his opponents' mass to 20,000 pounds puts a real weight on their shoulders.
   [ 2, makeVillainCard("Hellfire Club", "Harry Leland (Black Bishop)", 5, 3, {
     ambush: ev => addTurnMod('cost', isHero, 1),
-    escape: ev => addTurnMod('cost', isHero, 1),
+    escape: sameEffect,
   })],
 // AMBUSH: The Villain ascends to become a new Mastermind. He gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Mastermind dominates the revealed Hero with the highest cost (and tied for highest.)
 // ATTACK: 8+
@@ -2247,7 +2233,7 @@ addVillainTemplates("X-Men", [
 // VP: 4
   [ 1, makeVillainCard("Mojoverse", "Spiral", 6, 4, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, 5, p); })),
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, 5, p); })),
+    escape: sameEffect,
   })],
 // AMBUSH: These Warwolves capture a <b>Human Shield</b>.
 // FIGHT: KO one of your Heroes.
@@ -2356,7 +2342,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Angel", 4, u, {
-  }), u, 2, Color.INSTINCT, u, "D", ev => xGenePower(Color.INSTINCT) && 0/* TODO */)],
+  }), u, 2, Color.INSTINCT, u, "D", ev => xGenePower(Color.INSTINCT) && (turnState.nextHeroRecruit = 'SOARING'))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
@@ -2374,7 +2360,7 @@ addVillainTemplates("X-Men", [
 // ATTACKG: 3
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Cyclops", 7, u, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p))),
-  }), u, 3, Color.RANGED, u, "", ev => xGenePower(Color.RANGED) && 0/* TODO */)],
+  }), u, 3, Color.RANGED, u, "", ev => xGenePower(Color.RANGED) && selectCardEv(ev, "Choose a Hero to put in your hand", playerState.discard.limit(isHero).limit(Color.RANGED), c => moveCardEv(ev, c, playerState.hand)))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
@@ -2409,7 +2395,7 @@ addVillainTemplates("X-Men", [
 // VP: 5
   [ 1, makeVillainCard("Shi'ar Imperial Guard", "Gladiator", 7, 5, {
     ambush: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
-    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
   })],
 // AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle Dominates those Heroes.
 // ATTACK: 4+
@@ -2517,7 +2503,7 @@ addVillainTemplates("Spider-Man Homecoming", [
 // VP: 3
   [ 2, makeVillainCard("Salvagers", "Shocker #2", 5, 3, {
     ambush: ev => eachPlayer(p => p.hand.limit(c => hqHeroes().map(c => c.cardName).includes(c.cardName)).each(c =>discardEv(ev, c))),
-    escape: ev => eachPlayer(p => p.hand.limit(c => hqHeroes().map(c => c.cardName).includes(c.cardName)).each(c =>discardEv(ev, c))),
+    escape: sameEffect,
   })],
 // FIGHT: You get +1 Recruit for each Tech Hero in the HQ.
 // ESCAPE: Each player reveals a Tech Hero or gains a Wound.

@@ -429,11 +429,11 @@ function revengeVarDefense(c: Card) {
 }
 function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
   captureEv
-  // TODO
+  // TODO hidden witness
 }
 
 function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
-  // TODO
+  // TODO human shields
 }
 function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
 function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {
@@ -485,7 +485,7 @@ function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: H
   }));
 }
 function strikerCount() {
-  // TODO
+  // TODO striker
   return 0;
 }
 function strikerHeroEv(ev: Ev, n: number = 1) {
@@ -504,12 +504,14 @@ function dangerSenseEv(ev: Ev, n: number, f?: (cards: Card[]) => void) {
 function makeTransformingHeroCard(c1: Card, c2: Card) {
   c1.transformed = c2;
   c2.transformed = c1;
+  c2.isTransformed = true;
   return c1;
 }
 function makeTransformingMastermindCard(c1: Card, name: string, defense: number, strike: Handler, abilities?: MastermindCardAbillities) {
   const c2 = makeMastermindCard(name, defense, c1.printedVP, c1.leads, strike, [], abilities);
   c2.backSide = c1;
   c1.backSide = c2;
+  c2.isTransformed = true;
   return c1;
 }
 function transformMastermindEv(ev: Ev, c?: Card) {
@@ -526,13 +528,13 @@ function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
   });
 }
 function canOutwit(p: Player = playerState) {
-  return yourHeroes(p).uniqueCount(c => c.cost) >= (gameState.outwitAmount || 3);
+  return yourHeroes(p).uniqueCount(c => c.cost) >= (gameState.outwitAmount ? gameState.outwitAmount() : 3);
 }
 function mayOutwitEv(ev: Ev, func: () => void) {
   canOutwit() && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', { func }));
 }
 function outwitOrEv(ev: Ev, func: () => void, p: Player = playerState) {
-  canOutwit(p) ? pushEv(ev, 'OUTWIT', () => {}) : func(); // TODO optional
+  canOutwit(p) ? pushEv(ev, 'OUTWIT', () => {}) : func(); // TODO optional outwit
 }
 function woundedFuryEv(ev: Ev) {
   addAttackEvent(ev, playerState.discard.count(isWound));
@@ -550,7 +552,7 @@ function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' 
   }
 }
 function addMastermindEv(ev: Ev, name?: string) {
-  // TODO
+  // TODO add mastermind with one tactic
 }
 
 function empowerEv(ev: Ev, color: number) {
@@ -579,7 +581,7 @@ function symbioteBondEv(ev: Ev, to: Card | Card[], what: Card | Card[], unbound?
     return;
   }
   if (isBonded(to) || isBonded(what)) return;
- // TODO
+ // TODO symbiote bonding
 }
 function isBonded(c: Card) {
   return false;

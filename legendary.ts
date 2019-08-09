@@ -106,9 +106,10 @@ interface Card {
   epic?: boolean
   coordinate?: boolean
   transformed?: Card
+  isTransformed?: boolean
   backSide?: Card
-  uSizeChanging?: { color: number, amount: number } // TODO
-  chivalrousDuel?: boolean // TODO
+  uSizeChanging?: { color: number, amount: number } // TODO microscopic size changing
+  chivalrousDuel?: boolean // TODO chivalrous duel
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -828,8 +829,8 @@ interface Game extends Ev {
   gameSetup: Setup
   turnNum: number
   strikeCount: number
-  outwitAmount?: number
-  reversePlayerOrder?: boolean
+  outwitAmount?: () => number
+  reversePlayerOrder?: boolean // TODO revese player order
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -2449,7 +2450,7 @@ function startApp(): void {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Show hidden events (card revealing)
+Show hidden events (card revealing) (show source card before rescue, ambush, fight, escape, strike, twist effects trigger)
 Select setup screen
 show multiple actions (play/teleport)
 highlight deck selection
@@ -2461,6 +2462,7 @@ top villain deck card select (prof x uncommon)
 !attached cards view
 
 ENGINE:
+eliminate count per turn in favor of pastevents or closures
 replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
 remodel triggers to attach on resolution not queuing?
 count escape pile conditions properly (do not count cards temporarly in the escape pile).
@@ -2468,7 +2470,7 @@ set location of copies (to avoid null pointers in many places)
 Use deck.(locationN|n)ame instead of deck.id
 rename lookAtDeck to revealPlayerDeck where applicable
 revealed without moving decks?
-TODO CA75 man out of time play and start of turn triggers (use in future triggers and more)
+TODO start of turn triggers (use in future triggers and more)
 TODO SW1 fight card placement order
 TODO SW1 escape card special location (also to check which bystanders were carried)
 TODO SW1 render city dynamically
@@ -2482,6 +2484,7 @@ TODO Homecoming coordinate
 TODO Champions multiple size-changing
 TODO Champions cheering crowds
 copy artifact should not count as cards played
+make rescue, ambush, fight, escape, heal effects their own event type (avoid triggering on 'effect' and effectName)
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 

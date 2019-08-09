@@ -1239,7 +1239,7 @@ addTemplates("MASTERMINDS", "X-Men", [
   } ],
   [ "Sins of X-Men Past", ev => {
   // Each other player reveals the top six cards of their deck and chooses an X-Men Hero revealed this way. Onslaught Dominates those Heroes. Put the rest back in random order.
-    eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 6, cards => selectCardEv(ev, "Choose an X-Men Hero", cards.limit('X-Men'), c => dominateEv(ev, ev.source.mastermind, c), p), p)); // TODO random
+    eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 6, cards => selectCardEv(ev, "Choose an X-Men Hero", cards.limit('X-Men'), c => dominateEv(ev, ev.source.mastermind, c), p), p)); // TODO random cleanup in player deck reveal
   } ],
   [ "Xavier and Magneto Combined", ev => {
   // Reveal the top three cards of the Hero Deck. Onslaught Dominates all the X-Men and Brotherhood Heroes you revealed. Put the rest back in random order.
@@ -1296,7 +1296,7 @@ addTemplates("MASTERMINDS", "Spider-Man Homecoming", [
 ...makeEpicMastermindCard("Adrian Toomes", [ 5, 5 ], 6, "Salvagers", ev => {
 // Starting from the Sewers, each Villain in the city uses its "Escape" ability.
 // Starting from the Sewers, each Villain in the city uses its "Ambush" ability, then its "Escape" ability.
-  gameState.city.reverse().each(d => d.limit(isVillain).each(c => { // TODO reverse 
+  [...gameState.city].reverse().each(d => d.limit(isVillain).each(c => { // Array.reverse mutates the source
     ev.source.epic && pushEffects(ev, c, 'ambush', c.ambush);
     pushEffects(ev, c, 'escape', c.escape);
   }));
@@ -1543,7 +1543,7 @@ makeTransformingMastermindCard(makeMastermindCard("Illuminati, Secret Society", 
   transformMastermindEv(ev);
 }, {
   trigger: {
-    event: 'DRAW', // TODO draw N
+    event: 'DRAW', // TODO draw N triggerable event
     after: ev => pickDiscardEv(ev, 1, ev.parent.who),
   }
 }),
@@ -1591,7 +1591,7 @@ makeTransformingMastermindCard(makeMastermindCard("King Hulk, Sakaarson", 9, 6, 
 }),
 // All cards' {OUTWIT} abilities require four different costs instead of three.
 // TRANSNAME: M.O.D.O.K., Network Nightmare
-// You can only fight M.O.D.O.K with Recruit, not Attack. // TODO
+// You can only fight M.O.D.O.K with Recruit, not Attack.
 makeTransformingMastermindCard(makeMastermindCard("M.O.D.O.K.", 9, 6, "Intelligencia", ev => {
 // Each player who can't {OUTWIT} M.O.D.O.K. gains a Wound, then M.O.D.O.K. {TRANSFORM}.
   eachPlayer(p => outwitOrEv(ev, () => gainWoundEv(ev, p), p));
@@ -1630,7 +1630,10 @@ makeTransformingMastermindCard(makeMastermindCard("M.O.D.O.K.", 9, 6, "Intellige
     transformMastermindEv(ev);
   } ],
 ], {
-  init: c => gameState.outwitAmount = 4, // TODO only on non-transformed side
+  init: c => {
+    gameState.outwitAmount = () => c.isTransformed ? 3 : 4;
+    addStatSet('fightCost', v => v === c, (c, p) => c.isTransformed ? ({ ...p, either: 0, attack: 0, recruit: safePlus(p.recruit, safePlus(p.attack, p.either))}) : p);
+  },
 }), "M.O.D.O.K., Network Nightmare", 8, ev => {
 // Each player who can't {OUTWIT} M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. {TRANSFORM}.
   eachPlayer(p => outwitOrEv(ev, () => selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p), p));
@@ -1894,7 +1897,7 @@ addTemplates("MASTERMINDS", "Dimensions", [
   [ "That Menace Spider-Man!", ev => {
   // Each other player reveals their hand and discard a Spider-Friends Hero. Any player who cannot must instead put a non-grey card from their hand into the Angry Mobs stack.
     eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit('Spider Friends'), c => discardEv(ev, c), () => {
-      selectCardEv(ev, "Choose a Hero to put into the Angry Mobs stack", p.hand.limit(isNonGrayHero), c => { // TODO not just heroes
+      selectCardEv(ev, "Choose a Hero to put into the Angry Mobs stack", p.hand.limit(c => !isColor(Color.GRAY)(c)), c => {
         attachCardEv(ev, c, ev.source.mastermind, 'MOBS');
       }, p);
     }, p));
