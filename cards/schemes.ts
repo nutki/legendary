@@ -137,7 +137,7 @@ makeSchemeCard("Detonate the Helicarrier", { twists: 8, heroes: 6 }, ev => {
 // EVILWINS: When the number of non grey Heroes in the KO pile is 3 times the number of players.
 makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
   // Twist: Each player reveals a [Strength] Hero or KOs the top card of their deck.
-  eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => lookAtDeckEv(ev, 1, () => p.revealed.withLast(c => KOEv(ev, c)), p), p));
+  eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => KOEv(ev, c)), p), p));
 }, koProgressTrigger(isNonGrayHero), () => {
   setSchemeTarget(3, true);
 }),
@@ -281,7 +281,6 @@ addTemplates("SCHEMES", "Paint the Town Red", [
 // EVILWINS: When 2 Villains with the same card name have escaped or the Villain Deck runs out.
 makeSchemeCard("The Clone Saga", { twists: 8 }, ev => {
   // Twist: Each player reveals two non-grey Heroes with the same card name or discards down to 3 cards.
-  // TODO multiplayer reveal
   eachPlayer(p => revealOrEv(ev, c => p.hand.deck.count(cc => cc.cardName === c.cardName) >= 2, () => pickDiscardEv(ev, -3, p), p));
 }, [
   {
@@ -1623,7 +1622,7 @@ makeSchemeCard<{enabledUntil: Player, team: Map<Player, Affiliation>}>("Gladiato
 }, {
   event: "PLAY",
   match: ev => gameState.schemeState.enabledUntil !== undefined,
-  after: ev => gameState.schemeState.put(playerState, ev.what.team), // TODO multi team cards?
+  after: ev => gameState.schemeState.team.put(playerState, ev.what.team), // TODO multi team cards?
 }], s => {
   s.team = new Map();
   addStatSet('fightCost', () => true, (c, p) => { // TODO playCost mod

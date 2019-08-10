@@ -15,7 +15,7 @@ function versatileEv(ev: Ev, a: number): void {
   if (turnState.versatileBoth) {
     addRecruitEvent(ev, a);
     addAttackEvent(ev, a);
-  } else chooseOneEv(ev, "Versatile is", ["Recruit", ev => addRecruitEvent(ev, a)], ["Attack", ev => addAttackEvent(ev, a)]);
+  } else chooseOneEv(ev, "Versatile is", ["Recruit", () => addRecruitEvent(ev, a)], ["Attack", () => addAttackEvent(ev, a)]);
 }
 
 // EXPANSION Fantastic Four
@@ -79,7 +79,7 @@ const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
 // fight effect
 function feastEv(ev: Ev, effect?: (c: Card) => void, who?: Player) {
   who = who || playerState;
-  lookAtDeckEv(ev, 1, () => who.revealed.each(c => {
+  revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
     KOEv(ev, c);
     effect && cont(ev, () => effect(c));
   }), who);
@@ -429,7 +429,6 @@ function revengeVarDefense(c: Card) {
   return c.printedDefense + playerState.victory.limit(isVillain).count(isGroup(c.leads || c.villainGroup));
 }
 function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
-  captureEv
   // TODO hidden witness
 }
 
@@ -537,10 +536,10 @@ function canOutwit(p: Player = playerState) {
   return yourHeroes(p).uniqueCount(c => c.cost) >= (gameState.outwitAmount ? gameState.outwitAmount() : 3);
 }
 function mayOutwitEv(ev: Ev, func: () => void) {
-  canOutwit() && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', { func }));
+  canOutwit() && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', func));
 }
 function outwitOrEv(ev: Ev, func: () => void, p: Player = playerState) {
-  canOutwit(p) ? pushEv(ev, 'OUTWIT', () => {}) : func(); // TODO optional outwit
+  canOutwit(p) ? chooseOneEv(ev, "Outwit", ["Yes", () => pushEv(ev, 'OUTWIT', () => {})], ["No", () => func()]) : func();
 }
 function woundedFuryEv(ev: Ev) {
   addAttackEvent(ev, playerState.discard.count(isWound));

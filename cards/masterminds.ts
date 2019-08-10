@@ -11,8 +11,8 @@ makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
   // Choose one: each other player draws a card or each other player discards a card.
   [ "Monarch's Decree", ev => {
       chooseOneEv(ev, "Each other player",
-      ["draws a card", ev => eachOtherPlayerVM(p => drawEv(ev, 1, p))],
-      ["discards a card", ev => eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p))]
+      ["draws a card", () => eachOtherPlayerVM(p => drawEv(ev, 1, p))],
+      ["discards a card", () => eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p))]
       );
   } ],
   // Take another turn after this one.
@@ -85,7 +85,7 @@ makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
   } ],
   [ "The End of All Things", ev => {
   // Each other player reveals the top three cards of their deck, KOs each one of those cards that cost 1 or more, and puts the rest back in any order.
-    eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => p.revealed.limit(c => c.cost >= 1).each(c => KOEv(ev, c)), p));
+    eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 3, cards => cards.limit(c => c.cost >= 1).each(c => KOEv(ev, c)), p));
   } ],
   [ "Horsemen Are Drawing Nearer", ev => {
   // Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.
@@ -193,7 +193,7 @@ makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
   } ],
   [ "Psychic Torment", ev => {
   // Look at the top five cards of your deck. Put one into your hand and discard the rest.
-    lookAtDeckEv(ev, 5, ev => {
+    lookAtDeckEv(ev, 5, () => {
       selectCardEv(ev, "Choose a card to put in your hand", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.hand));
       cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
     })
@@ -914,7 +914,7 @@ makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. E
 // {BRIBE}
 makeMastermindCard("Misty Knight", 14, 6, "Heroes for Hire", ev => {
 // Each player reveals 4 cards with Recruit icons or gains a Wound.
-  eachPlayer(p => yourHeroes(p).count(hasRecruitIcon) >=4 || gainWoundEv(ev, p)); // TODO multiplayer reveal
+  eachPlayer(p => yourHeroes(p).count(hasRecruitIcon) >=4 || gainWoundEv(ev, p));
 }, [
   [ "Bionic Repulsor Field", ev => {
   // Each other player reveals a Marvel Knight Hero or puts two cards from their hand on top of the deck.

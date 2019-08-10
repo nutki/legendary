@@ -13,7 +13,7 @@ addBystanderTemplates("Villains", [
 // RESCUE: draw an extra card when you draw a new hand at the end of your turn.
 [ 3, makeBystanderCard("Computer Hacker", ev => playerState === ev.who ? addEndDrawMod(1) : addFutureTrigger(() => addEndDrawMod(1), ev.who)) ],
 // RESCUE: reveal the top card of your deck. If it costs 0 - KO it.
-[ 3, makeBystanderCard("Engineer", ev => lookAtDeckEv(ev, 1, () => ev.who.revealed.limit(c => !c.cost).each(c => KOEv(ev, c)), ev.who)) ],
+[ 3, makeBystanderCard("Engineer", ev => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => !c.cost).each(c => KOEv(ev, c)), ev.who)) ],
 // RESCUE: gain 1 recruit.
 [ 3, makeBystanderCard("Public Speaker", ev => playerState === ev.who && addRecruitEvent(ev, 1)) ],
 // RESCUE: kidnap another Bystander.

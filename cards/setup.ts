@@ -97,7 +97,7 @@ makeAmbitionCard("Insane Twist", 9, ev => playTwistEv(ev, ev.source)),
 // A Villain in the city captures a Bystander.
 makeAmbitionCard("Kidnap", 2, ev => selectCardEv(ev, "Choose a Villain", cityVillains(), c => captureEv(ev, c))),
 // Reveal the top two cards of the Villain Deck. Play a Scheme Twist you revealed. Put the rest back on the top and/or bottom in any order.
-makeAmbitionCard("Thirst for Power", 7, ev => investigateEv(ev, isTwist, gameState.villaindeck, c => playTwistEv(ev, c))), // TODO no modifier),
+makeAmbitionCard("Thirst for Power", 7, ev => investigateEv(ev, isTwist, gameState.villaindeck, c => playTwistEv(ev, c))), // TODO almost investigate,
 // Each other player chooses Recruit or Attack, then discard all their cards with that icon.
 makeAmbitionCard("Painful Choice", 8, ev => {/* TODO */}),
 // Each Villain on the Rooftops and Streets captures a Bystander.
@@ -111,7 +111,7 @@ makeAmbitionCard("Ruthless Strike", 4, ev => playStrikeEv(ev, ev.source)),
 // Choose a 0-cost Hero from the KO pile for each other player. Those players gain those Heroes.
 makeAmbitionCard("Infiltrate S.H.I.E.L.D.", 4, ev => {/* TODO */}),
 // Reveal the top two cards of the Villain Deck. Play a Master Strike you revealed. Put the rest back on the top and/or bottom in any order.
-makeAmbitionCard("Thirst for Vengeance", 6, ev => investigateEv(ev, isStrike, gameState.villaindeck, c => playStrikeEv(ev, c))), // TODO no modifier
+makeAmbitionCard("Thirst for Vengeance", 6, ev => investigateEv(ev, isStrike, gameState.villaindeck, c => playStrikeEv(ev, c))), // TODO almost investigate
 // Each other player reveals a [Strength] Hero or gains a Wound.
 makeAmbitionCard("Pummel", 4, ev => eachOtherPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p))),
 ]);

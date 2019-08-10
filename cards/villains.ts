@@ -102,7 +102,7 @@ addVillainTemplates("Legendary", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Masters of Evil", "Melter", 5, 3, {
-    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, ev => selectCardOptEv(ev, "Choose a card to KO", p.revealed.deck, sel => KOEv(ev, sel)), p, playerState)),
+    fight: ev => eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, sel => KOEv(ev, sel)), p, playerState)),
   })],
 // Ultron is worth +1 VP for each [Tech] Hero you have among all your cards at the end of the game.
 // ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
@@ -263,8 +263,8 @@ addVillainTemplates("Dark City", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Four Horsemen", "Pestilence", 5, 3, {
-    fight: ev => eachOtherPlayerVM(p => lookAtDeckEv(ev, 3, ev => p.revealed.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)), // TODO multiplayer reveal
-    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 3, ev => p.revealed.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)),
+    fight: ev => eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 3, cards => cards.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)),
+    escape: ev => eachPlayer(p => revealPlayerDeckEv(ev, 3, cards => cards.limit(c => c.cost >= 1).each(c => discardEv(ev, c)), p)),
   })],
 // FIGHT: Each other player reveals an [Instinct] Hero or gains a Wound.
 // ESCAPE: Each player does that same effect.
@@ -637,7 +637,7 @@ addVillainTemplates("Villains", [
 // VP: 2
 // FIGHT: Each player reveals the top three cards of their deck. You choose which players discard them and which players put them back on top in the order of their choice.
   [ 2, makeVillainCard("Defenders", "Luke Cage", 4, 2, {
-    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 3, () => chooseMayEv(ev, "Discard revealed", () => p.revealed.deck.each(c => discardEv(ev, c))), p)),
+    fight: ev => eachPlayer(p => revealPlayerDeckEv(ev, 3, cards => chooseMayEv(ev, "Discard revealed", () => cards.each(c => discardEv(ev, c))), p)),
   })],
 ]},
 { name: "Marvel Knights", cards: [
@@ -658,8 +658,8 @@ addVillainTemplates("Villains", [
 // FIGHT: Reveal the top card of your deck. If it costs 0 Cost, KO it.
 // ESCAPE: Each player reveals the top card of their deck and if it costs 1 Cost or more, KOs it.
   [ 2, makeVillainCard("Marvel Knights", "Punisher", 6, 4, {
-    fight: ev => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(c => !c.cost).each(c => KOEv(ev, c))),
-    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 1, () => p.revealed.limit(c => c.cost >= 1).each(c => KOEv(ev, c)), p)),
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => !c.cost).each(c => KOEv(ev, c))),
+    escape: ev => eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost >= 1).each(c => KOEv(ev, c)), p)),
   })],
 // ATTACK: 5
 // VP: 3
@@ -676,15 +676,15 @@ addVillainTemplates("Villains", [
 // Elusive 6.
 // FIGHT: Each player reveals the top card of their deck. Choose any number of those cards to be discarded.
   [ 2, makeVillainCard("Spider Friends", "Black Cat", 2, 2, {
-    fight: ev => eachPlayer(p => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Discard revealed", p.revealed.deck, c => discardEv(ev, c)), p)),
+    fight: ev => eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Discard revealed", cards, c => discardEv(ev, c)), p)),
   })],
 // ATTACK: 5
 // VP: 3
 // FIGHT: Reveal the top card of your deck. If it has a Recruit icon, KO it.
 // ESCAPE: Each player reveals the top card of their deck, and if it has an Attack icon, KO it.
   [ 2, makeVillainCard("Spider Friends", "Firestar", 5, 3, {
-    fight: ev => lookAtDeckEv(ev, 1, () => playerState.revealed.limit(hasRecruitIcon).each(c => KOEv(ev, c))),
-    escape: ev => eachPlayer(p => lookAtDeckEv(ev, 1, () => p.revealed.limit(hasAttackIcon).each(c => KOEv(ev, c)), p)),
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.limit(hasRecruitIcon).each(c => KOEv(ev, c))),
+    escape: ev => eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.limit(hasAttackIcon).each(c => KOEv(ev, c)), p)),
   })],
 // ATTACK: 4
 // VP: 2
@@ -716,13 +716,10 @@ addVillainTemplates("Villains", [
 // X-Treme Attack.
 // FIGHT: Each other player discards the top card of their deck. Play a copy of one of those Allies.
   [ 2, makeVillainCard("Uncanny Avengers", "Rogue", 4, 2, {
-    fight: ev => {
+    fight: ev => { // copied from Rogue Hero card
       let revealed: Card[] = [];
-      eachPlayer(p => lookAtDeckEv(ev, 1, () => { p.revealed.limit(isHero).each(c => revealed.push(c)); discardEv(ev, p.revealed.top); }));
-      repeat(gameState.players.size, () => selectCardEv(ev, "Choose a card to copy", revealed, sel => {
-        playCopyEv(ev, sel);
-        revealed = revealed.limit(c => c !== sel);
-      }));
+      eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.each(c => { isHero(c) && revealed.push(c); discardEv(ev, c); }), p));
+      cont(ev, () => selectCardOrderEv(ev, "Choose a card to copy", revealed, c => playCopyEv(ev, c)));
     },
     varDefense: xTremeAttack,
     xTremeAttack: true,
@@ -731,7 +728,7 @@ addVillainTemplates("Villains", [
 // VP: 3
 // FIGHT: Reveal the top three cards of your deck. Put any that have odd-numbered costs into your hand and discard the rest. (0 is even.)
   [ 2, makeVillainCard("Uncanny Avengers", "Scarlet Witch", 5, 3, {
-    fight: ev => lookAtDeckEv(ev, 3, () => playerState.revealed.each(c => isCostOdd(c) ? moveCardEv(ev, c, playerState.hand) : discardEv(ev, c))),
+    fight: ev => revealPlayerDeckEv(ev, 3, cards => cards.each(c => isCostOdd(c) ? moveCardEv(ev, c, playerState.hand) : discardEv(ev, c))),
   })],
 // ATTACK: 7+
 // VP: 5
@@ -1150,7 +1147,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 5
 // VP: 3
   [ 3, makeVillainCard("Domain of Apocalypse", "Apocalyptic Blink", 5, 3, {
-    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => chooseOneEv(ev, "Choose one", ["Draw", ev => drawCardEv(ev, c)], ["Teleport", ev => teleportEv(ev, c)]))),
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => chooseOneEv(ev, "Choose one", ["Draw", () => drawCardEv(ev, c)], ["Teleport", () => teleportEv(ev, c)]))),
   })],
 // FIGHT: Gain an X-Men Hero from the HQ for free.
 // ESCAPE: Magneto ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals an X-Men Hero or discards down to four cards."
@@ -1210,7 +1207,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Limbo", "Inferno Darkchilde", 5, 3, {
-    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => chooseOneEv(ev, "Choose one", ["KO", ev => KOEv(ev, c)], ["Teleport", ev => teleportEv(ev, c)]))),
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => chooseOneEv(ev, "Choose one", ["KO", () => KOEv(ev, c)], ["Teleport", () => teleportEv(ev, c)]))),
     escape: ev => eachPlayer(p => p.hand.withRandom(c => teleportEv(ev, c))),
   })],
 // FIGHT: Up to two cards in your hand that have a Recruit icon gain {TELEPORT} this turn.
@@ -1812,7 +1809,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 6*
 // VP: 5
   [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Sharon Carter, Agent 13", 6, 5, {
-    escape: ev => fortifyEv(ev, ev.source, gameState.officer), // TODO
+    escape: ev => fortifyEv(ev, ev.source, gameState.officer), // TODO fortify
     ...shieldClearance,
   })],
 ]},
@@ -1824,14 +1821,14 @@ addVillainTemplates("Civil War", [
   [ 2, makeVillainCard("Superhuman Registration Act", "Iron Spider", 2, 3, {
     ambush: ev => fortifyEv(ev, ev.source, playerState.deck),
     fight: ev => revealVillainDeckEv(ev, 1, cards => cards.has(c => c.vp <= 2) && fortifyEv(ev, ev.source, playerState.left.deck)),
-    // TODO
+    // TODO fortify
   })],
 // ESCAPE: Fortify an HQ space. While its fortified, Heroes can't be gained from that space.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Superhuman Registration Act", "Ms. Marvel", 5, 3, {
     escape: ev => selectCardEv(ev, "Choose an HQ space", gameState.hq, d => fortifyEv(ev, ev.source, d)),
-    // TODO
+    // TODO fortify
   })],
 // {SIZECHANGING STRENGTH}
 // ESCAPE: Fortify the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.

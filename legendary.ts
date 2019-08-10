@@ -1381,7 +1381,7 @@ function cityLeftmost() {
 }
 function withLeftmostCitySpace(ev: Ev, f: (d: Deck) => void) {
   const spaces = cityLeftmost();
-  spaces.size === 1 ? cont(ev, () => f(spaces[0])) : selectCardEv(ev, "Choose a leftmost city space", spaces, f); 
+  spaces.size === 1 ? cont(ev, () => f(spaces[0])) : selectCardEv(ev, "Choose a leftmost city space", spaces, f);
 }
 function isCityEmpty(d: Deck) {
   return d.size === 0;
@@ -1769,10 +1769,10 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
-    let card: Card;
+    let c: Card[] = [];
     who = who || playerState;
-    lookAtDeckEv(ev, 1, () => card = who.revealed.limit(cond)[0], who);
-    cont(ev, () => { if (card) { drawEv(ev, 1, who); if (func) func(card); } } );
+    revealPlayerDeckEv(ev, 1, cards => c = cards.limit(cond), who);
+    cont(ev, () => { c.each(c => { drawCardEv(ev, c, who); func && func(c); }) } );
 }
 function KOEv(ev: Ev, card: Card): void { pushEv(ev, "KO", { what: card, where: card.location, func: ev => moveCardEv(ev, ev.what, gameState.ko) }); }
 function evilWinsEv(ev: Ev, mastermind?: Card | Player): void { gameOverEv(ev, 'LOSS', mastermind); }
@@ -1906,7 +1906,7 @@ function revealAndEv(ev: Ev, cond: Filter<Card>, effect: () => void, who?: Playe
   let cards = revealable(who).limit(cond);
   selectCardOptEv(ev, "Reveal a card", cards, effect, () => {}, who);
 }
-function chooseOneEv(ev: Ev, desc: string, ...a: [string, (ev: Ev) => void][]): void {
+function chooseOneEv(ev: Ev, desc: string, ...a: [string, () => void][]): void {
   let options = a.map(o => new Ev(ev, "EFFECT", { func: o[1], desc: o[0] }));
   if (!options.length) return;
   pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
@@ -2012,19 +2012,23 @@ function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?
 function lookAtThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction, who?: Player) {
   revealThreeEv(ev, a1, a2, a3, who);
 }
-function lookAtDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (ev: Ev) => void, who?: Player, agent?: Player) {
+function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   who = who || playerState;
   agent = agent || who;
   for (let i = 0; i < amount; i++) cont(ev, ev => revealOne(ev, who, bottom));
-  cont(ev, action);
+  cont(ev, () => action(who.revealed.deck));
   cont(ev, () => cleanupRevealed(ev, who.revealed, who.deck, bottom, agent));
 }
-function lookAtDeckEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
-  lookAtDeckTopOrBottomEv(ev, amount, false, action, who, agent);
+function lookAtDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
+  revealPlayerDeckTopOrBottomEv(ev, amount, false, action, who, agent);
 }
-function lookAtDeckBottomEv(ev: Ev, amount: number, action: (ev: Ev) => void, who?: Player, agent?: Player) {
-  lookAtDeckTopOrBottomEv(ev, amount, true, action, who, agent);
+function lookAtDeckBottomEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
+  revealPlayerDeckTopOrBottomEv(ev, amount, true, action, who, agent);
 }
+function revealPlayerDeckBottomEv(ev: Ev, amount: number, action: () => void, who?: Player, agent?: Player) {
+  revealPlayerDeckTopOrBottomEv(ev, amount, true, action, who, agent);
+}
+
 function cleanupRevealedTopOrBottom(ev: Ev, src: Deck, dst: Deck, agent: Player) {
   if (src.size === 0) return;
   selectCardOptEv(ev, "Choose a card to put back on the bottom", src.deck,
@@ -2498,7 +2502,6 @@ TODO remodel triggers to attach on resolution not queuing?
 TODO count escape pile conditions properly (do not count cards temporarly in the escape pile).
 TODO set location of copies (to avoid null pointers in many places)
 TODO Use deck.(locationN|n)ame instead of deck.id
-TODO rename lookAtDeck to revealPlayerDeck where applicable
 TODO revealed without moving decks?
 TODO SW1 fight card placement order
 TODO SW1 render city dynamically
@@ -2512,6 +2515,10 @@ TODO Homecoming coordinate
 TODO Champions multiple size-changing
 TODO Champions cheering crowds
 TODO copy artifact should not count as cards played
+TODO heroName fixes (setup option vs heroName, divided names, transformed names?, gray card names, gainable and other hero names)
+TODO many fortify effects (including Authoritarian Iron Man)
+TODO ant-man uSizeChanging, cDuel
+TODO venom Bonding
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 
