@@ -237,7 +237,7 @@ makeHorrorCard("Shadow of the Disciple", ev => ascendToMastermind(ev, ev => each
 // AMBUSH: Play two cards from the Villain Deck.
 makeHorrorCard("Surprise Assault", ev => { villainDrawEv(ev); villainDrawEv(ev); }),
 // AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card and the player on your right gains a Wound.
-makeHorrorCard("Viral Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURN', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); gainWoundEv(ev, playerState.right); }} }),
+makeHorrorCard("Viral Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURNSTART', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); gainWoundEv(ev, playerState.right); }} }),
 // The Mastermind has +3 Attack.
 makeHorrorCard("Tyrant Mastermind", ev => addStatMod('defense', isMastermind, 3)),
 ];

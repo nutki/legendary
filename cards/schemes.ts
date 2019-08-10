@@ -625,7 +625,7 @@ makeSchemeCard<{traitor: Player}>("The Traitor", { twists: 8 }, ev => {
 addTemplates("SCHEMES", "Secret Wars Volume 1", [
 // SETUP: 9 Twists. Put 10 extra Annihilation Wave Henchmen in that KO pile.
 // EVILWINS: When there are 10 Annihilation Henchmen next to the Mastermind.
-makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], required: { henchmen: 'Annihilation Wave' } }, ev => {
+makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], /* required: { henchmen: 'Annihilation Wave' } this is not a real Henchmen group */}, ev => {
   // Twist: KO all Annihilation Henchmen from the players' Victory Piles. Stack this Twist next to the Scheme. Then, for each Twist in that stack, put an Annihilation Henchman from the KO pile next to the Mastermind. Players can fight those Henchmen.
   eachPlayer(p => p.victory.limit(c => c.cardName === 'Annihilation Wave').each(c => KOEv(ev, c)));
   attachCardEv(ev, ev.source, gameState.scheme, "TWIST");
@@ -903,20 +903,14 @@ makeSchemeCard("Master the Mysteries of Kung-Fu", { twists: 8 }, ev => {
   setSchemeTarget(2, true);
 }),
 // SETUP: 8 Twists.
-makeSchemeCard("Secret Wars", { twists: 8, extra_masterminds: 3 }, ev => {
+makeSchemeCard("Secret Wars", { twists: 8 }, ev => {
   if (ev.nr <= 3) {
     // Twist 1-3 Add another random Mastermind to the game with one Tactic.
-    gameState.scheme.attached('EXTRAMASTERMINDS').withRandom(m => moveCardEv(ev, m, gameState.mastermind));
+    addMastermindEv(ev)
   }
   // Twist 8 Evil wins!
   schemeProgressEv(ev, ev.nr);
-}, [], () => {
-  setSchemeTarget(8);
-  while(gameState.mastermind.size > 1) gameState.mastermind.withTop(m => {
-    moveCard(m, gameState.scheme.attachedDeck('EXTRAMASTERMINDS'));
-    while (m.attached('TACTICS').size > 1) m.attached('TACTICS').withFirst(c => moveCard(c, gameState.scheme.attachedDeck('EXTRATACTICS')));
-  });
-}),
+}, [], () => setSchemeTarget(8)),
 // SETUP: 6 Twists. Add 10 random Ambition cards to the Villain Deck.
 // RULE: Ambition cards are Villains with their printed Attack. Add +1 Attack for each Twist stacked next to the Scheme. They are worth 4 VP. Whenever an Ambition Villain escapes, do its Ambition effect.
 // EVILWINS: When 4 Ambition Villains escape.
@@ -1320,7 +1314,7 @@ makeSchemeCard("Anti-Mutant Hatred", { twists: 11, wounds: 30 }, ev => {
   // Twist: Put this Twist into your discard pile as an "Angry Mob."
   moveCardEv(ev, ev.source, playerState.discard);
 }, [ runOutProgressTrigger('WOUNDS'), runOutProgressTrigger('VILLAIN', false), {
-  event: 'TURN',
+  event: 'TURNSTART',
   match: ev => playerState.hand.has(isTwist),
   after: ev => playerState.hand.limit(isTwist).each(c => {
     gainWoundEv(ev, playerState.right);

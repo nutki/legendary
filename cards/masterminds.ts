@@ -1543,7 +1543,7 @@ makeTransformingMastermindCard(makeMastermindCard("Illuminati, Secret Society", 
   transformMastermindEv(ev);
 }, {
   trigger: {
-    event: 'DRAW', // TODO draw N triggerable event
+    event: 'DRAWCARDS',
     after: ev => pickDiscardEv(ev, 1, ev.parent.who),
   }
 }),

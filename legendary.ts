@@ -513,9 +513,11 @@ type EvType =
 'ADDRECRUIT' |
 'CAPTURE' |
 'VILLAINDRAW' |
+'DRAWCARDS' |
 'DRAW' |
 'PLAYCARDEFFECTS' |
 'RESHUFFLE' |
+'CARDEFFECT' |
 // UI
 'SELECTEVENT' |
 'SELECTCARD1' |
@@ -551,6 +553,17 @@ type EvType =
 'BETRAY' |
 'BUYSHARD' |
 undefined;
+type TriggerableEvType =
+// Basic actions
+'RECRUIT' | 'FIGHT' | 'PLAY' |
+// Basic effects
+'KO' | 'RESCUE' | 'DISCARD' | 'GAIN' | 'STRIKE' | 'TWIST' | 'DEFEAT' | 'ESCAPE' | 'ADDRECRUIT' | 'VILLAINDRAW' | 'DRAW' | 'DRAWCARDS' | 'RESHUFFLE' | 'CARDEFFECT' |
+// Expansion actions
+'TELEPORT' | 'DODGE' |
+// Expansion effects
+'COORDINATE' | 'OUTWIT' |
+// Special
+'CLEANUP' | 'MOVECARD' | 'TURNSTART';
 interface Ev<TSchemeState = any> {
   type: EvType
   desc?: string
@@ -772,7 +785,7 @@ interface Turn extends Ev {
   smashMultiplier?: number
 }
 interface Trigger {
-  event: EvType
+  event: TriggerableEvType
   match?: (e: Ev, s?: Card) => boolean
   after?: (e: Ev) => void
   replace?: (e: Ev) => void
@@ -1822,7 +1835,9 @@ function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler |
     pushEv(ev, "EFFECT", p);
   }
   if (!effects) return;
-  if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
+  pushEv(ev, 'CARDEFFECT', { effectName, source: c, func: () => {
+    if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
+  }});
 }
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0 || max === 0) {
@@ -2125,8 +2140,10 @@ function drawCardEv(ev: Ev, what: Card, who: Player = playerState) {
   }, what, who });
 }
 function drawEv(ev: Ev, amount: number = 1, who: Player = playerState) {
-  for (let i = 0; i < amount; i++)
-    pushEv(ev, "DRAW", { func: drawOne, who });
+  if (amount) pushEv(ev, "DRAWCARDS", { who, amount, func: ev => {
+    for (let i = 0; i < ev.amount; i++)
+      pushEv(ev, "DRAW", { func: drawOne, who: ev.who });
+  }});
 }
 function drawOne(ev: Ev): void {
   if (!ev.who.deck.size && !ev.who.discard.size) {
@@ -2249,7 +2266,7 @@ function rescueBystander(ev: Ev): void {
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
 }
-function addTurnTrigger(type: EvType, match: (ev: Ev, source: Card) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
+function addTurnTrigger(type: TriggerableEvType, match: (ev: Ev, source: Card) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, match, after: f } : { event: type, match, ...f };
   turnState.triggers.push(trigger);
 }

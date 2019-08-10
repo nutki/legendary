@@ -923,7 +923,7 @@ addHeroTemplates("Fantastic Four", [
 // If an ambush effect would occur, you may reveal this card and draw two cards instead.
 // COST: 7
   ra: makeHeroCard("Invisible Woman", "Invisible Barrier", 7, u, 5, Color.COVERT, "Fantastic Four", "", [], { trigger: {
-    event: 'EFFECT',
+    event: 'CARDEFFECT',
     match: ev => ev.effectName == 'ambush',
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
@@ -950,7 +950,7 @@ addHeroTemplates("Fantastic Four", [
 // {FOCUS 1} You get +1 Attack usable only against the Mastermind.
 // COST: 7
   ra: makeHeroCard("Mr. Fantastic", "Ultimate Nullifier", 7, u, 4, Color.TECH, "Fantastic Four", "", [
-    ev => addTurnTrigger('EFFECT', ev => ev.effectName == 'fight', { replace: ev => chooseMayEv(ev, "Keep fight effect", () => doReplacing(ev)) }),
+    ev => addTurnTrigger('CARDEFFECT', ev => ev.effectName == 'fight', { replace: ev => chooseMayEv(ev, "Keep fight effect", () => doReplacing(ev)) }),
     ev => setFocusEv(ev, 1, ev => addAttackSpecialEv(ev, isMastermind, 1))
   ]),
 },
@@ -1786,7 +1786,7 @@ addHeroTemplates("Guardians of the Galaxy", [
     uc: makeHeroCard("Rocket Raccoon", "Incoming Detector", 4, u, u, Color.INSTINCT, "Guardians of the Galaxy", "G", [], {
       isArtifact: true,
       triggers: [ {
-        event: "EFFECT",
+        event: "CARDEFFECT",
         match: (ev, source) => ev.effectName === "ambush" && isControlledArtifact(source),
         after: ev => gainShardEv(ev),
       },  {
@@ -2045,7 +2045,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   }),
 // When any player defeats a Villain or Mastermind with a "Fight" effect, you may discard this card to cancel that fight effect. If you do, draw three cards.
   ra: makeHeroCard("Apocalyptic Kitty Pryde", "Untouchable", 7, 5, u, Color.COVERT, "X-Men", "", [], { trigger: {
-    event: 'EFFECT',
+    event: 'CARDEFFECT',
     match: ev => ev.effectName === 'fight', // TODO trigger once per all effects
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 3, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
@@ -2587,12 +2587,9 @@ addHeroTemplates("Secret Wars Volume 2", [
     if (superPower(Color.COVERT)) {
       let once = false;
       const isDemon = (c: Card) => c === gameState.bystanders.top && !once;
-      addTurnSet('isFightable', isDemon, () => true);
-      addTurnSet('isVillain', isDemon, () => true);
-      addTurnSet('defense', isDemon, () => 3);
-      addTurnSet('villainGroup', isDemon, () => 'Demon');
-      addTurnSet('fight', isDemon, () => ev => (once = true, selectCardAndKOEv(ev, yourHeroes()))); // TODO fight could be prevented
-      // TODO make top of bystander stack card of interest
+      addTurnSet('isFightable', isDemon, () => true); // TODO make top of bystander stack card of interest
+      villainify('Demon', isDemon, 3, ev => selectCardAndKOEv(ev, yourHeroes()));
+      addTurnTrigger('FIGHT', ev => isDemon(ev.what), () => once = true);
     }
   }),
 // If a player would gain a Wound, you may discard this card instead. If you do, draw two cards.
@@ -3165,7 +3162,7 @@ addHeroTemplates("Civil War", [
   }),
 // If an Ambush effect would occur, you may discard this card to cancel that effect and draw two cards.
   uc: makeHeroCard("Tigra", "Can't Surprise a Cat", 5, u, 2, Color.COVERT, "Avengers", "D", [], { trigger: {
-    event: "EFFECT",
+    event: "CARDEFFECT",
     match: (ev, source: Card) => ev.effectName === 'ambush' && source.location === ev.who.hand,
     replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
       discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
@@ -4523,7 +4520,7 @@ addHeroTemplates("Venom", [
   })),
 // If a Master Strike or Villain that has an Ambush ability was played this turn, you get +1 Attack.
   c2: makeHeroCard("Venom Rocket", "Spring the Trap", 4, u, 2, Color.TECH, "Venomverse", "FD", ev => {
-    (pastEvents('STRIKE').size || pastEvents('EFFECT').has(e => e.effectName === 'ambush')) && addAttackEvent(ev, 1); // TODO has ambush
+    (pastEvents('STRIKE').size || pastEvents('CARDEFFECT').has(e => e.effectName === 'ambush')) && addAttackEvent(ev, 1); // TODO has ambush
   }),
 // {VIOLENCE} You may KO a card from your hand or discard pile.
   uc: makeHeroCard("Venom Rocket", "Serious Overkill", 5, u, 2, Color.RANGED, "Venomverse", "D", [], { excessiveViolence: ev => KOHandOrDiscardEv(ev) }),
