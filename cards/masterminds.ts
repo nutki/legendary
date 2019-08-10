@@ -215,11 +215,12 @@ addTemplates("MASTERMINDS", "Fantastic Four", [
 // Galactus Wins: When the city is destroyed.
 makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
 // Destroy the city space closest to Galactus. Any Villain there escapes. Put this Master Strike there.
-    const space = gameState.city[0]; // TODO with leftmost city
+  withLeftmostCitySpace(ev, space => {
     destroyCity(space);
     if (!gameState.city.size) evilWinsEv(ev, ev.source);
     space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
     moveCardEv(ev, ev.what, space);
+  })
 }, [
   [ "Cosmic Entity", ev => {
   // Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then draws that many cards.
@@ -835,7 +836,7 @@ makeMastermindCard("Authoritarian Iron Man", 12, 6, "Superhuman Registration Act
 // Authoritarian Iron Man fortifies the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space.
 // Villains in that space get +3 Attack.
   // TODO location is not city here
-  const d = ev.source.location.isCity ? ev.source.location.adjacentRight && fortifyEv(ev, ev.source, ev.source.location.adjacentRight) :
+  ev.source.location.isCity ? ev.source.location.adjacentRight && fortifyEv(ev, ev.source, ev.source.location.adjacentRight) :
     withCity('BRIDGE', d => fortifyEv(ev, ev.source, d));
 }, [
   [ "Armada of Armors", ev => {

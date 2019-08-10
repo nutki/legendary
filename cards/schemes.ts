@@ -1362,11 +1362,12 @@ makeSchemeCard("Mutant-Hunting Super Sentinels", { twists: 9, vd_henchmen_counts
 makeSchemeCard("Nuclear Armageddon", { twists: 5 }, ev => {
   // Twist: Destroy the city space closest to the Mastermind. Any Villain There escapes. Put this Twist there.
   // Copied from Galactus' master strike
-  const space = gameState.city[0];
-  destroyCity(space);
-  if (!gameState.city.size) evilWinsEv(ev, ev.source);
-  space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
-  moveCardEv(ev, ev.source, space);
+  withLeftmostCitySpace(ev, space => {
+    destroyCity(space);
+    if (!gameState.city.size) evilWinsEv(ev, ev.source);
+    space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
+    moveCardEv(ev, ev.source, space);
+  });
 }),
 // SETUP: 11 Twists. 6 Wounds per player in Wound Stack.
 // EVILWINS: When the Wound Stack or Villain Deck runs out.

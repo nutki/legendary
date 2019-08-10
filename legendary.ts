@@ -1376,6 +1376,13 @@ function villainIn(...where: CityLocation[]): Card[] {
 function withCity(where: CityLocation, f: (d: Deck) => void) {
   gameState.city.limit(e => e.id === where).each(f);
 }
+function cityLeftmost() {
+  return gameState.city.limit(d => d.adjacentLeft === undefined);
+}
+function withLeftmostCitySpace(ev: Ev, f: (d: Deck) => void) {
+  const spaces = cityLeftmost();
+  spaces.size === 1 ? cont(ev, () => f(spaces[0])) : selectCardEv(ev, "Choose a leftmost city space", spaces, f); 
+}
 function isCityEmpty(d: Deck) {
   return d.size === 0;
 }

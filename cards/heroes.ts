@@ -4636,7 +4636,7 @@ addHeroTemplates("Dimensions", [
 // Choose a Villain or Mastermind. If there are no other Villains adjacent to it, it gets -1 Attack this turn.
   c2: makeHeroCard("Man-Thing", "Burn the Fearful", 4, u, 2, Color.INSTINCT, u, "D", ev => {
     const cards = cityVillains().limit(c => !cityAdjacent(c.location).has(d => d.has(isVillain)));
-    gameState.city[0].has(isVillain) || gameState.mastermind.each(c => cards.push(c));
+    cityLeftmost().has(d => d.has(isVillain)) || gameState.mastermind.each(c => cards.push(c));
     selectCardEv(ev, "Choose a Villain or Mastermind", cards, c => addTurnMod('defense', v => v === c, -1));
   }),
 // {TELEPORT}
