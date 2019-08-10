@@ -1194,7 +1194,16 @@ addVillainTemplates("Secret Wars Volume 1", [
 // VP: 4
   [ 2, makeVillainCard("Limbo", "Inferno Cyclops", 6, 4, {
     ambush: ev => captureEv(ev, ev.source),
-    escape: ev => withMastermind(ev, m => {}), // TODO SW1 escaping locations
+    escape: ev => withMastermind(ev, () => {}),
+    trigger: {
+      event: 'ESCAPE',
+      match: (ev, source) => ev.what === source,
+      before: ev => ev.state.captured = ev.parent.what.captured.limit(isBystander),
+      after:  ev => {
+        const cards = <Card[]>ev.state.captured;
+        cards.size && withMastermind(ev, m => cards.each(c => captureEv(ev, m, c)));
+      }
+    }
   })],
 // FIGHT: Reveal the top card of your deck. KO it or {TELEPORT} it.
 // ESCAPE: Each player <b>Teleports</b> a random card from their hand.
