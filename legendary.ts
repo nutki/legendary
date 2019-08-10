@@ -2470,41 +2470,38 @@ function startApp(): void {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-Show hidden events (card revealing) (show source card before rescue, ambush, fight, escape, strike, twist effects trigger)
-Select setup screen
-show multiple actions (play/teleport)
-highlight deck selection
-multiplayer play areas
-idicators of actionable locations in hidden decks
-scrollable cards played and hand
-"scenarios"
-top villain deck card select (prof x uncommon)
-!attached cards view
+TODO !Show hidden events (card revealing) (show source card before rescue, ambush, fight, escape, strike, twist effects trigger)
+TODO Select setup screen
+TODO show multiple actions (play/teleport)
+TODO highlight deck selection
+TODO multiplayer play areas
+TODO idicators of actionable locations in hidden decks
+TODO scrollable cards played and hand
+TODO "scenarios"
+TODO top villain deck card select (prof x uncommon)
+TODO !attached cards view
 
 ENGINE:
-eliminate count per turn in favor of pastevents or closures
-replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
-remodel triggers to attach on resolution not queuing?
-count escape pile conditions properly (do not count cards temporarly in the escape pile).
-set location of copies (to avoid null pointers in many places)
-Use deck.(locationN|n)ame instead of deck.id
-rename lookAtDeck to revealPlayerDeck where applicable
-revealed without moving decks?
-TODO start of turn triggers (use in future triggers and more)
+TODO eliminate count per turn in favor of pastevents or closures
+TODO replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
+TODO remodel triggers to attach on resolution not queuing?
+TODO count escape pile conditions properly (do not count cards temporarly in the escape pile).
+TODO set location of copies (to avoid null pointers in many places)
+TODO Use deck.(locationN|n)ame instead of deck.id
+TODO rename lookAtDeck to revealPlayerDeck where applicable
+TODO revealed without moving decks?
 TODO SW1 fight card placement order
-TODO SW1 escape card special location (also to check which bystanders were carried)
 TODO SW1 render city dynamically
 TODO SW1 make cardAction allow functions returning multiple actions
 TODO SW2 make scheme card position independent
-TODO Noir hidden witness removal and limits (human shields at the same time) (also return them with Card.captured)
+TODO Noir hidden witness removal and fight limitation (human shields at the same time) (also return them with Card.captured)
 TODO X-Men rework extra masterminds
 TODO X-Men bring back canFight/canRectuit as general fightCost.cond mods will not affect piercing attacks
 TODO Homecoming striker
 TODO Homecoming coordinate
 TODO Champions multiple size-changing
 TODO Champions cheering crowds
-copy artifact should not count as cards played
-make rescue, ambush, fight, escape, heal effects their own event type (avoid triggering on 'effect' and effectName)
+TODO copy artifact should not count as cards played
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 
