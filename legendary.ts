@@ -2282,14 +2282,15 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
   gameState.triggers.forEach(checkTrigger());
   turnState.triggers.forEach(checkTrigger());
   gameState.mastermind.each(checkCardTrigger);
-  playerState.hand.each(checkCardTrigger);
   CityCards().each(checkCardTrigger);
   hqCards().each(checkCardTrigger);
   // TODO check other active locations (villain/hero deck top for example)
-  playerState.artifact.each(checkCardTrigger);
-  // TODO other player's hand triggers
-  playerState.revealed.each(checkCardTrigger);
-  playerState.playArea.each(checkCardTrigger);
+  gameState.players.each(p => {
+    p.artifact.each(checkCardTrigger);
+    p.hand.each(checkCardTrigger);
+    p.revealed.each(checkCardTrigger);
+    p.playArea.each(checkCardTrigger);
+  });
   return triggers;
 }
 function addTriggers(ev: Ev): Ev[] {
