@@ -1312,7 +1312,13 @@ addHeroTemplates("Villains", [
 // {DODGE}
 // When you play or {DODGE} with this card, another HYDRA Ally in your hand gains {DODGE} this turn.
 // COST: 4
-  c1: makeHeroCard("Green Goblin", "Goblin Glider", 4, u, 2, Color.TECH, "Sinister Six", "D", ev => /*TODO*/'When you play or {DODGE} with this card, another HYDRA Ally in your hand gains {DODGE} this turn.', { cardActions: [ dodge ] }),
+  c1: makeHeroCard("Green Goblin", "Goblin Glider", 4, u, 2, Color.TECH, "Sinister Six", "D", ev => {
+    selectCardEv(ev, "Choose an Ally to gain Dodge", playerState.hand.limit('HYDRA'), c => addTurnAction(dodge(c, ev)));
+  }, { trigger: {
+    event: 'DODGE',
+    match: (ev, source) => source === ev.what,
+    after: ev => selectCardEv(ev, "Choose an Ally to gain Dodge", playerState.hand.limit('HYDRA'), c => addTurnAction(dodge(c, ev))),
+  }, cardActions: [ dodge ] }),
 // ATTACK: 1+
 // {DODGE}
 // If you discarded any cards this turn, you get +2 Attack.
