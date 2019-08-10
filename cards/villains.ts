@@ -922,7 +922,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // ATTACK: 7
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Power Gem", 7, u, {
-    ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isStrike) + gameState.mastermind.deck.sum(m => m.attached("STRIKE").size)),
+    ambush: ev => attachShardEv(ev, ev.source, strikerCount(false)),
   }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] }) ],
 // AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
 // FIGHT: Put this into your discard pile as an Artifact.

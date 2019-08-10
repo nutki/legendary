@@ -90,7 +90,7 @@ makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
   [ "Horsemen Are Drawing Nearer", ev => {
   // Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.
     // TODO multiplayer order?
-    eachOtherPlayerVM(p => selectCardEv(ev, "Play a Villain", p.victory.limit(c => c.villainGroup == ev.source.mastermind.leads), c => villainDrawEv(ev, c), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Play a Villain", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => villainDrawEv(ev, c), p));
   } ],
   [ "Immortal and Undefeated", ev => {
   // If this is not the final Tactic, rescue six Bystanders and shuffle this Tactic back into the other Tactics.
@@ -184,7 +184,7 @@ makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
 // Stryfe gets +1 Attack for each Master Strike stacked next to him. Each player reveals an X-Force Hero or discards a card at random.
 makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
 // Stack this Master Strike next to Stryfe.
-  attachCardEv(ev, ev.what, ev.source, "STRIKE");
+  attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
   eachPlayer(p => revealOrEv(ev, "X-Force", () => p.deck.withRandom(c => discardEv(ev, c)), p));
 }, [
   [ "Furious Wrath", ev => {
@@ -207,7 +207,7 @@ makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
     eachOtherPlayerVM(p => revealOrEv(ev, "X-Force", () => gainWoundEv(ev, p), p));
   } ],
 ], {
-  varDefense: c => c.printedDefense + c.attached("STRIKE").size,
+  varDefense: c => c.printedDefense + gameState.mastermind.attached("STRIKE").size,
 }),
 ]);
 addTemplates("MASTERMINDS", "Fantastic Four", [
@@ -215,11 +215,11 @@ addTemplates("MASTERMINDS", "Fantastic Four", [
 // Galactus Wins: When the city is destroyed.
 makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
 // Destroy the city space closest to Galactus. Any Villain there escapes. Put this Master Strike there.
-    const space = gameState.city[0];
+    const space = gameState.city[0]; // TODO with leftmost city
     destroyCity(space);
     if (!gameState.city.size) evilWinsEv(ev, ev.source);
     space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
-    moveCardEv(ev, ev.source, space);
+    moveCardEv(ev, ev.what, space);
 }, [
   [ "Cosmic Entity", ev => {
   // Choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. Each player reveals any number of cards of that class, then draws that many cards.
@@ -259,7 +259,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
   } ],
   [ "Master of Monsters", ev => {
   // If this is not the final Tactic, reveal the top six cards of the Villain Deck. Play all the Subterranea Villains you revealed. Put the rest on the bottom of the Villain Deck in random order.
-    finalTactic(ev.source) || revealVillainDeckEv(ev, 6, r => r.limit(c => c.villainGroup === ev.source.mastermind.leads).each(c => villainDrawEv(ev, c)), true, true)
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 6, r => r.limit(isGroup(ev.source.mastermind.leads)).each(c => villainDrawEv(ev, c)), true, true)
   } ],
   [ "Secret Tunnel", ev => {
   // You get +6 Attack usable only against Villains in the Streets.
@@ -362,8 +362,8 @@ makeMastermindCard("Dr. Strange", 8, 6, "Defenders", ev => {
 ]),
 makeMastermindCard("Nick Fury", 9, 6, "Avengers", ev => {
 // Stack this Strike next to Nick Fury. Then demolish each player once for each Strike stacked here.
-  attachCardEv(ev, ev.what, ev.source, "STRIKE");
-  repeat(ev.source.attached("STRIKE").size, () => demolishEv(ev));
+  attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
+  cont(ev, () => repeat(gameState.mastermind.attached("STRIKE").size, () => demolishEv(ev)));
 }, [
   [ "Bounty on Fury's Head", ev => {
   // KO any number of your Hydra Allies. For each Ally you KO'd this way, you may gain a Madame HYDRA.
@@ -396,15 +396,15 @@ makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
   } ],
   [ "Might of Valhalla", ev => {
   // Draw a card for each Asgardian Warrior in your Victory Pile.
-    drawEv(ev, playerState.victory.count(c => c.villainGroup === ev.source.mastermind.leads));
+    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
   } ],
   [ "Riches of Asgard", ev => {
   // You get +1 Recruit for each Asgardian Warrior in your Victory Pile.
-    addRecruitEvent(ev, playerState.victory.count(c => c.villainGroup === ev.source.mastermind.leads));
+    addRecruitEvent(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
   } ],
   [ "Ride of the Valkyries", ev => {
   // Each other player reveals a Foes of Asgard Ally or discards a card for each Asgardian Warrior in the Overrun Pile.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => pickDiscardEv(ev, gameState.escaped.count(c => c.villainGroup === ev.source.mastermind.leads), p), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => pickDiscardEv(ev, gameState.escaped.count(isGroup(ev.source.mastermind.leads)), p), p));
   } ],
 ], {
   varDefense: c => c.printedDefense + cityVillains().count(isGroup(c.leads)) + gameState.escaped.count(isGroup(c.leads)),
@@ -499,7 +499,7 @@ addTemplates("MASTERMINDS", "Fear Itself", [
 makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty.", ev => {
 // Demolish each player. Then stack this Strike next to Iron Man. Uru-Enchanted Iron Man has an Uru-Enchanted Weapon for each Strike stacked here.
   demolishEv(ev);
-  attachCardEv(ev, ev.what, ev.source, "STRIKE");
+  attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
 }, [
   [ "Armor of the Destroyer", ev => {
   // For each [Tech] Ally you have, demolish each other player.
@@ -519,7 +519,7 @@ makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty.", ev => {
     eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev)));
   } ],
 ], {
-  trigger: uruEnchantedTrigger(c => c.attached("STRIKE").size),
+  trigger: uruEnchantedTrigger(c => gameState.mastermind.attached("STRIKE").size),
   fightFail: uruEnchantedFail,
 }),
 ]);
@@ -532,7 +532,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
 }, [
   [ "City of Demon Goblins", ev => {
   // Madelyne captures five Bystanders.
-    captureEv(ev, ev.source, 5);
+    captureEv(ev, ev.source.mastermind, 5);
   } ],
   [ "Corrupted Clone of Jean Grey", ev => {
   // Each other player reveals an X-Men Hero or gains a Wound.
@@ -540,11 +540,11 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
   } ],
   [ "Everyone's a Demon on the Inside", ev => {
   // Madelyne captures a Bystander from each other player's Victory Pile.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => captureEv(ev, ev.source, c)));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => captureEv(ev, ev.source.mastermind, c)));
   } ],
   [ "Gather the Harvest", ev => {
   // For each Limbo Villain in the city and/or Escape Pile, Madelyne captures a Bystander.
-    captureEv(ev, ev.source, [...cityVillains(), ...gameState.escaped.deck].count(isGroup(ev.source.leads)));
+    captureEv(ev, ev.source.mastermind, [...cityVillains(), ...gameState.escaped.deck].count(isGroup(ev.source.mastermind.leads)));
   } ],
 ], {
   fightCond: c => !c.captured.has(isBystander),
@@ -834,6 +834,7 @@ addTemplates("MASTERMINDS", "Civil War", [
 makeMastermindCard("Authoritarian Iron Man", 12, 6, "Superhuman Registration Act", ev => {
 // Authoritarian Iron Man fortifies the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space.
 // Villains in that space get +3 Attack.
+  // TODO location is not city here
   const d = ev.source.location.isCity ? ev.source.location.adjacentRight && fortifyEv(ev, ev.source, ev.source.location.adjacentRight) :
     withCity('BRIDGE', d => fortifyEv(ev, ev.source, d));
 }, [
@@ -995,7 +996,7 @@ makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
 // {REVENGE Deadpool's "Friends"}
 makeMastermindCard("Macho Gomez", 9, 6, "Deadpool's \"Friends\"", ev => {
 // Put this Strike in front of you as a "Bounty on Your Head." Then, each player gains a Wound for each Bounty on them. Any number of times during your turn, you may pay 1 Recruit to move a Bounty from you to the player on your left.
-  attachCardEv(ev, ev.source, playerState.deck, 'BOUNTY');
+  attachCardEv(ev, ev.what, playerState.deck, 'BOUNTY');
   cont(ev, () => eachPlayer(p => repeat(p.deck.attached('BOUNTY').size, () => gainWoundEv(ev, p))));
 }, [
   [ "Bounty Payout", ev => {
@@ -1108,7 +1109,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 ], {
   init: c => addFutureTrigger(ev => {
     captureShieldEv(ev, c, c.epic ? 8 : 5);
-    ev.source.epic && playHorrorEv(ev);
+    c.epic && playHorrorEv(ev);
   }),
 }),
 // Dark Phoenix Wins: When the Hero Deck is empty.
@@ -1751,7 +1752,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
   } ],
   [ "Predictive Analysis", ev => {
   // Put the top three cards of the Hero Deck into Ultron's Threat Analysis pile.
-    const threat = ev.source.attachedDeck('THREAT');
+    const threat = ev.source.mastermind.attachedDeck('THREAT');
     revealHeroDeckEv(ev, 3, cards => cards.each(c => moveCardEv(ev, c, threat)));
   } ],
   [ "Self-Repairing Legions", ev => {
@@ -1857,7 +1858,7 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Soul Seize", ev => {
   // Put all Heroes that cost 5 or more from the HQ into Poison Thanos' "Poisoned Souls" pile.
-    hqHeroes().limit(c => c.cost >= 5).each(c => attachCardEv(ev, c, ev.source, 'SOULS'));
+    hqHeroes().limit(c => c.cost >= 5).each(c => attachCardEv(ev, c, ev.source.mastermind, 'SOULS'));
   } ],
 ], {
   varDefense: c => c.attached('SOULS').uniqueCount(c => c.cost) * (c.epic ? 2 : 1)

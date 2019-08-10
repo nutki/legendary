@@ -485,10 +485,9 @@ function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: H
     func: ev => { func(ev); moveCardEv(ev, ev.what, playerState.victory); },
   }));
 }
-function strikerCount() {
-  let count = 0;
-  count += gameState.ko.count(isStrike);
-  count += gameState.mastermind.deck.sum(m => m.attached('STRIKE').size);
+function strikerCount(full: boolean = true) {
+  let count = gameState.ko.count(isStrike) + gameState.mastermind.attached('STRIKE').count(isStrike);
+  if (!full) return count;
   count += gameState.players.sum(p => p.victory.count(isStrike)); // Mysterio, Deathbird
   count += gameState.players.sum(p => p.deck.attached('BOUNTY').size); // Macho Gomez
   count += CityCards().count(isStrike); // Deathbird

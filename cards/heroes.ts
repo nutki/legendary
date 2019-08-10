@@ -1799,8 +1799,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // {POWER Tech} You get +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind.
   // COST: 7
     ra: makeHeroCard("Rocket Raccoon", "Vengeance is Rocket", 7, u, 5, Color.TECH, "Guardians of the Galaxy", "G", ev => {
-      const count = gameState.ko.count(isStrike) + gameState.mastermind.deck.sum(m => m.attached("STRIKE").size);
-      superPower(Color.TECH) && addAttackEvent(ev, count);
+      superPower(Color.TECH) && addAttackEvent(ev, strikerCount(false));
     }),
   },
   {
