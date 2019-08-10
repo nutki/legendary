@@ -1796,7 +1796,7 @@ makeSchemeCard("Maximum Carnage", { twists: 10, wounds: [6, 12, 18, 24, 30] }, e
 // SETUP: 6 Twists. All Bystanders are also "Biochemists."
 makeSchemeCard("Paralyzing Venom", { twists: 6 }, ev => {
   // Twist: Each player Kos a Biochemist from their Victory Pile or discards down to 4 cards in hand. // FIX Kos
-  eachPlayer(p => selectCardOrEv(ev, "Choose a Biochemist", p.victory.limit(isBystander), c => KOEv(ev, c), () => pickDiscardEv(ev, -4, p), p)); // TODO or optional
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Biochemist", p.victory.limit(isBystander), c => KOEv(ev, c), () => pickDiscardEv(ev, -4, p), p));
   // Twist 6 Evil Wins!
   schemeProgressEv(ev, ev.nr)
 }, [], () => setSchemeTarget(6)),

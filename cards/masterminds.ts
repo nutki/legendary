@@ -785,7 +785,7 @@ makeMastermindCard("Arnim Zola", 6, 6, "Zola's Creations", ev => {
   } ],
   [ "Pet Projects", ev => {
   // Each other player reveals a Zola's Creations Villain from their Victory Pile or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOrEv(ev, "Select a card", p.victory.limit(isGroup(ev.source.mastermind.leads)), () => {}, () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Select a card", p.victory.limit(isGroup(ev.source.mastermind.leads)), () => {}, () => gainWoundEv(ev, p), p));
   } ],
   [ "Crush Pacifist Resistance", ev => {
   // KO up to two of your Heroes that have less than 2 printed Attack.
@@ -1853,7 +1853,7 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Searing Poisons", ev => {
   // Each other player discards a Poisons card from their hand or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOrEv(ev, 'Choose a card', p.hand.limit(isGroup(ev.source.mastermind.leads)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, 'Choose a card', p.hand.limit(isGroup(ev.source.mastermind.leads)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Soul Seize", ev => {
   // Put all Heroes that cost 5 or more from the HQ into Poison Thanos' "Poisoned Souls" pile.

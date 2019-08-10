@@ -1995,7 +1995,7 @@ addVillainTemplates("Noir", [
 // VP: 3
   [ 2, makeVillainCard("Goblin's Freak Show", "Vulture, Carnival Cannibal", 5, 3, {
     ambush: ev => captureWitnessEv(ev, ev.source, 2),
-    fight: ev => eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p)),
+    fight: ev => eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p)),
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
 // AMBUSH: Chameleon captures a <b>Hidden Witness</b>.

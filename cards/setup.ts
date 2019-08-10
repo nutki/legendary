@@ -105,7 +105,7 @@ makeAmbitionCard("Crime Surge", 3, ev => cityVillains().limit(c => isLocation(c.
 // Add a random new Mastermind to the game with one Tactic.
 makeAmbitionCard("Dark Apprentice", 10, ev => addMastermindEv(ev)),
 // Each other player KOs a Bystander from their Victory Pile or gains a Wound.
-makeAmbitionCard("Collateral Damage", 4, ev => eachOtherPlayer(p => selectCardOrEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p))),
+makeAmbitionCard("Collateral Damage", 4, ev => eachOtherPlayer(p => selectCardOptEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p))),
 // This card becomes a Master Strike that takes effect immediately.
 makeAmbitionCard("Ruthless Strike", 4, ev => playStrikeEv(ev, ev.source)),
 // Choose a 0-cost Hero from the KO pile for each other player. Those players gain those Heroes.
