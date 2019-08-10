@@ -545,6 +545,7 @@ type EvType =
 'EFFECT' |
 'MOVECARD' |
 'NOOP' |
+'TURNSTART' |
 // Scheme Actions
 'PAYTORESCUE' |
 'BETRAY' |
@@ -2304,6 +2305,7 @@ function playTurn(ev: Turn) {
   gameState.turnNum++;
   textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
+  pushEv(ev, "TURNSTART", () => {});
   villainDrawEv(ev);
   playOutOfTimeEv(ev);
   pushEv(ev, "ACTIONS", ev => {

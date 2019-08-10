@@ -230,8 +230,8 @@ makeHorrorCard("Pain upon Pain", ev => gameState.triggers.push({ event: 'STRIKE'
 makeHorrorCard("The Plot Thickens", ev => { gameState.villaindeck.addNewCard(twistTemplate); gameState.villaindeck.shuffle(); }),
 // Whenever you complete a Scheme Twist, play another card from the Villain Deck.
 makeHorrorCard("Plots upon Plots", ev => gameState.triggers.push({ event: 'TWIST', after: ev => villainDrawEv(ev) })),
-// AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card, then each player discards a card. TODO turn start trigger
-makeHorrorCard("Psychic Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURN', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); cont(ev, () => eachPlayer(p => pickDiscardEv(ev, 1, p))); }} }),
+// AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card, then each player discards a card.
+makeHorrorCard("Psychic Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURNSTART', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); cont(ev, () => eachPlayer(p => pickDiscardEv(ev, 1, p))); }} }),
 // This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind worth 5 VP. It gains the ability "Master Strike: Each player reveals a Tech Hero or gains a Wound."
 makeHorrorCard("Shadow of the Disciple", ev => ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)), 5)),
 // AMBUSH: Play two cards from the Villain Deck.

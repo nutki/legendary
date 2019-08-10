@@ -254,7 +254,7 @@ function ascendToMastermind(ev: Ev, strike?: Handler, vp?: number) {
 function addFutureTrigger(effect: (ev: Ev) => void, p?: Player) {
   let done: boolean = false; // TODO maybe remove triggers instead
   gameState.triggers.push({
-    event: 'TURN', // TODO turn start trigger
+    event: 'TURNSTART',
     match: ev => !done && (!p || playerState === p),
     after: ev => (effect(ev), done = true),
   })

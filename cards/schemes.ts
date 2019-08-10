@@ -708,8 +708,8 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
 }, [
   koProgressTrigger(isNonGrayHero),
   {
-    event: 'VILLAINDRAW', // TODO turn start trigger
-    before: ev => {
+    event: 'TURNSTART',
+    after: ev => {
       gameState.cityEntry = gameState.city[playerState.nr];
       swapDecks(gameState.villaindeck, gameState.villaindeck.attachedDeck('REALITY' + playerState.nr));
     }
@@ -1619,7 +1619,7 @@ makeSchemeCard<{enabledUntil: Player, team: Map<Player, Affiliation>}>("Gladiato
   // Twist: Until the start of your next turn, each player can only play cards from a single Team of their choice during their turn. (e.g. S.H.I.E.L.D., Avengers, X-Men, Warbound, etc.)
   ev.state.enabledUntil = playerState;
 }, [escapeProgressTrigger(isVillain), runOutProgressTrigger("VILLAIN", false), {
-  event: "TURN", // TODO turn start trigger
+  event: "TURNSTART",
   match: ev => playerState === gameState.schemeState.enabledUntil,
   after: ev => {
     gameState.schemeState.team = new Map();
