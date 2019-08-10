@@ -845,6 +845,7 @@ interface Game extends Ev {
   strikeCount: number
   outwitAmount?: () => number
   reversePlayerOrder?: boolean // TODO revese player order
+  destroyedCitySpaces: Deck[]
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1178,6 +1179,7 @@ gameState = {
   gameSetup,
   turnNum: 0,
   strikeCount: 0,
+  destroyedCitySpaces: [],
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -1343,6 +1345,7 @@ function makeCityAdjacent(city: Deck[], s: number = 0, e: number = city.length) 
 }
 function destroyCity(space: Deck) {
   gameState.city = gameState.city.filter(d => d !== space);
+  gameState.destroyedCitySpaces.push(space);
   gameState.city.forEach(d => {
     if (d.next === space) d.next = space.next;
   });

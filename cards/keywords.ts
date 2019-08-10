@@ -486,8 +486,14 @@ function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: H
   }));
 }
 function strikerCount() {
-  // TODO striker
-  return 0;
+  let count = 0;
+  count += gameState.ko.count(isStrike);
+  count += gameState.mastermind.deck.sum(m => m.attached('STRIKE').size);
+  count += gameState.players.sum(p => p.victory.count(isStrike)); // Mysterio, Deathbird
+  count += gameState.players.sum(p => p.deck.attached('BOUNTY').size); // Macho Gomez
+  count += CityCards().count(isStrike); // Deathbird
+  count += gameState.destroyedCitySpaces.sum(d => d.count(isStrike)); // Galactus
+  return count;
 }
 function strikerHeroEv(ev: Ev, n: number = 1) {
   addAttackEvent(ev, n * strikerCount());
