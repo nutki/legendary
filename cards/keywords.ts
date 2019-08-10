@@ -205,6 +205,7 @@ function throwArtifactAction(c: Card, ev: Ev) {
     cont(ev, () => ev.what.artifactEffects[0](ev));
   }});
 }
+const thrownArtifact = { isArtifact: true, cardActions: [ throwArtifactAction ]};
 
 // {RISEOFTHELIVINGDEAD}: "Each player checks the top card of their Victory Pile. If that card is a Villain with a 'Rise of the Living Dead' ability, that Villain reenters the city."
 // (Mastermind Tactics never return this way.)

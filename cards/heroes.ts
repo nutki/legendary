@@ -1837,7 +1837,7 @@ addHeroTemplates("Fear Itself", [
 // COST: 3
 // FLAVOR: When Absorbing Man seized the Mace, he was reborn as Greithoth, body and soul.
   c1: makeHeroCard("Greithoth, Breaker of Wills", "Mace of Chains", 3, u, u, Color.INSTINCT, "Foes of Asgard", "FD", ev => addRecruitEvent(ev, 2), {
-    isArtifact: true, cardActions: [ throwArtifactAction ]
+    ...thrownArtifact
   }),
 // ATTACK: 1+
 // If you control an <b>Artifact</b>, you get +2 Attack.
@@ -1859,7 +1859,7 @@ addHeroTemplates("Fear Itself", [
 // When you throw this, you get +2 Attack.
 // COST: 4
   c1: makeHeroCard("Kuurth, Breaker of Stone", "Unstoppable Sledge", 4, u, u, Color.RANGED, "Foes of Asgard", "D", ev => addAttackEvent(ev, 2), {
-    isArtifact: true, cardActions: [ throwArtifactAction ]
+    ...thrownArtifact
   }),
 // RECRUIT: 2+
 // Reveal the top or bottom card of your deck. If it costs 4 or more, you get +2 Recruit.
@@ -1920,10 +1920,7 @@ addHeroTemplates("Fear Itself", [
 // COST: 5
   uc: makeHeroCard("Nerkkod, Breaker of Oceans", "Cudgel of the Deep", 5, u, u, Color.RANGED, "Foes of Asgard", "", ev => {
     addAttackSpecialEv(ev, c => isMastermind(c) || atLocation(c, 'BRIDGE'), 3);
-  }, {
-    isArtifact: true,
-    cardActions: [ throwArtifactAction ],
-  }),
+  }, { ...thrownArtifact }),
 // ATTACK: 5
 // {TEAMPOWER Foes of Asgard} Each other player reveals their hand. Choose a New Recruit or Madame HYDRA from each of those players' hands and put them into your hand.
 // COST: 7
@@ -1948,10 +1945,7 @@ addHeroTemplates("Fear Itself", [
 // COST: 4
   c2: makeHeroCard("Nul, Breaker of Worlds", "Otherworldly Maul", 4, u, u, Color.INSTINCT, "Foes of Asgard", "D", ev => {
     addAttackEvent(ev, 2 * superPower(Color.STRENGTH));
-  }, {
-    isArtifact: true,
-    cardActions: [ throwArtifactAction ],
-  }),
+  }, { ...thrownArtifact }),
 // ATTACK: 4
 // Say "NUL SMASH!" Then each player slaps a palm on the table. The last other player to slap a palm on the table gains a Bindings.
 // COST: 6
@@ -1985,13 +1979,13 @@ addHeroTemplates("Fear Itself", [
 // COST: 5
   uc: makeHeroCard("Skadi", "Hammer of the Serpent", 5, u, u, Color.STRENGTH, "HYDRA", "D", ev => {
     addAttackEvent(ev, 2 * turnState.pastEvents.count(e => e.type === "DISCARD" && e.who === playerState));
-  }, { isArtifact: true, cardActions: [ throwArtifactAction ] }),
+  }, { ...thrownArtifact }),
 // <b>Thrown Artifact</b>
 // When you throw this, you get +1 Attack for each other HYDRA card you played this turn.
 // COST: 7
   ra: makeHeroCard("Skadi", "War Banner of HYDRA", 7, u, u, Color.COVERT, "HYDRA", "", ev => {
-    addAttackEvent(ev, turnState.cardsPlayed.limit(c => c !== ev.source).count("HYDRA")); // TODO check if source is correct for artifacts and copies 
-  }, { isArtifact: true, cardActions: [ throwArtifactAction ] }),
+    addAttackEvent(ev, turnState.cardsPlayed.limit(c => c !== ev.what).count("HYDRA"));
+  }, { ...thrownArtifact }),
 },
 {
   name: "Skirn, Breaker of Men",
@@ -2016,7 +2010,7 @@ addHeroTemplates("Fear Itself", [
 // <b>Thrown Artifact</b>
 // When you throw this, you get +1 Attack for each card you've drawn this turn.
 // COST: 2
-  uc: makeHeroCard("Skirn, Breaker of Men", "Titanic Bludgeon", 2, u, u, Color.RANGED, "Foes of Asgard", "D", ev => addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DRAW" && e.who === playerState)), { isArtifact: true, cardActions: [ throwArtifactAction ]}),
+  uc: makeHeroCard("Skirn, Breaker of Men", "Titanic Bludgeon", 2, u, u, Color.RANGED, "Foes of Asgard", "D", ev => addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DRAW" && e.who === playerState)), { ...thrownArtifact}),
 // ATTACK: 4
 // Each player reveals a [Covert] Ally or discards a card. For each card discarded this way, you draw a card.
 // COST: 7
