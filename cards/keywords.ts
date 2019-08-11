@@ -116,7 +116,7 @@ function isControlledArtifact(c: Card) {
   return c.location === playerState.artifact;
 }
 function useArtifactAction(i: number = 0, shardCost: number = 0) {
-  return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', { what: c, cost: { cond: c => {
+  return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', { what: c, source: c, cost: { cond: c => {
     return isControlledArtifact(c) && !countPerTurn(`useArtifact${i}`, c) && playerState.shard.size >= shardCost;
   }}, func: ev => {
     incPerTurn(`useArtifact${i}`, ev.what);

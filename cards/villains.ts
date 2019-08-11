@@ -940,7 +940,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Soul Gem", 6, u, {
     ambush: ev => attachShardEv(ev, ev.source, cityVillains().size),
-  }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { isArtifact: true, triggers: [{
+  }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { isArtifact: true, cardActions: [ useArtifactAction() ], triggers: [{
     event: "MOVECARD",
     match: (ev, source) => ev.what === source,
     before: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
