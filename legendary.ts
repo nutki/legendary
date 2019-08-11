@@ -2075,7 +2075,7 @@ function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => vo
 }
 
 function isCopy(c: Card) {
-  return !c.instance || Object.getPrototypeOf(c) !== c.instance;
+  return !c.instance || Object.getPrototypeOf(c) !== c.instance; // TODO could be also transformed or dual
 }
 function returnToStackEv(ev: Ev, deck: Deck) {
   const c = ev.source;
