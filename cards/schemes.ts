@@ -330,7 +330,7 @@ makeSchemeCard("Splice Humans with Spider DNA", { twists: 8, required: { villain
 // You can't fight the Mastermind unless you have a Bystander in your Victory Pile for each Twist next to the Mastermind.
 makeSchemeCard("Weave a Web of Lies", { twists: 7 }, ev => {
   // Twist: Stack this Twist next to the Mastermind.
-  attachCardEv(ev, ev.source, gameState.mastermind, "TWIST");
+  attachCardEv(ev, ev.twist, gameState.mastermind, "TWIST");
   // Twist 7 Evil Wins!
   schemeProgressEv(ev, ev.nr);
 }, {
@@ -453,7 +453,7 @@ makeSchemeCard("Infiltrate the Lair with Spies", { twists: 8 }, ev => {
 // EVILWINS: When there are 3 Assault Squads in the Overrun Pile.
 makeSchemeCard("Mass Produce War Machine Armor", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: 'S.H.I.E.L.D. Assault Squad' } }, ev => {
   // Twist: Stack this Twist next to the Plot as "War Machine Technology." An Assault Squad from the current player's Victory Pile enters the Bridge.
-  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   selectCardEv(ev, "Select an Assault Squad", playerState.victory.limit(isGroup('S.H.I.E.L.D. Assault Squad')), c => villainDrawEv(ev, c));
 }, escapeProgressTrigger(isGroup('S.H.I.E.L.D. Assault Squad')), () => {
   addStatMod('defense', isGroup('S.H.I.E.L.D. Assault Squad'), () => gameState.scheme.attached('TWIST').size);
@@ -494,7 +494,7 @@ makeSchemeCard("Forge the Infinity Gauntlet", { twists: 8, required: { villains:
 makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
   // Twist: Shuffle this Twist into the Nega-Bomb Deck. Then reveal a random card from that deck. If it's a Bystander, rescue it. If it's a Twist, KO it, KO all Heroes from the HQ, and each player gains a Wound.
   const negabomb = gameState.scheme.attachedDeck("NEGABOMB");
-  shuffleIntoEv(ev, ev.source, negabomb);
+  shuffleIntoEv(ev, ev.twist, negabomb);
   revealDeckEv(ev, negabomb, 1, cards => {
     cards.limit(isBystander).each(c => rescueEv(ev, c));
     cards.limit(isTwist).each(c => {
@@ -506,6 +506,7 @@ makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
 }, escapeProgressTrigger(isNonGrayHero), () => {
   setSchemeTarget(16);
   const negabomb = gameState.scheme.attachedDeck("NEGABOMB");
+  negabomb.revealed = new Deck("NEGABOMB_REVEALED");
   repeat(6, () => gameState.bystanders.withTop(c => moveCard(c, negabomb)));
 }),
 // SETUP: 8 Twists. Always include Kree Starforce and Skrull Villain Groups.
@@ -519,14 +520,14 @@ makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], 
     cont(ev, () => {
       const k = gameState.escaped.count(isGroup("Kree Starforce"));
       const s = gameState.escaped.count(isGroup("Skrull"));
-      k > s && attachCardEv(ev, ev.source, kLoc, "CONQUEST");
-      s > k && attachCardEv(ev, ev.source, sLoc, "CONQUEST");
+      k > s && attachCardEv(ev, ev.twist, kLoc, "CONQUEST");
+      s > k && attachCardEv(ev, ev.twist, sLoc, "CONQUEST");
     });
   } else if (ev.nr === 8) {
   // Twist 8 Stack this Twist on the side with the most Conquests.
     const kCount = kLoc.attached("CONQUEST").size;
     const sCount = sLoc.attached("CONQUEST").size;
-    attachCardEv(ev, ev.source, kCount > sCount ? kLoc : sLoc, "CONQUEST")
+    attachCardEv(ev, ev.twist, kCount > sCount ? kLoc : sLoc, "CONQUEST")
   }
   cont(ev, () => {
     const kCount = kLoc.attached("CONQUEST").size;
@@ -539,7 +540,7 @@ makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], 
 // EVILWINS: When the Mastermind has 10 Shards or when there are no more Shards in the supply.
 makeSchemeCard("Unite the Shards", { twists: [6, 7, 8, 9, 10], shards: 30 }, ev => {
   // Twist: Stack this Twist next to the Scheme. Then for each Twist in that stack, the Mastermind gains a Shard.
-  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   cont(ev, () => attachShardEv(ev, gameState.mastermind.top, gameState.scheme.attached('TWIST').size));
 }, [{
   event: "MOVECARD",
@@ -627,7 +628,7 @@ addTemplates("SCHEMES", "Secret Wars Volume 1", [
 makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], /* required: { henchmen: 'Annihilation Wave' } this is not a real Henchmen group */}, ev => {
   // Twist: KO all Annihilation Henchmen from the players' Victory Piles. Stack this Twist next to the Scheme. Then, for each Twist in that stack, put an Annihilation Henchman from the KO pile next to the Mastermind. Players can fight those Henchmen.
   eachPlayer(p => p.victory.limit(c => c.cardName === 'Annihilation Wave').each(c => KOEv(ev, c)));
-  attachCardEv(ev, ev.source, gameState.scheme, "TWIST");
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
   cont(ev, () => {
     const w = gameState.ko.limit(c => c.cardName === 'Annihilation Wave');
     const n = gameState.scheme.attached('TWIST').size;
@@ -662,7 +663,7 @@ makeSchemeCard("Corrupt the Next Generation of Heroes", { twists: 8 }, ev => {
 // EVILWINS: When 8 Master Strikes have taken effect.
 makeSchemeCard("Crush Them With My Bare Hands", { twists: 5, vd_villain: [ 2, 2, 3, 3, 4 ] }, ev => {
   // Twist: This Twist becomes a Master Strike that takes effect immediately.
-  playStrikeEv(ev, ev.source);
+  playStrikeEv(ev, ev.twist);
 }, {
   event: 'STRIKE',
   after: ev => schemeProgressEv(ev, gameState.schemeProgress - 1),
@@ -736,7 +737,7 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
 makeSchemeCard("Master of Tyrants", { twists: 8, extra_masterminds: 3 }, ev => {
   if (ev.nr <= 7) {
     // Twist 1-7 Put this Twist under a Tyrant Villain as "Dark Power." It gets +2 Attack.
-    selectCardEv(ev, 'Choose Tyrant Villain', cityVillains().limit(isTactic), c => attachCardEv(ev, ev.source, c, 'DARK_POWER'));
+    selectCardEv(ev, 'Choose Tyrant Villain', cityVillains().limit(isTactic), c => attachCardEv(ev, ev.twist, c, 'DARK_POWER'));
   } else if (ev.nr === 8) {
     // Twist 8 All Tyrant Villains in the city escape.
     cityVillains().limit(isTactic).each(c => villainEscapeEv(ev, c));
@@ -844,7 +845,7 @@ makeSchemeCard("Enthrone the Barons of Battleworld", { twists: 8 }, ev => {
 makeSchemeCard("The Fountain of Eternal Life", { twists: [ 4, 8, 8, 8, 8 ] }, ev => {
   // Twist: A Villain from your Victory Pile enters the Sewers. Put this Twist on the bottom of the Villain Deck.
   selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => villainDrawEv(ev, c));
-  moveCardEv(ev, ev.source, gameState.villaindeck, true);
+  moveCardEv(ev, ev.twist, gameState.villaindeck, true);
 }, escapeProgressTrigger(isVillain), () => {
   setSchemeTarget(3, true);
   addStatSet('fight', isVillain, (c, prev) => combineHandlers(prev, fatefulResurrectionEv));
@@ -864,7 +865,7 @@ makeSchemeCard("The God-Emperor of Battleworld", { twists: 8 }, ev => {
     addStatSet('defense', c => c === ev.source, () => 9 + 2 * gameState.scheme.attached('TWIST').size);
   } else if (ev.nr >= 2 && ev.nr <= 6) {
     // Twist 2-6 Stack this Twist next to the Scheme. The God-Emperor gets another +2 Attack.
-    attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+    attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   } else if (ev.nr === 7) {
     // Twist 7 If the God-Emperor lives, it KOs all other Masterminds.
     fightableCards().includes(ev.source) && fightableCards().limit(isMastermind).limit(c => c !== ev.source).each(c => KOEv(ev, c)); // TODO detach on KO
@@ -895,7 +896,7 @@ makeSchemeCard("The Mark of Khonshu", { twists: 10, heroes: [4, 6, 6, 6, 7], req
 // EVILWINS: When the number of escaped Villains is double the number of players.
 makeSchemeCard("Master the Mysteries of Kung-Fu", { twists: 8 }, ev => {
   // Twist: Stack this Twist next to the Scheme.
-  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
 }, escapeProgressTrigger(isVillain), () => {
   addStatSet('nthCircle', isEnemy, (c, prev) => Math.max(prev || 0, gameState.scheme.attached('TWIST').size));
   gameState.specialActions = ev => fightableCards().map(c => nthCircleRevealAction(c, ev));
@@ -916,7 +917,7 @@ makeSchemeCard("Secret Wars", { twists: 8 }, ev => {
 makeSchemeCard("Sinister Ambitions", { twists: 6 }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Stack this Twist next to the Scheme. Play another card from the Villain Deck.
-    attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+    attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
     villainDrawEv(ev);
   } else if (ev.nr === 6) {
     // Twist 6 Each Ambition Villain in the city escapes.
@@ -938,7 +939,7 @@ addTemplates("SCHEMES", "Captain America 75th Anniversary", [
 makeSchemeCard("Brainwash the Military", { twists: 7 }, ev => {
   if (ev.nr <= 6) {
     // Twist 1-6 Stack this Twists next to the Scheme as a "Traitor Battalion." Play another card from the Villain Deck.
-    attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+    attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
     villainDrawEv(ev);
   } else if (ev.nr === 7) {
     // Twist 7 All S.H.I.E.L.D. Officers in the city escape.
@@ -1143,8 +1144,8 @@ makeSchemeCard("United States Split by Civil War", { twists: 10 }, ev => {
   // Twist: If there is a Villain on the Streets or Bridge, put this Twist in a stack of "Western States Victories." Otherwise, if there is a Villain in the Sewers, put this Twist in a stack of "Eastern States Victories."
   const west = cityVillains().has(c => isLocation(c.location, 'BRIDGE', 'STREETS'));
   const east = cityVillains().has(c => isLocation(c.location, 'SEWERS'));
-  if (west) attachCardEv(ev, ev.source, gameState.scheme, 'WEST');
-  else if (east) attachCardEv(ev, ev.source, gameState.scheme, 'EAST');
+  if (west) attachCardEv(ev, ev.twist, gameState.scheme, 'WEST');
+  else if (east) attachCardEv(ev, ev.twist, gameState.scheme, 'EAST');
   cont(ev, () => {
     const w = gameState.scheme.attached('WEST').size;
     const e = gameState.scheme.attached('EAST').size;
@@ -1274,7 +1275,7 @@ addTemplates("SCHEMES", "X-Men", [
 // EVILWINS: When 3 Villains per player have escaped.
 makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], required: { henchmen: 'Brood' } }, ev => {
   // Twist: The player on your right gains this Twist as a "Brood Infection." When drawn, they KO it and gain 2 Wounds.
-  gainEv(ev, ev.source, playerState.right);
+  gainEv(ev, ev.twist, playerState.right);
 }, [
   escapeProgressTrigger(isVillain), {
     event: 'MOVECARD',
@@ -1311,7 +1312,7 @@ makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_hench
 // EVILWINS: When the Wound Stack or Villain Deck runs out.
 makeSchemeCard("Anti-Mutant Hatred", { twists: 11, wounds: 30 }, ev => {
   // Twist: Put this Twist into your discard pile as an "Angry Mob."
-  moveCardEv(ev, ev.source, playerState.discard);
+  moveCardEv(ev, ev.twist, playerState.discard);
 }, [ runOutProgressTrigger('WOUNDS'), runOutProgressTrigger('VILLAIN', false), {
   event: 'TURNSTART',
   match: ev => playerState.hand.has(isTwist),
@@ -1349,7 +1350,7 @@ makeSchemeCard("Horror of Horrors", { twists: 6 }, ev => {
 // EVILWINS: When 3 Sentinels have Escaped.
 makeSchemeCard("Mutant-Hunting Super Sentinels", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], required: { henchmen: 'Sentinel' }}, ev => {
   // Twist: Stack this Twist next to the Scheme as a "Sentinel Upgrade." Shuffle all Sentinels from players' Victory Piles into the Villain Deck. Play another card from the Villain Deck.
-  attachCardEv(ev, ev.source, gameState.scheme, 'UPGRADE');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'UPGRADE');
   gameState.players.each(p => p.victory.limit(c => c.cardName === "Sentinel").each(c => shuffleIntoEv(ev, c, gameState.villaindeck)));
   villainDrawEv(ev);
 }, escapeProgressTrigger(c => c.cardName === "Sentinel"), () => {
@@ -1363,9 +1364,9 @@ makeSchemeCard("Nuclear Armageddon", { twists: 5 }, ev => {
   // Copied from Galactus' master strike
   withLeftmostCitySpace(ev, space => {
     destroyCity(space);
-    if (!gameState.city.size) evilWinsEv(ev, ev.source);
+    if (!gameState.city.size) evilWinsEv(ev);
     space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
-    moveCardEv(ev, ev.source, space);
+    moveCardEv(ev, ev.twist, space);
   });
 }),
 // SETUP: 11 Twists. 6 Wounds per player in Wound Stack.
@@ -1373,7 +1374,7 @@ makeSchemeCard("Nuclear Armageddon", { twists: 5 }, ev => {
 // FAQ https://boardgamegeek.com/thread/1820963/televised-death-traps-timing
 makeSchemeCard("Televised Deathtraps of Mojoworld", { twists: 11, wounds: [ 6, 12, 18, 24, 30 ] }, ev => {
   // Twist: Stack this Twist next to the Scheme as a "Deathtrap.' This turn, you may pay 1 Attack for each Deathtrap stacked there. If you don't, each player gains a Wound.
-  attachCardEv(ev, ev.source, gameState.scheme, 'DEATHTRAP');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'DEATHTRAP');
   cont(ev, () => {
     const recruit = gameState.scheme.attached('DEATHTRAP').size;
     let paid = false;
@@ -1386,11 +1387,11 @@ makeSchemeCard("Televised Deathtraps of Mojoworld", { twists: 11, wounds: [ 6, 1
 makeSchemeCard("X-Men Danger Room Goes Berserk", { twists: 8 }, ev => {
   // Twist: Trap! By End of Turn: You may pay 2 Recruit. If you do, shuffle this Twist back into the Villain Deck, then play a card from the Villain Deck. Or Suffer: Stack this Twist next to the scheme as an "Airborne Neurotoxin."
   let paid = false;
-  const c = ev.source;
+  const c = ev.twist;
   moveCardEv(ev, c, gameState.trap);
-  addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 2 }, func: ev => {
+  addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { recruit: 2 }, func: ev => {
     paid = true;
-    shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+    shuffleIntoEv(ev, ev.what, gameState.villaindeck);
     villainDrawEv(ev);
   } }))
   addTurnTrigger('CLEANUP', () => !paid, ev => {
@@ -1406,7 +1407,7 @@ makeSchemeCard("Distract the Hero", { twists: 8 }, ev => {
   // Comunity ruling https://boardgamegeek.com/thread/2092842/distract-hero-what-does-it-mean-get-some-vp
   // Twist: If you get any Victory Points this turn, put this Twist on the bottom of the Villain Deck. Otherwise, stack this Twist next to the Scheme as a Villainous Interruption.
   let done = false;
-  const twist = ev.source;
+  const twist = ev.twist;
   addTurnTrigger('MOVECARD', ev => ev.to === playerState.victory && ev.what.vp > 0, ev => {
     done = true;
     moveCardEv(ev, twist, gameState.villaindeck, true);
@@ -1572,7 +1573,7 @@ addTemplates("SCHEMES", "World War Hulk", [
 // EVILWINS: When 25 non-grey Heroes are KO'd.
 makeSchemeCard("Break the Planet Asunder", { twists: 9 }, ev => {
   // Twist: Stack this Twist next to the Scheme as a "Tectonic Break." Then KO each Hero from the HQ whose printed Attack is less than the number of Tectonic Breaks (no printed Attack counts as 0).
-  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   cont(ev, () => {
     const n = gameState.scheme.attached('TWIST').size;
     hqHeroes().limit(c => !c.printedAttack || c.printedAttack < n).each(c => KOEv(ev, c));
@@ -1675,7 +1676,7 @@ makeSchemeCard("Shoot Hulk into Space", { twists: 8, heroes: [ 4, 6, 6, 6, 7 ] }
 makeSchemeCard("Subjugate with Obedience Disks", { twists: 11 }, ev => {
   // Twist: Put this Twist under an HQ space as an "Obedience Disk." No space can have two more Obedience Disks than any other space.
   const spaces = gameState.hq.highest(d => -d.attached('DISK').size);
-  selectCardEv(ev, 'Choose an HQ space', spaces, d => attachCardEv(ev, ev.source, d, 'DISK'));
+  selectCardEv(ev, 'Choose an HQ space', spaces, d => attachCardEv(ev, ev.twist, d, 'DISK'));
   cont(ev, () => schemeProgressEv(ev, gameState.hq.sum(d => d.attached('DISK').size)));
 }, [], () => {
   setSchemeTarget(gameState.hq.size * 2);
@@ -1718,8 +1719,8 @@ makeSchemeCard("Age of Ultron", { twists: 11, heroes: [ 3, 5, 5, 6, 7 ] }, ev =>
   // Twist: Put the top card of the Hero Deck next to the Scheme in an "Evolution" Pile. Then this Twist enters the city as an "Evolved Ultron" Villain.
   const evolution = gameState.scheme.attachedDeck('EVOLUTION');
   gameState.herodeck.withTop(c => moveCardEv(ev, c, evolution));
-  villainify('Evolved Ultron', ev.source, c => 4 + empowerVarDefense(evolution.deck.map(c => c.color).reduce((p, c) => p | c))(c), 6);
-  enterCityEv(ev, ev.source);
+  villainify('Evolved Ultron', ev.twist, c => 4 + empowerVarDefense(evolution.deck.map(c => c.color).reduce((p, c) => p | c))(c), 6);
+  enterCityEv(ev, ev.twist);
 }, koOrEscapeProgressTrigger(c => isTwist(c) && isVillain(c)), () => {
   setSchemeTarget(7);
 }),
@@ -1742,7 +1743,7 @@ makeSchemeCard("Pull Earth into Medieval Times", { twists: 9 }, ev => {
 // EVILWINS: When ther are 10 Giant Ants next to the Mastermind.
 makeSchemeCard("Transform Commuters into Giant Ants", { twists: [7, 8, 9, 10, 11] }, ev => {
   // Twist: STack this Twist next to the Scheme. Then for each Twist in that stack, put a Bystander face down next to the Mastermind as a 2A "Giant Ant" Villain. When you fight one, rescue it as a Bystander. // FIX 2A STack
-  attachCardEv(ev, ev.source, gameState.scheme, 'TWIST');
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   cont(ev, () => {
     const amount = gameState.scheme.attached('TWIST').size;
     repeat(amount, () => cont(ev, () => {
@@ -1776,8 +1777,8 @@ addTemplates("SCHEMES", "Venom", [
 // EVILWINS: When the Escape Pile has 3 cards per player, or the Villain Deck runs out.
 makeSchemeCard("Invasion of the Venom Symbiotes", { twists: 8, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ] }, ev => {
   // Twist: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush</b>: This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
-  villainify('Symbiote', ev.source, 3, 3);
-  addStatSet('ambush', c => c === ev.source, () => ev => symbioteBondEv(ev, cityVillains().limit(v => v !== ev.source), ev.source));
+  villainify('Symbiote', ev.twist, 3, 3);
+  addStatSet('ambush', c => c === ev.twist, () => ev => symbioteBondEv(ev, cityVillains().limit(v => v !== ev.twist), ev.twist));
   villainDrawEv(ev);
 }, escapeProgressTrigger(c => true), () => {
   setSchemeTarget(3, true);

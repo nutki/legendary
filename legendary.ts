@@ -2188,7 +2188,7 @@ function reshufflePlayerDeck(): void {
 function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev: Ev): void {
   moveCardEv(ev, ev.what, gameState.ko);
-  confirmEv(ev, 'Scheme Twist!', ev.source);
+  confirmEv(ev, 'Scheme Twist!', gameState.scheme.top);
   let e = pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
   cont(ev, () => {
     if (gameState.players.length === 1) {
