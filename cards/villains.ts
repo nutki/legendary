@@ -942,11 +942,11 @@ addVillainTemplates("Guardians of the Galaxy", [
     ambush: ev => attachShardEv(ev, ev.source, cityVillains().size),
   }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { isArtifact: true, cardActions: [ useArtifactAction() ], triggers: [{
     event: "MOVECARD",
-    match: (ev, source) => ev.what === source,
+    match: (ev, source) => ev.what === source && isControlledArtifact(source),
     before: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
   }, {
     event: "DEFEAT",
-    match: (ev, source) => owner(source) === playerState && isControlledArtifact(source),
+    match: (ev, source) => owner(source) === playerState && isControlledArtifact(source) && isVillain(ev.what),
     after: ev => attachShardEv(ev, ev.source),
   }] }) ],
 // AMBUSH: Space Gem gains a Shard for each empty space in the city.
