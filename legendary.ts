@@ -1696,7 +1696,7 @@ function addTurnAction(action: Ev) {
   turnState.turnActions.push(action);
 }
 function getActions(ev: Ev): Ev[] {
-  let p = playerState.hand.limit(c => isHero(c) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
+  let p = playerState.hand.limit(c => (isHero(c) || isArtifact(c)) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   // TODO any deck with recruitable

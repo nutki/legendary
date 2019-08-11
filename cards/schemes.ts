@@ -503,7 +503,7 @@ makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
       eachPlayer(p => gainWoundEv(ev, p));
     });
   });
-}, escapeProgressTrigger(isNonGrayHero), () => {
+}, koProgressTrigger(isNonGrayHero), () => {
   setSchemeTarget(16);
   const negabomb = gameState.scheme.attachedDeck("NEGABOMB");
   negabomb.revealed = new Deck("NEGABOMB_REVEALED");
