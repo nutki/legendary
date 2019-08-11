@@ -641,7 +641,6 @@ class Ev implements EvParams {
     this.func = params;
   } else Object.assign(this, params);
   if (!this.ui && (!this.func || typeof this.func !== "function")) throw TypeError("No function in event");
-  this.id = Ev.nextId++;
   }
   getSource() {
     for (let ev: Ev = this; ev; ev = ev.parent) {
@@ -656,7 +655,12 @@ class Ev implements EvParams {
     if (this.what) r += ` (${this.what.id})`;
     return r;
   }
-  static nextId = 0;
+  setId() {
+    const id = Ev.nextId.get(this.type) || 0;
+    this.id = id;
+    Ev.nextId.set(this.type, id + 1);
+  }
+  static nextId = new Map<string, number>();
 };
 
 interface Templates {
@@ -1266,6 +1270,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 // Populate HQ
 gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
+Ev.nextId = new Map();
 }
 
 // Card effects functions
@@ -2393,6 +2398,8 @@ function clickCard(ev: MouseEvent): void {
   }
 }
 function playEvent(ev: Ev) {
+  ev.setId();
+  if(!undoLog.replaying) console.log(ev.toString());
   payCost(ev, res => {
     res && ev.func(ev);
     !res && ev.failFunc && ev.failFunc(ev);
@@ -2419,8 +2426,7 @@ function mainLoop(): void {
   })[ev.type] || playEvent)(ev);
   }
   let ev = popEvent();
-  console.log(ev.toString());
-  while (!ev.ui) { playEvent(ev); ev = popEvent(); console.log(ev.toString()); }
+  while (!ev.ui) { playEvent(ev); ev = popEvent(); }
   displayGame(ev);
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": function () {
