@@ -798,6 +798,7 @@ addHeroTemplates("Dark City", [
     r.limit(isBystander).each(c => chooseMayEv(ev, "Rescue the bystander", () => rescueEv(ev, c)));
     r.limit(isVillain).each(c => {
       addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+      // TODO reveal until end of turn
     });
   })),
 // ATTACK: 6
@@ -2467,6 +2468,7 @@ addHeroTemplates("Secret Wars Volume 2", [
     revealVillainDeckEv(ev, 1, r => {
       r.limit(isVillain).each(c => {
         addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+        // TODO reveal until end of turn
         superPower(Color.RANGED, Color.RANGED) && addAttackEvent(ev, c.printedVP || 0);
       });
     });
@@ -2582,7 +2584,7 @@ addHeroTemplates("Secret Wars Volume 2", [
     if (superPower(Color.COVERT)) {
       let once = false;
       const isDemon = (c: Card) => c === gameState.bystanders.top && !once;
-      addTurnSet('isFightable', isDemon, () => true); // TODO make top of bystander stack card of interest
+      addTurnSet('isFightable', isDemon, () => true);
       villainify('Demon', isDemon, 3, ev => selectCardAndKOEv(ev, yourHeroes()));
       addTurnTrigger('FIGHT', ev => isDemon(ev.what), () => once = true);
     }
@@ -3730,7 +3732,7 @@ addHeroTemplates("X-Men", [
   c1: makeHeroCard("Psylocke", "Psychic Knife", 2, u, u, Color.INSTINCT, "X-Men", "D", [ ev => drawEv(ev, 1), ev => superPower(Color.INSTINCT) && addPiercingEv(ev, 1) ], { printedPiercing: 0 }),
 // Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, draw a card.
   c2: makeHeroCard("Psylocke", "Precognition", 3, 2, u, Color.COVERT, "X-Men", "D", ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
-    addTurnSet('isFightable', v => v === c, () => true); // TODO isRecruitable
+    addTurnAction(recruitCardActionEv(ev, c)); // TODO reveal until end of turn
     addTurnTrigger('RECRUIT', ev => ev.what === c && ev.where === gameState.herodeck, () => drawEv(ev));
   }))),
 // PIERCING
