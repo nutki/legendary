@@ -124,8 +124,10 @@ function useArtifactAction(i: number = 0, shardCost: number = 0) {
   }});
 }
 function playArtifact(ev: Ev) {
-  if (isCopy(ev.source) || owner(ev.source) !== playerState) { // Chameleon does no make a copy, but the card played is not owned by the current player
-    chooseOptionEv(ev, "Choose Effect", ev.source.artifactEffects.map((v, i) => ({ l: `Effect ${i+1}`, v })), f => f(ev), ev.who);
+  if (ev.source.location !== playerState.playArea) { // Chameleon and Star-Lord using playCardEffects outside of playCard
+    if (ev.source.artifactEffects.size !== 1)
+      chooseOptionEv(ev, "Choose Effect", ev.source.artifactEffects.map((v, i) => ({ l: `Effect ${i+1}`, v })), f => f(ev), ev.who);
+    else ev.source.artifactEffects[0](ev);
   } else {
     moveCardEv(ev, ev.source, playerState.artifact);
   }

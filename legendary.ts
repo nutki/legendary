@@ -2537,7 +2537,6 @@ TODO Homecoming striker
 TODO Homecoming coordinate
 TODO Champions multiple size-changing
 TODO Champions cheering crowds
-TODO copy artifact should not count as cards played
 TODO heroName fixes (setup option vs heroName, divided names, transformed names?, gray card names, gainable and other hero names)
 TODO many fortify effects (including Authoritarian Iron Man)
 TODO ant-man uSizeChanging, cDuel

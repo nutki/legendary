@@ -1810,7 +1810,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // Choose an <b>Artifact</b> any player controls with a "once per turn" ability. Play a copy of one of those abilities.
   // COST: 4
     c2: makeHeroCard("Star-Lord", "Legendary Outlaw", 4, 2, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => {
-      selectCardEv(ev, "Choose an Artifact", gameState.players.map(p => p.artifact.deck).merge(), c => playCopyEv(ev, c));
+      selectCardEv(ev, "Choose an Artifact", gameState.players.map(p => p.artifact.deck).merge(), c => playCardEffects(ev, c));
     }),
   // <b>Artifact -</b>
   // Once per turn, draw a card.
