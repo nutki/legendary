@@ -523,6 +523,7 @@ type EvType =
 'SELECTCARD1' |
 'SELECTCARD01' |
 'SELECTOBJECTS' |
+'CONFIRM' |
 // Expansion actions
 'TELEPORT' |
 'FOCUS' |
@@ -599,6 +600,7 @@ interface Ev<TSchemeState = any> {
   effectName?: EffectStat
   failFunc?: (ev: Ev) => void
   withViolence?: boolean
+  id: number
 }
 interface EvParams {
   where?: Deck
@@ -639,6 +641,7 @@ class Ev implements EvParams {
     this.func = params;
   } else Object.assign(this, params);
   if (!this.ui && (!this.func || typeof this.func !== "function")) throw TypeError("No function in event");
+  this.id = Ev.nextId++;
   }
   getSource() {
     for (let ev: Ev = this; ev; ev = ev.parent) {
@@ -646,6 +649,14 @@ class Ev implements EvParams {
     }
     return undefined;
   }
+  toString() {
+    const evList = new Array<Ev>();
+    for (let e: Ev<any> = this; e; e = e.parent) evList.unshift(e);
+    let r = evList.map(e => `${e.type} ${e.id}`).join(' => ');
+    if (this.what) r += ` (${this.what.id})`;
+    return r;
+  }
+  static nextId = 0;
 };
 
 interface Templates {
@@ -804,7 +815,7 @@ interface SetupParams {
   required?: { heroes?: string | string[], villains?: string | string[], henchmen?:string | string[] },
   extra_masterminds?: number[] | number,
 }
-interface Game extends Ev {
+interface Game {
   gameRand: RNG
   nextId: number
   twistCount: number
@@ -1109,9 +1120,6 @@ playerState.artifact.owner = playerState.shard.owner = playerState.teleported.ow
 playerState.outOfTime.owner = playerState;
 playerState.left = playerState.right = playerState;
 gameState = {
-  type: "STATE",
-  parent: undefined,
-  getSource: undefined,
   nextId: 0,
   twistCount: 0,
   gameRand: undefined,
@@ -1511,7 +1519,7 @@ function joinQueue(): void {
 }
 function popEvent(): Ev {
   joinQueue();
-  return eventQueue.shift() || new Ev(gameState, "TURN", <EvParams>{
+  return eventQueue.shift() || new Ev(undefined, "TURN", <EvParams>{
     recruit: 0,
     attack: 0,
     piercing: 0,
@@ -1845,9 +1853,13 @@ function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler |
     pushEv(ev, "EFFECT", p);
   }
   if (!effects) return;
+  confirmEv(ev, `${effectName}!`, c);
   pushEv(ev, 'CARDEFFECT', { effectName, source: c, func: () => {
     if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
   }});
+}
+function confirmEv(ev: Ev, desc: string, what?: Card) {
+  pushEv(ev, "CONFIRM", { desc, what, ui: true });
 }
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0 || max === 0) {
@@ -2176,6 +2188,7 @@ function reshufflePlayerDeck(): void {
 function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev: Ev): void {
   moveCardEv(ev, ev.what, gameState.ko);
+  confirmEv(ev, 'Scheme Twist!', ev.source);
   let e = pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
   cont(ev, () => {
     if (gameState.players.length === 1) {
@@ -2401,11 +2414,13 @@ function mainLoop(): void {
     "SELECTOBJECTS": () => {
       const v = undoLog.readInts();
       v.length ? v.forEach(o => ev.result1((<Card[]>ev.options)[o])) : ev.result0();
-    }
+    },
+    "CONFIRM": () => {},
   })[ev.type] || playEvent)(ev);
   }
   let ev = popEvent();
-  while (!ev.ui) { playEvent(ev); ev = popEvent(); }
+  console.log(ev.toString());
+  while (!ev.ui) { playEvent(ev); ev = popEvent(); console.log(ev.toString()); }
   displayGame(ev);
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": function () {
@@ -2442,10 +2457,12 @@ function mainLoop(): void {
       }});
     },
     "GAMEOVER": function () {
-    }
+    },
+    "CONFIRM": function () {
+      extraActions.push({ name: "OK", func: () => mainLoop() });
+    },
   })[ev.type])(ev);
   setMessage(ev.desc || "");
-  console.log("UI> " + ev.type, ev, clickActions, extraActions);
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
@@ -2484,7 +2501,7 @@ function startApp(): void {
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*
 GUI:
-TODO !Show hidden events (card revealing) (show source card before rescue, ambush, fight, escape, strike, twist effects trigger)
+TODO Show revealed cards when no action taken
 TODO Select setup screen
 TODO show multiple actions (play/teleport)
 TODO highlight deck selection

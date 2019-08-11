@@ -92,7 +92,7 @@ function displayDecks(): void {
   }
 }
 function eventSource(ev: Ev): string {
-  const s = ev.getSource();
+  const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
   return s instanceof Card ? makeDisplayCardImg(s, false, false, false) : "";
 }
 let sourceOrg = "";
