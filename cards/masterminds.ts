@@ -227,7 +227,7 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
     chooseClassEv(ev, color => eachPlayer(p => {
       let count = 0;
       selectObjectsAnyEv(ev, "Reveal cards", revealable(p).limit(color), () => count++, p);
-      drawEv(ev, count, p);
+      cont(ev, () => drawEv(ev, count, p));
     }))
   } ],
   [ "Force of Eternity", ev => {
@@ -246,7 +246,9 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
     const hqNames = hqHeroes().map(c => c.cardName);
     eachOtherPlayerVM(p => p.discard.limit(isHero).limit(c => hqNames.includes(c.cardName)).each(c => KOEv(ev, c)));
   } ],
-]),
+], {
+  cardActions: [ cosmicThreatAction() ]
+}),
 // Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
 makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
 // All Subterranea Villains in the city escape. If any Villains escaped this way, each player gains a Wound.
