@@ -1361,6 +1361,8 @@ function destroyCity(space: Deck) {
   gameState.destroyedCitySpaces.push(space);
   gameState.city.forEach(d => {
     if (d.next === space) d.next = space.next;
+    if (d.adjacentLeft === space) d.adjacentLeft = space.adjacentLeft;
+    if (d.adjacentRight === space) d.adjacentRight = space.adjacentRight;
   });
   gameState.hq.forEach(d => {
     if (d.below === space) d.below = undefined;
