@@ -616,3 +616,29 @@ function switcherooActionEv(n: number) {
     }
   })
 }
+
+function hyperspeedEv(ev: Ev, n: number = undefined, icon: 'ATTACK' | 'RECRUIT'| 'CHOOSE' = 'ATTACK') {
+  if (icon === 'CHOOSE' && !turnState.hyperspeedBoth) {
+    chooseOneEv(ev, "Choose", ["Attack", () => hyperspeedEv(ev, n, 'ATTACK')], ["Recruit", () => hyperspeedEv(ev, n, 'RECRUIT')]);
+  } else {
+    revealPlayerDeckEv(ev, n ? n : playerState.deck.size, cards => {
+      (icon === 'ATTACK' || turnState.hyperspeedBoth) && addAttackEvent(ev, cards.count(hasAttackIcon));
+      (icon === 'RECRUIT' || turnState.hyperspeedBoth) && addRecruitEvent(ev, cards.count(hasRecruitIcon));
+      cards.each(c => discardEv(ev, c));
+    });
+  }
+}
+const lastStandAmount = () => gameState.city.count(isCityEmpty);
+function lastStandEv(ev: Ev) {
+  addAttackEvent(ev, lastStandAmount());
+}
+function lastStandVarDefense(n: number = 1) {
+  return (c: Card) => c.printedDefense + lastStandAmount() * n;
+}
+const darkMemoriesAmount = () => numClasses(playerState.discard.deck);
+function darkMemoriesEv(ev: Ev) {
+  addAttackEvent(ev, darkMemoriesAmount());
+}
+function darkMemoriesVarDefense(n: number = 1) {
+  return (c: Card) => c.printedDefense + darkMemoriesAmount() * n;
+}

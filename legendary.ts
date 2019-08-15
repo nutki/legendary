@@ -798,6 +798,7 @@ interface Turn extends Ev {
   recruitWithAttack: boolean
   piercingWithAttack: boolean
   smashMultiplier?: number
+  hyperspeedBoth?: boolean
 }
 interface Trigger {
   event: TriggerableEvType
