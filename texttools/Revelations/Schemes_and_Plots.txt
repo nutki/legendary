@@ -1,0 +1,49 @@
+
+#CARDNAME: Earthquake Drains the Ocean
+#SETUP: 11 Twists. Add an extra Villain Group.
+#RULE: There are two extra "Low Tide" city spaces on the left side of the city, so the city has 7 spaces total.
+#TWIST: The tide rushes in. This Scheme {TRANSFORM}.
+#EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+
+Scheme Transformed
+
+#CARDNAME: Tsunami Crushes the Coast
+#RULE: The Low Tide, Bridge, and Streets city spaces no longer exist. The city has 3 spaces total. Put this Scheme on the Streets to mark the edge of the city. Villains in destroyed city spaces escape, starting from the left.
+#TWIST: The tide rushes out. This Scheme {TRANSFORM}, then play another card from the Villain Deck.
+#EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+
+#CARDNAME: House of M
+#SETUP: 8 Twists. Hero Deck is 4 X-Men Heroes and 2 non-X-Men Heroes. (Or substitute another team for all X-Men icons on both sides.) Add 14 Scarlet Witch Hero cards to the Villain Deck.
+#RULE: Each Scarlet Witch in the city is a Villain with Attack equal to its cost +3. If you fight one, gain it as a Hero.
+#TWIST: KO all non-X-Men Heroes from the HQ. If there are at least 2 Scarlet Witch cards in the city, this Scheme {TRANSFORM}. Otherwise play another card from the Villain Deck.
+
+Scheme Transformed
+
+#CARDNAME: ”No More Mutants”
+#RULE: Each Scarlet Witch in the city is a Villain with Attack equal to its cost +4. If you fight one, gain it as a Hero.
+#TWIST: KO all X-Men Heroes from the HQ. Play another card from the Villain Deck.
+#EVILWINS: When the number of non-grey Heroes in the KO pile is ten plus double the number of players.
+
+#CARDNAME: Secret HYDRA Corruption
+#SETUP: 30 Officers in the S.H.I.E.L.D. Officer stack. 1 player: 7 Twists. 2-3 players: 9 Twists. 4-5 players: 11 Twists.
+#RULE: Officers stacked next to this Scheme are "Hydra Sympathizers." You may pay 3 Recruit to have the player of your choice gain one as a Hero.
+#TWIST: For each Twist in the KO pile (including this one), put a card from the S.H.I.E.L.D. Officer stack next to this Scheme. Then this Scheme {TRANSFORM}.
+
+Scheme Transformed
+
+#CARDNAME: Open HYDRA Revolution
+#RULE: Officers next to this Scheme are 3 Attack "Hydra Traitor" Villains. When you fight one, return it to the Officer Stack and KO one of your Heroes.
+#TWIST: For each Twist in the KO pile (including this one), put a card from the S.H.I.E.L.D. Officer stack next to this Scheme, Then if Evil hasn't won yet, this Scheme {TRANSFORM}.
+#EVILWINS: When there are 15 Officers next to this Scheme or the S.H.I.E.L.D. Officer Stack runs out.
+
+#CARDNAME: The Korvac Saga
+#SETUP: 8 Twists.
+#TWIST: Each player must discard down to four cards or KO a Bystander from their Victory Pile to "search for the Korvac Entity." This Scheme {TRANSFORM}.
+
+Scheme Transformed
+
+#CARDNAME: Korvac Revealed
+#RULE: This Scheme counts as a 19 Attack "Korvac" Villain worth 9VP. If you defeat Korvac, KO the Mastermind and all its Tactics.
+Twistc2,4,6: Each player discards an Avengers Hero or gains a Wound. This Scheme {TRANSFORM}.
+#TWISTNR: NR[8] Evil Wins!
+

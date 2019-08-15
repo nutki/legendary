@@ -1,0 +1,70 @@
+
+#CARDNAME: HYDRA Base
+<b>Henchman Location</b>
+HYDRA Base gets +2 Attack while there's a Villain here.
+#FIGHT: KO one of your Heroes.
+#VP: 1
+
+#CARDNAME: Mandarin's Rings
+
+#CARDNAME: Daimonic, The White Light
+#COPIES: 1
+#FIGHT: Draw a card.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Incandescence, The Flame Blast
+#COPIES: 1
+#FIGHT: You may KO a card from your discard pile.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Influence, The Impact Beam
+#COPIES: 1
+#FIGHT: You get +1 Recruit.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Liar, The Mento-Intensifier
+#COPIES: 1
+#FIGHT: Look at the top card of another player's deck. Say it is "Good" or "Bad." That player chooses to put it in your discard pile or their discard pile.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Lightning, The Electro-Blast
+#COPIES: 1
+#FIGHT: Reveal the top card of your deck. You may KO it.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Nightbringer, The Black Light
+#COPIES: 1
+#FIGHT: Reveal the top three cards of the Villain Deck. You may defeat a Villain you revealed worth 2VP or less. (Do its Fight effect.) Put the rest back in any order.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Remaker, The Matter Rearranger
+#COPIES: 1
+#FIGHT: You may choose a card from your hand or discard pile. The player on your right puts it in their hand.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Spectral, The Disintegration Beam
+#COPIES: 1
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Spin, The Vortex Beam
+#COPIES: 1
+#FIGHT: Reveal the top six cards of your deck. Discard all of them that cost 0, then put the rest back in any order.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Zero, The Ice Blast
+#COPIES: 1
+#FIGHT: Choose a card you played this turn that costs 0. When you draw a new hand of cards at the end of this turn, add that card to your hand as an extra card.
+#ATTACK: 3
+#VP: 1
+
+

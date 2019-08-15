@@ -110,3 +110,4 @@ Reveal the top card of your deck. If it costs 2 or less, draw it.
 #ATTACK: 1
 #VP: 6
 
+

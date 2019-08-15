@@ -1,0 +1,89 @@
+
+#CARDNAME: Grim Reaper
+Grim Reaper gets +1 Attack for each Location card in the city.
+#LEADS: Lethal Legion
+#STRIKE: This Strike enters the city as a 7 Attack "Graveyard" Location that says "This gets +2 Attack while there's a Villain here." It's Worth 5VP.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Grim Reaper
+Grim Reaper gets +2 Attack for each Location card in the city.
+#LEADS: Lethal Legion
+#STRIKE: This Strike enters the city as an 8 Attack "Graveyard" Location that says "This gets +3 Attack while there's a Villain here." It's worth 6VP. Then, if there are at least three Location cards in the city, each player gains a Wound.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Carnival of Concussions
+#FIGHT: If this was not already a <b>Location</b>, draw three cards, and this card enters the city as a Location with this ability:
+Whenever you fight a Villain here, each other player KOs a Bystander from their Victory Pile.
+
+#TACTIC: Cult of Skulls
+#FIGHT: If this was not already a <b>Location</b>, KO up to two cards from your discard pile, and this card enters the city as a Location with this ability:
+Whenever you fight a Villain here, each other player reveals their hand and discards a non-grey card.
+
+#TACTIC: Maze of Bones
+#FIGHT: If this was not already a <b>Location</b>, look at the top four cards of your deck, KO any number of them, and put the rest back in any order. Then this card enters the city as a Location with this ability:
+Whenever you fight a Villain here, each other player gains a Wound.
+
+#TACTIC: Prison of Coffins
+#FIGHT: If this was not already a <b>Location</b>, you get +5 Recruit, and this card enters the city as a Location with this ability:
+Whenever you fight a Villain here, each other player puts a Villain from their Victory Pile into the Escape Pile.
+
+#CARDNAME: Mandarin
+All Mandarin's Rings get +1 Attack. 
+Mandarin gets -1 Attack for each Mandarin's Ring among all players' Victory Piles. (-3 Attack for each in solo.)
+#LEADS: Mandarin's Rings
+#STRIKE: Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound instead.
+#ATTACK: 16*
+#VP: 6
+
+#EPICNAME: Mandarin
+All Mandarin's Rings get +2 Attack. 
+Mandarin gets -2 Attack for each Mandarin's Ring among all players' Victory Piles. (-6 Attack for each in solo.)
+#LEADS: Mandarin's Rings
+#STRIKE: Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound to the top of their deck instead.
+#ATTACK: 26*
+#VP: 6
+
+#TACTIC: Circles Unbroken
+#FIGHT: Draw a card for each Mandarin's Ring in your Victory Pile.
+
+#TACTIC: Dragon of Heaven Spaceship
+#FIGHT: If this was not already a <b>Location</b>, KO up to two of your Heroes, and this card enters the city as a Location with this ability:
+Whenever you fight a Villain here, each other player reveals their hand and KOs one of their non-grey Heroes.
+#FIGHT: KO up to two of your Heroes.
+
+#TACTIC: Intertwining Powers
+#FIGHT: Each other player without at least two Mandarin's Rings in their Victory Pile gains a Wound.
+
+#TACTIC: Rings Seek Their True Hand
+#FIGHT: Each other player reveals a [Tech] Hero or puts a Mandarin's Ring from their Victory Pile into the Escape Pile.
+
+#CARDNAME: The Hood
+{DARK MEMORIES}
+#LEADS: Hood's Gang
+#STRIKE: Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
+#ATTACK: 9+
+#VP: 6
+
+#EPICNAME: Hood
+ <b>Double Dark Memories</b>
+#LEADS: Hood's Gang
+#STRIKE: Each player discards their deck, then shuffles 6 random grey cards from their discard pile to form their new deck.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Demonic Revelation
+#FIGHT: Each other player reveals their hand and discards a non-grey Hero.
+
+#TACTIC: Focus Magic Through Guns
+#FIGHT: Each other player reveals a [Covert] Hero or discards a card.
+Then each other player reveals a [Tech] Hero or gains a Wound.
+
+#TACTIC: Paean to Dormammu
+#FIGHT: Each other player discards their deck.
+
+#TACTIC: The Hood's Warehouse
+#FIGHT: If this was not already a <b>Location</b>, rescue 4 Bystanders, and this card enters the city as a Location with this ability:
+When you fight a Villain here, play another card from the Villain Deck.
+

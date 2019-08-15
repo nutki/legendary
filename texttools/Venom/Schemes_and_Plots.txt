@@ -22,3 +22,4 @@
 #TWISTNR: NR[11] Evil Wins!
 #RULE: If Tactics or Master Strikes mention the Drained Mastermind, use the main Mastermind instead.
 
+

@@ -168,3 +168,4 @@ You may choose a number from 1 to 5. A Hero in your hand gains <b>Switcheroo</b>
 {POWER Instinct Instinct} You may choose a number from 1 to 8 instead.
 #COST: 8
 
+

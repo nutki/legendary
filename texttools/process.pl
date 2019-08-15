@@ -59,7 +59,7 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds|Dark Memories|Last Stand)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
@@ -89,6 +89,7 @@ while (<A>) {
     s!<b>Wounded Fury</b>!{WOUNDED FURY}!g;
     s!<b>Feast</b>!{FEAST}!g;
     s!<b>Switcheroo (\d+)</b>!{SWITCHEROO $1}!g;
+    s!<b>Hyperspeed (\d+)</b>!{HYPERSPEED $1}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

@@ -1,0 +1,322 @@
+
+#CARDNAME: Captain Marvel, Agent of S.H.I.E.L.D.
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: The Sword of S.H.I.E.L.D.
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} Draw a card.
+#COST: 3
+#FLAVOR: What if a superhero also had the backing of a multinational military?
+
+#SUBNAME: Radiant Blast
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+If you drew any extra cards this turn, you get +1 Attack.
+#COST: 4
+#FLAVOR: When you need something extra-blasted.
+
+#SUBNAME: Dominate the Battlefield
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} {LAST STAND}
+#COST: 6
+#FLAVOR: Sometimes the victory party has a smashing section.
+
+#SUBNAME: Higher, Further, Faster
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 0+
+Choose one: Draw three cards or {LAST STAND}.
+{POWER Strength Strength} Instead, do both.
+#COST: 7
+
+#CARDNAME: Darkhawk
+#TEAM: Avengers
+
+#SUBNAME: Balance the Darkforce
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1
+#ATTACK: 1
+{POWER Tech} Draw a card.
+#COST: 3
+#FLAVOR: The Darkhawk amulet must re-absorb all the energies it provides.
+
+#SUBNAME: Hawk Dive
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 0+
+Choose Recruit or Attack. Then {HYPERSPEED 4} for that icon.
+#COST: 4
+#FLAVOR: Chris Powell must switch carefully between his human and android bodies.
+
+#SUBNAME: Travel to Nullspace
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+If the most recent Hero you played this turn has a Recruit icon, you get +3 Recruit. If it has an Attack icon, you get +3 Attack. (If both, you get both.)
+#COST: 6
+
+#SUBNAME: Warflight
+#COPIES: 1
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+Whenever you Hyperspeed this turn, you get both Recruit from Recruit icons and Attack from Attack icons.
+{HYPERSPEED 7}
+{POWER Tech Tech} Instead, {HYPERSPEED 9}.
+#COST: 7
+
+#CARDNAME: Hellcat
+#TEAM: Avengers
+
+#SUBNAME: Catlike Agility
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1+
+{POWER Instinct} Choose one - Draw a card or you get +1 Attack.
+#COST: 2
+#FLAVOR: Hiss…Leap…Claw…Purr.
+
+#SUBNAME: Part-Time PI
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2+
+Reveal the top card of any deck. If it's not a Scheme Twist, you may put it on the bottom of that deck.
+{POWER Instinct} Choose one - Draw a card or you get +1 Recruit.
+#COST: 3
+
+#SUBNAME: Demon Sight
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2+
+Guess Villain, Bystander, Strike, or Twist. Then reveal the top card of the Villain Deck. If you guessed right, you get +2 Attack.
+{TEAMPOWER Avengers} If it was a Villain, you may fight it this turn.
+#COST: 5
+
+#SUBNAME: Second Chance at Life
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 6
+If a Master Strike or Scheme Twist would occur, you may discard this card from your hand instead. If you do, draw three cards, then shuffle that Strike or Twist back into the Villain Deck.
+#COST: 8
+
+#CARDNAME: Photon
+#TEAM: Avengers
+
+#SUBNAME: Infrared Conversation
+#COPIES: 5
+#CLASS: [Ranged]
+To play this, you must discard a card. Draw two cards.
+#COST: 3
+#FLAVOR: Transforming into any wavelength of light includes the invisible and the blinding.
+
+#SUBNAME: Ultraviolet Radiation
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 3+
+To play this, you must discard a card.
+{POWER Ranged} {HYPERSPEED 3}.
+#COST: 4
+#FLAVOR: Careful - you wouldn't want to get 10,000 sunburns.
+
+#SUBNAME: Light the Way
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3+
+You get +1 Attack for each card you discarded from your hand this turn.
+#COST: 6
+
+#SUBNAME: Coruscating Vengeance
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 6+
+{TEAMPOWER Avengers, Avengers} {LAST STAND}
+#COST: 8
+
+#CARDNAME: Quicksilver
+#TEAM: Avengers
+
+#SUBNAME: Too Fast to See
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+{HYPERSPEED 3} for Recruit.
+{POWER Instinct} Instead, {HYPERSPEED 3} for Recruit and Attack.
+#COST: 3
+
+#SUBNAME: Perpetual Motion
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+{POWER Strength} {HYPERSPEED 4}
+#COST: 4
+#FLAVOR: From a quantum perspective, he really is in three places at once.
+
+#SUBNAME: Jittery Impatience
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 2
+#ATTACK: 2
+Look at the top card of your deck. Discard it or put it back.
+{POWER Instinct} You may KO the card you discarded this way.
+#COST: 6
+
+#SUBNAME: Around the World Punch
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 0+
+<b>Hyperspeed</b> your entire remaining deck. (Don't reshuffle.)
+{TEAMPOWER Avengers, Avengers, Avengers, Avengers} Before you do that, put your discard pile on top of your deck.
+#COST: 8
+
+#CARDNAME: Ronin
+#TEAM: Avengers
+
+#SUBNAME: Mysterious Identity
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+As you play this card, you may choose a color and/or a team icon. This card is that color and team icon this turn. (instead of [Covert] and Avengers)
+#COST: 3
+
+#SUBNAME: Storm of Arrows
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 0+
+{HYPERSPEED 4}
+{POWER Ranged} Draw a card.
+#COST: 4
+#FLAVOR: You wouldn't think arrows could reach super-sonic speeds. You wouldn't think so…
+
+#SUBNAME: Haunted by Loss
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2+
+{POWER Instinct} {DARK MEMORIES}
+#COST: 5
+#FLAVOR: Many have taken the mantle of Ronin: Echo, Hawkeye, Blade, and even the Red Guardian. Who wears it now?
+
+#SUBNAME: Brooding Fury
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 3+
+{DARK MEMORIES}
+{POWER Strength} {DARK MEMORIES} again.
+#COST: 7
+
+#CARDNAME: Scarlet Witch
+#TEAM: Avengers
+
+#SUBNAME: Hex Bolt
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1
+{POWER Ranged} Discard the top card of any player's deck. You may play a copy of that card this turn.
+#COST: 2
+#FLAVOR: Wanda's reality-altering powers eventually threatened her sanity.
+
+#SUBNAME: Alter Reality
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+#ATTACK: 0+
+Reveal the top card of your deck. Discard it or put it back.
+{POWER Covert} {DARK MEMORIES}
+#COST: 3
+
+#SUBNAME: Chaos Magic
+#COPIES: 3
+#CLASS: [Covert]
+Reveal the top card of the Hero Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Hero Deck.
+#COST: 4
+
+#SUBNAME: Warp Time and Space
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+Reveal the top three cards of the Hero Deck. Put one of them in your hand. Put the rest on the top or bottom of the Hero Deck in any order.
+{TEAMPOWER Avengers, Avengers, Avengers} {DARK MEMORIES}
+#COST: 7
+
+#CARDNAME: Speed
+#TEAM: Avengers
+
+#SUBNAME: Accelerate
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 0+
+{HYPERSPEED 2}
+{POWER Instinct} Instead, {HYPERSPEED 6}
+#COST: 2
+#FLAVOR: If Tommy goes too fast, he might literally not be able to stop.
+
+#SUBNAME: Speedy Delivery
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+#ATTACK: 1
+The next Hero you recruit this turn goes on top of your deck.
+#COST: 4
+#FLAVOR: When one Avenger can move at supersonic speed, they all can.
+
+#SUBNAME: Race to the Rescue
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+Choose a Hero Class. ([Strength], [Instinct], [Covert], [Tech] or [Ranged] ) Reveal the top card of your deck. If it's the Hero Class you named, draw it. Otherwise, put it back on the top or bottom.
+#COST: 5
+
+#SUBNAME: Break the Sound Barrier
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 0+
+Look at the top six cards of your deck, draw two of them, and put the rest back on the top or bottom in any order.
+{POWER Covert} {HYPERSPEED 6}
+#COST: 8
+
+#CARDNAME: War Machine
+#TEAM: Avengers
+
+#SUBNAME: Simulated Target Practice
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+{POWER Tech} You may fight a Henchman from your Victory Pile this turn. If you do, KO it and rescue a Bystander. (Do that Henchman's Fight effect too.)
+#COST: 3
+
+#SUBNAME: Military-Industrial Complex
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 2
+Whenever you defeat a Villain this turn, you get +1 Recruit.
+#COST: 4
+#FLAVOR: More victories means more funding. Which means bigger guns. Which means more victories.
+#GUN: 1
+
+#SUBNAME: Hypersonic Cannon
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 0+
+{HYPERSPEED 5}
+{POWER Ranged} You may KO a card from your discard pile.
+#COST: 5
+#FLAVOR: Sonic, meet boom.
+#GUN: 1
+
+#SUBNAME: Overwhelming Firepower
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+Whenever you defeat a Villain or Mastermind this turn, draw a card and rescue a Bystander.
+#COST: 8
+#GUN: 1
+

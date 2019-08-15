@@ -71,6 +71,9 @@ sub autopower {
     s/^{WOUNDED FURY}$// and $effect = "woundedFuryEv(ev)";
     s/^{SMASH (\d)}$// and $effect = "smashEv(ev, $1)";
     s/^{SWITCHEROO (\d+)}$// and $ability = "cardActions: [ switcherooActionEv($1) ]";
+    s/^{DARK MEMORIES}$// and $effect = "darkMemoriesEv(ev)";
+    s/^{LAST STAND}$// and $effect = "lastStandEv(ev)";
+    s/^{HYPERSPEED (\d+)}$// and $effect = "hyperspeedEv(ev, $1)";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;

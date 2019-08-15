@@ -1,0 +1,203 @@
+
+#CARDNAME: Army of Evil
+
+#SUBNAME: Blackout
+#COPIES: 2
+#AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
+#FIGHT: Draw two cards.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Count Nefaria
+#COPIES: 1
+#AMBUSH: All players reveal their hands. Unless all those revealed cards together include [Strength], [Instinct], [Covert], [Tech], and [Ranged] Heroes, each player gains a Wound.
+#ESCAPE: Same Effect.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Dome of Darkforce
+#COPIES: 1
+<b>Location</b>
+Whenever you fight a Villain here, each other player reveals a [Ranged] Hero or discards a card.
+#FIGHT: Draw two cards.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Klaw
+#COPIES: 2
+#AMBUSH: Klaw captures a [Tech] or [Ranged] Hero that costs 5 or less from the HQ.
+#FIGHT: Gain that Hero.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Mister Hyde
+#COPIES: 2
+While in the Bank or Streets, this card's name is "Dr. Calvin Zabo", and you must spend Recruit to fight him instead of Attack.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 6*
+#VP: 4
+
+#CARDNAME: Dark Avengers
+
+#SUBNAME: Ares
+#COPIES: 1
+{LAST STAND}
+#FIGHT: KO one of your Heroes.
+#ATTACK: 6+
+#VP: 6
+
+#SUBNAME: Captain Marvel (Noh-Varr)
+#COPIES: 1
+{LAST STAND}
+#AMBUSH: If any other Dark Avengers are in the city, each player gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Dark Hawkeye (Bullseye)
+#COPIES: 1
+{LAST STAND}
+#FIGHT: KO one of your Heroes. Then choose one:
+- Each other player Kos one of their Heroes.
+- Each other player gains a 0-cost Hero from the KO pile.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Dark Ms. Marvel (Moonstone)
+#COPIES: 1
+{LAST STAND}
+#FIGHT: Each other player discards two cards then draws a card.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Dark Spider-Man (Scorpion)
+#COPIES: 1
+<b>Double Last Stand</b>
+#FIGHT: Reveal the top two cards of your deck. KO one of them that costs 2 or less. Put the rest back in any order.
+#ATTACK: 2+
+#VP: 2
+
+#SUBNAME: Dark Wolverine (Daken)
+#COPIES: 1
+{LAST STAND}
+#AMBUSH: Each player reveals an [Instinct] Hero or gains a Wound.
+#ESCAPE: Same effect, then shuffle Dark Wolverine back into the Villain Deck.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Sentry
+#COPIES: 1
+While in the Bank or Streets, this card's name is "The Void", it gets +5 Attack, and it gets
+"<b>Fight</b>: KO up to two cards from your discard pile."
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 7+
+#VP: 5
+
+#SUBNAME: Sentry's Watchtower
+#COPIES: 1
+<b>Location</b>
+Villains here get {LAST STAND}. (Villains who already have it get the bonus again.)
+#FIGHT: You gain the Hero in the HQ space under this.
+#ATTACK: 8
+#VP: 5
+
+#CARDNAME: Hood's Gang
+
+#SUBNAME: Cancer
+#COPIES: 2
+{DARK MEMORIES}
+#AMBUSH: Each player that has any cards in their discard pile gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Chemistro
+#COPIES: 2
+{DARK MEMORIES}
+#FIGHT: Exchange a card you played this turn with a card in the HQ that has the same or lower cost. (The card you gained goes to your discard pile.)
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Madam Masque
+#COPIES: 2
+{DARK MEMORIES}
+#AMBUSH: Guess Villain, Bystander, Strike, or Twist. Then reveal the top card of the Villain Deck. If you guessed wrong, play that card.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: The Brothers Grimm
+#COPIES: 1
+To fight The Brothers Grimm, you must also discard two identical cards.
+#FIGHT: You may KO a card from your discard pile.
+#ATTACK: 2*
+#VP: 2
+
+#SUBNAME: The Dark Dimension
+#COPIES: 1
+<b>Location</b>
+Villains here get {DARK MEMORIES}. (Villains who already have it get the bonus again.)
+#FIGHT: Take another turn after this one.
+#ATTACK: 9
+#VP: 5
+
+#CARDNAME: Lethal Legion
+
+#SUBNAME: Carnival of Wonders
+#COPIES: 1
+<b>Location</b>
+Whenever you fight a Villain here, each other player chooses a Bystander from their Victory Pile to be captured by Carnival of Wonders.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Laser Maze
+#COPIES: 1
+<b>Location</b>
+Whenever you fight a Villain here, each other player reveals a [Ranged] Hero or gains a Wound.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Living Laser
+#COPIES: 1
+Living Laser gets +3 Attack while there's a "Maze" Location in the city.
+#FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: M'Baku
+#COPIES: 1
+M'Baku gets +3 Attack while there's a "Cult" Location in the city.
+#FIGHT: Each player reveals their hand and discards a [Tech] card.
+#ESCAPE: Same effect.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Power Man (Erik Josten)
+#COPIES: 1
+Power Man gets +3 Attack while there's a "Prison" Location in the city.
+#ESCAPE: Each player puts a Villain from their Victory Pile into the Escape Pile or gains a Wound.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Swordsman
+#COPIES: 1
+Swordsman gets +3 Attack while there's a "Carnival" Location in the city.
+#AMBUSH: Swordsman and each Location in the city each capture a Bystander.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: "The Raft" Prison
+#COPIES: 1
+<b>Location</b>
+Whenever you fight a Villain here, each other player puts a Villain from their Victory Pile into the Escape Pile or gains a Wound
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: White Gorilla Cult
+#COPIES: 1
+<b>Location</b>
+Whenever you fight a Villain here, each other player reveals their hand and discards a [Tech] card.
+#ATTACK: 6
+#VP: 4
+
