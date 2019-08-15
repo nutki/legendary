@@ -1782,7 +1782,7 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
   who = who || playerState;
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, where: card.location });
 }
-function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
+function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), where: card.location, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let c: Card[] = [];
@@ -1967,6 +1967,17 @@ function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player 
 function chooseClassEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean) {
   chooseOptionEv(ev, "Choose a Hero Class",
     [{l:'Strength', v:Color.STRENGTH},
+    {l:'Instinct', v:Color.INSTINCT},
+    {l:'Covert', v:Color.COVERT},
+    {l:'Tech', v:Color.TECH},
+    {l:'Ranged', v:Color.RANGED}].filter(o => !limit || limit(o.v)),
+    f
+  );
+}
+function chooseColorEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean) {
+  chooseOptionEv(ev, "Choose a Hero color",
+    [{l:'Gray', v:Color.GRAY},
+    {l:'Strength', v:Color.STRENGTH},
     {l:'Instinct', v:Color.INSTINCT},
     {l:'Covert', v:Color.COVERT},
     {l:'Tech', v:Color.TECH},

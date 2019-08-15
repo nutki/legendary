@@ -1553,7 +1553,7 @@ addHeroTemplates("Villains", [
 // Reveal the top card of the Ally Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Ally Deck.
 // COST: 4
   uc: makeHeroCard("Mystique", "Turn the Tide", 4, u, u, Color.INSTINCT, "Brotherhood", "", ev => {
-    gameState.herodeck.withTop(c => addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: {
+    gameState.herodeck.withTop(c => addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { // TODO make this card visible
       cond: c => c === gameState.herodeck.top
     }, func: ev => {
       playCopyEv(ev, ev.what);
@@ -4684,6 +4684,218 @@ addHeroTemplates("Dimensions", [
         addTurnAction(switcherooActionEv(n)(c, ev));
       })
     });
+  }),
+},
+]);
+addHeroTemplates("Revelations", [
+{
+  name: "Captain Marvel, Agent of S.H.I.E.L.D.",
+  team: "S.H.I.E.L.D.",
+// {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} Draw a card.
+  c1: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "The Sword of S.H.I.E.L.D.", 3, 2, u, Color.STRENGTH, "S.H.I.E.L.D.", "FD", ev => superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && drawEv(ev)),
+// If you drew any extra cards this turn, you get +1 Attack.
+  c2: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "Radiant Blast", 4, u, 2, Color.RANGED, "S.H.I.E.L.D.", "FD", ev => pastEvents('DRAW').has(e => e.who === playerState) && addAttackEvent(ev, 1)),
+// {POWER Ranged} {LAST STAND}
+  uc: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "Dominate the Battlefield", 6, u, 2, Color.RANGED, "S.H.I.E.L.D.", "FD", ev => superPower(Color.RANGED) && lastStandEv(ev)),
+// Choose one: Draw three cards or {LAST STAND}.
+// {POWER Strength Strength} Instead, do both.
+  ra: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "Higher, Further, Faster", 7, u, 0, Color.STRENGTH, "S.H.I.E.L.D.", "", ev => {
+    if (superPower(Color.STRENGTH, Color.STRENGTH)) { drawEv(ev, 3); lastStandEv(ev); } else {
+      chooseOneEv(ev, "Choose one", ["Draw three cards", () => drawEv(ev, 3)], ["Last Stand", () => lastStandEv(ev)]);
+    }
+  }),
+},
+{
+  name: "Darkhawk",
+  team: "Avengers",
+// {POWER Tech} Draw a card.
+  c1: makeHeroCard("Darkhawk", "Balance the Darkforce", 3, 1, 1, Color.TECH, "Avengers", "F", ev => superPower(Color.TECH) && drawEv(ev)),
+// Choose Recruit or Attack. Then {HYPERSPEED 4} for that icon.
+  c2: makeHeroCard("Darkhawk", "Hawk Dive", 4, 0, 0, Color.COVERT, "Avengers", "F", ev => hyperspeedEv(ev, 4, 'CHOOSE')),
+// If the most recent Hero you played this turn has a Recruit icon, you get +3 Recruit. If it has an Attack icon, you get +3 Attack. (If both, you get both.)
+  uc: makeHeroCard("Darkhawk", "Travel to Nullspace", 6, 0, 0, Color.TECH, "Avengers", "", ev => turnState.cardsPlayed.withLast(c => {
+    hasRecruitIcon(c) && addRecruitEvent(ev, 3);
+    hasAttackIcon(c) && addAttackEvent(ev, 3);
+  })),
+// Whenever you Hyperspeed this turn, you get both Recruit from Recruit icons and Attack from Attack icons.
+// {HYPERSPEED 7}
+// {POWER Tech Tech} Instead, {HYPERSPEED 9}.
+  ra: makeHeroCard("Darkhawk", "Warflight", 7, 0, 0, Color.TECH, "Avengers", "", [ ev => turnState.hyperspeedBoth = true, ev => hyperspeedEv(ev, superPower(Color.TECH, Color.TECH) ? 9 : 7) ]),
+},
+{
+  name: "Hellcat",
+  team: "Avengers",
+// {POWER Instinct} Choose one - Draw a card or you get +1 Attack.
+  c1: makeHeroCard("Hellcat", "Catlike Agility", 2, u, 1, Color.INSTINCT, "Avengers", "FD", ev => superPower(Color.INSTINCT) && chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["+1 Attack", () => addAttackEvent(ev, 1)])),
+// Reveal the top card of any deck. If it's not a Scheme Twist, you may put it on the bottom of that deck.
+// {POWER Instinct} Choose one - Draw a card or you get +1 Recruit.
+  c2: makeHeroCard("Hellcat", "Part-Time PI", 3, 2, u, Color.INSTINCT, "Avengers", "D", [ ev => {
+    selectCardEv(ev, "Choose a deck", [...gameState.players.map(p => p.deck), gameState.villaindeck, gameState.herodeck, gameState.bystanders], d => {
+      const f = (c: Card[]) => selectCardOptEv(ev, "Put on the bottom of the deck", c.limit(c => !isScheme(c)), c => {
+        moveCardEv(ev, c, c.location, true);
+      });
+      if (d.owner && d === d.owner.deck) revealPlayerDeckEv(ev, 1, f, d.owner, playerState);
+      else revealDeckEv(ev, d, 1, f);
+      // TODO scheme decks
+    });
+  }, ev => superPower(Color.INSTINCT) && chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["+1 Recruit", () => addRecruitEvent(ev, 1)]) ]),
+// Guess Villain, Bystander, Strike, or Twist. Then reveal the top card of the Villain Deck. If you guessed right, you get +2 Attack.
+// {TEAMPOWER Avengers} If it was a Villain, you may fight it this turn.
+  uc: makeHeroCard("Hellcat", "Demon Sight", 5, u, 2, Color.COVERT, "Avengers", "D", ev => {
+    chooseOptionEv(ev, "Guess", [
+      {l:"Villain", v:isVillain},
+      {l:"Bystander", v:isBystander},
+      {l:"Strike", v:isStrike},
+      {l:"Twist", v:isTwist},
+    ], f => revealVillainDeckEv(ev, 1, cards => {
+      cards.has(f) && addAttackEvent(ev, 2);
+      superPower("Avengers") && cards.limit(isVillain).each(c => addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true));
+    }));
+  }),
+// If a Master Strike or Scheme Twist would occur, you may discard this card from your hand instead. If you do, draw three cards, then shuffle that Strike or Twist back into the Villain Deck.
+  ra: makeHeroCard("Hellcat", "Second Chance at Life", 8, u, 6, Color.INSTINCT, "Avengers", "", [], { triggers: [
+    { event: 'STRIKE', replace: ev => selectCardOptEv(ev, "Discard Second Chance at Life", [ ev.source ], c => {
+      discardEv(ev, c);
+      drawEv(ev, 3);
+    }, () => doReplacing(ev), owner(ev.source))},
+  ]}),
+},
+{
+  name: "Photon",
+  team: "Avengers",
+// To play this, you must discard a card. Draw two cards.
+  c1: makeHeroCard("Photon", "Infrared Conversation", 3, u, u, Color.RANGED, "Avengers", "F", ev => drawEv(ev, 2), { playCost: 1, playCostType: 'DISCARD' }),
+// To play this, you must discard a card.
+// {POWER Ranged} {HYPERSPEED 3}.
+  c2: makeHeroCard("Photon", "Ultraviolet Radiation", 4, u, 3, Color.RANGED, "Avengers", "F", ev => superPower(Color.RANGED) && hyperspeedEv(ev, 3), { playCost: 1, playCostType: 'DISCARD' }),
+// You get +1 Attack for each card you discarded from your hand this turn.
+  uc: makeHeroCard("Photon", "Light the Way", 6, u, 3, Color.COVERT, "Avengers", "", ev => addAttackEvent(ev, pastEvents('DISCARD').count(e => e.where === playerState.hand))),
+// {TEAMPOWER Avengers, Avengers} {LAST STAND}
+  ra: makeHeroCard("Photon", "Coruscating Vengeance", 8, u, 6, Color.RANGED, "Avengers", "", ev => superPower("Avengers", "Avengers") && lastStandEv(ev)),
+},
+{
+  name: "Quicksilver",
+  team: "Avengers",
+// {HYPERSPEED 3} for Recruit.
+// {POWER Instinct} Instead, {HYPERSPEED 3} for Recruit and Attack.
+  c1: makeHeroCard("Quicksilver", "Too Fast to See", 3, 0, 0, Color.INSTINCT, "Avengers", "", ev => hyperspeedEv(ev, 3, superPower(Color.INSTINCT) ? 'BOTH' : 'RECRUIT')),
+// {POWER Strength} {HYPERSPEED 4}
+  c2: makeHeroCard("Quicksilver", "Perpetual Motion", 4, u, 2, Color.STRENGTH, "Avengers", "FD", ev => superPower(Color.STRENGTH) && hyperspeedEv(ev, 4)),
+// Look at the top card of your deck. Discard it or put it back.
+// {POWER Instinct} You may KO the card you discarded this way.
+  uc: makeHeroCard("Quicksilver", "Jittery Impatience", 6, 2, 2, Color.INSTINCT, "Avengers", "D", ev => { // Copied from Drax
+    lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Discard revealed", playerState.revealed.deck, c => {
+      discardEv(ev, c)
+    }));
+    superPower(Color.INSTINCT) && cont(ev, () => turnState.pastEvents.limit(e => e.type === "DISCARD" && e.parent === ev).each(e => {
+      chooseMayEv(ev, "KO discarded card", () => KOEv(ev, e.what));
+    }));
+  }),
+// <b>Hyperspeed</b> your entire remaining deck. (Don't reshuffle.)
+// {TEAMPOWER Avengers, Avengers, Avengers, Avengers} Before you do that, put your discard pile on top of your deck.
+  ra: makeHeroCard("Quicksilver", "Around the World Punch", 8, u, 0, Color.STRENGTH, "Avengers", "", [
+    ev => superPower("Avengers", "Avengers", "Avengers", "Avengers") && shuffleIntoEv(ev, playerState.discard, playerState.deck),
+    ev => hyperspeedEv(ev) ]),
+},
+{
+  name: "Ronin",
+  team: "Avengers",
+// As you play this card, you may choose a color and/or a team icon. This card is that color and team icon this turn. (instead of [Covert] and Avengers)
+  c1: makeHeroCard("Ronin", "Mysterious Identity", 3, u, 2, Color.COVERT, "Avengers", "D", ev => {
+    chooseColorEv(ev, color => addTurnSet('color', c => c === ev.source, () => color)); // TODO this may be too late in case of triggers on card played.
+    // TODO choose and modify team
+  }),
+// {HYPERSPEED 4}
+// {POWER Ranged} Draw a card.
+  c2: makeHeroCard("Ronin", "Storm of Arrows", 4, u, 0, Color.RANGED, "Avengers", "F", [ ev => hyperspeedEv(ev, 4), ev => superPower(Color.RANGED) && drawEv(ev) ]),
+// {POWER Instinct} {DARK MEMORIES}
+  uc: makeHeroCard("Ronin", "Haunted by Loss", 5, u, 2, Color.INSTINCT, "Avengers", "FD", ev => superPower(Color.INSTINCT) && darkMemoriesEv(ev)),
+// {DARK MEMORIES}
+// {POWER Strength} {DARK MEMORIES} again.
+  ra: makeHeroCard("Ronin", "Brooding Fury", 7, u, 3, Color.STRENGTH, "Avengers", "", [ ev => darkMemoriesEv(ev), ev => superPower(Color.STRENGTH) && darkMemoriesEv(ev) ]),
+},
+{
+  name: "Scarlet Witch",
+  team: "Avengers",
+// {POWER Ranged} Discard the top card of any player's deck. You may play a copy of that card this turn.
+  c1: makeHeroCard("Scarlet Witch", "Hex Bolt", 2, u, 1, Color.RANGED, "Avengers", "FD", ev => superPower(Color.RANGED) && choosePlayerEv(ev, p => {
+    revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+      discardEv(ev, c);
+      addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: {
+        cond: c => c.location === p.discard
+      }, func: ev => {
+        playCopyEv(ev, ev.what);
+      } }));
+    }), p);
+  })),
+// Reveal the top card of your deck. Discard it or put it back.
+// {POWER Covert} {DARK MEMORIES}
+  c2: makeHeroCard("Scarlet Witch", "Alter Reality", 3, 2, 0, Color.COVERT, "Avengers", "D", [ ev => {
+    revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Discard revealed", cards, c => {
+      discardEv(ev, c)
+    }));
+   }, ev => superPower(Color.COVERT) && darkMemoriesEv(ev) ]),
+// Reveal the top card of the Hero Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Hero Deck.
+  uc: makeHeroCard("Scarlet Witch", "Chaos Magic", 4, u, u, Color.COVERT, "Avengers", "", ev => {
+    gameState.herodeck.withTop(c => addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { // TODO make this card visible
+      cond: c => c === gameState.herodeck.top
+    }, func: ev => {
+      playCopyEv(ev, ev.what);
+      moveCardEv(ev, ev.what, gameState.herodeck, true);
+    } })));
+  }),
+// Reveal the top three cards of the Hero Deck. Put one of them in your hand. Put the rest on the top or bottom of the Hero Deck in any order.
+// {TEAMPOWER Avengers, Avengers, Avengers} {DARK MEMORIES}
+  ra: makeHeroCard("Scarlet Witch", "Warp Time and Space", 7, u, 0, Color.COVERT, "Avengers", "", [ ev => {
+    revealHeroDeckEv(ev, 3, cards => selectCardEv(ev, "Choose a card to put in your hand", cards, c => moveCardEv(ev, c, playerState.hand)), false, true);
+  }, ev => superPower("Avengers", "Avengers", "Avengers") && darkMemoriesEv(ev) ]),
+},
+{
+  name: "Speed",
+  team: "Avengers",
+// {HYPERSPEED 2}
+// {POWER Instinct} Instead, {HYPERSPEED 6}
+  c1: makeHeroCard("Speed", "Accelerate", 2, u, 0, Color.INSTINCT, "Avengers", "FD", ev => hyperspeedEv(ev, superPower(Color.INSTINCT) ? 6 : 2)),
+// The next Hero you recruit this turn goes on top of your deck.
+  c2: makeHeroCard("Speed", "Speedy Delivery", 4, 2, 1, Color.INSTINCT, "Avengers", "FD", ev => turnState.nextHeroRecruit = 'DECK'),
+// Choose a Hero Class. ([Strength], [Instinct], [Covert], [Tech] or [Ranged] ) Reveal the top card of your deck. If it's the Hero Class you named, draw it. Otherwise, put it back on the top or bottom.
+  uc: makeHeroCard("Speed", "Race to the Rescue", 5, u, 3, Color.COVERT, "Avengers", "", ev => chooseClassEv(ev, col => {
+    revealPlayerDeckEv(ev, 1, cards => {
+      cards.limit(col).each(c => drawCardEv(ev, c));
+    }); // TODO top or bottom cleanup
+  })),
+// Look at the top six cards of your deck, draw two of them, and put the rest back on the top or bottom in any order.
+// {POWER Covert} {HYPERSPEED 6}
+  ra: makeHeroCard("Speed", "Break the Sound Barrier", 8, u, 0, Color.COVERT, "Avengers", "", [ ev => revealPlayerDeckEv(ev, 6, cards => {
+    selectObjectsEv(ev, "Choose cards to draw", 2, cards, c => drawCardEv(ev, c)); // TODO top or bottom cleanup
+  }), ev => superPower(Color.COVERT) && hyperspeedEv(ev, 6) ]),
+},
+{
+  name: "War Machine",
+  team: "Avengers",
+// {POWER Tech} You may fight a Henchman from your Victory Pile this turn. If you do, KO it and rescue a Bystander. (Do that Henchman's Fight effect too.)
+  c1: makeHeroCard("War Machine", "Simulated Target Practice", 3, u, 2, Color.TECH, "Avengers", "D", ev => {
+    let done = false;
+    addTurnSet('isFightable', c => c.location === playerState.victory && isHenchman(c) && !done, () => true);
+    addTurnTrigger('FIGHT', ev => ev.what.location === playerState.victory && isHenchman(ev.what) && !done, () => {
+      KOEv(ev, ev.parent.what);
+      rescueEv(ev);
+      done = true;
+    });
+  }),
+// Whenever you defeat a Villain this turn, you get +1 Recruit.
+// GUN: 1
+  c2: makeHeroCard("War Machine", "Military-Industrial Complex", 4, 0, 2, Color.TECH, "Avengers", "GFD", ev => {
+    addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => addRecruitEvent(ev, 1));
+  }),
+// {HYPERSPEED 5}
+// {POWER Ranged} You may KO a card from your discard pile.
+// GUN: 1
+  uc: makeHeroCard("War Machine", "Hypersonic Cannon", 5, u, 0, Color.RANGED, "Avengers", "GF", [ ev => hyperspeedEv(ev, 5), ev => superPower(Color.RANGED) && selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)) ]),
+// Whenever you defeat a Villain or Mastermind this turn, draw a card and rescue a Bystander.
+// GUN: 1
+  ra: makeHeroCard("War Machine", "Overwhelming Firepower", 8, u, 5, Color.TECH, "Avengers", "G", ev => {
+    addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), ev => { drawEv(ev); rescueEv(ev); });
   }),
 },
 ]);
