@@ -68,9 +68,8 @@ while (<A>) {
     s!<b>Savior</b>:!{SAVIOR}!g;
     s!<b>(Man|Woman) Out of Time</b>!{OUTOFTIME}!g;
     s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
-    s!<b>Size-Changing</b>: (\[($class)\](, \[($class)\])*)!'{SIZECHANGING '.(uc$1)=~s/[^a-z ]//gir.'}'!ge;
-    s!<b>Microscopic Size-Changing</b>: (\[($class)\]( \[\2\])*)\.?!'{USIZECHANGING '.(uc$2)=~s/[^a-z ]//gir.' '.$1=~y/]/]/.'}'!ge;
-    s!Size-Changing: ($class)!'{SIZECHANGING '.(uc$1).'}'!ge; # FIX CW villains
+    s!<b>Size-Changing</b> (\[($class)\](, \[($class)\])*)!'{SIZECHANGING '.(uc$1)=~s/[^a-z ]//gir.'}'!ge;
+    s!<b>Microscopic Size-Changing</b> (\[($class)\]( \[\2\])*)\.?!'{USIZECHANGING '.(uc$2)=~s/[^a-z ]//gir.' '.$1=~y/]/]/.'}'!ge;
     s!(<b>)S.H.I.E.L.D. Clearance(</b>)!{SHIELDCLEARANCE}!g; #FIX? no formatting in most cases
     s!<b>Excessive Violence</b>:!{VIOLENCE}!g;
     s!<b>Revenge for (.*?)</b>!{REVENGE $1}!g;

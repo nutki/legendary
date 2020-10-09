@@ -1,6 +1,5 @@
 
-<b>X-Gene</b>: This keyword represents X-Men combining unique mutant powers with their
-signature teamwork.
+<b>X-Gene</b>: This keyword represents X-Men combining unique mutant powers with their signature teamwork.
 * Some Heroes say things like "X-Gene [Ranged]: You get +2 Attack." This means "If you have a [Ranged] card in your discard pile, you get +2 Attack." You can use a card's X-Gene ability only if you have the specified kind of card in your discard pile.
 * You can only use a card's X-Gene ability once, no matter how many matching cards you have in your discard pile.
 * Remember: when you play a card during your turn, it stays in front of you until the end of turn. Then all the cards you played that turn go to the discard pile. So if you have an empty discard pile, you can't play a [Tech] card from your hand, then immediately play a card with "X-Gene [Tech]" and use that X-Gene ability.

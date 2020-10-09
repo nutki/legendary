@@ -9,7 +9,7 @@ Example 3: Say your first play is using Cheering Crowds to play a [Tech] card tw
 * When playing out a big turn, some people like to put the Bystander they're returning temporarily on the Cheering Crowds card to remind themselves they've played it twice.
 ...
 * If you use Cheering Crowds to play a {VERSATILE} card twice, you could get Recruit with one play and get Attack with the other play, or choose the same for both.
-<b>Size-Changing</b>: This keyword represents Heroes and Villains using superpowers to stretch or massively change their size. It's also used by characters that can change the size of a weapon, technology, or energy. It first appeared in <i>Legendary: Civil War</i>, but in this set it has a new twist.
+<b>Size-Changing</b> This keyword represents Heroes and Villains using superpowers to stretch or massively change their size. It's also used by characters that can change the size of a weapon, technology, or energy. It first appeared in <i>Legendary: Civil War</i>, but in this set it has a new twist.
 ...
 * As a new Twist, some Heroes and Villains in this set say things like "{SIZECHANGING STRENGTH COVERT}." If you played any [Strength] Heroes this turn, the cost is 2 less. If you played any [Covert] Heroes, the cost is 2 less. If you played both a [Strength] Hero and a [Covert] Hero this turn, then the cost is 4 less.
 * Fin Fang Foom and one of his Monsters Unleashed even say "{SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED}". You can pay 2 Attack less to fight them for each of these Hero Classes you played this turn.

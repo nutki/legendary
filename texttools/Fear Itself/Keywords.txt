@@ -1,12 +1,14 @@
 
-<b>Thrown Artifact</b>: These are Artifact cards that the player can "throw" at the perfect moment. To "throw" a Thrown Artifact, put it on the bottom of your deck and use its ability.
-You can throw as many Artifacts as you want in a turn. You can only throw during your turn.
-If a card effect like Rogue, Chameleon, or Star-Lord would let you "copy" a Thrown Artifact card, use that Artifact's "When you throw this" ability once, and there is no other effect. (Don't put anything on the bottom of your deck.)
-
+<b>Thrown Artifact</b>: Some Ally cards in this set are "Thrown Artifacts". These are Artifact cards that the player can "throw" at the perfect moment.
+* To "throw" a Thrown Artifact, put it on the bottom of your deck and use its ability.
+* You can throw as many Artifacts as you want in a turn. You can only throw during your turn.
+* If a card effect like Rogue, Chameleon, or Star-Lord would let you "copy" a Thrown Artifact card, use that Artifact's "When you throw this" ability once, and there is no other effect. (Don't put anything on the bottom of your deck.)
 <b>Uru-Enchanted Weapons</b>: When you try to fight an enemy that has some number of Uru-Enchanted Weapons, reveal that many cards from the top of the Adversary Deck. That enemy immediately gains +Attack equal to the total Victory Points of all the cards you revealed. If you have enough Attack points to match the enemy's improved Attack, use them and defeat the enemy as normal. If you don't have enough Attack points, you don't defeat this enemy, you lose all your Attack points, and you can't fight anymore this turn.
-Whether you defeat that enemy or not, put all the cards you revealed from the Adversary Deck on the bottom of that deck in random order.
-Many of these enemies have a "<b>Fight or Fail</b>:" effect. Do this effect if you defeat them or if the Uru-Enchanted Weapons cause you to fail to defeat them.
-Once you start to fight an enemy, you can't play any more cards or throw any Artifacts until after that fight is complete. So remember to generate all the Attack points you can before you attack an enemy with Uru-Enchanted Weapons!
-Flipping cards for Uru-Enchanted Weapons cannot end the game. If you run out of cards in the Adversary Deck, shuffle the cards you've revealed so far and keep revealing. (If there are no cards left in the Adversary Deck there is no Attack bonus.)
-
+* Whether you defeat that enemy or not, put all the cards you revealed from the Adversary Deck on the bottom of that deck in random order.
+* Many of these enemies have a "<b>Fight or Fail</b>:" effect. Do this effect if you defeat them <b>or</b> if the Uru-Enchanted Weapons cause you to fail to defeat them.
+* You can't try to fight an enemy unless you have enough Attack points to match its printed Attack.
+* Once you start to fight an enemy, you can't play any more cards or throw any Artifacts until after that fight is complete. So remember to generate all the Attack points you can before you attack an enemy with Uru-Enchanted Weapons!
+* The * symbol next to these Enemies' Attack indicates that they might get more Attack.
+* Flipping cards for Uru-Enchanted Weapons cannot end the game. If you run out of cards in the Adversary Deck, shuffle the cards you've revealed so far and keep revealing. (If there are no cards left in the Adversary Deck there is no Attack bonus.)
+* With 2-5 players, each flip tends to be worth about 1.5 attack. In solo mode: about 1 attack.
 

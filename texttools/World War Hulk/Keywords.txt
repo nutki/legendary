@@ -1,5 +1,6 @@
 
 {TRANSFORM}: This keyword represents the themes of duality and transformation in Hulk stories.
+
 Heroes:
 * Each Hero in this set has some special "Transformed" cards that go along with it. When you use these Heroes, <b>don't</b> shuffle their "Transformed" cards into the Hero Deck. Instead, set them aside in a special Transformation Pile. You can't recruit cards from this pile. Instead, you transform other cards into them.
 * Some Hero cards like "Bruce Banner: Gamma Ray Experiments" say things like "...{TRANSFORM} this into Savage Hulk Unleashed."
@@ -10,7 +11,8 @@ Heroes:
 * You can look through the Transformation Pile at any time.
 * At the end of the game, store a Hero's Transformed cards with the rest of that Hero's cards. To start a game, you only need to bring out the Transformed cards for the Heroes you're using. Don't bring out all the Transformed cards in the entire game.
 * If you sleeve your cards, you can put the Transformed version of the card in the same sleeve, behind the Transforming card. When it's time to transform, you just pull the back card to the front of the sleeve. It's a little thicker in the sleeve, but it still shuffles well.
-Masterminds: Each Mastermind in this set is a double-sided "Transforming Mastermind" that transforms back and forth between two forms during the game.
+Masterminds:
+Each Mastermind in this set is a double-sided "Transforming Mastermind" that transforms back and forth between two forms during the game.
 * The side with the "Always Leads" ability starts face up.
 * When a Master Strike or Mastermind Tactic ability occurs, it will tell you to "Transform" the Mastermind, meaning flip it over to its other side. (Don't also do the Master Strike ability of the new side.)
 * A Mastermind only uses the abilities and Attack of its currently face up side. Ignore the special abilities and values on the currently face down side.
