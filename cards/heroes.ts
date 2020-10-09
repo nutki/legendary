@@ -1185,12 +1185,12 @@ addHeroTemplates("Villains", [
 // {POWER Instinct} Draw a card.
 // COST: 3
 // FLAVOR: "And for my next trick..."
-  c1: makeHeroCard("Bullseye", "Everything's A Weapon", 3, u, 2, Color.RANGED, "Crime Syndicate", "FD", ev => superPower(Color.INSTINCT) && drawEv(ev, 1)),
+  c1: makeHeroCard("Bullseye", "Everything's a Weapon", 3, u, 2, Color.RANGED, "Crime Syndicate", "FD", ev => superPower(Color.INSTINCT) && drawEv(ev, 1)),
 // RECRUIT: 0+
 // {DODGE}
 // Choose an Adversary Group. You get +1 Recruit for each Adversary in your Victory Pile from that Adversary Group.
 // COST: 2
-  c2: makeHeroCard("Bullseye", "Fulfill The Contract", 2, 0, u, Color.INSTINCT, "Crime Syndicate", "D", ev => {
+  c2: makeHeroCard("Bullseye", "Fulfill the Contract", 2, 0, u, Color.INSTINCT, "Crime Syndicate", "D", ev => {
     const groups = playerState.victory.limit(isVillain).unique(c => c.villainGroup);
     const f = (group: string) => addRecruitEvent(ev, playerState.victory.limit(isVillain).count(c => c.villainGroup === group));
     const options = groups.map(g => [g, () => f(g)] as [ string, () => void]);
@@ -1384,13 +1384,16 @@ addHeroTemplates("Villains", [
   uc: makeHeroCard("Kingpin", "Import Illegal Weapons", 5, u, 3, Color.TECH, "Crime Syndicate", "", ev => {
     addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cardName === "New Recruits"));
   }),
+// Gain three New Recruits.
 // {TEAMPOWER Crime Syndicate, Crime Syndicate} If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
 // COST: 8
-  ra: makeHeroCard("Kingpin", "Endless Underlings", 8, u, u, Color.STRENGTH, "Crime Syndicate", "", ev => {
+  ra: makeHeroCard("Kingpin", "Endless Underlings", 8, u, u, Color.STRENGTH, "Crime Syndicate", "", [
+  ev => repeat(3, () => cont(ev, () => gameState.newRecruit.withTop(c => gainEv(ev, c)))),
+  ev => {
     superPower("Crime Syndicate", "Crime Syndicate") && addTurnTrigger('MOVECARD',
-      ev => ev.to === gameState.newRecruit && ev.from === playerState.playArea && ev.what.cardName === "New Recruits",
+       ev => ev.to === gameState.newRecruit && ev.from === playerState.playArea && ev.what.cardName === "New Recruits",
       ev => moveCardEv(ev, ev.parent.what, playerState.deck, true));
-  }),
+  }]),
 },
 {
   name: "Kraven",
@@ -3478,7 +3481,9 @@ addHeroTemplates("X-Men", [
 // Draw a card.
 // PIERCING
 // {XGENE [Covert]} You get +1 Piercing.
-  c1: makeHeroCard("Banshee", "Sonar Detection", 2, u, u, Color.COVERT, "X-Men", "D", [ ev => drawEv(ev, 1), ev => xGenePower(Color.COVERT) && addPiercingEv(ev, 1) ]),
+// +0+ Piercing
+  c1: makeHeroCard("Banshee", "Sonar Detection", 2, u, u, Color.COVERT, "X-Men", "D", [ ev => drawEv(ev, 1), ev => xGenePower(Color.COVERT) && addPiercingEv(ev, 1) ],
+  { printedPiercing: 0 }),
 // {SOARING FLIGHT}
 // PIERCING
 // 2 Piercing
@@ -3999,7 +4004,7 @@ addHeroTemplates("World War Hulk", [
   uc: makeHeroCard("Amadeus Cho", "Renegade Genius", 6, u, 0, Color.TECH, "Champions", "", [ ev => addAttackEvent(ev, yourHeroes().uniqueCount(c => c.cost)), ev => mayOutwitEv(ev, () => drawEv(ev, 1)) ]),
 // Whenever you use an {OUTWIT} ability this turn, you may use it an extra time.
 // {OUTWIT}: Look at the top card of your deck. KO it or put it back.
-  ra: makeHeroCard("Amadeus Cho", "Visualize The Variables", 8, u, 4, Color.TECH, "Champions", "", [
+  ra: makeHeroCard("Amadeus Cho", "Visualize the Variables", 8, u, 4, Color.TECH, "Champions", "", [
     () => addTurnTrigger('OUTWIT', () => true, ev => chooseMayEv(ev, "Use the ability an extra time", () => ev.parent.func(ev))),
     ev => mayOutwitEv(ev, () => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to KO", playerState.revealed.deck, c => KOEv(ev, c)))) ]),
 },
@@ -4007,7 +4012,7 @@ addHeroTemplates("World War Hulk", [
   name: "Bruce Banner",
   team: "Avengers",
 // {OUTWIT}: When you draw a new hand of cards at the end of this turn, draw an extra card.
-  c1: makeHeroCard("Bruce Banner", "Solve The Impossible", 2, u, 1, Color.TECH, "Avengers", "D", ev => mayOutwitEv(ev, () => addEndDrawMod(1))),
+  c1: makeHeroCard("Bruce Banner", "Solve the Impossible", 2, u, 1, Color.TECH, "Avengers", "D", ev => mayOutwitEv(ev, () => addEndDrawMod(1))),
 // {OUTWIT}: {TRANSFORM} this into Savage Hulk Unleashed.
 // TRANSFORMED
 // {SMASH 4}
@@ -4146,12 +4151,12 @@ addHeroTemplates("World War Hulk", [
   c1: makeHeroCard("Korg", "Nothing Beats Rock", 2, u, 0, Color.STRENGTH, "Warbound", "D", [ ev => drawEv(ev, 1), ev => superPower(Color.STRENGTH) && smashEv(ev, 2, c => isWound(c) && KOEv(ev, c))]),
 // {OUTWIT}: Draw a card.
   c2: makeHeroCard("Korg", "Move Mountains", 4, u, 2, Color.STRENGTH, "Warbound", "FD", ev => mayOutwitEv(ev, () => drawEv(ev, 1))),
-// {POWER Strength} {TRANSFORM} this into Lord of Granite.
+// {POWER Strength Strength} {TRANSFORM} this into Lord of Granite.
 // TRANSFORMED
 // Draw a card.
 // {SMASH 3}
   uc: makeTransformingHeroCard(
-    makeHeroCard("Korg", "Forged By Fire", 3, 2, u, Color.STRENGTH, "Warbound", "FD", ev => superPower(Color.STRENGTH) && transformHeroEv(ev, ev.source)),
+    makeHeroCard("Korg", "Forged by Fire", 3, 2, u, Color.STRENGTH, "Warbound", "FD", ev => superPower(Color.STRENGTH, Color.STRENGTH) && transformHeroEv(ev, ev.source)),
     makeHeroCard("Korg", "Lord of Granite", 5, u, 0, Color.COVERT, "Warbound", "F", [ ev => drawEv(ev, 1), ev => smashEv(ev, 3) ]),
   ),
 // Put all cards from the HQ on the bottom of the Hero Deck in random order. You get their total printed Attack.
@@ -4221,7 +4226,7 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // Draw a card.
   uc: makeTransformingHeroCard(
-    makeHeroCard("No-Name, Brood Queen", "Bursting With Life", 3, 2, u, Color.STRENGTH, "Warbound", "D", [
+    makeHeroCard("No-Name, Brood Queen", "Bursting with Life", 3, 2, u, Color.STRENGTH, "Warbound", "D", [
       ev => chooseMayEv(ev, "Feast", () => feastEv(ev)),
       ev => turnState.pastEvents.has(e => e.type === 'KO' && ev.where === playerState.deck && isNonGrayHero(ev.what)) && transformHeroEv(ev, ev.source),
     ]),
@@ -4236,7 +4241,7 @@ addHeroTemplates("World War Hulk", [
 },
 {
   name: "Rick Jones",
-  team: "S.H.I.E.L.D.",
+  team: "S.H.I.E.L.D.", // TODO multi team
 // {POWER Tech} Reveal the top card of your deck. If it's a S.H.I.E.L.D., draw it.
   c1: makeHeroCard("Rick Jones", "Hacktivist", 3, u, 2, Color.TECH, "S.H.I.E.L.D.", "FD", ev => superPower(Color.TECH) && drawIfEv(ev, 'S.H.I.E.L.D.')),
 // Reveal the top card of your deck. If it costs 3 or more, {TRANSFORM} this into Captain Marvel.
@@ -4244,7 +4249,7 @@ addHeroTemplates("World War Hulk", [
 // Reveal the top card of your deck. If it costs 3 or more, draw it.
   c2: makeTransformingHeroCard(
     makeHeroCard("Rick Jones", "Seek the Nega-Bands", 4, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "D", ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost >= 3) && transformHeroEv(ev, ev.source))),
-    makeHeroCard("Rick Jones", "Captain Marvel", 5, u, 2, Color.RANGED, "S.H.I.E.L.D.", "FD", ev => drawIfEv(ev, c => c.cost >= 3)),
+    makeHeroCard("Rick Jones", "Captain Marvel", 5, u, 2, Color.RANGED, "Avengers", "FD", ev => drawIfEv(ev, c => c.cost >= 3)),
   ),
 // If you have at least 5 Villains in your Victory Pile, {TRANSFORM} this into A-Bomb and put it on top of your deck.
 // TRANSFORMED
@@ -4257,8 +4262,8 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // Count the number of different printed VP values in your Victory Pile. Draw that many cards.
   ra: makeTransformingHeroCard(
-    makeHeroCard("Rick Jones", "Caught In Kree-Skrull War", 7, u, 4, Color.COVERT, "S.H.I.E.L.D.", "", ev => turnState.pastEvents.count(e => e.type === 'DEFEAT' && isVillain(e.what)) >= 2 && transformHeroEv(ev, ev.source, 'DECK')),
-    makeHeroCard("Rick Jones", "The Destiny Force", 9, u, u, Color.RANGED, "S.H.I.E.L.D.", "", ev => drawEv(ev, playerState.victory.limit(c => c.printedVP !== undefined).uniqueCount(c => c.printedVP))),
+    makeHeroCard("Rick Jones", "Caught in Kree-Skrull War", 7, u, 4, Color.COVERT, "S.H.I.E.L.D.", "", ev => turnState.pastEvents.count(e => e.type === 'DEFEAT' && isVillain(e.what)) >= 2 && transformHeroEv(ev, ev.source, 'DECK')),
+    makeHeroCard("Rick Jones", "The Destiny Force", 9, u, u, Color.RANGED, "Avengers", "", ev => drawEv(ev, playerState.victory.limit(c => c.printedVP !== undefined).uniqueCount(c => c.printedVP))),
   ),
 },
 {

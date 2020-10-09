@@ -52,6 +52,7 @@ All Heroes you recruit this turn have {SOARING FLIGHT}.
 Draw a card.
 #PIERCING
 {XGENE [Covert]} You get +1 Piercing.
+0+ Piercing
 #COST: 2
 
 #SUBNAME: Speed of Sound

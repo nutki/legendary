@@ -102,7 +102,7 @@ To play this, you must put another card from your hand on top of your deck.
 #SUBNAME: Adventurers Assemble!
 #COPIES: 1
 #CLASS: [Tech]
-Whenever you <b>Investigate</b> this turn, look a three cards instead of two.
+Whenever you <b>Investigate</b> this turn, look at three cards instead of two.
 Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
 #ATTACK: 4
 #COST: 7

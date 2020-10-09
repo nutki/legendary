@@ -2,7 +2,7 @@
 #CARDNAME: Bullseye
 #TEAM: Crime Syndicate
 
-#SUBNAME: Everything's A Weapon
+#SUBNAME: Everything's a Weapon
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2
@@ -10,7 +10,7 @@
 #COST: 3
 #FLAVOR: "And for my next trick..."
 
-#SUBNAME: Fulfill The Contract
+#SUBNAME: Fulfill the Contract
 #COPIES: 5
 #CLASS: [Instinct]
 #RECRUIT: 0+
@@ -227,6 +227,7 @@ You get +1 Attack for each New Recruit you played this turn.
 #SUBNAME: Endless Underlings
 #COPIES: 1
 #CLASS: [Strength]
+Gain three New Recruits.
 {TEAMPOWER Crime Syndicate, Crime Syndicate} If you would return a New Recruit to the New Recruit Stack this turn, put it on the bottom of your deck instead.
 #COST: 8
 

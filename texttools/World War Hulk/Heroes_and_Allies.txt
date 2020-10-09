@@ -33,7 +33,7 @@ You get +1 Attack for each different cost of Hero you have.
 {OUTWIT}: Draw a card.
 #COST: 6
 
-#SUBNAME: Visualize The Variables
+#SUBNAME: Visualize the Variables
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 4
@@ -44,7 +44,7 @@ Whenever you use an {OUTWIT} ability this turn, you may use it an extra time.
 #CARDNAME: Bruce Banner
 #TEAM: Avengers
 
-#SUBNAME: Solve The Impossible
+#SUBNAME: Solve the Impossible
 #COPIES: 5
 #CLASS: [Tech]
 #ATTACK: 1
@@ -224,7 +224,7 @@ Draw a card.
 #COST: 4
 #FLAVOR: Sometimes being smart means figuring out a better way to smash something.
 
-#SUBNAME: Build The Suit
+#SUBNAME: Build the Suit
 #COPIES: 3
 #CLASS: [Tech]
 #RECRUIT: 3
@@ -307,11 +307,11 @@ Draw a card.
 #COST: 4
 #FLAVOR: Nobody expects to be outwitted by a pile of rocks.
 
-#SUBNAME: Forged By Fire
+#SUBNAME: Forged by Fire
 #COPIES: 3
 #CLASS: [Strength]
 #RECRUIT: 2
-{POWER Strength} {TRANSFORM} this into Lord of Granite.
+{POWER Strength Strength} {TRANSFORM} this into Lord of Granite.
 #COST: 3
 #FLAVOR: After a while, it gets hard to tell if you're being hit by fist-sized rocks or rock-sized fists.
 #TRANSFORMED
@@ -431,7 +431,7 @@ Look at the top card of your deck. Discard it or put it back.
 {POWER Covert} You may {FEAST}.
 #COST: 4
 
-#SUBNAME: Bursting With Life
+#SUBNAME: Bursting with Life
 #COPIES: 3
 #CLASS: [Strength]
 #RECRUIT: 2
@@ -454,10 +454,10 @@ Look at the top card of your deck. Then {FEAST} up to three times. You get +2 At
 #COST: 8
 
 #CARDNAME: Rick Jones
-#TEAM: S.H.I.E.L.D.
 
 #SUBNAME: Hacktivist
 #COPIES: 5
+#TEAM: S.H.I.E.L.D.
 #CLASS: [Tech]
 #ATTACK: 2
 {POWER Tech} Reveal the top card of your deck. If it's a S.H.I.E.L.D., draw it.
@@ -466,6 +466,7 @@ Look at the top card of your deck. Then {FEAST} up to three times. You get +2 At
 
 #SUBNAME: Seek the Nega-Bands
 #COPIES: 5
+#TEAM: S.H.I.E.L.D.
 #CLASS: [Instinct]
 #RECRUIT: 2
 Reveal the top card of your deck. If it costs 3 or more, {TRANSFORM} this into Captain Marvel.
@@ -473,6 +474,7 @@ Reveal the top card of your deck. If it costs 3 or more, {TRANSFORM} this into C
 #TRANSFORMED
 #SUBNAME: Captain Marvel
 #COPIES: 5
+#TEAM: Avengers
 #CLASS: [Ranged]
 #ATTACK: 2
 Reveal the top card of your deck. If it costs 3 or more, draw it.
@@ -481,6 +483,7 @@ Reveal the top card of your deck. If it costs 3 or more, draw it.
 
 #SUBNAME: Irradiated Blood
 #COPIES: 3
+#TEAM: S.H.I.E.L.D.
 #CLASS: [Tech]
 #ATTACK: 3
 If you have at least 5 Villains in your Victory Pile, {TRANSFORM} this into A-Bomb and put it on top of your deck.
@@ -494,8 +497,9 @@ If you have at least 5 Villains in your Victory Pile, {TRANSFORM} this into A-Bo
 #COST: 6
 #FLAVOR: A beast of few words.
 
-#SUBNAME: Caught In Kree-Skrull War
+#SUBNAME: Caught in Kree-Skrull War
 #COPIES: 1
+#TEAM: S.H.I.E.L.D.
 #CLASS: [Covert]
 #ATTACK: 4
 If you defeat two Villains this turn, {TRANSFORM} this into The Destiny Force and put it on top of your deck.
@@ -503,6 +507,7 @@ If you defeat two Villains this turn, {TRANSFORM} this into The Destiny Force an
 #TRANSFORMED
 #SUBNAME: The Destiny Force
 #COPIES: 1
+#TEAM: Avengers
 #CLASS: [Ranged]
 Count the number of different printed VP values in your Victory Pile. Draw that many cards.
 #COST: 9

@@ -32,7 +32,7 @@ You get +1 Attack for each extra card you drew this turn.
 #CLASS: [Tech]
 #ATTACK: 5
 {USIZECHANGING TECH 5}
-A hero in the HQ without <b>Size-Changing</b> abilities gain {SIZECHANGING TECH} this turn.
+A hero in the HQ with no Size-Changing abilities gain {SIZECHANGING TECH} this turn.
 #COST: 9*
 
 #CARDNAME: Wasp
@@ -95,7 +95,7 @@ If your discard pile is empty, you get +2 Recruit. Otherwise, shuffle your disca
 #CLASS: [Tech]
 {SIZECHANGING TECH}
 Draw two cards.
-#COST: 6°
+#COST: 6
 #FLAVOR: Holograms allow Jocasta to appear human, as she searches for her own humanity.
 
 #SUBNAME: Electromagnetic Eyebeams
@@ -137,7 +137,7 @@ Put a card from the HQ on the bottom of the Hero Deck. If that card had a Recrui
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 4+
-<b>Size-Changing</b> [Strength]
+{SIZECHANGING STRENGTH}
 Choose any number of cards from the HQ. Put them on the bottom of the Hero Deck. Then you get <b>Empowered</b> by [Ranged] and [Strength].
 #COST: 8*
 
