@@ -201,3 +201,4 @@ Whenever you fight a Villain here, each other player reveals their hand and disc
 #ATTACK: 6
 #VP: 4
 
+

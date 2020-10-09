@@ -20,10 +20,10 @@ To fight Blind Al, you also gotta drop a Deuce <i>(discard a card with a "2" pri
 #SUBNAME: Taskmaster
 #COPIES: 2
 #AMBUSH: Taskmaster captures a Bystander.
-During your turn, Taskmaster gets + Attack equal to the cost of the highest-cost Hero you played this turn.
+During your turn, Taskmaster gets +Attack equal to the cost of the highest-cost Hero you played this turn.
 #ATTACK: 3+
 #VP: 4
-#FLAVOR: They call it Photographic Reflexes: I can copy any fighting move I've ever seen. And I've seen Howard the Duck."
+#FLAVOR: "They call it Photographic Reflexes: I can copy any fighting move I've ever seen. And I've seen Howard the Duck."
 
 #SUBNAME: Weasel
 #COPIES: 2

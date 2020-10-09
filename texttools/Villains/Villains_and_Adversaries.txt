@@ -138,7 +138,7 @@ Overrun: Each player gains a Bindings.
 #ATTACK: 4+
 #VP: 2
 X-Treme Attack.
-#AMBUSH: Each player who does not reveal a Ranged Ally discards two cards, then draws a card.
+#AMBUSH: Each player who does not reveal a [Ranged] Ally discards two cards, then draws a card.
 
 #SUBNAME: Rogue
 #COPIES: 2

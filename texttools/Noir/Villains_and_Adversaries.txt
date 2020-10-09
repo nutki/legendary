@@ -24,7 +24,7 @@
 
 #SUBNAME: Ox
 #COPIES: 1
-#AMBUSH: Each other player reveals a Strength Hero or Ox captures a random Bystander from their Victory Pile as a <b>Hidden Witness</b>.
+#AMBUSH: Each other player reveals a [Strength] Hero or Ox captures a random Bystander from their Victory Pile as a <b>Hidden Witness</b>.
 #ATTACK: 5*
 #VP: 3
 
@@ -57,7 +57,7 @@
 
 #SUBNAME: Henry "Beast" McCoy
 #COPIES: 1
-#FIGHT: <b>Investigate</b> for any card that's Tech or Strength.
+#FIGHT: <b>Investigate</b> for any card that's [Tech] or [Strength].
 #ATTACK: 5
 #VP: 3
 

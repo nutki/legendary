@@ -5,14 +5,14 @@
 #COPIES: 2
 {STRIKER 1}
 #FIGHT: KO one of your 0-cost Heroes.
-#ESCAPE: The current player reveals a Ranged Hero or gains a 0-cost Hero from the KO pile.
+#ESCAPE: The current player reveals a [Ranged] Hero or gains a 0-cost Hero from the KO pile.
 #ATTACK: 4+
 #VP: 4
 
 #SUBNAME: Shocker #1
 #COPIES: 2
 {STRIKER 1}
-#ESCAPE: Each player reveals an Instinct Hero or discards a card.
+#ESCAPE: Each player reveals an [Instinct] Hero or discards a card.
 #ATTACK: 3+
 #VP: 3
 
@@ -25,8 +25,8 @@
 
 #SUBNAME: Tinkerer
 #COPIES: 2
-#FIGHT: You get +1 Recruit for each Tech Hero in the HQ.
-#ESCAPE: Each player reveals a Tech Hero or gains a Wound.
+#FIGHT: You get +1 Recruit for each [Tech] Hero in the HQ.
+#ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.
 #ATTACK: 4
 #VP: 2
 

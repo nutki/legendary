@@ -74,7 +74,7 @@ You can't defeat Blob unless you have an X-Men Hero.
 #COPIES: 1
 Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
 #ATTACK: 6
-#VP: 3*
+#VP: 3+
 
 #SUBNAME: Viper
 #COPIES: 1

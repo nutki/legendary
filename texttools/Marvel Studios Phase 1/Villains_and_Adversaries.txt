@@ -52,7 +52,7 @@
 #ATTACK: 4
 #VP: 2
 
-#SUBNAME: Ymir, Frost Giant King
+#SUBNAME: Laufey, Frost Giant King
 #COPIES: 2
 #AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
 #FIGHT: Choose a player. That player KOs any number of Wounds from their hand and discard pile.
@@ -98,19 +98,19 @@ Each Player reveals their hand. Each player with any [Strength] cards must disca
 #ATTACK: 4
 #VP: 3
 
-#SUBNAME: HYDRA Kidnappers
+#SUBNAME: HYDRA Motorcycle Squad
 #COPIES: 3
 #FIGHT: You may gain a S.H.I.E.L.D. Officer.
 #ATTACK: 3
 #VP: 1
 
-#SUBNAME: Supreme HYDRA
+#SUBNAME: Arnim Zola
 #COPIES: 1
-Supreme HYDRA is worth +3 VP for each other HYDRA Villain in your Victory Pile.
+Arnim Zola is worth +3 VP for each other HYDRA Villain in your Victory Pile.
 #ATTACK: 6
-#VP: 3*
+#VP: 3+
 
-#SUBNAME: Viper
+#SUBNAME: HYDRA Tank
 #COPIES: 1
 #FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
 #ESCAPE: Same effect.
