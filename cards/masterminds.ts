@@ -1770,9 +1770,9 @@ addTemplates("MASTERMINDS", "Ant-Man", [
   varDefense: c => empowerVarDefense(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c), c.epic ? 3 : 1)(c),
 }),
 // <b>Chivalrous Duel</b>
-// EPICNAME: Morgana Le Fay // FIX Morgan
+// EPICNAME: Morgan Le Fay
 // <b>Chivalrous Duel</b>
-...makeEpicMastermindCard("Morgana Le Fay", [ 7, 9 ], 6, "Queen's Vengeance", ev => {
+...makeEpicMastermindCard("Morgan Le Fay", [ 7, 9 ], 6, "Queen's Vengeance", ev => {
 // Each player in turn reveals a [Covert] Hero or gains a 0-cost Hero or Wound from the KO pile.
 // Each player in turn gains a Wound, then gains a 0-cost Hero from the KO pile.
   const gainHero = (p: Player) => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainEv(ev, c), p);

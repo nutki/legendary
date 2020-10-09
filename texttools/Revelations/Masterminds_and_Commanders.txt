@@ -87,3 +87,4 @@ Then each other player reveals a [Tech] Hero or gains a Wound.
 #FIGHT: If this was not already a <b>Location</b>, rescue 4 Bystanders, and this card enters the city as a Location with this ability:
 When you fight a Villain here, play another card from the Villain Deck.
 
+

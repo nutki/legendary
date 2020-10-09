@@ -24,7 +24,7 @@
 #TACTIC: Self-Repairing Legions
 #FIGHT: Each other player in turn reveals a [Tech] Hero or puts an Ultron's Legacy Villain from the Victory Pile into an empty city space.
 
-#CARDNAME: Morgana Le Fay
+#CARDNAME: Morgan Le Fay
 
 <b>Chivalrous Duel</b>
 #LEADS: Queen's Vengeance

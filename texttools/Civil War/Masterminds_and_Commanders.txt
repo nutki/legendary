@@ -8,7 +8,7 @@ Villains in that space get +3 Attack.
 #VP: 6
 
 #TACTIC: Armada of Armors
-#FIGHT: You get +6 Recruit usable only to recruit Ranged and/or Tech Heroes.
+#FIGHT: You get +6 Recruit usable only to recruit [Ranged] and/or [Tech] Heroes.
 
 #TACTIC: Freeze Domestic Assets
 #FIGHT: Each other player reveals their hand and discards all their cards with Recruit icons.
@@ -28,13 +28,13 @@ Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
 #VP: 6
 
 #TACTIC: Blasted Henchmen!
-#FIGHT: Each other player reveals a Tech Hero or KOs a Villain from their Victory Pile.
+#FIGHT: Each other player reveals a [Tech] Hero or KOs a Villain from their Victory Pile.
 
 #TACTIC: Cursed Dynasty
 #FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
 
 #TACTIC: Endless Minions
-#FIGHT: Each other player reveals a Tech Hero or chooses a Villain from their Victory Pile and it enters the city.
+#FIGHT: Each other player reveals a [Tech] Hero or chooses a Villain from their Victory Pile and it enters the city.
 
 #TACTIC: Revenge for My Father
 #FIGHT: Each other player reveals their hand. Each player who revealed an Avengers Hero gains a Wound.
@@ -88,7 +88,7 @@ Ragnarok gets +2 Attack for each Hero Class among Heroes in the HQ.
 #VP: 6
 
 #TACTIC: Electrical Charge
-#FIGHT: Count how many Ranged Heroes you have. Draw that many cards.
+#FIGHT: Count how many [Ranged] Heroes you have. Draw that many cards.
 
 #TACTIC: God of Cyborg Thunder
 #FIGHT: You can spend Recruit as Attack this turn.
