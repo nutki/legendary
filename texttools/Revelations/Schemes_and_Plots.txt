@@ -44,6 +44,7 @@ Scheme Transformed
 
 #CARDNAME: Korvac Revealed
 #RULE: This Scheme counts as a 19 Attack "Korvac" Villain worth 9VP. If you defeat Korvac, KO the Mastermind and all its Tactics.
-Twistc2,4,6: Each player discards an Avengers Hero or gains a Wound. This Scheme {TRANSFORM}.
+<b>Twist: 2,4,6</b>: Each player discards an Avengers Hero or gains a Wound. This Scheme {TRANSFORM}.
 #TWISTNR: NR[8] Evil Wins!
+
 

@@ -48,7 +48,7 @@ Whenever you complete a Scheme Twist, play another card from the Villain Deck.
 #AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card, then each player discards a card.
 
 #CARDNAME: Shadow of the Disciple
-This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind worth 5 VP. It gains the ability "Master Strike: Each player reveals a Tech Hero or gains a Wound."
+This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind worth 5 VP. It gains the ability "Master Strike: Each player reveals a [Tech] Hero or gains a Wound."
 
 #CARDNAME: Surprise Assault
 #AMBUSH: Play two cards from the Villain Deck.
