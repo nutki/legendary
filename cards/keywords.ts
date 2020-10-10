@@ -642,3 +642,20 @@ function darkMemoriesEv(ev: Ev) {
 function darkMemoriesVarDefense(n: number = 1) {
   return (c: Card) => c.printedDefense + darkMemoriesAmount() * n;
 }
+function cityHasLocation(name: string) {
+  const cityLocations = gameState.city.map(c => c.attached("LOCATION"));
+  return cityLocations.some(locs => locs.some(loc => loc.cardName.includes(name)));
+}
+function cityAllLocations() {
+  return gameState.city.map(c => c.attached("LOCATION")).merge();
+}
+function lethalLegionVarDefense(name: string) {
+  return (c: Card) => c.printedDefense + (cityHasLocation(name) ? 3 : 0);
+}
+function fightVillainAtLocationEachOtherPlayerTrigger(effect: (ev: Ev, p: Player) => void): Trigger {
+  return {
+    event: 'FIGHT',
+    match: (ev, source) => isVillain(ev.what) && ev.what.location === source.location.attachedTo,
+    after: ev => eachOtherPlayerVM(p => effect(ev, p)),
+  };
+}

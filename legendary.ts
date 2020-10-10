@@ -72,6 +72,7 @@ interface Card {
   escape?: Handler | Handler[]
   varVP?: (c: Card) => number
   varDefense?: (c: Card) => number
+  varFightCost?: (c: Card, attack: number) => ActionCost;
   rescue?: (ev: Ev) => void
   heal?: (ev: Ev) => void
   effects?: ((ev: Ev) => void)[]
@@ -110,6 +111,7 @@ interface Card {
   backSide?: Card
   uSizeChanging?: { color: number, amount: number } // TODO microscopic size changing
   chivalrousDuel?: boolean // TODO chivalrous duel
+  modifiers?: Modifiers;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -118,6 +120,7 @@ interface VillainCardAbillities {
   strike?: Handler | Handler[]
   varVP?: (c: Card) => number
   varDefense?: (c: Card) => number
+  varFightCost?: (c: Card, attack: number) => ActionCost;
   fightCond?: (c?: Card) => boolean
   fightCost?: (ev: Ev) => void
   fightFail?: (ev: Ev) => void
@@ -132,6 +135,7 @@ interface VillainCardAbillities {
   excessiveViolence?: Handler
   uSizeChanging?: { color: number, amount: number }
   chivalrousDuel?: boolean
+  modifiers?: Modifiers;
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -279,6 +283,14 @@ function makeVillainCard(group: string, name: string, defense: number, vp: numbe
   if (abilities) Object.assign(c, abilities);
   if (c.fight === sameEffect) c.fight = c.ambush;
   if (c.escape === sameEffect) c.escape = c.fight || c.ambush;
+  return c;
+}
+function makeLocationCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
+  let c = new Card("LOCATION", name);
+  c.printedDefense = defense;
+  c.printedVP = vp;
+  c.printedVillainGroup = group;
+  if (abilities) Object.assign(c, abilities);
   return c;
 }
 function makeTacticsCard(name: string, fight?: Handler) {
@@ -1495,6 +1507,10 @@ function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
   return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
 function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, value: ModifiableStats[T]): ModifiableStats[T] {
+  const fortifyModifiers = c.location.attached("FORTIFY").map(c => c.modifiers && c.modifiers[stat]).filter(m => m);
+  const locationModifiers = c.location.attached("LOCATION").map(c => c.modifiers && c.modifiers[stat]).filter(m => m);
+  for (const mod of fortifyModifiers) value = modifyStat(c, mod, value);
+  for (const mod of locationModifiers) value = modifyStat(c, mod, value);
   return modifyStat(c, turnState && turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
 }
 function combineHandlers(prev: Handler | Handler[], h: Handler) {
@@ -1563,11 +1579,15 @@ function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   // TODO uSizeChaning, fix double size changing from champions
   return getModifiedStat(c, 'recruitCost', { recruit, cond });
 }
+function defaultFightCost(c: Card, attack: number): ActionCost {
+  return c.bribe ? { either: attack, cond: c.fightCond } : { attack, cond: c.fightCond };
+}
 function getFightCost(c: Card): ActionCost {
   let attack = c.defense;
   if (c.sizeChanging && superPower(c.sizeChanging)) attack = Math.min(0, attack - 2);
   // TODO uSizeChaning
-  return getModifiedStat(c, 'fightCost', (c.bribe ? { either: attack, cond: c.fightCond } : { attack, cond: c.fightCond }));
+  const costFunc = c.varFightCost || defaultFightCost;
+  return getModifiedStat(c, 'fightCost', costFunc(c, attack));
 }
 function canPayCost(action: Ev) {
   const cost = action.cost;
@@ -1991,6 +2011,7 @@ function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false
 }
 function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined) {
   const cards = cond ? who.hand.deck : who.hand.limit(cond);
+  // TODO multiplayer: pickDiscardEv show hand when condition present (and cards.size < n depending on card wording)
   repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", cards, sel => discardEv(ev, sel), who));
 }
 function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState) {
@@ -2234,6 +2255,12 @@ function villainDraw(ev: Ev): void {
   } else if (isVillain(c)) {
     moveCardEv(ev, c, gameState.cityEntry);
     pushEffects(ev, c, 'ambush', c.ambush);
+  } else if (c.cardType === "LOCATION") {
+    // TODO Locations
+    // check if space in the city
+    // if not ko the cheapest
+    // attach
+    // * add locations to fightable
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
   } else if (c.cardType === "SCHEME TWIST") {
@@ -2552,7 +2579,7 @@ TODO Homecoming coordinate
 TODO Champions multiple size-changing
 TODO Champions cheering crowds
 TODO heroName fixes (setup option vs heroName, divided names, transformed names?, gray card names, gainable and other hero names)
-TODO many fortify effects (including Authoritarian Iron Man)
+TODO many fortify effects
 TODO ant-man uSizeChanging, cDuel
 TODO venom Bonding
 
