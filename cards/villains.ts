@@ -560,7 +560,7 @@ addVillainTemplates("Villains", [
 // VP: 2
 // Elusive 4
   [ 2, makeVillainCard("Avengers", "Ant-Man", 3, 2, {
-    fightCost: elusive(4),
+    fightCond: elusive(4),
   })],
 // ATTACK: 4+
 // VP: 5
@@ -1698,6 +1698,7 @@ addVillainTemplates("Civil War", [
 // VP: 2
   [ 2, makeVillainCard("Great Lakes Avengers", "Squirrel Girl", 3, 2, {
     escape: ev => fortifyEv(ev, ev.source, gameState.sidekick),
+    // TODO forify also prevent recruit
     trigger: { event: 'GAIN', match: (ev, source) => isFortifying(source, gameState.sidekick) && isSidekick(ev.what), replace: () => {}},
     fightCond: c => turnState.cardsPlayed.size <= 1,
   })],
@@ -1708,7 +1709,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 9*
 // VP: 5
   [ 2, makeVillainCard("Heroes for Hire", "Colleen Wing", 9, 5, {
-    escape: ev => fortifyEv(ev, ev.source, gameState.mastermind), // TODO prevent fight and maybe recruit (see squirrel girl)
+    escape: ev => fortifyEv(ev, ev.source, gameState.mastermind), // TODO fortify prevent fight
     bribe: true,
   })],
 // {BRIBE}
@@ -1836,6 +1837,7 @@ addVillainTemplates("Civil War", [
 // VP: 5
   [ 2, makeVillainCard("Superhuman Registration Act", "She-Hulk", 8, 5, {
     escape: ev => fortifyEv(ev, ev.source, gameState.villaindeck),
+    // TODO fortify is Master Strike from Deck
     trigger: { event: 'STRIKE', match: (ev, source) => isFortifying(source, gameState.villaindeck), after: ev => {
       eachPlayer(p => gainWoundEv(ev, p));
       withCity('SEWERS', sewers => enterCityEv(ev, ev.source, sewers));
@@ -3255,6 +3257,301 @@ addVillainTemplates("Venom", [
 // VP: 6
   [ 1, makeVillainCard("Poisons", "Symbiotic Armor", 1, 6, {
     ambush: ev => withMastermind(ev, m => symbioteBondEv(ev, m, ev.source, ev => selectCardAndKOEv(ev, yourHeroes()))),
+  })],
+]},
+]);
+addVillainTemplates("Revelations", [
+{ name: "Army of Evil", cards: [
+// AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
+// FIGHT: Draw two cards.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Army of Evil", "Blackout", 4, 2, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p))),
+    fight: ev => drawEv(ev, 2),
+  })],
+// AMBUSH: All players reveal their hands. Unless all those revealed cards together include [Strength], [Instinct], [Covert], [Tech], and [Ranged] Heroes, each player gains a Wound.
+// ESCAPE: Same Effect.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Army of Evil", "Count Nefaria", 7, 5, {
+    ambush: ev => [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.RANGED, Color.TECH]
+      .every(c => gameState.players.some(p => p.hand.has(c))) || eachPlayerEv(ev, () => gainWoundEv(ev)),
+    escape: sameEffect,
+  })],
+// <b>Location</b>
+// Whenever you fight a Villain here, each other player reveals a [Ranged] Hero or discards a card.
+// FIGHT: Draw two cards.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeLocationCard("Army of Evil", "Dome of Darkforce", 7, 5, {
+    fight: ev => drawEv(ev, 2),
+    trigger: fightVillainAtLocationEachOtherPlayerTrigger(
+      (ev, p) => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p), p)
+    ),
+  })],
+// AMBUSH: Klaw captures a [Tech] or [Ranged] Hero that costs 5 or less from the HQ.
+// FIGHT: Gain that Hero.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Army of Evil", "Klaw", 5, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(Color.TECH | Color.RANGED).limit(c => c.cost <= 5), c => attachCardEv(ev, c, ev.source, "GAIN_CAPTURE")),
+    fight: ev => ev.source.attached("GAIN_CAPTURE").each(c => gainEv(ev, c)),
+  })],
+// While in the Bank or Streets, this card's name is "Dr. Calvin Zabo", and you must spend Recruit to fight him instead of Attack.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 6*
+// VP: 4
+  [ 2, makeVillainCard("Army of Evil", "Mister Hyde", 6, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varFightCost: (c, attack) => atLocation(c, "BANK", "STREETS") ? { recruit: attack } : { attack },
+    // TODO var name?
+  })],
+]},
+{ name: "Dark Avengers", cards: [
+// {LAST STAND}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 6+
+// VP: 6
+  [ 1, makeVillainCard("Dark Avengers", "Ares", 6, 6, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: lastStandVarDefense(),
+  })],
+// {LAST STAND}
+// AMBUSH: If any other Dark Avengers are in the city, each player gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 3+
+// VP: 3
+  [ 1, makeVillainCard("Dark Avengers", "Captain Marvel (Noh-Varr)", 3, 3, {
+    ambush: ev => CityCards().has(c => c.villainGroup === "Dark Avengers" && c !== ev.source) &&
+      eachPlayer(p => cont(ev, () => gainWoundEv(ev, p))),
+    escape: sameEffect,
+    varDefense: lastStandVarDefense(),
+  })],
+// {LAST STAND}
+// FIGHT: KO one of your Heroes. Then choose one:
+// - Each other player Kos one of their Heroes.
+// - Each other player gains a 0-cost Hero from the KO pile.
+// ATTACK: 4+
+// VP: 4
+  [ 1, makeVillainCard("Dark Avengers", "Dark Hawkeye (Bullseye)", 4, 4, {
+    fight: [
+      ev => selectCardAndKOEv(ev, yourHeroes()),
+      ev => chooseOneEv(ev, "Each other player",
+        ["KOs one of their Heroes", () => eachOtherPlayerVM(p => selectCardAndKOEv(ev, yourHeroes(p), p))],
+        ["gains a 0-cost Hero from the KO pile", () => eachOtherPlayerVM(p =>
+          selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainEv(ev, c, p), p))]
+      ),
+    ],
+    varDefense: lastStandVarDefense(),
+  })],
+// {LAST STAND}
+// FIGHT: Each other player discards two cards then draws a card.
+// ATTACK: 4+
+// VP: 4
+  [ 1, makeVillainCard("Dark Avengers", "Dark Ms. Marvel (Moonstone)", 4, 4, {
+    fight: ev => eachOtherPlayerVM(p => cont(ev, () => {
+      pickDiscardEv(ev, 2, p);
+      cont(ev, () => drawEv(ev, 1, p));
+    })),
+    varDefense: lastStandVarDefense(),
+  })],
+// <b>Double Last Stand</b>
+// FIGHT: Reveal the top two cards of your deck. KO one of them that costs 2 or less. Put the rest back in any order.
+// ATTACK: 2+
+// VP: 2
+  [ 1, makeVillainCard("Dark Avengers", "Dark Spider-Man (Scorpion)", 2, 2, {
+    fight: ev => revealPlayerDeckEv(ev, 2, cards => selectCardAndKOEv(ev, cards.limit(c => c.cost <= 2))),
+    varDefense: lastStandVarDefense(2),
+  })],
+// {LAST STAND}
+// AMBUSH: Each player reveals an [Instinct] Hero or gains a Wound.
+// ESCAPE: Same effect, then shuffle Dark Wolverine back into the Villain Deck.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Dark Avengers", "Dark Wolverine (Daken)", 5, 5, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
+    escape: [
+      ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
+      ev => shuffleIntoEv(ev, ev.source, gameState.villaindeck),
+    ],
+    varDefense: lastStandVarDefense(),
+  })],
+// While in the Bank or Streets, this card's name is "The Void", it gets +5 Attack, and it gets
+// "<b>Fight</b>: KO up to two cards from your discard pile."
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 7+
+// VP: 5
+  [ 1, makeVillainCard("Dark Avengers", "Sentry", 7, 5, {
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: c => c.printedDefense + (atLocation(c, "BANK", "STREETS") ? 5 : 0),
+    fight: ev => atLocation(ev.source, "BANK", "STREETS") && selectObjectsUpToEv(ev, "Choose up to two cards to KO", 2, playerState.discard.deck, c => discardEv(ev, c)),
+    // TODO var name and var fight?
+  })],
+// <b>Location</b>
+// Villains here get {LAST STAND}. (Villains who already have it get the bonus again.)
+// FIGHT: You gain the Hero in the HQ space under this.
+// ATTACK: 8
+// VP: 5
+  [ 1, makeLocationCard("Dark Avengers", "Sentry's Watchtower", 8, 5, {
+    fight: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.location.below === ev.source.location.attachedTo), c => gainEv(ev, c)),
+    modifiers: {
+      defense: [{
+        cond: isVillain,
+        func: (c, v) => v + lastStandAmount()
+      }]
+    }
+  })],
+]},
+{ name: "Hood's Gang", cards: [
+// {DARK MEMORIES}
+// AMBUSH: Each player that has any cards in their discard pile gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Hood's Gang", "Cancer", 3, 2, {
+    ambush: ev => eachPlayer(p => cont(ev, () => p.discard.deck.length && gainWoundEv(ev, p))),
+    escape: sameEffect,
+    varDefense: darkMemoriesVarDefense(),
+  })],
+// {DARK MEMORIES}
+// FIGHT: Exchange a card you played this turn with a card in the HQ that has the same or lower cost. (The card you gained goes to your discard pile.)
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Hood's Gang", "Chemistro", 4, 3, {
+    fight: ev => {
+      const minCost = hqCards().highest(c => -c.cost);
+      minCost.length && selectCardEv(ev, "Choose a card you played", playerState.playArea.deck.limit(c => c.cost >= minCost[0].cost), c1 => {
+        selectCardEv(ev, "Choose a card to exchange", hqCards().limit(c => c.cost <= c1.cost), c2 => {
+          swapCardsEv(ev, c1, c2);
+          moveCardEv(ev, c2, playerState.discard);
+        })
+      });
+    },
+    varDefense: darkMemoriesVarDefense(),
+  })],
+// {DARK MEMORIES}
+// AMBUSH: Guess Villain, Bystander, Strike, or Twist. Then reveal the top card of the Villain Deck. If you guessed wrong, play that card.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Hood's Gang", "Madam Masque", 5, 4, {
+    ambush: ev => {
+      chooseOptionEv(ev, "Choose a card type", [
+        { l: "Villain", v: isVillain },
+        { l: "Bystander", v: isBystander },
+        { l: "Strike", v: isStrike },
+        { l: "Twist", v: isTwist },
+      ], f => revealVillainDeckEv(ev, 1, cards => cards.limit(f).each(c => villainDrawEv(ev, c))));
+    },
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: darkMemoriesVarDefense(),
+  })],
+// To fight The Brothers Grimm, you must also discard two identical cards.
+// FIGHT: You may KO a card from your discard pile.
+// ATTACK: 2*
+// VP: 2
+  [ 1, makeVillainCard("Hood's Gang", "The Brothers Grimm", 2, 2, {
+    fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
+    fightCond: () => playerState.hand.has(c1 => playerState.hand.has(c2 => c1 !== c2 && c1.instance === c2.instance))
+  })],
+// <b>Location</b>
+// Villains here get {DARK MEMORIES}. (Villains who already have it get the bonus again.)
+// FIGHT: Take another turn after this one.
+// ATTACK: 9
+// VP: 5
+  [ 1, makeLocationCard("Hood's Gang", "The Dark Dimension", 9, 5, {
+    fight: ev => gameState.extraTurn = true,
+    modifiers: {
+      defense: [{
+        cond: isVillain,
+        func: (c, v) => v + darkMemoriesAmount()
+      }]
+    }
+  })],
+]},
+{ name: "Lethal Legion", cards: [
+// <b>Location</b>
+// Whenever you fight a Villain here, each other player chooses a Bystander from their Victory Pile to be captured by Carnival of Wonders.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeLocationCard("Lethal Legion", "Carnival of Wonders", 5, 3, {
+    trigger: fightVillainAtLocationEachOtherPlayerTrigger(
+      (ev, p) => selectCardEv(ev, "Choose a Bystander for Carnival of Wonders", p.victory.limit(isBystander), c => {
+        captureEv(ev, ev.source, c);
+      }, p)
+    )
+  })],
+// <b>Location</b>
+// Whenever you fight a Villain here, each other player reveals a [Ranged] Hero or gains a Wound.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeLocationCard("Lethal Legion", "Laser Maze", 7, 5, {
+    trigger: fightVillainAtLocationEachOtherPlayerTrigger(
+      (ev, p) => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p),
+    ),
+  })],
+// Living Laser gets +3 Attack while there's a "Maze" Location in the city.
+// FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Lethal Legion", "Living Laser", 6, 5, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
+    varDefense: lethalLegionVarDefense("Maze")
+  })],
+// M'Baku gets +3 Attack while there's a "Cult" Location in the city.
+// FIGHT: Each player reveals their hand and discards a [Tech] card.
+// ESCAPE: Same effect.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Lethal Legion", "M'Baku", 5, 4, {
+    fight: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, Color.TECH)),
+    escape: sameEffect,
+    varDefense: lethalLegionVarDefense("Cult")
+  })],
+// Power Man gets +3 Attack while there's a "Prison" Location in the city.
+// ESCAPE: Each player puts a Villain from their Victory Pile into the Escape Pile or gains a Wound.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Lethal Legion", "Power Man (Erik Josten)", 5, 4, {
+    escape: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Villain", p.victory.limit(isVillain),
+      c => moveCardEv(ev, c, gameState.escaped),
+      () => gainWoundEv(ev, p),
+      p),
+    ),
+    varDefense: lethalLegionVarDefense("Prison")
+  })],
+// Swordsman gets +3 Attack while there's a "Carnival" Location in the city.
+// AMBUSH: Swordsman and each Location in the city each capture a Bystander.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Lethal Legion", "Swordsman", 4, 3, {
+    ambush: ev => {
+      captureEv(ev, ev.source);
+      cityAllLocations().each(c => captureEv(ev, c));
+    },
+    varDefense: lethalLegionVarDefense("Carnival")
+  })],
+// <b>Location</b>
+// Whenever you fight a Villain here, each other player puts a Villain from their Victory Pile into the Escape Pile or gains a Wound
+// ATTACK: 6
+// VP: 4
+  [ 1, makeLocationCard("Lethal Legion", "\"The Raft\" Prison", 6, 4, {
+    trigger: fightVillainAtLocationEachOtherPlayerTrigger(
+      (ev, p) => selectCardOrEv(ev, "Choose a Villain", p.victory.limit(isVillain),
+        c => moveCardEv(ev, c, gameState.escaped),
+        () => gainWoundEv(ev, p),
+        p),
+    ),
+  })],
+// <b>Location</b>
+// Whenever you fight a Villain here, each other player reveals their hand and discards a [Tech] card.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeLocationCard("Lethal Legion", "White Gorilla Cult", 6, 4, {
+    trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => pickDiscardEv(ev, 1, p, Color.TECH)),
   })],
 ]},
 ]);
