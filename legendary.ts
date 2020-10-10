@@ -1308,7 +1308,7 @@ function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
 function isArtifact(c: Card): boolean { return c.isArtifact; }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
-function hasFlag(flag: 'N' | 'D' | 'G' | 'F') { return (c: Card) => c.flags && c.flags.includes(flag); }
+function hasFlag(flag: 'N' | 'D' | 'G' | 'F' | 'T') { return (c: Card) => c.flags && c.flags.includes(flag); }
 function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("HYDRA")(c); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isTrap(c: Card) { return c.cardType === "TRAP"; }
