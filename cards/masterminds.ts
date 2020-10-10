@@ -837,8 +837,8 @@ addTemplates("MASTERMINDS", "Civil War", [
 makeMastermindCard("Authoritarian Iron Man", 12, 6, "Superhuman Registration Act", ev => {
 // Authoritarian Iron Man fortifies the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space.
 // Villains in that space get +3 Attack.
-  // TODO location is not city here
-  ev.source.location.isCity ? ev.source.location.adjacentRight && fortifyEv(ev, ev.source, ev.source.location.adjacentRight) :
+  const fortifyingSpace = ev.source.location.attachedTo;
+  fortifyingSpace instanceof Deck ? fortifyingSpace.adjacentRight && fortifyEv(ev, ev.source, fortifyingSpace.adjacentRight) :
     withCity('BRIDGE', d => fortifyEv(ev, ev.source, d));
 }, [
   [ "Armada of Armors", ev => {
