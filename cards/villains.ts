@@ -1801,7 +1801,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 4*
 // VP: 3
   [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Dum Dum Dugan", 4, 3, {
-    fight: ev => eachPlayer(p => p.victory.has(c => c.cardName === 'S.H.I.E.L.D. Officer') || gainWoundEv(ev, p)),
+    fight: ev => eachPlayer(p => p.victory.has(isShieldOfficer) || gainWoundEv(ev, p)),
     escape: sameEffect,
     ...shieldClearance,
   })],

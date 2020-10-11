@@ -1000,7 +1000,9 @@ const exampleGameSetup: Setup = {
   heroes: [ "Black Widow", "Deadpool", "Wolverine" ],
   bystanders: ["Legendary"],
   withOfficers: true,
+  withSpecialOfficers: true,
   withSidekicks: true,
+  withSpecialSidekicks: true,
   withWounds: true,
   withMadame: true,
   withNewRecruits: true,
@@ -1064,6 +1066,8 @@ interface Setup {
   bystanders: string[]
   withOfficers: boolean
   withSidekicks: boolean
+  withSpecialSidekicks: boolean;
+  withSpecialOfficers: boolean;
   withWounds: boolean
   withNewRecruits: boolean
   withMadame: boolean
@@ -1109,6 +1113,8 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     bystanders: undefined,
     withOfficers: undefined,
     withSidekicks: undefined,
+    withSpecialOfficers: undefined,
+    withSpecialSidekicks: undefined,
     withWounds: undefined,
     withNewRecruits: undefined,
     withMadame: undefined,
@@ -1285,7 +1291,15 @@ gameSetup.heroes.map(findHeroTemplate).forEach(h => {
 gameState.herodeck.shuffle();
 // Init auxiliary decks
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
+if (gameSetup.withSpecialOfficers) {
+  shieldOfficerTemplates.each(([n, c]) => gameState.officer.addNewCard(c, n));
+  gameState.officer.shuffle();
+}
 if (gameSetup.withSidekicks) gameState.sidekick.addNewCard(sidekickTemplate, 15);
+if (gameSetup.withSpecialSidekicks) {
+  specialSidekickTemplates.each(([n, c]) => gameState.sidekick.addNewCard(c, n));
+  gameState.sidekick.shuffle();
+}
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
 if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
 if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTemplate, 15);
@@ -1355,6 +1369,7 @@ function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isTrap(c: Card) { return c.cardType === "TRAP"; }
 function isRevelationsLocation(c: Card): boolean { return getModifiedStat(c, 'isLocation', c.cardType === "LOCATION"); }
+function isShieldOfficer(c: Card) { return [ c.heroName, c.cardName ].includes('S.H.I.E.L.D. Officer'); }
 function isFightable(c: Card): boolean {
   const res = isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :

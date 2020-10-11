@@ -610,7 +610,7 @@ function poisonBondEv(ev: Ev, to: Card[]) {
     symbioteBondEv(ev, cards, ev.source);
   }
 }
-
+// Revelations
 function switcherooActionEv(n: number) {
   return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', {
     what: c,
@@ -665,3 +665,29 @@ function fightVillainAtLocationEachOtherPlayerTrigger(effect: (ev: Ev, p: Player
     after: ev => eachOtherPlayerVM(p => effect(ev, p)),
   };
 }
+// S.H.I.E.L.D.
+function sendUndercoverEv(ev: Ev, c: Card = ev.source) {
+  addStatSet("vp", c1 => c1 === c && owner(c1) && c1.location === owner(c1).victory, () => 1);
+  moveCardEv(ev, c, (owner(c) || playerState).victory);
+}
+function chooseUndercoverEv(ev: Ev, func: Handler | undefined = undefined, c: Card = ev.source) {
+  chooseMayEv(ev, "Send Undercover", () => {
+    sendUndercoverEv(ev, c);
+    func && cont(ev, func);
+  });
+}
+function isShieldOrHydraInAnyWay(c: Card) {
+  if (isShieldOrHydra(c)) return true;
+  const names = [c.cardName, c.heroName, c.mastermind && c.mastermind.cardName, c.villainGroup].filter(name => name);
+  if (names.some(name => name.includes('S.H.I.E.L.D.'))) return true;
+  if (names.some(name => name.includes('HYDRA') || name.includes("Hydra"))) return true;
+  return false;
+}
+function shieldLevel() {
+  return playerState.victory.count(isShieldOrHydraInAnyWay);
+}
+function hydraLevel() {
+  return gameState.escaped.count(isShieldOrHydraInAnyWay);
+}
+const shieldLevelPower = (n: number) => shieldLevel() >= n;
+const hydraLevelPower = (n: number) => hydraLevel() >= n;

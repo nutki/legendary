@@ -241,3 +241,48 @@ makeHorrorCard("Viral Infection", ev => moveCardEv(ev, ev.source, playerState.di
 // The Mastermind has +3 Attack.
 makeHorrorCard("Tyrant Mastermind", ev => addStatMod('defense', isMastermind, 3)),
 ];
+
+// Expansion S.H.I.E.L.D.
+const shieldOfficerTemplates: [number, Card][] = [
+// You may send this Hero {UNDERCOVER}.
+// GUN: 1
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Dum Dum Dugan", 3, 2, 1, Color.STRENGTH, "S.H.I.E.L.D.", "GD", ev => chooseUndercoverEv(ev)) ],
+// You may discard a card. If you do, draw  card.
+// GUN: 1
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "G.W. Bridge", 3, 2, u, Color.STRENGTH, "S.H.I.E.L.D.", "GD", ev => selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => {
+  discardEv(ev, c);
+  drawEv(ev);
+})) ],
+// You may send this Hero {UNDERCOVER}.
+// If you do, KO another S.H.I.E.L.D. Hero from your hand.
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Grant Ward", 3, 2, u, Color.TECH, "S.H.I.E.L.D.", "FD", ev => chooseUndercoverEv(ev, () => selectCardAndKOEv(ev, playerState.hand.limit('S.H.I.E.L.D.')))) ],
+// Choose one:
+// - You get +2 Recruit
+// - Or you get +1 Attack and draw a card.
+// GUN: 1
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Leo Fitz & Jemma Simmons", 3, 0, 0, Color.TECH, "S.H.I.E.L.D.", "GD", ev => {
+  chooseOptionEv(ev, "Choose one", [
+    { l: "+2 Recruit", v: () => addRecruitEvent(ev, 2) },
+    { l: "+1 Attack and draw", v: () => { addAttackEvent(ev, 1); drawEv; } },
+  ], f => f());
+}) ],
+// {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} Draw a card.
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Melinda May", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "D", ev => superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && drawEv(ev)) ],
+// You may send this Hero {UNDERCOVER}. If you do, you get +1 Recruit
+// GUN: 1
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Sharon Carter", 3, 2, u, Color.COVERT, "S.H.I.E.L.D.", "GD", ev => chooseUndercoverEv(ev, () => addRecruitEvent(ev, 1))) ],
+// {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} You may send this Hero or a S.H.I.E.L.D. Hero from your hand {UNDERCOVER}.
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Victoria Hand", 3, 2, u, Color.COVERT, "S.H.I.E.L.D.", "D", ev => {
+  superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && selectCardOptEv(ev, "Send Undercover", [ev.source, ...playerState.hand.limit('S.H.I.E.L.D.')], c => {
+    sendUndercoverEv(ev, c);
+  });
+}) ],
+// {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D.} You may send this Hero {UNDERCOVER} or put it on top of your deck.
+// GUN: 1
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "\"Yo-Yo\" Rodriguez", 3, 2, u, Color.RANGED, "S.H.I.E.L.D.", "GD", ev => {
+  superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.") && chooseOptionEv(ev, "Send this Hero", [
+    { l: "Undercover", v: () => sendUndercoverEv(ev) },
+    { l: "on top of your deck", v: () => moveCardEv(ev, ev.source, playerState.deck) },
+  ], f => f());
+}) ],
+];

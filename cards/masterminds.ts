@@ -910,7 +910,7 @@ makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. E
     villainifyOfficers(ev, 2);
   } ],
 ], {
-  fightCond: c => shieldClearanceCond(2)() && !cityVillains().has(isGroup(c.leads)) && !cityVillains().has(c => c.cardName === 'S.H.I.E.L.D. Officer'),
+  fightCond: c => shieldClearanceCond(2)() && !cityVillains().has(isGroup(c.leads)) && !cityVillains().has(isShieldOfficer),
   fightCost: shieldClearanceCost(2),
 }),
 // {BRIBE}

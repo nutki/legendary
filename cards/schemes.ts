@@ -943,15 +943,14 @@ makeSchemeCard("Brainwash the Military", { twists: 7 }, ev => {
     villainDrawEv(ev);
   } else if (ev.nr === 7) {
     // Twist 7 All S.H.I.E.L.D. Officers in the city escape.
-    cityVillains().limit(c => c.cardName === 'S.H.I.E.L.D. Officer').each(c => villainEscapeEv(ev, c));
+    cityVillains().limit(isShieldOfficer).each(c => villainEscapeEv(ev, c));
   }
-}, escapeProgressTrigger(c => c.cardName === 'S.H.I.E.L.D. Officer'), () => {
+}, escapeProgressTrigger(isShieldOfficer), () => {
   setSchemeTarget(5);
-  const isOfficer = (c: Card) => c.cardName === 'S.H.I.E.L.D. Officer';
   repeat(12, () => moveCard(gameState.officer.top, gameState.villaindeck));
-  addStatMod('defense', isOfficer, c => 3 + gameState.scheme.attached('TWIST').size);
-  addStatSet('isVillain', isOfficer, () => true);
-  addStatSet('fight', isOfficer, () => (ev: Ev) => gainEv(ev, ev.source));
+  addStatMod('defense', isShieldOfficer, c => 3 + gameState.scheme.attached('TWIST').size);
+  addStatSet('isVillain', isShieldOfficer, () => true);
+  addStatSet('fight', isShieldOfficer, () => (ev: Ev) => gainEv(ev, ev.source));
   gameState.villaindeck.shuffle();
 }),
 // SETUP: 7 Twists. Add an extra Villain Group.

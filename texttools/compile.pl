@@ -10,6 +10,7 @@
   AMBITIONS => "Ambitions.txt",
   WOUNDS => "Wounds_and_Bindings.txt",
   HORRORS => "Horrors.txt",
+  OFFICERS => "Setup_Cards.txt",
 );
 my ($type, $exp) = @ARGV;
 my $file = $input{$type};
@@ -38,6 +39,7 @@ sub autopower {
     s/^{XGENE \[(.*?)\]} *// and $cond = "xGenePower(Color.".(uc$1).")";
     s/^{XGENE (.*?)} *// and $cond = "xGenePower(\"$1\")";
     s/^{VIOLENCE} *// and $wrap = "excessiveViolence: ev => XXX";
+    s/^{SHIELDLEVEL (.*?)} *// and $cond = "shieldLevelPower($1)";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -188,10 +190,10 @@ sub maketrap {
       print ", ev => {}" if $_{RESCUE};
       print ")$ge ],\n";
       $_{VP} == 1 || !defined($_{VP}) or die "VP is not 1: $_{VP}";
-    } elsif ($type eq "SIDEKICKS") {
+    } elsif ($type eq "SIDEKICKS" or $type eq "OFFICERS") {
       parse();
       $copies = $_{COPIES} * 1 || 1;
-      my $h = makehero("Special Sidekick", $_{TEAM});
+      my $h = makehero($type eq "SIDEKICKS" ? "Special Sidekick" : "S.H.I.E.L.D. Officer", "\"$_{TEAM}\"");
       print "[ $copies, $h ],\n";
     } elsif ($type eq "HEROES") {
       ($_, my @subitems) = split/^\n+/m;

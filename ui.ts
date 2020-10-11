@@ -190,6 +190,8 @@ function setupChange(): void {
   tmp.bystanders = getBystanderSelects("setup_bystanders");
   tmp.withOfficers = (<HTMLInputElement>document.getElementById('withOfficers')).checked;
   tmp.withSidekicks = (<HTMLInputElement>document.getElementById('withSidekicks')).checked;
+  tmp.withSpecialOfficers = (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked;
+  tmp.withSpecialSidekicks = (<HTMLInputElement>document.getElementById('withSpecialSidekicks')).checked;
   tmp.withWounds = true;
   tmp.withBindings = true;
   tmp.withMadame = (<HTMLInputElement>document.getElementById('withMadame')).checked;
@@ -231,6 +233,8 @@ function setupSet(s: Setup): void {
   (<HTMLInputElement>document.getElementById('withNewRecruits')).checked = s.withNewRecruits;
   (<HTMLInputElement>document.getElementById('withOfficers')).checked = s.withOfficers;
   (<HTMLInputElement>document.getElementById('withSidekicks')).checked = s.withSidekicks;
+  (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked = s.withSpecialOfficers;
+  (<HTMLInputElement>document.getElementById('withSpecialSidekicks')).checked = s.withSpecialSidekicks;
   (<HTMLSelectElement>document.getElementById('handType')).value = s.handType;
   (<HTMLSelectElement>document.getElementById('cityType')).value = s.cityType;
   setBysternderSelects("setup_bystanders", s.bystanders);
