@@ -386,9 +386,9 @@ function shieldClearanceCond(n: number) { return () => playerState.hand.limit(is
 function shieldClearanceCost(n: number) { return (ev: Ev) => selectObjectsEv(ev, "Discard S.H.I.E.L.D. Heros", n, playerState.hand.limit(isHero).limit('S.H.I.E.L.D.'), c => discardEv(ev, c)); }
 const shieldClearance = { fightCond: shieldClearanceCond(1), fightCost: shieldClearanceCost(1) };
 
-function villainify(name: string, c: Card | ((c: Card) => boolean), defense: number | ((c: Card) => number), reward?: number | 'GAIN' | 'RESCUE' | ((ev: Ev) => void)) {
+function villainify(name: string, c: Card | ((c: Card) => boolean), defense: number | ((c: Card) => number), reward?: number | 'GAIN' | 'RESCUE' | ((ev: Ev) => void), t: "VILLAIN" | "LOCATION" = "LOCATION") {
   const cond = c instanceof Card ? ((v: Card) => v === c) : c;
-  addStatSet('isVillain', cond, () => true);
+  addStatSet(t === "LOCATION" ? 'isLocation' : 'isVillain', cond, () => true);
   addStatSet('defense', cond, typeof defense === "number" ? (() => defense) : defense);
   name && addStatSet('villainGroup', cond, () => name);
   if (typeof reward === "number") {

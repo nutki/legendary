@@ -152,6 +152,10 @@ interface MastermindCardAbillities {
   sizeChanging?: number
   chivalrousDuel?: boolean
 }
+interface TacticsCardAbillities {
+  fight?: Handler | Handler[];
+  trigger?: Trigger;
+}
 interface HeroCardAbillities {
   trigger?: Trigger
   triggers?: Trigger[]
@@ -293,14 +297,17 @@ function makeLocationCard(group: string, name: string, defense: number, vp: numb
   if (abilities) Object.assign(c, abilities);
   return c;
 }
-function makeTacticsCard(name: string, fight?: Handler) {
+function makeTacticsCard(name: string, abilities: TacticsCardAbillities = {}) {
   const t = new Card("TACTICS", name);
-  if (fight) t.fight = fight;
+  if (abilities.fight) t.fight = abilities.fight;
   return t;
+}
+function makeEpicName(name: string) {
+  return "Epic " + (name.startsWith("The ") ? name.substring(4) : name);
 }
 function makeEpicMastermindCard(name: string, defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
   const m1 = makeMastermindCard(name, defense[0], vp, leads, strike, tactics, abilities);
-  const m2 = makeMastermindCard(`Epic ${name}`, defense[1], vp, leads, strike, tactics, abilities);
+  const m2 = makeMastermindCard(makeEpicName(name), defense[1], vp, leads, strike, tactics, abilities);
   m2.epic = true;
   // Epic masterminds use unchanged defense on tactics (may be relevant for some schemes).
   m2.tacticsTemplates = m1.tacticsTemplates;
@@ -313,7 +320,7 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
   c.leads = leads;
   c.strike = strike;
   c.tacticsTemplates = tactics.map(function (e) {
-    const t = e instanceof Card ? e : makeTacticsCard(e[0], e[1]);
+    const t = e instanceof Card ? e : makeTacticsCard(e[0], { fight: e[1] });
     t.printedVP = vp;
     t.printedDefense = defense;
     return t;
@@ -1339,6 +1346,7 @@ function hasFlag(flag: 'N' | 'D' | 'G' | 'F' | 'T') { return (c: Card) => c.flag
 function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("HYDRA")(c); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isTrap(c: Card) { return c.cardType === "TRAP"; }
+function isRevelationsLocation(c: Card): boolean { return getModifiedStat(c, 'isLocation', c.cardType === "LOCATION"); }
 function isFightable(c: Card): boolean {
   const res = isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
@@ -1505,6 +1513,7 @@ interface ModifiableStats {
   sizeChanging?: number
   effects?: Handler[]
   chivalrousDuel?: boolean
+  isLocation?: boolean
 }
 
 function safePlus(a: number, b: number) {
@@ -2273,6 +2282,13 @@ function playStrike(ev: Ev) {
   fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr }));
   if (gameState.advancedSolo) villainDrawEv(ev);
 }
+function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: ev => {
+  // TODO Locations
+  // check if space in the city
+  // if not ko the cheapest
+  // attach
+  // * add locations to fightable
+} }); }
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
@@ -2282,12 +2298,8 @@ function villainDraw(ev: Ev): void {
   } else if (isVillain(c)) {
     moveCardEv(ev, c, gameState.cityEntry);
     pushEffects(ev, c, 'ambush', c.ambush);
-  } else if (c.cardType === "LOCATION") {
-    // TODO Locations
-    // check if space in the city
-    // if not ko the cheapest
-    // attach
-    // * add locations to fightable
+  } else if (isRevelationsLocation(c)) {
+    playLocationEv(ev, c);
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
   } else if (c.cardType === "SCHEME TWIST") {

@@ -1922,3 +1922,111 @@ addTemplates("MASTERMINDS", "Dimensions", [
   fightCond: c => c.attached('MOBS').size === 0,
 }),
 ]);
+addTemplates("MASTERMINDS", "Revelations", [
+// Grim Reaper gets +1 Attack for each Location card in the city.
+// EPICNAME: Grim Reaper
+// Grim Reaper gets +2 Attack for each Location card in the city.
+...makeEpicMastermindCard("Grim Reaper", [ 8, 9 ], 6, "Lethal Legion", ev => {
+// This Strike enters the city as a 7 Attack "Graveyard" Location that says "This gets +2 Attack while there's a Villain here." It's Worth 5VP.
+// This Strike enters the city as an 8 Attack "Graveyard" Location that says "This gets +3 Attack while there's a Villain here." It's worth 6VP. Then, if there are at least three Location cards in the city, each player gains a Wound.
+  const oneIfEpic = ev.source.epic ? 1 : 0;
+  villainify("Graveyard", ev.what, c => {
+    const villainHere = c.location.attachedTo instanceof Deck && c.location.attachedTo.has(isVillain);
+    return 7 + oneIfEpic + (villainHere ? 2 + oneIfEpic : 0);
+  }, 6 + oneIfEpic, "LOCATION");
+  oneIfEpic && cont(ev, () => cityAllLocations().length >= 3 && eachPlayer(p => cont(ev, () => gainWoundEv(ev, p))));
+  playLocationEv(ev, ev.what);
+}, [
+  // If this was not already a <b>Location</b>, draw three cards, and this card enters the city as a Location with this ability:
+  // Whenever you fight a Villain here, each other player KOs a Bystander from their Victory Pile.
+  makeTacticsCard("Carnival of Concussions", { fight: ev => {
+    if (!isRevelationsLocation(ev.source)) {
+      drawEv(ev, 3);
+      addStatSet('isLocation', c => c === ev.source, () => true);
+      playLocationEv(ev, ev.source);
+    }
+  }, trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => {
+    selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c), p)
+  })}),
+  makeTacticsCard("Cult of Skulls", { fight: ev => {
+  // If this was not already a <b>Location</b>, KO up to two cards from your discard pile, and this card enters the city as a Location with this ability:
+  // Whenever you fight a Villain here, each other player reveals their hand and discards a non-grey card.
+    if (!isRevelationsLocation(ev.source)) {
+      selectObjectsUpToEv(ev, "Chooose cards to KO", 2, playerState.discard.deck, c => KOEv(ev, c));
+      addStatSet('isLocation', c => c === ev.source, () => true);
+      playLocationEv(ev, ev.source);
+    }
+  }, trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => {
+    pickDiscardEv(ev, 1, p, c => !isColor(Color.GRAY)(c))
+  })}),
+  makeTacticsCard("Maze of Bones", { fight: ev => {
+  // If this was not already a <b>Location</b>, look at the top four cards of your deck, KO any number of them, and put the rest back in any order. Then this card enters the city as a Location with this ability:
+  // Whenever you fight a Villain here, each other player gains a Wound.
+    if (!isRevelationsLocation(ev.source)) {
+      lookAtDeckEv(ev, 4, cards => selectObjectsAnyEv(ev, "Choose cards to KO", cards, c => KOEv(ev, c)));
+      addStatSet('isLocation', c => c === ev.source, () => true);
+      playLocationEv(ev, ev.source);
+    }
+  }, trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => {
+    gainWoundEv(ev, p);
+  })}),
+  makeTacticsCard("Prison of Coffins", { fight: ev => {
+  // If this was not already a <b>Location</b>, you get +5 Recruit, and this card enters the city as a Location with this ability:
+  // Whenever you fight a Villain here, each other player puts a Villain from their Victory Pile into the Escape Pile.
+    if (!isRevelationsLocation(ev.source)) {
+      addRecruitEvent(ev, 5);
+      addStatSet('isLocation', c => c === ev.source, () => true);
+      playLocationEv(ev, ev.source);
+    }
+  }, trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => {
+    selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain), c => moveCardEv(ev, c, gameState.escaped), p);
+  })}),
+], {
+  varDefense: c => c.printedDefense + cityAllLocations().length * (c.epic ? 2 : 1),
+}),
+// All Mandarin's Rings get +1 Attack. 
+// Mandarin gets -1 Attack for each Mandarin's Ring among all players' Victory Piles. (-3 Attack for each in solo.)
+// EPICNAME: Mandarin
+// All Mandarin's Rings get +2 Attack. 
+// Mandarin gets -2 Attack for each Mandarin's Ring among all players' Victory Piles. (-6 Attack for each in solo.)
+...makeEpicMastermindCard("Mandarin", [ 16, 26 ], 6, "Mandarin's Rings", ev => {
+// Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound instead.
+// Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound to the top of their deck instead.
+}, [
+  [ "Circles Unbroken", ev => {
+  // Draw a card for each Mandarin's Ring in your Victory Pile.
+  } ],
+// Whenever you fight a Villain here, each other player reveals their hand and KOs one of their non-grey Heroes.
+  [ "Dragon of Heaven Spaceship", ev => {
+  // If this was not already a <b>Location</b>, KO up to two of your Heroes, and this card enters the city as a Location with this ability:|KO up to two of your Heroes.
+  } ],
+  [ "Intertwining Powers", ev => {
+  // Each other player without at least two Mandarin's Rings in their Victory Pile gains a Wound.
+  } ],
+  [ "Rings Seek Their True Hand", ev => {
+  // Each other player reveals a [Tech] Hero or puts a Mandarin's Ring from their Victory Pile into the Escape Pile.
+  } ],
+]),
+// {DARK MEMORIES}
+// EPICNAME: Hood
+//  <b>Double Dark Memories</b>
+...makeEpicMastermindCard("The Hood", [ 9, 10 ], 6, "Hood's Gang", ev => {
+// Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
+// Each player discards their deck, then shuffles 6 random grey cards from their discard pile to form their new deck.
+}, [
+  [ "Demonic Revelation", ev => {
+  // Each other player reveals their hand and discards a non-grey Hero.
+  } ],
+// Then each other player reveals a [Tech] Hero or gains a Wound.
+  [ "Focus Magic Through Guns", ev => {
+  // Each other player reveals a [Covert] Hero or discards a card.
+  } ],
+  [ "Paean to Dormammu", ev => {
+  // Each other player discards their deck.
+  } ],
+// When you fight a Villain here, play another card from the Villain Deck.
+  [ "The Hood's Warehouse", ev => {
+  // If this was not already a <b>Location</b>, rescue 4 Bystanders, and this card enters the city as a Location with this ability:
+  } ],
+]),
+]);
