@@ -984,7 +984,7 @@ makeSchemeCard<{current: string, conquered: string[], city: Deck[]}>("Change the
   cityVillains().each(c => moveCardEv(ev, c, gameState.villaindeck, true)); // TODO detach cards on move
   cont(ev, () => CityCards().each(c => {})); // TODO handle other cards (Hyperion for now?)
   cont(ev, () => {
-    gameState.city === ev.state.city.slice(-size);
+    gameState.city = ev.state.city.slice(-size);
     makeCityAdjacent(gameState.city);
   });
   villainDrawEv(ev);
@@ -1822,5 +1822,107 @@ makeSchemeCard<{drained: Card}>("Symbiotic Absorption", { twists: 11, extra_mast
   setSchemeTarget(11);
   s.drained = gameState.mastermind.deck[1]; // TODO init extra masterminds attached to scheme already
   moveCard(s.drained, gameState.scheme.attachedDeck('DRAINED'));
+}),
+]);
+addTemplates("SCHEMES", "Revelations", [
+// SETUP: 11 Twists. Add an extra Villain Group.
+// RULE: There are two extra "Low Tide" city spaces on the left side of the city, so the city has 7 spaces total.
+// TRULE: The Low Tide, Bridge, and Streets city spaces no longer exist. The city has 3 spaces total. Put this Scheme on the Streets to mark the edge of the city. Villains in destroyed city spaces escape, starting from the left.
+// BEVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
+makeTransformingSchemeCard<{city: Deck[]}>("Earthquake Drains the Ocean", "Tsunami Crushes the Coast", { twists: 11, vd_villain: [ 2, 3, 4, 4, 5 ] }, transformed => ev => {
+  // Twist: The tide rushes in. This Scheme {TRANSFORM}.
+  // Twist: The tide rushes out. This Scheme {TRANSFORM}, then play another card from the Villain Deck.
+  let newCity = ev.state.city;
+  if (!transformed) {
+    const toRemove = gameState.city.filter(d => ["LOWTIDE1", "LOWTIDE2", "BRIDGE", "STREETS"].includes(d.id));
+    newCity = gameState.city.filter(d => !["LOWTIDE1", "LOWTIDE2", "BRIDGE", "STREETS"].includes(d.id));
+    toRemove.each(d => d.limit(isVillain).each(c => villainEscapeEv(ev, c)));
+    gameState.city = newCity;
+    cont(ev, () => toRemove.each(c => {})); // TODO handle other cards (Hyperion for now?, locations?)
+  }
+  transformSchemeEv(ev);
+  cont(ev, () => {
+    gameState.city = newCity;
+    makeCityAdjacent(gameState.city);
+  })
+  transformed && villainDrawEv(ev);
+}, escapeProgressTrigger(isVillain), (s) => {
+  setSchemeTarget(3, true);
+  s.city = [new Deck("LOWTIDE1", true), new Deck("LOWTIDE2", true), ...gameState.city];
+  gameState.city = s.city;
+  makeCityAdjacent(gameState.city);
+}),
+// SETUP: 8 Twists. Hero Deck is 4 X-Men Heroes and 2 non-X-Men Heroes. (Or substitute another team for all X-Men icons on both sides.) Add 14 Scarlet Witch Hero cards to the Villain Deck.
+// RULE: Each Scarlet Witch in the city is a Villain with Attack equal to its cost +3. If you fight one, gain it as a Hero.
+// TRULE: Each Scarlet Witch in the city is a Villain with Attack equal to its cost +4. If you fight one, gain it as a Hero.
+// TEVILWINS: When the number of non-grey Heroes in the KO pile is ten plus double the number of players.
+// 
+makeTransformingSchemeCard<{xMen: string[]}>("House of M", "”No More Mutants”", { twists: 8, heroes: 7, required: { heroes: "Scarlet Witch" } }, transformed => ev => {
+  // Twist: KO all non-X-Men Heroes from the HQ. If there are at least 2 Scarlet Witch cards in the city, this Scheme {TRANSFORM}. Otherwise play another card from the Villain Deck.
+  // Twist: KO all X-Men Heroes from the HQ. Play another card from the Villain Deck.
+  hqHeroes().limit(c => ev.state.xMen.includes(c.heroName) === transformed).each(c => KOEv(ev, c));
+  !transformed && cityVillains().count(isGroup("Scarlet Witch")) >= 2 ? transformSchemeEv(ev) : villainDrawEv(ev);
+}, koProgressTrigger(isNonGrayHero), s => {
+  const isScarletWith = (c: Card) => c.heroName === "Scarlet Witch";
+  s.xMen = gameState.gameSetup.heroes.slice(0, 4);
+  gameState.herodeck.limit(isScarletWith).each(c => moveCard(c, gameState.villaindeck));
+  gameState.villaindeck.shuffle();
+  villainify("Scarlet Witch", isScarletWith, c => c.cost + (gameState.scheme.top.isTransformed ? 4 : 3), "GAIN");
+  setSchemeTarget(10 + 2 * gameState.players.length);
+}),
+
+// SETUP: 30 Officers in the S.H.I.E.L.D. Officer stack. 1 player: 7 Twists. 2-3 players: 9 Twists. 4-5 players: 11 Twists.
+// RULE: Officers stacked next to this Scheme are "Hydra Sympathizers." You may pay 3 Recruit to have the player of your choice gain one as a Hero.
+// TRULE: Officers next to this Scheme are 3 Attack "Hydra Traitor" Villains. When you fight one, return it to the Officer Stack and KO one of your Heroes.
+// TEVILWINS: When there are 15 Officers next to this Scheme or the S.H.I.E.L.D. Officer Stack runs out.
+makeTransformingSchemeCard("Secret HYDRA Corruption", "Open HYDRA Revolution", { twists: [ 7, 9, 9, 11, 11 ] }, transformed => ev => {
+  // Twist: For each Twist in the KO pile (including this one), put a card from the S.H.I.E.L.D. Officer stack next to this Scheme. Then this Scheme {TRANSFORM}.
+  // Twist: For each Twist in the KO pile (including this one), put a card from the S.H.I.E.L.D. Officer stack next to this Scheme, Then if Evil hasn't won yet, this Scheme {TRANSFORM}.
+  repeat(gameState.ko.count(isTwist), () => cont(ev, () => {
+    gameState.officer.top ? attachCardEv(ev, gameState.officer.top, gameState.scheme, "HYDRA") : evilWinsEv(ev);
+  }))
+  transformSchemeEv(ev);
+}, [], () => {
+  setSchemeTarget(15);
+  villainify("Hydra Traitor", c => c.location.id === "HYDRA" && gameState.scheme.top.isTransformed, 3, ev => {
+    selectCardAndKOEv(ev, yourHeroes())
+    returnToStackEv(ev, gameState.officer);
+  });
+  gameState.specialActions = ev => {
+    const stack = gameState.scheme.attached("HYDRA");
+    if (gameState.scheme.top.isTransformed) {
+      return stack.map(c => fightActionEv(ev, c))
+    } else {
+      return stack.map(c => new Ev(ev, "EFFECT", {
+        cost: { recruit: 3 },
+        func: ev => choosePlayerEv(ev, p => gainEv(ev, c, p)),
+      }))
+    }
+  }
+}),
+
+// SETUP: 8 Twists.
+// TRULE: This Scheme counts as a 19 Attack "Korvac" Villain worth 9VP. If you defeat Korvac, KO the Mastermind and all its Tactics.
+makeTransformingSchemeCard("The Korvac Saga", "Korvac Revealed", { twists: 8 }, transformed => ev => {
+  // Twist: Each player must discard down to four cards or KO a Bystander from their Victory Pile to "search for the Korvac Entity." This Scheme {TRANSFORM}.
+  // <b>Twist: 2,4,6</b>: Each player discards an Avengers Hero or gains a Wound. This Scheme {TRANSFORM}.
+  if (transformed && [2, 4, 6].includes(ev.nr)) {
+    eachPlayer(p => selectCardOptEv(ev, "Choose a card to discard", p.hand.limit("Avengers"), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  } else {
+    eachPlayer(p => {
+      selectCardOptEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => pickDiscardEv(ev, -4, p));
+    });
+  }
+  // Twist 8 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+  transformSchemeEv(ev);
+}, [], () => {
+  setSchemeTarget(8);
+  const isKorvac = (c: Card) => gameState.scheme.top.isTransformed && c.location === gameState.scheme;
+  villainify("Korvac", isKorvac, 19, 9);
+  addStatSet("fight", isKorvac, () => ev => {
+    gameState.mastermind.each(c => c.attached("TACTICS").each(c => KOEv(ev, c)));
+    gameState.mastermind.each(c => KOEv(ev, c));
+  });
 }),
 ]);

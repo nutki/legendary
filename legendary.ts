@@ -793,6 +793,14 @@ function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev
   if (initfunc) c.init = initfunc;
   return c;
 }
+function makeTransformingSchemeCard<T = void>(name: string, transName: string, counts: SetupParams, effect: (transformed: boolean) => (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
+  const c1 = makeSchemeCard(name, counts, effect(false), triggers, initfunc);
+  const c2 = makeSchemeCard(transName, counts, effect(true), triggers);
+  c1.backSide = c2;
+  c2.backSide = c1;
+  c2.isTransformed = true;
+  return c1;
+}
 
 interface Player {
   nr: number

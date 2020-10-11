@@ -527,6 +527,12 @@ function transformMastermindEv(ev: Ev, c?: Card) {
     Object.setPrototypeOf(m, Object.getPrototypeOf(m.backSide));
   });
 }
+function transformSchemeEv(ev: Ev, c?: Card) {
+  const s = c || ev.source;
+  cont(ev, () => {
+    Object.setPrototypeOf(s, Object.getPrototypeOf(s.backSide));
+  });
+}
 function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
   selectCardOptEv(ev, "Select card to Smash", playerState.hand.deck, c => {
     discardEv(ev, c);
