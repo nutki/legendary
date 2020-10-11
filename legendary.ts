@@ -335,9 +335,13 @@ function makeWoundCard(name: string, cond: (c: Card) => boolean, heal: (ev: Ev) 
   if (name) c.cardName = name;
   return c;
 }
-function makeHenchmenCard(name: string, defense: number, abilities: VillainCardAbillities, vp: number = 1) {
+function makeHenchmenCard(name: string, defense: number, abilities: VillainCardAbillities, group: string = name) {
   abilities.isHenchman = true;
-  return makeVillainCard(name, name, defense, vp, abilities);
+  return makeVillainCard(group, name, defense, 1, abilities);
+}
+function makeHenchmenLocationCard(name: string, defense: number, abilities: VillainCardAbillities, group: string = name) {
+  abilities.isHenchman = true;
+  return makeLocationCard(group, name, defense, 1, abilities);
 }
 function makeTrapCard(group: string, name: string, vp: number, ambush: Handler, cond: (ev: Ev) => boolean, penalty: Handler) {
   let c = new Card("TRAP", name);
@@ -692,7 +696,11 @@ interface Templates {
     uc: Card
     ra: Card
   }[]
-  HENCHMEN: Card[]
+  HENCHMEN: (Card | {
+    set?: string;
+    templateId?: string;
+    cards: [number, Card][];
+  })[]
   VILLAINS: {
     set?: string
     templateId?: string
@@ -750,8 +758,20 @@ function addBystanderTemplates(set: string, cards: [number, Card][]) {
     cards,
   });
 }
+function addHenchmenTemplates(set: string, templates: Templates['HENCHMEN']) {
+  templates.forEach(t => {
+    t.set = set;
+    if (t instanceof Card) {
+      t.templateId = t.cardName;
+    } else {
+      t.templateId = t.cards[0][1].printedVillainGroup;
+      t.cards.forEach(c => c[1].set = set);
+    }
+    cardTemplates.HENCHMEN.push(t);
+  });
+}
 function findHeroTemplate(name: string) { return cardTemplates.HEROES.filter(t => t.templateId === name)[0]; }
-function findHenchmanTemplate(name: string): Card { return cardTemplates.HENCHMEN.filter(t => t.templateId === name)[0]; }
+function findHenchmanTemplate(name: string) { return cardTemplates.HENCHMEN.filter(t => t.templateId === name)[0]; }
 function findVillainTemplate(name: string) { return cardTemplates.VILLAINS.filter(t => t.templateId === name)[0]; }
 function findMastermindTemplate(name: string): Card { return cardTemplates.MASTERMINDS.filter(t => t.templateId === name)[0]; }
 function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.templateId === name)[0]; }
@@ -1259,8 +1279,15 @@ if (gameSetup.withShards) gameState.shard.addNewCard(shardTemplate, getParam('sh
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 gameState.bystanders.shuffle();
 // Init villain deck
-gameSetup.henchmen.map(findHenchmanTemplate).forEach((h, i) => gameState.villaindeck.addNewCard(h, getHenchmenCounts()[i]));
-gameSetup.villains.map(findVillainTemplate).forEach(v => (<[number, Card][]>v.cards).forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
+function getHenchmenTemplates(template: Card | { cards: [number, Card][]}, groupNr: number): Card[] {
+  const count = getHenchmenCounts()[groupNr];
+  if (template instanceof Card) return Array(count).fill(template);
+  const cards = template.cards.map(([n, c]) => Array(n).fill(c)).merge();
+  if (count === cards.length) return cards;
+  return cards.shuffled().slice(0, count);
+}
+gameSetup.henchmen.map(findHenchmanTemplate).forEach((h, i) => getHenchmenTemplates(h, i).forEach(c => gameState.villaindeck.addNewCard(c)));
+gameSetup.villains.map(findVillainTemplate).forEach(v => v.cards.forEach(c => gameState.villaindeck.addNewCard(c[1], c[0])));
 gameState.villaindeck.addNewCard(strikeTemplate, gameState.players.length === 1 && !gameState.advancedSolo ? 1 : 5);
 gameState.villaindeck.addNewCard(twistTemplate, getParam('twists'));
 for (let i = 0; i < getParam('vd_bystanders'); i++)

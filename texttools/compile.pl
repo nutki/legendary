@@ -153,18 +153,31 @@ sub maketrap {
     my $f = join'|',@_;
     print s!^#($f):.*\n!!mgr =~ s!^#?(.*\n)!// $1!mgr;
   }
-  %atm = qw(HEROES Hero VILLAINS Villain BYSTANDERS Bystander);
-  print "addTemplates(\"$type\", \"$exp\", [\n" =~ s/Templates\("(HEROES|VILLAINS|BYSTANDERS)", /$atm{$1}Templates(/r;
+  my $henchmenGroup = "";
+  %atm = qw(HEROES Hero VILLAINS Villain BYSTANDERS Bystander HENCHMEN Henchmen);
+  print "addTemplates(\"$type\", \"$exp\", [\n" =~ s/Templates\("(HEROES|VILLAINS|BYSTANDERS|HENCHMEN)", /$atm{$1}Templates(/r;
   for (@items) {
     if ($type eq "HENCHMEN") {
       parse();
       my ($gs, $ge) = gainable();
       my $attack = $_{ATTACK} =~ s/[^0-9]//gr;
-      filterprint(qw(CARDNAME VP));
+      if (!$_{VP}) {
+        $henchmenGroup = ', "' . $_{CARDNAME} . '"';
+        print "{cards:[\n";
+        next;
+      }
+      filterprint(qw(CARDNAME VP COPIES));
+      if (!$_{COPIES}) {
+        print "]}\n" if $henchmenGroup;
+        $henchmenGroup = "";
+      } else {
+        print "[$_{COPIES}, ";
+        $ge .= "]";
+      }
       print "${gs}makeHenchmenCard(\"$_{CARDNAME}\", $attack, {\n";
       print "  fight: ev => { },\n" if $_{FIGHT};
       print "  ambush: ev => { },\n" if $_{AMBUSH};
-      print "})$ge,\n";
+      print "}$henchmenGroup)$ge,\n";
       $_{VP} == 1 || $_{FIGHT} eq "Gain this as a Hero." or die "VP is not 1: $_{VP}";
     } elsif ($type eq "BYSTANDERS") {
       parse();
@@ -320,4 +333,5 @@ sub maketrap {
       print "makeHorrorCard(\"$_{CARDNAME}\", ev => {/* TODO */}),\n";
     }
   }
+  print "]}\n" if $henchmenGroup;
   print "]);\n";

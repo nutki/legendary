@@ -193,3 +193,77 @@ makeHenchmenCard("Spider-Slayer", 3, {
   }),
 }),
 ]);
+addHenchmenTemplates("Revelations", [
+// <b>Henchman Location</b>
+// HYDRA Base gets +2 Attack while there's a Villain here.
+// FIGHT: KO one of your Heroes.
+makeHenchmenLocationCard("HYDRA Base", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: c => c.printedDefense + (c.location.attachedTo instanceof Deck && c.location.attachedTo.has(isVillain) ? 2 : 0)
+}),
+{cards:[
+// FIGHT: Draw a card.
+// ATTACK: 3
+[1, makeHenchmenCard("Daimonic, The White Light", 3, {
+  fight: ev => drawEv(ev),
+}, "Mandarin's Rings")],
+// FIGHT: You may KO a card from your discard pile.
+// ATTACK: 3
+[1, makeHenchmenCard("Incandescence, The Flame Blast", 3, {
+  fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
+}, "Mandarin's Rings")],
+// FIGHT: You get +1 Recruit.
+// ATTACK: 3
+[1, makeHenchmenCard("Influence, The Impact Beam", 3, {
+  fight: ev => addRecruitEvent(ev, 1),
+}, "Mandarin's Rings")],
+// FIGHT: Look at the top card of another player's deck. Say it is "Good" or "Bad." That player chooses to put it in your discard pile or their discard pile.
+// ATTACK: 3
+[1, makeHenchmenCard("Liar, The Mento-Intensifier", 3, {
+  fight: ev => chooseOtherPlayerEv(ev, p => {
+    lookAtDeckEv(ev, 1, () => {
+      p.revealed.each(c => chooseOptionEv(ev, "Choose a player to gain the card", [
+        {l:"You",v:p},
+        {l:playerState.name, v:playerState},
+      ], p => moveCardEv(ev, c, p.discard), p));
+    }, playerState, p);
+  }),
+}, "Mandarin's Rings")],
+// FIGHT: Reveal the top card of your deck. You may KO it.
+// ATTACK: 3
+[1, makeHenchmenCard("Lightning, The Electro-Blast", 3, {
+  fight: ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))),
+}, "Mandarin's Rings")],
+// FIGHT: Reveal the top three cards of the Villain Deck. You may defeat a Villain you revealed worth 2VP or less. (Do its Fight effect.) Put the rest back in any order.
+// ATTACK: 3
+[1, makeHenchmenCard("Nightbringer, The Black Light", 3, {
+  fight: ev => revealVillainDeckEv(ev, 3, cards => {
+    selectCardOptEv(ev, "Choose a Villain to defeat", cards.limit(isVillain).limit(c => c.vp <= 2), c => defeatEv(ev, c))
+  }, false),
+}, "Mandarin's Rings")],
+// FIGHT: You may choose a card from your hand or discard pile. The player on your right puts it in their hand.
+// ATTACK: 3
+[1, makeHenchmenCard("Remaker, The Matter Rearranger", 3, {
+  fight: ev => selectCardOptEv(ev, `Choose a card to give to ${playerState.right.name}`, handOrDiscard(), c => {
+    moveCardEv(ev, c, playerState.right.discard);
+  }),
+}, "Mandarin's Rings")],
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3
+[1, makeHenchmenCard("Spectral, The Disintegration Beam", 3, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+}, "Mandarin's Rings")],
+// FIGHT: Reveal the top six cards of your deck. Discard all of them that cost 0, then put the rest back in any order.
+// ATTACK: 3
+[1, makeHenchmenCard("Spin, The Vortex Beam", 3, {
+  fight: ev => revealPlayerDeckEv(ev, 6, cards => cards.limit(c => c.cost === 0).each(c => discardEv(ev, c))),
+}, "Mandarin's Rings")],
+// FIGHT: Choose a card you played this turn that costs 0. When you draw a new hand of cards at the end of this turn, add that card to your hand as an extra card.
+// ATTACK: 3
+[1, makeHenchmenCard("Zero, The Ice Blast", 3, {
+  fight: ev => selectCardEv(ev, "Choose a card", playerState.playArea.limit(c => c.cost === 0), c => {
+    addTurnTrigger("CLEANUP", undefined, ev => moveCardEv(ev, c, playerState.hand))
+  }),
+}, "Mandarin's Rings")],
+]}
+]);
