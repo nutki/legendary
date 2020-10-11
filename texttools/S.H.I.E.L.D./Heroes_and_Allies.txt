@@ -1,0 +1,155 @@
+
+#CARDNAME: Agent Phil Coulson
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Impeccable Planning
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+{SHIELDLEVEL 3} When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 3
+
+#SUBNAME: Build the Strike Team
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+Reveal the top card of the S.H.I.E.L.D. Officer Stack. Gain it or put it on the bottom of the stack.
+{POWER Covert} You may send it {UNDERCOVER}.
+#COST: 4
+
+#SUBNAME: Approve Orbital Strike
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 0+
+Choose one:
+- Send a S.H.I.E.L.D. Hero from your hand {UNDERCOVER}.
+- Or you get +1 Attack for each 2 <b>S.H.I.E.L.D. Levels</b> you have.
+#COST: 6
+
+#SUBNAME: Fake But Inspiring Death
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+During any player's turn, when another S.H.I.E.L.D. Hero is put into the KO pile, you may discard this card to send that Hero {UNDERCOVER} in your Victory Pile instead. If you do, draw three cards.
+{SHIELDLEVEL 8} You get +4 Attack.
+#COST: 8
+#GUN: 1
+
+#CARDNAME: Quake
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Going Underground
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 3
+To play this, you must discard a S.H.I.E.L.D. Hero.
+{POWER Ranged} You may send the Hero you discarded {UNDERCOVER}.
+#COST: 3
+
+#SUBNAME: Aftershock
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{SHIELDLEVEL 2} You get +2 Attack.
+#COST: 4
+#FLAVOR: S.H.I.E.L.D. training focused Daisy's vast powers to pinpoint accuracy.
+#GUN: 1
+
+#SUBNAME: Tectonic Wave
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2+
+Whenever you fight a Villain this turn, if its Attack is higher than your <b>S.H.I.E.L.D. Level</b>, you may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+{SHIELDLEVEL 4} You get +4 Attack
+#COST: 6
+
+#SUBNAME: Roil the Earth
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 0+
+You may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+Then, for each <b>S.H.I.E.L.D. Level</b> you have up to 5, choose a Hero from the HQ. Put all those Heroes on the bottom of the Hero Deck and you get their total printed Attack.
+#COST: 7
+
+#CARDNAME: Deathlok
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Authorize Lethal Force
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 0+
+Draw a card.
+{SHIELDLEVEL 1} You get +1 Attack.
+#COST: 2
+#FLAVOR: S.H.I.E.L.D. reanimates dead operatives into killer cyborgs. They're the good guys.
+#GUN: 1
+
+#SUBNAME: Reanimate Into Service
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2
+{POWER Tech} You may send a S.H.I.E.L.D. Hero {UNDERCOVER} from your discard pile or the KO pile.
+#COST: 4
+
+#SUBNAME: Headlok
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 3
+#ATTACK: 0+
+{SHIELDLEVEL 3} You get +3 Attack
+If your S.H.I.E.L.D. Level is less than 3, you may send a S.H.I.E.L.D. card from your discard pile {UNDERCOVER}.
+#COST: 5
+#FLAVOR: He'll knock your block off.
+#GUN: 1
+
+#SUBNAME: Behind Enemy Lines
+#COPIES: 1
+#CLASS: [Covert]
+#RECRUIT: 0+
+#ATTACK: 5
+You may send a S.H.I.E.L.D. Hero from your discard pile {UNDERCOVER}.
+{SHIELDLEVEL 3} You get the total printed Recruit of all the S.H.I.E.L.D. Heroes in your Victory Pile.
+#COST: 8
+#GUN: 1
+
+#CARDNAME: Mockingbird
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Take Cover
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+Look at the top card of your deck. Discard it or put it back.
+{POWER Instinct} If that card was a S.H.I.E.L.D. Hero, you may send it {UNDERCOVER}.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Battle Staves
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+{SHIELDLEVEL 2} Draw a card.
+#COST: 4
+#FLAVOR: War Machine fights using a state-of-the-art battle platform. Bobbi Morse just needs a couple of sticks.
+
+#SUBNAME: Spymaster
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 1+
+Choose one:
+- Send a card from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+- Or you get +1 Attack for each 2 <b>S.H.I.E.L.D. Levels</b> you have.
+#COST: 5
+#GUN: 1
+
+#SUBNAME: Infinity Formula
+#COPIES: 1
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+Draw a card.
+Send two cards from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+Then you get +1 Recruit and +1 Attack for each 2 <b>S.H.I.E.L.D. Levels</b> you have.
+#COST: 7
+
+

@@ -1,0 +1,59 @@
+
+#CARDNAME: Hydra Elite
+
+#SUBNAME: Crossbones
+#COPIES: 2
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player gains a Wound unless that player reveals at least as many S.H.I.E.L.D. Heroes as the <b>Hydra Level.</b>
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Gorgon
+#COPIES: 2
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then check the <b>Hydra Level.</b> You can't play Heroes of that cost this turn.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Growing Man
+#COPIES: 2
+Growing man gets + Attack equal to the Mastermind's <b>Hydra Level.</b>
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile.
+#ATTACK: 0+
+#VP: 3
+
+#SUBNAME: Hive
+#COPIES: 2
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals their hand and discards a card with cost equal to the <b>Hydra Level.</b>
+#ATTACK: 5
+#VP: 3
+
+#CARDNAME: A.I.M., Hydra Offshoot
+
+#SUBNAME: Graviton
+#COPIES: 2
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then, for each 2 <b>Hydra Levels</b>, Heroes currently in the HQ cost 1 more recruit this turn.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Mentallo
+#COPIES: 2
+Mentallo gets +1 Attack for each Officer he has.
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then Mentallo captures a S.H.I.E.L.D. Officer for each 2 <b>Hydra Level.</b>
+#FIGHT: Gain an Officer captured by Mentallo or send it <b>Undercover.</b> KO the rest.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Superia
+#COPIES: 2
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals a random card from their hand. If the <b>Hydra Level</b> is higher than that card's cost, that player discards that card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Taskmaster
+#COPIES: 2
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile.
+#FIGHT: Each player must reveal as many Hero colors (including grey) as the <b>Hydra Level</b> or gain a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 3 (erratum, see FAQ, 3+ as printed)
+#VP: 2 (erratum, see FAQ, 4 as printed)
+
+

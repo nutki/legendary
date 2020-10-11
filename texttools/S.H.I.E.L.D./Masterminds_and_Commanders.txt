@@ -1,0 +1,62 @@
+
+#CARDNAME: Hydra High Council
+
+#TACTIC: Red Skull
+Red Skull gets +1 Attack for each two <b>Hydra Levels</b>.
+#LEADS: Hydra Elite
+<b>Start Game: Adapt</b>.
+#STRIKE: Each player KOs one of their non-grey Heroes. <b>Adapt</b>.
+#FIGHT: KO one of your grey Heroes. <b>Adapt</b>.
+#ATTACK: 7+
+#VP: 6
+
+#TACTIC: Viper
+Viper gets +1 Attack for each Hydra Villain in the city.
+#STRIKE: If there are any Hydra Villains in the city, each player gains a Wound. <b>Adapt</b>.
+#FIGHT: Discard any number of cards, then draw that many cards. <b>Adapt</b>.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Arnim Zola
+Arnim Zola gets + Attack equal to the total printed Attack of all heroes in the HQ.
+#STRIKE: Each player discards two Heroes with Attack icons. <b>Adapt</b>.
+#FIGHT: You may gain a Hero from the HQ with an Attack icon. <b>Adapt</b>.
+#ATTACK: 6+
+#VP: 6
+
+#TACTIC: Baron Helmut Zemo
+Baron Helmut Zemo gets -1 Attack for each Villain in your Victory Pile.
+#STRIKE: Each player KOs a Hydra Villain from their Victory Pile or gains a Wound. <b>Adapt</b>.
+#FIGHT: Each other player KOs a Hydra Villain from their Victory Pile or gains a Wound. <b>Adapt</b>.
+#ATTACK: 16*
+#VP: 6
+
+#CARDNAME: Hydra Super-Adaptoid
+
+#TACTIC: Black Widow's Bite
+#LEADS: A.I.M. Hydra Offshoot
+<b>Start Game: Adapt</b>.
+#STRIKE: Each player KOs two Bystanders from their Victory Pile or gains a Wound. <b>Adapt</b>.
+#FIGHT: For each of your [Covert] Heroes, rescue a Bystander. <b>Adapt</b>.
+#ATTACK: 8
+#VP: 6
+
+#TACTIC: Captain America's Shield
+#STRIKE: Each player reveals an [Instinct] Hero or discards their hand and draws four cards. <b>Adapt</b>.
+#FIGHT: You get +1 Recruit for each color of Hero you have (including grey). <b>Adapt</b>.
+#ATTACK: 10
+#VP: 6
+
+#TACTIC: Iron Man's Armor
+#STRIKE: Each player reveals a [Tech] Hero or discards down to 3 cards. <b>Adapt</b>.
+#FIGHT: Count you [Tech] Heroes, then draw that many cards. <b>Adapt</b>.
+#ATTACK: 12
+#VP: 6
+
+#TACTIC: Thor's Hammer
+#STRIKE: Each player reveals a [Ranged] Hero or gains a Wound. <b>Adapt</b>.
+#FIGHT: For each of your [Strength] Heroes, KO one of your Heroes. <b>Adapt</b>.
+#ATTACK: 14
+#VP: 6
+
+

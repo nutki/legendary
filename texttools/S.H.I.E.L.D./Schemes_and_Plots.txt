@@ -1,0 +1,24 @@
+
+#CARDNAME: S.H.I.E.L.D. vs. HYDRA War
+#SETUP: 7 Twists. Include either the "Hydra Elite" or "A.I.M., Hydra Offshoot" Villain Group, but not both.
+#TWIST: Each player puts a card from the S.H.I.E.L.D. Officer Stack face up next to the Scheme as a 3 Attack "Double Agent" Villain. If any Double Agents were already there, put one into the Escape Pile and put the rest on the bottom of the S.H.I.E.L.D. Officer Stack. You can fight any Double Agent next to the Scheme to gain it or send it {UNDERCOVER}.
+#EVILWINS: When the <b>Hydra Level</b> is 11.
+
+#CARDNAME: Hail Hydra
+#SETUP: 11 Twists.
+#TWISTNR: NR[1-9] Choose one:
+-Say "I'd never abandon S.H.I.E.L.D.", and you can't fight this turn.
+-Or whisper "Hail Hydra", you can't recruit this turn, and a Villain captures a Bystander.
+#TWISTNR: NR[10] Evil Wins!
+
+#CARDNAME: Hydra Helicarriers Hunt Heroes
+#SETUP: 8 Twists. Add an extra Hero.
+#TWIST: Stack this Twist next to the Scheme. Then for each Twist stacked there, choose a different Hero Class ([Strength], [Instinct], [Covert], [Tech], [Ranged] ), to a maximum of 5. KO each Hero from the HQ that has any of those Hero Classes.
+#EVILWINS: When there are 18 non-grey Heroes in the KO pile.
+
+#CARDNAME: Secret Empire of Betrayal
+#SETUP: 11 Twists. Randomly pick 5 cards that cost 5 or less from an additional Hero. Shuffle them to form a "Dark Loyalty" deck.
+#TWIST: Shuffle this Twist into the Dark Loyalty deck as a "Vicious Betrayal." Then reveal the top card of that deck. If it's a Hero, gain it. If it's a Vicious Betrayal, put it next to the Scheme and each other player gains a Wound.
+#EVILWINS: When there are 6 Vicious Betrayals next to the Scheme.
+
+
