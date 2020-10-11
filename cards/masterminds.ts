@@ -1992,21 +1992,43 @@ addTemplates("MASTERMINDS", "Revelations", [
 ...makeEpicMastermindCard("Mandarin", [ 16, 26 ], 6, "Mandarin's Rings", ev => {
 // Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound instead.
 // Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound to the top of their deck instead.
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Ring to enter the city", p.victory.limit(isGroup(ev.source.leads)), c => {
+    enterCityEv(ev, c); // TODO enterCityEv card can be a location (HYDRA base)
+  }, () => {
+    ev.source.epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p);
+  }, p));
 }, [
   [ "Circles Unbroken", ev => {
   // Draw a card for each Mandarin's Ring in your Victory Pile.
+    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
   } ],
-// Whenever you fight a Villain here, each other player reveals their hand and KOs one of their non-grey Heroes.
-  [ "Dragon of Heaven Spaceship", ev => {
+  makeTacticsCard("Dragon of Heaven Spaceship", { fight: ev => {
   // If this was not already a <b>Location</b>, KO up to two of your Heroes, and this card enters the city as a Location with this ability:|KO up to two of your Heroes.
-  } ],
+  // Whenever you fight a Villain here, each other player reveals their hand and KOs one of their non-grey Heroes.
+    selectObjectsUpToEv(ev, "Choose up to two of your Heros", 2, yourHeroes(), c => KOEv(ev, c));
+    if (!isRevelationsLocation(ev.source)) {
+      addStatSet('isLocation', c => c === ev.source, () => true);
+      playLocationEv(ev, ev.source);
+    }
+  }, trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => {
+    pickDiscardEv(ev, 1, p, isNonGrayHero);
+  })}),
   [ "Intertwining Powers", ev => {
   // Each other player without at least two Mandarin's Rings in their Victory Pile gains a Wound.
+    eachOtherPlayerVM(p => p.victory.count(isGroup(ev.source.mastermind.leads)) >= 2 || gainWoundEv(ev, p));
   } ],
   [ "Rings Seek Their True Hand", ev => {
   // Each other player reveals a [Tech] Hero or puts a Mandarin's Ring from their Victory Pile into the Escape Pile.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => {
+      selectCardEv(ev, "Choose a Ring to put into the Escape Pile", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => moveCardEv(ev, c, gameState.escaped));
+    }, p))
   } ],
-]),
+], {
+  varDefense: c => c.printedDefense - gameState.players.sum(p => p.victory.count(isGroup(c.leads)) * (gameState.players.length === 1 ? 3 : 1)),
+  init: c => {
+    addStatMod('defense', isGroup(c.leads), c.epic ? 2 : 1);
+  }
+}),
 // {DARK MEMORIES}
 // EPICNAME: Hood
 //  <b>Double Dark Memories</b>

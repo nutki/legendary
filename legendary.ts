@@ -1906,6 +1906,9 @@ function gainBindingsEv(ev: Ev, who: Player = playerState): void {
 function gainWoundToHandEv(ev: Ev, who: Player = playerState): void {
   cont(ev, () => gameState.wounds.withTop(c => gainToHandEv(ev, c, who)));
 }
+function gainWoundToDeckEv(ev: Ev, who: Player = playerState): void {
+  cont(ev, () => gameState.wounds.withTop(c => gainToDeckEv(ev, c, who)));
+}
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
 function pushEv(ev: Ev, name: EvType, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
 type Handler = (ev: Ev) => void;
