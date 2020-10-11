@@ -2034,21 +2034,43 @@ addTemplates("MASTERMINDS", "Revelations", [
 //  <b>Double Dark Memories</b>
 ...makeEpicMastermindCard("The Hood", [ 9, 10 ], 6, "Hood's Gang", ev => {
 // Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
-// Each player discards their deck, then shuffles 6 random grey cards from their discard pile to form their new deck.
+  eachPlayer(p => cont(ev, () => {
+    if (!ev.source.epic) {
+      revealPlayerDeckEv(ev, 6, cards => cards.limit(isNonGrayHero).each(c => discardEv(ev, c)), p);
+    } else {
+      // Each player discards their deck, then shuffles 6 random grey cards from their discard pile to form their new deck.
+      discardDeckEv(ev, p);
+      cont(ev, () => p.discard.limit(isColor(Color.GRAY)).shuffled().slice(0, 6).each(c => moveCardEv(ev, c, p.deck)));
+    }
+  }));
 }, [
   [ "Demonic Revelation", ev => {
   // Each other player reveals their hand and discards a non-grey Hero.
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p, isNonGrayHero));
   } ],
 // Then each other player reveals a [Tech] Hero or gains a Wound.
   [ "Focus Magic Through Guns", ev => {
   // Each other player reveals a [Covert] Hero or discards a card.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => pickDiscardEv(ev, 1, p), p));
   } ],
   [ "Paean to Dormammu", ev => {
   // Each other player discards their deck.
+    eachOtherPlayerVM(p => discardDeckEv(ev, p));
   } ],
-// When you fight a Villain here, play another card from the Villain Deck.
-  [ "The Hood's Warehouse", ev => {
+  makeTacticsCard("The Hood's Warehouse", { fight: ev => {
   // If this was not already a <b>Location</b>, rescue 4 Bystanders, and this card enters the city as a Location with this ability:
-  } ],
-]),
+  // When you fight a Villain here, play another card from the Villain Deck.
+    if (!isRevelationsLocation(ev.source)) {
+      rescueEv(ev, 4);
+      addStatSet('isLocation', c => c === ev.source, () => true);
+      playLocationEv(ev, ev.source);
+    }
+  }, trigger: {
+    event: 'FIGHT',
+    match: (ev, source) => isVillain(ev.what) && ev.what.location === source.location.attachedTo,
+    after: ev => villainDrawEv(ev),
+  }}),
+], {
+  varDefense: c => c.printedDefense + darkMemoriesAmount() * (c.epic ? 2 : 1)
+}),
 ]);

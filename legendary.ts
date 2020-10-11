@@ -1840,6 +1840,7 @@ function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
 }
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), where: card.location, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
+function discardDeckEv(ev: Ev, who: Player = playerState) { who.deck.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
     let c: Card[] = [];
     who = who || playerState;
