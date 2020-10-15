@@ -2074,3 +2074,86 @@ addTemplates("MASTERMINDS", "Revelations", [
   varDefense: c => c.printedDefense + darkMemoriesAmount() * (c.epic ? 2 : 1)
 }),
 ]);
+
+addTemplates("MASTERMINDS", "S.H.I.E.L.D.", [
+makeAdaptingMastermindCard("Hydra High Council", 6, "Hydra Elite", [
+// Red Skull gets +1 Attack for each two <b>Hydra Levels</b>.
+// #STRIKE: Each player KOs one of their non-grey Heroes. <b>Adapt</b>.
+// #FIGHT: KO one of your grey Heroes. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Red Skull", 7, ev => {
+    eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p).limit(isNonGrayHero), p));
+  }, ev => {
+    selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY));
+  }, {
+    varDefense: c => c.printedDefense + Math.floor(hydraLevel() / 2),
+  }),
+// Viper gets +1 Attack for each Hydra Villain in the city.
+// #STRIKE: If there are any Hydra Villains in the city, each player gains a Wound. <b>Adapt</b>.
+// #FIGHT: Discard any number of cards, then draw that many cards. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Viper", 9, ev => {
+    cityVillains().has(isHydraInAnyWay) && eachPlayer(p => gainWoundEv(ev, p));
+  }, ev => {
+    let count = 0;
+    selectObjectsAnyEv(ev, "Choose cards to discard", playerState.hand.deck, c => {
+      discardEv(ev, c);
+      count++;
+    });
+    cont(ev, () => drawEv(ev, count));
+  }, {
+    varDefense: c => c.printedDefense + cityVillains().count(isHydraInAnyWay),
+  }),
+// Arnim Zola gets + Attack equal to the total printed Attack of all heroes in the HQ.
+// #STRIKE: Each player discards two Heroes with Attack icons. <b>Adapt</b>.
+// #FIGHT: You may gain a Hero from the HQ with an Attack icon. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Arnim Zola", 6, ev => {
+    eachPlayer(p => pickDiscardEv(ev, 2, p, hasAttackIcon));
+  }, ev => {
+    selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(hasAttackIcon), c => gainEv(ev, c));
+  }, {
+    varDefense: c => c.printedDefense + hqHeroes().sum(c => c.printedAttack || 0),
+  }),
+// Baron Helmut Zemo gets -1 Attack for each Villain in your Victory Pile.
+// #STRIKE: Each player KOs a Hydra Villain from their Victory Pile or gains a Wound. <b>Adapt</b>.
+// #FIGHT: Each other player KOs a Hydra Villain from their Victory Pile or gains a Wound. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Baron Helmut Zemo", 16, ev => {
+    eachPlayer(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isHydraInAnyWay), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  }, ev => {
+    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isHydraInAnyWay), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  }, {
+    varDefense: c => c.printedDefense - playerState.victory.count(isVillain),
+  }),
+]),
+makeAdaptingMastermindCard("Hydra Super-Adaptoid", 6, "A.I.M. Hydra Offshoot", [
+// #STRIKE: Each player KOs two Bystanders from their Victory Pile or gains a Wound. <b>Adapt</b>.
+// #FIGHT: For each of your [Covert] Heroes, rescue a Bystander. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Black Widow's Bite", 8, ev => {
+    eachPlayer(p => {
+      const bystanders = p.victory.limit(isBystander);
+      bystanders.size >= 2 ? selectObjectsEv(ev, "Choose Bystanders to KO", 2, bystanders, c => KOEv(ev, c), p) : gainWoundEv(ev, p);
+    });
+  }, ev => {
+    rescueEv(ev, yourHeroes().count(Color.COVERT));
+  }),
+// #STRIKE: Each player reveals an [Instinct] Hero or discards their hand and draws four cards. <b>Adapt</b>.
+// #FIGHT: You get +1 Recruit for each color of Hero you have (including grey). <b>Adapt</b>.
+  makeAdaptingTacticsCard("Captain America's Shield", 10, ev => {
+    eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => { discardHandEv(ev, p); drawEv(ev, 4, p); }, p));
+  }, ev => {
+    addRecruitEvent(ev, numColors());
+  }),
+// #STRIKE: Each player reveals a [Tech] Hero or discards down to 3 cards. <b>Adapt</b>.
+// #FIGHT: Count you [Tech] Heroes, then draw that many cards. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Iron Man's Armor", 12, ev => {
+    eachPlayer(p => revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, -3, p), p));
+  }, ev => {
+    drawEv(ev, superPower(Color.TECH));
+  }),
+// #STRIKE: Each player reveals a [Ranged] Hero or gains a Wound. <b>Adapt</b>.
+// #FIGHT: For each of your [Strength] Heroes, KO one of your Heroes. <b>Adapt</b>.
+  makeAdaptingTacticsCard("Thor's Hammer", 14, ev => {
+    eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p));
+  }, ev => {
+    selectObjectsEv(ev, "Choose Heroes to KO", superPower(Color.STRENGTH), yourHeroes(), c => KOEv(ev, c));
+  }),
+]),
+]);

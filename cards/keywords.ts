@@ -683,6 +683,12 @@ function isShieldOrHydraInAnyWay(c: Card) {
   if (names.some(name => name.includes('HYDRA') || name.includes("Hydra"))) return true;
   return false;
 }
+function isHydraInAnyWay(c: Card) {
+  if (isTeam('HYDRA')(c)) return true;
+  const names = [c.cardName, c.heroName, c.mastermind && c.mastermind.cardName, c.villainGroup].filter(name => name);
+  if (names.some(name => name.includes('HYDRA') || name.includes("Hydra"))) return true;
+  return false;
+}
 function shieldLevel() {
   return playerState.victory.count(isShieldOrHydraInAnyWay);
 }

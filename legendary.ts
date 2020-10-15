@@ -112,6 +112,7 @@ interface Card {
   uSizeChanging?: { color: number, amount: number } // TODO microscopic size changing
   chivalrousDuel?: boolean // TODO chivalrous duel
   modifiers?: Modifiers;
+  isAdaptingMastermind?: boolean;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -326,6 +327,27 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
     return t;
   });
   if (abilities) Object.assign(c, abilities);
+  return c;
+}
+function makeAdaptingMastermindCard(name: string, vp: number, leads: string, tactics: Card[]) {
+  let c = new Card("MASTERMIND", name);
+  c.printedVP = vp;
+  c.leads = leads;
+  c.isAdaptingMastermind = true;
+  tactics.each(c => {
+    c.printedVP = vp;
+    c.leads = leads;
+    c.isAdaptingMastermind = true;
+  });
+  c.tacticsTemplates = tactics;
+  return c;
+}
+function makeAdaptingTacticsCard(name: string, defense: number, strike: Handler, fight: Handler, abilities?: MastermindCardAbillities) {
+  const c = makeTacticsCard(name);
+  c.printedDefense = defense;
+  c.strike = strike;
+  c.fight = fight;
+  abilities && Object.assign(c, abilities);
   return c;
 }
 function makeBystanderCard(name: string, rescue?: (ev: Ev) => void, vp?: (c: Card) => number) {
@@ -1334,6 +1356,7 @@ gameSetup.mastermind.forEach((m, i) => {
       !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
 });
 if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
+if (gameState.mastermind.top.isAdaptingMastermind) adaptMastermind(gameState.mastermind.top);
 if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
@@ -2306,7 +2329,10 @@ function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
   const nr = ++gameState.strikeCount;
-  fightableCards().limit(isMastermind).each(m => pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr }));
+  fightableCards().limit(isMastermind).each(m => {
+    pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr });
+    m.isAdaptingMastermind && adaptMastermindEv(ev, m);
+  });
   if (gameState.advancedSolo) villainDrawEv(ev);
 }
 function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: ev => {
@@ -2316,6 +2342,20 @@ function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func:
   // attach
   // * add locations to fightable
 } }); }
+function adaptMastermind(mastermind: Card) {
+  const tactics = mastermind.attachedDeck("TACTICS");
+  const mastermindLocation = mastermind.location;
+  if (!tactics.size) {
+    mastermind.location.remove(mastermind);
+  }
+  const mastermindPos = mastermindLocation.deck.indexOf(mastermind);
+  tactics.shuffle();
+  const newMastermind = makeCardCopy(tactics.top);
+  newMastermind._attached = mastermind._attached;
+  mastermindLocation.deck[mastermindPos] = newMastermind;
+}
+function adaptMastermindEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { func: () => adaptMastermind(what) }); }
+
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
@@ -2388,6 +2428,7 @@ function villainDefeat(ev: Ev): void {
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
   pushEffects(ev, c, "fight", c.fight, { where: ev.where });
+  if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
 function rescueByEv(ev: Ev, who: Player, what: Card | number = 1): void {
   if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what, who });
