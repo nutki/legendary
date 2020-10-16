@@ -40,6 +40,7 @@ sub autopower {
     s/^{XGENE (.*?)} *// and $cond = "xGenePower(\"$1\")";
     s/^{VIOLENCE} *// and $wrap = "excessiveViolence: ev => XXX";
     s/^{SHIELDLEVEL (.*?)} *// and $cond = "shieldLevelPower($1)";
+    s/^If you are \{WORTHY\},? *// and $cond = "worthyPower()";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -76,6 +77,7 @@ sub autopower {
     s/^{DARK MEMORIES}$// and $effect = "darkMemoriesEv(ev)";
     s/^{LAST STAND}$// and $effect = "lastStandEv(ev)";
     s/^{HYPERSPEED (\d+)}$// and $effect = "hyperspeedEv(ev, $1)";
+    s/^{(\w+) CONQUEROR (\d+)}$// and $effect = "heroConquerorEv(ev, '$1', $2)";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;

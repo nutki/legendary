@@ -3,21 +3,21 @@
 
 #SUBNAME: Chitauri Soldier
 #COPIES: 2
-<b>Rooftops Conqueror 2</b>
+{ROOFTOPS CONQUEROR 2}
 #AMBUSH: Chitauri Soldier captures a Bystander.
 #ATTACK: 3+
 #VP: 2
 
 #SUBNAME: Chitauri Commander
 #COPIES: 2
-<b>Rooftops Conqueror 2</b>
+{ROOFTOPS CONQUEROR 2}
 #AMBUSH: (After this enters the city) If the rooftops are empty, reveal the top card of the villain deck.  If it's a villain, that villain enters the rooftops.
 #ATTACK: 3+
 #VP: 2
 
 #SUBNAME: Chitauri Leviathan
 #COPIES: 2
-<b>Rooftops Conqueror 2</b>
+{ROOFTOPS CONQUEROR 2}
 #FIGHT: Each player with no Bystanders in their Victory Pile gains a wound.
 #ESCAPE: Same effect.
 #ATTACK: 5+
@@ -25,7 +25,7 @@
 
 #SUBNAME: Chitauri Chariot
 #COPIES: 2
-<b>Rooftops Conqueror 2</b>
+{ROOFTOPS CONQUEROR 2}
 #AMBUSH: (After this enters the city) If the rooftops are empty, move this Villain there.
 #ATTACK: 4+
 #VP: 3
@@ -78,14 +78,14 @@ Each Player reveals their hand. Each player with any [Strength] cards must disca
 
 #SUBNAME: Abomination, Raging Monster
 #COPIES: 2
-<b>Streets Conqueror 3</b>
+{STREETS CONQUEROR 3}
 #AMBUSH: (After this enters the city.) If the streets are empty, move another villain from any city space to the streets.
 #ATTACK: 4+
 #VP: 4
 
 #SUBNAME: Fighter Jet
 #COPIES: 2
-<b>Streets Conqueror 2</b>
+{STREETS CONQUEROR 2}
 #FIGHT: KO one of your heroes.
 #ATTACK: 3+
 #VP: 2
@@ -141,7 +141,7 @@ Raza gets +1 Attack for each Bystander he has.
 
 #SUBNAME: Justin Hammer
 #COPIES: 2
-<b>Bank Conqueror 2</b>
+{BANK CONQUEROR 2}
 #FIGHT: You get +2 Recruit usable only to recruit heroes in the HQ space under the bank.
 #ATTACK: 3+
 #VP: 2

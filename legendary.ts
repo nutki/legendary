@@ -441,6 +441,7 @@ type Affiliation =
 'Crime Syndicate' |
 'Fantastic Four' |
 'Foes of Asgard' |
+'Heroes of Asgard' |
 'Guardians of the Galaxy' |
 'HYDRA' |
 'Illuminati' |

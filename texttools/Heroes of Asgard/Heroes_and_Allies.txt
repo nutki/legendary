@@ -1,0 +1,172 @@
+
+#CARDNAME: Thor
+#TEAM: Heroes of Asgard
+
+#SUBNAME: Test of Virtue
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+#ATTACK: 0+
+If you are {WORTHY}, you get +2 Attack.
+#COST: 3
+#FLAVOR: No matter how many times you prove yourself, doubt always lingers.
+
+#SUBNAME: Divine Lightning
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 3+
+You get +1 Attack for each other card you played this turn that makes you {WORTHY}.
+#COST: 5
+#FLAVOR: Might makes light.
+
+#SUBNAME: Mjolnir
+#COPIES: 3
+#CLASS: [Strength]
+You cannot throw Mjolnir unless you are {WORTHY}.
+{THROWN ARTIFACT} When you throw this, you get +3 Attack, then you get +1 Attack for each [Ranged] Hero you played this turn.
+#COST: 4
+
+#SUBNAME: Royal Decree
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5
+{TEAMPOWER Heroes of Asgard} Each player who is {WORTHY} draws a card. Each Villain that isn't worth at least 5VP gets -1 Attack this turn.
+#COST: 8
+
+#CARDNAME: Beta Ray Bill
+#TEAM: Heroes of Asgard
+
+#SUBNAME: Hope of the Korbinites
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+To play this, you must discard a card.
+Then, if you are {WORTHY}, draw a card.
+#COST: 1
+#FLAVOR: It's not about what you gain. It's about what you sacrifice.
+
+#SUBNAME: Bio-Engineered Cyborg
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 3
+You may discard a card. If you do, draw a card.
+#COST: 5
+#FLAVOR: His gaunt, equine face is not common to all Korbinites, but instead a product of his unique creation.
+
+#SUBNAME: Stormbreaker
+#COPIES: 3
+#CLASS: [Ranged]
+You cannot throw Stormbreaker unless you are {WORTHY}.
+{THROWN ARTIFACT} To throw this, you must discard a card from your hand. Then you get +2 Attack for each card you discarded from your hand this turn.
+#COST: 4
+
+#SUBNAME: The Warship Skuttlebutt
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+You may discard a card. Then count the number of cards you discarded from your hand this turn. Draw that many cards.
+#COST: 8
+#GUN: 1
+
+#CARDNAME: Valkyrie
+#TEAM: Heroes of Asgard
+
+#SUBNAME: Dragonfang
+#COPIES: 5
+#CLASS: [Strength]
+{THROWN ARTIFACT} When you throw this, you get {SEWERS CONQUEROR 2}.
+#COST: 3
+#FLAVOR: If you throw your sword, you better be sure it ends the fight.
+
+#SUBNAME: Flying Stallion
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+{ROOFTOPS CONQUEROR 1}
+When an Ambush ability is played, before it takes effect, you may discard this card. If you do, draw two extra cards at the end of this turn.
+#COST: 4
+
+#SUBNAME: Usher to Valhalla
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2+
+{BRIDGE CONQUEROR 1}
+{TEAMPOWER Heroes of Asgard} The first time you defeat a Villain this turn, you may KO one of your cards or a card from your discard pile.
+#COST: 6
+
+#SUBNAME: Ride of the Valkyries
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 4+
+{STREETS CONQUEROR 1}
+[Instinct] : You get +1 Attack for every 4 Heroes in the KO pile.
+#COST: 7
+
+#CARDNAME: Lady Sif
+#TEAM: Heroes of Asgard
+
+#SUBNAME: Dimensional Blade
+#COPIES: 5
+#CLASS: [Instinct]
+<b>Thrown artifact</b> - When you throw this you get +1 Recruit and +1 Attack.
+#COST: 2
+#FLAVOR: Cutting a hole between dimensions, Sif can decapitate a Frost Giant and a Lava Elemental with a single swing.
+
+#SUBNAME: Weapons Master
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+If you control any Artifacts, you get +2 Attack.
+#COST: 5
+#FLAVOR: An hour of throwing swords practice, then an hour of throwing helms practice.
+
+#SUBNAME: Winged Helm
+#COPIES: 3
+#CLASS: [Strength]
+{THROWN ARTIFACT} You may throw this to get +1 Attack.
+During any player's turn, if a player would gain a Wound, you may throw this to prevent that Wound and draw two cards instead.
+#COST: 3
+
+#SUBNAME: Golden Apples of Idunn
+#COPIES: 1
+#CLASS: [Covert]
+{THROWN ARTIFACT} When you throw this, you get +4 Attack and you may KO a card from your hand or discard pile.
+#COST: 7
+
+#CARDNAME: The Warriors Three
+#TEAM: Heroes of Asgard
+
+#SUBNAME: Fandral the Dashing
+#COPIES: 5
+#CLASS: [Instinct]
+You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+{POWER Covert} Draw a card.
+#COST: 3
+#FLAVOR: He wields Fimbuldraugr, the Whispering Spirit - the Ghost of the End of All Times. Or so he says.
+
+#SUBNAME: Hogun the Grim
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{POWER Strength} You may KO a card from your hand or discard pile.
+#COST: 4
+#FLAVOR: Some whisper that his ancient mace Hridgandr can heal the wounded. But mostly it creates more wounded.
+
+#SUBNAME: Volstagg the Valiant
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{BRIDGE CONQUEROR 1}
+{POWER Instinct} Instead, {BRIDGE CONQUEROR 3}
+#COST: 6
+#FLAVOR: He holds the Rainbow Bridge Bifrost againt all invaders.
+
+#SUBNAME: Three Stand as One
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+If you played at least three other non-grey Heroes with different cad ames this turn, you get +3 Attack
+{TEAMPOWER Heroes of Asgard} {STREETS CONQUEROR 3}
+#COST: 8
+
+

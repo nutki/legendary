@@ -697,3 +697,17 @@ function hydraLevel() {
 }
 const shieldLevelPower = (n: number) => shieldLevel() >= n;
 const hydraLevelPower = (n: number) => hydraLevel() >= n;
+
+// Heroes of Asgard
+function worthyPower(p: Player = playerState) {
+  return yourHeroes(p).has(c => c.cost >= 5);
+}
+function hasConqueror(l: CityLocation) {
+  return gameState.city.limit(d => d.id === l).has(c => c.has(isVillain));
+}
+function heroConquerorEv(ev: Ev, l: CityLocation, amount: number) {
+  hasConqueror(l) && addAttackEvent(ev, amount);
+}
+function conquerorVarDefese(l: CityLocation, amount: number) {
+  return (c: Card) => c.baseDefense + (hasConqueror(l) ? amount : 0);
+}

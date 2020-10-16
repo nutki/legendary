@@ -22,6 +22,10 @@
 17 Ant-Man
 18 Venom
 19 Dimensions
+20 S.H.I.E.L.D.
+21 Heroes of Asgard
+22 New Mutants
+23 Into the Cosmos
 END
 %n = (
 'h' => 'Heroes_and_Allies',

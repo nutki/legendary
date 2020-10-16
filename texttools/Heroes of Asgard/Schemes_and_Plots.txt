@@ -1,0 +1,29 @@
+
+#CARDNAME: Asgardian Test of Worth
+#SETUP: 11 Twists.
+#TWISTNR: NR[1-7] Each player who is not {WORTHY} discards a card. Then, if at least half the players <i>(round up)</i> are not {WORTHY}, put this Twist next to the Scheme as a "Moral Failing."
+#TWISTNR: NR[8-11] Put this Twist next to the Scheme as a "Moral Failing."
+#EVILWINS: When there are 5 Moral Failings.
+
+#CARDNAME: The Dark World of Svartalfheim
+#SETUP: 10 Twists.
+#TWIST: Put this Twist next to a city space of HQ space that doesn't already have one, as "Eternal Darkness."
+#RULE: Villains in city spaces with Eternal Darkness get +1 Attack. To recruit a Hero in an HQ space with Eternal Darkness, you must pay an extra 1 Recruit.
+#EVILWINS: When all city spaces or all HQ spaces are covered in Eternal Darkness.
+
+#CARDNAME: Ragnarok, Twilight of the Gods
+#SETUP: 11 Twists.
+#TWIST: Choose a Villain from your Victory Pile worth at least 2VP to enter the city. Then, if the total Attack of Villains in the city is at least as high as the Guardian Attack listed below, put this Twist next to the Scheme as a "Guardian Defeated."
+#TWISTNR: NR[1] Balder, 11 Attack    <b>Twist 5</b>: Heimdall, 12 Attack
+#TWISTNR: NR[2] Odin, 24 Attack        <b>Twist 6</b>: Frey, 7 Attack
+#TWISTNR: NR[3] Vidar, 19 Attack        <b>Twist 7</b>: Frigga, 8 Attack
+#TWISTNR: NR[4] Tyr, 16 Attack        <b>Twist 8-11</b>: Warriors of Valhalla, 6 Attack
+#EVILWINS: When there are 5 Guardians Defeated.
+
+#CARDNAME: War of the Frost Giants
+#SETUP: 9 Twists.
+#TWISTNR: NR[1-7] This Twist enters the city as a "Frost Giant Invader" Villain worth 6VP with 6 Attack and the ability "If you are not {WORTHY}, this gets +4 Attack."
+#TWISTNR: NR[8-9] Same effect, then a Frost Giant Invader from each player's Victory Pile enters the city.
+#EVILWINS: When there are 5 Frost Giant Invaders in the city and/or Escape Pile.
+
+

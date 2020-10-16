@@ -1,0 +1,98 @@
+
+#CARDNAME: Dark Council
+
+#SUBNAME: Ulik, the Troll
+#COPIES: 2
+Ulik gets +2 if you are not {WORTHY}.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Sindr, Fire Giant Queen
+#COPIES: 2
+#FIGHT: If you are {WORTHY}, you get +2 Recruit.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: The Mangog
+#COPIES: 1
+The Mangog gets +1 Attack for each Villain in the Victory Pile of the player on your right.
+#ESCAPE: Each player who is not {WORTHY} gains a Wound.
+#ATTACK: 3+
+#VP: 4
+#FLAVOR: 
+
+#SUBNAME: Laufey, Father of Loki
+#COPIES: 1
+#AMBUSH: Laufey captures The Casket of Eternal Winters from any Villain, Mastermind, player's control, or discard pile.
+#ESCAPE: If Laufey holds The Casket of Ancient Winters, say "Fimbulwinter has come," and each player discards down to 3 cards.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: The Casket of Ancient Winters
+#COPIES: 1
+{VILLAINOUS WEAPON}
+#GAINABLE
+{ARTIFACT} Once per turn, if you are {WORTHY}, you get +2 Recruit.
+#ATTACK: +4
+
+#SUBNAME: Jarnbjorn, First Axe of Thor
+#COPIES: 1
+{VILLAINOUS WEAPON}
+#GAINABLE
+{THROWN ARTIFACT} When you throw this, you get +3 Attack.
+#ATTACK: +3
+#FLAVOR: 
+
+#CARDNAME: Omens of Ragnarok
+
+#SUBNAME: Skurge, the Executioner
+#COPIES: 2
+{BRIDGE CONQUEROR 3}
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 2
+#FLAVOR: 
+
+#SUBNAME: The Fenris Wolf
+#COPIES: 2
+{STREETS CONQUEROR 2}
+#AMBUSH: The Fenris Wolf moves forward to the Rooftops, pushing other Villains forward as normal.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Jormungand, the World-Serpent
+#COPIES: 1
+{SEWERS CONQUEROR 1}
+{BANK CONQUEROR 1}
+{ROOFTOPS CONQUEROR 1}
+{STREETS CONQUEROR 1}
+{BRIDGE CONQUEROR 1}
+#FIGHT: Each Hero currently in the HQ costs 1 less this turn.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Surtur, Fire Giant King
+#COPIES: 1
+#FIGHT: Put this into your discard pile as a "Surtur's Crown" Artifact.
+#ESCAPE: If Surtur was holding The Eternal Flame, say "Ragnarok has come," KO each Heroes of Asgard Hero from the HQ, and each player gains two Wounds.
+--
+{ARTIFACT} Once per turn, you get {SEWERS CONQUEROR 1}.
+#ATTACK: 6
+
+#SUBNAME: The Eternal Flame
+#COPIES: 1
+{VILLAINOUS WEAPON}
+#AMBUSH: If Surtur is in the city, he captures The Eternal Flame. If a player controls "Surtur's Crown," that card enters the city as the Villain Surtur and captures The Eternal Flame.
+#GAINABLE
+{ARTIFACT} Once per turn, return a 0-cost card from your discard pile to your hand.
+#ATTACK: +4
+
+#SUBNAME: The Hel-Crown
+#COPIES: 1
+{VILLAINOUS WEAPON}
+#GAINABLE
+{ARTIFACT} Once per turn, you get {STREETS CONQUEROR 1}.
+#ATTACK: +3
+
+

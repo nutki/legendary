@@ -1,0 +1,67 @@
+
+#CARDNAME: Malekith the Accursed
+#LEADS: Dark Council
+#STRIKE: Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. Then this Master Strike enters the city as a {VILLAINOUS WEAPON} called "Darkspear" that gives +2 Attack. When you gain a Darkspear, it becomes a <b>Thrown Artifact</b> that gives +2 Attack when thrown.
+#ATTACK: 8
+#VP: 6
+
+#EPICNAME: Malekith the Accursed
+#LEADS: Dark Council
+#STRIKE: Malekith captures a {VILLAINOUS WEAPON} from the city, then captures one from any player's control or discard pile. Then this Master Strike enters the city as a {VILLAINOUS WEAPON} called "Darkspear" that gives +3 Attack. When you gain a Darkspear, it becomes a <b>Thrown Artifact</b> that gives +2 Attack when thrown.
+#ATTACK: 10
+#VP: 6
+
+#TACTIC: Black Hammer of the Accursed
+#FIGHT: Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
+---
+{ARTIFACT} Once per turn, you may KO a Hero from your discard pile.
+#ATTACK: +4
+
+#TACTIC: Dagger of Living Abyss
+#FIGHT: Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
+---
+{ARTIFACT} Once per turn, you may defeat a Villain worth 2VP or less.
+#ATTACK: +2
+
+#TACTIC: The Hunting Horn of Faerie
+#FIGHT: Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
+---
+{ARTIFACT} Once per turn, draw a card.
+#ATTACK: +3
+
+#TACTIC: Vulnerable to Cold Iron
+#FIGHT: You get +2 Recruit for each [Tech] Hero you have.
+
+#CARDNAME: Hela, Goddess of Death
+<b>Bridge Conqueror 5,</b> {STREETS CONQUEROR 5}
+#LEADS: Omens of Ragnarok
+#STRIKE: This Strike enters the city as a 5 Attack "Army of the Dead" Villain worth 3VP. Then choose a Villain worth 3VP or more from your Victory Pile <i>(including an Army of the Dead)</i> to enter the city. If you didn't have any, each player gains a Wound.
+#ATTACK: 10+
+#VP: 6
+
+#EPICNAME: Hela, Goddess of Death
+<b>Bridge Conqueror 6,</b> <b>Streets Conqueror 6,</b> {ROOFTOPS CONQUEROR 6}
+#LEADS: Omens of Ragnarok
+#STRIKE: This Strike enters the city as a 6 Attack "Army of the Dead" Villain worth 4VP. Then choose a Villain worth 4VP or more from your Victory Pile <i>(including an Army of the Dead)</i> to enter the city. If you didn't have any, each player gains a Wound.
+#ATTACK: 12+
+#VP: 6
+
+#TACTIC: Hela's Cloak
+#FIGHT: Rescue 4 Bystanders. Hela captures this card as a {VILLAINOUS WEAPON}.
+---
+{ARTIFACT} Once during each player's turn, if you would gain a Wound, you may draw a card instead.
+#ATTACK: +2
+
+#TACTIC: The Nightsword
+#FIGHT: Rescue 4 Bystanders. Hela captures this card as a {VILLAINOUS WEAPON}.
+---
+{THROWN ARTIFACT} When you throw this, you get {BRIDGE CONQUEROR 3}.
+#ATTACK: +3
+
+#TACTIC: Seize Bifrost, The Rainbow Bridge
+#FIGHT: Reveal the top card of the Villain Deck. If it's a Villain, that Villain enters the Bridge or Streets, if one of those spaces is empty.
+
+#TACTIC: Naglfar, Longship of Fingernails
+#FIGHT: The player on your right reveals the Villain from their Victory Pile that's worth the most VP. That Villain enters the Bridge or Streets, if one of those spaces is empty.
+
+

@@ -6,6 +6,7 @@ Cabal
 Crime Syndicate
 Fantastic Four
 Foes of Asgard
+Heroes of Asgard
 Guardians of the Galaxy
 HYDRA
 Illuminati
@@ -59,7 +60,8 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds|Dark Memories|Last Stand|Undercover)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds|Dark Memories|Last Stand|Undercover|Worthy|\w+ Conqueror \d+|Villainous Weapon)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Artifact|Thrown Artifact)</b>\s*-\s*!'{'.(uc$1).'} '!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
     s!<b>Patrol( the)? (.*?)</b>!{PATROL $2}!g;
@@ -124,6 +126,7 @@ while (<A>) {
       s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;
       s!^<span style='font-size:8px;'><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
       s!^<span style='font-size:8px;'><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
+      s!^<span style='font-size:8px;'>(.*)</span>!#FLAVOR: $2! && next;
 
     }
     $_ = join"\n",@lines;

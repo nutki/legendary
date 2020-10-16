@@ -1,7 +1,7 @@
 
 #CARDNAME: Iron Monger
 
-<b>Bank Conqueror 4</b>
+{BANK CONQUEROR 4}
 #LEADS: Iron Foes
 #STRIKE: If there is a Villain in the Bank, each player gains a Wound. Otherwise, put this Master Strike into the Bank as a 6 Attack “StaneTech Weaponry” Villain worth 4VP.
 #ATTACK: 9+
