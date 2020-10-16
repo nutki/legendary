@@ -51,7 +51,6 @@ interface Card {
   printedVP: number
   printedCost: number
   printedPiercing: number
-  canPlay?: () => boolean
   playCostType?: "DISCARD" | "TOPDECK"
   playCost?: number
   playCostLimit?: (c: Card) => boolean;
@@ -679,6 +678,7 @@ interface EvParams {
   effectName?: EffectStat
   failFunc?: (ev: Ev) => void
   withViolence?: boolean
+  actionFilters?: ((ev: Ev) => boolean)[]
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: EvType, params: EvParams | ((ev: Ev) => void)) {
@@ -870,6 +870,7 @@ interface Turn extends Ev {
   piercingWithAttack: boolean
   smashMultiplier?: number
   hyperspeedBoth?: boolean
+  actionFilters: ((ev: Ev) => boolean)[]
 }
 interface Trigger {
   event: TriggerableEvType
@@ -1605,6 +1606,9 @@ function combineHandlers(prev: Handler | Handler[], h: Handler) {
 function addHandler(prev: Handler[], h: Handler) {
   return prev ? [...prev, h] : [h];
 }
+function forbidAction(action: 'FIGHT' | 'RECRUIT' | 'PLAY', limit?: (c: Card) => boolean) {
+  turnState.actionFilters.push(ev => !(ev.type === action && (!limit || limit(ev.what))));
+}
 // Game engine functions
 function attachedDeck(name: string, where: Deck | Card) {
   if (!where._attached) where._attached = {};
@@ -1642,6 +1646,7 @@ function popEvent(): Ev {
     bystandersRescued: 0,
     modifiers: {},
     triggers: [],
+    actionFilters: [],
     func: playTurn
   });
 }
@@ -1831,6 +1836,7 @@ function getActions(ev: Ev): Ev[] {
   playerState.artifact.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   playerState.hand.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
+  p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
 }

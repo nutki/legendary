@@ -3555,3 +3555,108 @@ addVillainTemplates("Revelations", [
   })],
 ]},
 ]);
+addVillainTemplates("S.H.I.E.L.D.", [
+{ name: "Hydra Elite", cards: [
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player gains a Wound unless that player reveals at least as many S.H.I.E.L.D. Heroes as the <b>Hydra Level.</b>
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Hydra Elite", "Crossbones", 4, 2, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      cont(ev, () => eachPlayer(p => p.hand.limit(isHero).count('S.H.I.E.L.D.') >= hydraLevel())); // TODO mutli reveal
+    },
+  })],
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then check the <b>Hydra Level.</b> You can't play Heroes of that cost this turn.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Hydra Elite", "Gorgon", 6, 4, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      cont(ev, () => {
+        const cost = hydraLevel();
+        forbidAction("PLAY", c => c.cost === cost);
+      })
+    },
+  })],
+// Growing man gets + Attack equal to the Mastermind's <b>Hydra Level.</b>
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile.
+// ATTACK: 0+
+// VP: 3
+  [ 2, makeVillainCard("Hydra Elite", "Growing Man", 0, 3, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+    },
+    varDefense: c => c.baseDefense + hydraLevel(),
+  })],
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals their hand and discards a card with cost equal to the <b>Hydra Level.</b>
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Hydra Elite", "Hive", 5, 3, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      cont(ev, () => eachPlayer(p => pickDiscardEv(ev, 1, p, c => c.cost === hydraLevel())));
+    },
+  })],
+]},
+{ name: "A.I.M., Hydra Offshoot", cards: [
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then, for each 2 <b>Hydra Levels</b>, Heroes currently in the HQ cost 1 more recruit this turn.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("A.I.M., Hydra Offshoot", "Graviton", 6, 4, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      cont(ev, () => {
+        const heroes = hqHeroes();
+        const amount = Math.floor(hydraLevel()/2);
+        addTurnMod('cost', c => heroes.includes(c), amount);
+      });
+    },
+  })],
+// Mentallo gets +1 Attack for each Officer he has.
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then Mentallo captures a S.H.I.E.L.D. Officer for each 2 <b>Hydra Level.</b>
+// FIGHT: Gain an Officer captured by Mentallo or send it <b>Undercover.</b> KO the rest.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("A.I.M., Hydra Offshoot", "Mentallo", 3, 3, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      cont(ev, () => {
+        const amount = Math.floor(hydraLevel()/2);
+        repeat(amount, () => cont(ev, () => gameState.officer.withTop(c => captureEv(ev, ev.source, c))));
+      })
+    },
+    fight: ev => {
+      selectCardEv(ev, "Choose an Officer", ev.source.captured.limit(isShieldOfficer), c => {
+        chooseOneEv(ev, "Choose one", ["Gain", () => gainEv(ev, c)], ["Send Undercover", () => sendUndercoverEv(ev, c)]);
+      });
+    },
+    varDefense: c => c.baseDefense + c.captured.count(isShieldOfficer),
+  })],
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals a random card from their hand. If the <b>Hydra Level</b> is higher than that card's cost, that player discards that card.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("A.I.M., Hydra Offshoot", "Superia", 5, 3, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      cont(ev, () => {
+        const amount = Math.floor(hydraLevel()/2);
+        eachPlayer(p => p.hand.withRandom(c => amount > c.cost && discardEv(ev, c))); // TODO multiplayer reveal
+      })
+    },
+  })],
+// AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile.
+// FIGHT: Each player must reveal as many Hero colors (including grey) as the <b>Hydra Level</b> or gain a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 3 (erratum, see FAQ, 3+ as printed)
+// VP: 2 (erratum, see FAQ, 4 as printed)
+  [ 2, makeVillainCard("A.I.M., Hydra Offshoot", "Taskmaster", 3, 2, {
+    ambush: ev => {
+      gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
+    },
+    fight: ev => {
+      eachPlayer(p => numColors(p.hand.deck) >= hydraLevel() || gainWoundEv(ev, p)); // TODO multiplayer reveal
+    },
+    escape: sameEffect,
+  })],
+]},
+]);
