@@ -54,6 +54,7 @@ interface Card {
   canPlay?: () => boolean
   playCostType?: "DISCARD" | "TOPDECK"
   playCost?: number
+  playCostLimit?: (c: Card) => boolean;
   fightCond?: (c?: Card) => boolean
   fightCost?: (ev: Ev) => void
   fightFail?: (ev: Ev) => void
@@ -162,6 +163,7 @@ interface HeroCardAbillities {
   triggers?: Trigger[]
   playCost?: number
   playCostType?: 'TOPDECK' | 'DISCARD'
+  playCostLimit?: (c: Card) => boolean;
   copyPasteCard?: boolean
   teleport?: boolean
   soaring?: boolean
@@ -1793,9 +1795,10 @@ function canPlay(c: Card): boolean {
   if (c.divided) return canPlay(c.divided.left) || canPlay(c.divided.right);
   let type = c.playCostType;
   let val = c.playCost;
+  const filter = c.playCostLimit;
   if (type === undefined) return true;
   if (type === "DISCARD" || type === "TOPDECK")
-    return playerState.hand.count(i => i !== c) >= val;
+    return playerState.hand.count(i => i !== c && (!filter || filter(c))) >= val;
   throw TypeError(`unknown play cost: ${type}`);
 }
 function healCard(ev: Ev): void {
@@ -2100,8 +2103,9 @@ function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: F
   // TODO multiplayer: pickDiscardEv show hand when condition present (and cards.size < n depending on card wording)
   repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", cards, sel => discardEv(ev, sel), who));
 }
-function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState) {
-  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on top of your deck`, who.hand.deck, sel => moveCardEv(ev, sel, who.deck), who));
+function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined) {
+  const cards = cond ? who.hand.deck : who.hand.limit(cond);
+  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on top of your deck`, cards, sel => moveCardEv(ev, sel, who.deck), who));
 }
 function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
@@ -2219,8 +2223,8 @@ function playCardEffects(ev: Ev, card: Card) {
 function playCard2(ev: Ev) {
   const card = ev.what;
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
-    if (card.playCostType === "DISCARD") pickDiscardEv(ev, card.playCost);
-    if (card.playCostType === "TOPDECK") pickTopDeckEv(ev, card.playCost);
+    if (card.playCostType === "DISCARD") pickDiscardEv(ev, card.playCost, playerState, card.playCostLimit);
+    if (card.playCostType === "TOPDECK") pickTopDeckEv(ev, card.playCost, playerState, card.playCostLimit);
     playCardEffects(ev, card);
     cont(ev, () => turnState.cardsPlayed.push(card));
   }});

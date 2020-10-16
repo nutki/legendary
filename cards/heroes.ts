@@ -4904,3 +4904,139 @@ addHeroTemplates("Revelations", [
   }),
 },
 ]);
+addHeroTemplates("S.H.I.E.L.D.", [
+{
+  name: "Agent Phil Coulson",
+  team: "S.H.I.E.L.D.",
+// {SHIELDLEVEL 3} When you draw a new hand of cards at the end of this turn, draw an extra card.
+  c1: makeHeroCard("Agent Phil Coulson", "Impeccable Planning", 3, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", ev => shieldLevelPower(3) && addEndDrawMod(1)),
+// Reveal the top card of the S.H.I.E.L.D. Officer Stack. Gain it or put it on the bottom of the stack.
+// {POWER Covert} You may send it {UNDERCOVER}.
+  c2: makeHeroCard("Agent Phil Coulson", "Build the Strike Team", 4, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", ev => {
+    revealDeckEv(ev, gameState.officer, 1, cards => cards.each(c => {
+      const maybeUndercover: [string, () => void][] = superPower(Color.COVERT) ? [["Undecover", () => sendUndercoverEv(ev, c)]] : [];
+      chooseOneEv(ev, "Choose one", ["Gain", () => gainEv(ev, c)], ["Put on the bottom", () => moveCardEv(ev, c, gameState.officer, true)], ...maybeUndercover)
+    }));
+  }),
+// Choose one:
+// - Send a S.H.I.E.L.D. Hero from your hand {UNDERCOVER}.
+// - Or you get +1 Attack for each 2 <b>S.H.I.E.L.D. Levels</b> you have.
+  uc: makeHeroCard("Agent Phil Coulson", "Approve Orbital Strike", 6, u, 0, Color.TECH, "S.H.I.E.L.D.", "D", ev => {
+    const attackAmount = Math.floor(shieldLevel()/2);
+    chooseOneEv(ev, "Choose one",
+      ["Send a Hero undercover", () => selectCardEv(ev, "Choose a Hero", playerState.hand.limit(isHero).limit("S.H.I.E.L.D."), c => sendUndercoverEv(ev, c))],
+      [`Get +${attackAmount} attack`, () => addAttackEvent(ev, attackAmount)],
+    );
+  }),
+// During any player's turn, when another S.H.I.E.L.D. Hero is put into the KO pile, you may discard this card to send that Hero {UNDERCOVER} in your Victory Pile instead. If you do, draw three cards.
+// {SHIELDLEVEL 8} You get +4 Attack.
+// GUN: 1
+  ra: makeHeroCard("Agent Phil Coulson", "Fake But Inspiring Death", 8, u, 4, Color.COVERT, "S.H.I.E.L.D.", "G", ev => shieldLevelPower(8) && addAttackEvent(ev, 4), {
+    trigger: {
+      event: "KO",
+      match: ev => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what),
+      replace: ev => selectCardOptEv(ev, "Discard to send the Hero undercover and draw three cards", [ev.source], () => {
+        sendUndercoverEv(ev, ev.parent.what, owner(ev.source));
+        drawEv(ev, 3, owner(ev.source));
+      }, () => doReplacing(ev), owner(ev.source)),
+    }
+  }),
+},
+{
+  name: "Quake",
+  team: "S.H.I.E.L.D.",
+// To play this, you must discard a S.H.I.E.L.D. Hero.
+// {POWER Ranged} You may send the Hero you discarded {UNDERCOVER}.
+  c1: makeHeroCard("Quake", "Going Underground", 3, 3, u, Color.RANGED, "S.H.I.E.L.D.", "", ev => superPower(Color.RANGED) && chooseMayEv(ev, "Send the discarded Hero undercover", () => {
+    pastEvents("DISCARD").limit(e => e.parent == ev.parent).each(e => sendUndercoverEv(ev, e.what));
+  }), { playCost: 1, playCostType: 'DISCARD', playCostLimit: c => isHero(c) && isTeam('S.H.I.E.L.D.')(c) }),
+// {SHIELDLEVEL 2} You get +2 Attack.
+// GUN: 1
+  c2: makeHeroCard("Quake", "Aftershock", 4, u, 2, Color.RANGED, "S.H.I.E.L.D.", "GFD", ev => shieldLevelPower(2) && addAttackEvent(ev, 2)),
+// Whenever you fight a Villain this turn, if its Attack is higher than your <b>S.H.I.E.L.D. Level</b>, you may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+// {SHIELDLEVEL 4} You get +4 Attack
+  uc: makeHeroCard("Quake", "Tectonic Wave", 6, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", ev => shieldLevelPower(4) && addAttackEvent(ev, 4), {
+    trigger: {
+      event: "FIGHT",
+      match: ev => isVillain(ev.what),
+      after: ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
+        gameState.officer.withTop(c => sendUndercoverEv(ev, c, owner(ev.source)));
+      }, owner(ev.source)),
+    }
+  }),
+// You may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+// Then, for each <b>S.H.I.E.L.D. Level</b> you have up to 5, choose a Hero from the HQ. Put all those Heroes on the bottom of the Hero Deck and you get their total printed Attack.
+  ra: makeHeroCard("Quake", "Roil the Earth", 7, u, 0, Color.RANGED, "S.H.I.E.L.D.", "", [ ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
+    gameState.officer.withTop(c => sendUndercoverEv(ev, c));
+  }), ev => {
+    selectObjectsEv(ev, "Choose HQ Heroes", Math.min(shieldLevel(), 5), hqHeroes(), c => {
+      c.printedAttack && addAttackEvent(ev, c.printedAttack);
+      moveCardEv(ev, c, gameState.herodeck, true);
+    });
+  } ]),
+},
+{
+  name: "Deathlok",
+  team: "S.H.I.E.L.D.",
+// Draw a card.
+// {SHIELDLEVEL 1} You get +1 Attack.
+// GUN: 1
+  c1: makeHeroCard("Deathlok", "Authorize Lethal Force", 2, u, 0, Color.TECH, "S.H.I.E.L.D.", "GFD", [ ev => drawEv(ev), ev => shieldLevelPower(1) && addAttackEvent(ev, 1) ]),
+// {POWER Tech} You may send a S.H.I.E.L.D. Hero {UNDERCOVER} from your discard pile or the KO pile.
+  c2: makeHeroCard("Deathlok", "Reanimate Into Service", 4, u, 2, Color.TECH, "S.H.I.E.L.D.", "D", ev => 
+    superPower(Color.TECH) && selectCardOptEv(ev, "Chose a Hero to send undercover", [...gameState.ko.deck, ...playerState.discard.deck].limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c))),
+// {SHIELDLEVEL 3} You get +3 Attack
+// If your S.H.I.E.L.D. Level is less than 3, you may send a S.H.I.E.L.D. card from your discard pile {UNDERCOVER}.
+// GUN: 1
+  uc: makeHeroCard("Deathlok", "Headlok", 5, 3, 0, Color.STRENGTH, "S.H.I.E.L.D.", "GF", ev =>
+    shieldLevelPower(3) ?
+      addAttackEvent(ev, 3) :
+      selectCardOptEv(ev, "Choose a Hero to send undercover", playerState.discard.limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c))),
+// You may send a S.H.I.E.L.D. Hero from your discard pile {UNDERCOVER}.
+// {SHIELDLEVEL 3} You get the total printed Recruit of all the S.H.I.E.L.D. Heroes in your Victory Pile.
+// GUN: 1
+  ra: makeHeroCard("Deathlok", "Behind Enemy Lines", 8, 0, 5, Color.COVERT, "S.H.I.E.L.D.", "G", [ ev => {
+    selectCardOptEv(ev, "Choose a Hero to send undercover", playerState.discard.limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c))
+  }, ev => shieldLevelPower(3) && addRecruitEvent(ev, playerState.victory.limit(isHero).limit('S.H.I.E.L.D.').sum(c => c.printedRecruit || 0))
+  ]),
+},
+{
+  name: "Mockingbird",
+  team: "S.H.I.E.L.D.",
+// Look at the top card of your deck. Discard it or put it back.
+// {POWER Instinct} If that card was a S.H.I.E.L.D. Hero, you may send it {UNDERCOVER}.
+// GUN: 1
+  c1: makeHeroCard("Mockingbird", "Take Cover", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "GD", ev => {
+    lookAtDeckEv(ev, 1, () => {
+      superPower(Color.INSTINCT) && selectCardOptEv(ev, "Undercover revealed", playerState.revealed.limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c))
+      cont(ev, () => selectCardOptEv(ev, "Discard revealed", playerState.revealed.deck, c => discardEv(ev, c)));
+    });
+  }),
+// {SHIELDLEVEL 2} Draw a card.
+  c2: makeHeroCard("Mockingbird", "Battle Staves", 4, u, 2, Color.INSTINCT, "S.H.I.E.L.D.", "FD", ev => shieldLevelPower(2) && drawEv(ev)),
+// Choose one:
+// - Send a card from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+// - Or you get +1 Attack for each 2 <b>S.H.I.E.L.D. Levels</b> you have.
+// GUN: 1
+  uc: makeHeroCard("Mockingbird", "Spymaster", 5, u, 1, Color.COVERT, "S.H.I.E.L.D.", "GD", ev => {
+    const attackAmount = Math.floor(shieldLevel()/2);
+    chooseOneEv(ev, "Choose one",
+      ["Send a S.H.I.E.L.D. Officer undercover", () => gameState.officer.withTop(c => sendUndercoverEv(ev, c))],
+      [`Get +${attackAmount} Attack`, () => addAttackEvent(ev, attackAmount)]
+    );
+  }),
+// Draw a card.
+// Send two cards from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
+// Then you get +1 Recruit and +1 Attack for each 2 <b>S.H.I.E.L.D. Levels</b> you have.
+  ra: makeHeroCard("Mockingbird", "Infinity Formula", 7, 0, 0, Color.TECH, "S.H.I.E.L.D.", "D", [
+    ev => drawEv(ev),
+    ev => gameState.officer.withTop(c => sendUndercoverEv(ev, c)),
+    ev => gameState.officer.withTop(c => sendUndercoverEv(ev, c)),
+    ev => {
+      const amount = Math.floor(shieldLevel()/2);
+      addRecruitEvent(ev, amount);
+      addAttackEvent(ev, amount);
+    },
+  ]),
+},
+]);
