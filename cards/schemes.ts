@@ -1925,3 +1925,84 @@ makeTransformingSchemeCard("The Korvac Saga", "Korvac Revealed", { twists: 8 }, 
   });
 }),
 ]);
+addTemplates("SCHEMES", "S.H.I.E.L.D.", [
+// SETUP: 7 Twists. Include either the "Hydra Elite" or "A.I.M., Hydra Offshoot" Villain Group, but not both.
+// EVILWINS: When the <b>Hydra Level</b> is 11.
+makeSchemeCard("S.H.I.E.L.D. vs. HYDRA War", { twists: 7 }, ev => {
+  // Twist: Each player puts a card from the S.H.I.E.L.D. Officer Stack face up next to the Scheme as a 3 Attack "Double Agent" Villain. If any Double Agents were already there, put one into the Escape Pile and put the rest on the bottom of the S.H.I.E.L.D. Officer Stack. You can fight any Double Agent next to the Scheme to gain it or send it {UNDERCOVER}.
+  const currentAgents = gameState.scheme.attached("DOUBLEAGENT");
+  eachPlayer(() => cont(ev, () => gameState.officer.withTop(c => {
+    villainify("Double Agent", c, 3, ev => {
+      chooseOneEv(ev, "Choose One", ["Gain", () => gainEv(ev, ev.source)], ["Send Undercover", () => sendUndercoverEv(ev)]);
+    });
+    attachCardEv(ev, c, gameState.scheme, "DOUBLEAGENT");
+  })));
+  cont(ev, () => selectCardEv(ev, "Choose a Double Agent to put into the Escape Pile", currentAgents, c => {
+    moveCardEv(ev, c, gameState.escaped);
+    currentAgents.each(c2 => c !== c2 && moveCardEv(ev, c2, gameState.officer, true));
+  }));
+}, escapeProgressTrigger(isShieldOrHydraInAnyWay), () => {
+  setSchemeTarget(11);
+  gameState.specialActions = ev => gameState.mastermind.attachedDeck('DOUBLEAGENT').deck.map(c => fightActionEv(ev, c));
+}),
+// SETUP: 11 Twists.
+// -Say "I'd never abandon S.H.I.E.L.D.", and you can't fight this turn.
+// -Or whisper "Hail Hydra", you can't recruit this turn, and a Villain captures a Bystander.
+makeSchemeCard("Hail Hydra", { twists: 11 }, ev => {
+  if (ev.nr <= 9) {
+    // Twist 1-9 Choose one:
+    chooseOneEv(ev, "Choose one", ["I'd never abandon S.H.I.E.L.D.", () => {
+      forbidAction('FIGHT');
+    }], ["Hail Hydra", () => {
+      forbidAction('RECRUIT');
+      selectCardEv(ev, "Choose a Villain", villains(), c => captureEv(ev, c));
+    }]);
+  }
+  // Twist 10 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  setSchemeTarget(10);
+}),
+// SETUP: 8 Twists. Add an extra Hero.
+// EVILWINS: When there are 18 non-grey Heroes in the KO pile.
+makeSchemeCard("Hydra Helicarriers Hunt Heroes", { twists: 8, heroes: [4, 6, 6, 6, 7] }, ev => {
+  // Twist: Stack this Twist next to the Scheme. Then for each Twist stacked there, choose a different Hero Class ([Strength], [Instinct], [Covert], [Tech], [Ranged] ), to a maximum of 5. KO each Hero from the HQ that has any of those Hero Classes.
+  attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
+  let chosenClasses = 0;
+  cont(ev, () => {
+    const allClasses = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH];
+    const amount = gameState.scheme.attached('TWIST').size;
+    if (amount >= allClasses.size) {
+      chosenClasses = allClasses.reduce((p, c) => p | c, 0);
+    } else {
+      repeat(amount, () => chooseClassEv(ev, c => chosenClasses |= c, c => !(c && chosenClasses)));
+    }
+  });
+  cont(ev, () => hqHeroes().limit(chosenClasses).each(c => KOEv(ev, c)));
+}, [], () => {
+  setSchemeTarget(18);
+}),
+// SETUP: 11 Twists. Randomly pick 5 cards that cost 5 or less from an additional Hero. Shuffle them to form a "Dark Loyalty" deck.
+// EVILWINS: When there are 6 Vicious Betrayals next to the Scheme.
+makeSchemeCard("Secret Empire of Betrayal", { twists: 11, heroes: [4, 6, 6, 6, 7]  }, ev => {
+  // Twist: Shuffle this Twist into the Dark Loyalty deck as a "Vicious Betrayal." Then reveal the top card of that deck. If it's a Hero, gain it. If it's a Vicious Betrayal, put it next to the Scheme and each other player gains a Wound.
+  const darkStack = gameState.scheme.attachedDeck('DARK_LOYALTY');
+  revealDeckEv(ev, darkStack, 1, cards => cards.each(c => {
+    if (isTwist(c)) {
+      attachCardEv(ev, c, gameState.scheme, "TWIST");
+      eachOtherPlayer(p => gainWoundEv(ev, p));
+      cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TWIST').size));
+    } else {
+      gainEv(ev, c);
+    }
+  }));
+}, [], () => {
+  const darkStack = gameState.scheme.attachedDeck('DARK_LOYALTY');
+  darkStack.revealed = new Deck('DARK_LOYALTY_REVELAED');
+  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, darkStack));
+  darkStack.deck = darkStack.deck.limit(c => c.printedCost <= 5);
+  darkStack.shuffle();
+  darkStack.deck.splice(5);
+  setSchemeTarget(6);
+}),
+]);
