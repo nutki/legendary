@@ -154,6 +154,9 @@ interface MastermindCardAbillities {
   sizeChanging?: number
   chivalrousDuel?: boolean
 }
+interface VillainousWeaponCardAbillities {
+  ambush?: Handler | Handler[];
+}
 interface TacticsCardAbillities {
   fight?: Handler | Handler[];
   trigger?: Trigger;
@@ -195,6 +198,7 @@ class Card {
     let value = getModifiedStat(this, "defense", this.baseDefense);
     if (value !== undefined) value += this.attached('SHARD').size;
     if (value !== undefined && this.nthCircle) value += nthCircleDefense(this);
+    if (value !== undefined) value += this.attached('WEAPON').sum(c => this.printedDefense);
     return value < 0 ? 0 : value;
   }
   get vp() {
@@ -251,7 +255,7 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
   c.team = team;
   c.flags = flags;
   c.printedVP = undefined;
-  if (c.cardType === "VILLAIN" || c.cardType === "TACTIC" && !c.fight) c.fight = ev => gainEv(ev, ev.source);
+  if ((c.cardType === "VILLAIN" || c.cardType === "TACTIC") && !c.fight) c.fight = ev => gainEv(ev, ev.source);
   if (c.cardType === "BYSTANDER" && !c.rescue) c.rescue = ev => gainEv(ev, ev.source);
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   if (abilities) {
@@ -297,6 +301,13 @@ function makeLocationCard(group: string, name: string, defense: number, vp: numb
   let c = new Card("LOCATION", name);
   c.printedDefense = defense;
   c.printedVP = vp;
+  c.printedVillainGroup = group;
+  if (abilities) Object.assign(c, abilities);
+  return c;
+}
+function makeVillainousWeaponCard(group: string, name: string, defense: number, abilities: VillainousWeaponCardAbillities) {
+  const c = new Card("VILLAINOUSWEAPON", name);
+  c.printedDefense = defense;
   c.printedVillainGroup = group;
   if (abilities) Object.assign(c, abilities);
   return c;
@@ -1399,6 +1410,7 @@ function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isTrap(c: Card) { return c.cardType === "TRAP"; }
 function isRevelationsLocation(c: Card): boolean { return getModifiedStat(c, 'isLocation', c.cardType === "LOCATION"); }
 function isShieldOfficer(c: Card) { return [ c.heroName, c.cardName ].includes('S.H.I.E.L.D. Officer'); }
+function isVillainousWeapon(c: Card): boolean { return getModifiedStat(c, 'isVillainousWeapon', c.cardType === "VILLAINOUSWEAPON")}
 function isFightable(c: Card): boolean {
   const res = isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
@@ -1566,6 +1578,7 @@ interface ModifiableStats {
   effects?: Handler[]
   chivalrousDuel?: boolean
   isLocation?: boolean
+  isVillainousWeapon?: boolean;
 }
 
 function safePlus(a: number, b: number) {
@@ -2355,6 +2368,24 @@ function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func:
   // attach
   // * add locations to fightable
 } }); }
+
+function playVillainousWeapon(ev: Ev, what: Card) {
+  function putIntoCity() {
+    let i = gameState.cityEntry;
+    while (i && !i.has(isVillain)) i = i.next;
+    if (i) {
+      attachCardEv(ev, what, i, 'WEAPON');
+    } else {
+      KOEv(ev, what);
+    }
+  }
+  if (what.ambush) {
+    pushEffects(ev, what, 'ambush', what.ambush);
+    cont(ev, () => what.location.attachedTo instanceof Card || putIntoCity());
+  } else {
+    putIntoCity();
+  }
+}
 function adaptMastermind(mastermind: Card) {
   const tactics = mastermind.attachedDeck("TACTICS");
   const mastermindLocation = mastermind.location;
@@ -2380,6 +2411,8 @@ function villainDraw(ev: Ev): void {
     pushEffects(ev, c, 'ambush', c.ambush);
   } else if (isRevelationsLocation(c)) {
     playLocationEv(ev, c);
+  } else if (isVillainousWeapon(c)) {
+    playVillainousWeapon(ev, c)
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
   } else if (c.cardType === "SCHEME TWIST") {
@@ -2410,6 +2443,7 @@ function villainEscape(ev: Ev): void {
   // Handle GotG shards
   c.attached('SHARD').withFirst(c => withMastermind(ev, m => attachShardEv(ev, m, c)));
   cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
+  c.attached('WEAPON').each(c => withMastermind(ev, m => attachCardEv(ev, c, m, 'WEAPON')));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   gameState.bystandersCarried += b.count(isBystander);
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, 1, p));
@@ -2437,6 +2471,7 @@ function villainDefeat(ev: Ev): void {
   // Handle GotG shards
   ev.what.attached('SHARD').withFirst(c => gainShardEv(ev, c));
   cont(ev, () => ev.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
+  ev.what.attached('WEAPON').each(c => gainEv(ev, c));
   b.each(bc => rescueEv(ev, bc));
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);

@@ -3660,3 +3660,139 @@ addVillainTemplates("S.H.I.E.L.D.", [
   })],
 ]},
 ]);
+addVillainTemplates("Heroes of Asgard", [
+{ name: "Dark Council", cards: [
+// Ulik gets +2 if you are not {WORTHY}.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Dark Council", "Ulik, the Troll", 3, 2, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: c => c.baseDefense + (worthyPower() ? 0 : 2),
+  })],
+// FIGHT: If you are {WORTHY}, you get +2 Recruit.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Dark Council", "Sindr, Fire Giant Queen", 5, 3, {
+    fight: ev => worthyPower() && addRecruitEvent(ev, 2),
+  })],
+// The Mangog gets +1 Attack for each Villain in the Victory Pile of the player on your right.
+// ESCAPE: Each player who is not {WORTHY} gains a Wound.
+// ATTACK: 3+
+// VP: 4
+// FLAVOR: It is the coalesced hatred of a billion beings slain by Thor's father Odin.
+  [ 1, makeVillainCard("Dark Council", "The Mangog", 3, 4, {
+    escape: ev => eachPlayer(p => worthyPower(p) && gainWoundEv(ev, p)),
+    varDefense: c => c.baseDefense + playerState.right.victory.count(isVillain),
+  })],
+// AMBUSH: Laufey captures The Casket of Eternal Winters from any Villain, Mastermind, player's control, or discard pile.
+// ESCAPE: If Laufey holds The Casket of Ancient Winters, say "Fimbulwinter has come," and each player discards down to 3 cards.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Dark Council", "Laufey, Father of Loki", 6, 4, {
+    ambush: ev => {
+      [
+        ...villains().map(c => c.attached('WEAPON')),
+        ...gameState.mastermind.deck.map(c => c.attached('WEAPON')),
+        ...gameState.players.map(p => p.artifact.deck),
+        ...gameState.players.map(p => p.discard.deck)
+      ].merge().limit(c => c.cardName === "The Casket of Ancient Winters").each(c => {
+        attachCardEv(ev, c, ev.source, 'WEAPON');
+      });
+    },
+    escape: ev => {
+      ev.source.attached('WEAPON').has(c => c.cardName === "The Casket of Ancient Winters") &&
+        eachPlayer(p => pickDiscardEv(ev, -3, p));
+    },
+  })],
+// {VILLAINOUS WEAPON}
+// GAINABLE
+// {ARTIFACT} Once per turn, if you are {WORTHY}, you get +2 Recruit.
+// ATTACK: +4
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Dark Council", "The Casket of Ancient Winters", 4, {
+  }), u, u, 0, u, "D", ev => worthyPower() && addRecruitEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
+// {VILLAINOUS WEAPON}
+// GAINABLE
+// {THROWN ARTIFACT} When you throw this, you get +3 Attack.
+// ATTACK: +3
+// FLAVOR: Malekith eventually seized Jarnbjorn and cut off Thor's left arm.
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Dark Council", "Jarnbjorn, First Axe of Thor", 3, {
+  }), u, u, 0, u, "F", ev => addAttackEvent(ev, 3), { ...thrownArtifact })],
+]},
+{ name: "Omens of Ragnarok", cards: [
+// {BRIDGE CONQUEROR 3}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 2
+// FLAVOR: After a lifetime of evil, he redeemed himself with a final stand at the Bridge of Gjallerbru.
+  [ 2, makeVillainCard("Omens of Ragnarok", "Skurge, the Executioner", 4, 2, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: conquerorVarDefese('BRIDGE', 3),
+  })],
+// {STREETS CONQUEROR 2}
+// AMBUSH: The Fenris Wolf moves forward to the Rooftops, pushing other Villains forward as normal.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Omens of Ragnarok", "The Fenris Wolf", 4, 3, {
+    ambush: ev => {
+      withCity('ROOFTOPS', rooftops => {
+        const c = ev.source;
+        const move: () => void = () => cont(ev, () => c.location !== rooftops && c.location.next && (moveCardEv(ev, c, c.location.next), move()));
+        move();
+      })
+    },
+    varDefense: conquerorVarDefese('STREETS', 2)
+  })],
+// {SEWERS CONQUEROR 1}
+// {BANK CONQUEROR 1}
+// {ROOFTOPS CONQUEROR 1}
+// {STREETS CONQUEROR 1}
+// {BRIDGE CONQUEROR 1}
+// FIGHT: Each Hero currently in the HQ costs 1 less this turn.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Omens of Ragnarok", "Jormungand, the World-Serpent", 5, 5, {
+    fight: ev => {
+      const cards = hqHeroes();
+      addTurnMod('cost', c => cards.includes(c), -1);
+    },
+    varDefense: c => {
+      const locations: CityLocation[] = ['SEWERS', 'BANK', 'ROOFTOPS', 'STREETS', 'BRIDGE'];
+      return c.baseDefense + locations.count(hasConqueror);
+    }
+  })],
+// FIGHT: Put this into your discard pile as a "Surtur's Crown" Artifact.
+// ESCAPE: If Surtur was holding The Eternal Flame, say "Ragnarok has come," KO each Heroes of Asgard Hero from the HQ, and each player gains two Wounds.
+// --
+// {ARTIFACT} Once per turn, you get {SEWERS CONQUEROR 1}.
+// ATTACK: 6
+  [ 1, makeGainableCard(makeVillainCard("Omens of Ragnarok", "Surtur, Fire Giant King", 6, u, {
+    escape: ev => {
+      if (ev.source.attached('WEAPON').has(c => c.cardName === "The Eternal Flame")) {
+        hqHeroes().limit('Heroes of Asgard').each(c => KOEv(ev, c));
+        eachPlayer(p => (gainWoundEv(ev, p), gainWoundEv(ev, p)));
+      }
+    },
+  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'SEWERS', 1), {
+    isArtifact: true, cardActions: [ useArtifactAction() ]
+  })],
+// {VILLAINOUS WEAPON}
+// AMBUSH: If Surtur is in the city, he captures The Eternal Flame. If a player controls "Surtur's Crown," that card enters the city as the Villain Surtur and captures The Eternal Flame.
+// GAINABLE
+// {ARTIFACT} Once per turn, return a 0-cost card from your discard pile to your hand.
+// ATTACK: +4
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Omens of Ragnarok", "The Eternal Flame", 4, {
+    ambush: ev => {
+      cityVillains().limit(c => c.cardName === "Surtur, Fire Giant King").withFirst(c => {
+        attachCardEv(ev, c, ev.source, 'WEAPON');
+      });
+    },
+  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
+// {VILLAINOUS WEAPON}
+// GAINABLE
+// {ARTIFACT} Once per turn, you get {STREETS CONQUEROR 1}.
+// ATTACK: +3
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Omens of Ragnarok", "The Hel-Crown", 3, {
+  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'STREETS', 1), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
+]},
+]);
