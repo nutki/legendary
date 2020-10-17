@@ -1002,6 +1002,7 @@ makeSchemeCard<{current: string, conquered: string[], city: Deck[]}>("Change the
 }, s => {
   setSchemeTarget(3);
   const extraSpace = new Deck("EXTRACITY", true);
+  extraSpace.isCity = true;
   s.city = [extraSpace].concat(gameState.city);
 }),
 // SETUP: 9 Twists. 8 Heroes in Hero deck.
@@ -1848,6 +1849,7 @@ makeTransformingSchemeCard<{city: Deck[]}>("Earthquake Drains the Ocean", "Tsuna
 }, escapeProgressTrigger(isVillain), (s) => {
   setSchemeTarget(3, true);
   s.city = [new Deck("LOWTIDE1", true), new Deck("LOWTIDE2", true), ...gameState.city];
+  s.city.each(d => d.isCity = true);
   gameState.city = s.city;
   makeCityAdjacent(gameState.city);
 }),
@@ -2004,5 +2006,73 @@ makeSchemeCard("Secret Empire of Betrayal", { twists: 11, heroes: [4, 6, 6, 6, 7
   darkStack.shuffle();
   darkStack.deck.splice(5);
   setSchemeTarget(6);
+}),
+]);
+addTemplates("SCHEMES", "Heroes of Asgard", [
+// SETUP: 11 Twists.
+// EVILWINS: When there are 5 Moral Failings.
+makeSchemeCard("Asgardian Test of Worth", { twists: 11 }, ev => {
+  if (ev.nr <= 7) {
+    // Twist 1-7 Each player who is not {WORTHY} discards a card. Then, if at least half the players <i>(round up)</i> are not {WORTHY}, put this Twist next to the Scheme as a "Moral Failing."
+    eachPlayer(p => worthyPower(p) || pickDiscardEv(ev, 1, p));
+    if(gameState.players.count(worthyPower) * 2 >= gameState.players.size)
+      attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
+  } else if (ev.nr >= 8 && ev.nr <= 11) {
+    // Twist 8-11 Put this Twist next to the Scheme as a "Moral Failing."
+    attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
+  }
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TWIST').size));
+}, [], () => {
+  setSchemeTarget(5);
+}),
+// SETUP: 10 Twists.
+// RULE: Villains in city spaces with Eternal Darkness get +1 Attack. To recruit a Hero in an HQ space with Eternal Darkness, you must pay an extra 1 Recruit.
+// EVILWINS: When all city spaces or all HQ spaces are covered in Eternal Darkness.
+makeSchemeCard("The Dark World of Svartalfheim", { twists: 10 }, ev => {
+  // Twist: Put this Twist next to a city space of HQ space that doesn't already have one, as "Eternal Darkness."
+  const decks = [...gameState.hq, ...gameState.city].filter(d => !d.attached('DARKNESS').size);
+  selectCardEv(ev, "Choose a location", decks, d => attachCardEv(ev, ev.twist, d, 'DARKNESS'));
+  cont(ev, () => schemeProgressEv(ev, [gameState.hq, gameState.city].max(decks => decks.count(d => d.attached('DARKNESS').size > 0))));
+}, [], () => {
+  setSchemeTarget(5);
+  addStatMod('defense', isVillain, c => c.location.attached('DARKNESS').size);
+  addStatMod('cost', isHero, c => c.location.attached('DARKNESS').size)
+}),
+// SETUP: 11 Twists.
+// EVILWINS: When there are 5 Guardians Defeated.
+makeSchemeCard("Ragnarok, Twilight of the Gods", { twists: 11 }, ev => {
+  // Twist: Choose a Villain from your Victory Pile worth at least 2VP to enter the city. Then, if the total Attack of Villains in the city is at least as high as the Guardian Attack listed below, put this Twist next to the Scheme as a "Guardian Defeated."
+  selectCardEv(ev, "Choose a Villain to enter the city", playerState.victory.limit(isVillain).limit(c => c.vp >= 2), c => {
+    enterCityEv(ev, c);
+  });
+  // Twist 1 Balder, 11 Attack    <b>Twist 5</b>: Heimdall, 12 Attack
+  // Twist 2 Odin, 24 Attack        <b>Twist 6</b>: Frey, 7 Attack
+  // Twist 3 Vidar, 19 Attack        <b>Twist 7</b>: Frigga, 8 Attack
+  // Twist 4 Tyr, 16 Attack        <b>Twist 8-11</b>: Warriors of Valhalla, 6 Attack
+  cont(ev, () => {
+    const totalAttack = cityVillains().sum(c => c.defense);
+    const guardianDefense = [ , 11, 24, 19, 16, 12, 7, 8, 6, 6, 6, 6 ][ev.nr];
+    totalAttack >= guardianDefense && attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
+  });
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TWIST').size));
+}, [], () => {
+  setSchemeTarget(5);
+}),
+// SETUP: 9 Twists.
+// EVILWINS: When there are 5 Frost Giant Invaders in the city and/or Escape Pile.
+makeSchemeCard("War of the Frost Giants", { twists: 9 }, ev => {
+  // Twist 1-7 This Twist enters the city as a "Frost Giant Invader" Villain worth 6VP with 6 Attack and the ability "If you are not {WORTHY}, this gets +4 Attack."
+  villainify("Frost Giant Invader", ev.twist, 6, 6);
+  enterCityEv(ev, ev.twist);
+  if (ev.nr >= 8 && ev.nr <= 9) {
+    // Twist 8-9 Same effect, then a Frost Giant Invader from each player's Victory Pile enters the city.
+    eachPlayer(p => selectCardEv(ev, "Choose a Frost Giant Invader", p.victory.limit(isGroup("Frost Giant Invader")), c => enterCityEv(ev, c), p));
+  }
+}, {
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.escaped || ev.to.isCity || ev.from === gameState.escaped || ev.from.isCity,
+  after: ev => schemeProgressEv(ev, [...cityVillains(), ...gameState.escaped.deck].count(isGroup("Frost Giant Invader"))),
+}, () => {
+  setSchemeTarget(5);
 }),
 ]);
