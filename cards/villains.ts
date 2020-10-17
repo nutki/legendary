@@ -3786,6 +3786,10 @@ addVillainTemplates("Heroes of Asgard", [
       cityVillains().limit(c => c.cardName === "Surtur, Fire Giant King").withFirst(c => {
         attachCardEv(ev, c, ev.source, 'WEAPON');
       });
+      gameState.players.each(p => p.artifact.limit(c => c.cardName === "Surtur, Fire Giant King").withFirst(c => {
+        enterCityEv(ev, c);
+        attachCardEv(ev, c, ev.source, 'WEAPON');
+      }));
     },
   }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
 // {VILLAINOUS WEAPON}
