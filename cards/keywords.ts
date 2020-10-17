@@ -202,7 +202,7 @@ const uruEnchantedFail = (ev: Ev) => {
 };
 function demolishOtherEv(ev: Ev) { demolishEv(ev, p => p !== playerState ); }
 function throwArtifactAction(c: Card, ev: Ev) {
-  return new Ev(ev, 'THROWARTIFACT', { what: c, cost: { cond: c => isControlledArtifact(c) }, func: ev => {
+  return new Ev(ev, 'THROWARTIFACT', { what: c, cost: { cond: c => isControlledArtifact(c) && (!c.throwCond || c.throwCond(c)) }, func: ev => {
     moveCardEv(ev, ev.what, playerState.deck, true);
     cont(ev, () => ev.what.artifactEffects[0](ev));
   }});

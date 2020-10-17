@@ -5040,3 +5040,139 @@ addHeroTemplates("S.H.I.E.L.D.", [
   ]),
 },
 ]);
+addHeroTemplates("Heroes of Asgard", [
+{
+  name: "Thor",
+  team: "Heroes of Asgard",
+// If you are {WORTHY}, you get +2 Attack.
+  c1: makeHeroCard("Thor", "Test of Virtue", 3, 2, 0, Color.RANGED, "Heroes of Asgard", "FD", ev => worthyPower() && addAttackEvent(ev, 2)),
+// You get +1 Attack for each other card you played this turn that makes you {WORTHY}.
+  c2: makeHeroCard("Thor", "Divine Lightning", 5, u, 3, Color.RANGED, "Heroes of Asgard", "F", ev => {
+    addRecruitEvent(ev, turnState.cardsPlayed.limit(isHero).count(c => c !== ev.source && c.cost >= 5));
+  }),
+// You cannot throw Mjolnir unless you are {WORTHY}.
+// {THROWN ARTIFACT} When you throw this, you get +3 Attack, then you get +1 Attack for each [Ranged] Hero you played this turn.
+  uc: makeHeroCard("Thor", "Mjolnir", 4, u, u, Color.STRENGTH, "Heroes of Asgard", "", ev => {
+    addAttackEvent(ev, 3);
+    addAttackEvent(ev, superPower(Color.RANGED));
+  }, { ...thrownArtifact, throwCond: () => worthyPower() }),
+// {TEAMPOWER Heroes of Asgard} Each player who is {WORTHY} draws a card. Each Villain that isn't worth at least 5VP gets -1 Attack this turn.
+  ra: makeHeroCard("Thor", "Royal Decree", 8, u, 5, Color.RANGED, "Heroes of Asgard", "", ev => {
+    if (superPower("Heroes of Asgard")) {
+      eachPlayer(p => worthyPower(p) && drawEv(ev, 1, p));
+      addTurnMod('defense', c => isVillain(c) && !(c.vp >= 5), -1);
+    }
+  }),
+},
+{
+  name: "Beta Ray Bill",
+  team: "Heroes of Asgard",
+// To play this, you must discard a card.
+// Then, if you are {WORTHY}, draw a card.
+  c1: makeHeroCard("Beta Ray Bill", "Hope of the Korbinites", 1, 2, u, Color.STRENGTH, "Heroes of Asgard", "FD", ev => {
+    worthyPower() && drawEv(ev);
+  }, { playCost: 1, playCostType: 'DISCARD' }),
+// You may discard a card. If you do, draw a card.
+  c2: makeHeroCard("Beta Ray Bill", "Bio-Engineered Cyborg", 5, u, 3, Color.TECH, "Heroes of Asgard", "F", ev => {
+    selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
+  }),
+// You cannot throw Stormbreaker unless you are {WORTHY}.
+// {THROWN ARTIFACT} To throw this, you must discard a card from your hand. Then you get +2 Attack for each card you discarded from your hand this turn.
+  uc: makeHeroCard("Beta Ray Bill", "Stormbreaker", 4, u, u, Color.RANGED, "Heroes of Asgard", "D", ev => {
+    if (playerState.hand.size) {
+      pickDiscardEv(ev, 1);
+      cont(ev, () => addAttackEvent(ev, 2 * pastEvents('DISCARD').count(e => e.where === playerState.hand)));
+    }
+  }, { ...thrownArtifact, throwCond: () => worthyPower() && playerState.hand.size > 0 }),
+// You may discard a card. Then count the number of cards you discarded from your hand this turn. Draw that many cards.
+// GUN: 1
+  ra: makeHeroCard("Beta Ray Bill", "The Warship Skuttlebutt", 8, u, 4, Color.TECH, "Heroes of Asgard", "G", ev => {
+    selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => discardEv(ev, c));
+    cont(ev, () => drawEv(ev, pastEvents('DISCARD').count(e => e.where === playerState.hand)));
+  }),
+},
+{
+  name: "Valkyrie",
+  team: "Heroes of Asgard",
+// {THROWN ARTIFACT} When you throw this, you get {SEWERS CONQUEROR 2}.
+  c1: makeHeroCard("Valkyrie", "Dragonfang", 3, u, u, Color.STRENGTH, "Heroes of Asgard", "FD", ev => heroConquerorEv(ev, 'SEWERS', 2), { ...thrownArtifact }),
+// {ROOFTOPS CONQUEROR 1}
+// When an Ambush ability is played, before it takes effect, you may discard this card. If you do, draw two extra cards at the end of this turn.
+  c2: makeHeroCard("Valkyrie", "Flying Stallion", 4, u, 2, Color.INSTINCT, "Heroes of Asgard", "D", ev => heroConquerorEv(ev, 'ROOFTOPS', 1), { trigger: {
+    event: 'CARDEFFECT',
+    match: (ev, source: Card) => ev.effectName == 'ambush' && source.location === owner(source).hand,
+    before: ev => chooseMayEv(ev, "Discard to draw two extra cards", () => {
+      discardEv(ev, ev.source);
+      owner(ev.source) === playerState ? addEndDrawMod(2) : addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 2, owner(ev.source)));
+    }, owner(ev.source))
+  }}),
+// {BRIDGE CONQUEROR 1}
+// {TEAMPOWER Heroes of Asgard} The first time you defeat a Villain this turn, you may KO one of your cards or a card from your discard pile.
+  uc: makeHeroCard("Valkyrie", "Usher to Valhalla", 6, u, 2, Color.COVERT, "Heroes of Asgard", "D", [
+    ev => heroConquerorEv(ev, 'BRIDGE', 1),
+    ev => superPower("Heroes of Asgard") && addTurnTrigger('DEFEAT',
+      ev => isVillain(ev.what) && !pastEvents('DEFEAT').has(ev => isVillain(ev.what)),
+      { after: ev => selectCardOptEv(ev, "Choose a card to KO", [...revealable(), ...playerState.discard.deck], c => KOEv(ev, c)) })
+  ]),
+// {STREETS CONQUEROR 1}
+// [Instinct] : You get +1 Attack for every 4 Heroes in the KO pile.
+  ra: makeHeroCard("Valkyrie", "Ride of the Valkyries", 7, u, 4, Color.INSTINCT, "Heroes of Asgard", "", [
+    ev => heroConquerorEv(ev, 'STREETS', 1),
+    ev => superPower(Color.INSTINCT) && addAttackEvent(ev, Math.floor(gameState.ko.count(isHero)/4))
+  ]),
+},
+{
+  name: "Lady Sif",
+  team: "Heroes of Asgard",
+// {THROWN ARTIFACT} When you throw this you get +1 Recruit and +1 Attack.
+  c1: makeHeroCard("Lady Sif", "Dimensional Blade", 2, u, u, Color.INSTINCT, "Heroes of Asgard", "FD", ev => {
+    addRecruitEvent(ev, 1);
+    addAttackEvent(ev, 1);
+  }, { ...thrownArtifact }),
+// If you control any Artifacts, you get +2 Attack.
+  c2: makeHeroCard("Lady Sif", "Weapons Master", 5, u, 2, Color.INSTINCT, "Heroes of Asgard", "FD", ev => playerState.artifact.size && addAttackEvent(ev, 2)),
+// {THROWN ARTIFACT} You may throw this to get +1 Attack.
+// During any player's turn, if a player would gain a Wound, you may throw this to prevent that Wound and draw two cards instead.
+  uc: makeHeroCard("Lady Sif", "Winged Helm", 3, u, u, Color.STRENGTH, "Heroes of Asgard", "", ev => addAttackEvent(ev, 1), {
+    ...thrownArtifact,
+    trigger: {
+      event: "GAIN",
+      match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.artifact,
+      replace: ev => selectCardOptEv(ev, "Throw to draw 2 cards", [ev.source], () => {
+        moveCardEv(ev, ev.what, playerState.deck, true); // TODO this should count as throw in case of throw triggers/counters
+        drawEv(ev, 2, owner(ev.source));
+      }, () => doReplacing(ev), owner(ev.source))
+    }
+  }),
+// {THROWN ARTIFACT} When you throw this, you get +4 Attack and you may KO a card from your hand or discard pile.
+  ra: makeHeroCard("Lady Sif", "Golden Apples of Idunn", 7, u, u, Color.COVERT, "Heroes of Asgard", "", ev => {
+    addAttackEvent(ev, 4);
+    KOHandOrDiscardEv(ev);
+  }, { ...thrownArtifact }),
+},
+{
+  name: "The Warriors Three",
+  team: "Heroes of Asgard",
+// You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+// {POWER Covert} Draw a card.
+  c1: makeHeroCard("The Warriors Three", "Fandral the Dashing", 3, u, u, Color.INSTINCT, "Heroes of Asgard", "F", [
+    ev => {
+      selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+        selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+      });
+    },
+    ev => superPower(Color.COVERT) && drawEv(ev)
+  ]),
+// {POWER Strength} You may KO a card from your hand or discard pile.
+  c2: makeHeroCard("The Warriors Three", "Hogun the Grim", 4, 2, u, Color.COVERT, "Heroes of Asgard", "FD", ev => superPower(Color.STRENGTH) && KOHandOrDiscardEv(ev, undefined)),
+// {BRIDGE CONQUEROR 1}
+// {POWER Instinct} Instead, {BRIDGE CONQUEROR 3}
+  uc: makeHeroCard("The Warriors Three", "Volstagg the Valiant", 6, u, 3, Color.STRENGTH, "Heroes of Asgard", "F", ev => heroConquerorEv(ev, 'BRIDGE', superPower(Color.INSTINCT) ? 3 : 1)),
+// If you played at least three other non-grey Heroes with different cad ames this turn, you get +3 Attack // FIX
+// {TEAMPOWER Heroes of Asgard} {STREETS CONQUEROR 3}
+  ra: makeHeroCard("The Warriors Three", "Three Stand as One", 8, u, 4, Color.STRENGTH, "Heroes of Asgard", "", [
+    ev => turnState.cardsPlayed.limit(isNonGrayHero).uniqueCount(c => c.cardName) >= 3 && addAttackEvent(ev, 3),
+    ev => superPower("Heroes of Asgard") && heroConquerorEv(ev, 'STREETS', 3)
+  ]),
+},
+]);

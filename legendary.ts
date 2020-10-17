@@ -96,6 +96,7 @@ interface Card {
   xTremeAttack?: boolean
   isArtifact?: boolean
   artifactEffects?: ((ev: Ev) => void)[]
+  throwCond?: (c: Card) => boolean;
   gainable?: boolean
   printedNthCircle?: number
   sizeChanging?: number
@@ -169,6 +170,7 @@ interface HeroCardAbillities {
   wallcrawl?: boolean
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   isArtifact?: boolean
+  throwCond?: (c: Card) => boolean;
   sizeChanging?: number
   uSizeChanging?: { color: number, amount: number }
   excessiveViolence?: Handler
