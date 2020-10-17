@@ -147,8 +147,8 @@ makeHenchmenCard("Sapien League", 3, {
 // FIGHT: KO one of your Heroes.
 // ATTACK: 2*
 makeHenchmenCard("Shi'ar Death Commandos", 2, {
-  fight: ev => captureShieldEv(ev, ev.source),
-  ambush: ev => selectCardAndKOEv(ev, yourHeroes()),
+  ambush: ev => captureShieldEv(ev, ev.source),
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
 }),
 // FIGHT: The next Hero you recruit this turn has {SOARING FLIGHT}.
 // ATTACK: 3
