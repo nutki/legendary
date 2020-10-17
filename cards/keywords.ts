@@ -115,19 +115,23 @@ function dodge(c: Card, ev: Ev) {
 function isControlledArtifact(c: Card) {
   return c.location === playerState.artifact;
 }
+function getArtifactEffects(c: Card) {
+  return getModifiedStat(c, 'artifactEffects', c.artifactEffects);
+}
 function useArtifactAction(i: number = 0, shardCost: number = 0) {
   return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', { what: c, source: c, cost: { cond: c => {
     return isControlledArtifact(c) && !countPerTurn(`useArtifact${i}`, c) && playerState.shard.size >= shardCost;
   }}, func: ev => {
     incPerTurn(`useArtifact${i}`, ev.what);
-    ev.what.artifactEffects[i](ev);
+    getArtifactEffects(ev.what)[i](ev);
   }});
 }
 function playArtifact(ev: Ev) {
   if (ev.source.location !== playerState.playArea || isCopy(ev.source)) { // Chameleon and Star-Lord using playCardEffects outside of playCard
-    if (ev.source.artifactEffects.size !== 1)
-      chooseOptionEv(ev, "Choose Effect", ev.source.artifactEffects.map((v, i) => ({ l: `Effect ${i+1}`, v })), f => f(ev), ev.who);
-    else ev.source.artifactEffects[0](ev);
+    const effects = getArtifactEffects(ev.source);
+    if (effects.size !== 1)
+      chooseOptionEv(ev, "Choose Effect", effects.map((v, i) => ({ l: `Effect ${i+1}`, v })), f => f(ev), ev.who);
+    else effects[0](ev);
   } else {
     moveCardEv(ev, ev.source, playerState.artifact);
   }
@@ -204,7 +208,7 @@ function demolishOtherEv(ev: Ev) { demolishEv(ev, p => p !== playerState ); }
 function throwArtifactAction(c: Card, ev: Ev) {
   return new Ev(ev, 'THROWARTIFACT', { what: c, cost: { cond: c => isControlledArtifact(c) && (!c.throwCond || c.throwCond(c)) }, func: ev => {
     moveCardEv(ev, ev.what, playerState.deck, true);
-    cont(ev, () => ev.what.artifactEffects[0](ev));
+    cont(ev, () => getArtifactEffects(ev.what)[0](ev));
   }});
 }
 const thrownArtifact = { isArtifact: true, cardActions: [ throwArtifactAction ]};
@@ -702,12 +706,15 @@ const hydraLevelPower = (n: number) => hydraLevel() >= n;
 function worthyPower(p: Player = playerState) {
   return yourHeroes(p).has(c => c.cost >= 5);
 }
-function hasConqueror(l: CityLocation) {
-  return gameState.city.limit(d => d.id === l).has(c => c.has(isVillain));
+function hasConqueror(...locations: CityLocation[]) {
+  return locations.count(l => gameState.city.limit(d => d.id === l).has(c => c.has(isVillain)));
 }
 function heroConquerorEv(ev: Ev, l: CityLocation, amount: number) {
   hasConqueror(l) && addAttackEvent(ev, amount);
 }
-function conquerorVarDefese(l: CityLocation, amount: number) {
-  return (c: Card) => c.baseDefense + (hasConqueror(l) ? amount : 0);
+function conquerorVarDefese(amount: number, ...l: CityLocation[]) {
+  return (c: Card) => c.printedDefense + (hasConqueror(...l) * amount);
 }
+const weaponsInTheCity = () => cityVillains().map(c => c.attached('WEAPONS')).merge();
+const weaponsPlayersOwn = () => gameState.players.map(p => [...p.discard.limit(isVillainousWeapon), ...p.artifact.limit(isVillainousWeapon)]).merge();
+const weaponsAnywhere = () => [...weaponsInTheCity(), ...weaponsPlayersOwn()];

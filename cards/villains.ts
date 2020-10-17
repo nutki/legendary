@@ -3586,7 +3586,7 @@ addVillainTemplates("S.H.I.E.L.D.", [
     ambush: ev => {
       gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
     },
-    varDefense: c => c.baseDefense + hydraLevel(),
+    varDefense: c => c.printedDefense + hydraLevel(),
   })],
 // AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals their hand and discards a card with cost equal to the <b>Hydra Level.</b>
 // ATTACK: 5
@@ -3630,7 +3630,7 @@ addVillainTemplates("S.H.I.E.L.D.", [
         chooseOneEv(ev, "Choose one", ["Gain", () => gainEv(ev, c)], ["Send Undercover", () => sendUndercoverEv(ev, c)]);
       });
     },
-    varDefense: c => c.baseDefense + c.captured.count(isShieldOfficer),
+    varDefense: c => c.printedDefense + c.captured.count(isShieldOfficer),
   })],
 // AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals a random card from their hand. If the <b>Hydra Level</b> is higher than that card's cost, that player discards that card.
 // ATTACK: 5
@@ -3668,7 +3668,7 @@ addVillainTemplates("Heroes of Asgard", [
 // VP: 2
   [ 2, makeVillainCard("Dark Council", "Ulik, the Troll", 3, 2, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-    varDefense: c => c.baseDefense + (worthyPower() ? 0 : 2),
+    varDefense: c => c.printedDefense + (worthyPower() ? 0 : 2),
   })],
 // FIGHT: If you are {WORTHY}, you get +2 Recruit.
 // ATTACK: 5
@@ -3683,7 +3683,7 @@ addVillainTemplates("Heroes of Asgard", [
 // FLAVOR: It is the coalesced hatred of a billion beings slain by Thor's father Odin.
   [ 1, makeVillainCard("Dark Council", "The Mangog", 3, 4, {
     escape: ev => eachPlayer(p => worthyPower(p) && gainWoundEv(ev, p)),
-    varDefense: c => c.baseDefense + playerState.right.victory.count(isVillain),
+    varDefense: c => c.printedDefense + playerState.right.victory.count(isVillain),
   })],
 // AMBUSH: Laufey captures The Casket of Eternal Winters from any Villain, Mastermind, player's control, or discard pile.
 // ESCAPE: If Laufey holds The Casket of Ancient Winters, say "Fimbulwinter has come," and each player discards down to 3 cards.
@@ -3727,7 +3727,7 @@ addVillainTemplates("Heroes of Asgard", [
 // FLAVOR: After a lifetime of evil, he redeemed himself with a final stand at the Bridge of Gjallerbru.
   [ 2, makeVillainCard("Omens of Ragnarok", "Skurge, the Executioner", 4, 2, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-    varDefense: conquerorVarDefese('BRIDGE', 3),
+    varDefense: conquerorVarDefese(3, 'BRIDGE'),
   })],
 // {STREETS CONQUEROR 2}
 // AMBUSH: The Fenris Wolf moves forward to the Rooftops, pushing other Villains forward as normal.
@@ -3741,7 +3741,7 @@ addVillainTemplates("Heroes of Asgard", [
         move();
       })
     },
-    varDefense: conquerorVarDefese('STREETS', 2)
+    varDefense: conquerorVarDefese(2, 'STREETS')
   })],
 // {SEWERS CONQUEROR 1}
 // {BANK CONQUEROR 1}
@@ -3756,10 +3756,7 @@ addVillainTemplates("Heroes of Asgard", [
       const cards = hqHeroes();
       addTurnMod('cost', c => cards.includes(c), -1);
     },
-    varDefense: c => {
-      const locations: CityLocation[] = ['SEWERS', 'BANK', 'ROOFTOPS', 'STREETS', 'BRIDGE'];
-      return c.baseDefense + locations.count(hasConqueror);
-    }
+    varDefense: conquerorVarDefese(1, 'SEWERS', 'BANK', 'ROOFTOPS', 'STREETS', 'BRIDGE'),
   })],
 // FIGHT: Put this into your discard pile as a "Surtur's Crown" Artifact.
 // ESCAPE: If Surtur was holding The Eternal Flame, say "Ragnarok has come," KO each Heroes of Asgard Hero from the HQ, and each player gains two Wounds.

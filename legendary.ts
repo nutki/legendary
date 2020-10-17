@@ -160,6 +160,7 @@ interface VillainousWeaponCardAbillities {
 interface TacticsCardAbillities {
   fight?: Handler | Handler[];
   trigger?: Trigger;
+  printedDefense?: number;
 }
 interface HeroCardAbillities {
   trigger?: Trigger
@@ -198,7 +199,7 @@ class Card {
     let value = getModifiedStat(this, "defense", this.baseDefense);
     if (value !== undefined) value += this.attached('SHARD').size;
     if (value !== undefined && this.nthCircle) value += nthCircleDefense(this);
-    if (value !== undefined) value += this.attached('WEAPON').sum(c => this.printedDefense);
+    if (value !== undefined) value += this.attached('WEAPON').sum(c => this.defense);
     return value < 0 ? 0 : value;
   }
   get vp() {
@@ -314,15 +315,15 @@ function makeVillainousWeaponCard(group: string, name: string, defense: number, 
 }
 function makeTacticsCard(name: string, abilities: TacticsCardAbillities = {}) {
   const t = new Card("TACTICS", name);
-  if (abilities.fight) t.fight = abilities.fight;
+  if (abilities) Object.assign(t, abilities);
   return t;
 }
 function makeEpicName(name: string) {
   return "Epic " + (name.startsWith("The ") ? name.substring(4) : name);
 }
-function makeEpicMastermindCard(name: string, defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
-  const m1 = makeMastermindCard(name, defense[0], vp, leads, strike, tactics, abilities);
-  const m2 = makeMastermindCard(makeEpicName(name), defense[1], vp, leads, strike, tactics, abilities);
+function makeEpicMastermindCard(name: string, defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities | ((epic: boolean) => MastermindCardAbillities)) {
+  const m1 = makeMastermindCard(name, defense[0], vp, leads, strike, tactics, abilities instanceof Function ? abilities(false) : abilities);
+  const m2 = makeMastermindCard(makeEpicName(name), defense[1], vp, leads, strike, tactics, abilities instanceof Function ? abilities(true) : abilities);
   m2.epic = true;
   // Epic masterminds use unchanged defense on tactics (may be relevant for some schemes).
   m2.tacticsTemplates = m1.tacticsTemplates;
@@ -337,7 +338,8 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
   c.tacticsTemplates = tactics.map(function (e) {
     const t = e instanceof Card ? e : makeTacticsCard(e[0], { fight: e[1] });
     t.printedVP = vp;
-    t.printedDefense = defense;
+    if (t.printedDefense === undefined)
+      t.printedDefense = defense;
     return t;
   });
   if (abilities) Object.assign(c, abilities);
@@ -1401,7 +1403,7 @@ function isColor(col: number): (c: Card) => boolean { return function (c) { retu
 function isTeam(team: Affiliation): (c: Card) => boolean { return function (c) { return c.isTeam(team); }; }
 function isGroup(group: string): (c: Card) => boolean { return c => c.isGroup(group); }
 function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
-function isArtifact(c: Card): boolean { return c.isArtifact; }
+function isArtifact(c: Card): boolean { return getModifiedStat(c, 'isArtifact', c.isArtifact); }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
 function hasFlag(flag: 'N' | 'D' | 'G' | 'F' | 'T') { return (c: Card) => c.flags && c.flags.includes(flag); }
@@ -1411,6 +1413,7 @@ function isTrap(c: Card) { return c.cardType === "TRAP"; }
 function isRevelationsLocation(c: Card): boolean { return getModifiedStat(c, 'isLocation', c.cardType === "LOCATION"); }
 function isShieldOfficer(c: Card) { return [ c.heroName, c.cardName ].includes('S.H.I.E.L.D. Officer'); }
 function isVillainousWeapon(c: Card): boolean { return getModifiedStat(c, 'isVillainousWeapon', c.cardType === "VILLAINOUSWEAPON")}
+function getCardActions(c: Card) { return getModifiedStat(c, 'cardActions', c.cardActions || [])}
 function isFightable(c: Card): boolean {
   const res = isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
@@ -1579,6 +1582,9 @@ interface ModifiableStats {
   chivalrousDuel?: boolean
   isLocation?: boolean
   isVillainousWeapon?: boolean;
+  isArtifact?: boolean;
+  cardActions?: ((c: Card, ev: Ev) => Ev)[];
+  artifactEffects?: ((ev: Ev) => void)[];
 }
 
 function safePlus(a: number, b: number) {
@@ -1847,10 +1853,10 @@ function getActions(ev: Ev): Ev[] {
   gameState.newRecruit.withTop(c => p.push(recruitCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
-  fightableCards().each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  fightableCards().each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   p.push(useShardActionEv(ev));
-  playerState.artifact.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
-  playerState.hand.each(c => c.cardActions && c.cardActions.each(a => p.push(a(c, ev))));
+  playerState.artifact.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
+  playerState.hand.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));

@@ -962,7 +962,7 @@ makeMastermindCard("Ragnarok", 6, 6, "Registration Enforcers", ev => {
     hqHeroes().shuffled().each(c => moveCardEv(ev, c, gameState.herodeck, true));
   } ],
 ], {
-  varDefense: c => c.baseDefense + 2 * numClasses(hqHeroes()),
+  varDefense: c => c.printedDefense + 2 * numClasses(hqHeroes()),
 }),
 ]);
 addTemplates("MASTERMINDS", "Deadpool", [
@@ -2070,9 +2070,9 @@ addTemplates("MASTERMINDS", "Revelations", [
     match: (ev, source) => isVillain(ev.what) && ev.what.location === source.location.attachedTo,
     after: ev => villainDrawEv(ev),
   }}),
-], {
-  varDefense: c => c.printedDefense + darkMemoriesAmount() * (c.epic ? 2 : 1)
-}),
+], epic => ({
+  varDefense: darkMemoriesVarDefense(epic ? 2 : 1),
+})),
 ]);
 
 addTemplates("MASTERMINDS", "S.H.I.E.L.D.", [
@@ -2156,4 +2156,140 @@ makeAdaptingMastermindCard("Hydra Super-Adaptoid", 6, "A.I.M. Hydra Offshoot", [
     selectObjectsEv(ev, "Choose Heroes to KO", superPower(Color.STRENGTH), yourHeroes(), c => KOEv(ev, c));
   }),
 ]),
+]);
+addTemplates("MASTERMINDS", "Heroes of Asgard", [
+// EPICNAME: Malekith the Accursed
+...makeEpicMastermindCard("Malekith the Accursed", [ 8, 10 ], 6, "Dark Council", ev => {
+// Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. Then this Master Strike enters the city as a {VILLAINOUS WEAPON} called "Darkspear" that gives +2 Attack. When you gain a Darkspear, it becomes a <b>Thrown Artifact</b> that gives +2 Attack when thrown.
+// Malekith captures a {VILLAINOUS WEAPON} from the city, then captures one from any player's control or discard pile. Then this Master Strike enters the city as a {VILLAINOUS WEAPON} called "Darkspear" that gives +3 Attack. When you gain a Darkspear, it becomes a <b>Thrown Artifact</b> that gives +2 Attack when thrown.
+  const epic = ev.source.epic;
+  const thisStrikeCard = (c: Card) => c === ev.what;
+  addStatSet('isVillainousWeapon', thisStrikeCard, () => true);
+  addStatSet('isArtifact', thisStrikeCard, () => true);
+  addStatSet('defense', thisStrikeCard, () => epic ? 3 : 2);
+  addStatSet('effects', thisStrikeCard, () => [ playArtifact ]);
+  addStatSet('cardActions', thisStrikeCard, () => [ throwArtifactAction ]);
+  addStatSet('artifactEffects', thisStrikeCard, () => [ (ev: Ev) => addAttackEvent(ev, 2) ]);
+  (epic ? [weaponsInTheCity(), weaponsPlayersOwn()] : [weaponsAnywhere()]).each(cards => {
+    selectCardEv(ev, "Choose a Weapon for Malekith to capture", cards, c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+  });
+  playVillainousWeapon(ev, ev.what);
+}, [
+// ---
+// {ARTIFACT} Once per turn, you may KO a Hero from your discard pile.
+// ATTACK: +4
+  makeGainableCard(makeTacticsCard("Black Hammer of the Accursed", {
+    printedDefense: 4,
+    fight: ev => {
+      // Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
+      rescueEv(ev, 4);
+      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+      addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
+      playVillainousWeapon(ev, ev.source);
+    }
+  }), u, u, 0, u, "", ev => KOHandOrDiscardEv(ev), {
+    isArtifact: true, cardActions: [ useArtifactAction() ],
+  }),
+// ---
+// {ARTIFACT} Once per turn, you may defeat a Villain worth 2VP or less.
+// ATTACK: +2
+  makeGainableCard(makeTacticsCard("Dagger of Living Abyss", {
+    printedDefense: 2,
+    fight: ev => {
+      // Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
+      rescueEv(ev, 4);
+      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+      addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
+      playVillainousWeapon(ev, ev.source);
+    }
+  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a villain to defeat", villains().limit(c => c.vp <= 2), c => defeatEv(ev, c)), {
+    isArtifact: true, cardActions: [ useArtifactAction() ],
+  }),
+// ---
+// {ARTIFACT} Once per turn, draw a card.
+// ATTACK: +3
+  makeGainableCard(makeTacticsCard("The Hunting Horn of Faerie", {
+    printedDefense: 3,
+    fight: ev => {
+      // Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
+      rescueEv(ev, 4);
+      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+      addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
+      playVillainousWeapon(ev, ev.source);
+    }
+  }), u, u, 0, u, "", ev => drawEv(ev), {
+    isArtifact: true, cardActions: [ useArtifactAction() ],
+  }),
+  [ "Vulnerable to Cold Iron", ev => {
+  // You get +2 Recruit for each [Tech] Hero you have.
+    addRecruitEvent(ev, 2 * yourHeroes().count(Color.TECH));
+  } ],
+]),
+// <b>Bridge Conqueror 5,</b> {STREETS CONQUEROR 5}
+// EPICNAME: Hela, Goddess of Death
+// <b>Bridge Conqueror 6,</b> <b>Streets Conqueror 6,</b> {ROOFTOPS CONQUEROR 6}
+...makeEpicMastermindCard("Hela, Goddess of Death", [ 10, 12 ], 6, "Omens of Ragnarok", ev => {
+// This Strike enters the city as a 5 Attack "Army of the Dead" Villain worth 3VP. Then choose a Villain worth 3VP or more from your Victory Pile <i>(including an Army of the Dead)</i> to enter the city. If you didn't have any, each player gains a Wound.
+// This Strike enters the city as a 6 Attack "Army of the Dead" Villain worth 4VP. Then choose a Villain worth 4VP or more from your Victory Pile <i>(including an Army of the Dead)</i> to enter the city. If you didn't have any, each player gains a Wound.
+  const epic = ev.source.epic;
+  villainify("Army of the Dead", ev.what, epic ? 6 : 5, epic ? 4 : 3);
+  enterCityEv(ev, ev.what);
+  selectCardOrEv(ev, "Choose a Villain to enter the city", playerState.victory.limit(c => c.vp >= (epic ? 4 : 3)),
+    c => enterCityEv(ev, c),
+    () => eachPlayer(p => gainWoundEv(ev, p)));
+}, [
+// ---
+// {ARTIFACT} Once during each player's turn, if you would gain a Wound, you may draw a card instead.
+// ATTACK: +2
+  makeGainableCard(makeTacticsCard("Hela's Cloak", {
+    printedDefense: 2,
+    fight: ev => {
+      // Rescue 4 Bystanders. Hela captures this card as a {VILLAINOUS WEAPON}.
+      rescueEv(ev, 4);
+      addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
+      attachCardEv(ev, ev.source, ev.source.mastermind, 'WEAPON');
+    }
+  }), u, u, 0, u, "", u, {
+    isArtifact: true,
+    trigger: {
+      event: 'GAIN',
+      match: (ev, source) => isWound(ev.what) && ev.who === owner(source) && !countPerTurn("useArtifactTrigger", source),
+      replace: ev => {
+        selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+          drawEv(ev, 1, owner(ev.source));
+          incPerTurn("useArtifactTrigger", ev.source);
+        }, () => doReplacing(ev), owner(ev.source));
+      }
+    }
+  }),
+// ---
+// {THROWN ARTIFACT} When you throw this, you get {BRIDGE CONQUEROR 3}.
+// ATTACK: +3
+  makeGainableCard(makeTacticsCard("The Nightsword", {
+    printedDefense: 2,
+    fight: ev => {
+      // Rescue 4 Bystanders. Hela captures this card as a {VILLAINOUS WEAPON}.
+      rescueEv(ev, 4);
+      addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
+      attachCardEv(ev, ev.source, ev.source.mastermind, 'WEAPON');
+    }
+  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'BRIDGE', 3), {
+    isArtifact: true,
+    cardActions: [ useArtifactAction() ],
+  }),
+  [ "Seize Bifrost, The Rainbow Bridge", ev => {
+  // Reveal the top card of the Villain Deck. If it's a Villain, that Villain enters the Bridge or Streets, if one of those spaces is empty.
+    revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => {
+      selectCardEv(ev, "Choose a city space", gameState.city.limit(isCityEmpty).limit(d => d.id === 'STREETS' || d.id === 'BRIDGE'), d => enterCityEv(ev, c, d));
+    }));
+  } ],
+  [ "Naglfar, Longship of Fingernails", ev => {
+  // The player on your right reveals the Villain from their Victory Pile that's worth the most VP. That Villain enters the Bridge or Streets, if one of those spaces is empty.
+    selectCardEv(ev, "Choose a villain", playerState.right.victory.limit(isVillain).highest(c => c.vp), c => {
+      selectCardEv(ev, "Choose a city space", gameState.city.limit(isCityEmpty).limit(d => d.id === 'STREETS' || d.id === 'BRIDGE'), d => enterCityEv(ev, c, d));
+    }, playerState.right);
+  } ],
+], epic => ({
+  varDefense: epic ? conquerorVarDefese(6, 'STREETS', 'BRIDGE', 'ROOFTOPS') : conquerorVarDefese(5, 'STREETS', 'BRIDGE'),
+})),
 ]);
