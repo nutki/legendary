@@ -20,7 +20,7 @@ The Mangog gets +1 Attack for each Villain in the Victory Pile of the player on 
 #ESCAPE: Each player who is not {WORTHY} gains a Wound.
 #ATTACK: 3+
 #VP: 4
-#FLAVOR: 
+#FLAVOR: It is the coalesced hatred of a billion beings slain by Thor's father Odin.
 
 #SUBNAME: Laufey, Father of Loki
 #COPIES: 1
@@ -42,7 +42,7 @@ The Mangog gets +1 Attack for each Villain in the Victory Pile of the player on 
 #GAINABLE
 {THROWN ARTIFACT} When you throw this, you get +3 Attack.
 #ATTACK: +3
-#FLAVOR: 
+#FLAVOR: Malekith eventually seized Jarnbjorn and cut off Thor's left arm.
 
 #CARDNAME: Omens of Ragnarok
 
@@ -52,7 +52,7 @@ The Mangog gets +1 Attack for each Villain in the Victory Pile of the player on 
 #FIGHT: KO one of your Heroes.
 #ATTACK: 4+
 #VP: 2
-#FLAVOR: 
+#FLAVOR: After a lifetime of evil, he redeemed himself with a final stand at the Bridge of Gjallerbru.
 
 #SUBNAME: The Fenris Wolf
 #COPIES: 2

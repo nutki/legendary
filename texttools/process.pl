@@ -126,7 +126,7 @@ while (<A>) {
       s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;
       s!^<span style='font-size:8px;'><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
       s!^<span style='font-size:8px;'><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
-      s!^<span style='font-size:8px;'>(.*)</span>!#FLAVOR: $2! && next;
+      s!^<span style='font-size:8px;'>(.*)</span>!#FLAVOR: $1! && next;
 
     }
     $_ = join"\n",@lines;
