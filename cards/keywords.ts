@@ -197,7 +197,7 @@ function uruEnchantedCards(ev: Ev) {
   return turnState.pastEvents.filter(e => e.type === 'URUENCHANTEDREVEAL' && getFightEvent(e) === getFightEvent(ev)).map(e => e.what);
 }
 const uruEnchantedFail = (ev: Ev) => {
-  addTurnSet('fightCost', () => true, (c, prev) => ({ ...prev, cond: () => false }));
+  forbidAction('FIGHT');
   pushEffects(ev, ev.what, 'fight', ev.what.fight);
 };
 function demolishOtherEv(ev: Ev) { demolishEv(ev, p => p !== playerState ); }

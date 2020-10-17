@@ -2221,8 +2221,10 @@ addHeroTemplates("Secret Wars Volume 1", [
 // If you don't recruit any heroes this turn, you get +2 Attack.
   c2: makeHeroCard("Old Man Logan", "Loner", 5, u, 2, Color.INSTINCT | Color.COVERT, "X-Men", "FD", ev => {
     if (!turnState.pastEvents.has(e => e.type === 'RECRUIT')) {
-      addAttackEvent(ev, 2);
-      addTurnSet('recruitCost', isHero, () => ({ cond: () => false }));
+      chooseMayEv(ev, "Get +2 Attack", () => {
+        addAttackEvent(ev, 2);
+        forbidAction('RECRUIT');
+      });
     }
   }),
 // {POWER Instinct} {XDRAMPAGE Wolverine}. For each other player who gained a Wound this way, you get +1 Attack.

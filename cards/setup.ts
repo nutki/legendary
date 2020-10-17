@@ -9,8 +9,8 @@ const woundTemplate = makeWoundCard("Wound", function () {
   return !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT");
 }, function (ev) {
   playerState.hand.limit(isWound).forEach(function (w) { KOEv(ev, w); });
-  addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
-  addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
+  forbidAction('FIGHT');
+  forbidAction('RECRUIT');
 });
 
 // EXPANSION Villains
@@ -25,8 +25,8 @@ const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.
 const bindingsTemplate = makeWoundCard("Bindings", () => !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT"), ev => {
   KOEv(ev, ev.source);
   playerState.hand.limit(isBindings).limit(c => c !== ev.source).each(w => gainEv(ev, w, playerState.right));
-  addTurnSet('fightCost', () => true, () => ({ cond: () => false }));
-  addTurnSet('recruitCost', () => true, () => ({ cond: () => false }));
+  forbidAction('FIGHT');
+  forbidAction('RECRUIT');
 }, "BINDINGS");
 
 // EXPANSION Guardian of the Galaxy

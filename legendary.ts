@@ -2693,7 +2693,6 @@ TODO SW1 make cardAction allow functions returning multiple actions
 TODO SW2 make scheme card position independent
 TODO Noir hidden witness removal and fight limitation (human shields at the same time) (also return them with Card.captured)
 TODO X-Men rework extra masterminds
-TODO X-Men bring back canFight/canRectuit as general fightCost.cond mods will not affect piercing attacks
 TODO Homecoming striker
 TODO Homecoming coordinate
 TODO Champions multiple size-changing
