@@ -1,0 +1,14 @@
+
+#CARDNAME: Sidera Maris, Bridge Builders
+#AMBUSH: (After this enters the city) If there's a Villain on the Bridge, that Villain and this Henchman each gain a Shard. Otherwise, move this to the Bridge.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Universal Church of Truth
+#AMBUSH: Each Henchman Villain in the city gains a Shard. If Magus is the Mastermind, one Cosmic Wraith also gains a Shard.
+#FIGHT: {BURN 2 SHARDS}: KO one of your Heroes.
+#ATTACK: 2
+#VP: 1
+
+

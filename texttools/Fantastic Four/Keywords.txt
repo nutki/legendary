@@ -13,14 +13,14 @@ When you fight a Villain with <b>Burrow</b>, do all of that Villain's <b>Fight</
 * Fight it once to drive it back to the Streets then fight it again in the Streets to finish it.
 If you fight a Villain with <b>Burrow</b> twice in a turn, you'll do that Villain's "<b>Fight</b>" effects twice. Cards that do something "when you defeat" a Villain still work if the Villain burrows to the Streets. When a Villain burrows to the Streets, it does not do any Ambush effects
 
-<b>Cosmic Threat</b>: Galactus and his Heralds use the new <b>Cosmic Threat</b> keyword. This gives them incredibly high Attack values with a special vulnerability. If an enemy has <b>Cosmic Threat</b>: [Ranged] that means: "Once per turn, for each [Ranged] card you reveal, this Enemy gets -3 Attack this turn."
-For example, Morg has <b>Cosmic Threat</b>: [Instinct] and 12* Attack.
+{COSMIC THREAT}: Galactus and his Heralds use the new {COSMIC THREAT} keyword. This gives them incredibly high Attack values with a special vulnerability. If an enemy has {COSMIC THREAT}: [Ranged] that means: "Once per turn, for each [Ranged] card you reveal, this Enemy gets -3 Attack this turn."
+For example, Morg has {COSMIC THREAT}: [Instinct] and 12* Attack.
 * If you reveal two [Instinct] cards, Morg gets -6 Attack this turn, so he has 6 Attack left.
 * If you reveal four or more [Instinct] cards, Morg gets -12 Attack this turn, so he has 0 Attack, and you can fight him without spending any Attack.
 (An asterisk next to an Enemy's Attack number is to remind you that their Attack can change. The asterisk doesn't mean anything else.)
 
-<b>Galactus' Cosmic Threat</b>: Galactus has the "<b>Cosmic Threat</b>: [Strength] [Instinct] [Covert] [Tech] [Ranged] ability. This means:
+<b>Galactus' Cosmic Threat</b>: Galactus has the "{COSMIC THREAT}: [Strength] [Instinct] [Covert] [Tech] [Ranged] ability. This means:
 "Once per turn, choose [Strength], [Instinct], [Covert], [Tech] or [Ranged]. For each card of that color you reveal, this Enemy gets -3 Attack for one fight this turn."
-If you try to fight Galactus a second time in the same turn, he will return to his full Attack and you cannot use his <b>Cosmic Threat</b> ability a second time that turn.
+If you try to fight Galactus a second time in the same turn, he will return to his full Attack and you cannot use his {COSMIC THREAT} ability a second time that turn.
 
 

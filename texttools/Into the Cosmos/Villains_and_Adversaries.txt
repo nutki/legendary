@@ -1,0 +1,140 @@
+
+#CARDNAME: Elders of the Universe
+
+#SUBNAME: The Runner
+#COPIES: 2
+#AMBUSH: {CONTEST OF CHAMPIONS}[Instinct]. Each player that loses must discard a card. If Evil wins, the Runner gains a Shard for each card discarded this way, and he pushes forward two extra spaces.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: The Trader
+#COPIES: 2
+#AMBUSH: {CONTEST OF CHAMPIONS}[Tech]. Each player that loses must reveal their hand and trade a non-grey card from their hand with a card in the HQ that costs the same or less. If Evil wins, the Trader gains a Shard for each trade that occurred.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: The Champion of the Universe
+#COPIES: 2
+#AMBUSH: {CONTEST OF CHAMPIONS}[Strength]. Each player that loses must give this Villain one of their Shards or gain a Wound.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: The Collector
+#COPIES: 2
+#AMBUSH: {CONTEST OF CHAMPIONS}[Covert]. Each player that loses gives the Collector one of these things that he doesn't have yet: A Shard, a Bystander from their Victory Pile, a [Strength] Hero, a [Instinct] Hero, a [Covert] Hero, a [Tech] Hero, or a [Ranged] Hero from hand or discard pile.
+#FIGHT: The player of your choice gains one of the captured Heroes. Put the rest on the bottom of the Hero Deck.
+#ATTACK: 6
+#VP: 4
+
+#CARDNAME: Celestials
+
+#SUBNAME: Nezarr, The Calculator
+#COPIES: 2
+{COSMIC THREAT}[Covert] or [Tech]
+#FIGHT: Nezarr grants you a {CELESTIAL BOON}: For the rest of the game, while it's your turn, the Mastermind gets -Attack equal to a fifth of its printed Attack. (Round down the loss.)
+#ESCAPE: The Mastermind gains Shards equal to a fifth of its printed Attack. (Rounded down.)
+#ATTACK: 11*
+#VP: 4
+
+#SUBNAME: Gammenon, The Gatherer
+#COPIES: 2
+{COSMIC THREAT}[Strength] or [Instinct]
+#FIGHT: Gammenon grants you a {CELESTIAL BOON}: For the rest of the game, whenever you fight a Villain, rescue a Bystander.
+#ESCAPE: Three Villains in the city each capture a Bystander.
+#ATTACK: 10*
+#VP: 3
+
+#SUBNAME: Exitar, The Exterminator
+#COPIES: 2
+{COSMIC THREAT}[Tech] or [Ranged]
+#FIGHT: Exitar grants you a {CELESTIAL BOON}: For the rest of the game, once during each of your turns, you may fight a Henchman from your Victory Pile. Spend the normal Attack then do the Henchman's Fight effect. KO it and rescue a Bystander.
+#ESCAPE: KO 5 Henchman from the Villain Deck then shuffle it.
+#ATTACK: 12*
+#VP: 5
+
+#SUBNAME: Arishem, The Judge
+#COPIES: 1
+{COSMIC THREAT}[Ranged] or [Strength]
+#FIGHT: Arishem grants you a {CELESTIAL BOON}: For the rest of the game, once during each of your turns, you may put a card from the HQ on the bottom of the Hero Deck.
+#ESCAPE: (After the normal Escape KO) Put each Hero that costs 5 or more from the HQ on the bottom of the Hero Deck.
+#ATTACK: 13*
+#VP: 5
+
+#SUBNAME: Tiamut, The Dreaming Celestial
+#COPIES: 1
+{COSMIC THREAT}[Instinct] or [Covert]
+#FIGHT: Tiamut grants you a {CELESTIAL BOON}: Your hand size is one more for the rest of the game.
+#ESCAPE: Each player's hand size is one less for the rest of the game.
+#ATTACK: 14*
+#VP: 6
+
+#CARDNAME: From Beyond
+
+#SUBNAME: The Mapmakers
+#COPIES: 3
+{COSMIC THREAT}[Tech]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 7*
+#VP: 3
+
+#SUBNAME: The Shaper of Worlds
+#COPIES: 2
+{COSMIC THREAT}[Ranged]
+#AMBUSH: Create a "New Reality" space that stays above the Shaper of Worlds. It always contains a Hero, like an HQ space. Players can recruit from it.
+#FIGHT: Choose a player to gain that Hero.
+#ESCAPE: After the normal Escape KO, destroy the New Reality space and destroy an HQ space. KO those Heroes. (It doesn't refill. Any "Pocket Dimension" stays in play.)
+#ATTACK: 10*
+#VP: 5
+
+#SUBNAME: Kubik
+#COPIES: 2
+{COSMIC THREAT}[Instinct]
+#AMBUSH: Each player must reveal two cards with the same non-zero cost or gain a Wound.
+#FIGHT: Reveal the top card of your deck. If it costs 0, KO it.
+#ATTACK: 11*
+#VP: 5
+
+#SUBNAME: Kosmos
+#COPIES: 1
+{COSMIC THREAT}[Covert]
+#FIGHT: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn. For the rest of the game, players take turns in the opposite order around the table.
+#ATTACK: 13*
+#VP: 6
+
+#CARDNAME: Black Order of Thanos
+
+#SUBNAME: Corvus Glaive
+#COPIES: 2
+#AMBUSH: {DANGERSENSE 3}, helping all Black Order Villains and the Mastermind. Corvus Glaive captures a Bystander revealed this way.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Black Dwarf
+#COPIES: 2
+#AMBUSH: {DANGERSENSE 2}, helping all Black Order Villains and the Mastermind. Play a Master Strike revealed this way.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Supergiant
+#COPIES: 2
+#AMBUSH: {DANGERSENSE 1}, helping all Black Order Villains and the Mastermind. Play a Villain revealed this way.
+#FIGHT: You may KO a card from your discard pile.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: Proxima Midnight
+#COPIES: 1
+#AMBUSH: {DANGERSENSE 2}, helping all Black Order Villains and the Mastermind. Play a Scheme Twist revealed this way.
+#ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+#ATTACK: 7+
+#VP: 5
+
+#SUBNAME: Ebony Maw
+#COPIES: 1
+#AMBUSH: Choose Villain, Master Strike, or Scheme Twist. Then {DANGERSENSE 3}, helping all Black Order Villains and the Mastermind. Play all the cards you revealed this way of the type you chose.
+#ATTACK: 6+
+#VP: 5
+
+

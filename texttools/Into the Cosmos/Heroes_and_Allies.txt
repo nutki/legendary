@@ -1,0 +1,310 @@
+
+#CARDNAME: Captain Mar-Vell
+#TEAM: Avengers
+
+#SUBNAME: Cosmic Awareness
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1
+If you would get Attack from <b>Danger Sense</b> this turn, gain that many Shards instead.
+{DANGERSENSE 1}
+{POWER Ranged} Instead, same effect with {DANGERSENSE 2}
+#COST: 2
+
+#SUBNAME: Kree Genetics
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+If you gained any Shards this turn, draw a card.
+#COST: 3
+#FLAVOR: The humans he saved never realized he came from another world.
+
+#SUBNAME: Channel the Nega-Bands
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 2
+{TEAMPOWER Avengers} Reveal the top card of your deck. If it costs 1 or more, gain a Shard. If it costs 0, KO it.
+#COST: 6
+
+#SUBNAME: Protector of the Universe
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 3+
+{DANGERSENSE 4}
+If you gained any Shards this turn before playing this card, {DANGERSENSE 7} instead.
+#COST: 7
+
+#CARDNAME: Quasar
+#TEAM: Avengers
+
+#SUBNAME: Manipulate Gravitons
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+{POWER Covert} Whenever you recruit a Hero from the HQ this turn, gain a Shard.
+#COST: 3
+
+#SUBNAME: Cosmic Champion
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{BURN A SHARD}: You get +3 Attack
+#COST: 4
+#FLAVOR: No matter what exotic energy constructs he creates, they're probably going to hurt.
+
+#SUBNAME: The Quantum Bands
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 1
+Gain a Shard.
+{BURN 2 SHARDS}: You man KO a card from your hand or discard pile.
+#COST: 5
+
+#SUBNAME: The Star Brand
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+Whenever you defeat a Villain or Mastermind this turn, gain a Shard.
+{BURN 4 SHARDS}: You get +7 Attack
+#COST: 7
+
+#CARDNAME: Adam Warlock
+#TEAM: Avengers
+
+#SUBNAME: Transmute Matter
+#COPIES: 5
+#CLASS: [Covert]
+Gain a Shard.
+{BURN 2 SHARDS}: Halve the cost of a Hero in the HQ this turn. (Round the cost up.)
+#COST: 3
+
+#SUBNAME: Regenerative Cocoon
+#COPIES: 5
+#CLASS: [Strength]
+To play this, you must discard a card.
+When you draw a new hand of cards at the end of this turn, draw two extra cards.
+#COST: 4
+
+#SUBNAME: Soulblast
+#COPIES: 3
+#CLASS: [Covert]
+Gain 2 Shards
+{POWER Covert} {BURN 4 SHARDS}: Defeat a Villain.
+#COST: 5
+#FLAVOR: Just as Adam sees into souls, so does he cast the souls out.
+
+#SUBNAME: Manifest the Soul Gem
+#COPIES: 1
+#CLASS: [Ranged]
+Gain 4 Shards.
+{TEAMPOWER Avengers, Avengers} {BURN 8 SHARDS}: Defeat the Mastermind once. Then reveal the top card of the Villain Deck. If it's a Master Strike, then Adam Warlock is corrupted by power. At the start of next turn, add the Magus Mastermind to the game with one random Tactic. (If he has never been in this game.)
+#COST: 8
+
+#CARDNAME: Moondragon
+#TEAM: Avengers
+
+#SUBNAME: Peaceful Meditation
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+When you draw a new hand of cards at the end of this turn, if you didn't fight anything this turn, draw an extra card.
+#COST: 3
+
+#SUBNAME: Psionic Warning
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1+
+{DANGERSENSE 2}
+{POWER Instinct} If this revealed any Scheme Twists, gain a Shard.
+#COST: 4
+
+#SUBNAME: Psychokinetic Blast
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 1+
+{DANGERSENSE 4}
+{TEAMPOWER Avengers} If this revealed at least two Master Strikes, you may shuffle the Villain Deck.
+#COST: 6
+
+#SUBNAME: Lunar Dragon Form
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+{DANGERSENSE 1}
+If this revealed a Scheme Twist, you get +3 Attack and you may shuffle the Villain Deck.
+#COST: 8
+
+#CARDNAME: Nova
+#TEAM: Avengers
+
+#SUBNAME: Draw From the Worldmind
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+Draw a card.
+{POWER Tech} You get +1 Recruit or +1 Attack.
+#COST: 2
+#FLAVOR: All the wisdom of Xandar in one slightly-annoying helmet.
+
+#SUBNAME: Electromagnetic Wave
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 0+
+Choose one: You get +2 Recruit, or you gain a Shard.
+{POWER Ranged} Instead, do both.
+#COST: 3
+#FLAVOR: The Nova Corps values versatility even more than raw power.
+
+#SUBNAME: Declare Galactic Threat
+#COPIES: 3
+#CLASS: [Tech]
+A Villain gains {COSMIC THREAT}[Tech] this turn. (It loses any previous Cosmic Threat abilities and penalties it had.)
+If there were no Villains in the city, draw two cards instead.
+#COST: 6
+
+#SUBNAME: Mobilize the Nova Corps
+#COPIES: 1
+#CLASS: [Ranged]
+Choose one: Draw three cards or a Mastermind gains {COSMIC THREAT}[Ranged] this turn. (It loses any previous Cosmic Threat abilities and penalties it had.)
+#COST: 8
+
+#CARDNAME: Yondu
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Whistling Arrow
+#COPIES: 5
+#CLASS: [Ranged]
+Gain a Shard.
+{POWER Ranged} <b>Burn any number of Shards</b>: Defeat a Villain with printed VP equal to the number of Shards you turned. (This can't affect a Villain with 0 VP or no printed VP.)
+#COST: 2
+#GUN: 1
+
+#SUBNAME: Interstellar Hunter
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1+
+{DANGERSENSE 2}
+{POWER Covert} If this revealed any Master Strikes, draw a card.
+#COST: 3
+
+#SUBNAME: Anticipate Their Movements
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 1+
+{DANGERSENSE 3}
+{TEAMPOWER Guardians of the Galaxy} You may do the Fight effect of a Henchman Villain revealed this way. (Don't defeat it.)
+#COST: 5
+
+#SUBNAME: Space Pirate
+#COPIES: 1
+#CLASS: [Tech]
+Choose one: Gain a Hero from the HQ for free, or gain a Shard for each empty city space.
+{TEAMPOWER Guardians of the Galaxy, Guardians of the Galaxy, Guardians of the Galaxy} Do both.
+#COST: 7
+
+#CARDNAME: Phyla-Vell
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Channel Cosmic Power
+#COPIES: 5
+#CLASS: [Instinct]
+Gain a Shard.
+{POWER Instinct} Draw a card.
+#COST: 2
+#FLAVOR: Phyla carved herself a destiny far beyond her origins as a cosmically created daughter of Mar-Vell.
+
+#SUBNAME: Quantum Sword
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+If you have at least 4 Shards, you get +2 Attack.
+#COST: 4
+#FLAVOR: The molecules of a Quantum Sword can be in two places at the same time, conveniently cutting off two arms at once.
+
+#SUBNAME: Martyr
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2
+If any player would gain a Wound, you may discard this card and gain 2 Shards instead.
+#COST: 3
+
+#SUBNAME: Avatar of Oblivion
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 3+
+You may KO a card from your hand or discard pile. If you do, gain 2 Shards.
+Then, if you have at least 8 Shards, you get +3 Attack.
+#COST: 8
+
+#CARDNAME: Ronan the Accuser
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Universal Weapon
+#COPIES: 5
+#CLASS: [Tech]
+Gain a Shard.
+{BURN 2 SHARDS}: Draw two cards.
+#COST: 3
+#FLAVOR: His Cosmi-Rod can produce almost anything he can imagine.
+
+#SUBNAME: Rally Kree Warriors
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+Whenever you rescue a Bystander this turn, gain a Shard.
+{POWER Strength} Rescue a Bystander.
+#COST: 4
+#FLAVOR: His leadership inspires Kree onlookers to become warriors.
+#GUN: 1
+
+#SUBNAME: Accuse Enemies of the Empire
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 4
+{CONTEST OF CHAMPIONS}[Tech]. Each player that wins rescues a Bystander. If the Mastermind wins, it captures a Bystander.
+#COST: 6
+
+#SUBNAME: Seek the Infinity Gems
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+{CONTEST OF CHAMPIONS}[Strength]. Each other player that loses must lose a Shard. Each player that wins gains 2 Shards. If the Mastermind wins, a Villain gains 2 Shards.
+#COST: 8
+
+#CARDNAME: Nebula
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Ruthless Cyborg
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2
+Whenever you take any number of Shards from a Villain, Mastermind, or other player this turn, you may KO one of your cards or a card from your discard pile.
+#COST: 3
+
+#SUBNAME: Galactic Rogue
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 3
+A Villain gains a Shard.
+{POWER Instinct Tech} Take a Shard from a Villain.
+#COST: 5
+#FLAVOR: Her moments of generosity were often just a setup for a heist to follow.
+#GUN: 1
+
+#SUBNAME: Illusion Device
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 2
+{POWER Tech} Choose another player. Unless that player reveals a [Covert] Hero, take one of their Shards or "rescue" a Bystander from their Victory Pile.
+#COST: 4
+
+#SUBNAME: Daring Raid
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 5
+Whenever you take any number of Shards from a Villain, Mastermind, or other player this turn, you get +3 Recruit.
+#COST: 7
+
+

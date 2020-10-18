@@ -60,7 +60,8 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
-    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds|Dark Memories|Last Stand|Undercover|Worthy|\w+ Conqueror \d+|Villainous Weapon)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
+    s!<b>(Ambush|Fight): !<b>$1</b>: <b>!g;
+    s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds|Dark Memories|Last Stand|Undercover|Worthy|\w+ Conqueror \d+|Villainous Weapon|Cosmic Threat|Celestial Boon|Contest of Champions)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>(Artifact|Thrown Artifact)</b>\s*-\s*!'{'.(uc$1).'} '!ge;
     s!<b>Cross-Dimensional (.*?) Rampage</b>!{XDRAMPAGE $1}!g;
     s!<b>Rise of the Living Dead</b>!{RISEOFTHELIVINGDEAD}!g;
@@ -96,6 +97,8 @@ while (<A>) {
     s!<b>Moonlight</b>:!{MOONLIGHT}!g;
     s!<b>Sunlight</b>:!{SUNLIGHT}!g;
     s!<b>Waking Nightmares?</b>!{WAKING NIGHTMARE}!g;
+    s!<b>Burn a Shard</b>!{BURN A SHARD}!g;
+    s!<b>Burn (\d+) Shards</b>!{BURN $1 SHARDS}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

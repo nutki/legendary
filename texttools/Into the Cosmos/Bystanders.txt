@@ -1,0 +1,17 @@
+
+#CARDNAME: Legendary Game Designer
+#COPIES: 1
+#RESCUE: gain a Shard.
+#VP: 1
+
+#CARDNAME: Board Gamer
+#COPIES: 1
+#RESCUE: each player with the most Victory Points draws a card. (Your VP includes this Bystander.)
+#VP: 1
+
+#CARDNAME: Pizza Delivery Guy
+#COPIES: 1
+#RESCUE: choose one: Draw a card now, or draw an extra card when you draw a new hand of cards at the end of this turn.
+#VP: 1
+
+
