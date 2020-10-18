@@ -318,12 +318,11 @@ function makeTacticsCard(name: string, abilities: TacticsCardAbillities = {}) {
   if (abilities) Object.assign(t, abilities);
   return t;
 }
-function makeEpicName(name: string) {
-  return "Epic " + (name.startsWith("The ") ? name.substring(4) : name);
-}
-function makeEpicMastermindCard(name: string, defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities | ((epic: boolean) => MastermindCardAbillities)) {
-  const m1 = makeMastermindCard(name, defense[0], vp, leads, strike, tactics, abilities instanceof Function ? abilities(false) : abilities);
-  const m2 = makeMastermindCard(makeEpicName(name), defense[1], vp, leads, strike, tactics, abilities instanceof Function ? abilities(true) : abilities);
+function makeEpicMastermindCard(name: string | [string, string], defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities | ((epic: boolean) => MastermindCardAbillities)) {
+  const m1 = makeMastermindCard(typeof name === "string" ? name : name[0],
+    defense[0], vp, leads, strike, tactics, abilities instanceof Function ? abilities(false) : abilities);
+  const m2 = makeMastermindCard(typeof name === "string" ? "The " + name : name[1],
+    defense[1], vp, leads, strike, tactics, abilities instanceof Function ? abilities(true) : abilities);
   m2.epic = true;
   // Epic masterminds use unchanged defense on tactics (may be relevant for some schemes).
   m2.tacticsTemplates = m1.tacticsTemplates;

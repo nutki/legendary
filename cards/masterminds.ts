@@ -2032,7 +2032,7 @@ addTemplates("MASTERMINDS", "Revelations", [
 // {DARK MEMORIES}
 // EPICNAME: Hood
 //  <b>Double Dark Memories</b>
-...makeEpicMastermindCard("The Hood", [ 9, 10 ], 6, "Hood's Gang", ev => {
+...makeEpicMastermindCard(["The Hood", "Epic Hood"], [ 9, 10 ], 6, "Hood's Gang", ev => {
 // Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
   eachPlayer(p => cont(ev, () => {
     if (!ev.source.epic) {
@@ -2292,4 +2292,87 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
 ], epic => ({
   varDefense: epic ? conquerorVarDefese(6, 'STREETS', 'BRIDGE', 'ROOFTOPS') : conquerorVarDefese(5, 'STREETS', 'BRIDGE'),
 })),
+]);
+addTemplates("MASTERMINDS", "New Mutants", [
+// Belasco gets +Attack equal to the number of non-grey Heroes in the KO pile, divided by the number of players <i>(round down)</i>.
+...makeEpicMastermindCard(["Belasco, Demon Lord of Limbo", "Epic Belasco"], [ 9, 10 ], 6, "Demons of Limbo", ev => {
+// {SUNLIGHT} Each player KOs a non-grey Hero from their discard pile. {MOONLIGHT} Each player has a {WAKING NIGHTMARE}. KO Heroes discarded this way.
+// {SUNLIGHT} Each player KOs two non-grey Heroes from their discard pile. {MOONLIGHT} Each player has two {WAKING NIGHTMARE}. KO Heroes discarded this way.
+  eachPlayer(p => {
+    repeat(ev.source.epic ? 2 : 1, () => {
+      sunlightPower() && selectCardAndKOEv(ev, p.discard.deck, p);
+      moonlightPower() && wakingNightmareEv(ev, p);
+    });
+  })
+}, [
+  [ "A Demon's Mercy", ev => {
+  // Each other player KOs a non-grey Hero from their hand or discard pile.
+    eachOtherPlayerVM(p => selectCardAndKOEv(ev, handOrDiscard().limit(isNonGrayHero), p));
+  } ],
+  [ "Bargain for Souls", ev => {
+  // Reveal cards from the Hero Deck equal to the number of players. Gain one of them and KO the rest.
+    revealHeroDeckEv(ev, gameState.players.size, cards => {
+      selectCardEv(ev, "Choose a Hero to gain", cards, c => gainEv(ev, c));
+      cont(ev, () => gameState.herodeck.revealed.each(c => KOEv(ev, c)));
+    });
+  } ],
+  [ "Rescue from Limbo", ev => {
+  // You may KO one of your non-grey Heroes or a non-grey Hero from your discard pile. If you do, gain a Hero from the KO pile.
+    selectCardOptEv(ev, "Choose a Hero to KO", [...yourHeroes(), ...playerState.discard.deck].limit(isNonGrayHero), c => {
+      KOEv(ev, c);
+      selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero), c => gainEv(ev, c));
+    })
+  } ],
+  [ "Cleaving Demonblade", ev => {
+  // Each player chooses a different card in the HQ. Then KO all chosen cards.
+    const cards: Card[] = [];
+    eachPlayer(p => cont(ev, () => {
+      selectCardEv(ev, "Choose a Hero", hqHeroes().limit(c => !cards.includes(c)), c => cards.push(c), p);
+    }));
+    cont(ev, () => cards.each(c => KOEv(ev, c)));
+  } ],
+], {
+  trigger: {
+    event: 'DISCARD',
+    match: (ev, source) => ev.getSource() === source,
+    after: ev => KOEv(ev, ev.parent.what),
+  },
+  varDefense: c => c.printedDefense + Math.floor(gameState.ko.count(isNonGrayHero) / gameState.players.size),
+}),
+// During your turn, Emma Frost gets +1 Attack for each grey Hero you have.
+// During your turn, Emma Frost gets +2 Attack for each grey Hero you have.
+...makeEpicMastermindCard(["Emma Frost, The White Queen", "Epic Emma Frost"], [ 8, 9 ], 6, "Hellions", ev => {
+// Stack this Strike next to Emma Frost. Then each player has a {WAKING NIGHTMARE} for each Strike stacked here.
+// Stack this Strike next to Emma Frost. Then each player has a {WAKING NIGHTMARE} for each Strike stacked here, then one more {WAKING NIGHTMARE}.
+  attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
+  cont(ev, () => {
+    const amount = gameState.mastermind.attached('STRIKE').size + (ev.source.epic ? 1 : 0);
+    eachPlayer(p => repeat(amount, () => {
+      wakingNightmareEv(ev, p);
+    }));
+  });
+}, [
+  [ "Tempting Bargain", ev => {
+  // You may play the top card of the Villain Deck. If you do, you get +5 Recruit.
+    chooseMayEv(ev, "Play top card of the Villain Deck", () => { villainDrawEv(ev); addRecruitEvent(ev, 5); });
+  } ],
+  [ "Psychic X-Men Link", ev => {
+  // Each other player has a {WAKING NIGHTMARE}. Each of those players who did not discard an X-Men Hero this way gains a Wound.
+    eachOtherPlayerVM(p => wakingNightmareEv(ev, p));
+    cont(ev, () => {
+      const playersWithXmen = pastEvents('DISCARD').limit(e => e.getSource() === ev.source && isTeam('X-Men')(e.what)).map(e => e.who); // TODO e.isChildOf(ev) in case of multiple twists (look for other "this way")
+      eachOtherPlayerVM(p => playersWithXmen.includes(p) || gainWoundEv(ev, p));
+    });
+  } ],
+  [ "Assume Diamond Form", ev => {
+  // Emma Frost cannot be fought again until the start of your next turn.
+    forbidAction('FIGHT', c => c === ev.source.mastermind);
+  } ],
+  [ "Contempt for Weakness", ev => {
+  // Put a 0-cost Hero from the KO pile on top of each other player's deck.
+    eachOtherPlayerVM(p => selectCardEv(ev, `Choose a Hero for ${p.name} to gain`, gameState.ko.deck, c => gainEv(ev, c, p)))
+  } ],
+], {
+  varDefense: c => c.printedDefense + yourHeroes().count(Color.GRAY) * (c.epic ? 2 : 1),
+}),
 ]);

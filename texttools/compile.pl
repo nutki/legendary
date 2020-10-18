@@ -245,7 +245,7 @@ sub maketrap {
         filterprint(qw(LEADS STRIKE VP ATTACK));
         $vp ne $_{VP} and die "epic vp differ for $mastermindname";
         $leads ne $_{LEADS} and die "epic leads differ for $mastermindname";
-        $mastermindname ne $_{EPICNAME} and $mastermindname ne "The $_{EPICNAME}" and die "epic name differ for $mastermindname";
+        $mastermindname ne $_{EPICNAME} and $mastermindname ne "The $_{EPICNAME}" and print STDERR "$_{EPICNAME} epic name differ for $mastermindname\n";
         my $epicdefense = $_{ATTACK} =~  s/[^0-9.]//gr;
         $defense = "[ $defense, $epicdefense ]" if $epicdefense;
       }
