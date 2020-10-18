@@ -614,6 +614,7 @@ type EvType =
 'PAYTORESCUE' |
 'BETRAY' |
 'BUYSHARD' |
+'INSANEPLAY' |
 undefined;
 type TriggerableEvType =
 // Basic actions
@@ -949,6 +950,7 @@ interface Game {
   outwitAmount?: () => number
   reversePlayerOrder?: boolean // TODO revese player order
   destroyedCitySpaces: Deck[]
+  actionFilters: ((ev: Ev) => boolean)[];
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1286,6 +1288,7 @@ gameState = {
   turnNum: 0,
   strikeCount: 0,
   destroyedCitySpaces: [],
+  actionFilters: [],
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -1627,8 +1630,8 @@ function combineHandlers(prev: Handler | Handler[], h: Handler) {
 function addHandler(prev: Handler[], h: Handler) {
   return prev ? [...prev, h] : [h];
 }
-function forbidAction(action: 'FIGHT' | 'RECRUIT' | 'PLAY', limit?: (c: Card) => boolean) {
-  turnState.actionFilters.push(ev => !(ev.type === action && (!limit || limit(ev.what))));
+function forbidAction(action: 'FIGHT' | 'RECRUIT' | 'PLAY', limit?: (c: Card) => boolean, forever?: boolean) {
+  (forever ? gameState : turnState).actionFilters.push(ev => !(ev.type === action && (!limit || limit(ev.what))));
 }
 // Game engine functions
 function attachedDeck(name: string, where: Deck | Card) {
@@ -1858,6 +1861,7 @@ function getActions(ev: Ev): Ev[] {
   playerState.hand.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
+  if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
 }

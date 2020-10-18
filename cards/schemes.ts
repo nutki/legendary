@@ -203,7 +203,7 @@ makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, 
   addStatSet('isVillain', isGoblinQueen, () => true);
   gameState.specialActions = (ev) => {
     const what = demonGoblins.top;
-    return what && [ fightActionEv(ev, what) ];
+    return what ? [ fightActionEv(ev, what) ] : [];
   };
 }),
 // SETUP: 8 Twists. Villain Deck includes 14 cards for an extra Hero and no Bystanders.
@@ -2074,5 +2074,95 @@ makeSchemeCard("War of the Frost Giants", { twists: 9 }, ev => {
   after: ev => schemeProgressEv(ev, [...cityVillains(), ...gameState.escaped.deck].count(isGroup("Frost Giant Invader"))),
 }, () => {
   setSchemeTarget(5);
+}),
+]);
+addTemplates("SCHEMES", "New Mutants", [
+// SETUP: 8 Twists. Include Demons of Limbo as one of the Villain Groups. Put the Demon Bear Villain from that groups next to the Scheme.
+// RULE: Whenever the Demon Bear escapes, stack a Twist next to the Scheme as a "Dream Horror."
+// EVILWINS: When there are 3 Dream Horrors.
+makeSchemeCard("The Demon Bear Saga", { twists: 8, required: { villains: "Demons of Limbo" } }, ev => {
+  // Twist: If the Demon Bear is in the city, it escapes. Otherwise, the Demon Bear enters the city from wherever it is. If it was in a player's Victory Pile, that player rescues 4 Bystanders.
+  const cards = [villains(), gameState.scheme.attached('BEAR'), gameState.players.map(p => p.victory.deck).merge()].merge();
+  cards.limit(c => c.cardName === "Demon Bear").withFirst(bear => {
+    const where = bear.location;
+    if (where.isCity) {
+      villainEscapeEv(ev, bear);
+    } else {
+      if (owner(bear)) rescueByEv(ev, owner(bear), 4);
+      enterCityEv(ev, bear);
+    }
+  });
+}, {
+  event: 'ESCAPE',
+  match: ev => ev.what.cardName === "Demon Bear",
+  after: ev => {
+    gameState.ko.limit(isTwist).withFirst(c => attachCardEv(ev, c, gameState.scheme, 'TWIST'))
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TWIST').size))
+  }
+}, () => {
+  const bears = gameState.scheme.attachedDeck('BEAR')
+  gameState.villaindeck.limit(c => c.cardName === "Demon Bear").each(c => moveCard(c, bears));
+  setSchemeTarget(3);
+}),
+// SETUP: 11 Twists.
+// <b>Twist 1,3,5,7</b>: {MOONLIGHT} Stack this Twist next to the Scheme as an "Altered Orbit."
+// <b>Twist 2,4,6,8</b>: {SUNLIGHT} Same effect.
+// <b>Twist 9,10,11</b>: Same effect.
+// EVILWINS: When there are 4 Altered Orbits.
+makeSchemeCard("Crash the Moon into the Sun", { twists: 11 }, ev => {
+  if (sunlightPower() && [2, 4, 6, 8].includes(ev.nr) ||
+      moonlightPower() && [1, 3, 5, 7].includes(ev.nr) ||
+      [9, 10, 11].includes(ev.nr)) attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TWIST').size));
+}, [], () => {
+  setSchemeTarget(4);
+}),
+// SETUP: 1 Twist, plus 2 Twists per player.
+// RULE: On each of your turns, before you play other cards from your hand, you must play two randomly-selected cards from your hand for each Psychotic Break you have.
+// EVILWINS: When a player has 3 Psychotic Breaks.
+makeSchemeCard("Trapped in the Insane Asylum", { twists: [ 3, 5, 7, 9, 11 ] }, ev => {
+  // Twist: You face a "Sanity Test": Either keep this Twist in front of you as a "Psychotic Break", or discard a card and pass this Twist to the PLayer on your left and that player faces a Sanity Test. // FIX PLayer
+  const sanityTest = (p: Player = playerState) => {
+    chooseOptionEv(ev, "Choose one",
+      [{l:"Pass the Twist", v:() => { pickDiscardEv(ev, 1, p); sanityTest(p.left); }},
+      {l:"Keep as Psychotic Break", v:() => attachCardEv(ev, ev.twist, p.deck, 'TWIST')}], f => f(), p);
+  }
+  sanityTest();
+  cont(ev, () => schemeProgressEv(ev, gameState.players.max(p => p.deck.attached('TWIST').size)));
+}, [], () => {
+  setSchemeTarget(3);
+  const needsInsanePlays = () => pastEvents('INSANEPLAY').size < 2 * playerState.deck.attached('TWIST').size;
+  forbidAction('PLAY', () => needsInsanePlays(), true);
+  gameState.specialActions = ev => needsInsanePlays ? [ new Ev(ev, 'INSANEPLAY', {
+    desc: "Play a random card",
+    cost: { cond: () => playerState.hand.has(c => (isHero(c) || isArtifact(c)) && canPlay(c)) },
+    func: ev => {
+      const playableCards = playerState.hand.limit(c => (isHero(c) || isArtifact(c)) && canPlay(c));
+      playableCards.withRandom(c => pushEv(ev, 'PLAY', { func: playCard, what: c }));
+    }
+  })] : [];
+}),
+// SETUP: 9 Twists. Add an extra Villain Group.
+// RULE: The Bank nd the Streets do not exist. Put the Villain Deck under the HQ as "Home Plate." The Sewers, Rooftops, and Bridge are First, Second, and Third Base.
+// EVILWINS: When Evil has 4 "runs" <i>(Villains in the Escape Pile)</i> per player.
+makeSchemeCard("Superhuman Baseball Game", { twists: 9, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: Play the top card of the Villain Deck. If it's a Bystander, rescue that "Cheering Fan." If it's a Master Strike, then after it resolves, any Villain on Third Base "Steals Home" and Escapes. If it's a Villain, it "Hits a Double," pushes to Second Base <i>(the Rooftops)</i> and you play the top card from the Villain Deck.
+  const c = gameState.villaindeck.top;
+  if (c) {
+    if (isBystander(c)) rescueEv(ev, c);
+    else {
+      villainDrawEv(ev);
+      if(isVillain(c)) {
+        cont(ev, () => withCity('ROOFTOPS', rooftops => c.location.isCity && moveCardEv(ev, c, rooftops)));
+        villainDrawEv(ev);
+      } else if (isStrike(c)) {
+        cont(ev, () => withCity('BRIDGE', bridge => bridge.limit(isVillain).each(c => villainEscapeEv(ev, c))));
+      }
+    }
+  }
+}, escapeProgressTrigger(isVillain), () => {
+  setSchemeTarget(4);
+  gameState.city = gameState.city.filter(d => d.id !== "BANK" && d.id !== "STREETS");
+  makeCityAdjacent(gameState.city);
 }),
 ]);
