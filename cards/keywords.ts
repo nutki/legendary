@@ -718,3 +718,22 @@ function conquerorVarDefese(amount: number, ...l: CityLocation[]) {
 const weaponsInTheCity = () => cityVillains().map(c => c.attached('WEAPONS')).merge();
 const weaponsPlayersOwn = () => gameState.players.map(p => [...p.discard.limit(isVillainousWeapon), ...p.artifact.limit(isVillainousWeapon)]).merge();
 const weaponsAnywhere = () => [...weaponsInTheCity(), ...weaponsPlayersOwn()];
+
+// New Mutants
+const sunlightAmount = () => hqHeroes().count(c => (c.printedCost % 2) === 0);
+const moonlightAmount = () => hqHeroes().count(c => (c.printedCost % 2) === 1);
+const sunlightPower = () => sunlightAmount() > moonlightAmount();
+const moonlightPower = () => moonlightAmount() > sunlightAmount();
+
+function wakingNightmareEv(ev: Ev, p: Player = playerState) {
+  selectCardEv(ev, "Choose a card to discard", p.hand.limit(isNonGrayHero), c => {
+    discardEv(ev, c);
+    drawEv(ev, 1, p);
+  }, p);
+}
+function wakingNightmareOptEv(ev: Ev, p: Player = playerState) {
+  selectCardOptEv(ev, "Choose a card to discard", p.hand.limit(isNonGrayHero), c => {
+    discardEv(ev, c);
+    drawEv(ev, 1, p);
+  }, p);
+}

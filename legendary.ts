@@ -51,7 +51,7 @@ interface Card {
   printedVP: number
   printedCost: number
   printedPiercing: number
-  playCostType?: "DISCARD" | "TOPDECK"
+  playCostType?: "DISCARD" | "TOPDECK" | "BOTTOMDECK"
   playCost?: number
   playCostLimit?: (c: Card) => boolean;
   fightCond?: (c?: Card) => boolean
@@ -166,7 +166,7 @@ interface HeroCardAbillities {
   trigger?: Trigger
   triggers?: Trigger[]
   playCost?: number
-  playCostType?: 'TOPDECK' | 'DISCARD'
+  playCostType?: 'TOPDECK' | 'DISCARD' | 'BOTTOMDECK';
   playCostLimit?: (c: Card) => boolean;
   copyPasteCard?: boolean
   teleport?: boolean
@@ -1824,7 +1824,7 @@ function canPlay(c: Card): boolean {
   let val = c.playCost;
   const filter = c.playCostLimit;
   if (type === undefined) return true;
-  if (type === "DISCARD" || type === "TOPDECK")
+  if (type === "DISCARD" || type === "TOPDECK" || type === "BOTTOMDECK")
     return playerState.hand.count(i => i !== c && (!filter || filter(c))) >= val;
   throw TypeError(`unknown play cost: ${type}`);
 }
@@ -2131,9 +2131,9 @@ function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: F
   // TODO multiplayer: pickDiscardEv show hand when condition present (and cards.size < n depending on card wording)
   repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", cards, sel => discardEv(ev, sel), who));
 }
-function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined) {
+function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined, bottom: boolean = false) {
   const cards = cond ? who.hand.deck : who.hand.limit(cond);
-  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on top of your deck`, cards, sel => moveCardEv(ev, sel, who.deck), who));
+  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on ${bottom ? "bottom" : "top"} of your deck`, cards, sel => moveCardEv(ev, sel, who.deck, bottom), who));
 }
 function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
@@ -2253,6 +2253,7 @@ function playCard2(ev: Ev) {
   pushEv(ev, "PLAYCARDEFFECTS", { source: card, func: ev => {
     if (card.playCostType === "DISCARD") pickDiscardEv(ev, card.playCost, playerState, card.playCostLimit);
     if (card.playCostType === "TOPDECK") pickTopDeckEv(ev, card.playCost, playerState, card.playCostLimit);
+    if (card.playCostType === "BOTTOMDECK") pickTopDeckEv(ev, card.playCost, playerState, card.playCostLimit, true);
     playCardEffects(ev, card);
     cont(ev, () => turnState.cardsPlayed.push(card));
   }});

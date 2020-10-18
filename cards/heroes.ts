@@ -5178,3 +5178,133 @@ addHeroTemplates("Heroes of Asgard", [
   ]),
 },
 ]);
+addHeroTemplates("New Mutants", [
+{
+  name: "Sunspot",
+  team: "X-Men",
+// {MOONLIGHT} You may put a Hero from the HQ on the bottom of the Hero Deck.
+// {SUNLIGHT} Draw a card.
+  c1: makeHeroCard("Sunspot", "Absorb Radiation", 2, 1, u, Color.RANGED, "X-Men", "D", [
+    ev => moonlightPower() && selectCardOptEv(ev, "Choose a Hero", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => sunlightPower() && drawEv(ev),
+  ]),
+// {SUNLIGHT} You may put a card from your hand on the bottom of you deck. If you do, you get +2 Attack.
+  c2: makeHeroCard("Sunspot", "Solar-Powered", 4, u, 2, Color.STRENGTH, "X-Men", "FD", ev => {
+    sunlightPower() && selectCardOptEv(ev, "Choose a card", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck, true));
+  }),
+// To play this, you must put a card from your hand on the bottom of your deck.
+// {SUNLIGHT} You get +1 Attack for each other X-Men card you played this turn.
+  uc: makeHeroCard("Sunspot", "Thermokinetic Fury", 6, u, 4, Color.RANGED, "X-Men", "", ev => sunlightPower() && addAttackEvent(ev, superPower("X-Men")), {
+    playCost: 1, playCostType: 'BOTTOMDECK',
+  }),
+// Choose any number of Heroes in the HQ. Put them on the bottom of the Hero Deck.
+// {SUNLIGHT} You get +1 Attack for each Hero in the HQ with an even-numbered cost.
+  ra: makeHeroCard("Sunspot", "Empyreal Force", 8, u, 3, Color.STRENGTH, "X-Men", "", [
+    ev => selectObjectsAnyEv(ev, "Choose Heroes to put on the bottom of the deck", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => sunlightPower() && addAttackEvent(ev, sunlightAmount()) ]),
+},
+{
+  name: "Wolfsbane",
+  team: "X-Men",
+// {SUNLIGHT} You may put a Hero from the HQ on the bottom of the Hero Deck.
+// {MOONLIGHT} Draw a card.
+  c1: makeHeroCard("Wolfsbane", "Wolf Out", 3, 2, u, Color.INSTINCT, "X-Men", "D", [
+    ev => sunlightPower() && selectCardOptEv(ev, "Choose a Hero", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => moonlightPower() && drawEv(ev),
+  ]),
+// {MOONLIGHT} Look at the top two cards of your deck. Discard any number of them and put the rest back in any order.
+  c2: makeHeroCard("Wolfsbane", "Night Vision", 3, u, 2, Color.STRENGTH, "X-Men", "D",
+    ev => moonlightPower() &&
+      lookAtDeckEv(ev, 2, cards => selectObjectsAnyEv(ev, "Choose cards to discard", cards, c => discardEv(ev, c)))),
+// {MOONLIGHT} Look at the top card of your deck. KO it or put it back.
+  uc: makeHeroCard("Wolfsbane", "Howl at the Moon", 5, u, 3, Color.COVERT, "X-Men", "F",
+    ev => moonlightPower() &&
+      lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))),
+// Look at the top three cards of your deck. Discard any number of them and put the rest back in any order.
+// {MOONLIGHT} You get the total printed Attack of all the cards you discarded from your deck this turn.
+// GUN: 1
+  ra: makeHeroCard("Wolfsbane", "Nocturnal Savagery", 7, u, 4, Color.INSTINCT, "X-Men", "G", [
+    ev => lookAtDeckEv(ev, 3, cards => selectObjectsAnyEv(ev, "Choose cards to discard", cards, c => discardEv(ev, c))),
+    ev => moonlightPower() && addAttackEvent(ev, pastEvents('DISCARD').limit(e => [playerState.deck, playerState.revealed].includes(e.where)).sum(e => e.what.printedAttack)),
+  ]),
+},
+{
+  name: "Mirage",
+  team: "X-Men",
+// When a card effect causes you to discard this card, set it aside. At the end of this turn, add it to your hand as an extra card.
+  c1: makeHeroCard("Mirage", "Empathic Link", 3, 2, u, Color.INSTINCT, "X-Men", "D", u, { trigger: {
+    event: 'DISCARD',
+    match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
+    replace: ev => {
+      attachCardEv(ev, ev.source, owner(ev.source).deck, 'SETASIDE');
+      addTurnTrigger('CLEANUP', undefined, () => moveCardEv(ev, ev.source, owner(ev.source).hand));
+    },
+  }}),
+// {MOONLIGHT} You may discard a card. If you do, draw a card.
+  c2: makeHeroCard("Mirage", "Dreams Made Real", 3, u, 2, Color.RANGED, "X-Men", "FD", ev => {
+    moonlightPower() && selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
+  }),
+// You may have a {WAKING NIGHTMARE}. You get +Attack equal to the cost of the card you discarded this way.
+  uc: makeHeroCard("Mirage", "Nightmare Wolves", 6, u, 1, Color.COVERT, "X-Men", "", ev => wakingNightmareOptEv(ev)),
+// Whenever a card effect causes you to discard a card from your hand this turn, you get +2 Attack.
+// {MOONLIGHT} You may have a {WAKING NIGHTMARE}.
+  ra: makeHeroCard("Mirage", "Haunted By the Demon Bear", 7, u, 4, Color.COVERT, "X-Men", "D", [
+    ev => addTurnTrigger('DISCARD', e => e.where === playerState.hand, { after: ev => addAttackEvent(ev, 2) }),
+    ev => moonlightPower() && wakingNightmareOptEv(ev)
+  ]),
+},
+{
+  name: "Warlock",
+  team: "X-Men",
+// Look at the top two cards of your deck. Draw one and discard the other.
+  c1: makeHeroCard("Warlock", "Earthling Choices", 2, u, u, Color.TECH, "X-Men", "D", ev => lookAtDeckEv(ev, 2, cards => {
+    selectCardEv(ev, "Choose a card to draw", cards, c => {
+      drawCardEv(ev, c);
+      cards.limit(c1 => c1 !== c).each(c => discardEv(ev, c));
+    });
+  })),
+// {SUNLIGHT} You get +2 Recruit.
+// {MOONLIGHT} You get +2 Attack.
+// {POWER Tech} Instead, you get both.
+  c2: makeHeroCard("Warlock", "Analyze Planetary Rotation", 3, 0, 0, Color.TECH, "X-Men", "D", [
+    ev => (superPower(Color.TECH) || sunlightPower()) && addRecruitEvent(ev, 2),
+    ev => (superPower(Color.TECH) || moonlightPower()) && addAttackEvent(ev, 2),
+  ]),
+// {POWER Tech} The first time you defeat a Villain this turn, you may KO one of your cards or a card from your discard pile.
+  uc: makeHeroCard("Warlock", "Techno-Organic Adaptation", 6, u, 3, Color.COVERT, "X-Men", "",
+  ev => superPower(Color.TECH) && addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !pastEvents('DEFEAT').has(e => isVillain(e.what)), { after: ev => {
+    selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck]);
+  } })),
+// {SUNLIGHT} Draw 3 cards.
+// {MOONLIGHT} You get +3 Recruit and +3 Attack.
+// {TEAMPOWER X-Men, X-Men, X-Men, X-Men} Instead, you get both.
+  ra: makeHeroCard("Warlock", "Nanite Shapeshifter", 7, 0, 0, Color.TECH, "X-Men", "", [
+    ev => (superPower("X-Men", "X-Men", "X-Men", "X-Men") || sunlightPower()) && drawEv(ev, 3),
+    ev => (superPower("X-Men", "X-Men", "X-Men", "X-Men") || moonlightPower()) && (addRecruitEvent(ev, 3), addAttackEvent(ev, 3)),
+  ]),
+},
+{
+  name: "Karma",
+  team: "X-Men",
+// {POWER Covert} Choose a Villain. You get +1 Attack for each Villain adjacent to it.
+  c1: makeHeroCard("Karma", "Sow Rivalry", 3, u, 2, Color.COVERT, "X-Men", "FD", ev => superPower(Color.COVERT) && selectCardEv(ev, "Choose a Villain", villains(), c => {
+    addAttackEvent(ev, cityAdjacent(c.location).sum(d => d.count(isVillain)));
+  })),
+// Guess a color. Then reveal the top card of the Hero Deck and put it back on the top or bottom of that deck. If you guessed right, you get +2 Attack.
+  c2: makeHeroCard("Karma", "Temporary Possession", 4, u, 2, Color.COVERT, "X-Men", "D", ev => chooseColorEv(ev, color => {
+    revealHeroDeckEv(ev, 1, cards => {
+      cards.has(color) && addAttackEvent(ev, 2);
+      selectCardOptEv(ev, "Put on bottom of the deck", cards, c => moveCardEv(ev, c, gameState.herodeck, true));
+    });
+  })),
+// Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, you may KO one of your cards or a card from your discard pile.
+  uc: makeHeroCard("Karma", "Karmic Balance", 6, 4, u, Color.RANGED, "X-Men", "", ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+    addTurnAction(recruitCardActionEv(ev, c)); // TODO reveal until end of turn
+    addTurnTrigger('RECRUIT', ev => ev.what === c && ev.where === gameState.herodeck, () => selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck]);
+  }))),
+// {TEAMPOWER X-Men} Choose a Villain in the city. You get +Attack equal to its VP, usable only against other Villains or the Mastermind.
+  ra: makeHeroCard("Karma", "Control Like a Puppet", 8, u, 5, Color.RANGED, "X-Men", "", ev => superPower("X-Men") && selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
+    c.vp && addAttackSpecialEv(ev, c1 => (isMastermind(c1) || isVillain(c1)) && c !== c1, c.vp);
+  } )),
+},
+]);

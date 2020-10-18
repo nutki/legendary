@@ -41,6 +41,8 @@ sub autopower {
     s/^{VIOLENCE} *// and $wrap = "excessiveViolence: ev => XXX";
     s/^{SHIELDLEVEL (.*?)} *// and $cond = "shieldLevelPower($1)";
     s/^If you are \{WORTHY\},? *// and $cond = "worthyPower()";
+    s/^{SUNLIGHT} *// and $cond = "sunlightPower()";
+    s/^{MOONLIGHT} *// and $cond = "moonlightPower()";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
