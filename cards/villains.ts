@@ -3629,6 +3629,7 @@ addVillainTemplates("S.H.I.E.L.D.", [
       selectCardEv(ev, "Choose an Officer", ev.source.captured.limit(isShieldOfficer), c => {
         chooseOneEv(ev, "Choose one", ["Gain", () => gainEv(ev, c)], ["Send Undercover", () => sendUndercoverEv(ev, c)]);
       });
+      cont(ev, () => ev.source.captured.limit(isShieldOfficer).each(c => KOEv(ev, c)));
     },
     varDefense: c => c.printedDefense + c.captured.count(isShieldOfficer),
   })],
