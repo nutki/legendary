@@ -5300,7 +5300,7 @@ addHeroTemplates("New Mutants", [
 // Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, you may KO one of your cards or a card from your discard pile.
   uc: makeHeroCard("Karma", "Karmic Balance", 6, 4, u, Color.RANGED, "X-Men", "", ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
     addTurnAction(recruitCardActionEv(ev, c)); // TODO reveal until end of turn
-    addTurnTrigger('RECRUIT', ev => ev.what === c && ev.where === gameState.herodeck, () => selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck]);
+    addTurnTrigger('RECRUIT', ev => ev.what === c && ev.where === gameState.herodeck, () => selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck]));
   }))),
 // {TEAMPOWER X-Men} Choose a Villain in the city. You get +Attack equal to its VP, usable only against other Villains or the Mastermind.
   ra: makeHeroCard("Karma", "Control Like a Puppet", 8, u, 5, Color.RANGED, "X-Men", "", ev => superPower("X-Men") && selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
