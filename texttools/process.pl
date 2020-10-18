@@ -93,6 +93,9 @@ while (<A>) {
     s!<b>Switcheroo (\d+)</b>!{SWITCHEROO $1}!g;
     s!<b>Hyperspeed (\d+)</b>!{HYPERSPEED $1}!g;
     s!<b>S.H.I.E.L.D. Level (\d+)</b> *:?!{SHIELDLEVEL $1}!g;
+    s!<b>Moonlight</b>:!{MOONLIGHT}!g;
+    s!<b>Sunlight</b>:!{SUNLIGHT}!g;
+    s!<b>Waking Nightmares?</b>!{WAKING NIGHTMARE}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

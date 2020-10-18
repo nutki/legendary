@@ -1,0 +1,54 @@
+
+#CARDNAME: Belasco, Demon Lord of Limbo
+Belasco gets +Attack equal to the number of non-grey Heroes in the KO pile, divided by the number of players <i>(round down)</i>.
+#LEADS: Demons of Limbo
+#STRIKE: {SUNLIGHT} Each player KOs a non-grey Hero from their discard pile. {MOONLIGHT} Each player has a {WAKING NIGHTMARE}. KO Heroes discarded this way.
+#ATTACK: 9+
+#VP: 6
+
+#EPICNAME: Belasco
+Belasco gets +Attack equal to the number of non-grey Heroes in the KO pile, divided by the number of players <i>(round down)</i>.
+#LEADS: Demons of Limbo
+#STRIKE: {SUNLIGHT} Each player KOs two non-grey Heroes from their discard pile. {MOONLIGHT} Each player has two {WAKING NIGHTMARE}. KO Heroes discarded this way.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: A Demon's Mercy
+#FIGHT: Each other player KOs a non-grey Hero from their hand or discard pile.
+
+#TACTIC: Bargain for Souls
+#FIGHT: Reveal cards from the Hero Deck equal to the number of players. Gain one of them and KO the rest.
+
+#TACTIC: Rescue from Limbo
+#FIGHT: You may KO one of your non-grey Heroes or a non-grey Hero from your discard pile. If you do, gain a Hero from the KO pile.
+
+#TACTIC: Cleaving Demonblade
+#FIGHT: Each player chooses a different card in the HQ. Then KO all chosen cards.
+
+#CARDNAME: Emma Frost, The White Queen
+During your turn, Emma Frost gets +1 Attack for each grey Hero you have.
+#LEADS: Hellions
+#STRIKE: Stack this Strike next to Emma Frost. Then each player has a {WAKING NIGHTMARE} for each Strike stacked here.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Emma Frost
+During your turn, Emma Frost gets +2 Attack for each grey Hero you have.
+#LEADS: Hellions
+#STRIKE: Stack this Strike next to Emma Frost. Then each player has a {WAKING NIGHTMARE} for each Strike stacked here, then one more {WAKING NIGHTMARE}.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Tempting Bargain
+#FIGHT: You may play the top card of the Villain Deck. If you do, you get +5 Recruit.
+
+#TACTIC: Psychic X-Men Link
+#FIGHT: Each other player has a {WAKING NIGHTMARE}. Each of those players who did not discard an X-Men Hero this way gains a Wound.
+
+#TACTIC: Assume Diamond Form
+#FIGHT: Emma Frost cannot be fought again until the start of your next turn.
+
+#TACTIC: Contempt for Weakness
+#FIGHT: Put a 0-cost Hero from the KO pile on top of each other player's deck.
+
+

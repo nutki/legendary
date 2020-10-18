@@ -1,0 +1,173 @@
+
+#CARDNAME: Sunspot
+#TEAM: X-Men
+
+#SUBNAME: Absorb Radiation
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 1
+{MOONLIGHT} You may put a Hero from the HQ on the bottom of the Hero Deck.
+{SUNLIGHT} Draw a card.
+#COST: 2
+
+#SUBNAME: Solar-Powered
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+{SUNLIGHT} You may put a card from your hand on the bottom of you deck. If you do, you get +2 Attack.
+#COST: 4
+#FLAVOR: Just a small fraction of the sun's power is still thousands of Gigawatts.
+
+#SUBNAME: Thermokinetic Fury
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 4+
+To play this, you must put a card from your hand on the bottom of your deck.
+{SUNLIGHT} You get +1 Attack for each other X-Men card you played this turn.
+#COST: 6
+
+#SUBNAME: Empyreal Force
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 3+
+Choose any number of Heroes in the HQ. Put them on the bottom of the Hero Deck.
+{SUNLIGHT} You get +1 Attack for each Hero in the HQ with an even-numbered cost.
+#COST: 8
+
+#CARDNAME: Wolfsbane
+#TEAM: X-Men
+
+#SUBNAME: Wolf Out
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{SUNLIGHT} You may put a Hero from the HQ on the bottom of the Hero Deck.
+{MOONLIGHT} Draw a card.
+#COST: 3
+
+#SUBNAME: Night Vision
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2
+{MOONLIGHT} Look at the top two cards of your deck. Discard any number of them and put the rest back in any order.
+#COST: 3
+
+#SUBNAME: Howl at the Moon
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+{MOONLIGHT} Look at the top card of your deck. KO it or put it back.
+#COST: 5
+#FLAVOR: Her howls getting closer end with the howls of her victim.
+
+#SUBNAME: Nocturnal Savagery
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 4+
+Look at the top three cards of your deck. Discard any number of them and put the rest back in any order.
+{MOONLIGHT} You get the total printed Attack of all the cards you discarded from your deck this turn.
+#COST: 7
+#GUN: 1
+
+#CARDNAME: Mirage
+#TEAM: X-Men
+
+#SUBNAME: Empathic Link
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+When a card effect causes you to discard this card, set it aside. At the end of this turn, add it to your hand as an extra card.
+#COST: 3
+
+#SUBNAME: Dreams Made Real
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{MOONLIGHT} You may discard a card. If you do, draw a card.
+#COST: 3
+#FLAVOR: Mirage weaves discarded wisps of dreams into constructs that are all too solid.
+
+#SUBNAME: Nightmare Wolves
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 1+
+You may have a {WAKING NIGHTMARE}. You get +Attack equal to the cost of the card you discarded this way.
+#COST: 6
+
+#SUBNAME: Haunted By the Demon Bear
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+Whenever a card effect causes you to discard a card from your hand this turn, you get +2 Attack.
+{MOONLIGHT} You may have a {WAKING NIGHTMARE}.
+#COST: 7
+
+#CARDNAME: Warlock
+#TEAM: X-Men
+
+#SUBNAME: Earthling Choices
+#COPIES: 5
+#CLASS: [Tech]
+Look at the top two cards of your deck. Draw one and discard the other.
+#COST: 2
+
+#SUBNAME: Analyze Planetary Rotation
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+{SUNLIGHT} You get +2 Recruit.
+{MOONLIGHT} You get +2 Attack.
+{POWER Tech} Instead, you get both.
+#COST: 3
+
+#SUBNAME: Techno-Organic Adaptation
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+{POWER Tech} The first time you defeat a Villain this turn, you may KO one of your cards or a card from your discard pile.
+#COST: 6
+
+#SUBNAME: Nanite Shapeshifter
+#COPIES: 1
+#CLASS: [Tech]
+#RECRUIT: 0+
+#ATTACK: 0+
+{SUNLIGHT} Draw 3 cards.
+{MOONLIGHT} You get +3 Recruit and +3 Attack.
+{TEAMPOWER X-Men, X-Men, X-Men, X-Men} Instead, you get both.
+#COST: 7
+
+#CARDNAME: Karma
+#TEAM: X-Men
+
+#SUBNAME: Sow Rivalry
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+{POWER Covert} Choose a Villain. You get +1 Attack for each Villain adjacent to it.
+#COST: 3
+#FLAVOR: Sometimes Karma controls an enemy's every motion. Other times she is more subtle.
+
+#SUBNAME: Temporary Possession
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+Guess a color. Then reveal the top card of the Hero Deck and put it back on the top or bottom of that deck. If you guessed right, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: Karmic Balance
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 4
+Reveal the top card of the Hero Deck. You may recruit it this turn. If you do, you may KO one of your cards or a card from your discard pile.
+#COST: 6
+
+#SUBNAME: Control Like a Puppet
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+{TEAMPOWER X-Men} Choose a Villain in the city. You get +Attack equal to its VP, usable only against other Villains or the Mastermind.
+#COST: 8
+
+

@@ -1,0 +1,19 @@
+
+<b>Moonlight and Sunlight</b>: As a werewolf, Wolfsbane gets extra powerful at night or under a full moon. By contrast, Sunspot absorbs solar energy to fuel his powers, gaining strength from the force of full sunlight. To fight at their best, they must carefully consider when to engage the enemy, by moonlight or sunlight. This is represented by this new matched pair of keywords.
+* Some Hero cards say things like "{MOONLIGHT} You get +2 Attack." Others say things like "{SUNLIGHT} Draw a card."
+* <b>Moonlight abilities work only when most of the Heroes in the HQ have odd-numbered costs. Likewise, Sunlight abilites work only when most of the Heroes in the HQ have even-numbered costs.</b>
+* Bedsides Heroes, some Villains and Masterminds also say get extra Attack or abilities during Moonlight or Sunlight.
+* If there are a tied number of odd and even-numbered Heroes in the HQ (because some HQ soaces have been added or destroyed), then niether Moonlight nor Sunlight is in effect.
+* Only the printed costs matter. Abilities that change the costs of Heroes in the HQ won;t affect Moonlight or Sunlight.
+* "Divided Cards" from <i>Civil War</i> and other sets count as just one card for Moonlight/Sunlight.
+<b>Moonlight and Sunlight Timing</b>: As always, do a cards abilities in the order they are listed. You check Moonlight or Sunlight at the moment when you would use that ability.
+* For example. Sunspot has a card that says "{MOONLIGHT} You may put a Hero form the HQ on the bottom of the Hero Deck. {SUNLIGHT} Draw a card." Sunspot's cards primarily benefit from Sunlight, so the Moonlight ability here mostly helps him push the HQ towards Sunlight.
+* You do these abilities in the order they are listed. So if there are three off-numbered cards in the HQ, and you play this card, you might be able to use the Moonlight ability to change the HQ to have only two odd-numbered cards, and then you could immediately use the Sunlight ability.
+* Once you are completely done playing a Hero card or fighting a Villain with a Moonlight or Sunlight ability, move on. If later in the turn you change Moonlight or Sunlight, you don;t go back in time to change the past.
+{WAKING NIGHTMARE}: The New Mutants often confront demons, monsters, sadists, trauma, and psychological horror. This keyword represents these attacks on their sanity. It's also used to represent how the Hero Mirage uses her powers to bring dream and nightmare constructs to life.
+* Some cards tell you to "have a Waking Nightmare." This means "<b>Discard a non-grey Hero from your hand. If you discard a Hero this way, draw a card.</b>"
+* Getting pummeled by Waking Nightmares can downgrade your hand from powerful superheroes to mere S.H.I.E.L.D. Agents. However, you can sometimes find new courage in a nightmare you may be able to discard a non-grey Hero you don;t need very much and have a chance to draw something more helpful.
+* Some Mirage Hero Cards also let you have a Waking Nightmare and give you specific benefits for it.
+<b>Conflicting Card Abilities</b>: When two card effects tell you to do different things with a card at the same time, you can choose which to do. So when you discard Empathic Link to Belasco of the Demon Bear, you can use the Empathic Link ability to set itself aside instead of letting Belasco KO it or the Demon Bear capture it. The Demon Bear will capture another player's discarded Hero instead. When you discard Empathic Link to a Waking Nightmare and set it aside, you still draw a card for the Waking Nightmare.
+
+

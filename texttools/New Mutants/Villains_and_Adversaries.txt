@@ -1,0 +1,97 @@
+
+#CARDNAME: Hellions
+
+#SUBNAME: Catseye
+#COPIES: 2
+{MOONLIGHT} Catseye gets +2 Attack.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 3
+#FLAVOR: Transforming into various feline forms makes Catseye into Wolfsbane's natural enemy.
+
+#SUBNAME: Thunderbird
+#COPIES: 2
+{SUNLIGHT} Thunderbird gets +2 Attack
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 4
+#FLAVOR: He rises like the morning sun, growing beyond his bitterness to eventually join the X-Men.
+
+#SUBNAME: Roulette
+#COPIES: 1
+#AMBUSH: Reveal the top card of the Hero Deck. If it's [Tech], each player gains a Wound. If it's [Covert], you draw a card.
+#FIGHT: Same effect.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+#FLAVOR: Her supernatural black tokens curse, while her red tokens bless.
+
+#SUBNAME: Tarot
+#COPIES: 1
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a...
+Bystander: Rescue it.
+Scheme Twist: Play it.
+Master Strike: Each player gains a Wound.
+Villain: Each player has a {WAKING NIGHTMARE}.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Jetstream
+#COPIES: 1
+#AMBUSH: <i>(After this enters the Sewers)</i> Put Jetstream on the Bridge. If there's another Villain there, swap them.
+#ESCAPE: Each player discards an X-Men Hero or gains a Wound.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Empath
+#COPIES: 1
+During your turn, Empath gets +1 Attack for each grey Hero you have.
+#AMBUSH: Each player reveals a [Covert] Hero or has a {WAKING NIGHTMARE}.
+#ESCAPE: Same effect.
+#ATTACK: 4+
+#VP: 4
+
+#CARDNAME: Demons of Limbo
+
+#SUBNAME: Crotus
+#COPIES: 2
+#AMBUSH: Crotus captures a Bystander. Put an even-numbered Hero on the bottom of the Hero Deck.
+{MOONLIGHT} Crotus gets +4 Attack
+#ATTACK: 3+
+#VP: 3
+#FLAVOR: Those who pick on little Crotus change their tune when night falls and his demonic army rises.
+
+#SUBNAME: Witchfire
+#COPIES: 2
+#AMBUSH: Witchfire captures a Hero from the HQ with the lowest odd-numbered cost.
+{SUNLIGHT} Witchfire gets +2 Attack
+#FIGHT: The player of your choice gains that Hero.
+#ESCAPE: KO the captured Hero.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: N'astirh
+#COPIES: 2
+{SUNLIGHT} To fight N'astirh, you must also spend 3 Recruit.
+{MOONLIGHT} N'astirh gets +3 Attack.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 3
+#FLAVOR: Weaving magic and technology makes N'astirh dangerously adaptable.
+
+#SUBNAME: Demon Bear
+#COPIES: 1
+#AMBUSH: Each player has a {WAKING NIGHTMARE}. The Demon Bear captures one of the Heroes discarded this way that has the lowest cost. The Demon Bear gets + Attack equal to that Hero's cost.
+#FIGHT: The player of your choice gains that Hero.
+#ESCAPE: KO the captured Hero.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: S'ym
+#COPIES: 1
+#AMBUSH: {SUNLIGHT} Each player reveals a [Strength] Hero or gains a Wound. {MOONLIGHT} Each player has a {WAKING NIGHTMARE}.
+#ESCAPE: Same effect.
+#ATTACK: 7
+#VP: 5
+
+
