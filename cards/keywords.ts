@@ -735,5 +735,5 @@ function wakingNightmareOptEv(ev: Ev, p: Player = playerState) {
   selectCardOptEv(ev, "Choose a card to discard", p.hand.limit(isNonGrayHero), c => {
     discardEv(ev, c);
     drawEv(ev, 1, p);
-  }, p);
+  }, () => {}, p);
 }
