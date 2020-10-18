@@ -3797,3 +3797,142 @@ addVillainTemplates("Heroes of Asgard", [
   }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'STREETS', 1), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
 ]},
 ]);
+addVillainTemplates("New Mutants", [
+{ name: "Hellions", cards: [
+// {MOONLIGHT} Catseye gets +2 Attack.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 3
+// FLAVOR: Transforming into various feline forms makes Catseye into Wolfsbane's natural enemy.
+  [ 2, makeVillainCard("Hellions", "Catseye", 3, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: c => c.printedDefense + (moonlightPower() ? 2 : 0),
+  })],
+// {SUNLIGHT} Thunderbird gets +2 Attack
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 4
+// FLAVOR: He rises like the morning sun, growing beyond his bitterness to eventually join the X-Men.
+  [ 2, makeVillainCard("Hellions", "Thunderbird", 4, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: c => c.printedDefense + (sunlightPower() ? 2 : 0),
+  })],
+// AMBUSH: Reveal the top card of the Hero Deck. If it's [Tech], each player gains a Wound. If it's [Covert], you draw a card.
+// FIGHT: Same effect.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+// FLAVOR: Her supernatural black tokens curse, while her red tokens bless.
+  [ 1, makeVillainCard("Hellions", "Roulette", 5, 3, {
+    ambush: ev => revealHeroDeckEv(ev, 1, cards => {
+      cards.has(Color.TECH) && eachPlayer(p => gainWoundEv(ev, p));
+      cards.has(Color.COVERT) && drawEv(ev);
+    }),
+    fight: sameEffect,
+    escape: sameEffect,
+  })],
+// AMBUSH: Reveal the top card of the Villain Deck. If it's a...
+// Bystander: Rescue it.
+// Scheme Twist: Play it.
+// Master Strike: Each player gains a Wound.
+// Villain: Each player has a {WAKING NIGHTMARE}.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Hellions", "Tarot", 5, 3, {
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => {
+      cards.limit(isBystander).each(c => rescueEv(ev, c));
+      cards.limit(isTwist).each(c => playTwistEv(ev, c));
+      cards.has(isStrike) && eachPlayer(p => gainWoundEv(ev, p));
+      cards.has(isVillain) && eachPlayer(p => wakingNightmareEv(ev, p));
+    }),
+  })],
+// AMBUSH: <i>(After this enters the Sewers)</i> Put Jetstream on the Bridge. If there's another Villain there, swap them.
+// ESCAPE: Each player discards an X-Men Hero or gains a Wound.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Hellions", "Jetstream", 6, 4, {
+    ambush: ev => withCity('BRIDGE', bridge => swapCardsEv(ev, ev.source, bridge)),
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit('X-Men'), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
+  })],
+// During your turn, Empath gets +1 Attack for each grey Hero you have.
+// AMBUSH: Each player reveals a [Covert] Hero or has a {WAKING NIGHTMARE}.
+// ESCAPE: Same effect.
+// ATTACK: 4+
+// VP: 4
+  [ 1, makeVillainCard("Hellions", "Empath", 4, 4, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => wakingNightmareEv(ev, p), p)),
+    escape: ev => sameEffect,
+    varDefense: c => c.printedDefense + yourHeroes().count(Color.GRAY),
+  })],
+]},
+{ name: "Demons of Limbo", cards: [
+// AMBUSH: Crotus captures a Bystander. Put an even-numbered Hero on the bottom of the Hero Deck.
+// {MOONLIGHT} Crotus gets +4 Attack
+// ATTACK: 3+
+// VP: 3
+// FLAVOR: Those who pick on little Crotus change their tune when night falls and his demonic army rises.
+  [ 2, makeVillainCard("Demons of Limbo", "Crotus", 3, 3, {
+    ambush: ev => {
+      captureEv(ev, ev.source);
+      selectCardEv(ev, "Choose a Hero to put on bottom of the deck", hqHeroes().limit(c => c.printedCost % 2 === 0), c => {
+        moveCardEv(ev, c, gameState.herodeck, true);
+      })
+    },
+    varDefense: c => c.printedDefense + (moonlightPower() ? 4 : 0),
+  })],
+// AMBUSH: Witchfire captures a Hero from the HQ with the lowest odd-numbered cost.
+// {SUNLIGHT} Witchfire gets +2 Attack
+// FIGHT: The player of your choice gains that Hero.
+// ESCAPE: KO the captured Hero.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Demons of Limbo", "Witchfire", 4, 4, {
+    ambush: ev => {
+      const cards = hqHeroes().limit(c => c.printedCost % 2 == 1).highest(c => -c.printedCost);
+      selectCardEv(ev, "Choose a hero", cards, c => attachCardEv(ev, c, ev.source, "WITCHFIRE_CAPTURE"))
+    },
+    fight: ev => ev.source.attached("WITCHFIRE_CAPTURE").each(c => choosePlayerEv(ev, p => gainEv(ev, c, p))),
+    escape: ev => ev.source.attached("WITCHFIRE_CAPTURE").each(c => KOEv(ev, c)),
+    varDefense: c => c.printedDefense + (sunlightPower() ? 2 : 0),
+  })],
+// {SUNLIGHT} To fight N'astirh, you must also spend 3 Recruit.
+// {MOONLIGHT} N'astirh gets +3 Attack.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 3
+// FLAVOR: Weaving magic and technology makes N'astirh dangerously adaptable.
+  [ 2, makeVillainCard("Demons of Limbo", "N'astirh", 3, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varFightCost: (c, attack) => sunlightPower() ? { attack, recruit: 3 } : { attack },
+    varDefense: c => c.printedDefense + (moonlightPower() ? 3 : 0)
+  })],
+// AMBUSH: Each player has a {WAKING NIGHTMARE}. The Demon Bear captures one of the Heroes discarded this way that has the lowest cost. The Demon Bear gets + Attack equal to that Hero's cost.
+// FIGHT: The player of your choice gains that Hero.
+// ESCAPE: KO the captured Hero.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Demons of Limbo", "Demon Bear", 5, 5, {
+    ambush: ev => {
+      eachPlayer(p => wakingNightmareEv(ev, p));
+      cont(ev, () => {
+        const cards = pastEvents('DISCARD').limit(e => e.getSource() === ev.source).map(e => e.what);
+        selectCardEv(ev, "Choose a hero", cards, c => attachCardEv(ev, c, ev.source, "DEMON_BEAR_CAPTURE"));
+      });
+    },
+    fight: ev => ev.source.attached("DEMON_BEAR_CAPTURE").each(c => choosePlayerEv(ev, p => gainEv(ev, c, p))),
+    escape: ev => ev.source.attached("DEMON_BEAR_CAPTURE").each(c => KOEv(ev, c)),
+    varDefense: c => c.printedDefense + c.attached("DEMON_BEAR_CAPTURE").sum(c => c.cost),
+  })],
+// AMBUSH: {SUNLIGHT} Each player reveals a [Strength] Hero or gains a Wound. {MOONLIGHT} Each player has a {WAKING NIGHTMARE}.
+// ESCAPE: Same effect.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Demons of Limbo", "S'ym", 7, 5, {
+    ambush: ev => {
+      sunlightPower() && eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p));
+      moonlightPower() && eachPlayer(p => wakingNightmareEv(ev, p));
+    },
+    escape: ev => sameEffect,
+  })],
+]},
+]);
