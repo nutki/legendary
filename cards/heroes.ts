@@ -4577,7 +4577,7 @@ addHeroTemplates("Venom", [
 // {VIOLENCE} "Rescue" a Bystander.
   uc: makeHeroCard("Venompool", "Can I Get a Little Gratitude", 5, u, 3, Color.INSTINCT, "Venomverse", "", ev => {
     addTurnTrigger('RESCUE', ev => ev.who === playerState, ev => {
-      const rescue = getModifiedStat(ev.parent.what, 'rescue', ev.parent.what.rescue);
+      const rescue = getModifiedStat(ev.parent.what, 'rescue', ev.parent.what.rescue); // TODO abstract this
       if (rescue) pushEv(ev, "EFFECT", { source: ev.parent.what, func: rescue, who: playerState });
     });
   }, { excessiveViolence: ev => rescueEv(ev) }),

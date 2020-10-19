@@ -625,6 +625,7 @@ function switcherooActionEv(n: number) {
     what: c,
     desc: 'Switcheroo',
     source: c,
+    cost: { cond: c => c.location === playerState.hand },
     func: ev => {
       moveCardEv(ev, ev.source, gameState.herodeck, true);
       selectCardOptEv(ev, "Choose a Hero", hqHeroes().limit(c => c.cost === n), c => moveCardEv(ev, c, playerState.hand));
@@ -778,7 +779,16 @@ function contestOfChampionsEv(ev: Ev, color: number, effect1: ((p: Player) => vo
   revealHeroDeckEv(ev, evilCount, evilChamps => {
     const goodChamps = champs.values();
     const winningScore = [...goodChamps, ...evilChamps].max(champValue);
-    eachPlayer(p => champs.get(p) && champValue(champs.get(p)) === winningScore ? effect1(p) : effect0(p));
-    evilChamps.has(c => champValue(c) === winningScore) && effectEvil();
+    eachPlayer(p => cont(ev, () => champs.get(p) && champValue(champs.get(p)) === winningScore ? effect1(p) : effect0(p)));
+    evilChamps.has(c => champValue(c) === winningScore) && cont(ev, effectEvil);
   }, false, true);
+}
+
+function celestialBoonActionEv(func: (ev: Ev) => void, cond?: (c: Card) => boolean) {
+  return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', {
+    desc: 'Celestial Boon',
+    source: c,
+    cost: { cond: c => c.location === playerState.hand && (!cond || cond(c)) && !countPerTurn('boon', c)},
+    func: ev => { incPerTurn('boon', c); func(ev); },
+  })
 }

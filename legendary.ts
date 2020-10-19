@@ -1865,6 +1865,7 @@ function getActions(ev: Ev): Ev[] {
   p.push(useShardActionEv(ev));
   playerState.artifact.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   playerState.hand.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
+  playerState.victory.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);
@@ -2334,7 +2335,7 @@ function drawCardEv(ev: Ev, what: Card, who: Player = playerState) {
   }, what, who });
 }
 function drawEv(ev: Ev, amount: number = 1, who: Player = playerState) {
-  if (amount) pushEv(ev, "DRAWCARDS", { who, amount, func: ev => {
+  if (amount > 0) pushEv(ev, "DRAWCARDS", { who, amount, func: ev => {
     for (let i = 0; i < ev.amount; i++)
       pushEv(ev, "DRAW", { func: drawOne, who: ev.who });
   }});
@@ -2534,6 +2535,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     p.hand.each(checkCardTrigger);
     p.revealed.each(checkCardTrigger);
     p.playArea.each(checkCardTrigger);
+    p.victory.each(checkCardTrigger);
   });
   return triggers;
 }

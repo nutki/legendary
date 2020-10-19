@@ -3866,7 +3866,7 @@ addVillainTemplates("New Mutants", [
 // VP: 4
   [ 1, makeVillainCard("Hellions", "Empath", 4, 4, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => wakingNightmareEv(ev, p), p)),
-    escape: ev => sameEffect,
+    escape: sameEffect,
     varDefense: c => c.printedDefense + yourHeroes().count(Color.GRAY),
   })],
 ]},
@@ -3937,7 +3937,264 @@ addVillainTemplates("New Mutants", [
       sunlightPower() && eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p));
       moonlightPower() && eachPlayer(p => wakingNightmareEv(ev, p));
     },
-    escape: ev => sameEffect,
+    escape: sameEffect,
+  })],
+]},
+]);
+addVillainTemplates("Into the Cosmos", [
+{ name: "Elders of the Universe", cards: [
+// AMBUSH: {CONTEST OF CHAMPIONS}[Instinct]. Each player that loses must discard a card. If Evil wins, the Runner gains a Shard for each card discarded this way, and he pushes forward two extra spaces.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Elders of the Universe", "The Runner", 5, 3, {
+    ambush: ev => contestOfChampionsEv(ev, Color.INSTINCT, () => {},
+      p => pickDiscardEv(ev, 1, p),
+      () => attachShardEv(ev, ev.source, pastEvents('DISCARD').count(e => e.getSource() === ev.source)) // TODO e.childOf(ev)
+    ),
+  })],
+// AMBUSH: {CONTEST OF CHAMPIONS}[Tech]. Each player that loses must reveal their hand and trade a non-grey card from their hand with a card in the HQ that costs the same or less. If Evil wins, the Trader gains a Shard for each trade that occurred.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Elders of the Universe", "The Trader", 4, 2, {
+    ambush: ev => {
+      let trades = 0;
+      contestOfChampionsEv(ev, Color.TECH, () => {},
+        p => selectCardEv(ev, "Choose a Hero to trade", p.hand.limit(isNonGrayHero), c1 => {
+          selectCardEv(ev, "Choose a Hero to trade for", hqHeroes().limit(c2 => c2.cost <= c1.cost), c2 => {
+            swapCardsEv(ev, c1, c2);
+            trades++;
+          }, p);
+        }, p),
+        () => attachShardEv(ev, ev.source, trades))
+      }
+  })],
+// AMBUSH: {CONTEST OF CHAMPIONS}[Strength]. Each player that loses must give this Villain one of their Shards or gain a Wound.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 7
+// VP: 5
+  [ 2, makeVillainCard("Elders of the Universe", "The Champion of the Universe", 7, 5, {
+    ambush: ev => contestOfChampionsEv(ev, Color.STRENGTH, () => {},
+    p => {
+      p.shard.size ? chooseOptionEv(ev, "Choose one", [
+        {l:"Give a Shard", v:() => p.shard.withTop(c => attachShardEv(ev, ev.source, c))},
+        {l:"Gain a Wound", v:() => gainWoundEv(ev, p)}], f => f(), p) : gainWoundEv(ev, p);
+    }, () => {}),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes())
+  })],
+// AMBUSH: {CONTEST OF CHAMPIONS}[Covert]. Each player that loses gives the Collector one of these things that he doesn't have yet: A Shard, a Bystander from their Victory Pile, a [Strength] Hero, a [Instinct] Hero, a [Covert] Hero, a [Tech] Hero, or a [Ranged] Hero from hand or discard pile.
+// FIGHT: The player of your choice gains one of the captured Heroes. Put the rest on the bottom of the Hero Deck.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Elders of the Universe", "The Collector", 6, 4, {
+    ambush: ev => contestOfChampionsEv(ev, Color.COVERT, () => {},
+    p => {
+      const options = [];
+      if (!ev.source.attached('SHARD').size && p.shard.size)
+        options.push({l:"Give a Shard", v: () => p.shard.withTop(c => attachShardEv(ev, ev.source, c))});
+      if (!ev.source.captured.has(isBystander) && p.victory.has(isBystander))
+        options.push({l:"Give a Bystander", v: () => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => captureEv(ev, ev.source, c), p)});
+      let wantedColors = 0;
+      for (const color of [Color.COVERT, Color.STRENGTH, Color.INSTINCT, Color.TECH, Color.RANGED])
+        if (!ev.source.captured.has(color)) wantedColors |= color;
+      if (p.hand.has(wantedColors) || p.discard.has(wantedColors))
+        options.push({l:`Give a Hero`, v: () => {
+          selectCardEv(ev, "Choose a Hero", [...p.hand.deck, ...p.discard.deck].limit(wantedColors), c => {
+            captureEv(ev, ev.source, c);
+          }, p);
+        }});
+      chooseOptionEv(ev, "Choose one", options, f => f(), p);
+    }, () => {}),
+    fight: ev => {
+      choosePlayerEv(ev, p => {
+        selectCardEv(ev, "Choose a Hero", ev.source.captured.limit(isHero), c => gainEv(ev, c, p));
+      });
+      cont(ev, () => ev.source.captured.limit(isHero).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
+    },
+  })],
+]},
+{ name: "Celestials", cards: [
+// {COSMIC THREAT}[Covert] or [Tech]
+// FIGHT: Nezarr grants you a {CELESTIAL BOON}: For the rest of the game, while it's your turn, the Mastermind gets -Attack equal to a fifth of its printed Attack. (Round down the loss.)
+// ESCAPE: The Mastermind gains Shards equal to a fifth of its printed Attack. (Rounded down.)
+// ATTACK: 11*
+// VP: 4
+  [ 2, makeVillainCard("Celestials", "Nezarr, The Calculator", 11, 4, {
+    fight: ev => {
+      addStatMod('defense', isMastermind, c => ev.source.location === playerState.victory ? -Math.floor(c.printedDefense / 5) : 0); // TODO once per game
+    },
+    escape: ev => gameState.mastermind.each(c => attachShardEv(ev, c, Math.floor(c.printedAttack/5))),
+    cosmicThreat: Color.COVERT | Color.TECH,
+    cardActions: [ cosmicThreatAction ],
+  })],
+// {COSMIC THREAT}[Strength] or [Instinct]
+// FIGHT: Gammenon grants you a {CELESTIAL BOON}: For the rest of the game, whenever you fight a Villain, rescue a Bystander.
+// ESCAPE: Three Villains in the city each capture a Bystander.
+// ATTACK: 10*
+// VP: 3
+  [ 2, makeVillainCard("Celestials", "Gammenon, The Gatherer", 10, 3, {
+    escape: ev => selectObjectsEv(ev, "Choose 3 Villains", 3, cityVillains(), c => captureEv(ev, c)),
+    cosmicThreat: Color.STRENGTH | Color.INSTINCT,
+    cardActions: [ cosmicThreatAction ],
+    trigger: {
+      event: 'FIGHT',
+      match: (ev, source) => isVillain(ev.what) && source.location === playerState.victory,
+      after: ev => rescueEv(ev),
+    },
+  })],
+// {COSMIC THREAT}[Tech] or [Ranged]
+// FIGHT: Exitar grants you a {CELESTIAL BOON}: For the rest of the game, once during each of your turns, you may fight a Henchman from your Victory Pile. Spend the normal Attack then do the Henchman's Fight effect. KO it and rescue a Bystander.
+// ESCAPE: KO 5 Henchman from the Villain Deck then shuffle it.
+// ATTACK: 12*
+// VP: 5
+  [ 2, makeVillainCard("Celestials", "Exitar, The Exterminator", 12, 5, {
+    escape: ev => revealVillainDeckEv(ev, () => false, cards => selectObjectsEv(ev, "Choose 5 Henchmen", 5, cards.limit(isHenchman), c => KOEv(ev, c))),
+    cosmicThreat: Color.TECH | Color.RANGED,
+    cardActions: [ cosmicThreatAction, celestialBoonActionEv(ev => {
+      const cards = playerState.victory.limit(isHenchman).map(c => fightActionEv(u, c)).limit(ev => canPayCost(ev)).map(ev => ev.what);
+      selectCardEv(ev, "Choose a Henchman", cards, c => {
+        playEvent(fightActionEv(ev, c));
+        KOEv(ev, c);
+        rescueEv(ev);
+      });
+    }, () => {
+      return playerState.victory.limit(isHenchman).map(c => fightActionEv(u, c)).has(ev => canPayCost(ev));
+    }) ],
+  })],
+// {COSMIC THREAT}[Ranged] or [Strength]
+// FIGHT: Arishem grants you a {CELESTIAL BOON}: For the rest of the game, once during each of your turns, you may put a card from the HQ on the bottom of the Hero Deck.
+// ESCAPE: (After the normal Escape KO) Put each Hero that costs 5 or more from the HQ on the bottom of the Hero Deck.
+// ATTACK: 13*
+// VP: 5
+  [ 1, makeVillainCard("Celestials", "Arishem, The Judge", 13, 5, {
+    escape: ev => hqHeroes().limit(c => c.cost >= 5).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+    cosmicThreat: Color.RANGED | Color.STRENGTH,
+    cardActions: [ cosmicThreatAction, celestialBoonActionEv(ev => {
+      selectCardEv(ev, "Choose a card to put on the bottom of the Hero Deck", hqCards(), c => {
+        moveCardEv(ev, c, gameState.herodeck, true);
+      });
+    }) ],
+  })],
+// {COSMIC THREAT}[Instinct] or [Covert]
+// FIGHT: Tiamut grants you a {CELESTIAL BOON}: Your hand size is one more for the rest of the game.
+// ESCAPE: Each player's hand size is one less for the rest of the game.
+// ATTACK: 14*
+// VP: 6
+  [ 1, makeVillainCard("Celestials", "Tiamut, The Dreaming Celestial", 14, 6, {
+    escape: ev => gameState.endDrawAmount--,
+    cosmicThreat: Color.INSTINCT | Color.COVERT,
+    cardActions: [ cosmicThreatAction ],
+    trigger: {
+      event: "CLEANUP",
+      before: ev => addEndDrawMod(1),
+    }
+  })],
+]},
+{ name: "From Beyond", cards: [
+// {COSMIC THREAT}[Tech]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 7*
+// VP: 3
+  [ 3, makeVillainCard("From Beyond", "The Mapmakers", 7, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    cosmicThreat: Color.TECH,
+    cardActions: [ cosmicThreatAction ],
+  })],
+// {COSMIC THREAT}[Ranged]
+// AMBUSH: Create a "New Reality" space that stays above the Shaper of Worlds. It always contains a Hero, like an HQ space. Players can recruit from it.
+// FIGHT: Choose a player to gain that Hero.
+// ESCAPE: After the normal Escape KO, destroy the New Reality space and destroy an HQ space. KO those Heroes. (It doesn't refill. Any "Pocket Dimension" stays in play.)
+// ATTACK: 10*
+// VP: 5
+  [ 2, makeVillainCard("From Beyond", "The Shaper of Worlds", 10, 5, {
+    ambush: ev => {}, // TODO
+    fight: ev => {}, // TODO
+    escape: ev => {}, // TODO
+    cosmicThreat: Color.RANGED,
+    cardActions: [ cosmicThreatAction ],
+  })],
+// {COSMIC THREAT}[Instinct]
+// AMBUSH: Each player must reveal two cards with the same non-zero cost or gain a Wound.
+// FIGHT: Reveal the top card of your deck. If it costs 0, KO it.
+// ATTACK: 11*
+// VP: 5
+  [ 2, makeVillainCard("From Beyond", "Kubik", 11, 5, {
+    ambush: ev => eachPlayer(p => {
+      const cards = revealable(p).limit(c => c.cost > 0);
+      cards.uniqueCount(c => c.cost) === cards.size && gainWoundEv(ev, p);
+    }),
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c))),
+    cosmicThreat: Color.INSTINCT,
+    cardActions: [ cosmicThreatAction ],
+  })],
+// {COSMIC THREAT}[Covert]
+// FIGHT: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn. For the rest of the game, players take turns in the opposite order around the table.
+// ATTACK: 13*
+// VP: 6
+  [ 1, makeVillainCard("From Beyond", "Kosmos", 13, 6, {
+    fight: ev => {
+      addFutureTrigger(ev => {
+        addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
+      });
+      gameState.reversePlayerOrder = true;
+      gameState.extraTurn = true;
+    },
+    cosmicThreat: Color.COVERT,
+    cardActions: [ cosmicThreatAction ],
+  })],
+]},
+{ name: "Black Order of Thanos", cards: [
+// AMBUSH: {DANGERSENSE 3}, helping all Black Order Villains and the Mastermind. Corvus Glaive captures a Bystander revealed this way.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Black Order of Thanos", "Corvus Glaive", 5, 4, {
+    ambush: ev => dangerSenseEv(ev, 3, cards => {
+      selectCardEv(ev, "Choose a Bystander", cards.limit(isBystander), c => captureEv(ev, ev.source, c));
+    }, c => isMastermind(c) || isVillain(c) && isGroup("Black Order of Thanos")(c)),
+  })],
+// AMBUSH: {DANGERSENSE 2}, helping all Black Order Villains and the Mastermind. Play a Master Strike revealed this way.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Black Order of Thanos", "Black Dwarf", 4, 3, {
+    ambush: ev => dangerSenseEv(ev, 2, cards => {
+      selectCardEv(ev, "Choose a Master Strike", cards.limit(isStrike), c => playStrikeEv(ev, c));
+    }, c => isMastermind(c) || isVillain(c) && isGroup("Black Order of Thanos")(c)),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes())
+  })],
+// AMBUSH: {DANGERSENSE 1}, helping all Black Order Villains and the Mastermind. Play a Villain revealed this way.
+// FIGHT: You may KO a card from your discard pile.
+// ATTACK: 6+
+// VP: 5
+  [ 2, makeVillainCard("Black Order of Thanos", "Supergiant", 6, 5, {
+    ambush: ev => dangerSenseEv(ev, 1, cards => {
+      cards.limit(isVillain).each(c => villainDrawEv(ev, c));
+    }, c => isMastermind(c) || isVillain(c) && isGroup("Black Order of Thanos")(c)),
+    fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
+  })],
+// AMBUSH: {DANGERSENSE 2}, helping all Black Order Villains and the Mastermind. Play a Scheme Twist revealed this way.
+// ESCAPE: Each player reveals an [Instinct] Hero or gains a Wound.
+// ATTACK: 7+
+// VP: 5
+  [ 1, makeVillainCard("Black Order of Thanos", "Proxima Midnight", 7, 5, {
+    ambush: ev => dangerSenseEv(ev, 2, cards => {
+      selectCardEv(ev, "Choose a Scheme Twist", cards.limit(isTwist), c => playTwistEv(ev, c));
+    }, c => isMastermind(c) || isVillain(c) && isGroup("Black Order of Thanos")(c)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
+  })],
+// AMBUSH: Choose Villain, Master Strike, or Scheme Twist. Then {DANGERSENSE 3}, helping all Black Order Villains and the Mastermind. Play all the cards you revealed this way of the type you chose.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Black Order of Thanos", "Ebony Maw", 6, 5, {
+    ambush: ev => {
+      chooseOptionEv(ev, "Choose one", [
+        {l:"Villain", v: isVillain},
+        {l:"Master Strike", v: isStrike},
+        {l:"Scheme Twist", v: isTwist},
+      ], f => dangerSenseEv(ev, 3, cards => {
+          cards.limit(f).each(c => villainDrawEv(ev, c));
+        }, c => isMastermind(c) || isVillain(c) && isGroup("Black Order of Thanos")(c)),
+      );
+    }
   })],
 ]},
 ]);
