@@ -114,6 +114,7 @@ interface Card {
   chivalrousDuel?: boolean // TODO chivalrous duel
   modifiers?: Modifiers;
   isAdaptingMastermind?: boolean;
+  cosmicThreat?: number;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -138,6 +139,7 @@ interface VillainCardAbillities {
   uSizeChanging?: { color: number, amount: number }
   chivalrousDuel?: boolean
   modifiers?: Modifiers;
+  cosmicThreat?: number;
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -153,6 +155,7 @@ interface MastermindCardAbillities {
   printedNthCircle?: number
   sizeChanging?: number
   chivalrousDuel?: boolean
+  cosmicThreat?: number;
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -600,6 +603,7 @@ type EvType =
 'COORDINATE' |
 'OUTWIT' |
 'TRANSFORM' |
+'DANGERSENSE' |
 // Special
 'STATE' |
 'TURN' |
@@ -621,6 +625,7 @@ type TriggerableEvType =
 'RECRUIT' | 'FIGHT' | 'PLAY' |
 // Basic effects
 'KO' | 'RESCUE' | 'DISCARD' | 'GAIN' | 'STRIKE' | 'TWIST' | 'DEFEAT' | 'ESCAPE' | 'ADDRECRUIT' | 'VILLAINDRAW' | 'DRAW' | 'DRAWCARDS' | 'RESHUFFLE' | 'CARDEFFECT' |
+'ADDATTACK' |
 // Expansion actions
 'TELEPORT' | 'DODGE' |
 // Expansion effects
@@ -1587,6 +1592,7 @@ interface ModifiableStats {
   isArtifact?: boolean;
   cardActions?: ((c: Card, ev: Ev) => Ev)[];
   artifactEffects?: ((ev: Ev) => void)[];
+  cosmicThreat?: number;
 }
 
 function safePlus(a: number, b: number) {

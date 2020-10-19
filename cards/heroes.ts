@@ -2597,7 +2597,7 @@ addHeroTemplates("Secret Wars Volume 2", [
 // If a player would gain a Wound, you may discard this card instead. If you do, draw two cards.
   c2: makeHeroCard("Soulsword Colossus", "Steel Interception", 4, u, 2, Color.STRENGTH | Color.COVERT, "X-Men", "D", [], { trigger: {
     event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.hand,
+    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
     replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
       discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
     }, () => doReplacing(ev), owner(ev.source))
@@ -2955,7 +2955,7 @@ addHeroTemplates("Civil War", [
 // If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
   c1: makeHeroCard("Luke Cage", "Take a Bullet for the Team", 4, 1, 1, Color.STRENGTH, "Avengers", "", [], { trigger: {
     event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.hand,
+    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
     replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
       discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
     }, () => doReplacing(ev), owner(ev.source))
@@ -3053,7 +3053,7 @@ addHeroTemplates("Civil War", [
 // If a Master Strike would occur, you may reveal this card to KO that Master Strike, cancel its effects, and draw a card.
   ra: makeHeroCard("Speedball", "Kinetic Force Field", 7, u, 5, Color.RANGED, "New Warriors", "", [], { trigger: {
     event: 'STRIKE',
-    match: (ev, source: Card) => source.location === ev.who.hand,
+    match: (ev, source: Card) => owner(source) && source.location === owner(source).hand,
     replace: ev => selectCardOptEv(ev, "Reveal to cancel Master Strike", [ev.source], () => {
       drawEv(ev, 1, owner(ev.source));
     }, () => doReplacing(ev), owner(ev.source))
@@ -3165,7 +3165,7 @@ addHeroTemplates("Civil War", [
 // If an Ambush effect would occur, you may discard this card to cancel that effect and draw two cards.
   uc: makeHeroCard("Tigra", "Can't Surprise a Cat", 5, u, 2, Color.COVERT, "Avengers", "D", [], { trigger: {
     event: "CARDEFFECT",
-    match: (ev, source: Card) => ev.effectName === 'ambush' && source.location === ev.who.hand,
+    match: (ev, source: Card) => ev.effectName === 'ambush' && owner(source) && source.location === owner(source).hand,
     replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
       discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
     }, () => doReplacing(ev), owner(ev.source))
@@ -3419,7 +3419,7 @@ addHeroTemplates("Noir", [
 // Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
   uc: makeHeroCard("Luke Cage Noir", "Unbreakable Cage", 6, u, 4, Color.STRENGTH, "Marvel Knights", "", [], { trigger: {
     event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.hand && !turnState.pastEvents.has(e => e.type === 'DRAW' && e.getSource() === source),
+    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand && !turnState.pastEvents.has(e => e.type === 'DRAW' && e.getSource() === source),
     replace: ev => selectCardOptEv(ev, "Reveal to Investigate", [ev.source], () => {
       investigateEv(ev, u, owner(ev.source).deck, c => drawCardEv(ev, c, owner(c)), owner(ev.source));
     }, () => doReplacing(ev), owner(ev.source))
@@ -5306,5 +5306,271 @@ addHeroTemplates("New Mutants", [
   ra: makeHeroCard("Karma", "Control Like a Puppet", 8, u, 5, Color.RANGED, "X-Men", "", ev => superPower("X-Men") && selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
     c.vp && addAttackSpecialEv(ev, c1 => (isMastermind(c1) || isVillain(c1)) && c !== c1, c.vp);
   } )),
+},
+]);
+addHeroTemplates("Into the Cosmos", [
+{
+  name: "Captain Mar-Vell",
+  team: "Avengers",
+// If you would get Attack from <b>Danger Sense</b> this turn, gain that many Shards instead.
+// {DANGERSENSE 1}
+// {POWER Ranged} Instead, same effect with {DANGERSENSE 2}
+  c1: makeHeroCard("Captain Mar-Vell", "Cosmic Awareness", 2, u, 1, Color.RANGED, "Avengers", "D", [
+    ev => addTurnTrigger('ADDATTACK', ev => ev.parent.type === 'DANGERSENSE', { replace: ev => gainShardEv(ev, ev.parent.amount) }),
+    ev => dangerSenseEv(ev, superPower(Color.RANGED) ? 2 : 1),
+  ]),
+// If you gained any Shards this turn, draw a card.
+  c2: makeHeroCard("Captain Mar-Vell", "Kree Genetics", 3, 2, u, Color.STRENGTH, "Avengers", "FD", ev => {
+    pastEvents('MOVECARD').has(e => e.to === playerState.shard) && drawEv(ev);
+  }),
+// {TEAMPOWER Avengers} Reveal the top card of your deck. If it costs 1 or more, gain a Shard. If it costs 0, KO it.
+  uc: makeHeroCard("Captain Mar-Vell", "Channel the Nega-Bands", 6, u, 2, Color.TECH, "Avengers", "D", ev => {
+    superPower("Avengers") && revealPlayerDeckEv(ev, 1, cards => {
+      cards.limit(c => !c.cost).each(c => KOEv(ev, c));
+      cards.has(c => c.cost >= 1) && gainShardEv(ev);
+    });
+  }),
+// {DANGERSENSE 4}
+// If you gained any Shards this turn before playing this card, {DANGERSENSE 7} instead.
+  ra: makeHeroCard("Captain Mar-Vell", "Protector of the Universe", 7, u, 3, Color.COVERT, "Avengers", "", ev => {
+    dangerSenseEv(ev, pastEvents('MOVECARD').has(e => e.to === playerState.shard) ? 7 : 4);
+  }),
+},
+{
+  name: "Quasar",
+  team: "Avengers",
+// {POWER Covert} Whenever you recruit a Hero from the HQ this turn, gain a Shard.
+  c1: makeHeroCard("Quasar", "Manipulate Gravitons", 3, 2, u, Color.COVERT, "Avengers", "D", ev => {
+    superPower(Color.COVERT) && addTurnTrigger('RECRUIT', ev => ev.where.isHQ, { after: ev => gainShardEv(ev) });
+  }),
+// {BURN A SHARD}: You get +3 Attack
+  c2: makeHeroCard("Quasar", "Cosmic Champion", 4, u, 2, Color.RANGED, "Avengers", "FD", ev => {
+    setBurnShardEv(ev, 1, ev => addAttackEvent(ev, 3));
+  }),
+// Gain a Shard.
+// {BURN 2 SHARDS}: You man KO a card from your hand or discard pile.
+  uc: makeHeroCard("Quasar", "The Quantum Bands", 5, u, 1, Color.COVERT, "Avengers", "D", [
+    ev => gainShardEv(ev),
+    ev => setBurnShardEv(ev, 2, ev => KOHandOrDiscardEv(ev)),
+  ]),
+// Whenever you defeat a Villain or Mastermind this turn, gain a Shard.
+// {BURN 4 SHARDS}: You get +7 Attack
+  ra: makeHeroCard("Quasar", "The Star Brand", 7, u, 4, Color.STRENGTH, "Avengers", "", [
+    ev => addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), { after: ev => gainShardEv(ev) }),
+    ev => setBurnShardEv(ev, 4, ev => addAttackEvent(ev, 7)),
+  ]),
+},
+{
+  name: "Adam Warlock",
+  team: "Avengers",
+// Gain a Shard.
+// {BURN 2 SHARDS}: Halve the cost of a Hero in the HQ this turn. (Round the cost up.)
+  c1: makeHeroCard("Adam Warlock", "Transmute Matter", 3, u, u, Color.COVERT, "Avengers", "D", [
+    ev => gainShardEv(ev),
+    ev => setBurnShardEv(ev, 2, ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
+      addTurnSet('cost', c1 => c1 === c, (c, v) => Math.ceil(v/2))
+    })) ]),
+// To play this, you must discard a card.
+// When you draw a new hand of cards at the end of this turn, draw two extra cards.
+  c2: makeHeroCard("Adam Warlock", "Regenerative Cocoon", 4, u, u, Color.STRENGTH, "Avengers", "", ev => addEndDrawMod(2), { playCost: 1, playCostType: 'DISCARD' }),
+// Gain 2 Shards
+// {POWER Covert} {BURN 4 SHARDS}: Defeat a Villain.
+  uc: makeHeroCard("Adam Warlock", "Soulblast", 5, u, u, Color.COVERT, "Avengers", "FD", [
+    ev => gainShardEv(ev, 2),
+    ev => superPower(Color.COVERT) && setBurnShardEv(ev, 4, ev => selectCardEv(ev, "Choose a Villain", villains(), c => defeatEv(ev, c))),
+  ]),
+// Gain 4 Shards.
+// {TEAMPOWER Avengers, Avengers} {BURN 8 SHARDS}: Defeat the Mastermind once. Then reveal the top card of the Villain Deck. If it's a Master Strike, then Adam Warlock is corrupted by power. At the start of next turn, add the Magus Mastermind to the game with one random Tactic. (If he has never been in this game.)
+  ra: makeHeroCard("Adam Warlock", "Manifest the Soul Gem", 8, u, u, Color.RANGED, "Avengers", "", [
+    ev => gainShardEv(ev, 4),
+    ev => superPower("Avengers", "Avengers") && setBurnShardEv(ev, 8, ev => {
+      withMastermind(ev, c => defeatEv(ev, c));
+      revealVillainDeckEv(ev, 1, cards => cards.has(isStrike) && addFutureTrigger(ev => addMastermindEv(ev, "Magus")));
+    }),
+  ]),
+},
+{
+  name: "Moondragon",
+  team: "Avengers",
+// When you draw a new hand of cards at the end of this turn, if you didn't fight anything this turn, draw an extra card.
+  c1: makeHeroCard("Moondragon", "Peaceful Meditation", 3, 2, u, Color.COVERT, "Avengers", "D", ev => addTurnTrigger('CLEANUP', undefined, { before: ev => {
+    pastEvents('FIGHT').size === 0 && addEndDrawMod(1);
+  }})),
+// {DANGERSENSE 2}
+// {POWER Instinct} If this revealed any Scheme Twists, gain a Shard.
+  c2: makeHeroCard("Moondragon", "Psionic Warning", 4, u, 1, Color.INSTINCT, "Avengers", "D", 
+    ev => dangerSenseEv(ev, 2, cards => superPower(Color.INSTINCT) && cards.has(isTwist) && gainShardEv(ev))),
+// {DANGERSENSE 4}
+// {TEAMPOWER Avengers} If this revealed at least two Master Strikes, you may shuffle the Villain Deck.
+  uc: makeHeroCard("Moondragon", "Psychokinetic Blast", 6, u, 1, Color.RANGED, "Avengers", "",
+    ev => dangerSenseEv(ev, 4, cards => superPower("Avengers") && cards.count(isStrike) >= 2 && chooseMayEv(ev, "Shuffle the Villain Deck", () => gameState.villaindeck.shuffle()))),
+// {DANGERSENSE 1}
+// If this revealed a Scheme Twist, you get +3 Attack and you may shuffle the Villain Deck.
+  ra: makeHeroCard("Moondragon", "Lunar Dragon Form", 8, u, 5, Color.STRENGTH, "Avengers", "", ev => dangerSenseEv(ev, 1, cards => { if (cards.has(isTwist)) {
+    addAttackEvent(ev, 3);
+    chooseMayEv(ev, "Shuffle the Villain Deck", () => gameState.villaindeck.shuffle());
+  }})),
+},
+{
+  name: "Nova",
+  team: "Avengers",
+// Draw a card.
+// {POWER Tech} You get +1 Recruit or +1 Attack.
+  c1: makeHeroCard("Nova", "Draw From the Worldmind", 2, 0, 0, Color.TECH, "Avengers", "FD", [
+    ev => drawEv(ev),
+    ev => superPower(Color.TECH) && addRecruitEvent(ev, 1),
+    ev => superPower(Color.TECH) && addAttackEvent(ev, 1),
+  ]),
+// Choose one: You get +2 Recruit, or you gain a Shard.
+// {POWER Ranged} Instead, do both.
+  c2: makeHeroCard("Nova", "Electromagnetic Wave", 3, 0, u, Color.RANGED, "Avengers", "FD", ev => {
+    if (superPower(Color.RANGED)) {
+      addRecruitEvent(ev, 2); gainShardEv(ev);
+    } else {
+      chooseOneEv(ev, "Choose One", ["+2 Recruit", () => addRecruitEvent(ev, 2)], ["Gain a Shard", () => gainShardEv]);
+    }
+  }),
+// A Villain gains {COSMIC THREAT}[Tech] this turn. (It loses any previous Cosmic Threat abilities and penalties it had.)
+// If there were no Villains in the city, draw two cards instead.
+  uc: makeHeroCard("Nova", "Declare Galactic Threat", 6, u, u, Color.TECH, "Avengers", "", ev => {
+    if(cityVillains().size === 0) {
+      drawEv(ev, 2);
+    } else {
+      selectCardEv(ev, "Choose a Villain", villains(), c => giveCosmicThreat(c, Color.TECH));
+    }
+  }),
+// Choose one: Draw three cards or a Mastermind gains {COSMIC THREAT}[Ranged] this turn. (It loses any previous Cosmic Threat abilities and penalties it had.)
+  ra: makeHeroCard("Nova", "Mobilize the Nova Corps", 8, u, u, Color.RANGED, "Avengers", "", ev => {
+    chooseOneEv(ev, "Choose one", ["Draw three cards", () => drawEv(ev, 3)], ["Mastermind gains Cosmic Threat", () => withMastermind(ev, c => giveCosmicThreat(c, Color.RANGED))]);
+  }),
+},
+{
+  name: "Yondu",
+  team: "Guardians of the Galaxy",
+// Gain a Shard.
+// {POWER Ranged} <b>Burn any number of Shards</b>: Defeat a Villain with printed VP equal to the number of Shards you turned. (This can't affect a Villain with 0 VP or no printed VP.)
+// GUN: 1
+  c1: makeHeroCard("Yondu", "Whistling Arrow", 2, u, u, Color.RANGED, "Guardians of the Galaxy", "GD", [
+    ev => gainShardEv(ev),
+    ev => superPower(Color.RANGED) && setBurnShardEv(ev,
+      () => villains().has(c => c.vp > 0 && c.vp <= playerState.shard.size),
+      ev => selectCardEv(ev, "Choose a Villain", villains().limit(c => c.vp > 0 && c.vp <= playerState.shard.size), c => {
+        repeat(c.vp, () => spendShardEv(ev));
+        defeatEv(ev, c);
+      }
+    )),
+  ]),
+// {DANGERSENSE 2}
+// {POWER Covert} If this revealed any Master Strikes, draw a card.
+  c2: makeHeroCard("Yondu", "Interstellar Hunter", 3, u, 1, Color.COVERT, "Guardians of the Galaxy", "D", 
+    ev => dangerSenseEv(ev, 2, cards => superPower(Color.COVERT) && cards.has(isStrike) && drawEv(ev))),
+// {DANGERSENSE 3}
+// {TEAMPOWER Guardians of the Galaxy} You may do the Fight effect of a Henchman Villain revealed this way. (Don't defeat it.)
+  uc: makeHeroCard("Yondu", "Anticipate Their Movements", 5, u, 1, Color.INSTINCT, "Guardians of the Galaxy", "", 
+    ev => dangerSenseEv(ev, 3, cards => superPower("Guardians of the Galaxy") && selectCardOptEv(ev, "Choose a Villain", cards.limit(isVillain), c => {
+      pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use 
+    }))),
+// Choose one: Gain a Hero from the HQ for free, or gain a Shard for each empty city space.
+// {TEAMPOWER Guardians of the Galaxy, Guardians of the Galaxy, Guardians of the Galaxy} Do both.
+  ra: makeHeroCard("Yondu", "Space Pirate", 7, u, u, Color.TECH, "Guardians of the Galaxy", "", ev => {
+    const heroForFree = () => selectCardEv(ev, "Choose a Hero to gain", hqHeroes(), c => gainEv(ev, c));
+    const gainShards = () => gainShardEv(ev, gameState.city.count(isCityEmpty));
+    if (superPower("Guardians of the Galaxy", "Guardians of the Galaxy", "Guardians of the Galaxy")) {
+      heroForFree(); gainShards();
+    } else {
+      chooseOneEv(ev, "Choose one", ["Gain a Hero", heroForFree], ["Gain Shards", gainShards]);
+    }
+  }),
+},
+{
+  name: "Phyla-Vell",
+  team: "Guardians of the Galaxy",
+// Gain a Shard.
+// {POWER Instinct} Draw a card.
+  c1: makeHeroCard("Phyla-Vell", "Channel Cosmic Power", 2, u, u, Color.INSTINCT, "Guardians of the Galaxy", "FD", [
+    ev => gainShardEv(ev),
+    ev => superPower(Color.INSTINCT) && drawEv(ev),
+  ]),
+// If you have at least 4 Shards, you get +2 Attack.
+  c2: makeHeroCard("Phyla-Vell", "Quantum Sword", 4, u, 2, Color.INSTINCT, "Guardians of the Galaxy", "FD",
+    ev => playerState.shard.size >= 4 && addAttackEvent(ev, 2)),
+// If any player would gain a Wound, you may discard this card and gain 2 Shards instead.
+  uc: makeHeroCard("Phyla-Vell", "Martyr", 3, u, 2, Color.STRENGTH, "Guardians of the Galaxy", "D", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
+    replace: ev => selectCardOptEv(ev, "Discard to gain 2 Shards", [ev.source], () => {
+      discardEv(ev, ev.source); gainShardEv(ev, 2, owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// You may KO a card from your hand or discard pile. If you do, gain 2 Shards.
+// Then, if you have at least 8 Shards, you get +3 Attack.
+  ra: makeHeroCard("Phyla-Vell", "Avatar of Oblivion", 8, u, 3, Color.INSTINCT, "Guardians of the Galaxy", "D", [
+    ev => KOHandOrDiscardEv(ev, undefined, () => gainShardEv(ev, 2)),
+    ev => playerState.shard.size >= 8 && addAttackEvent(ev, 3),
+  ]),
+},
+{
+  name: "Ronan the Accuser",
+  team: "(Unaffiliated)",
+// Gain a Shard.
+// {BURN 2 SHARDS}: Draw two cards.
+  c1: makeHeroCard("Ronan the Accuser", "Universal Weapon", 3, u, u, Color.TECH, u, "FD", [
+    ev => gainShardEv(ev),
+    ev => setBurnShardEv(ev, 2, ev => drawEv(ev, 2)),
+  ]),
+// Whenever you rescue a Bystander this turn, gain a Shard.
+// {POWER Strength} Rescue a Bystander.
+// GUN: 1
+  c2: makeHeroCard("Ronan the Accuser", "Rally Kree Warriors", 4, 2, u, Color.STRENGTH, u, "GFD", [
+    ev => addTurnTrigger('RESCUE', ev => isBystander(ev.what), ev => gainShardEv(ev)),
+    ev => superPower(Color.STRENGTH) && rescueEv(ev),
+  ]),
+// {CONTEST OF CHAMPIONS}[Tech]. Each player that wins rescues a Bystander. If the Mastermind wins, it captures a Bystander.
+  uc: makeHeroCard("Ronan the Accuser", "Accuse Enemies of the Empire", 6, u, 4, Color.STRENGTH, u, "", ev => {
+    contestOfChampionsEv(ev, Color.TECH,
+      p => rescueByEv(ev, p),
+      () => {},
+      () => withMastermind(ev, c => captureEv(ev, c)));
+  }),
+// {CONTEST OF CHAMPIONS}[Strength]. Each other player that loses must lose a Shard. Each player that wins gains 2 Shards. If the Mastermind wins, a Villain gains 2 Shards.
+  ra: makeHeroCard("Ronan the Accuser", "Seek the Infinity Gems", 8, u, 4, Color.TECH, u, "D", ev => {
+    contestOfChampionsEv(ev, Color.STRENGTH,
+      p => gainShardEv(ev, 2, p),
+      p => p !== playerState && spendShardEv(ev, p),
+      () => selectCardEv(ev, "Choose a Villain", villains(), c => attachShardEv(ev, c, 2)));
+  }),
+},
+{
+  name: "Nebula",
+  team: "Guardians of the Galaxy",
+// Whenever you take any number of Shards from a Villain, Mastermind, or other player this turn, you may KO one of your cards or a card from your discard pile.
+  c1: makeHeroCard("Nebula", "Ruthless Cyborg", 3, 2, u, Color.TECH, "Guardians of the Galaxy", "D", ev => {
+    addTurnTrigger('MOVECARD', ev =>
+      ev.to === playerState.shard && (ev.from.attachedTo instanceof Card && isEnemy(ev.from.attachedTo) ||
+        gameState.players.has(p => p !== playerState && ev.from === p.shard)),
+      ev => selectCardOptEv(ev, "Choose a card to KO", [...revealable(), ...playerState.discard.deck], c => KOEv(ev, c)));
+  }),
+// A Villain gains a Shard.
+// {POWER Instinct Tech} Take a Shard from a Villain.
+// GUN: 1
+  c2: makeHeroCard("Nebula", "Galactic Rogue", 5, u, 3, Color.INSTINCT, "Guardians of the Galaxy", "GF", [ ev => {
+    selectCardEv(ev, "Choose a Villain", villains(), c => attachShardEv(ev, c));
+  }, ev => superPower(Color.INSTINCT, Color.TECH) && selectCardEv(ev, "Choose a Shard", villains().limit(c => c.attached('SHARD').size > 0), c => {
+    c.attached('SHARD').withFirst(c => gainShardEv(ev, c));
+  }) ]),
+// {POWER Tech} Choose another player. Unless that player reveals a [Covert] Hero, take one of their Shards or "rescue" a Bystander from their Victory Pile.
+  uc: makeHeroCard("Nebula", "Illusion Device", 4, u, 2, Color.TECH, "Guardians of the Galaxy", "D", ev => superPower(Color.TECH) && chooseOtherPlayerEv(ev, p => {
+    revealOrEv(ev, Color.COVERT, () => chooseOneEv(ev, "Choose one",
+      ["Take a Shard", () => p.shard.withFirst(c => gainShardEv(ev, c))],
+      ["\"Rescue\" a Bystander", () => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => rescueEv(ev, c))],
+    ), p);
+  })),
+// Whenever you take any number of Shards from a Villain, Mastermind, or other player this turn, you get +3 Recruit.
+  ra: makeHeroCard("Nebula", "Daring Raid", 7, 0, 5, Color.INSTINCT, "Guardians of the Galaxy", "", ev => {
+    addTurnTrigger('MOVECARD', ev =>
+      ev.to === playerState.shard && (ev.from.attachedTo instanceof Card && isEnemy(ev.from.attachedTo) ||
+        gameState.players.has(p => p !== playerState && ev.from === p.shard)),
+      ev => addRecruitEvent(ev, 3));
+  }),
 },
 ]);

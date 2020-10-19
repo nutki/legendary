@@ -411,7 +411,8 @@ addVillainTemplates("Fantastic Four", [
   [ 2, makeVillainCard("Heralds of Galactus", "Firelord", 9, 4, {
     fight: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
     escape: sameEffect,
-    cardActions: [ cosmicThreatAction(Color.RANGED) ],
+    cardActions: [ cosmicThreatAction ],
+    cosmicThreat: Color.RANGED,
   })],
 // Cosmic Threat: [Instinct]
 // AMBUSH: Put each non-[Instinct] Hero from the HQ on the bottom of the Hero Deck.
@@ -419,7 +420,8 @@ addVillainTemplates("Fantastic Four", [
 // VP: 6
   [ 2, makeVillainCard("Heralds of Galactus", "Morg", 12, 6, {
     ambush: ev => hqHeroes().limit(c => !isColor(Color.INSTINCT)(c)).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
-    cardActions: [ cosmicThreatAction(Color.INSTINCT) ],
+    cardActions: [ cosmicThreatAction ],
+    cosmicThreat: Color.INSTINCT,
   })],
 // Cosmic Threat: [Covert]
 // FIGHT: Choose one of your [Covert] Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
@@ -427,7 +429,8 @@ addVillainTemplates("Fantastic Four", [
 // VP: 5
   [ 2, makeVillainCard("Heralds of Galactus", "Stardust", 10, 5, {
     fight: ev => selectCardEv(ev, "Choose a Covert hero", yourHeroes().limit(Color.COVERT), sel => addTurnTrigger("CLEANUP", undefined, ev => moveCardEv(ev, sel, playerState.hand))),
-    cardActions: [ cosmicThreatAction(Color.COVERT) ],
+    cardActions: [ cosmicThreatAction ],
+    cosmicThreat: Color.COVERT,
   })],
 // Cosmic Threat: [Strength]
 // AMBUSH: For each [Strength] Hero in the HQ, Terrax captures a Bystander.
@@ -435,7 +438,8 @@ addVillainTemplates("Fantastic Four", [
 // VP: 5
   [ 2, makeVillainCard("Heralds of Galactus", "Terrax the Tamer", 11, 5, {
     ambush: ev => captureEv(ev, ev.source, hqHeroes().count(Color.STRENGTH)),
-    cardActions: [ cosmicThreatAction(Color.STRENGTH) ],
+    cardActions: [ cosmicThreatAction ],
+    cosmicThreat: Color.STRENGTH,
   })],
 ]},
 { name: "Subterranea", cards: [

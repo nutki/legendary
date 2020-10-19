@@ -247,7 +247,8 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
     eachOtherPlayerVM(p => p.discard.limit(isHero).limit(c => hqNames.includes(c.cardName)).each(c => KOEv(ev, c)));
   } ],
 ], {
-  cardActions: [ cosmicThreatAction() ]
+  cardActions: [ cosmicThreatAction ],
+  cosmicThreat: Color.COVERT | Color.INSTINCT | Color.RANGED | Color.STRENGTH | Color.TECH,
 }),
 // Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
 makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {

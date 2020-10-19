@@ -48,7 +48,9 @@ function burrowEv(ev: Ev) {
 // {COSMIC_THREAT}: If an enemy has Cosmic Threat: Ranged, that means: "For each Ranged card you reveal, this Enemy gets -3 Attack this turn." (An asterisk next to an Enemy's Attack number is to remind you that their Attack can change. The asterisk doesn't mean anything else.)
 // Galactus' Cosmic Threat means "Once per turn, choose Strength, Instinct, Covert, Tech or Ranged. For each card of that color you reveal, this Enemy gets -3 Attack for one fight this turn." If you try to fight Galactus a second time in the same turn, he will return to his full attack and you cannot use his Cosmic Threat ability a second time that turn.
 // villain cardAction
-const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
+const cosmicThreatAction = (what: Card, ev: Ev) => {
+  const color = getModifiedStat(what, 'cosmicThreat', what.cosmicThreat);
+  if (!color) return noOpActionEv(ev);
   function doReveal(ev: Ev, color: number) {
     incPerTurn('cosmicThreat', what);
     let count = 0;
@@ -61,7 +63,7 @@ const cosmicThreatAction = (color?: number) => (what: Card, ev: Ev) => {
       cond: c => !countPerTurn('cosmicThreat', c) && revealable().has(color || isNonGrayHero)
     },
     func: (ev) => {
-      color ? doReveal(ev, color) : chooseClassEv(ev, color => doReveal(ev, color))
+      classes.includes(color) ? doReveal(ev, color) : chooseClassEv(ev, color => doReveal(ev, color), c => (c & color) !== 0);
     },
     what,
   });
@@ -505,11 +507,14 @@ function strikerHeroEv(ev: Ev, n: number = 1) {
 function strikerVarDefense(c: Card) {
   return c.printedDefense + strikerCount();
 }
-function dangerSenseEv(ev: Ev, n: number, f?: (cards: Card[]) => void) {
-  revealVillainDeckEv(ev, n, cards => {
-    addAttackEvent(ev, cards.count(isVillain));
-    f && f(cards);
-  }, false, false);
+function dangerSenseEv(ev: Ev, amount: number, f?: (cards: Card[]) => void, helping?: (card: Card) => boolean) {
+  pushEv(ev, 'DANGERSENSE', { amount, func: ev => {
+    revealVillainDeckEv(ev, ev.amount, cards => {
+      const amount = cards.count(isVillain)
+      helping ? addTurnMod('defense', helping, amount) : addAttackEvent(ev, amount);
+      f && f(cards);
+    }, false, false);
+  } });
 }
 
 function makeTransformingHeroCard(c1: Card, c2: Card) {
@@ -736,4 +741,44 @@ function wakingNightmareOptEv(ev: Ev, p: Player = playerState) {
     discardEv(ev, c);
     drawEv(ev, 1, p);
   }, () => {}, p);
+}
+
+// Into the Cosmos
+
+function burnShardActionEv(ev: Ev, amount: number | (() => boolean), effect: (ev: Ev) => void) {
+  const what = ev.source;
+  const cond = typeof amount === "number" ? () => playerState.shard.size >= amount : amount;
+  const cost: ActionCost = {
+    cond: () => !countPerTurn('burn', what) && cond()
+  };
+  const func = (ev: Ev) => {
+    incPerTurn('burn', what);
+    if (typeof amount === "number") repeat(amount, () => spendShardEv(ev));
+    effect(ev);
+  };
+  return new Ev(ev, 'EFFECT', { what, func, cost });
+}
+function setBurnShardEv(ev: Ev, cost: number | (() => boolean), f: Handler) {
+  addTurnAction(burnShardActionEv(ev, cost, f));
+}
+
+function giveCosmicThreat(what: Card, color: number) {
+  addTurnSet('cosmicThreat', c => c === what, () => color);
+  addTurnSet('cardActions', c => c === what, (c, v) => v.includes(cosmicThreatAction) ? v : [ ...v, cosmicThreatAction ]);
+}
+
+function contestOfChampionsEv(ev: Ev, color: number, effect1: ((p: Player) => void), effect0: ((p: Player) => void), effectEvil: (() => void), evilCount: number = 2) {
+  const champs = new Map<Player, Card>();
+  const champValue = (c: Card) => c.cost * (isColor(color)(c) ? 2 : 1);
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Champion", p.hand.limit(isHero), c => {
+    champs.set(p, c);
+  }, () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+    champs.set(p, c);
+  }), p), p));
+  revealHeroDeckEv(ev, evilCount, evilChamps => {
+    const goodChamps = champs.values();
+    const winningScore = [...goodChamps, ...evilChamps].max(champValue);
+    eachPlayer(p => champs.get(p) && champValue(champs.get(p)) === winningScore ? effect1(p) : effect0(p));
+    evilChamps.has(c => champValue(c) === winningScore) && effectEvil();
+  }, false, true);
 }
