@@ -267,3 +267,25 @@ makeHenchmenLocationCard("HYDRA Base", 2, {
 }, "Mandarin's Rings")],
 ]}
 ]);
+addHenchmenTemplates("Into the Cosmos", [
+// AMBUSH: (After this enters the city) If there's a Villain on the Bridge, that Villain and this Henchman each gain a Shard. Otherwise, move this to the Bridge.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3
+makeHenchmenCard("Sidera Maris, Bridge Builders", 3, {
+  ambush: ev => withCity('BRIDGE', bridge => {
+    bridge.has(isVillain) && attachShardEv(ev, ev.source);
+    bridge.limit(isVillain).each(c => attachShardEv(ev, c));
+  }),
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+}),
+// AMBUSH: Each Henchman Villain in the city gains a Shard. If Magus is the Mastermind, one Cosmic Wraith also gains a Shard.
+// FIGHT: {BURN 2 SHARDS}: KO one of your Heroes.
+// ATTACK: 2
+makeHenchmenCard("Universal Church of Truth", 2, {
+  ambush: ev => {
+    cityVillains().limit(isHenchman).each(c => attachShardEv(ev, c));
+    selectCardEv(ev, "Choose a Cosmic Wraith", villains().limit(isGroup("Cosmic Wraith")), c => attachShardEv(ev, c));
+  },
+  fight: ev => setBurnShardEv(ev, 2, ev => selectCardAndKOEv(ev, yourHeroes())),
+}),
+]);
