@@ -28,6 +28,7 @@ sub mkdir_and_copy {
   AMBITIONS => "Ambitions.txt",
   WOUNDS => "Wounds_and_Bindings.txt",
   HORRORS => "Horrors.txt",
+  OFFICERS => "Setup_Cards.txt",
 );
 my ($exp, $tmpDir) = @ARGV;
 for $type (sort {$a cmp $b} keys %input) {
@@ -119,6 +120,9 @@ for $type (sort {$a cmp $b} keys %input) {
     } elsif ($type eq "HORRORS") {
       parse();
       checkimage("horrors", $_{CARDNAME});
+    } elsif ($exp eq "S.H.I.E.L.D." and $type eq "OFFICERS") {
+      parse();
+      checkimage("officers", "S.H.I.E.L.D. Officer", $_{CARDNAME});
     }
   }
 }
