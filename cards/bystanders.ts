@@ -178,3 +178,16 @@ addBystanderTemplates("Revelations", [
 // RESCUE: choose Recruit or Attack. Then {HYPERSPEED 3} for that icon.
 [ 1, makeBystanderCard("Rocket Test Pilot", ev => hyperspeedEv(ev, 3, "CHOOSE")) ],
 ]);
+addBystanderTemplates("Into the Cosmos", [
+// RESCUE: gain a Shard.
+[ 1, makeBystanderCard("Legendary Game Designer", ev => gainShardEv(ev, 1, ev.who)) ],
+// RESCUE: each player with the most Victory Points draws a card. (Your VP includes this Bystander.)
+[ 1, makeBystanderCard("Board Gamer", ev => {
+  const maxVp = gameState.players.max(currentVP);
+  eachPlayer(p => maxVp === currentVP(p) && drawEv(ev, 1, p));
+}) ],
+// RESCUE: choose one: Draw a card now, or draw an extra card when you draw a new hand of cards at the end of this turn.
+[ 1, makeBystanderCard("Pizza Delivery Guy", ev => ev.who !== playerState ? drawEv(ev, 1, ev.who) :
+  chooseOneEv(ev, "Choose one", ["Draw now", () => drawEv(ev)], ["Draw at the end of turn", () => addEndDrawMod(1)])
+) ],
+]);
