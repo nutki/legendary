@@ -5418,8 +5418,7 @@ addHeroTemplates("Into the Cosmos", [
 // {POWER Tech} You get +1 Recruit or +1 Attack.
   c1: makeHeroCard("Nova", "Draw From the Worldmind", 2, 0, 0, Color.TECH, "Avengers", "FD", [
     ev => drawEv(ev),
-    ev => superPower(Color.TECH) && addRecruitEvent(ev, 1),
-    ev => superPower(Color.TECH) && addAttackEvent(ev, 1),
+    ev => superPower(Color.TECH) && chooseOneEv(ev, "Choose one", ["Recruit", () => addRecruitEvent(ev, 1)], ["Attack", () => addAttackEvent(ev, 1)])
   ]),
 // Choose one: You get +2 Recruit, or you gain a Shard.
 // {POWER Ranged} Instead, do both.
