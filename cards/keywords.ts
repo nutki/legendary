@@ -49,9 +49,9 @@ function burrowEv(ev: Ev) {
 // Galactus' Cosmic Threat means "Once per turn, choose Strength, Instinct, Covert, Tech or Ranged. For each card of that color you reveal, this Enemy gets -3 Attack for one fight this turn." If you try to fight Galactus a second time in the same turn, he will return to his full attack and you cannot use his Cosmic Threat ability a second time that turn.
 // villain cardAction
 const cosmicThreatAction = (what: Card, ev: Ev) => {
-  const color = getModifiedStat(what, 'cosmicThreat', what.cosmicThreat);
+  const color = getModifiedStat(what, 'cosmicThreat', 0) || what.cosmicThreat;
   if (!color) return noOpActionEv(ev);
-  function doReveal(ev: Ev, color: number) {
+  function doReveal(ev: Ev, color: Filter<Card>) {
     incPerTurn('cosmicThreat', what);
     let count = 0;
     selectObjectsAnyEv(ev, "Reveal cards", revealable().limit(color), () => count++);
@@ -63,7 +63,8 @@ const cosmicThreatAction = (what: Card, ev: Ev) => {
       cond: c => !countPerTurn('cosmicThreat', c) && revealable().has(color || isNonGrayHero)
     },
     func: (ev) => {
-      classes.includes(color) ? doReveal(ev, color) : chooseClassEv(ev, color => doReveal(ev, color), c => (c & color) !== 0);
+      !(typeof color === "number") || classes.includes(color) ?
+        doReveal(ev, color) : chooseClassEv(ev, color => doReveal(ev, color), c => (c & color) !== 0);
     },
     what,
   });
@@ -768,9 +769,8 @@ function giveCosmicThreat(what: Card, color: number) {
   addTurnSet('cardActions', c => c === what, (c, v) => v.includes(cosmicThreatAction) ? v : [ ...v, cosmicThreatAction ]);
 }
 
-function contestOfChampionsEv(ev: Ev, color: number, effect1: ((p: Player) => void), effect0: ((p: Player) => void), effectEvil: (() => void), evilCount: number = 2) {
+function contestOfChampionsEv(ev: Ev, color: Filter<Card>, effect1: ((p: Player) => void), effect0: ((p: Player) => void), effectEvil: (() => void), evilCount: number = 2) {
   const champs = new Map<Player, Card>();
-  const champValue = (c: Card) => c.cost * (isColor(color)(c) ? 2 : 1);
   eachPlayer(p => selectCardOptEv(ev, "Choose a Champion", p.hand.limit(isHero), c => {
     champs.set(p, c);
   }, () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
@@ -778,8 +778,11 @@ function contestOfChampionsEv(ev: Ev, color: number, effect1: ((p: Player) => vo
   }), p), p));
   revealHeroDeckEv(ev, evilCount, evilChamps => {
     const goodChamps = champs.values();
+    const champValue = (c: Card) => c.cost * ([c].has(color) ? 2 : 1) +
+      (gameState.contestOfCampionsEvilBonus && evilChamps.includes(c) ? gameState.contestOfCampionsEvilBonus : 0);
     const winningScore = [...goodChamps, ...evilChamps].max(champValue);
-    eachPlayer(p => cont(ev, () => champs.get(p) && champValue(champs.get(p)) === winningScore ? effect1(p) : effect0(p)));
+    eachPlayer(p => cont(ev, () => !(champs.get(p) && champValue(champs.get(p)) === winningScore) && effect0(p)));
+    eachPlayer(p => cont(ev, () => champs.get(p) && champValue(champs.get(p)) === winningScore && effect1(p)));
     evilChamps.has(c => champValue(c) === winningScore) && cont(ev, effectEvil);
   }, false, true);
 }
@@ -792,3 +795,5 @@ function celestialBoonActionEv(func: (ev: Ev) => void, cond?: (c: Card) => boole
     func: ev => { incPerTurn('boon', c); func(ev); },
   })
 }
+
+function isOtherPlayerVM(p: Player) { return gameState.advancedSolo || p !== playerState; }

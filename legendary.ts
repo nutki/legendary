@@ -114,7 +114,7 @@ interface Card {
   chivalrousDuel?: boolean // TODO chivalrous duel
   modifiers?: Modifiers;
   isAdaptingMastermind?: boolean;
-  cosmicThreat?: number;
+  cosmicThreat?: Filter<Card>;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -139,7 +139,7 @@ interface VillainCardAbillities {
   uSizeChanging?: { color: number, amount: number }
   chivalrousDuel?: boolean
   modifiers?: Modifiers;
-  cosmicThreat?: number;
+  cosmicThreat?: Filter<Card>;
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -155,7 +155,7 @@ interface MastermindCardAbillities {
   printedNthCircle?: number
   sizeChanging?: number
   chivalrousDuel?: boolean
-  cosmicThreat?: number;
+  cosmicThreat?: Filter<Card>;
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -956,6 +956,7 @@ interface Game {
   reversePlayerOrder?: boolean // TODO revese player order
   destroyedCitySpaces: Deck[]
   actionFilters: ((ev: Ev) => boolean)[];
+  contestOfCampionsEvilBonus?: number;
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1305,6 +1306,7 @@ if (gameSetup.cityType === 'VILLAIN') gameState.city = gameState.city.reverse();
 gameState.cityEntry = gameState.city[4];
 gameState.villaindeck.revealed = new Deck('VILLAIN_REVEALED', true);
 gameState.herodeck.revealed = new Deck('HERO_REVEALED', true);
+gameState.officer.revealed = new Deck('OFFICER_REVEALED', true);
 
 for (let i = 0; i < 5; i++) {
   gameState.hq[i].below = gameState.city[i];
@@ -2413,6 +2415,7 @@ function adaptMastermind(mastermind: Card) {
   tactics.shuffle();
   const newMastermind = makeCardCopy(tactics.top);
   newMastermind._attached = mastermind._attached;
+  newMastermind.location = mastermindLocation;
   mastermindLocation.deck[mastermindPos] = newMastermind;
 }
 function adaptMastermindEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { func: () => adaptMastermind(what) }); }

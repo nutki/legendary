@@ -2377,3 +2377,152 @@ addTemplates("MASTERMINDS", "New Mutants", [
   varDefense: c => c.printedDefense + yourHeroes().count(Color.GRAY) * (c.epic ? 2 : 1),
 }),
 ]);
+addTemplates("MASTERMINDS", "Into the Cosmos", [
+// Magus gets +1 Attack for each Villain in the city that has any Shards.
+// Magus gets +2 Attack for each Villain in the city that has any Shards.
+...makeEpicMastermindCard("Magus", [ 9, 11 ], 6, "Universal Church of Truth", ev => {
+  const epic = ev.source.epic;
+// If there are already any Villains with Shards in the city, each player gains a Wound.
+// If there are already any Villains with Shards in the city, each player gains a Wound to the top of their deck.
+  cityVillains().has(c => c.attached('SHARD').size > 0) && eachPlayer(p => {
+    epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p);
+  });
+// Then this Strike enters the city as a "Cosmic Wraith" Villain with 4 Attack worth 4 VP.
+// Then this Strike enters the city as a "Cosmic Wraith" Villain with 6 Attack worth 6 VP.
+  villainify("Cosmic Wraith", ev.what, epic ? 6 : 4, epic ? 6 : 4);
+  enterCityEv(ev, ev.what);
+// Then put a Shard on each Villain in the city.
+  cityVillains().each(c => attachShardEv(ev, c));
+}, [
+  [ "Dark Side of Adam Warlock", ev => {
+  // Magus gains a Shard. Then Magus takes a Shard from each other player that does not reveal a [Covert] Hero.
+    attachShardEv(ev, ev.source.mastermind);
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => p.shard.withTop(c => attachShardEv(ev, ev.source.mastermind, c)), p));
+  } ],
+  [ "Seize Cosmic Power", ev => {
+  // Magus takes a Shard from each Villain in the city. Then the Villain with the highest Attack gains a Shard.
+    cityVillains().each(c => c.attached('SHARD').withFirst(c => attachShardEv(ev, ev.source.mastermind, c)));
+    selectCardEv(ev, "Choose a Villain", villains().highest(c => c.defense), c => attachShardEv(ev, c));
+  } ],
+  [ "Conjured Shade of Thanos", ev => {
+  // Rescue 4 Bystanders. This Tactic enters the city as a Villain. Then each Villain in the city gains a Shard. (You win when the Mastermind has no more Tactics stacked under it.)
+    rescueEv(ev, 4);
+    addStatSet('isVillain', c => c === ev.source, () => true);
+    addStatSet('fight', c => c === ev.source, () => undefined); // Remove this fight effect to prevent reenter loop
+    enterCityEv(ev, ev.source);
+    cityVillains().each(c => attachShardEv(ev, c));
+  } ],
+  [ "Resurrected as the Child Magus", ev => {
+  // Until the start of your next turn, Magus can only be fought with Recruit instead of Attack.
+    addTurnSet('fightCost', c => c === ev.source.mastermind, (c, v) => ({ ...v, recruit: v.recruit + v.attack + v.either, attack: 0, either: 0 }));
+  } ],
+], {
+  varDefense: c => c.printedAttack + (c.epic ? 2 : 1) + cityVillains().count(c => c.attached('SHARD').size > 0),
+}),
+// EPICNAME: Grandmaster
+// Evil adds +2 to its final total in every {CONTEST OF CHAMPIONS} caused by any card.
+...makeEpicMastermindCard("The Grandmaster", [ 10, 11 ], 6, "Elders of the Universe", ev => {
+// Reveal the top card of the Hero Deck then put it back. {CONTEST OF CHAMPIONS} for that card's color(s).
+// Each player that loses gains a Wound. If the Grandmaster wins, he gains a Shard.
+// Each player that loses gains a Wound. If the Grandmaster wins, he gains 2 Shards.
+  gameState.herodeck.withTop(c => contestOfChampionsEv(ev, c.color, () => {}, p => {
+    gainWoundEv(ev, p);
+  }, () => {
+    attachShardEv(ev, ev.source, ev.source.epic ? 2 : 1);
+  }))
+}, [
+  [ "Deal With Death", ev => {
+  // {CONTEST OF CHAMPIONS}[Covert], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must KO a non-grey Hero from their discard pile. If you win, you may gain a non-grey Hero from the KO pile. If the Grandmaster wins, he gains a Shard.
+    contestOfChampionsEv(ev, Color.COVERT, p => {
+      p === playerState &&
+        selectCardOptEv(ev, "Choose a Hero to gain", gameState.ko.limit(isNonGrayHero), c => gainEv(ev, c));
+    }, p => {
+      isOtherPlayerVM(p) && selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p);
+    }, () => {
+      attachShardEv(ev, ev.source.mastermind);
+    }, 4);
+  } ],
+  [ "Galactic Marathon", ev => {
+  // {CONTEST OF CHAMPIONS}[Instinct], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must discard down to four cards. If you win, draw two cards. If the Grandmaster wins, he gains 2 Shards.
+    contestOfChampionsEv(ev, Color.COVERT, p => {
+      p === playerState && drawEv(ev, 2);
+    }, p => {
+      isOtherPlayerVM(p) && pickDiscardEv(ev, -4, p);
+    }, () => {
+      attachShardEv(ev, ev.source.mastermind, 2);
+    }, 4);
+  } ],
+  [ "Cheat Against Thanos", ev => {
+  // {CONTEST OF CHAMPIONS}[Ranged], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must KO half the Bystanders (round up) from their Victory Pile. If you win, rescue three Bystanders. If the Grandmaster Wins, he gains 3 Shards.
+    contestOfChampionsEv(ev, Color.COVERT, p => {
+      p === playerState && rescueEv(ev, 3);
+    }, p => {
+      isOtherPlayerVM(p) && selectObjectsEv(ev, "Choose Bystanders to KO", Math.ceil(p.victory.count(isBystander)/2), p.victory.limit(isBystander), c => KOEv(ev, c), p);
+    }, () => {
+      attachShardEv(ev, ev.source.mastermind, 3);
+    }, 4);
+  } ],
+  [ "Match Offenders vs. Defenders", ev => {
+  // {CONTEST OF CHAMPIONS}[Strength], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must gain a 0-cost card from the KO pile. If you win, reveal the top four cards of your deck, KO any number of them, and put the rest back in any order. If the Grandmaster wins, he gains 4 Shards.
+    contestOfChampionsEv(ev, Color.COVERT, p => {
+      p === playerState &&
+        revealPlayerDeckEv(ev, 4, cards => selectObjectsAnyEv(ev, "Choose cards to KO", cards, c => KOEv(ev, c)));
+    }, p => {
+      isOtherPlayerVM(p) &&
+        selectCardEv(ev, "Choose a card to gain", gameState.ko.limit(c => c.cost === 0), c => gainEv(ev, c, p), p)
+    }, () => {
+      attachShardEv(ev, ev.source.mastermind, 4);
+    }, 4);
+  } ],
+], {
+  init: c => gameState.contestOfCampionsEvilBonus = c.epic ? 2 : 0
+}),
+// {COSMIC THREAT} for cards that cost 5 or more.
+// EPICNAME: Beyonder
+// {COSMIC THREAT} for cards that cost 6 or more.
+...makeEpicMastermindCard("The Beyonder", [ 21, 24 ], 7, "From Beyond", ev => {
+// Each player reveals a card that costs 5 or more or gains a Wound.
+// Each player reveals a card that costs 6 or more or gains a Wound.
+  eachPlayer(p => revealOrEv(ev, c => c.cost >= (ev.source.epic ? 6 : 5), () => gainWoundEv(ev, p), p));
+// Then put this Strike under an HQ space (that doesn't already have a Strike) pulling that space into a Pocket Dimension. To recruit a card from a Pocket Dimension, you must pay 1 Attack for each Pocket Dimension in play.
+  selectCardEv(ev, "Choose an HQ space", gameState.hq.limit(d => !d.attached('POCKET').size), d => {
+    attachCardEv(ev, ev.what, d, 'POCKET');
+  });
+}, [
+  [ "Playthings of a Petulant God", ev => {
+  // Each other player reveals their hand and KOs a card from their hand or discard pile with the same card name as any card in a Pocket Dimension.
+    const cardsInPockets = hqCards().limit(c => c.location.attached('POCKET').size > 0).map(c => c.cardName);
+    eachOtherPlayerVM(p => selectCardAndKOEv(ev, handOrDiscard(p).limit(c => cardsInPockets.includes(c.cardName)), p));
+  } ],
+  [ "Dimensional Collapse", ev => {
+  // Destroy an HQ space that's in a Pocket Dimension. (That space doesn't refill.) To mark this, turn the Hero there face down. The Pocket Dimension card stays in play.
+    selectCardEv(ev, "Choose an HQ space", gameState.hq.limit(d => d.attached('POCKET').size > 0), d => {
+      destroyHQ(d); // TODO turn the Hero face down
+    });
+  } ],
+  [ "Pull Earth Into The Beyond", ev => {
+  // Rescue four Bystanders. Put this card above the Sewers, pulling it into a Pocket Dimension. To fight a Villain there, you must also pay 1 Attack for each Pocket Dimension in play.
+    withCity('SEWERS', sewers => {
+      rescueEv(ev, 4);
+      attachCardEv(ev, ev.what, sewers, 'POCKET');
+    });
+  } ],
+  [ "Create the Secret Wars", ev => {
+  // Choose a team (e.g. S.H.I.E.L.D., Avengers, X-Men, Guardians of the Galaxy, etc.), {CONTEST OF CHAMPIONS} for that team icon, with Evil selecting from 4 cards from the Hero Deck. Each other player that loses gains a Wound. If you win, the player of your choice gains a Hero from a Pocket Dimension.
+    contestOfChampionsEv(ev, "Avengers", p => {
+      const heroes = hqHeroes().limit(c => c.location.attached('POCKET').size > 0);
+      p === playerState && selectCardEv(ev, "Choose a Hero", heroes, c => choosePlayerEv(ev, p => gainEv(ev, c, p)));
+    }, p => {
+      isOtherPlayerVM(p) && gainWoundEv(ev, p);
+    }, () => {}, 4);
+  } ],
+], epic => ({
+  cosmicThreat: c => c.cost >= (epic ? 6 : 5),
+  cardActions: [ cosmicThreatAction ],
+  init: () => {
+    const amount = () => [...gameState.hq, ...gameState.city].count(c => c.attached('POCKET').size > 0); // TODO Should count destroyed spaces as well
+    addStatSet('recruitCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, recruit: v.recruit + amount()}));
+    addStatSet('fightCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: v.attack + amount()}));
+  }
+})),
+]);
