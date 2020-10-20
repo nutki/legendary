@@ -4106,11 +4106,26 @@ addVillainTemplates("Into the Cosmos", [
 // ATTACK: 10*
 // VP: 5
   [ 2, makeVillainCard("From Beyond", "The Shaper of Worlds", 10, 5, {
-    ambush: ev => {}, // TODO
-    fight: ev => {}, // TODO
-    escape: ev => {}, // TODO
+    ambush: ev => gameState.herodeck.withTop(c => attachCardEv(ev, c, ev.source, 'NEWREALITY')),
+    fight: ev => ev.source.attached('NEWREALITY').each(c => choosePlayerEv(ev, p => gainEv(ev, c))),
+    escape: ev => {
+      ev.source.attached('NEWREALITY').each(c => KOEv(ev, c));
+      selectCardEv(ev, "Choose an HQ space", gameState.hq, d => {
+        destroyHQ(d);
+        d.each(c => KOEv(ev, c));
+      });
+    },
     cosmicThreat: Color.RANGED,
-    cardActions: [ cosmicThreatAction ],
+    cardActions: [
+      cosmicThreatAction,
+      (c: Card, ev: Ev) => c.attached("NEWREALITY").size ?
+        recruitCardActionEv(ev, c.attachedDeck("NEWREALITY").top) : noOpActionEv(ev),
+    ],
+    trigger: {
+      event: "MOVECARD",
+      match: (ev, source) => ev.from === source.attachedDeck('NEWREALITY'),
+      after: ev => gameState.herodeck.withTop(c => moveCardEv(ev, c, ev.parent.from)),
+    }
   })],
 // {COSMIC THREAT}[Instinct]
 // AMBUSH: Each player must reveal two cards with the same non-zero cost or gain a Wound.
