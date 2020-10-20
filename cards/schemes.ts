@@ -1721,7 +1721,11 @@ makeSchemeCard("Age of Ultron", { twists: 11, heroes: [ 3, 5, 5, 6, 7 ] }, ev =>
   gameState.herodeck.withTop(c => moveCardEv(ev, c, evolution));
   villainify('Evolved Ultron', ev.twist, c => 4 + empowerVarDefense(evolution.deck.map(c => c.color).reduce((p, c) => p | c))(c), 6);
   enterCityEv(ev, ev.twist);
-}, koOrEscapeProgressTrigger(c => isTwist(c) && isVillain(c)), () => {
+}, {
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.escaped || ev.to.isCity || ev.from === gameState.escaped || ev.from.isCity,
+  after: ev => schemeProgressEv(ev, [...cityVillains(), ...gameState.escaped.deck].count(c => isTwist(c) && isVillain(c))),
+}, () => {
   setSchemeTarget(7);
 }),
 // SETUP: 9 Twists.
@@ -2164,5 +2168,104 @@ makeSchemeCard("Superhuman Baseball Game", { twists: 9, vd_villain: [ 2, 3, 4, 4
   setSchemeTarget(4);
   gameState.city = gameState.city.filter(d => d.id !== "BANK" && d.id !== "STREETS");
   makeCityAdjacent(gameState.city);
+}),
+]);
+addTemplates("SCHEMES", "Into the Cosmos", [
+// SETUP: 11 Twists. Add an extra Hero. Put 11 random cards from the Hero Deck face up in a "Contest Row."
+// EVILWINS: When there are 6 Evil Triumphs.
+makeSchemeCard("The Contest of Champions", { twists: 11, heroes: [ 4, 6, 6, 6, 7 ] }, ev => {
+  const contestRow = gameState.scheme.attachedDeck("CONTEST");
+  // Twist 1-4 KO the leftmost card in the Contest Row, then {CONTEST OF CHAMPIONS} for that cards color(s).
+  // Each player that loses discards a card. If the Mastermind wins, put a Wound next to this Scheme as an "Evil Triumph."
+  // Twist 5-8 Same effect, but in the Contest, Evil selects from 4 cards from the Hero Deck.
+  // Twist 9-11 Same effect, but in the Contest, Evil selects from 6 cards from the Hero Deck.
+  contestRow.withTop(c => {
+    KOEv(ev, c);
+    contestOfChampionsEv(ev, c.color, () => {}, p => {
+      pickDiscardEv(ev, 1, p);
+    }, () => {
+      gameState.wounds.withTop(c => attachCardEv(ev, c, gameState.scheme, 'TRIUMPH'));
+    }, ev.nr <= 4 ? 2 : ev.nr <= 8 ? 4 : 6);
+  })
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TRIUMPH').size));
+}, [], () => {
+  const contestRow = gameState.scheme.attachedDeck("CONTEST");
+  repeat(11, () => gameState.herodeck.withTop(c => moveCard(c, contestRow)));
+  setSchemeTarget(6);
+}),
+// SETUP: 14 Twists (using 3 Wounds to represent extra Scheme Twists). Put 14 Adam Warlock Hero cards in a face up stack, ordered from lowest-cost on top, to highest-cost on the bottom.
+// EVILWINS: When there are 8 Souls Corruptions.
+makeSchemeCard("Turn the Soul of Adam Warlock", { twists: 14, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Adam Warlock" } }, ev => {
+  // Twist: Set aside the top card of the Adam Warlock stack.
+  // This turn you may "Purify" it by spending Attack equal to double its cost.
+  // If you do, choose a player to gain that card, then you rescue a Bystander, and you may KO one of your Heroes.
+  // If you don't do this by the end of your turn, put that Adam Warlock card into a "Soul's Corruption" stack next to the Scheme.
+}, {
+  event: "CLEANUP",
+  match: () => gameState.scheme.attached("ADAMASIDE").size > 0,
+  before: ev => gameState.scheme.attached("ADAMASIDE").each(c => {
+    attachCardEv(ev, c, gameState.scheme, "CORRUPTION");
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached("CORRUPTION").size));
+  }),
+}, () => {
+  const adam = gameState.scheme.attachedDeck("ADAM");
+  gameState.herodeck.limit(c => c.heroName === "Adam Warlock").each(c => moveCard(c, adam));
+  setSchemeTarget(8);
+  gameState.specialActions = ev => gameState.scheme.attached("ADAMASIDE").map(c => {
+    return new Ev(ev, 'EFFECT', { what: c, cost: { attack: c.cost * 2 }, func: ev => {
+      choosePlayerEv(ev, p => gainEv(ev, c, p));
+      rescueEv(ev, 1);
+      selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+    }});
+  });
+}),
+// SETUP: 9 Twists. Exactly one Hero must be a Nova Hero. 1 player: 5 Heroes. Each player's starting deck adds 2 Wounds, 1 S.H.I.E.L.D. Officer, and a Nova card that costs 2.
+// RULE: All S.H.I.E.L.D. Officers and a Nova Heroes count as "Nova Centurions."
+// EVILWINS: When there are 5 KO'd Nova Centurions per player.
+makeSchemeCard("Destroy the Nova Corps", { twists: 9, heroes: [ 5, 5, 5, 5, 6 ], required: { heroes: "Nova" } }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Each player must reveal their hand and discard a Nova Centurion. Each player that discarded this way gains a Shard. Each player that didn't discard this way must KO a card from the S.H.I.E.L.D. Officer Stack.
+    eachPlayer(p => selectCardOrEv(ev, "Choose a Centurion to discard",
+      p.hand.limit(c => isShieldOfficer(c) || c.heroName === "Nova"),
+      c => {
+        discardEv(ev, c);
+        gainShardEv(ev, 1, p);
+      }, () => {
+        gameState.officer.withTop(c => KOEv(ev, c));
+      }, p));
+  } else if (ev.nr >= 6 && ev.nr <= 9) {
+    // Twist 6-9 Each player must KO a Nova Centurion from the S.H.I.E.L.D. Officer Stack or from their hand or discard pile.
+    eachPlayer(p => cont(ev, () => {
+      const centurions = handOrDiscard(p).limit(c => isShieldOfficer(c) || c.heroName === "Nova");
+      const cards = gameState.officer.top ? [ gameState.officer.top, ...centurions ] : centurions;
+      selectCardEv(ev, "Choose a Centurion to KO", cards, c => KOEv(ev, c), p)
+    }));
+  }
+}, koProgressTrigger(c => isShieldOfficer(c) || c.heroName === "Nova"), () => {
+  setSchemeTarget(5, true);
+  eachPlayer(p => {
+    gameState.wounds.withTop(c => moveCard(c, p.deck));
+    gameState.wounds.withTop(c => moveCard(c, p.deck));
+    gameState.officer.withTop(c => moveCard(c, p.deck));
+    gameState.herodeck.limit(c => c.heroName === "Nova" && c.cost === 2).withRandom(c => moveCard(c, p.deck));
+    p.deck.shuffle();
+  })
+}),
+// SETUP: 11 Twists. Add an extra Hero.
+// RULE: Each "Phalanx-Infected" Villain has Attack equal to its cost, +1 Attack for each two Phalanx Conquests. If you fight one, choose a player to gain it as a Hero.
+// EVILWINS: When there are 6 Phalanx-Infected in the city and/or Escape Pile, or the Villain Deck runs out.
+makeSchemeCard("Annihilation: Conquest", { twists: 11, heroes: [ 4, 6, 6, 6, 7 ] }, ev => {
+  // Twist: Put this Twist next to the Scheme as a "Phalanx Conquest." The highest-cost Hero from the HQ enters the city as a "Phalanx-Infected" Villain.
+  attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
+  selectCardEv(ev, "Choose a Hero to become Phalanx-Infected", hqHeroes().highest(c => c.cost), c => {
+    villainify("Phalanx-Infected", c1 => c1 === c, c => c.cost + Math.floor(gameState.scheme.attached('TWIST').size/2), "GAIN");
+    enterCityEv(ev, c);
+  });
+}, [{
+  event: "MOVECARD",
+  match: ev => ev.to === gameState.escaped || ev.to.isCity || ev.from === gameState.escaped || ev.from.isCity,
+  after: ev => schemeProgressEv(ev, [...cityVillains(), ...gameState.escaped.deck].count(isGroup("Phalanx-Infected"))),
+}, runOutProgressTrigger("VILLAIN", false)], () => {
+  setSchemeTarget(6);
 }),
 ]);
