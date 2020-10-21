@@ -2013,7 +2013,7 @@ function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler |
     pushEv(ev, "EFFECT", p);
   }
   if (!effects) return;
-  confirmEv(ev, `${effectName}!`, c);
+  confirmEv(ev, `${c.cardName}: ${effectName}!`, c);
   pushEv(ev, 'CARDEFFECT', { effectName, source: c, func: () => {
     if (!(effects instanceof Array)) f(effects); else effects.forEach(f);
   }});
@@ -2142,13 +2142,11 @@ function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false
   options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);
 }
 function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined) {
-  const cards = cond ? who.hand.deck : who.hand.limit(cond);
   // TODO multiplayer: pickDiscardEv show hand when condition present (and cards.size < n depending on card wording)
-  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, "Choose a card to discard", cards, sel => discardEv(ev, sel), who));
+  repeat(n < 0 ? who.hand.size + n : n, () => cont(ev, () => selectCardEv(ev, "Choose a card to discard", who.hand.limit(cond), sel => discardEv(ev, sel), who)));
 }
 function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined, bottom: boolean = false) {
-  const cards = cond ? who.hand.deck : who.hand.limit(cond);
-  repeat(n < 0 ? who.hand.size + n : n, () => selectCardEv(ev, `Choose a card to put on ${bottom ? "bottom" : "top"} of your deck`, cards, sel => moveCardEv(ev, sel, who.deck, bottom), who));
+  repeat(n < 0 ? who.hand.size + n : n, () => cont(ev, () => selectCardEv(ev, `Choose a card to put on ${bottom ? "bottom" : "top"} of your deck`, who.hand.limit(cond), sel => moveCardEv(ev, sel, who.deck, bottom), who)));
 }
 function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
