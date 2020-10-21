@@ -1993,6 +1993,7 @@ makeSchemeCard("Hydra Helicarriers Hunt Heroes", { twists: 8, heroes: [4, 6, 6, 
 makeSchemeCard("Secret Empire of Betrayal", { twists: 11, heroes: [4, 6, 6, 6, 7]  }, ev => {
   // Twist: Shuffle this Twist into the Dark Loyalty deck as a "Vicious Betrayal." Then reveal the top card of that deck. If it's a Hero, gain it. If it's a Vicious Betrayal, put it next to the Scheme and each other player gains a Wound.
   const darkStack = gameState.scheme.attachedDeck('DARK_LOYALTY');
+  shuffleIntoEv(ev, ev.twist, darkStack);
   revealDeckEv(ev, darkStack, 1, cards => cards.each(c => {
     if (isTwist(c)) {
       attachCardEv(ev, c, gameState.scheme, "TWIST");
