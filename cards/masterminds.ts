@@ -2117,9 +2117,9 @@ makeAdaptingMastermindCard("Hydra High Council", 6, "Hydra Elite", [
 // #STRIKE: Each player KOs a Hydra Villain from their Victory Pile or gains a Wound. <b>Adapt</b>.
 // #FIGHT: Each other player KOs a Hydra Villain from their Victory Pile or gains a Wound. <b>Adapt</b>.
   makeAdaptingTacticsCard("Baron Helmut Zemo", 16, ev => {
-    eachPlayer(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isHydraInAnyWay), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachPlayer(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isVillain).limit(isHydraInAnyWay), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   }, ev => {
-    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isHydraInAnyWay), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isVillain).limit(isHydraInAnyWay), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   }, {
     varDefense: c => c.printedDefense - playerState.victory.count(isVillain),
   }),
