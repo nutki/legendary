@@ -115,6 +115,7 @@ interface Card {
   modifiers?: Modifiers;
   isAdaptingMastermind?: boolean;
   cosmicThreat?: Filter<Card>;
+  mastermindName?: string;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -324,8 +325,8 @@ function makeTacticsCard(name: string, abilities: TacticsCardAbillities = {}) {
 function makeEpicMastermindCard(name: string | [string, string], defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities | ((epic: boolean) => MastermindCardAbillities)) {
   const m1 = makeMastermindCard(typeof name === "string" ? name : name[0],
     defense[0], vp, leads, strike, tactics, abilities instanceof Function ? abilities(false) : abilities);
-  const m2 = makeMastermindCard(typeof name === "string" ? "The " + name : name[1],
-    defense[1], vp, leads, strike, tactics, abilities instanceof Function ? abilities(true) : abilities);
+  const m2 = makeMastermindCard(typeof name === "string" ? "Epic " + name : name[1],
+    defense[1], vp, leads, strike, [], abilities instanceof Function ? abilities(true) : abilities);
   m2.epic = true;
   // Epic masterminds use unchanged defense on tactics (may be relevant for some schemes).
   m2.tacticsTemplates = m1.tacticsTemplates;
@@ -340,6 +341,7 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: st
   c.tacticsTemplates = tactics.map(function (e) {
     const t = e instanceof Card ? e : makeTacticsCard(e[0], { fight: e[1] });
     t.printedVP = vp;
+    t.mastermindName = name;
     if (t.printedDefense === undefined)
       t.printedDefense = defense;
     return t;
@@ -353,6 +355,7 @@ function makeAdaptingMastermindCard(name: string, vp: number, leads: string, tac
   c.leads = leads;
   c.isAdaptingMastermind = true;
   tactics.each(c => {
+    c.mastermindName = name;
     c.printedVP = vp;
     c.leads = leads;
     c.isAdaptingMastermind = true;
@@ -2410,6 +2413,7 @@ function adaptMastermind(mastermind: Card) {
   const mastermindLocation = mastermind.location;
   if (!tactics.size) {
     mastermind.location.remove(mastermind);
+    return;
   }
   const mastermindPos = mastermindLocation.deck.indexOf(mastermind);
   tactics.shuffle();

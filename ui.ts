@@ -12,7 +12,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
   if (card.cardType === "VILLAIN") return imageName("villains", card, card.villainGroup);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
-  if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermind.cardName);
+  if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermindName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
   if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
   return imageName("", card);
