@@ -271,4 +271,11 @@ function initUI() {
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
   document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
+  const updateSize = () => {
+    const scale = Math.min(window.innerWidth / 2200, window.innerHeight / 1250);
+    document.getElementById("scalable-contents").style.transform = `scale(${scale})`;
+    document.getElementById("scalable-container").style.height = `${scale * 1250}px`;
+  }
+  window.addEventListener("resize", updateSize);
+  updateSize();
 }

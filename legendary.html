@@ -113,6 +113,9 @@ div.card div.capturedHint {
     padding: 0 10px;
     font-size: 35px;
 }
+#source {
+  width: 400px;
+}
 #source div.card {
   border-radius: 20px;
   width: 400px;
@@ -206,6 +209,8 @@ tr.cityscape td:first-child:before {
 </style>
 </head>
 <body>
+<div id="scalable-container" style="width: 100%; overflow: hidden;">
+<div id="scalable-contents" style="transform-origin: top left; transform: scale(0.5); width: 2200px;">
 <div style="display: flex; height: 666px">
 <div>
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
@@ -260,6 +265,8 @@ tr.cityscape td:first-child:before {
 <div class="popup hidden" id="popvictory"><div class="deck" data-id="VICTORY0" data-mode="IMG" data-fanout="1"></div></div>
 <div class="popup hidden" id="popko"><div class="deck" data-id="KO" data-mode="IMG" data-fanout="1"></div></div>
 <div class="popup hidden" id="popescaped"><div class="deck" data-id="ESCAPED" data-mode="IMG" data-fanout="1"></div></div>
+</div>
+</div>
 <span class="deck" data-id="DECK0" data-mode="count"></span>
 <hr>
 <span class="deck" data-id="OUTOFTIME0" data-mode="count"></span>
