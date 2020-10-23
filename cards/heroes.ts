@@ -4936,7 +4936,7 @@ addHeroTemplates("S.H.I.E.L.D.", [
   ra: makeHeroCard("Agent Phil Coulson", "Fake But Inspiring Death", 8, u, 4, Color.COVERT, "S.H.I.E.L.D.", "G", ev => shieldLevelPower(8) && addAttackEvent(ev, 4), {
     trigger: {
       event: "KO",
-      match: ev => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what),
+      match: (ev, source) => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what) && source.location === owner(source).hand,
       replace: ev => selectCardOptEv(ev, "Discard to send the Hero undercover and draw three cards", [ev.source], () => {
         sendUndercoverEv(ev, ev.parent.what, owner(ev.source));
         drawEv(ev, 3, owner(ev.source));
@@ -4957,15 +4957,12 @@ addHeroTemplates("S.H.I.E.L.D.", [
   c2: makeHeroCard("Quake", "Aftershock", 4, u, 2, Color.RANGED, "S.H.I.E.L.D.", "GFD", ev => shieldLevelPower(2) && addAttackEvent(ev, 2)),
 // Whenever you fight a Villain this turn, if its Attack is higher than your <b>S.H.I.E.L.D. Level</b>, you may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
 // {SHIELDLEVEL 4} You get +4 Attack
-  uc: makeHeroCard("Quake", "Tectonic Wave", 6, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", ev => shieldLevelPower(4) && addAttackEvent(ev, 4), {
-    trigger: {
-      event: "FIGHT",
-      match: ev => isVillain(ev.what),
-      after: ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
-        gameState.officer.withTop(c => sendUndercoverEv(ev, c, owner(ev.source)));
-      }, owner(ev.source)),
-    }
-  }),
+  uc: makeHeroCard("Quake", "Tectonic Wave", 6, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", [
+    ev => addTurnTrigger('FIGHT', ev => isVillain(ev.what), ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
+      gameState.officer.withTop(c => sendUndercoverEv(ev, c, owner(ev.source)));
+    }, owner(ev.source))),
+    ev => shieldLevelPower(4) && addAttackEvent(ev, 4),
+  ]),
 // You may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
 // Then, for each <b>S.H.I.E.L.D. Level</b> you have up to 5, choose a Hero from the HQ. Put all those Heroes on the bottom of the Hero Deck and you get their total printed Attack.
   ra: makeHeroCard("Quake", "Roil the Earth", 7, u, 0, Color.RANGED, "S.H.I.E.L.D.", "", [ ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
