@@ -464,7 +464,7 @@ addHeroTemplates("Dark City", [
 // COST: 3
   c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger: {
     event: "STRIKE",
-    match: (ev, source: Card) => source.location === owner(source).hand,
+    match: (ev, source: Card) => owner(source) && source.location === owner(source).hand,
     before: ev => chooseMayEv(ev, "Discard to draw three extra cards", () => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source))); }, owner(ev.source))
   }}),
 // ATTACK: 2+
@@ -4454,7 +4454,7 @@ addHeroTemplates("Ant-Man", [
 // When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
   uc: makeHeroCard("Black Knight", "Flying Steed", 6, u, 3, Color.COVERT, "Avengers", "", [], { trigger: {
     event: 'STRIKE',
-    match: (ev, source) => source.location === owner(source).hand,
+    match: (ev, source) => owner(source) && source.location === owner(source).hand,
     before: ev => chooseMayEv(ev, "Discard Black Knight to draw extra cards", () => { discardEv(ev, ev.source); addEndDrawMod(3); })
   }}),
 // You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
@@ -4936,7 +4936,7 @@ addHeroTemplates("S.H.I.E.L.D.", [
   ra: makeHeroCard("Agent Phil Coulson", "Fake But Inspiring Death", 8, u, 4, Color.COVERT, "S.H.I.E.L.D.", "G", ev => shieldLevelPower(8) && addAttackEvent(ev, 4), {
     trigger: {
       event: "KO",
-      match: (ev, source) => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what) && source.location === owner(source).hand,
+      match: (ev, source) => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what) && owner(source) && source.location === owner(source).hand,
       replace: ev => selectCardOptEv(ev, "Discard to send the Hero undercover and draw three cards", [ev.source], () => {
         sendUndercoverEv(ev, ev.parent.what, owner(ev.source));
         drawEv(ev, 3, owner(ev.source));
@@ -4959,8 +4959,8 @@ addHeroTemplates("S.H.I.E.L.D.", [
 // {SHIELDLEVEL 4} You get +4 Attack
   uc: makeHeroCard("Quake", "Tectonic Wave", 6, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", [
     ev => addTurnTrigger('FIGHT', ev => isVillain(ev.what), ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
-      gameState.officer.withTop(c => sendUndercoverEv(ev, c, owner(ev.source)));
-    }, owner(ev.source))),
+      gameState.officer.withTop(c => sendUndercoverEv(ev, c));
+    })),
     ev => shieldLevelPower(4) && addAttackEvent(ev, 4),
   ]),
 // You may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
@@ -5099,7 +5099,7 @@ addHeroTemplates("Heroes of Asgard", [
 // When an Ambush ability is played, before it takes effect, you may discard this card. If you do, draw two extra cards at the end of this turn.
   c2: makeHeroCard("Valkyrie", "Flying Stallion", 4, u, 2, Color.INSTINCT, "Heroes of Asgard", "D", ev => heroConquerorEv(ev, 'ROOFTOPS', 1), { trigger: {
     event: 'CARDEFFECT',
-    match: (ev, source: Card) => ev.effectName == 'ambush' && source.location === owner(source).hand,
+    match: (ev, source: Card) => ev.effectName == 'ambush' && owner(source) && source.location === owner(source).hand,
     before: ev => chooseMayEv(ev, "Discard to draw two extra cards", () => {
       discardEv(ev, ev.source);
       owner(ev.source) === playerState ? addEndDrawMod(2) : addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 2, owner(ev.source)));
