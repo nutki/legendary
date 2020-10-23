@@ -22,9 +22,7 @@
   font-family: NumberFont;
   src: url(fonts/MatrixBoldSmallCaps.ttf);
 }
-body { background: #555; -moz-user-select: none }
-table { margin: 0; padding: 0; border: 0; }
-td { margin: 0; padding: 0; border: 0; }
+body { background: #555; user-select: none; padding: 0; margin: 0; }
 .number {
   color: white;
   font-family: NumberFont;
@@ -78,7 +76,7 @@ div.card {
     border-radius: 10px;
     width: 200px;
     height: 280px;
-    transition: left 1s linear, top 1s linear;
+    transition: left 1s linear, top 1s linear, transform 1s linear;
 }
 div.card div.count {
     font-family: NumberFont;
@@ -113,20 +111,7 @@ div.card div.capturedHint {
     padding: 0 10px;
     font-size: 35px;
 }
-#source {
-  width: 400px;
-}
-#source div.card {
-  border-radius: 20px;
-  width: 400px;
-  height: 560px;
-}
-#source img.cardface {
-    width:400px;
-    height: 560px;
-    position:absolute;
-}
-.popup {
+.popup .cards {
   display: block;
   position: absolute;
   left: 200px;
@@ -139,26 +124,27 @@ div.card div.capturedHint {
   border-radius: 20px;
   white-space: nowrap;
 }
-td {
-  position: relative;
-}
-table.d td { width: 210px; height: 285px; white-space: nowrap; }
-table.d td.w { width: 2000px; height: 285px; }
-div.deck {
+.popupname {
+  display: block;
+  bottom: 0;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-/*  transform: translate(-50%,-50%);*/
+  height: 40px;
+  background-color: red;
 }
-div.deck.small {
+div.small {
   transform: scale(.5);
   transform-origin: top left;
 }
-.tr.small { left: 50%; }
-.bl.small { top: 50%; }
-.br.small { top: 50%; left: 50%; }
+div.large {
+  transform: scale(2);
+  transform-origin: top left;
+}
+.deck {
+  width: 210px;
+  height: 285px;
+  z-index: 1;
+  pointer-events: none;
+}
 .deckcount {
   position: absolute;
   left: 50%;
@@ -195,97 +181,49 @@ img.vpcount {
 #popvictory { top: 20px;}
 #popdiscard { top: 330px;}
 #popdeck { top: 330px;}
-tr.cityscape td:first-child:before {
-    content: "";
-    position: absolute;
-    width: 1055px;
-    height: 285px;
-    z-index: -1;
-    top: 0;
-    left: 211px;
-    background: url('images/cityscape.png');
-    background-size: 1055px 286px;
-}
+
 </style>
 </head>
 <body>
 <div id="scalable-container" style="width: 100%; overflow: hidden;">
 <div id="scalable-contents" style="transform-origin: top left; transform: scale(0.5); width: 2200px;">
-<div style="display: flex; height: 666px">
-<div>
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
-<table class="d"><tr class="cityscape">
-<td><div class="deck" data-id="MASTERMIND" data-mode="IMG" data-fanout="1"></div></td>
-<td><div class="deck" data-id="BRIDGE" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="STREETS" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="ROOFTOPS" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="BANK" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="SEWERS" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="SCHEME" data-mode="IMG"></div></td>
-<td rowspan="2"><div id="source"></div></td>
-</tr><tr>
-<td>
-  <div class="deck small" data-id="SHIELDOFFICER" data-mode="IMG"></div>
-  <div class="deck small tr" data-id="SIDEKICK" data-mode="IMG"></div>
-  <div class="deck small bl" data-id="MADAME" data-mode="IMG"></div>
-  <div class="deck small br" data-id="NEWRECRUIT" data-mode="IMG"></div>
-</td>
-<td><div class="deck" data-id="HQ1" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="HQ2" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="HQ3" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="HQ4" data-mode="IMG"></div></td>
-<td><div class="deck" data-id="HQ5" data-mode="IMG"></div></td>
-<td>
-  <div class="deck small" data-id="VILLAIN" data-mode="IMG" data-count="VILLAIN"></div>
-  <div class="deck small tr" data-id="ESCAPED" data-mode="IMG" data-count="ESCAPED" data-popupid="popescaped"></div>
-  <div class="deck small bl" data-id="KO" data-mode="IMG" data-count="KO" data-popupid="popko"></div>
-  <div class="deck small br" data-id="WOUNDS" data-mode="IMG" data-count="WOUNDS"></div>
-</td>
-</tr></table>
-<img class="icon" src="icons/recruit.svg" width="50"><span class="number" id="recruit"></span>
-<img class="icon" src="icons/attack.svg"><span class="number" id="attack"></span><span class="number" id="shards"></span>
-<img class="icon" src="icons/VP.png"><span class="number" id="vp"></span>
-<span id="message"></span>
-<span id="extraActions"></span>
+<div id="card-container" style="position: absolute;"></div>
+<div id="card-container2" style="position: absolute;"></div>
+<div style="position: absolute; top: 610px">
+  <img class="icon" src="icons/recruit.svg" width="50"><span class="number" id="recruit"></span>
+  <img class="icon" src="icons/attack.svg"><span class="number" id="attack"></span><span class="number" id="shards"></span>
+  <img class="icon" src="icons/VP.png"><span class="number" id="vp"></span>
+  <span id="message"></span>
+  <span id="extraActions"></span>
 </div>
-<div id="logContainer" style="overflow: auto;"></div>
-</div>
-<table class="d"><tr>
-<td class="w" colspan="2"><div class="deck" data-id="PLAYAREA0" data-fanout="1" data-mode="IMG"></div></td>
-</tr><tr>
-<td>
-  <div class="deck small tr" data-id="DISCARD0" data-mode="IMG" data-count="DISCARD" data-popupid="popdiscard"></div>
-  <div class="deck small" data-id="DECK0" data-mode="IMG" data-count="DECK" data-popupid="popdeck"></div>
-  <div class="deck small bl" data-id="VICTORY0" data-mode="IMG" data-count="VP" data-popupid="popvictory"></div>
-</td>
-<td class="w"><div class="deck" data-id="HAND0" data-fanout="1" data-mode="IMG"></div></td>
-</tr></table>
-<div class="popup hidden" id="popdiscard"><div class="deck" data-id="DISCARD0" data-mode="IMG" data-fanout="1"></div></div>
-<div class="popup hidden" id="popdeck"><div class="deck" data-id="REVEALED0" data-mode="IMG" data-fanout="1"></div></div>
-<div class="popup hidden" id="popvictory"><div class="deck" data-id="VICTORY0" data-mode="IMG" data-fanout="1"></div></div>
-<div class="popup hidden" id="popko"><div class="deck" data-id="KO" data-mode="IMG" data-fanout="1"></div></div>
-<div class="popup hidden" id="popescaped"><div class="deck" data-id="ESCAPED" data-mode="IMG" data-fanout="1"></div></div>
+<div id="logContainer" style="overflow: auto; position: absolute; left: 1900px; width: 300px;"></div>
+<div class="popup hidden" id="popdiscard"><div class="popupname">Discard</div><div class="cards"></div></div>
+<div class="popup hidden" id="popdeck"><div class="cards"></div></div>
+<div class="popup hidden" id="popvictory"><div class="cards"></div></div>
+<div class="popup hidden" id="popko"><div class="cards"></div></div>
+<div class="popup hidden" id="popescaped"><div class="cards"></div></div>
 </div>
 </div>
-<span class="deck" data-id="DECK0" data-mode="count"></span>
+<span class="text-deck" data-id="DECK0"></span>
 <hr>
-<span class="deck" data-id="OUTOFTIME0" data-mode="count"></span>
+<span class="text-deck" data-id="OUTOFTIME0"></span>
 <hr>
-<span class="deck" data-id="VILLAIN" data-mode="count"></span>
-{<span class="deck" data-id="VILLAIN_REVEALED" data-mode="count"></span>}
+<span class="text-deck" data-id="VILLAIN"></span>
+{<span class="text-deck" data-id="VILLAIN_REVEALED"></span>}
 <hr>
-<span class="deck" data-id="BYSTANDERS" data-mode="count"></span>
+<span class="text-deck" data-id="BYSTANDERS"></span>
 <hr>
-<span class="deck" data-id="HERO" data-mode="count"></span>
-{<span class="deck" data-id="HERO_REVEALED" data-mode="count"></span>}
+<span class="text-deck" data-id="HERO"></span>
+{<span class="text-deck" data-id="HERO_REVEALED"></span>}
 <hr>
-<span class="deck" data-id="SCHEME" data-mode="count"></span>
+<span class="text-deck" data-id="SCHEME"></span>
 <hr>
-<span class="deck" data-id="MASTERMIND" data-mode="count"></span>
+<span class="text-deck" data-id="MASTERMIND"></span>
 <hr>
-<span class="deck" data-id="SHARD" data-mode="count"></span>
+<span class="text-deck" data-id="SHARD"></span>
 <hr>
-<span class="deck" data-id="SHARD0" data-mode="count"></span>
+<span class="text-deck" data-id="SHARD0"></span>
 <hr>
 Players: <select id="setup_players"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
 Scheme: <select id="setup_scheme"></select>

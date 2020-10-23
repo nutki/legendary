@@ -30,76 +30,157 @@ function makeDisplayCard(c: Card): string {
   return res + makeDisplayAttached(c);
 }
 function setSourceImg(name: string) {
-  const r = `<div class="card"><img class="cardface" src="${name}"><div class="frame"></div></div>`;
-  document.getElementById("source").innerHTML = r;
+  const r = div("card large", { id: "source2" }, img(name, "cardface"), div("frame"));
+  positionCard(r, 7, 0);
+  document.getElementById("card-container").appendChild(r);
 }
 function clearSourceImg() {
-  document.getElementById("source").innerHTML = sourceOrg;
+  document.getElementById("source2").remove();
 }
-function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): string {
-  const extraClasses = gone ? " gone" : "";
-  const src = back ? 'images/back.jpg' : cardImageName(c);
-  const hover = `onmouseover="setSourceImg('${src}')" onmouseleave="clearSourceImg()"`;
-  let r = '';
-  r += id ? `<div ${hover} class="card${extraClasses}" id="${c.id}">` : `<div ${hover} class="card${extraClasses}">`;
-  r += `<img class="cardface" src="${src}">`
-  if (isMastermind(c)) r += `<div class="count">${c.attached("TACTICS").size}</div>`;
-  if (isScheme(c) && getSchemeCountdown() !== undefined)
-    r += `<div class="count">${getSchemeCountdown()}</div>`;
-  if (!back && c.defense !== c.printedDefense) r += `<div class="attackHint">${c.defense}</div>`
-  if (c.captured.size > 0) r += `<div class="capturedHint">${c.captured.size}</div>`
-  r += `<div class="frame"></div></div>`;
-  return r;
-}
-function makeDisplayPlayAreaImg(c: Card): string {
+function makeDisplayPlayAreaImg(c: Card) {
   const gone = !playerState.playArea.deck.includes(c);;
   return makeDisplayCardImg(c, false, gone);
 }
-function displayDecks(): void {
-  let divs = document.getElementsByClassName("deck");
+function img(src: string, className?: string) {
+  const e = document.createElement('img');
+  e.setAttribute('class', className);
+  e.setAttribute('src', src);
+  return e;
+}
+function div(className: string, options?: {[key: string]: string}, ...children: Node[]) {
+  const e = document.createElement('div');
+  e.setAttribute("class", className);
+  for (const key in options) e.setAttribute(key, options[key]);
+  for (const child of children) child && e.appendChild(child);
+  return e;
+}
+function span(className: string, options?: {[key: string]: string}, ...children: Node[]) {
+  const e = document.createElement('span');
+  e.setAttribute("class", className);
+  for (const key in options) e.setAttribute(key, options[key]);
+  for (const child of children) child && e.appendChild(child);
+  return e;
+}
+function br() { return document.createElement('br'); }
+function text(value: string | number) { return document.createTextNode(value.toString()); }
+function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): HTMLDivElement {
+  const src = back ? 'images/back.jpg' : cardImageName(c);
+  const options: {[key: string]: string} = {
+    onmouseover: `setSourceImg('${src}')`,
+    onmouseleave: "clearSourceImg()",
+  };
+  if (id) options.id = c.id;
+  const d = div(gone ? "card gone" : "card", options, img(src, "cardface"));
+  if (isMastermind(c)) d.appendChild(div("count", {}, text(c.attached("TACTICS").size)))
+  if (isScheme(c) && getSchemeCountdown() !== undefined)
+    d.appendChild(div("count", {}, text(getSchemeCountdown())))
+  if (!back && c.defense !== c.printedDefense)
+    d.appendChild(div("attackHint", {}, text(c.defense)));
+  if (c.captured.size > 0) d.appendChild(div("capturedHint", {}, text(c.captured.size)));
+  d.appendChild(div("frame"));
+  return d;
+}
+function positionCard(card: HTMLElement, x: number, y: number, i: number = 0) {
+  card.style.position = "absolute";
+  card.style.top = y * 288 + (y >= 2 ? 60 : 0) + "px";
+  card.style.left = (x + i) * 212 + "px";
+}
+const mainDecks = [
+  { id: 'MASTERMIND', x: 0, y: 0 },
+  { id: 'BRIDGE', x: 1, y: 0 },
+  { id: 'STREETS', x: 2, y: 0 },
+  { id: 'ROOFTOPS', x: 3, y: 0 },
+  { id: 'BANK', x: 4, y: 0 },
+  { id: 'SEWERS', x: 5, y: 0 },
+  { id: 'SCHEME', x: 6, y: 0 },
+  { id: 'HQ1', x: 1, y: 1 },
+  { id: 'HQ2', x: 2, y: 1 },
+  { id: 'HQ3', x: 3, y: 1 },
+  { id: 'HQ4', x: 4, y: 1 },
+  { id: 'HQ5', x: 5, y: 1 },
+  { id: 'SHIELDOFFICER', x: 0, y: 1, size: 'small' },
+  { id: 'SIDEKICK', x: .5, y: 1, size: 'small' },
+  { id: 'MADAME', x: 0, y: 1.5, size: 'small' },
+  { id: 'NEWRECRUIT', x: .5, y: 1.5, size: 'small' },
+  { id: 'VILLAIN', x: 6, y: 1, size: 'small', count: 'VILLAIN' },
+  { id: 'ESCAPED', x: 6.5, y: 1, size: 'small', count: 'ESCAPED', popupid: 'popescaped' },
+  { id: 'KO', x: 6, y: 1.5, size: 'small', count: 'KO', popupid: 'popko' },
+  { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS' },
+  { id: 'PLAYAREA0', x: 1, y: 2, fanout: true },
+  { id: 'HAND0', x: 1, y: 3, fanout: true },
+  { id: 'DECK0', x: 0, y: 3, size: 'small', count: 'DECK', popupid: 'popdeck'},
+  { id: 'DISCARD0', x: .5, y: 3, size: 'small', count: 'DISCARD', popupid: 'popdiscard'},
+  { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory'},
+];
+const popupDecks = [
+  { id: 'DISCARD0', container: 'popdiscard' },
+  { id: 'REVEALED0', container: 'popdeck' },
+  { id: 'VICTORY0', container: 'popvictory' },
+  { id: 'KO', container: 'popko' },
+  { id: 'ESCAPED', container: 'popescaped' },
+];
+function displayDecks(ev: Ev): void {
   let list = Deck.deckList;
   let deckById:{[id: string]:Deck} = {};
   for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
-  for (let i = 0; i < divs.length; i++) {
-    let div = divs[i];
-    let deck = deckById[div.getAttribute("data-id")];
-    let fanout = div.getAttribute("data-fanout");
-    let mode = div.getAttribute("data-mode");
-    let count = div.getAttribute("data-count");
-    let popup = div.getAttribute("data-popupid");
-    let html = '';
-    if (mode === "IMG") {
-      if (deck.id === "PLAYAREA0") {
-        html = playerState.artifact.deck.map(c => makeDisplayCardImg(c)) +
-          turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg).join('');
-      } else if (fanout) {
-        html = deck.deck.map(c => makeDisplayCardImg(c, !deck.faceup)).reverse().join('');
-      } else {
-        html = deck.size ? makeDisplayCardImg(deck.top, !deck.faceup, false, popup === null) : '';
-      }
-      if (count === "1") {
-      }
-      if (count === "VP") {
-        html += '<img class="vpcount" src="icons/VP.png">';
-        html += '<div class="deckcount vpcount">' + currentVP(playerState) + '</div>';
-      } else if (count) {
-        html += `<div class="deckcount"><span class="name">${count}</span><br>${deck.size}</div>`;
-      }
-    } else {
-      html = deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+  const cardsContainer = document.getElementById("card-container");
+  cardsContainer.innerHTML = '';
+  const cityBg = img('images/cityscape.png');
+  cityBg.style.position = 'absolute';
+  cityBg.style.left = '211px';
+  cityBg.style.width = '1055px';
+  cityBg.style.height = '285px';
+  cardsContainer.appendChild(cityBg);
+  for (const deckPos of mainDecks) {
+    const deck = deckById[deckPos.id];
+    const cardDivs = deck.id === "PLAYAREA0" ? [
+      ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
+      ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
+    ] : deckPos.fanout ? deck.deck.map(card => makeDisplayCardImg(card, !deck.faceup)) :
+    deck.size ? [ makeDisplayCardImg(deck.top, !deck.faceup, false, !deckPos.popupid) ] : [];
+    cardDivs.forEach((cardDiv, i) => {
+      cardsContainer.appendChild(cardDiv);
+      if (deckPos.size) cardDiv.classList.add(deckPos.size);
+      positionCard(cardDiv, deckPos.x, deckPos.y, i);
+      if(deckPos.popupid) cardDiv.addEventListener("click", () => document.getElementById(deckPos.popupid).classList.toggle("hidden"));
+    });
+    if (deckPos.count) {
+      const d = div('deck');
+      positionCard(d, deckPos.x, deckPos.y);
+      cardsContainer.appendChild(d);
+      if (deckPos.size) d.classList.add(deckPos.size);
+      if (deckPos.count === 'VP') {
+        d.appendChild(img("icons/VP.png", "vpcount"));
+        d.appendChild(div("deckcount vpcount", {}, text(currentVP(playerState))));
+      } else if(deckPos.count) d.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
     }
-    div.innerHTML = html;
+  }
+  for (const popupDeck of popupDecks) {
+    const container = document.getElementById(popupDeck.container);
+    container.innerHTML = '';
+    const deck = deckById[popupDeck.id];
+    deck.deck.forEach((card, i) => {
+      const cardDiv = makeDisplayCardImg(card, !deck.faceup);
+      container.appendChild(cardDiv);
+      positionCard(cardDiv, 0, 0, i);
+    });
+  }
+  const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
+  if (s instanceof Card) {
+    const sDiv = makeDisplayCardImg(s, false, false, false);
+    sDiv.classList.add('large');
+    positionCard(sDiv, 7, 0);
+    cardsContainer.appendChild(sDiv);
+  }
+  let divs = document.getElementsByClassName("text-deck");
+  for (const div of divs) {
+    let deck = deckById[div.getAttribute("data-id")];
+    div.innerHTML = deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ');
   }
 }
-function eventSource(ev: Ev): string {
-  const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
-  return s instanceof Card ? makeDisplayCardImg(s, false, false, false) : "";
-}
-let sourceOrg = "";
 function displayGame(ev: Ev): void {
   const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard } = getDisplayInfo();
-  displayDecks();
-  document.getElementById("source").innerHTML = sourceOrg = eventSource(ev);
+  displayDecks(ev);
   document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
   document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
   document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
@@ -272,7 +353,9 @@ function initUI() {
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
   document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
   const updateSize = () => {
-    const scale = Math.min(window.innerWidth / 2200, window.innerHeight / 1250);
+    const viewportHeight = document.documentElement.clientHeight;
+    const viewportWidth = document.documentElement.clientWidth;
+    const scale = Math.min(viewportWidth / 2200, viewportHeight / 1250);
     document.getElementById("scalable-contents").style.transform = `scale(${scale})`;
     document.getElementById("scalable-container").style.height = `${scale * 1250}px`;
   }
