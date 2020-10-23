@@ -1346,11 +1346,13 @@ gameState.herodeck.shuffle();
 if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
 if (gameSetup.withSpecialOfficers) {
   shieldOfficerTemplates.each(([n, c]) => gameState.officer.addNewCard(c, n));
+  gameState.officer.faceup = false;
   gameState.officer.shuffle();
 }
 if (gameSetup.withSidekicks) gameState.sidekick.addNewCard(sidekickTemplate, 15);
 if (gameSetup.withSpecialSidekicks) {
   specialSidekickTemplates.each(([n, c]) => gameState.sidekick.addNewCard(c, n));
+  gameState.sidekick.faceup = false;
   gameState.sidekick.shuffle();
 }
 if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
@@ -1359,7 +1361,10 @@ if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTempla
 if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
 if (gameSetup.withShards) gameState.shard.addNewCard(shardTemplate, getParam('shards'));
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
-gameState.bystanders.shuffle();
+if (gameSetup.bystanders.has(b => b !== 'Legendary')) {
+  gameState.bystanders.faceup = false;
+  gameState.bystanders.shuffle();
+}
 // Init villain deck
 function getHenchmenTemplates(template: Card | { cards: [number, Card][]}, groupNr: number): Card[] {
   const count = getHenchmenCounts()[groupNr];
