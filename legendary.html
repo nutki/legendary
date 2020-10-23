@@ -24,6 +24,11 @@
 }
 body { background: #555; user-select: none; padding: 0; margin: 0; }
 .number {
+  display: inline-block;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
   color: white;
   font-family: NumberFont;
   font-size: 50px;
@@ -181,7 +186,9 @@ img.vpcount {
 #popvictory { top: 20px;}
 #popdiscard { top: 330px;}
 #popdeck { top: 330px;}
-
+#recruit { background-image: url('icons/recruit.svg'); }
+#attack { background-image: url('icons/attack.svg'); }
+#vp { background-image: url('icons/VP.png'); }
 </style>
 </head>
 <body>
@@ -191,9 +198,9 @@ img.vpcount {
 <div id="card-container" style="position: absolute;"></div>
 <div id="card-container2" style="position: absolute;"></div>
 <div style="position: absolute; top: 610px">
-  <img class="icon" src="icons/recruit.svg" width="50"><span class="number" id="recruit"></span>
-  <img class="icon" src="icons/attack.svg"><span class="number" id="attack"></span><span class="number" id="shards"></span>
-  <img class="icon" src="icons/VP.png"><span class="number" id="vp"></span>
+  <span class="number" id="recruit"></span>
+  <span class="number" id="attack"></span><span class="number" id="shards"></span>
+  <span class="number" id="vp"></span>
   <span id="message"></span>
   <span id="extraActions"></span>
 </div>
