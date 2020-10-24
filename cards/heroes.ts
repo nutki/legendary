@@ -426,8 +426,8 @@ addHeroTemplates("Dark City", [
   ra: makeHeroCard("Bishop", "Firepower From the Future", 7, u, 4, Color.TECH, "X-Men", "G", ev => {
     revealPlayerDeckEv(ev, 4, cards => {
       addAttackEvent(ev, cards.sum(c => c.printedAttack || 0));
+      cards.each(c => discardEv(ev, c));
       if (superPower("X-Men")) selectObjectsAnyEv(ev, "KO cards", cards, c => KOEv(ev, c));
-      cont(ev, () => playerState.revealed.deck.each(c => discardEv(ev, c)));
     });
   }),
 },

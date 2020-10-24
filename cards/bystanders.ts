@@ -56,8 +56,10 @@ addBystanderTemplates("X-Men", [
 // Look at the top two cards of your deck. Draw one and discard the other.
 // COST: 2
 [ 1, makeGainableCard(makeBystanderCard("Cypher"), u, u, Color.TECH, "X-Men", "D", ev => lookAtDeckEv(ev, 2, cards => {
-  selectCardEv(ev, "Choose a card to draw", cards, c => drawCardEv(ev, c));
-  cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
+  selectCardEv(ev, "Choose a card to draw", cards, c => {
+    drawCardEv(ev, c);
+    cards.limit(c1 => c1 !== c).each(c => discardEv(ev, c));
+  });
 }), { printedCost: 2 }) ],
 // CLASS: [Tech]
 // {POWER Tech} You may KO a card from your hand or discard pile.

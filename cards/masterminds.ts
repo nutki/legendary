@@ -194,9 +194,11 @@ makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
   [ "Psychic Torment", ev => {
   // Look at the top five cards of your deck. Put one into your hand and discard the rest.
     lookAtDeckEv(ev, 5, cards => {
-      selectCardEv(ev, "Choose a card to put in your hand", cards, c => moveCardEv(ev, c, playerState.hand));
-      cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
-    })
+      selectCardEv(ev, "Choose a card to put in your hand", cards, c => {
+        moveCardEv(ev, c, playerState.hand);
+        cards.limit(c1 => c1 !== c).each(c => discardEv(ev, c));
+      });
+    });
   } ],
   [ "Swift Vengeance", ev => {
   // A Wound from the Wound Stack becomes a Master Strike that takes effect immediately.
@@ -2313,8 +2315,10 @@ addTemplates("MASTERMINDS", "New Mutants", [
   [ "Bargain for Souls", ev => {
   // Reveal cards from the Hero Deck equal to the number of players. Gain one of them and KO the rest.
     revealHeroDeckEv(ev, gameState.players.size, cards => {
-      selectCardEv(ev, "Choose a Hero to gain", cards, c => gainEv(ev, c));
-      cont(ev, () => gameState.herodeck.revealed.each(c => KOEv(ev, c)));
+      selectCardEv(ev, "Choose a Hero to gain", cards, c => {
+        gainEv(ev, c);
+        cards.limit(c1 => c1 !== c).each(c => KOEv(ev, c));
+      });
     });
   } ],
   [ "Rescue from Limbo", ev => {

@@ -2192,7 +2192,7 @@ function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?
       selectCardEv(ev, `Choose a card to ${actions[a2].desc}`, cards.limit(c => c !== c1), c2 => {
         actions[a2].handler(ev, c2);
         a3 && selectCardEv(ev, `Choose a card to ${actions[a3].desc}`, cards.limit(c => c !== c1 && c !== c2), c3 => {
-          actions[a1].handler(ev, c3);
+          actions[a3].handler(ev, c3);
         }, who);
       }, who);
     }, who);
