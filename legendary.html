@@ -50,6 +50,7 @@ img.icon {
 .action { font-family: TitleFont; font-size: 30px; border: 2px solid black; background: yellow; padding: 0px 20px; border-radius: 10px; margin: 20px; }
 .action.noconfirm { background: green; }
 .card.gone { opacity: .5; }
+.deck-overlay.select { background-color: rgb(255,255,0,.5); }
 span.card.select { border: 2px solid yellow; border-radius: 15px; }
 span.card.select.selectko { border-color: black; }
 span.card.select.selectdiscard { border-color: red; }
@@ -144,10 +145,11 @@ div.large {
   transform: scale(2);
   transform-origin: top left;
 }
-.deck {
+.deck, .deck-overlay {
   width: 210px;
   height: 285px;
-  z-index: 1;
+}
+.deck-overlay {
   pointer-events: none;
 }
 .deckcount {
@@ -197,7 +199,7 @@ img.vpcount {
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
 <div id="card-container" style="position: absolute;"></div>
 <div id="card-container2" style="position: absolute;"></div>
-<div style="position: absolute; top: 610px">
+<div style="position: absolute; top: 600px">
   <span class="number" id="recruit"></span>
   <span class="number" id="attack"></span><span class="number" id="shards"></span>
   <span class="number" id="vp"></span>

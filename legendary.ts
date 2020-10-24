@@ -2615,8 +2615,14 @@ let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev: MouseEvent): void {
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     const id = node.id || (node.getAttribute && node.getAttribute('data-id'));
+    const deckId = node.getAttribute && node.getAttribute('data-deck-id');
+    console.log(id, node);
     if (id && clickActions[id]) {
       clickActions[id]();
+      return;
+    }
+    if (clickActions[deckId]) {
+      clickActions[deckId]();
       return;
     }
   }
@@ -2707,6 +2713,10 @@ function mainLoop(): void {
       if ((/\bdefeat\b/i).test(ev.desc)) e.classList.add("selectdefeat");
     }
   });
+  for (const deckDiv of document.getElementsByClassName('deck-overlay')) {
+    const id = deckDiv.getAttribute('data-deck-id');
+    if (clickActions[id]) deckDiv.classList.add("select");
+  }
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   document.getElementById("logContainer").innerHTML = textLog.text;
   closePopupDecks();
