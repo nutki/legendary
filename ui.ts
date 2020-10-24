@@ -141,6 +141,7 @@ function displayDecks(ev: Ev): void {
     const cardDivs = deck.id === "PLAYAREA0" ? [
       ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
       ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
+      ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
     ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card, !deck.faceup)) :
     deck.size ? [ makeDisplayCardImg(deck.top, !deck.faceup, false, !deckPos.popupid) ] : [];
     const n = cardDivs.size;
@@ -192,8 +193,9 @@ function displayGame(ev: Ev): void {
   document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
   document.getElementById("vp").innerHTML = `${soloVP}`;
 }
-function setMessage(msg: string): void {
+function setMessage(msg: string, gameOverMsg: string): void {
   document.getElementById("message").innerHTML = msg;
+  document.getElementById("game-over-message").innerHTML = gameOverMsg;
 }
 
 // Game setup selection screen

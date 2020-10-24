@@ -2698,7 +2698,7 @@ function mainLoop(): void {
       extraActions.push({ name: "OK", func: () => mainLoop() });
     },
   })[ev.type])(ev);
-  setMessage(ev.desc || "");
+  setMessage(ev.desc || "", ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;

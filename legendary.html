@@ -191,6 +191,23 @@ img.vpcount {
 #recruit { background-image: url('icons/recruit.svg'); }
 #attack { background-image: url('icons/attack.svg'); }
 #vp { background-image: url('icons/VP.png'); }
+#game-over-message {
+  position: absolute;
+  width: 1050px; height: 570px;
+  left: 210px;
+  text-align: center; font-size: 200px; font-family: TitleFont;
+  color: yellow;
+  pointer-events: none;
+  text-shadow:
+   -2px -2px 0 #000,
+    2px -2px 0 #000,
+   -2px  2px 0 #000,
+    2px  2px 0 #000,
+   -2px    0px 0 #000,
+    2px    0px 0 #000,
+      0px  2px 0 #000,
+      0px -2px 0 #000;
+}
 </style>
 </head>
 <body>
@@ -199,6 +216,7 @@ img.vpcount {
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
 <div id="card-container" style="position: absolute;"></div>
 <div id="card-container2" style="position: absolute;"></div>
+<div id="game-over-message"></div>
 <div style="position: absolute; top: 600px">
   <span class="number" id="recruit"></span>
   <span class="number" id="attack"></span><span class="number" id="shards"></span>
