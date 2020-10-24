@@ -263,7 +263,7 @@ const shieldOfficerTemplates: [number, Card][] = [
 [ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Leo Fitz & Jemma Simmons", 3, 0, 0, Color.TECH, "S.H.I.E.L.D.", "GD", ev => {
   chooseOptionEv(ev, "Choose one", [
     { l: "+2 Recruit", v: () => addRecruitEvent(ev, 2) },
-    { l: "+1 Attack and draw", v: () => { addAttackEvent(ev, 1); drawEv; } },
+    { l: "+1 Attack and draw", v: () => { addAttackEvent(ev, 1); drawEv(ev); } },
   ], f => f());
 }) ],
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} Draw a card.
