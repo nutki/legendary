@@ -176,7 +176,7 @@ const specialSidekickTemplates: [number, Card][] = [
 [ 2, makeHeroCard("Special Sidekick", "Ms. Lion", 2, u, u, Color.COVERT, "Avengers", "FD", [ ev => rescueEv(ev), ev => drawEv(ev, 1), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // Look at the top three cards of your deck. Draw one. Put the rest back in any order. Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Redwing", 2, u, u, Color.INSTINCT, "Avengers", "FD", [ ev => {
-  lookAtDeckEv(ev, 3, () => selectCardEv(ev, "Choose a card to draw", playerState.revealed.deck, c => drawCardEv(ev, c)));
+  lookAtDeckEv(ev, 3, cards => selectCardEv(ev, "Choose a card to draw", cards, c => drawCardEv(ev, c)));
 }, ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // Once this turn, if you made at least 6 Recruit, you get +2 Attack. Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Throg", 2, 2, 0, Color.STRENGTH, "Avengers", "FD", [ ev => {

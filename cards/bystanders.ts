@@ -55,8 +55,8 @@ addBystanderTemplates("X-Men", [
 // CLASS: [Tech]
 // Look at the top two cards of your deck. Draw one and discard the other.
 // COST: 2
-[ 1, makeGainableCard(makeBystanderCard("Cypher"), u, u, Color.TECH, "X-Men", "D", ev => lookAtDeckEv(ev, 2, () => {
-  selectCardEv(ev, "Choose a card to draw", playerState.revealed.deck, c => drawCardEv(ev, c));
+[ 1, makeGainableCard(makeBystanderCard("Cypher"), u, u, Color.TECH, "X-Men", "D", ev => lookAtDeckEv(ev, 2, cards => {
+  selectCardEv(ev, "Choose a card to draw", cards, c => drawCardEv(ev, c));
   cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
 }), { printedCost: 2 }) ],
 // CLASS: [Tech]

@@ -1870,7 +1870,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Thunderbolts", "Fixer", 4, 2, {
-    fight: ev => lookAtDeckEv(ev, 3, () => selectCardAndKOEv(ev, playerState.revealed.deck)),
+    fight: ev => lookAtDeckEv(ev, 3, cards => selectCardAndKOEv(ev, cards)),
   })],
 // FIGHT: Each player reveals a Tech Hero or gains a Wound.
 // ESCAPE: Same effect.
@@ -3228,7 +3228,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Sabretooth", 4, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'STREETS'))),
-  }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to KO", playerState.revealed.deck, c => KOEv(ev, c))))],
+  }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))))],
 // FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE

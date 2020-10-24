@@ -513,6 +513,7 @@ class Deck {
   has(c: Filter<Card>) { return count(this.deck, c) > 0; }
   each(f: (c: Card) => void) { this.deck.forEach(f); }
   withTop(f: (c: Card) => void) { if (this.size !== 0) f(this.top); }
+  withBottom(f: (c: Card) => void) { if (this.size !== 0) f(this.bottom); }
   withFirst(f: (c: Card) => void) { if (this.size !== 0) f(this.first); }
   withLast(f: (c: Card) => void) { if (this.size !== 0) f(this.last); }
   withRandom(f: (c: Card) => void) {if (this.size !== 0) f(this.deck[gameState.gameRand.nextRange(0, this.size)]); }
@@ -2213,7 +2214,7 @@ function lookAtDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, w
 function lookAtDeckBottomEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   revealPlayerDeckTopOrBottomEv(ev, amount, true, action, who, agent);
 }
-function revealPlayerDeckBottomEv(ev: Ev, amount: number, action: () => void, who?: Player, agent?: Player) {
+function revealPlayerDeckBottomEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   revealPlayerDeckTopOrBottomEv(ev, amount, true, action, who, agent);
 }
 
@@ -2744,10 +2745,8 @@ GUI:
 TODO Show revealed cards when no action taken
 TODO Select setup screen
 TODO show multiple actions (play/teleport)
-TODO highlight deck selection
 TODO multiplayer play areas
 TODO idicators of actionable locations in hidden decks
-TODO scrollable cards played and hand
 TODO "scenarios"
 TODO top villain deck card select (prof x uncommon)
 TODO !attached cards view

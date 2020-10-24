@@ -4,7 +4,7 @@ addTemplates("HENCHMEN", "Legendary", [
 // FIGHT: Look at the top two cards of your deck. KO one of them and put the other back.
 // ATTACK: 3
 makeHenchmenCard("Doombot Legion", 3, {
-  fight: ev => lookAtDeckEv(ev, 2, () => selectCardAndKOEv(ev, playerState.revealed.deck))
+  fight: ev => lookAtDeckEv(ev, 2, cards => selectCardAndKOEv(ev, cards))
 }),
 // CARDNAME: Hand Ninjas
 // FIGHT: You get +1 Recruit.
@@ -171,7 +171,7 @@ makeHenchmenCard("Death's Heads", 3, {
 // ATTACK: 3
 makeHenchmenCard("Sakaaran Hivelings", 3, {
   fight: [
-    ev => lookAtDeckEv(ev, 1, () => selectCardOptEv(ev, "Choose a card to put on the bottom of your deck", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.deck, true))),
+    ev => lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to put on the bottom of your deck", cards, c => moveCardEv(ev, c, playerState.deck, true))),
     feastEv,
   ]
 }),
@@ -221,12 +221,12 @@ makeHenchmenLocationCard("HYDRA Base", 2, {
 // ATTACK: 3
 [1, makeHenchmenCard("Liar, The Mento-Intensifier", 3, {
   fight: ev => chooseOtherPlayerEv(ev, p => {
-    lookAtDeckEv(ev, 1, () => {
-      p.revealed.each(c => chooseOptionEv(ev, "Choose a player to gain the card", [
+    lookAtDeckEv(ev, 1, cards => {
+      cards.each(c => chooseOptionEv(ev, "Choose a player to gain the card", [
         {l:"You",v:p},
         {l:playerState.name, v:playerState},
       ], p => moveCardEv(ev, c, p.discard), p));
-    }, playerState, p);
+    }, p, playerState);
   }),
 }, "Mandarin's Rings")],
 // FIGHT: Reveal the top card of your deck. You may KO it.

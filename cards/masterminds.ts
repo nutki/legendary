@@ -193,8 +193,8 @@ makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
   } ],
   [ "Psychic Torment", ev => {
   // Look at the top five cards of your deck. Put one into your hand and discard the rest.
-    lookAtDeckEv(ev, 5, () => {
-      selectCardEv(ev, "Choose a card to put in your hand", playerState.revealed.deck, c => moveCardEv(ev, c, playerState.hand));
+    lookAtDeckEv(ev, 5, cards => {
+      selectCardEv(ev, "Choose a card to put in your hand", cards, c => moveCardEv(ev, c, playerState.hand));
       cont(ev, () => playerState.revealed.each(c => discardEv(ev, c)));
     })
   } ],
