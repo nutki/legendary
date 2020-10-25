@@ -4957,7 +4957,7 @@ addHeroTemplates("S.H.I.E.L.D.", [
 // Whenever you fight a Villain this turn, if its Attack is higher than your <b>S.H.I.E.L.D. Level</b>, you may send a S.H.I.E.L.D. Hero from the S.H.I.E.L.D. Officer Stack {UNDERCOVER}.
 // {SHIELDLEVEL 4} You get +4 Attack
   uc: makeHeroCard("Quake", "Tectonic Wave", 6, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", [
-    ev => addTurnTrigger('FIGHT', ev => isVillain(ev.what), ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
+    ev => addTurnTrigger('FIGHT', ev => isVillain(ev.what) && ev.what.defense > shieldLevel(), ev => chooseMayEv(ev, "Send a S.H.I.E.L.D. Officer undercover", () => {
       gameState.officer.withTop(c => sendUndercoverEv(ev, c));
     })),
     ev => shieldLevelPower(4) && addAttackEvent(ev, 4),
