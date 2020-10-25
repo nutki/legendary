@@ -6,11 +6,11 @@ const uiConfig = {
 function setUiConfig(setup: Setup) {
   uiConfig.usesShieldLevel =
     setup.heroes.some(h => ['Agent Phil Coulson', 'Quake', 'Deathlok', 'Mockingbird'].includes(h));
-  document.getElementById("shield-level").style.display = uiConfig.usesShieldLevel ? 'block' : 'none';
+  document.getElementById("shield-level").style.display = uiConfig.usesShieldLevel ? 'inline-block' : 'none';
   uiConfig.usesHydraLevel =
     setup.villains.some(v=> ['Hydra Elite', 'A.I.M., Hydra Offshoot'].includes(v)) ||
     setup.mastermind.includes('Hydra High Council');
-  document.getElementById("hydra-level").style.display = uiConfig.usesHydraLevel ? 'block' : 'none';
+  document.getElementById("hydra-level").style.display = uiConfig.usesHydraLevel ? 'inline-block' : 'none';
 }
 function imageName(path: string, card: Card, subname?: string): string {
   let name = card.cardName;
