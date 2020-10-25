@@ -2750,6 +2750,7 @@ function mainLoop(): void {
 }
 function startGame(): void {
   initGameState(undoLog.gameSetup);
+  setUiConfig(gameState.gameSetup);
   mainLoop();
 }
 function startApp(): void {

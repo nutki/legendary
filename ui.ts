@@ -1,4 +1,17 @@
 // GUI
+const uiConfig = {
+  usesShieldLevel: false,
+  usesHydraLevel: false,
+}
+function setUiConfig(setup: Setup) {
+  uiConfig.usesShieldLevel =
+    setup.heroes.some(h => ['Agent Phil Coulson', 'Quake', 'Deathlok', 'Mockingbird'].includes(h));
+  document.getElementById("shield-level").style.display = uiConfig.usesShieldLevel ? 'block' : 'none';
+  uiConfig.usesHydraLevel =
+    setup.villains.some(v=> ['Hydra Elite', 'A.I.M., Hydra Offshoot'].includes(v)) ||
+    setup.mastermind.includes('Hydra High Council');
+  document.getElementById("hydra-level").style.display = uiConfig.usesHydraLevel ? 'block' : 'none';
+}
 function imageName(path: string, card: Card, subname?: string): string {
   let name = card.cardName;
   if (!name) name = subname;
@@ -192,6 +205,8 @@ function displayGame(ev: Ev): void {
   document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
   document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
   document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
+  if (uiConfig.usesShieldLevel) document.getElementById("shield-level").innerHTML = shieldLevel().toString();
+  if (uiConfig.usesHydraLevel) document.getElementById("hydra-level").innerHTML = hydraLevel().toString();
   document.getElementById("vp").innerHTML = `${soloVP}`;
 }
 function setMessage(msg: string, gameOverMsg: string): void {
