@@ -2553,7 +2553,7 @@ addHeroTemplates("Secret Wars Volume 2", [
 // Any time you are shuffling your deck with this card in it, you may set this card aside and put it on top of your deck at the end of the shuffle.
   ra: makeHeroCard("Shang-Chi", "Muscle Memory", 7, u, 5, Color.INSTINCT, "Marvel Knights", "", [], { trigger: {
     event: 'RESHUFFLE',
-    match: (ev, source) => source.location === ev.where, // TODO look for trigger cards in deck
+    match: (ev, source) => owner(source) && source.location === owner(source).deck, // TODO look for trigger cards in deck
     after: ev => chooseMayEv(ev, "Put Muscle Memory on the top of you deck", () => moveCardEv(ev, ev.source, owner(ev.source).deck)),
   }, wallcrawl: true }),
 },
@@ -5221,7 +5221,7 @@ addHeroTemplates("New Mutants", [
 // GUN: 1
   ra: makeHeroCard("Wolfsbane", "Nocturnal Savagery", 7, u, 4, Color.INSTINCT, "X-Men", "G", [
     ev => lookAtDeckEv(ev, 3, cards => selectObjectsAnyEv(ev, "Choose cards to discard", cards, c => discardEv(ev, c))),
-    ev => moonlightPower() && addAttackEvent(ev, pastEvents('DISCARD').limit(e => [playerState.deck, playerState.revealed].includes(e.where)).sum(e => e.what.printedAttack)),
+    ev => moonlightPower() && addAttackEvent(ev, pastEvents('DISCARD').limit(e => playerState.deck === e.where).sum(e => e.what.printedAttack)),
   ]),
 },
 {

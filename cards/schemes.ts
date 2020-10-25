@@ -506,7 +506,6 @@ makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
 }, koProgressTrigger(isNonGrayHero), () => {
   setSchemeTarget(16);
   const negabomb = gameState.scheme.attachedDeck("NEGABOMB");
-  negabomb.revealed = new Deck("NEGABOMB_REVEALED");
   repeat(6, () => gameState.bystanders.withTop(c => moveCard(c, negabomb)));
 }),
 // SETUP: 8 Twists. Always include Kree Starforce and Skrull Villain Groups.
@@ -1506,7 +1505,7 @@ makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twis
   }
 }, [{
   event: 'MOVECARD',
-  match: ev => ev.from === gameState.herodeck && ev.to !== gameState.herodeck.revealed,
+  match: ev => ev.from === gameState.herodeck,
   after: ev => {
     const d = gameState.hq.map(d => d.attachedDeck('HEROES')).find(d => d.size > 0);
     d ? (gameState.herodeck = d) : evilWinsEv(ev);
@@ -1519,7 +1518,7 @@ makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twis
   },
 }, {
   event: 'MOVECARD',
-  match: ev => ev.to === gameState.herodeck && ev.from !== gameState.herodeck && ev.from !== gameState.herodeck.revealed,
+  match: ev => ev.to === gameState.herodeck && ev.from !== gameState.herodeck,
   replace: ev => {
     const state: {decks: { col: number, d: Deck }[]} = gameState.schemeState;
     state.decks.limit(({col}) => isColor(col)(ev.parent.what)).withRandom(({d}) => moveCardEv(ev, ev.parent.what, d));
@@ -2005,7 +2004,6 @@ makeSchemeCard("Secret Empire of Betrayal", { twists: 11, heroes: [4, 6, 6, 6, 7
   }));
 }, [], () => {
   const darkStack = gameState.scheme.attachedDeck('DARK_LOYALTY');
-  darkStack.revealed = new Deck('DARK_LOYALTY_REVELAED');
   gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, darkStack));
   darkStack.deck = darkStack.deck.limit(c => c.printedCost <= 5);
   darkStack.shuffle();

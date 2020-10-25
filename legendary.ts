@@ -441,6 +441,12 @@ function moveCard(c: Card, where: Deck, bottom?: boolean): void {
     TypeError("Moving card without location " + c);
   };
   c.location.remove(c);
+  if (c.location.revealedCards) {
+    for (const revealed of c.location.revealedCards) {
+      const pos = revealed.indexOf(c);
+      if (pos >=0) revealed.splice(pos, 1);
+    }
+  }
   // Remove copy pasting
   if (Object.getPrototypeOf(c) !== c.instance) {
     delete c.color;
@@ -482,6 +488,7 @@ class Deck {
   owner: Player
   _attached: {[name: string]:Deck}
   deck: Card[]
+  revealedCards?: Card[][];
   faceup: boolean
   isHQ?: boolean
   isCity?: boolean
@@ -491,7 +498,6 @@ class Deck {
   adjacentLeft?: Deck
   adjacentRight?: Deck
   attachedTo?: Deck | Card
-  revealed?: Deck
   constructor(name: string, faceup?: boolean) {
   this.id = name;
   this.deck = [];
@@ -519,6 +525,16 @@ class Deck {
   withRandom(f: (c: Card) => void) {if (this.size !== 0) f(this.deck[gameState.gameRand.nextRange(0, this.size)]); }
   attachedDeck(name: string): Deck { return attachedDeck(name, this); }
   attached(name: string): Card[] { return attachedCards(name, this); }
+  registerRevealed(cards: Card[]) {
+    this.revealedCards = this.revealedCards || [];
+    this.revealedCards.push(cards);
+  }
+  clearRevealed(cards: Card[]) {
+    if (this.revealedCards) {
+      this.revealedCards = this.revealedCards.filter(e => e !== cards);
+      if (!this.revealedCards.length) this.revealedCards = undefined;
+    }
+  }
   static deckList: Deck[] = []
 };
 
@@ -542,7 +558,7 @@ interface Array<T> {
 }
 Array.prototype.count = function (f) { return count(this, f); };
 Object.defineProperty(Array.prototype, 'size', { get: function() { return this.length; } });
-Array.prototype.shuffled = function () { const r = Array(this); shuffleArray(r, gameState.gameRand); return r; };
+Array.prototype.shuffled = function () { const r = [...this]; shuffleArray(r, gameState.gameRand); return r; };
 Array.prototype.limit = function (f) { return limit(this, f); };
 Array.prototype.has = function (f) { return count(this, f) > 0; };
 Array.prototype.each = function <T, U>(this: Array<T>, f: (e: T, i: number) => U) { return this.forEach(f); };
@@ -858,7 +874,6 @@ interface Player {
   discard: Deck
   victory: Deck
   playArea: Deck
-  revealed: Deck
   teleported: Deck
   artifact: Deck
   shard: Deck
@@ -1216,7 +1231,6 @@ playerState = {
   hand: new Deck('HAND0', true),
   victory: new Deck('VICTORY0', true),
   playArea: new Deck('PLAYAREA0', true),
-  revealed: new Deck('REVEALED0', true),
   teleported: new Deck('TELEPORT0', true),
   artifact: new Deck('ARTIFACT0', true),
   shard: new Deck('SHARD0', true),
@@ -1224,7 +1238,7 @@ playerState = {
   left: undefined,
   right: undefined,
 };
-playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState.revealed.owner = playerState;
+playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = playerState.victory.owner = playerState;
 playerState.playArea.owner = playerState;
 playerState.artifact.owner = playerState.shard.owner = playerState.teleported.owner = playerState;
 playerState.outOfTime.owner = playerState;
@@ -1308,9 +1322,6 @@ if (undoLog.replaying) {
 }
 if (gameSetup.cityType === 'VILLAIN') gameState.city = gameState.city.reverse();
 gameState.cityEntry = gameState.city[4];
-gameState.villaindeck.revealed = new Deck('VILLAIN_REVEALED', true);
-gameState.herodeck.revealed = new Deck('HERO_REVEALED', true);
-gameState.officer.revealed = new Deck('OFFICER_REVEALED', true);
 
 for (let i = 0; i < 5; i++) {
   gameState.hq[i].below = gameState.city[i];
@@ -1459,7 +1470,6 @@ function owned(p: Player = playerState): Card[] {
     ...p.hand.deck,
     ...p.discard.deck,
     ...p.deck.deck,
-    ...p.revealed.deck,
     ...p.victory.deck,
     ...p.teleported.deck,
     ...p.playArea.deck,
@@ -2154,21 +2164,26 @@ function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: F
 function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined, bottom: boolean = false) {
   repeat(n < 0 ? who.hand.size + n : n, () => cont(ev, () => selectCardEv(ev, `Choose a card to put on ${bottom ? "bottom" : "top"} of your deck`, who.hand.limit(cond), sel => moveCardEv(ev, sel, who.deck, bottom), who)));
 }
-function cleanupRevealed (ev: Ev, src: Deck, dst: Deck, bottom: boolean = false, agent: Player = playerState) {
+function cleanupRevealed (ev: Ev, src: Card[], dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
-  if (src.size === 1) moveCardEv(ev, src.top, dst, bottom);
-  else selectCardEv(ev, "Choose a card to put back", src.deck, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst, bottom, agent); }, agent);
+  if (src.size === 1) moveCardEv(ev, src[0], dst, bottom);
+  else selectCardEv(ev, "Choose a card to put back", src, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst, bottom, agent); }, agent);
 };
 function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
-  const dst = src.revealed;
-  let i = 0;
-  const f = typeof amount === "number" ? () => ++i < amount : amount
-  const d = () => src.withTop(c => { moveCardEv(ev, c, dst); cont(ev, () => f(dst.deck) && d()); } );
-  cont(ev, d);
-  cont(ev, () => action(dst.deck));
-  if (random) cont(ev, () => { dst.shuffle(); moveAll(dst, src, bottom); });
-  else cont(ev, () => cleanupRevealed(ev, dst, src, bottom, agent));
+  const cards: Card[] = [];
+  cont(ev, () => {
+    for(let i = 0; typeof amount === "number" ? i < amount : amount(cards); i++) {
+      const c = src.deck[src.deck.size - i - 1];
+      if (!c) break;
+      cards.push(c);
+    }
+    src.registerRevealed(cards);
+  });
+  cont(ev, () => action(cards));
+  if (random) cont(ev, () => cards.shuffled().each(c => moveCard(c, src)));
+  else cont(ev, () => cleanupRevealed(ev, cards, src, bottom, agent));
+  cont(ev, () => src.clearRevealed(cards));
 }
 function revealVillainDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   revealDeckEv(ev, gameState.villaindeck, amount, action, random, bottom, agent);
@@ -2177,7 +2192,7 @@ function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), act
   revealDeckEv(ev, gameState.herodeck, amount, action, random, bottom, agent);
 }
 function revealPlayerDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
-  lookAtDeckEv(ev, amount, () => action(who.revealed.deck), who, agent);
+  lookAtDeckEv(ev, amount, action, who, agent);
 }
 type RevealThreeAction = 'KO' | 'DISCARD' | 'DRAW';
 function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction, who?: Player) {
@@ -2204,9 +2219,15 @@ function lookAtThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?
 function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   who = who || playerState;
   agent = agent || who;
-  for (let i = 0; i < amount; i++) cont(ev, ev => revealOne(ev, who, bottom));
-  cont(ev, () => action(who.revealed.deck));
-  cont(ev, () => cleanupRevealed(ev, who.revealed, who.deck, bottom, agent));
+  let cards: Card[] = [];
+  if (playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
+  cont(ev, () => {
+    cards = playerState.deck.deck.slice(0, amount);
+    playerState.deck.registerRevealed(cards);
+  })
+  cont(ev, () => action(cards));
+  cont(ev, () => cleanupRevealed(ev, cards, who.deck, bottom, agent));
+  cont(ev, () => playerState.deck.clearRevealed(cards));
 }
 function lookAtDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   revealPlayerDeckTopOrBottomEv(ev, amount, false, action, who, agent);
@@ -2218,27 +2239,29 @@ function revealPlayerDeckBottomEv(ev: Ev, amount: number, action: (cards: Card[]
   revealPlayerDeckTopOrBottomEv(ev, amount, true, action, who, agent);
 }
 
-function cleanupRevealedTopOrBottom(ev: Ev, src: Deck, dst: Deck, agent: Player) {
+function cleanupRevealedTopOrBottom(ev: Ev, src: Card[], dst: Deck, agent: Player) {
   if (src.size === 0) return;
-  selectCardOptEv(ev, "Choose a card to put back on the bottom", src.deck,
+  selectCardOptEv(ev, "Choose a card to put back on the bottom", src,
     sel => { moveCardEv(ev, sel, dst, true); cleanupRevealedTopOrBottom(ev, src, dst, agent); },
     () => cleanupRevealed(ev, src, dst, false, agent), agent);
 };
 function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, action: (c: Card) => void = c => drawCardEv(ev, c), agent: Player = playerState, reveal: boolean = false) {
-  const dst = src.owner ? src.owner.revealed : src.revealed;
+  let cards: Card[] = [];
   const amount = turnState.investigateAmount || 2;
-  for (let i = 0; i < amount; i++) cont(ev, ev => src.owner ? revealOne(ev, src.owner, false) : src.withTop(c => moveCardEv(ev, c, dst)));
-  cont(ev, () => selectCardEv(ev, "Choose a card", dst.limit(f), action, agent));
-  cont(ev, () => cleanupRevealedTopOrBottom(ev, dst, src, agent));
+  if (src === playerState.deck && playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
+  cont(ev, () => {
+    cards = playerState.deck.deck.slice(0, amount);
+    playerState.deck.registerRevealed(cards);
+  })
+  cont(ev, () => selectCardEv(ev, "Choose a card", cards.limit(f), action, agent));
+  cont(ev, () => cleanupRevealedTopOrBottom(ev, cards, src, agent));
+  cont(ev, () => playerState.deck.clearRevealed(cards));
 }
-function revealOne(ev: Ev, who: Player, bottom: boolean) {
-  if (!who.deck.size && !who.discard.size) {
-  } else if (!who.deck.size) {
-    pushEv(ev, "RESHUFFLE", reshufflePlayerDeck);
-    pushEvents(ev);
-  } else {
-    moveCardEv(ev, bottom ? who.deck.bottom : who.deck.top, who.revealed);
-  }
+function isFaceUp(c: Card) {
+  const d = c.location;
+  if (!d || d.faceup) return true;
+  if (d.revealedCards && d.revealedCards.some(cards => cards.includes(c))) return true;
+  return false;
 }
 function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => void) {
   let cards = handOrDiscard();
@@ -2360,8 +2383,7 @@ function drawOne(ev: Ev): void {
   }
 }
 function reshufflePlayerDeck(): void {
-  moveAll(playerState.discard, playerState.deck);
-  playerState.deck.shuffle();
+  for(const c of playerState.discard.deck.shuffled()) moveCard(c, playerState.deck, true);
 }
 function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev: Ev): void {
@@ -2544,7 +2566,6 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
   gameState.players.each(p => {
     p.artifact.each(checkCardTrigger);
     p.hand.each(checkCardTrigger);
-    p.revealed.each(checkCardTrigger);
     p.playArea.each(checkCardTrigger);
     p.victory.each(checkCardTrigger);
   });

@@ -39,7 +39,7 @@ function clearSourceImg() {
 }
 function makeDisplayPlayAreaImg(c: Card) {
   const gone = !playerState.playArea.deck.includes(c);;
-  return makeDisplayCardImg(c, false, gone);
+  return makeDisplayCardImg(c, gone);
 }
 function img(src: string, className?: string) {
   const e = document.createElement('img');
@@ -63,8 +63,9 @@ function span(className: string, options?: {[key: string]: string}, ...children:
 }
 function br() { return document.createElement('br'); }
 function text(value: string | number) { return document.createTextNode(value.toString()); }
-function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = false, id: boolean = true): HTMLDivElement {
-  const src = back ? 'images/back.jpg' : cardImageName(c);
+function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true): HTMLDivElement {
+  const faceUp = isFaceUp(c);
+  const src = faceUp ? cardImageName(c) : 'images/back.jpg';
   const options: {[key: string]: string} = {
     onmouseover: `setSourceImg('${src}')`,
     onmouseleave: "clearSourceImg()",
@@ -74,7 +75,7 @@ function makeDisplayCardImg(c: Card, back: boolean = false, gone: boolean = fals
   if (isMastermind(c)) d.appendChild(div("count", {}, text(c.attached("TACTICS").size)))
   if (isScheme(c) && getSchemeCountdown() !== undefined)
     d.appendChild(div("count", {}, text(getSchemeCountdown())))
-  if (!back && c.defense !== c.printedDefense)
+  if (faceUp && c.defense !== c.printedDefense)
     d.appendChild(div("attackHint", {}, text(c.defense)));
   if (c.captured.size > 0) d.appendChild(div("capturedHint", {}, text(c.captured.size)));
   d.appendChild(div("frame"));
@@ -115,7 +116,7 @@ const mainDecks = [
 ];
 const popupDecks = [
   { id: 'DISCARD0', container: 'popdiscard' },
-  { id: 'REVEALED0', container: 'popdeck' },
+  { id: 'DECK0', container: 'popdeck' },
   { id: 'VICTORY0', container: 'popvictory' },
   { id: 'KO', container: 'popko' },
   { id: 'ESCAPED', container: 'popescaped' },
@@ -142,8 +143,8 @@ function displayDecks(ev: Ev): void {
       ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
       ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
       ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
-    ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card, !deck.faceup)) :
-    deck.size ? [ makeDisplayCardImg(deck.top, !deck.faceup, false, !deckPos.popupid) ] : [];
+    ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
+    deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid) ] : [];
     const n = cardDivs.size;
     const spread = deckPos.w > 1 && cardDivs.size ? Math.min(1, (deckPos.w - 1) / (n - 1)) : 0;
     cardDivs.forEach((cardDiv, i) => {
@@ -168,14 +169,14 @@ function displayDecks(ev: Ev): void {
     container.innerHTML = '';
     const deck = deckById[popupDeck.id];
     deck.deck.forEach((card, i) => {
-      const cardDiv = makeDisplayCardImg(card, !deck.faceup);
+      const cardDiv = makeDisplayCardImg(card);
       container.appendChild(cardDiv);
       positionCard(cardDiv, undefined, 0, 0, i);
     });
   }
   const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
   if (s instanceof Card) {
-    const sDiv = makeDisplayCardImg(s, false, false, false);
+    const sDiv = makeDisplayCardImg(s, false, false);
     positionCard(sDiv, 'large', 7, 0);
     cardsContainer.appendChild(sDiv);
   }
