@@ -171,7 +171,7 @@ function displayDecks(ev: Ev): void {
     deck.deck.forEach((card, i) => {
       const cardDiv = makeDisplayCardImg(card);
       container.appendChild(cardDiv);
-      positionCard(cardDiv, undefined, 0, 0, i);
+      positionCard(cardDiv, undefined, 0, 0, deck.deck.size - 1 - i);
     });
   }
   const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
