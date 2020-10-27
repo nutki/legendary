@@ -976,6 +976,7 @@ interface Game {
   destroyedCitySpaces: Deck[]
   actionFilters: ((ev: Ev) => boolean)[];
   contestOfCampionsEvilBonus?: number;
+  thronesFavorHolder: Player | Card | undefined;
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1313,6 +1314,7 @@ gameState = {
   strikeCount: 0,
   destroyedCitySpaces: [],
   actionFilters: [],
+  thronesFavorHolder: undefined,
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());

@@ -358,10 +358,10 @@ function saviorPower(p: Player = playerState) {
 // "Ultimate Abomination" means "This Mastermind gets +Attack equal to the total printed Attack of all the Heroes in the HQ."
 // An Abomination Villain's Attack can go up and down as the Villain moves through the city.
 function abominationVarDefense(c: Card) {
-  return c.printedDefense + (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) : 0);
+  return c.printedDefense + (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) || 0 : 0);
 }
 function ultimateAbominationVarDefense(c: Card) {
-  return c.printedDefense + hqHeroes().limit(hasAttackIcon).sum(c => c.printedAttack);
+  return c.printedDefense + (hqHeroes().limit(hasAttackIcon).sum(c => c.printedAttack) || 0);
 }
 
 // {PHASING}
@@ -797,3 +797,27 @@ function celestialBoonActionEv(func: (ev: Ev) => void, cond?: (c: Card) => boole
 }
 
 function isOtherPlayerVM(p: Player) { return gameState.advancedSolo || p !== playerState; }
+
+// Realm of Kings
+let thronesFavorHolder: Player | Card | undefined;
+function thronesFavorGainEv(ev: Ev, who: Card | Player = playerState) {
+  cont(ev, () => gameState.thronesFavorHolder = who);
+}
+
+function thronesFavorGainOrEv(ev: Ev, effect1: (ev: Ev) => void, who: Card | Player = playerState) {
+  gameState.thronesFavorHolder === who ? effect1(ev) : thronesFavorGainEv(ev, who);
+}
+function highestAbominationVarDefense(c: Card) {
+  return c.printedDefense + (hqHeroes().max(c => c.printedAttack) || 0);
+}
+function cityLocationAbominationVarDefense(l: CityLocation) {
+  return (c: Card) => c.printedDefense + (hqHeroes().limit(c => c.location.id === l).max(c => c.printedAttack) || 0);
+}
+
+function whenRecruitedTrigger(func: Handler): Trigger {
+  return ({
+    event: 'RECRUIT',
+    match: (ev, source) => ev.what === source,
+    after: func,
+  })
+}

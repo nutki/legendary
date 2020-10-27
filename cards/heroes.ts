@@ -3173,7 +3173,7 @@ addHeroTemplates("Civil War", [
 // {TEAMPOWER Avengers} You get that Hero's printed Recruit and Attack.
   ra: makeHeroCard("Tigra", "Mystic Talisman", 7, 0, 0, Color.COVERT, "Avengers", "", ev => {
     selectCardEv(ev, "Choose a hero to recruit", hqHeroes(), c => {
-      gainEv(ev, c);
+      recruitForFreeEv(ev, c);
       superPower("Avengers") && addAttackEvent(ev, c.printedAttack || 0);
       superPower("Avengers") && addRecruitEvent(ev, c.printedRecruit || 0);
     });

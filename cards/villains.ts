@@ -1158,7 +1158,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 8
 // VP: 6
   [ 1, makeVillainCard("Domain of Apocalypse", "Apocalyptic Magneto", 8, 6, {
-    fight: ev => {},
+    fight: ev => selectCardEv(ev, "Recruit a Hero for free", hqHeroes().limit("X-Men"), c => gainEv(ev, c)),
     escape: ascendToMastermind,
     strike: ev => eachPlayer(p => revealOrEv(ev, "X-Men", () => pickDiscardEv(ev, -4, p), p)),
   })],
