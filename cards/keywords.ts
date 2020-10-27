@@ -799,7 +799,6 @@ function celestialBoonActionEv(func: (ev: Ev) => void, cond?: (c: Card) => boole
 function isOtherPlayerVM(p: Player) { return gameState.advancedSolo || p !== playerState; }
 
 // Realm of Kings
-let thronesFavorHolder: Player | Card | undefined;
 function thronesFavorGainEv(ev: Ev, who: Card | Player = playerState) {
   cont(ev, () => gameState.thronesFavorHolder = who);
 }
