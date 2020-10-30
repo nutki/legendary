@@ -10,6 +10,7 @@ Heroes of Asgard
 Guardians of the Galaxy
 HYDRA
 Illuminati
+Inhumans
 Marvel Knights
 Mercs for Money
 New Warriors
@@ -60,6 +61,11 @@ while (<A>) {
     $name =~ s/ /_/g;
     $name .= ".txt";
     s!(: ?)</b>!</b>$1!g; #FIX
+    s!Favor\.</b>!Favor</b>.!g; #FIX realm of kings
+    s!Favor\,</b>!Favor</b>,!g; #FIX realm of kings
+    s!Thorne's Favor!Throne's Favor!g; #FIX realm of kings
+    s!(<b>When Recruited): !$1</b>: <b>!g; #FIX realm of kings?
+    s!<b>\+(\d)</b> (Attack|Recruit)!+$1 $2!g; #FIX realm of kings?
     s!<b>(Ambush|Fight): !<b>$1</b>: <b>!g;
     s!<b>(Bribe|Soaring Flight|Dodge|Versatile( \d+)?|Wall-Crawl|Teleport|Phasing|Cheering Crowds|Dark Memories|Last Stand|Undercover|Worthy|\w+ Conqueror \d+|Villainous Weapon|Cosmic Threat|Celestial Boon|Contest of Champions)</b>!'{'.(uc$1)=~s/-//gr.'}'!ge;
     s!<b>(Artifact|Thrown Artifact)</b>\s*-\s*!'{'.(uc$1).'} '!ge;
@@ -99,6 +105,9 @@ while (<A>) {
     s!<b>Waking Nightmares?</b>!{WAKING NIGHTMARE}!g;
     s!<b>Burn a Shard</b>!{BURN A SHARD}!g;
     s!<b>Burn (\d+) Shards</b>!{BURN $1 SHARDS}!g;
+    s!<b>When Recruited</b>:!{WHEN RECRUITED}!g;
+    s!<b>Throne's Favor</b>!{THRONES FAVOR}!g;
+    s!<b>((Double )?((Sewers|Bank|Rooftops|Streets|Bridge|Highest|Ultimate) )?Abomination)</b>!'{'.uc($1).'}'!ge;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
     for (@lines) {
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;

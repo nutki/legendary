@@ -8,7 +8,7 @@ You "played" a Man Out of Time card on both the first turn you played it and the
 If you defeat a Villain with Bystanders, put those Bystanders into your Victory Pile before checking any Savior ability on that Villain.
 If a Hero card rescues a Bystander, that Bystander counts towards any Savior ability on that Hero.
 
-<b>Abomination</b>: "This Villain gets +Attack equal to the printed Attack of the Hero in the HQ space under this Villain's city space."
+{ABOMINATION}: "This Villain gets +Attack equal to the printed Attack of the Hero in the HQ space under this Villain's city space."
 "Ultimate Abomination" means "This Mastermind gets +Attack equal to the total printed Attack of all the Heroes in the HQ."
 An Abomination Villain's Attack can go up and down as the Villain moves through the city.
 

@@ -1,0 +1,60 @@
+
+#CARDNAME: Maximus the Mad
+{HIGHEST ABOMINATION}
+#LEADS: Inhuman Rebellion
+#STRIKE: Reveal one of Maximus' remaining Mastermind Tactics at random. Use its Fight effect, then shuffle it back into those Tactics.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Maximus the Mad
+{DOUBLE HIGHEST ABOMINATION}
+#LEADS: Inhuman Rebellion
+#STRIKE: Reveal two different Tactics at random from Maximus' remaining Mastrmind Tactics. Then use each of those fight effects in the order that you revealed them. Then shuffle them back into those Tactics.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Echo-Tech Chorus Sentries
+#FIGHT: Each player KOs one of their [Tech] or Inhuman Heroes or gains a Wound.
+#FLAVOR: Maximus Boltagon harnessed Black Bolt's sonic powers into technology, then turned them against him.
+
+#TACTIC: Sieve of Secrets
+#FIGHT: Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
+
+#TACTIC: Seize the Inhuman Throne
+#FIGHT: Each player discards down to 4 cards. Maximus gains the {THRONES FAVOR}. If he already has it, he spends it and each player discards down to 3 cards.
+
+#TACTIC: Terrigen Bomb
+#FIGHT: Put each Hero from the HQ that doesn;t have a printed ttack of 2 or more on the bottom of the Hero Deck. Maximus gains the {THRONES FAVOR}. If he already had it, he spends it and each player KOs one of their non-grey Heroes with an Attack icon.
+
+#CARDNAME: Emperor Vulcan of the Shi'ar
+Vulcan gets +3 Attack while he has the {THRONES FAVOR}.
+#LEADS: Shi'ar Imperial Elite
+#STRIKE: Each player that doesn't have the {THRONES FAVOR} gains a Wound. Then Vulcan gains the {THRONES FAVOR}.
+#ATTACK: 10+
+#VP: 6
+
+#EPICNAME: Emperor Vulcan
+Vulcan gets +5 Attack while he has the {THRONES FAVOR}.
+#LEADS: Shi'ar Imperial Elite
+#STRIKE: Each player that doesn't have the {THRONES FAVOR} gains a Wound to the top of their deck. Then Vulcan gains the {THRONES FAVOR}.
+#ATTACK: 12+
+#VP: 6
+
+#TACTIC: Blast Every Form of Energy
+#FIGHT: If you have the {THRONES FAVOR}, you may KO a card you played this turn, and you may KO a card from your discard pile.
+Then Vulcan gains the {THRONES FAVOR}.
+
+#TACTIC: Vast Wealth of the Shi'ar
+#FIGHT: If you have the {THRONES FAVOR}, you get +4 Recruit.
+Then Vulcan gains the {THRONES FAVOR}.
+#FLAVOR: The brother of Cyclops and Havok, Vulcan is the only Earhborn mutant ever to take the Shi'ar throne.
+
+#TACTIC: Contempt for Weakness
+#FIGHT: If Vulcan has the {THRONES FAVOR}, each other player discards each of their cards that costs 2 or less.
+Then you gain the {THRONES FAVOR}.
+
+#TACTIC: Solar Cage
+#FIGHT: If Vulcan has the {THRONES FAVOR}, each other player shuffles a Wound from the Wound Stack and a non-grey Hero from their hand into their deck.
+Then you gain the {THRONES FAVOR}.
+
+

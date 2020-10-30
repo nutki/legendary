@@ -1,0 +1,71 @@
+
+#CARDNAME: Inhuman Rebellion
+
+#SUBNAME: Lineage
+#COPIES: 2
+{ABOMINATION}
+#FIGHT: Rescue Bystanders equal to the printed Attack of the Hero in the HQ space under Lineage.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Omega
+#COPIES: 2
+{ABOMINATION}
+#FIGHT: Choose "Alpha" or "Omega." Then reveal the top card of your deck:
+<ul>
+    <li> <b>Alpha</b>: If that card costs 0, KO it.</li>
+    <li> <b>Omega</b>: If that card costs 1 or more, draw it.</li>
+</ul>
+
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Lash
+#COPIES: 2
+{ABOMINATION}
+#AMBUSH: Choose a Hero from the HQ that doesn't have a printed Attack of 2 or more. Put it on the bottom of the Hero Deck.
+#FIGHT: Gain a Hero from the HQ with no Attack icon that costs 4 or less.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: The Unspoken
+#COPIES: 2
+{DOUBLE ABOMINATION}
+#AMBUSH: Choose a Hero from the HQ that doesn't have a printed Attack of 2 or more. Put it on the bottom of the Hero Deck. If there were no such Heroes, then each player gains a Wound instead.
+#FIGHT: KO one of your Heroes with no Attack icon.
+#ATTACK: 5+
+#VP: 5
+
+#CARDNAME: Shi'ar Imperial Elite
+
+#SUBNAME: Plutonia
+#COPIES: 2
+While the Mastermind has the {THRONES FAVOR}, you must spend Recruit to fight Plutonia instead of Attack.
+#AMBUSH: The Mastermind gains the {THRONES FAVOR}.
+#FIGHT: You gain the {THRONES FAVOR}. If you already have it, you get +2 Recruit.
+#ATTACK: 4*
+#VP: 2
+
+#SUBNAME: Starbolt
+#COPIES: 2
+While the Mastermind has the {THRONES FAVOR}, Starbolt gets +2 Attack.
+#AMBUSH: The Mastermind gains the {THRONES FAVOR}.
+#FIGHT: You gain the {THRONES FAVOR}. If you already have it, you may KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Mentor
+#COPIES: 2
+#AMBUSH: The Mastermind gains the {THRONES FAVOR}. If they already have it, each player discards a card.
+#FIGHT: You gain the {THRONES FAVOR}. If you already have it, draw two cards.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Gladiator
+#COPIES: 2
+#AMBUSH: The Mastermind gains the {THRONES FAVOR}. If they already have it, each player gains a Wound.
+#FIGHT: You gain the {THRONES FAVOR}. If you already have it, you may KO a card from your discard pile.
+#ATTACK: 7
+#VP: 5
+
+

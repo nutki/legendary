@@ -1,0 +1,197 @@
+
+#CARDNAME: Black Bolt
+#TEAM: Inhumans
+
+#SUBNAME: Break the Silence
+#COPIES: 5
+#CLASS: [Ranged]
+{WHEN RECRUITED} You may KO one of your cards with no rules text.
+---
+#RECRUIT: 2+
+{POWER Ranged} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
+#COST: 3
+
+#SUBNAME: Worldess Murmur
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 1
+#ATTACK: 3
+#COST: 5
+
+#SUBNAME: Declaration of War
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 2
+{TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to reveal the top two cards of your deck. Put each of those cards with no rules text into your hand and put the rest back in any order.
+#COST: 4
+
+#SUBNAME: The King's Speech
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5
+Gain the {THRONES FAVOR}. If you already have it, you may spend it to choose "Speak" or "Don't Speak" then reveal the top 3 cards of your deck:
+<ul>
+    <li> <b>Speak</b>: Put all of them with rules text into your hand.</li>
+    <li> <b>Don't Speak</b>: You may KO any number of them with no rules text.</li>
+</ul>
+
+Put the rest back in any order.
+#COST: 8
+
+#CARDNAME: Medusa
+#TEAM: Inhumans
+
+#SUBNAME: Queen of the Inhumans
+#COPIES: 5
+#CLASS: [Strength]
+{WHEN RECRUITED} Gain the {THRONES FAVOR}.
+---
+#ATTACK: 1+
+Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
+#COST: 2
+
+#SUBNAME: Splitting Hairs
+#COPIES: 5
+#CLASS: [Instinct]
+{WHEN RECRUITED} Draw a card and gain the {THRONES FAVOR}.
+---
+#ATTACK: 2
+{POWER Instinct} Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw a card.
+#COST: 3
+
+#SUBNAME: Royal Command
+#COPIES: 3
+#CLASS: [Instinct]
+{WHEN RECRUITED} Gain the {THRONES FAVOR}.
+---
+#ATTACK: 3
+{TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to KO one of your cards.
+#COST: 5
+
+#SUBNAME: Headstrong
+#COPIES: 1
+#CLASS: [Instinct]
+{WHEN RECRUITED} Draw two cards and gain the {THRONES FAVOR}.
+---
+#ATTACK: 4
+Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw two cards.
+#COST: 7
+
+#CARDNAME: Crystal
+#TEAM: Inhumans
+
+#SUBNAME: Earth, Air, Fire, and Water
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+[Strength] [Instinct] [Covert] [Ranged]: You get +3 Attack
+#COST: 3
+#FLAVOR: The four elements form the basis of all creation...and all destruction.
+
+#SUBNAME: Master the Four Elements
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 1
+Choose [Strength], [Instinct], [Covert], or [Ranged]. This card is only that Hero Class this turn.
+Draw a card.
+#COST: 4
+#FLAVOR: The younger sister of Queen Medusa, Princess Crystal cares more about elemental echoes than palace intrigues.
+
+#SUBNAME: Elemental Princess
+#COPIES: 3
+#CLASS: [Covert]
+{WHEN RECRUITED} You may KO one of your cards that isn't [Strength], [Instinct], [Covert], or [Ranged].
+---
+#ATTACK: 3
+Gain the {THRONES FAVOR}. If you already have it, you may spend it make this card [Strength], [Instinct], [Covert], and [Ranged] this turn.
+#COST: 6
+
+#SUBNAME: Weave Four Into One
+#COPIES: 1
+#CLASS: [Strength]
+{WHEN RECRUITED} You may gain a [Strength], [Instinct], [Covert], or [Ranged] Hero from the HQ that costs 4 or less. (after refilling the HQ)
+---
+#ATTACK: 4
+Reveal the top four cards of your deck. Put a [Strength] Hero, a [Instinct] Hero, a [Covert] Hero, and a [Ranged] Hero from among them into your hand. Put the rest back in any order.
+#COST: 8
+
+#CARDNAME: Karnak
+#TEAM: Inhumans
+
+#SUBNAME: Brilliant Strategist
+#COPIES: 5
+#CLASS: [Covert]
+{WHEN RECRUITED} You get +1 Attack.
+---
+#ATTACK: 1
+{POWER Covert} When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 2
+
+#SUBNAME: Find Fatal Flaw
+#COPIES: 5
+#CLASS: [Instinct]
+{WHEN RECRUITED} You get +2 Attack.
+---
+#RECRUIT: 0+
+Choose a Villain Group. You get +1 Recruit for each Villain in your Victory Pile from that Group.
+#COST: 4
+
+#SUBNAME: Shatter the Weak Point
+#COPIES: 3
+#CLASS: [Strength]
+{WHEN RECRUITED} You get +3 Attack.
+---
+#ATTACK: 0+
+Choose a Villain Group. You get +1 Attack for each Villain in your Victory Pile from that Group.
+#COST: 5
+
+#SUBNAME: Seek the Center
+#COPIES: 1
+#CLASS: [Covert]
+{WHEN RECRUITED} You get +4 Attack.
+---
+Whenever you play a card this turn, including this one, you may first use that card's "When Recruited" ability.
+#COST: 7
+
+#CARDNAME: Gorgon
+#TEAM: Inhumans
+
+#SUBNAME: Lockjaw, Inhuman's Best Friend
+#COPIES: 5
+#CLASS: [Covert]
+{WHEN RECRUITED} You may {TELEPORT} a 0-cost Hero from your hand.
+---
+#RECRUIT: 2
+{POWER Covert} You may {TELEPORT} another card from your hand.
+#COST: 3
+
+#SUBNAME: Stomping Shockwave
+#COPIES: 5
+#CLASS: [Strength]
+{WHEN RECRUITED} {SEWERS ABOMINATION} (after refilling HQ)
+---
+#ATTACK: 2+
+{POWER Strength} {STREETS ABOMINATION}
+#COST: 5
+
+#SUBNAME: Trample Underhoof
+#COPIES: 3
+#CLASS: [Strength]
+{WHEN RECRUITED} You may KO one of your cards with no Attack icon.
+---
+#ATTACK: 1+
+{HIGHEST ABOMINATION}
+#COST: 6
+
+#SUBNAME: Lead the Inhuman Elite
+#COPIES: 1
+#CLASS: [Strength]
+{WHEN RECRUITED} {BRIDGE ABOMINATION} (after refilling HQ)
+---
+#ATTACK: 4+
+{TELEPORT}
+{TEAMPOWER Inhumans} {ROOFTOPS ABOMINATION}
+#COST: 8
+#GUN: 1
+
+
