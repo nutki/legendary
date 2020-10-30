@@ -2268,3 +2268,62 @@ makeSchemeCard("Annihilation: Conquest", { twists: 11, heroes: [ 4, 6, 6, 6, 7 ]
   setSchemeTarget(6);
 }),
 ]);
+addTemplates("SCHEMES", "Realm of Kings", [
+makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
+  if (ev.nr <= 11) {
+    attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
+    ev.state.toPay.push(ev.nr <= 8 ? 1 : 2);
+  }
+}, {
+  event: 'CLEANUP',
+  after: ev => {
+    const state:{ toPay: number[] } = gameState.schemeState;
+    state.toPay.each(amount => cont(ev, () => {
+      repeat(amount, () => gameState.officer.withTop(c => attachCardEv(ev, c, gameState.scheme, 'GENERAL')));
+      withMastermind(ev, mastermind => thronesFavorGainOrEv(ev, () => gainWoundEv(ev), mastermind));
+      cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('GENERAL').size));
+    }));
+  }
+}, s => {
+  setSchemeTarget(6);
+  gameState.specialActions = ev => {
+    const recruit = gameState.mastermind.attached("TWIST").size;
+    return s.toPay.length ? [new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit }, desc: `Supply the war (${recruit} recruit)`, func: ev => {
+      thronesFavorGainEv(ev);
+      selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c));
+      s.toPay.pop();
+    } })] : [];
+  }
+  s.toPay = [];
+}),
+makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8 ] }, ev => {
+  const isle = [gameState.scheme, gameState.mastermind, ...gameState.city];
+  const groomIdx = isle.findIndex(d => d.attached('GROOM').size > 0) || 0;
+  const brideIdx = isle.findIndex(d => d.attached('BRIDE').size > 0) || 0;
+  const groom = isle[groomIdx].attachedDeck('GROOM');
+  const bride = isle[brideIdx].attachedDeck('BRIDE');
+  if (ev.nr == 1) {
+    groom.withFirst(c => gainEv(ev, c));
+    cont(ev, () => groom.each(c => attachCardEv(ev, c, isle[6], 'GROOM')));
+  } else if (ev.nr == 2) {
+    bride.withFirst(c => gainEv(ev, c));
+    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[1], 'BRIDE')));
+  } else if (ev.nr >= 3 && ev.nr <= 7) {
+    chooseOptionEv(ev, "Choose side", [{l:"Groom", v:groom}, {l:"Bride", v:bride}], d => d.withFirst(c => gainEv(ev, c)));
+    [bride, bride, groom, groom].each(d => d.attachedTo instanceof Deck && d.attachedTo.has(isEnemy) &&
+      cont(ev, () => d.withFirst(c => KOEv(ev, c))));
+    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[brideIdx + 1], 'BRIDE')));
+  } else if (ev.nr >= 8 && ev.nr <= 11) {
+    [bride, bride, groom, groom].each(d => cont(ev, () => d.withFirst(c => KOEv(ev, c))));
+  }
+  cont(ev, () => schemeProgressEv(ev, Math.min(groom.size, bride.size)));
+}, [], () => {
+  const bride = gameState.scheme.attachedDeck('BRIDE');
+  const groom = gameState.scheme.attachedDeck('GROOM');
+  gameState.herodeck.limit(c => c.heroName === extraHeroName(1)).each(c => moveCard(c, bride));
+  gameState.herodeck.limit(c => c.heroName === extraHeroName(2)).each(c => moveCard(c, groom));
+  bride.deck.sort((a, b) => a.cost - b.cost);
+  groom.deck.sort((a, b) => a.cost - b.cost);
+  gameState.schemeProgress = 14;
+}),
+]);
