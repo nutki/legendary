@@ -105,7 +105,7 @@ while (<A>) {
     s!<b>Waking Nightmares?</b>!{WAKING NIGHTMARE}!g;
     s!<b>Burn a Shard</b>!{BURN A SHARD}!g;
     s!<b>Burn (\d+) Shards</b>!{BURN $1 SHARDS}!g;
-    s!<b>When Recruited</b>:!{WHEN RECRUITED}!g;
+    s!<b>When Recruited</b>:(.*)\n---<br />!{WHEN RECRUITED}$1!g;
     s!<b>Throne's Favor</b>!{THRONES FAVOR}!g;
     s!<b>((Double )?((Sewers|Bank|Rooftops|Streets|Bridge|Highest|Ultimate) )?Abomination)</b>!'{'.uc($1).'}'!ge;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;

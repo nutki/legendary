@@ -6,7 +6,6 @@
 #COPIES: 5
 #CLASS: [Ranged]
 {WHEN RECRUITED} You may KO one of your cards with no rules text.
----
 #RECRUIT: 2+
 {POWER Ranged} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
 #COST: 3
@@ -45,7 +44,6 @@ Put the rest back in any order.
 #COPIES: 5
 #CLASS: [Strength]
 {WHEN RECRUITED} Gain the {THRONES FAVOR}.
----
 #ATTACK: 1+
 Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
 #COST: 2
@@ -54,7 +52,6 @@ Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Att
 #COPIES: 5
 #CLASS: [Instinct]
 {WHEN RECRUITED} Draw a card and gain the {THRONES FAVOR}.
----
 #ATTACK: 2
 {POWER Instinct} Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw a card.
 #COST: 3
@@ -63,7 +60,6 @@ Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Att
 #COPIES: 3
 #CLASS: [Instinct]
 {WHEN RECRUITED} Gain the {THRONES FAVOR}.
----
 #ATTACK: 3
 {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to KO one of your cards.
 #COST: 5
@@ -72,7 +68,6 @@ Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Att
 #COPIES: 1
 #CLASS: [Instinct]
 {WHEN RECRUITED} Draw two cards and gain the {THRONES FAVOR}.
----
 #ATTACK: 4
 Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw two cards.
 #COST: 7
@@ -101,7 +96,6 @@ Draw a card.
 #COPIES: 3
 #CLASS: [Covert]
 {WHEN RECRUITED} You may KO one of your cards that isn't [Strength], [Instinct], [Covert], or [Ranged].
----
 #ATTACK: 3
 Gain the {THRONES FAVOR}. If you already have it, you may spend it make this card [Strength], [Instinct], [Covert], and [Ranged] this turn.
 #COST: 6
@@ -110,7 +104,6 @@ Gain the {THRONES FAVOR}. If you already have it, you may spend it make this car
 #COPIES: 1
 #CLASS: [Strength]
 {WHEN RECRUITED} You may gain a [Strength], [Instinct], [Covert], or [Ranged] Hero from the HQ that costs 4 or less. (after refilling the HQ)
----
 #ATTACK: 4
 Reveal the top four cards of your deck. Put a [Strength] Hero, a [Instinct] Hero, a [Covert] Hero, and a [Ranged] Hero from among them into your hand. Put the rest back in any order.
 #COST: 8
@@ -122,7 +115,6 @@ Reveal the top four cards of your deck. Put a [Strength] Hero, a [Instinct] Hero
 #COPIES: 5
 #CLASS: [Covert]
 {WHEN RECRUITED} You get +1 Attack.
----
 #ATTACK: 1
 {POWER Covert} When you draw a new hand of cards at the end of this turn, draw an extra card.
 #COST: 2
@@ -131,7 +123,6 @@ Reveal the top four cards of your deck. Put a [Strength] Hero, a [Instinct] Hero
 #COPIES: 5
 #CLASS: [Instinct]
 {WHEN RECRUITED} You get +2 Attack.
----
 #RECRUIT: 0+
 Choose a Villain Group. You get +1 Recruit for each Villain in your Victory Pile from that Group.
 #COST: 4
@@ -140,7 +131,6 @@ Choose a Villain Group. You get +1 Recruit for each Villain in your Victory Pile
 #COPIES: 3
 #CLASS: [Strength]
 {WHEN RECRUITED} You get +3 Attack.
----
 #ATTACK: 0+
 Choose a Villain Group. You get +1 Attack for each Villain in your Victory Pile from that Group.
 #COST: 5
@@ -149,7 +139,6 @@ Choose a Villain Group. You get +1 Attack for each Villain in your Victory Pile 
 #COPIES: 1
 #CLASS: [Covert]
 {WHEN RECRUITED} You get +4 Attack.
----
 Whenever you play a card this turn, including this one, you may first use that card's "When Recruited" ability.
 #COST: 7
 
@@ -160,7 +149,6 @@ Whenever you play a card this turn, including this one, you may first use that c
 #COPIES: 5
 #CLASS: [Covert]
 {WHEN RECRUITED} You may {TELEPORT} a 0-cost Hero from your hand.
----
 #RECRUIT: 2
 {POWER Covert} You may {TELEPORT} another card from your hand.
 #COST: 3
@@ -169,7 +157,6 @@ Whenever you play a card this turn, including this one, you may first use that c
 #COPIES: 5
 #CLASS: [Strength]
 {WHEN RECRUITED} {SEWERS ABOMINATION} (after refilling HQ)
----
 #ATTACK: 2+
 {POWER Strength} {STREETS ABOMINATION}
 #COST: 5
@@ -178,7 +165,6 @@ Whenever you play a card this turn, including this one, you may first use that c
 #COPIES: 3
 #CLASS: [Strength]
 {WHEN RECRUITED} You may KO one of your cards with no Attack icon.
----
 #ATTACK: 1+
 {HIGHEST ABOMINATION}
 #COST: 6
@@ -187,7 +173,6 @@ Whenever you play a card this turn, including this one, you may first use that c
 #COPIES: 1
 #CLASS: [Strength]
 {WHEN RECRUITED} {BRIDGE ABOMINATION} (after refilling HQ)
----
 #ATTACK: 4+
 {TELEPORT}
 {TEAMPOWER Inhumans} {ROOFTOPS ABOMINATION}
