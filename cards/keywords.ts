@@ -802,21 +802,28 @@ function isOtherPlayerVM(p: Player) { return gameState.advancedSolo || p !== pla
 function thronesFavorGainEv(ev: Ev, who: Card | Player = playerState) {
   cont(ev, () => gameState.thronesFavorHolder = who);
 }
+function thronesFavorSpendEv(ev: Ev) {
+  cont(ev, () => gameState.thronesFavorHolder = undefined);
+}
 
 function thronesFavorGainOrEv(ev: Ev, effect1: (ev: Ev) => void, who: Card | Player = playerState) {
   gameState.thronesFavorHolder === who ? effect1(ev) : thronesFavorGainEv(ev, who);
 }
+function thronesFavorGainOrSpendEv(ev: Ev, effect1: (ev: Ev) => void, who: Card) {
+  thronesFavorGainOrEv(ev, ev => (thronesFavorSpendEv(ev), effect1(ev)), who);
+}
+function thronesFavorGainOrMaySpendEv(ev: Ev, effect1: (ev: Ev) => void, who: Player = playerState) {
+  thronesFavorGainOrEv(ev, ev => chooseMayEv(ev, "Spend Throne's Favor", () => {
+    thronesFavorSpendEv(ev);
+    effect1(ev);
+  }, who), who);
+}
 function highestAbominationVarDefense(c: Card) {
   return c.printedDefense + (hqHeroes().max(c => c.printedAttack) || 0);
 }
-function cityLocationAbominationVarDefense(l: CityLocation) {
-  return (c: Card) => c.printedDefense + (hqHeroes().limit(c => c.location.id === l).max(c => c.printedAttack) || 0);
+function heroHighestAbominationEv(ev: Ev) {
+  addAttackEvent(ev, hqHeroes().max(c => c.printedAttack) || 0);
 }
-
-function whenRecruitedTrigger(func: Handler): Trigger {
-  return ({
-    event: 'RECRUIT',
-    match: (ev, source) => ev.what === source,
-    after: func,
-  })
+function heroAbominationEv(ev: Ev, l: CityLocation) {
+  addAttackEvent(ev, hqHeroes().limit(c => c.location.id === l).max(c => c.printedAttack) || 0);
 }

@@ -116,6 +116,7 @@ interface Card {
   isAdaptingMastermind?: boolean;
   cosmicThreat?: Filter<Card>;
   mastermindName?: string;
+  whenRecruited?: Handler;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -186,6 +187,7 @@ interface HeroCardAbillities {
   lightShow?: Handler
   coordinate?: boolean
   cheeringCrowds?: boolean
+  whenRecruited?: Handler;
 }
 class Card {
   constructor (t: string, n: string) {
@@ -471,6 +473,7 @@ type Affiliation =
 'Guardians of the Galaxy' |
 'HYDRA' |
 'Illuminati' |
+'Inhumans' |
 'Marvel Knights' |
 'Mercs for Money' |
 'New Warriors' |
@@ -2332,6 +2335,7 @@ function playCard(ev: Ev): void {
 function buyCard(ev: Ev): void {
   textLog.log(`Recruited ${ev.what.cardName || ev.what.id}`);
   let where = turnState.nextHeroRecruit;
+  ev.what.whenRecruited && ev.what.whenRecruited(ev);
   turnState.nextHeroRecruit = undefined;
   if (where === "HAND") gainToHandEv(ev, ev.what);
   else if (where === "DECK") gainToDeckEv(ev, ev.what);
