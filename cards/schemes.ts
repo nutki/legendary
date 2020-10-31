@@ -2269,8 +2269,52 @@ makeSchemeCard("Annihilation: Conquest", { twists: 11, heroes: [ 4, 6, 6, 6, 7 ]
 }),
 ]);
 addTemplates("SCHEMES", "Realm of Kings", [
+]);
+addTemplates("SCHEMES", "Realm of Kings", [
+// SETUP: 11 Twists. Set aside two extra Heroes to get married. Prepare each Wedding Hero into a seperate 14-card stack, ordered by cost with the lowest cost on top.
+// EVILWINS: When either Wedding Hero Stack is KO'd.
+makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8 ] }, ev => {
+  const isle = [gameState.scheme, gameState.mastermind, ...gameState.city];
+  const groomIdx = isle.findIndex(d => d.attached('GROOM').size > 0) || 0;
+  const brideIdx = isle.findIndex(d => d.attached('BRIDE').size > 0) || 0;
+  const groom = isle[groomIdx].attachedDeck('GROOM');
+  const bride = isle[brideIdx].attachedDeck('BRIDE');
+  if (ev.nr == 1) {
+    // Twist 1 Put one Wedding Hero Stack above the rightmost city space "at the altar." Gain its top card.
+    groom.withFirst(c => gainEv(ev, c));
+    cont(ev, () => groom.each(c => attachCardEv(ev, c, isle[6], 'GROOM')));
+  } else if (ev.nr == 2) {
+    // Twist 2 Put the other Wedding Hero Stack above the Mastermind space "at the door." Gain its top card.
+    bride.withFirst(c => gainEv(ev, c));
+    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[1], 'BRIDE')));
+  } else if (ev.nr >= 3 && ev.nr <= 7) {
+    // Twist 3-7 Gain the top card of either Wedding Hero Stack. Then KO two cards from the top of each Wedding Hero Stack that has a Villain or Mastermind in the space immediately below it. Then the leftmost Hero Stack "walks down the aisle," moving one space to the right.
+    chooseOptionEv(ev, "Choose side", [{l:"Groom", v:groom}, {l:"Bride", v:bride}], d => d.withFirst(c => gainEv(ev, c)));
+    [bride, bride, groom, groom].each(d => d.attachedTo instanceof Deck && d.attachedTo.has(isEnemy) &&
+      cont(ev, () => d.withFirst(c => KOEv(ev, c))));
+    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[brideIdx + 1], 'BRIDE')));
+  } else if (ev.nr >= 8 && ev.nr <= 11) {
+    // Twist 8-11 KO two cards from the top of each Wedding Hero Stack.
+    [bride, bride, groom, groom].each(d => cont(ev, () => d.withFirst(c => KOEv(ev, c))));
+  }
+  cont(ev, () => schemeProgressEv(ev, Math.min(groom.size, bride.size)));
+}, [], () => {
+  const bride = gameState.scheme.attachedDeck('BRIDE');
+  const groom = gameState.scheme.attachedDeck('GROOM');
+  gameState.herodeck.limit(c => c.heroName === extraHeroName(1)).each(c => moveCard(c, bride));
+  gameState.herodeck.limit(c => c.heroName === extraHeroName(2)).each(c => moveCard(c, groom));
+  bride.deck.sort((a, b) => a.cost - b.cost);
+  groom.deck.sort((a, b) => a.cost - b.cost);
+  gameState.schemeProgress = 14;
+}),
+// SETUP: 11 Twists.
+//  <b>If you pay</b>: You gain the {THRONES FAVOR}. You may KO one of your cards.
+//  <b>If you don't pay by the end of turn</b>: Right after you draw a new hand, stack a card from the S.H.I.E.L.D. Officer Stack next to the Scheme as a "Victorious General." The Mastermind gains the {THRONES FAVOR}. If they aleady have it, you gain a Wound.
+// EVILWINS: When there are 6 Victorious Generals.
 makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
   if (ev.nr <= 11) {
+    // Twist 1-8 Stack this Twist next to the Scheme as a "Battlefront." This turn, you may pay 1 Recruit per Battlefront to supply the war.
+    // Twist 9-11 Same effect, but with two Victorious Generals.
     attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
     ev.state.toPay.push(ev.nr <= 8 ? 1 : 2);
   }
@@ -2296,34 +2340,23 @@ makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
   }
   s.toPay = [];
 }),
-makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8 ] }, ev => {
-  const isle = [gameState.scheme, gameState.mastermind, ...gameState.city];
-  const groomIdx = isle.findIndex(d => d.attached('GROOM').size > 0) || 0;
-  const brideIdx = isle.findIndex(d => d.attached('BRIDE').size > 0) || 0;
-  const groom = isle[groomIdx].attachedDeck('GROOM');
-  const bride = isle[brideIdx].attachedDeck('BRIDE');
-  if (ev.nr == 1) {
-    groom.withFirst(c => gainEv(ev, c));
-    cont(ev, () => groom.each(c => attachCardEv(ev, c, isle[6], 'GROOM')));
-  } else if (ev.nr == 2) {
-    bride.withFirst(c => gainEv(ev, c));
-    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[1], 'BRIDE')));
-  } else if (ev.nr >= 3 && ev.nr <= 7) {
-    chooseOptionEv(ev, "Choose side", [{l:"Groom", v:groom}, {l:"Bride", v:bride}], d => d.withFirst(c => gainEv(ev, c)));
-    [bride, bride, groom, groom].each(d => d.attachedTo instanceof Deck && d.attachedTo.has(isEnemy) &&
-      cont(ev, () => d.withFirst(c => KOEv(ev, c))));
-    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[brideIdx + 1], 'BRIDE')));
-  } else if (ev.nr >= 8 && ev.nr <= 11) {
-    [bride, bride, groom, groom].each(d => cont(ev, () => d.withFirst(c => KOEv(ev, c))));
+// SETUP: 10 Twists. Each player puts a small object above the sewers to represent themself.
+// RULE: You can't fight Villains outside the city space where you are. (You can still recruit from all HQ spaces and fight the Mastermind.) During your turn, you can spend 1 Attack any number of times to move yourself one space left or right.
+makeSchemeCard("Tornado of Terrigen Mists", { twists: 10 }, ev => {
+  if (ev.nr === 1) {
+    // Twist 1 Put this Tornado Scheme card above the Sewers.
+  } else if (ev.nr >= 2 && ev.nr <= 5) {
+    // Twist 2-5 Each player in the Tornado space gains a Wound. Then move this Tornado card and each Villain simultaneously one space to the left. (A Villain on the Bridge escapes.)
+  } else if (ev.nr >= 6 && ev.nr <= 9) {
+    // Twist 6-9 Same effect, but move them all to the right, if possible. (A Villain in the Sewers doesn't move.)
+  } else if (ev.nr === 10) {
+    // Twist 10 Evil Wins!
   }
-  cont(ev, () => schemeProgressEv(ev, Math.min(groom.size, bride.size)));
-}, [], () => {
-  const bride = gameState.scheme.attachedDeck('BRIDE');
-  const groom = gameState.scheme.attachedDeck('GROOM');
-  gameState.herodeck.limit(c => c.heroName === extraHeroName(1)).each(c => moveCard(c, bride));
-  gameState.herodeck.limit(c => c.heroName === extraHeroName(2)).each(c => moveCard(c, groom));
-  bride.deck.sort((a, b) => a.cost - b.cost);
-  groom.deck.sort((a, b) => a.cost - b.cost);
-  gameState.schemeProgress = 14;
+}),
+// SETUP: Add Twists equal to the number of players plus 3. Add an extra Henchman Group of 10 cards as "Xerogen Experiments."
+// RULE: All Xerogen Experiments also have {ABOMINATION}.
+// EVILWINS: When there are 3 Villains per player in the Escape Pile or the Villain Deck runs out.
+makeSchemeCard("Devolve with Xerogen Crystals", { twists: 8 }, ev => {
+  // Twist: Choose a Hero in the HQ that doesn't have a printed Attack of 2 or more. Put it on the bottom of the Hero Deck. Then play two cards from the Villain Deck.
 }),
 ]);
