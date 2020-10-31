@@ -79,7 +79,7 @@ Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw two c
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2+
-[Strength] [Instinct] [Covert] [Ranged]: You get +3 Attack
+{POWER Strength Instinct Covert Ranged} You get +3 Attack
 #COST: 3
 #FLAVOR: The four elements form the basis of all creation...and all destruction.
 

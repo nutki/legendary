@@ -128,7 +128,7 @@ while (<A>) {
       s!^($aff),? ($aff),? ($aff),? ($aff): (.*)$!{TEAMPOWER $1, $2, $3, $4} $5! && next;
       s!^\[($class)\]: (.*)$!{POWER $1} $2! && next;
       s!^\[($class)\],? \[($class)\]: (.*)$!{POWER $1 $2} $3! && next;
-      s!^\[($class)\], \[($class)\], \[($class)\], \[($class)\]: (.*)$!{POWER $1 $2 $3 $4} $5! && next;
+      s!^\[($class)\],? \[($class)\],? \[($class)\],? \[($class)\]: (.*)$!{POWER $1 $2 $3 $4} $5! && next;
       s!^<b>(?:Healing|Betrayal)</b>: (.*)!#HEAL: $1! && next;
       s!^<b>Spectrum</b>: (.*)$!{SPECTRUM} $1! && next;
       s!^<b>X-Gene</b> (.*):!{XGENE $1}! && next;

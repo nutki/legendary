@@ -43,6 +43,7 @@ sub autopower {
     s/^If you are \{WORTHY\},? *// and $cond = "worthyPower()";
     s/^{SUNLIGHT} *// and $cond = "sunlightPower()";
     s/^{MOONLIGHT} *// and $cond = "moonlightPower()";
+    s/^{WHEN RECRUITED} *// and $wrap = "whenRecruited: ev => XXX";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -80,6 +81,8 @@ sub autopower {
     s/^{LAST STAND}$// and $effect = "lastStandEv(ev)";
     s/^{HYPERSPEED (\d+)}$// and $effect = "hyperspeedEv(ev, $1)";
     s/^{(\w+) CONQUEROR (\d+)}$// and $effect = "heroConquerorEv(ev, '$1', $2)";
+    s/^{HIGEST ABOMINATION}$// and $effect = "heroHighestAbominationEv(ev)";
+    s/^{(\w+) ABOMINATION}$// and $effect = "heroAbominationEv(ev, '$1')";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
