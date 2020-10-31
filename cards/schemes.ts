@@ -2341,22 +2341,63 @@ makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
   s.toPay = [];
 }),
 // SETUP: 10 Twists. Each player puts a small object above the sewers to represent themself.
-// RULE: You can't fight Villains outside the city space where you are. (You can still recruit from all HQ spaces and fight the Mastermind.) During your turn, you can spend 1 Attack any number of times to move yourself one space left or right.
-makeSchemeCard("Tornado of Terrigen Mists", { twists: 10 }, ev => {
+// RULE: You can't fight Villains outside the city space where you are.
+// (You can still recruit from all HQ spaces and fight the Mastermind.)
+// During your turn, you can spend 1 Attack any number of times to move yourself one space left or right.
+makeSchemeCard<{ locations: Map<Player, Deck>, tornado: Card }>("Tornado of Terrigen Mists", { twists: 10 }, ev => {
+  const tornadoAt = ev.state.tornado && ev.state.tornado.location.attachedTo instanceof Deck ? ev.state.tornado.location.attachedTo : undefined;
   if (ev.nr === 1) {
     // Twist 1 Put this Tornado Scheme card above the Sewers.
+    withCity('SEWERS', sewers => attachCardEv(ev, ev.twist, sewers, 'TORNADO'));
+    ev.state.tornado = ev.twist;
   } else if (ev.nr >= 2 && ev.nr <= 5) {
-    // Twist 2-5 Each player in the Tornado space gains a Wound. Then move this Tornado card and each Villain simultaneously one space to the left. (A Villain on the Bridge escapes.)
+    // Twist 2-5 Each player in the Tornado space gains a Wound.
+    // Then move this Tornado card and each Villain simultaneously one space to the left. (A Villain on the Bridge escapes.)
+    eachPlayer(p => ev.state.locations.get(p) === tornadoAt && gainWoundEv(ev, p));
+    gameState.city.each(d => d.limit(isVillain).each(c => {
+      d.adjacentLeft ? moveCardEv(ev, c, d.adjacentLeft) : villainEscapeEv(ev, c);
+    }));
+    tornadoAt.adjacentLeft && attachCardEv(ev, ev.state.tornado, tornadoAt.adjacentLeft, 'TORNADO');
   } else if (ev.nr >= 6 && ev.nr <= 9) {
     // Twist 6-9 Same effect, but move them all to the right, if possible. (A Villain in the Sewers doesn't move.)
-  } else if (ev.nr === 10) {
-    // Twist 10 Evil Wins!
+    eachPlayer(p => ev.state.locations.get(p) === tornadoAt && gainWoundEv(ev, p));
+    let i = gameState.city.size - 1;
+    while (i >= 0 && isCityEmpty(gameState.city[i])) i--;
+    while (i > 0) {
+      i--;
+      gameState.city[i].limit(isVillain).each(c => moveCardEv(ev, c, gameState.city[i+1]));
+    }
+    tornadoAt.adjacentRight && attachCardEv(ev, ev.state.tornado, tornadoAt.adjacentRight, 'TORNADO');
   }
+  // Twist 10 Evil Wins!
+  schemeProgressEv(ev, ev.nr);
+}, [], s => {
+  const sewers = gameState.city.find(d => d.id === 'SEWERS');
+  s.locations = new Map(gameState.players.map(p => [p, sewers]));
+  forbidAction('FIGHT', c => isVillain(c) && c.location.isCity && s.locations.get(playerState) !== c.location, true);
+  gameState.specialActions = (ev) => {
+    return cityAdjacent(s.locations.get(playerState)).map(d => new Ev(ev, 'EFFECT', {
+      desc: `Move to ${d.id.toLowerCase()}`,
+      cost: { attack: 1 },
+      func: ev => s.locations.set(playerState, d),
+    }));
+  }
+  setSchemeTarget(10);
 }),
 // SETUP: Add Twists equal to the number of players plus 3. Add an extra Henchman Group of 10 cards as "Xerogen Experiments."
 // RULE: All Xerogen Experiments also have {ABOMINATION}.
 // EVILWINS: When there are 3 Villains per player in the Escape Pile or the Villain Deck runs out.
-makeSchemeCard("Devolve with Xerogen Crystals", { twists: 8 }, ev => {
-  // Twist: Choose a Hero in the HQ that doesn't have a printed Attack of 2 or more. Put it on the bottom of the Hero Deck. Then play two cards from the Villain Deck.
+makeSchemeCard("Devolve with Xerogen Crystals", { twists: [4, 5, 6, 7, 8], vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ] }, ev => {
+  // Twist: Choose a Hero in the HQ that doesn't have a printed Attack of 2 or more.
+  // Put it on the bottom of the Hero Deck. Then play two cards from the Villain Deck.
+  selectCardEv(ev, "Choose a card to put on Hero Deck bottom", hqHeroes().limit(c => !(c.printedAttack >= 2)), c => moveCardEv(ev, c, gameState.herodeck, true));
+  villainDrawEv(ev);
+  villainDrawEv(ev);
+}, [
+  escapeProgressTrigger(isVillain),
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
+  setSchemeTarget(3, true);
+  addStatMod('defense', c => c.cardName === extraHenchmenName(), abominationAmount);
 }),
 ]);

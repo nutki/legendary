@@ -357,8 +357,11 @@ function saviorPower(p: Player = playerState) {
 // <b>Abomination</b>: "This Villain gets +Attack equal to the printed Attack of the Hero in the HQ space under this Villain's city space."
 // "Ultimate Abomination" means "This Mastermind gets +Attack equal to the total printed Attack of all the Heroes in the HQ."
 // An Abomination Villain's Attack can go up and down as the Villain moves through the city.
+function abominationAmount(c: Card) {
+  return (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) || 0 : 0);
+}
 function abominationVarDefense(c: Card) {
-  return c.printedDefense + (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) || 0 : 0);
+  return c.printedDefense + abominationAmount(c);
 }
 function ultimateAbominationVarDefense(c: Card) {
   return c.printedDefense + (hqHeroes().limit(hasAttackIcon).sum(c => c.printedAttack) || 0);
