@@ -4213,3 +4213,88 @@ addVillainTemplates("Into the Cosmos", [
   })],
 ]},
 ]);
+addVillainTemplates("Realm of Kings", [
+{ name: "Inhuman Rebellion", cards: [
+// {ABOMINATION}
+// FIGHT: Rescue Bystanders equal to the printed Attack of the Hero in the HQ space under Lineage.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Inhuman Rebellion", "Lineage", 3, 2, {
+    fight: ev => {},
+  })],
+// {ABOMINATION}
+// FIGHT: Choose "Alpha" or "Omega." Then reveal the top card of your deck:
+// <ul>
+//     <li> <b>Alpha</b>: If that card costs 0, KO it.</li>
+//     <li> <b>Omega</b>: If that card costs 1 or more, draw it.</li>
+// </ul>
+// ATTACK: 4+
+// VP: 3
+[ 2, makeVillainCard("Inhuman Rebellion", "Omega", 4, 3, {
+    fight: ev => chooseOneEv(ev, "Choose", ["Alpha", () => {
+      revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c)));
+    }], ["Omega", () => {
+      revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost >= 1).each(c => drawCardEv(ev, c)));
+    }]),
+    varDefense: abominationVarDefense,
+  })],
+// {ABOMINATION}
+// AMBUSH: Choose a Hero from the HQ that doesn't have a printed Attack of 2 or more. Put it on the bottom of the Hero Deck.
+// FIGHT: Gain a Hero from the HQ with no Attack icon that costs 4 or less.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Inhuman Rebellion", "Lash", 5, 4, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero to remove from HQ", hqHeroes().limit(c => !(c.printedAttack >= 2)), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    fight: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => !hasAttackIcon(c)).limit(c => c.cost <= 4), c => gainEv(ev, c)),
+    varDefense: abominationVarDefense,
+  })],
+// {DOUBLE ABOMINATION}
+// AMBUSH: Choose a Hero from the HQ that doesn't have a printed Attack of 2 or more. Put it on the bottom of the Hero Deck. If there were no such Heroes, then each player gains a Wound instead.
+// FIGHT: KO one of your Heroes with no Attack icon.
+// ATTACK: 5+
+// VP: 5
+  [ 2, makeVillainCard("Inhuman Rebellion", "The Unspoken", 5, 5, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero to remove from HQ", hqHeroes().limit(c => !(c.printedAttack >= 2)), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(c => !hasAttackIcon(c))),
+    varDefense: doubleAbominationVarDefense,
+  })],
+]},
+{ name: "Shi'ar Imperial Elite", cards: [
+// While the Mastermind has the {THRONES FAVOR}, you must spend Recruit to fight Plutonia instead of Attack.
+// AMBUSH: The Mastermind gains the {THRONES FAVOR}.
+// FIGHT: You gain the {THRONES FAVOR}. If you already have it, you get +2 Recruit.
+// ATTACK: 4*
+// VP: 2
+  [ 2, makeVillainCard("Shi'ar Imperial Elite", "Plutonia", 4, 2, {
+    ambush: ev => withMastermind(ev, c => thronesFavorGainEv(ev, c)),
+    fight: ev => thronesFavorGainOrEv(ev, () => addRecruitEvent(ev, 2)),
+    varFightCost: (c, attack) => mastermindHasThronesFavor() ? ({ recruit: attack }) : ({ attack }),
+  })],
+// While the Mastermind has the {THRONES FAVOR}, Starbolt gets +2 Attack.
+// AMBUSH: The Mastermind gains the {THRONES FAVOR}.
+// FIGHT: You gain the {THRONES FAVOR}. If you already have it, you may KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Shi'ar Imperial Elite", "Starbolt", 4, 3, {
+    ambush: ev => withMastermind(ev, c => thronesFavorGainEv(ev, c)),
+    fight: ev => thronesFavorGainOrEv(ev, () => selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c))),
+    varDefense: c => c.printedDefense + (mastermindHasThronesFavor() ? 2 : 0),
+  })],
+// AMBUSH: The Mastermind gains the {THRONES FAVOR}. If they already have it, each player discards a card.
+// FIGHT: You gain the {THRONES FAVOR}. If you already have it, draw two cards.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Shi'ar Imperial Elite", "Mentor", 5, 3, {
+    ambush: ev => withMastermind(ev, c => thronesFavorGainOrEv(ev, () => eachPlayer(p => pickDiscardEv(ev, 1, p)), c)),
+    fight: ev => thronesFavorGainOrEv(ev, () => drawEv(ev, 2)),
+  })],
+// AMBUSH: The Mastermind gains the {THRONES FAVOR}. If they already have it, each player gains a Wound.
+// FIGHT: You gain the {THRONES FAVOR}. If you already have it, you may KO a card from your discard pile.
+// ATTACK: 7
+// VP: 5
+  [ 2, makeVillainCard("Shi'ar Imperial Elite", "Gladiator", 7, 5, {
+    ambush: ev => withMastermind(ev, c => thronesFavorGainOrEv(ev, () => eachPlayer(p => gainWoundEv(ev, p)), c)),
+    fight: ev => thronesFavorGainOrEv(ev, () => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c))),
+  })],
+]},
+]);

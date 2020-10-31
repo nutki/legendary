@@ -818,6 +818,7 @@ function thronesFavorGainOrMaySpendEv(ev: Ev, effect1: (ev: Ev) => void, who: Pl
     effect1(ev);
   }, who), who);
 }
+const mastermindHasThronesFavor = () => gameState.thronesFavorHolder instanceof Card && isMastermind(gameState.thronesFavorHolder);
 function highestAbominationVarDefense(c: Card) {
   return c.printedDefense + (hqHeroes().max(c => c.printedAttack) || 0);
 }
@@ -826,4 +827,7 @@ function heroHighestAbominationEv(ev: Ev) {
 }
 function heroAbominationEv(ev: Ev, l: CityLocation) {
   addAttackEvent(ev, hqHeroes().limit(c => c.location.id === l).max(c => c.printedAttack) || 0);
+}
+function doubleAbominationVarDefense(c: Card) {
+  return c.printedDefense + 2 * (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) || 0 : 0);
 }
