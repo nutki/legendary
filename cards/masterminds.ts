@@ -2425,7 +2425,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
 }),
 // EPICNAME: Grandmaster
 // Evil adds +2 to its final total in every {CONTEST OF CHAMPIONS} caused by any card.
-...makeEpicMastermindCard("The Grandmaster", [ 10, 11 ], 6, "Elders of the Universe", ev => {
+...makeEpicMastermindCard(["The Grandmaster", "Epic Grandmaster"], [ 10, 11 ], 6, "Elders of the Universe", ev => {
 // Reveal the top card of the Hero Deck then put it back. {CONTEST OF CHAMPIONS} for that card's color(s).
 // Each player that loses gains a Wound. If the Grandmaster wins, he gains a Shard.
 // Each player that loses gains a Wound. If the Grandmaster wins, he gains 2 Shards.
@@ -2484,7 +2484,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
 // {COSMIC THREAT} for cards that cost 5 or more.
 // EPICNAME: Beyonder
 // {COSMIC THREAT} for cards that cost 6 or more.
-...makeEpicMastermindCard("The Beyonder", [ 21, 24 ], 7, "From Beyond", ev => {
+...makeEpicMastermindCard(["The Beyonder", "Epic Beyonder"], [ 21, 24 ], 7, "From Beyond", ev => {
 // Each player reveals a card that costs 5 or more or gains a Wound.
 // Each player reveals a card that costs 6 or more or gains a Wound.
   eachPlayer(p => revealOrEv(ev, c => c.cost >= (ev.source.epic ? 6 : 5), () => gainWoundEv(ev, p), p));
@@ -2529,4 +2529,83 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
     addStatSet('fightCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: v.attack + amount()}));
   }
 })),
+]);
+addTemplates("MASTERMINDS", "Realm of Kings", [
+// {HIGHEST ABOMINATION}
+// EPICNAME: Maximus the Mad
+// {DOUBLE HIGHEST ABOMINATION}
+...makeEpicMastermindCard("Maximus the Mad", [ 8, 9 ], 6, "Inhuman Rebellion", ev => {
+// Reveal one of Maximus' remaining Mastermind Tactics at random. Use its Fight effect, then shuffle it back into those Tactics.
+// Reveal two different Tactics at random from Maximus' remaining Mastrmind Tactics. Then use each of those fight effects in the order that you revealed them. Then shuffle them back into those Tactics.
+  const tactics = ev.source.mastermind.attachedDeck("TACTICS");
+  tactics.shuffle();
+  cont(ev, () => {
+    revealDeckEv(ev, tactics, ev.source.epic ? 2 : 1, cards => cards.each(c => {
+      pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use
+    }));
+  });
+  cont(ev, () => tactics.shuffle());
+}, [
+// FLAVOR: Maximus Boltagon harnessed Black Bolt's sonic powers into technology, then turned them against him.
+  [ "Echo-Tech Chorus Sentries", ev => {
+  // Each player KOs one of their [Tech] or Inhuman Heroes or gains a Wound.
+    eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(c => isTeam('Inhumans')(c) || isColor(Color.TECH)(c)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Sieve of Secrets", ev => {
+  // Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
+    eachPlayer(p => revealPlayerDeckEv(ev, 6, cards => cards.limit(isNonGrayHero).each(c => discardEv(ev, c)), p));
+  } ],
+  [ "Seize the Inhuman Throne", ev => {
+  // Each player discards down to 4 cards. Maximus gains the {THRONES FAVOR}. If he already has it, he spends it and each player discards down to 3 cards.
+    eachPlayer(p => pickDiscardEv(ev, -4, p));
+    thronesFavorGainOrSpendEv(ev, () => eachPlayer(p => pickDiscardEv(ev, -3, p)), ev.source.mastermind);
+  } ],
+  [ "Terrigen Bomb", ev => {
+  // Put each Hero from the HQ that doesn;t have a printed ttack of 2 or more on the bottom of the Hero Deck. Maximus gains the {THRONES FAVOR}. If he already had it, he spends it and each player KOs one of their non-grey Heroes with an Attack icon.
+    hqHeroes().limit(c => !(c.printedAttack >= 2)).each(c => moveCardEv(ev, c, gameState.herodeck, true));
+    thronesFavorGainOrSpendEv(ev, () => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p).limit(isNonGrayHero).limit(hasAttackIcon), p)), ev.source.mastermind);
+  } ],
+], { varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * (hqHeroes().max(c => c.printedAttack) || 0)}),
+// Vulcan gets +3 Attack while he has the {THRONES FAVOR}.
+// EPICNAME: Emperor Vulcan
+// Vulcan gets +5 Attack while he has the {THRONES FAVOR}.
+...makeEpicMastermindCard(["Emperor Vulcan of the Shi'ar", "Epic Emperor Vulcan"], [ 10, 12 ], 6, "Shi'ar Imperial Elite", ev => {
+  const epic = ev.source.epic;
+// Each player that doesn't have the {THRONES FAVOR} gains a Wound. Then Vulcan gains the {THRONES FAVOR}.
+// Each player that doesn't have the {THRONES FAVOR} gains a Wound to the top of their deck. Then Vulcan gains the {THRONES FAVOR}.
+  eachPlayer(p => gameState.thronesFavorHolder === p || (epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p)));
+  thronesFavorGainEv(ev, ev.source);
+}, [
+  [ "Blast Every Form of Energy", ev => {
+    // If you have the {THRONES FAVOR}, you may KO a card you played this turn, and you may KO a card from your discard pile.
+    if (gameState.thronesFavorHolder === playerState) {
+      selectCardOptEv(ev, "Choose a card to KO", playerState.playArea.deck, c => KOEv(ev, c));
+      selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c));
+    }
+    // Then Vulcan gains the {THRONES FAVOR}.
+    thronesFavorGainEv(ev, ev.source.mastermind);
+    // FLAVOR: The brother of Cyclops and Havok, Vulcan is the only Earhborn mutant ever to take the Shi'ar throne.
+  } ],
+  [ "Vast Wealth of the Shi'ar", ev => {
+    // If you have the {THRONES FAVOR}, you get +4 Recruit.
+    gameState.thronesFavorHolder === playerState && addRecruitEvent(ev, 4);
+    // Then Vulcan gains the {THRONES FAVOR}.
+    thronesFavorGainEv(ev, ev.source.mastermind);
+  } ],
+  [ "Contempt for Weakness", ev => {
+    // If Vulcan has the {THRONES FAVOR}, each other player discards each of their cards that costs 2 or less.
+    gameState.thronesFavorHolder === ev.source.mastermind && eachOtherPlayerVM(p => p.hand.limit(c => c.cost <= 2).each(c => discardEv(ev, c)));
+    // Then Vulcan gains the {THRONES FAVOR}.
+    thronesFavorGainEv(ev, ev.source.mastermind);
+  } ],
+  [ "Solar Cage", ev => {
+    // If Vulcan has the {THRONES FAVOR}, each other player shuffles a Wound from the Wound Stack and a non-grey Hero from their hand into their deck.
+    gameState.thronesFavorHolder === ev.source.mastermind && eachOtherPlayerVM(p => {
+      cont(ev, () => gameState.wounds.withTop(c => shuffleIntoEv(ev, c, p.deck)));
+      selectCardEv(ev, "Choose a Hero to shuffle into your deck", p.hand.limit(isNonGrayHero), c => shuffleIntoEv(ev, c, p.deck), p);
+    });
+    // Then Vulcan gains the {THRONES FAVOR}.
+    thronesFavorGainEv(ev, ev.source.mastermind);
+  } ],
+], { varDefense: c => c.printedDefense + (gameState.thronesFavorHolder === c ? c.epic ? 5 : 3 : 0) }),
 ]);

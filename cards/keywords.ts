@@ -819,9 +819,6 @@ function thronesFavorGainOrMaySpendEv(ev: Ev, effect1: (ev: Ev) => void, who: Pl
   }, who), who);
 }
 const mastermindHasThronesFavor = () => gameState.thronesFavorHolder instanceof Card && isMastermind(gameState.thronesFavorHolder);
-function highestAbominationVarDefense(c: Card) {
-  return c.printedDefense + (hqHeroes().max(c => c.printedAttack) || 0);
-}
 function heroHighestAbominationEv(ev: Ev) {
   addAttackEvent(ev, hqHeroes().max(c => c.printedAttack) || 0);
 }
