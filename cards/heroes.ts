@@ -5569,3 +5569,142 @@ addHeroTemplates("Into the Cosmos", [
   }),
 },
 ]);
+addHeroTemplates("Realm of Kings", [
+{
+  name: "Black Bolt",
+  team: "Inhumans",
+// {WHEN RECRUITED} You may KO one of your cards with no rules text.
+// {POWER Ranged} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
+  c1: makeHeroCard("Black Bolt", "Break the Silence", 3, 2, u, Color.RANGED, "Inhumans", "D",
+    ev => superPower(Color.RANGED) && selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)),
+    { whenRecruited: ev => thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2)) }),
+  c2: makeHeroCard("Black Bolt", "Worldess Murmur", 5, 1, 3, Color.RANGED, "Inhumans", "N"),
+// {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to reveal the top two cards of your deck. Put each of those cards with no rules text into your hand and put the rest back in any order.
+  uc: makeHeroCard("Black Bolt", "Declaration of War", 4, u, 2, Color.TECH, "Inhumans", "D", ev => superPower("Inhumans") && thronesFavorGainOrMaySpendEv(ev, () => {
+    revealPlayerDeckEv(ev, 2, cards => cards.limit(hasFlag("N")).each(c => moveCardEv(ev, c, playerState.hand)));
+  })),
+// Gain the {THRONES FAVOR}. If you already have it, you may spend it to choose "Speak" or "Don't Speak" then reveal the top 3 cards of your deck:
+//     <b>Speak</b>: Put all of them with rules text into your hand.
+//     <b>Don't Speak</b>: You may KO any number of them with no rules text.
+// Put the rest back in any order.
+  ra: makeHeroCard("Black Bolt", "The King's Speech", 8, u, 5, Color.RANGED, "Inhumans", "", ev => thronesFavorGainOrMaySpendEv(ev, () => {
+    chooseOneEv(ev, "Choose", ["Speak", () => {
+      revealPlayerDeckEv(ev, 3, cards => cards.limit(hasFlag("N")).each(c => moveCardEv(ev, c, playerState.hand)));
+    }], ["Don't Speak", () => {
+      revealPlayerDeckEv(ev, 3, cards => selectObjectsAnyEv(ev, "Choose cards to KO", cards.limit(hasFlag("N")), c => KOEv(ev, c)));
+    }]);
+  })),
+},
+{
+  name: "Medusa",
+  team: "Inhumans",
+// {WHEN RECRUITED} Gain the {THRONES FAVOR}.
+// Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
+  c1: makeHeroCard("Medusa", "Queen of the Inhumans", 2, u, 1, Color.STRENGTH, "Inhumans", "D", ev => thronesFavorGainOrMaySpendEv(ev, ev => addAttackEvent(ev, 2)), {
+    whenRecruited: thronesFavorGainEv
+  }),
+// {WHEN RECRUITED} Draw a card and gain the {THRONES FAVOR}.
+// {POWER Instinct} Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw a card.
+  c2: makeHeroCard("Medusa", "Splitting Hairs", 3, u, 2, Color.INSTINCT, "Inhumans", "D", ev => superPower(Color.INSTINCT) && thronesFavorGainOrMaySpendEv(ev, ev => drawEv(ev)), {
+    whenRecruited: ev => { drawEv(ev); thronesFavorGainEv(ev); }
+  }),
+// {WHEN RECRUITED} Gain the {THRONES FAVOR}.
+// {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to KO one of your cards.
+  uc: makeHeroCard("Medusa", "Royal Command", 5, u, 3, Color.INSTINCT, "Inhumans", "", ev => superPower("Inhumans") && thronesFavorGainOrMaySpendEv(ev, ev => selectCardAndKOEv(ev, revealable())), {
+    whenRecruited: thronesFavorGainEv
+  }),
+// {WHEN RECRUITED} Draw two cards and gain the {THRONES FAVOR}.
+// Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw two cards.
+  ra: makeHeroCard("Medusa", "Headstrong", 7, u, 4, Color.INSTINCT, "Inhumans", "", ev => thronesFavorGainOrMaySpendEv(ev, ev => drawEv(ev, 2)), {
+    whenRecruited: ev => { drawEv(ev, 2); thronesFavorGainEv(ev); }
+  }),
+},
+{
+  name: "Crystal",
+  team: "Inhumans",
+// {POWER Strength Instinct Covert Ranged} You get +3 Attack
+  c1: makeHeroCard("Crystal", "Earth, Air, Fire, and Water", 3, u, 2, Color.RANGED, "Inhumans", "FD", ev => superPower(Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.RANGED) && addAttackEvent(ev, 3)),
+// Choose [Strength], [Instinct], [Covert], or [Ranged]. This card is only that Hero Class this turn.
+// Draw a card.
+  c2: makeHeroCard("Crystal", "Master the Four Elements", 4, 1, u, Color.INSTINCT, "Inhumans", "F", [
+    ev => chooseClassEv(ev, color => {
+      addTurnSet('color', c => c === ev.source, () => color); // TODO this may be too late in case of triggers on card played.
+    }, color => [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.RANGED].includes(color)),
+    ev => drawEv(ev),
+  ]),
+// {WHEN RECRUITED} You may KO one of your cards that isn't [Strength], [Instinct], [Covert], or [Ranged].
+// Gain the {THRONES FAVOR}. If you already have it, you may spend it make this card [Strength], [Instinct], [Covert], and [Ranged] this turn.
+  uc: makeHeroCard("Crystal", "Elemental Princess", 6, u, 3, Color.COVERT, "Inhumans", "", ev => {
+    thronesFavorGainOrMaySpendEv(ev, () => {
+      addTurnSet('color', c => c === ev.source, () => Color.STRENGTH | Color.INSTINCT | Color.COVERT | Color.RANGED); // TODO this may be too late in case of triggers on card played.
+    });
+  }, {
+    whenRecruited: ev => selectCardOptEv(ev, "Choose a card to KO", revealable().limit(c => !isColor(Color.STRENGTH | Color.INSTINCT | Color.COVERT | Color.RANGED)(c)), c => KOEv(ev, c)),
+  }),
+// {WHEN RECRUITED} You may gain a [Strength], [Instinct], [Covert], or [Ranged] Hero from the HQ that costs 4 or less. (after refilling the HQ)
+// Reveal the top four cards of your deck. Put a [Strength] Hero, a [Instinct] Hero, a [Covert] Hero, and a [Ranged] Hero from among them into your hand. Put the rest back in any order.
+  ra: makeHeroCard("Crystal", "Weave Four Into One", 8, u, 4, Color.STRENGTH, "Inhumans", "", ev => {
+    revealPlayerDeckEv(ev, 4, cards => [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.RANGED].each(color => {
+      selectCardEv(ev, "Choose a Hero to put in hand", cards.limit(color), c => moveCardEv(ev, c, playerState.hand));
+    }));
+  }, {
+    whenRecruited: ev => selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(Color.STRENGTH | Color.INSTINCT | Color.COVERT | Color.RANGED), c => gainEv(ev, c)),
+  }),
+},
+{
+  name: "Karnak",
+  team: "Inhumans",
+// {WHEN RECRUITED} You get +1 Attack.
+// {POWER Covert} When you draw a new hand of cards at the end of this turn, draw an extra card.
+  c1: makeHeroCard("Karnak", "Brilliant Strategist", 2, u, 1, Color.COVERT, "Inhumans", "D", ev => superPower(Color.COVERT) && addEndDrawMod(1), { whenRecruited: ev => addAttackEvent(ev, 1) }),
+// {WHEN RECRUITED} You get +2 Attack.
+// Choose a Villain Group. You get +1 Recruit for each Villain in your Victory Pile from that Group.
+  c2: makeHeroCard("Karnak", "Find Fatal Flaw", 4, 0, u, Color.INSTINCT, "Inhumans", "D", ev => {
+    const groups = playerState.victory.limit(c => c.printedVillainGroup !== undefined).unique(c => c.printedVillainGroup).map(g => ({l:g, v:g}));
+    chooseOptionEv(ev, "Choose a Villain Group", groups, g => addRecruitEvent(ev, playerState.victory.count(isGroup(g))))
+  }, { whenRecruited: ev => addAttackEvent(ev, 2) }),
+// {WHEN RECRUITED} You get +3 Attack.
+// Choose a Villain Group. You get +1 Attack for each Villain in your Victory Pile from that Group.
+  uc: makeHeroCard("Karnak", "Shatter the Weak Point", 5, u, 0, Color.STRENGTH, "Inhumans", "", ev => {
+    const groups = playerState.victory.limit(c => c.printedVillainGroup !== undefined).unique(c => c.printedVillainGroup).map(g => ({l:g, v:g}));
+    chooseOptionEv(ev, "Choose a Villain Group", groups, g => addAttackEvent(ev, playerState.victory.count(isGroup(g))))
+  }, { whenRecruited: ev => addAttackEvent(ev, 3) }),
+// {WHEN RECRUITED} You get +4 Attack.
+// Whenever you play a card this turn, including this one, you may first use that card's "When Recruited" ability.
+  ra: makeHeroCard("Karnak", "Seek the Center", 7, u, u, Color.COVERT, "Inhumans", "", ev => {
+    chooseMayEv(ev, "Use this card's When Recruited", () => ev.source.whenRecruited(ev));
+    addTurnTrigger('PLAY', ev => ev.what.whenRecruited !== undefined, { before: ev => {
+      chooseMayEv(ev, "Use this card's When Recruited", () => ev.parent.what.whenRecruited(ev));
+    }})
+  }, { whenRecruited: ev => addAttackEvent(ev, 4) }),
+},
+{
+  name: "Gorgon",
+  team: "Inhumans",
+// {WHEN RECRUITED} You may {TELEPORT} a 0-cost Hero from your hand.
+// {POWER Covert} You may {TELEPORT} another card from your hand.
+  c1: makeHeroCard("Gorgon", "Lockjaw, Inhuman's Best Friend", 3, 2, u, Color.COVERT, "Inhumans", "D", ev => {
+    superPower(Color.COVERT) && selectCardOptEv(ev, "Choose a card to Teleport", playerState.hand.limit(c => c !== ev.source), c => teleportEv(ev, c));
+  }, {
+    whenRecruited: ev => selectCardOptEv(ev, "Choose a Hero to Teleport", playerState.hand.limit(isHero).limit(c => c.cost === 0), c => teleportEv(ev, c)),
+  }),
+// {WHEN RECRUITED} {SEWERS ABOMINATION} (after refilling HQ)
+// {POWER Strength} {STREETS ABOMINATION}
+  c2: makeHeroCard("Gorgon", "Stomping Shockwave", 5, u, 2, Color.STRENGTH, "Inhumans", "D", ev => superPower(Color.STRENGTH) && heroAbominationEv(ev, 'STREETS'), {
+    whenRecruited: ev => heroAbominationEv(ev, 'STREETS'),
+  }),
+// {WHEN RECRUITED} You may KO one of your cards with no Attack icon.
+// {HIGHEST ABOMINATION}
+  uc: makeHeroCard("Gorgon", "Trample Underhoof", 6, u, 1, Color.STRENGTH, "Inhumans", "", ev => heroHighestAbominationEv(ev), {
+    whenRecruited: ev => selectCardOptEv(ev, "Choose a card to KO", revealable().limit(c => !hasAttackIcon(c)), c => KOEv(ev, c)),
+  }),
+// {WHEN RECRUITED} {BRIDGE ABOMINATION} (after refilling HQ)
+// {TELEPORT}
+// {TEAMPOWER Inhumans} {ROOFTOPS ABOMINATION}
+// GUN: 1
+  ra: makeHeroCard("Gorgon", "Lead the Inhuman Elite", 8, u, 4, Color.STRENGTH, "Inhumans", "G", ev => superPower("Inhumans") && heroAbominationEv(ev, 'ROOFTOPS'), {
+    whenRecruited: ev => heroAbominationEv(ev, 'BRIDGE'),
+    teleport: true,
+  }),
+},
+]);
