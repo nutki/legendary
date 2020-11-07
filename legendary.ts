@@ -206,7 +206,10 @@ class Card {
     if (value !== undefined) value += this.attached('SHARD').size;
     if (value !== undefined && this.nthCircle) value += nthCircleDefense(this);
     if (value !== undefined) value += this.attached('WEAPON').sum(c => this.defense);
-    return value < 0 ? 0 : value;
+    if (value !== undefined && this.sizeChanging && superPower(this.sizeChanging)) value -= 2;
+    if (value < 0) value = 0;
+    value -= uSizeChangingAmount(this); // Only this can make the attack negative
+    return value;
   }
   get vp() {
     const baseVP = (this.varVP ? this.varVP(this) : this.printedVP) || 0;
@@ -1717,20 +1720,29 @@ interface ActionCost {
   either?: number;
   cond?: (c: Card) => boolean;
   piercing?: number;
+  recruitBonus?: number;
+  attackBonus?: number;
+}
+function uSizeChangingAmount(c: Card): number {
+  if (!c.uSizeChanging) return 0;
+  return Math.min(superPower(c.uSizeChanging.color), c.uSizeChanging.amount) * 2;
 }
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   let recruit = c.cost;
   if (c.sizeChanging && superPower(c.sizeChanging)) recruit = Math.min(0, recruit - 2);
-  // TODO uSizeChaning, fix double size changing from champions
-  return getModifiedStat(c, 'recruitCost', { recruit, cond });
+  // TODO fix double size changing from champions
+  recruit -= uSizeChangingAmount(c);
+  const recruitBonus = Math.max(-recruit, 0);
+  recruit = Math.max(recruit, 0);
+  return getModifiedStat(c, 'recruitCost', { recruit, cond, recruitBonus });
 }
 function defaultFightCost(c: Card, attack: number): ActionCost {
   return c.bribe ? { either: attack, cond: c.fightCond } : { attack, cond: c.fightCond };
 }
 function getFightCost(c: Card): ActionCost {
   let attack = c.defense;
-  if (c.sizeChanging && superPower(c.sizeChanging)) attack = Math.min(0, attack - 2);
-  // TODO uSizeChaning
+  const attackBonus = Math.max(-attack, 0);
+  attack = Math.max(attack, 0);
   const costFunc = c.varFightCost || defaultFightCost;
   return getModifiedStat(c, 'fightCost', costFunc(c, attack));
 }
@@ -1777,6 +1789,8 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
     piercingToPay -= piercingAmount;
     return resolve(piercingToPay === 0);
   }
+  cost.recruitBonus && addRecruitEvent(action, cost.recruitBonus);
+  cost.attackBonus && addAttackEvent(action, cost.attackBonus);
   let attackToPay = cost.attack || 0;
   let recruitToPay = cost.recruit || 0;
   let eitherToPay = cost.either || 0;
