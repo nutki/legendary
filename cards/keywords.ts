@@ -396,7 +396,7 @@ function shieldClearanceCond(n: number) { return () => playerState.hand.limit(is
 function shieldClearanceCost(n: number) { return (ev: Ev) => selectObjectsEv(ev, "Discard S.H.I.E.L.D. Heros", n, playerState.hand.limit(isHero).limit('S.H.I.E.L.D.'), c => discardEv(ev, c)); }
 const shieldClearance = { fightCond: shieldClearanceCond(1), fightCost: shieldClearanceCost(1) };
 
-function villainify(name: string, c: Card | ((c: Card) => boolean), defense: number | ((c: Card) => number), reward?: number | 'GAIN' | 'RESCUE' | ((ev: Ev) => void), t: "VILLAIN" | "LOCATION" = "LOCATION") {
+function villainify(name: string, c: Card | ((c: Card) => boolean), defense: number | ((c: Card) => number), reward?: number | 'GAIN' | 'RESCUE' | ((ev: Ev) => void), t: "VILLAIN" | "LOCATION" = "VILLAIN") {
   const cond = c instanceof Card ? ((v: Card) => v === c) : c;
   addStatSet(t === "LOCATION" ? 'isLocation' : 'isVillain', cond, () => true);
   addStatSet('defense', cond, typeof defense === "number" ? (() => defense) : defense);
@@ -588,8 +588,15 @@ function empowerEv(ev: Ev, color: number) {
 function empowerVarDefense(color: number, amount: number = 1) {
   return (c: Card) => c.printedDefense + hqCards().count(color) * amount;
 }
+function getSizeChanging(c: Card) {
+  return getModifiedStat(c, 'sizeChanging', c.sizeChanging);
+}
+function isSizeChanged(c: Card) {
+  const color = getSizeChanging(c);
+  return color && (superPower(color) > 0);
+}
 function hasNoSizeChanging(c: Card) {
-  return !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging
+  return !getSizeChanging(c) && !c.uSizeChanging
 }
 function uSizeChangingAmount(c: Card): number {
   if (!c.uSizeChanging) return 0;

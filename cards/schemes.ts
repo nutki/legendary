@@ -1764,7 +1764,7 @@ makeSchemeCard("Transform Commuters into Giant Ants", { twists: [7, 8, 9, 10, 11
 // SETUP: 11 Twists. Add all 14 cards for and extra Hero the Villain Deck.
 // RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
 // EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
-makeSchemeCard("Trap Heroes in the Microverse", { twists: 11, heroes: [ 3, 6, 6, 6, 7 ] }, ev => {
+makeSchemeCard("Trap Heroes in the Microverse", { twists: 11, heroes: [ 4, 6, 6, 6, 7 ] }, ev => {
   // Twist: Play two cards from the Villain Deck.
   villainDrawEv(ev); villainDrawEv(ev);
 }, [ escapeProgressTrigger(isVillain), runOutProgressTrigger('VILLAIN', false) ], () => {

@@ -3044,7 +3044,7 @@ addVillainTemplates("Ant-Man", [
 // VP: 3
   [ 1, makeVillainCard("Ultron's Legacy", "Ultron-Pym", 6, 3, {
     fight: ev => selectCardEv(ev, "Choose a Hero", hqHeroes().limit(hasNoSizeChanging), c => {
-      addTurnSet('sizeChanging', v => v === c, (c, p) => safeOr(p, Color.TECH));
+      addTurnSet('sizeChanging', v => v === c, () => Color.TECH);
     }),
     uSizeChanging: { color: Color.TECH, amount: 5 },
   })],

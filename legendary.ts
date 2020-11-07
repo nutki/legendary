@@ -207,7 +207,7 @@ class Card {
     value += this.attached('SHARD').size;
     if (this.nthCircle) value += nthCircleDefense(this);
     value += this.attached('WEAPON').sum(c => this.defense);
-    if (this.sizeChanging && superPower(this.sizeChanging)) value -= 2;
+    if (isSizeChanged(this)) value -= 2;
     if (value < 0) value = 0;
     value -= uSizeChangingAmount(this); // Only this can make the attack negative
     return value;
@@ -1727,7 +1727,7 @@ interface ActionCost {
 }
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   let recruit = c.cost;
-  if (c.sizeChanging && superPower(c.sizeChanging)) recruit = Math.max(0, recruit - 2);
+  if (isSizeChanged(c)) recruit = Math.max(0, recruit - 2);
   // TODO fix double size changing from champions
   recruit -= uSizeChangingAmount(c);
   const recruitBonus = Math.max(-recruit, 0);
@@ -1735,12 +1735,12 @@ function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   return getModifiedStat(c, 'recruitCost', { recruit, cond, recruitBonus });
 }
 function defaultFightCost(c: Card, attack: number): ActionCost {
-  return c.bribe ? { either: attack, cond: c.fightCond } : { attack, cond: c.fightCond };
+  const attackBonus = Math.max(-attack, 0);
+  attack = Math.max(attack, 0);
+  return c.bribe ? { either: attack, cond: c.fightCond, attackBonus } : { attack, cond: c.fightCond, attackBonus };
 }
 function getFightCost(c: Card): ActionCost {
   let attack = c.defense;
-  const attackBonus = Math.max(-attack, 0);
-  attack = Math.max(attack, 0);
   const costFunc = c.varFightCost || defaultFightCost;
   return getModifiedStat(c, 'fightCost', costFunc(c, attack));
 }

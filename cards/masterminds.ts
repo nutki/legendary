@@ -1770,7 +1770,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
     }, p));
   } ],
 ], {
-  varDefense: c => empowerVarDefense(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c), c.epic ? 3 : 1)(c),
+  varDefense: c => empowerVarDefense(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c, 0), c.epic ? 3 : 1)(c),
 }),
 // <b>Chivalrous Duel</b>
 // EPICNAME: Morgan Le Fay
