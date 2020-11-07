@@ -496,6 +496,7 @@ function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: H
     func: ev => { func(ev); moveCardEv(ev, ev.what, playerState.victory); },
   }));
 }
+// Spider Man
 function strikerCount(full: boolean = true) {
   let count = gameState.ko.count(isStrike) + gameState.mastermind.attached('STRIKE').count(isStrike);
   if (!full) return count;
@@ -520,7 +521,7 @@ function dangerSenseEv(ev: Ev, amount: number, f?: (cards: Card[]) => void, help
     }, false, false);
   } });
 }
-
+// World War Hulk
 function makeTransformingHeroCard(c1: Card, c2: Card) {
   c1.transformed = c2;
   c2.transformed = c1;
@@ -580,7 +581,7 @@ function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' 
 function addMastermindEv(ev: Ev, name?: string) {
   // TODO add mastermind with one tactic
 }
-
+// Ant Man
 function empowerEv(ev: Ev, color: number) {
   addAttackEvent(ev, hqCards().count(color));
 }
@@ -589,6 +590,10 @@ function empowerVarDefense(color: number, amount: number = 1) {
 }
 function hasNoSizeChanging(c: Card) {
   return !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging
+}
+function uSizeChangingAmount(c: Card): number {
+  if (!c.uSizeChanging) return 0;
+  return Math.min(superPower(c.uSizeChanging.color), c.uSizeChanging.amount) * 2;
 }
 function chivalrousDuelSources() {
   const amounts = new Map<string, number>();
@@ -610,7 +615,7 @@ function chivalrousSpendEv(ev: Ev, amount: number) {
     pushEv(ev, "CHIVALROUSSPEND", { desc: heroName, amount });
   });
 }
-
+// Venom
 function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, doBoth?: number) {
   const hasDigest = playerState.victory.size >= amount;
   if (hasDigest || doBoth) effect1(ev);

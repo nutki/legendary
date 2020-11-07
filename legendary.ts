@@ -203,10 +203,11 @@ class Card {
   }
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
-    if (value !== undefined) value += this.attached('SHARD').size;
-    if (value !== undefined && this.nthCircle) value += nthCircleDefense(this);
-    if (value !== undefined) value += this.attached('WEAPON').sum(c => this.defense);
-    if (value !== undefined && this.sizeChanging && superPower(this.sizeChanging)) value -= 2;
+    if (value === undefined) return value;
+    value += this.attached('SHARD').size;
+    if (this.nthCircle) value += nthCircleDefense(this);
+    value += this.attached('WEAPON').sum(c => this.defense);
+    if (this.sizeChanging && superPower(this.sizeChanging)) value -= 2;
     if (value < 0) value = 0;
     value -= uSizeChangingAmount(this); // Only this can make the attack negative
     return value;
@@ -1723,10 +1724,6 @@ interface ActionCost {
   piercing?: number;
   recruitBonus?: number;
   attackBonus?: number;
-}
-function uSizeChangingAmount(c: Card): number {
-  if (!c.uSizeChanging) return 0;
-  return Math.min(superPower(c.uSizeChanging.color), c.uSizeChanging.amount) * 2;
 }
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   let recruit = c.cost;
