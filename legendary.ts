@@ -1727,7 +1727,7 @@ interface ActionCost {
 }
 function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
   let recruit = c.cost;
-  if (c.sizeChanging && superPower(c.sizeChanging)) recruit = Math.min(0, recruit - 2);
+  if (c.sizeChanging && superPower(c.sizeChanging)) recruit = Math.max(0, recruit - 2);
   // TODO fix double size changing from champions
   recruit -= uSizeChangingAmount(c);
   const recruitBonus = Math.max(-recruit, 0);
@@ -1944,7 +1944,7 @@ function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   pushEv(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });
 }
 function shuffleIntoEv(ev: Ev, what: Card | Deck, where: Deck): void {
-  const cards = what instanceof Card ? [ what ] : what.deck;
+  const cards = what instanceof Card ? [ what ] : [ ...what.deck ];
   cont(ev, () => cards.each(c => moveCard(c, where)));
   cont(ev, () => where.shuffle());
 }

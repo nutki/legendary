@@ -4402,7 +4402,7 @@ addHeroTemplates("Ant-Man", [
   c1: makeHeroCard("Jocasta", "Creation of Ultron", 3, u, 2, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && empowerEv(ev, Color.TECH)),
 // If your discard pile is empty, you get +2 Recruit. Otherwise, shuffle your discard pile into your deck.
   c2: makeHeroCard("Jocasta", "Reprocess", 4, 2, u, Color.RANGED, "Avengers", "D", ev => {
-    playerState.discard.size ? addRecruitEvent(ev, 2) : shuffleIntoEv(ev, playerState.discard, playerState.deck);
+    !playerState.discard.size ? addRecruitEvent(ev, 2) : shuffleIntoEv(ev, playerState.discard, playerState.deck);
   }),
 // {SIZECHANGING TECH}
 // Draw two cards.
