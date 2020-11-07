@@ -110,8 +110,8 @@ interface Card {
   transformed?: Card
   isTransformed?: boolean
   backSide?: Card
-  uSizeChanging?: { color: number, amount: number } // TODO microscopic size changing
-  chivalrousDuel?: boolean // TODO chivalrous duel
+  uSizeChanging?: { color: number, amount: number }
+  chivalrousDuel?: boolean;
   modifiers?: Modifiers;
   isAdaptingMastermind?: boolean;
   cosmicThreat?: Filter<Card>;
@@ -640,6 +640,7 @@ type EvType =
 'MOVECARD' |
 'NOOP' |
 'TURNSTART' |
+'CHIVALROUSSPEND' |
 // Scheme Actions
 'PAYTORESCUE' |
 'BETRAY' |
@@ -1759,6 +1760,9 @@ function canPayCost(action: Ev) {
     usableRecruit += turnState.recruitSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   if (action.type === 'FIGHT')
     usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
+  if (action.type === 'FIGHT' && action.what.chivalrousDuel) {
+    usableAttack = Math.min(usableAttack, chivalrousMaxAttack());
+  }
   if (cost.piercing) { // simplified calculation assumes cost.attack and cost.recruit is zero
     let usablePiercing = turnState.piercing;
     if (turnState.piercingWithAttack) usablePiercing += usableAttack;
@@ -1796,6 +1800,9 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
   let eitherToPay = cost.either || 0;
   if (turnState.attackWithRecruit) { eitherToPay += attackToPay;  attackToPay = 0; }
   if (turnState.recruitWithAttack) { eitherToPay += recruitToPay; recruitToPay = 0; }
+  if (attackToPay && action.type === 'FIGHT' && action.what.chivalrousDuel) {
+    chivalrousSpendEv(action, attackToPay);
+  }
   if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
     attackToPay -= payMin(a, attackToPay);
     eitherToPay -= payMin(a, eitherToPay);
@@ -2813,7 +2820,6 @@ TODO Champions multiple size-changing
 TODO Champions cheering crowds
 TODO heroName fixes (setup option vs heroName, divided names, transformed names?, gray card names, gainable and other hero names)
 TODO many fortify effects
-TODO ant-man uSizeChanging, cDuel
 TODO venom Bonding
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many

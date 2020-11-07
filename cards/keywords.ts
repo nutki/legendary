@@ -590,6 +590,26 @@ function empowerVarDefense(color: number, amount: number = 1) {
 function hasNoSizeChanging(c: Card) {
   return !getModifiedStat(c, 'sizeChanging', c.sizeChanging) && !c.uSizeChanging
 }
+function chivalrousDuelSources() {
+  const amounts = new Map<string, number>();
+  pastEvents("ADDATTACK").each(ev => {
+    const source = ev.getSource();
+    if (ev.amount && source && source.heroName) {
+      amounts.set(source.heroName, (amounts.get(source.heroName) || 0) + ev.amount);
+    }
+  });
+  pastEvents("CHIVALROUSSPEND").each(ev => {
+    amounts.set(ev.desc, amounts.get(ev.desc) - ev.amount);
+  });
+  return amounts;
+}
+function chivalrousMaxAttack() { return Math.max(...chivalrousDuelSources().values()); }
+function chivalrousSpendEv(ev: Ev, amount: number) {
+  const options = [...chivalrousDuelSources()].filter(([, v]) => v >= amount).map(([heroName]) => ({l: heroName, v: heroName}));
+  chooseOptionEv(ev, "Choose a Hero to use for Chivalrous Duel", options, heroName => {
+    pushEv(ev, "CHIVALROUSSPEND", { desc: heroName, amount });
+  });
+}
 
 function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, doBoth?: number) {
   const hasDigest = playerState.victory.size >= amount;
