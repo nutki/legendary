@@ -4410,7 +4410,7 @@ addHeroTemplates("Ant-Man", [
 // If your discard pile is empty, you get +2 Attack. Otherwise shuffle your discard pile into your deck.
 // GUN: 1
   ra: makeHeroCard("Jocasta", "Electromagnetic Eyebeams", 7, u, 5, Color.RANGED, "Avengers", "GD", ev => {
-    playerState.discard.size ? addAttackEvent(ev, 2) : shuffleIntoEv(ev, playerState.discard, playerState.deck);
+    !playerState.discard.size ? addAttackEvent(ev, 2) : shuffleIntoEv(ev, playerState.discard, playerState.deck);
   }),
 },
 {
