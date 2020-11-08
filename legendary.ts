@@ -2477,6 +2477,7 @@ function adaptMastermindEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { func: ()
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
+  if (!c) return; // Villain decks runs out
   textLog.log(ev.what ? `Playing villain card: ${c.cardName || c.id}` : `Drawn from villain deck: ${c.cardName || c.id}`);
   ev.what = c;
   if (!c) {
