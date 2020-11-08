@@ -586,7 +586,7 @@ function empowerEv(ev: Ev, color: number) {
   addAttackEvent(ev, hqCards().count(color));
 }
 function empowerVarDefense(color: number, amount: number = 1) {
-  return (c: Card) => c.printedDefense + hqCards().count(color) * amount;
+  return (c: Card) => (c.printedDefense || 0) + hqCards().count(color) * amount;
 }
 function getSizeChanging(c: Card) {
   return getModifiedStat(c, 'sizeChanging', c.sizeChanging);
@@ -619,7 +619,7 @@ function chivalrousMaxAttack() { return Math.max(...chivalrousDuelSources().valu
 function chivalrousSpendEv(ev: Ev, amount: number) {
   const options = [...chivalrousDuelSources()].filter(([, v]) => v >= amount).map(([heroName]) => ({l: heroName, v: heroName}));
   chooseOptionEv(ev, "Choose a Hero to use for Chivalrous Duel", options, heroName => {
-    pushEv(ev, "CHIVALROUSSPEND", { desc: heroName, amount });
+    pushEv(ev, "CHIVALROUSSPEND", { desc: heroName, amount, func: () => {} });
   });
 }
 // Venom
