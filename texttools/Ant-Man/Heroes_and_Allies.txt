@@ -171,7 +171,7 @@ When a Master Strike is played, before it takes effect, you may discard this car
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 0+
-You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
+You get +Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
 #COST: 7
 
 

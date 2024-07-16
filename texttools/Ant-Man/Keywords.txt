@@ -1,4 +1,3 @@
-
 <b>Size-Changing</b> This keyword represents Heroes and Villains using superpowers to shrink, grow, or massively change their size. It's also used by characters that can change the size of a weapon, technology, or energy. It first debuted in <i>Legendary Civil War</i> and also appeared in <i>Legendary Champions</i>.
 * Some Hero cards say things like "Size-Changing [Covert]." This means <b>"You can recruit this card for 2 Recruit less if you played any [Covert] cards this turn."</b>
 * Likewise, some Villain cards say things like "Size-Changing [Tech]." This means <b>"You can fight this Villain for 2 Attack less if you played any [Tech] cards this turn."</b>

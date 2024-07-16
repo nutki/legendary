@@ -3098,7 +3098,7 @@ addVillainTemplates("Ant-Man", [
 // VP: 4
   [ 1, makeVillainCard("Queen's Vengeance", "Gigantus", 7, 4, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-    uSizeChanging: { color: Color.STRENGTH, amount: 5 },
+    uSizeChanging: { color: Color.STRENGTH, amount: 6 },
   })],
 // <b>Chivalrous Duel</b>
 // ESCAPE: Each player reveals a [Tech] Hero or gains a Wound.

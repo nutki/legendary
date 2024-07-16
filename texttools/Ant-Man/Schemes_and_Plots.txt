@@ -18,7 +18,7 @@
 
 #CARDNAME: Trap Heroes in the Microverse
 #SETUP: 11 Twists. Add all 14 cards for and extra Hero the Villain Deck.
-#RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
+#RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no other abilities while in the city. When you fight one, choose any player to gain it as a Hero.
 #TWIST: Play two cards from the Villain Deck.
 #EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
 
