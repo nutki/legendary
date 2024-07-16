@@ -16,7 +16,7 @@ This Villain gets +1 Attack for each Bystander in the KO pile.
 #VP: 1
 
 #CARDNAME: Shi'ar Death Commandos
-#AMBUSH: The Villain captures a Human Shield.
+#AMBUSH: This Villain captures a <b>Human Shield</b>.
 #FIGHT: KO one of your Heroes.
 #ATTACK: 2*
 #VP: 1

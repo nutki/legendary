@@ -1,4 +1,3 @@
-
 <b>Danger Sense</b>: This keyword represents Spider-Man using his famous "Spider-Sense" superpower to detect danger and evade it. It also covers Tony Stark, Happy Hogan, and Vulture watching for threats and rapidly reacting to them.
 * Some cards say things like "Danger Sense 2." This means "Reveal the top 2 cards of the Villain Deck. You get +1 Attack for each Villain you revealed. Put all the cards back on top in any order."
 * Cards can say Danger Sense 1, 2, 3, or even 4, revealing that many cards.

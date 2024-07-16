@@ -215,11 +215,11 @@ makeHorrorCard("Enraged Mastermind", ev => addStatMod('defense', isMastermind, 2
 // After you defeat the Mastermind's four Tactics, you must still fight the Mastermind a fifth time to put the Mastermind card in your Victory Pile and win.
 makeHorrorCard("Fight to the End", ev => addStatSet('isFightable', isMastermind, c => c.location === gameState.mastermind)),
 // The Mastermind has +1 Attack for each Mastermind Tactic among all players' Victory Piles.
-makeHorrorCard("Growing Thread", ev => addStatMod('defense', isMastermind, () => gameState.players.sum(p => p.victory.count(isTactic)))),
+makeHorrorCard("Growing Threat", ev => addStatMod('defense', isMastermind, () => gameState.players.sum(p => p.victory.count(isTactic)))),
 // Whenever you play a Henchman Villain from the Villain Deck, play another card from the Villain Deck.
 makeHorrorCard("Legions upon Legions", ev => gameState.triggers.push({ event: 'VILLAINDRAW', after: ev => isHenchman(ev.parent.what) && villainDrawEv(ev) })),
 // The Mastermind has +1 Attack.
-makeHorrorCard("Manical Mastermind", ev => addStatMod('defense', isMastermind, 1)),
+makeHorrorCard("Maniacal Mastermind", ev => addStatMod('defense', isMastermind, 1)),
 // Whenever you play a Bystander from the Villain Deck, play another card from the Villain Deck.
 makeHorrorCard("Misery upon Misery", ev => gameState.triggers.push({ event: 'VILLAINDRAW', after: ev => isBystander(ev.parent.what) && villainDrawEv(ev) })),
 // AMBUSH: Each player gains a Wound.

@@ -28,14 +28,14 @@
 #CARDNAME: Dark Phoenix
 #LEADS: Hellfire Club
 #STRIKE: KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck.
-Dark Phoenix Wins: When the Hero Deck is empty.
+<b>Dark Phoenix Wins</b>: When the Hero Deck is empty.
 #ATTACK: 13
 #VP: 7
 
 #EPICNAME: Dark Phoenix
 #LEADS: Hellfire Club
 #STRIKE: KO the top card of the Hero Deck and each card in the Hero Deck that shares a color with it. Shuffle the Hero Deck. Then, each player plays a Hellfire Club card from their victory Pile. Next, play a random Horror.
-Dark Phoenix Wins: When the Hero Deck is empty.
+<b>Dark Phoenix Wins</b>: When the Hero Deck is empty.
 #ATTACK: 15
 #VP: 7
 
@@ -61,8 +61,8 @@ Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
 #EPICNAME: Deathbird
 Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
 #LEADS: Shi'ar Imperial Guard and a Shi'ar Henchmen Group.
-#STRIKE: If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
-#ATTACK: 8+
+#STRIKE: If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Ship Token Villain with 9 Attack worth 6 VP.
+#ATTACK: 10+
 #VP: 6
 
 #TACTIC: Shi'ar Elite Bodyguards
@@ -106,39 +106,39 @@ Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
 #CARDNAME: Onslaught
 Each player's hand size is 1 less.
 #LEADS: Dark Descendants
-#STRIKE: KO all Heroes Dominated by Onslaught. Then each player reveals their hand and chooses one of their non-grey Heroes. Onslaught Dominates those Heroes.
+#STRIKE: KO all Heroes <b>Dominated</b> by Onslaught. Then each player reveals their hand and chooses one of their non-grey Heroes. Onslaught <b>Dominates</b> those Heroes.
 #ATTACK: 10+
 #VP: 7
 
 #EPICNAME: Onslaught
 Each player's hand size is 1 less.
 #LEADS: Dark Descendants
-#STRIKE: KO all Heroes Dominated by Onslaught. Then each player reveals their hand and chooses two of their non-grey Heroes. Onslaught Dominates those Heroes. Then play a random Horror.
+#STRIKE: KO all Heroes <b>Dominated</b> by Onslaught. Then each player reveals their hand and chooses two of their non-grey Heroes. Onslaught <b>Dominates</b> those Heroes. Then play a random Horror.
 #ATTACK: 12+
 #VP: 7
 
 #TACTIC: Godlike Psionic Entity
-#FIGHT: Onslaught Dominates all five Heroes from the HQ.
+#FIGHT: Onslaught <b>Dominates</b> all five Heroes from the HQ.
 
 #TACTIC: Sins of X-Men Past
-#FIGHT: Each other player reveals the top six cards of their deck and chooses an X-Men Hero revealed this way. Onslaught Dominates those Heroes. Put the rest back in random order.
+#FIGHT: Each other player reveals the top six cards of their deck and chooses an X-Men Hero revealed this way. Onslaught <b>Dominates</b> those Heroes. Put the rest back in random order.
 
 #TACTIC: Xavier and Magneto Combined
-#FIGHT: Reveal the top three cards of the Hero Deck. Onslaught Dominates all the X-Men and Brotherhood Heroes you revealed. Put the rest back in random order.
+#FIGHT: Reveal the top three cards of the Hero Deck. Onslaught <b>Dominates</b> all the X-Men and Brotherhood Heroes you revealed. Put the rest back in random order.
 
 #TACTIC: Worldwide Mental Control
-#FIGHT: Onslaught Dominates four 0-cost Heroes from the KO pile. The next time a player fights Onslaught, KO those 0-cost Heroes.
+#FIGHT: Onslaught <b>Dominates</b> four 0-cost Heroes from the KO pile. The next time a player fights Onslaught, KO those 0-cost Heroes.
 
 #CARDNAME: Shadow King
 #LEADS: Shadow-X
-#STRIKE: KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+#STRIKE: KO all Heroes <b>Dominated</b> by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King <b>Dominates</b> those Heroes.
 #ATTACK: 7+
 #VP: 6
 
 #EPICNAME: Shadow King
 #START: Play two random Horrors.
 #LEADS: Shadow-X
-#STRIKE: KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+#STRIKE: KO all Heroes <b>Dominated</b> by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King <b>Dominates</b> those Heroes.
 #ATTACK: 9+
 #VP: 6
 
@@ -146,10 +146,10 @@ Each player's hand size is 1 less.
 #FIGHT: Each other player reveals their hand and shuffles two cards with Recruit icons from their hand back into their deck.
 
 #TACTIC: Poison their Minds
-#FIGHT: Each other player reveals their hand and chooses one of their non-grey Heroes. Shadow King Dominates those Heroes.
+#FIGHT: Each other player reveals their hand and chooses one of their non-grey Heroes. Shadow King <b>Dominates</b> those Heroes.
 
 #TACTIC: Psychic Seduction
-#FIGHT: Shadow King Dominates each Hero that costs 5 or less from the HQ.
+#FIGHT: Shadow King <b>Dominates</b> each Hero that costs 5 or less from the HQ.
 
 #TACTIC: Telepathic Betrayal
 #FIGHT: If the "Betrayal of the Shadow" Trap is in any Victory Pile or the KO pile, put it on top of the Villain Deck.

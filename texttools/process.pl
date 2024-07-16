@@ -152,7 +152,7 @@ while (<A>) {
       s!^<span style='font-size:14px;'><i><b>(.*?)</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
       s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;
       s!^<span style='font-size:8px;'><i>Art contains a gun.*</i></span>!#GUN: 1! && next;
-      s!^<span style='font-size:8px;'><i>(Flavor: )?(.*)</i></span>!#FLAVOR: $2! && next;
+      s!^<span style='font-size:8px;'><i>(Flavor: )?(.*)</i>(</span>)?!#FLAVOR: $2! && next;
       s!^<span style='font-size:8px;'>(.*)</span>!#FLAVOR: $1! && next;
 
     }
@@ -218,10 +218,10 @@ while (<A>) {
     }
     if ($name =~ /^Ambitions/) {
       s!^<b>Attack</b>: (\d+)\n!#ATTACK: $1\n!mg;
-      s!(^|\n\n)<b>(.*?)</b>\n!$1#CARDNAME: $2\n!g;
+      s!(^|\n)<b>(.*?)</b>\n!$1#CARDNAME: $2\n!g;
     }
     if ($name =~ /^Horrors/) {
-      s!(^|\n\n)<b>(.*?)</b>\n!$1#CARDNAME: $2\n!g;
+      s!(^|\n)<b>(.*?)</b>\n!$1#CARDNAME: $2\n!g;
       s!^<b>Ambush</b>: !#AMBUSH: !gm;
     }
     s/\n\n+/\n\n/g;

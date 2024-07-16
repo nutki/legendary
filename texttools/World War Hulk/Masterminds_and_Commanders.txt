@@ -1,9 +1,9 @@
 
-#CARDNAME: General Ross
+#CARDNAME: General "Thunderbolt" Ross
 
 #START: Stack 8 Bystanders next to General Ross as "Helicopter" Villains with 2 Attack. You can fight them to rescue them as Bystanders. You can't fight General Ross while he has any Helicopters.
 #LEADS: Code Red
-#STRIKE:  General Ross {TRANSFORM} then {XDRAMPAGE Hulk}.
+#STRIKE:  General Ross {TRANSFORM}, then {XDRAMPAGE Hulk}.
 #ATTACK: 6*
 #VP: 6
 

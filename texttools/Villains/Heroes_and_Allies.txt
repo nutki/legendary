@@ -397,7 +397,7 @@ Reveal the top card of the Ally Deck. You may play a copy of that card this turn
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 0+
-Reveal the top five cards of the Ally Deck. You get + Attack equal to their total printed Attack. Then put them back in any order.
+Reveal the top five cards of the Ally Deck. You get +Attack equal to their total printed Attack. Then put them back in any order.
 #COST: 7
 
 #CARDNAME: Sabretooth

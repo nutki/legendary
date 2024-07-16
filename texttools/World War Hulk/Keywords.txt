@@ -1,6 +1,4 @@
-
 {TRANSFORM}: This keyword represents the themes of duality and transformation in Hulk stories.
-
 Heroes:
 * Each Hero in this set has some special "Transformed" cards that go along with it. When you use these Heroes, <b>don't</b> shuffle their "Transformed" cards into the Hero Deck. Instead, set them aside in a special Transformation Pile. You can't recruit cards from this pile. Instead, you transform other cards into them.
 * Some Hero cards like "Bruce Banner: Gamma Ray Experiments" say things like "...{TRANSFORM} this into Savage Hulk Unleashed."

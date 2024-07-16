@@ -4,14 +4,14 @@
 #SUBNAME: Fatale
 #COPIES: 2
 #FIGHT: KO one of your Heroes.
-#ESCAPE: The Mastermind Dominates the top card of the Hero Deck.
+#ESCAPE: The Mastermind <b>Dominates</b> the top card of the Hero Deck.
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: Havok, Brainwashed
 #COPIES: 2
 #FIGHT: Gain this as a Hero.
-#ESCAPE: Havok becomes a Hero Dominated by the Mastermind.
+#ESCAPE: Havok becomes a Hero <b>Dominated</b> by the Mastermind.
 #ATTACK: 6
 #GAINABLE
 #TEAM: X-Men
@@ -21,7 +21,7 @@
 
 #SUBNAME: Nemesis
 #COPIES: 1
-#AMBUSH: Each player reveals their hand and chooses one of their non-grey Heroes. Nemesis Dominates those Heroes.
+#AMBUSH: Each player reveals their hand and chooses one of their non-grey Heroes. Nemesis <b>Dominates</b> those Heroes.
 #ATTACK: 5
 #VP: 5
 
@@ -34,7 +34,7 @@
 
 #SUBNAME: Random
 #COPIES: 2
-#AMBUSH: Random Dominates the top card of the Hero Deck. Then, each player reveals their hand and chooses one of their Heroes with that same cost. Random Dominates those Heroes.
+#AMBUSH: Random <b>Dominates</b> the top card of the Hero Deck. Then, each player reveals their hand and chooses one of their Heroes with that same cost. Random <b>Dominates</b> those Heroes.
 #ATTACK: 4+
 #VP: 3
 
@@ -44,12 +44,12 @@
 #COPIES: 1
 #TRAP
 #TRAPCOND: Have no Hellfire Villains in the city.
-#TRAPEFFECT: This Trap becomes a 6 Attack "Phoenix Force" Token Villain that enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
+#TRAPEFFECT: This Trap becomes a 6 Attack "Phoenix Force" Token Villain that enters the city and <b>Dominates</b> all the Heroes in the HQ that cost 6 or less.
 #VP: 3
 
 #SUBNAME: Emma Frost (White Queen)
 #COPIES: 2
-#AMBUSH: Each player chooses an X-Men Hero from their discard pile. Emma Frost Dominates those Heroes.
+#AMBUSH: Each player chooses an X-Men Hero from their discard pile. Emma Frost <b>Dominates</b> those Heroes.
 #ATTACK: 4+
 #VP: 4
 
@@ -63,7 +63,7 @@
 
 #SUBNAME: Mastermind (Jason Wyngarde)
 #COPIES: 1
-#AMBUSH: The Villain ascends to become a new Mastermind. He gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Mastermind dominates the revealed Hero with the highest cost (and tied for highest.)
+#AMBUSH: The Villain ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player simultaneously reveals a non-grey Hero. Mastermind <b>Dominates</b> the revealed Hero with the highest cost <i>(and tied for highest.)</i>
 #ATTACK: 8+
 #VP: 6
 
@@ -197,7 +197,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Dark Marvel Girl
 #COPIES: 1
-#AMBUSH: Dark Marvel Girl Dominates each X-Men Hero that costs 4 or less from the HQ.
+#AMBUSH: Dark Marvel Girl <b>Dominates</b> each X-Men Hero that costs 4 or less from the HQ.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4+
 #GAINABLE
@@ -223,7 +223,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Oracle
 #COPIES: 2
-#AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle Dominates those Heroes.
+#AMBUSH: Each player discards the top four cards of their deck and chooses one of those cards that costs 1 to 4. Oracle <b>Dominates</b> those Heroes.
 #ATTACK: 4+
 #VP: 4
 
@@ -253,7 +253,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 
 #SUBNAME: Lady Mastermind
 #COPIES: 1
-#AMBUSH: This Villain ascends to become a new Mastermind. She gains the ability "Master Strike: Each player simultaneously reveals a non-grey Hero. Lady Mastermind Dominates the revealed Hero with the lowest cost (and tied for lowest.)
+#AMBUSH: This Villain ascends to become a new Mastermind. She gains the ability "<b>Master Strike</b>: Each player simultaneously reveals a non-grey Hero. Lady Mastermind <b>Dominates</b> the revealed Hero with the lowest cost <i>(and tied for lowest.)</i>
 #ATTACK: 7+
 #VP: 5
 
@@ -267,14 +267,14 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #SUBNAME: Selene
 #COPIES: 2
 #AMBUSH: Selene Dominates all of the 0-cost Heroes from the KO pile.
-#FIGHT: KO all the Heroes Dominated by Selene.
-#ESCAPE: Put one Hero Dominated by Selene into each player's discard pile.
+#FIGHT: KO all the Heroes <b>Dominated</b> by Selene.
+#ESCAPE: Put one Hero <b>Dominated</b> by Selene into each player's discard pile.
 #ATTACK: 3+
 #VP: 3
 
 #SUBNAME: Typhoid Mary
 #COPIES: 2
-#AMBUSH: Each player reveals their hand and chooses a 3-cost Hero from it. Typhoid Mary Dominates those Heroes.
+#AMBUSH: Each player reveals their hand and chooses a 3-cost Hero from it. Typhoid Mary <b>Dominates</b> those Heroes.
 #ATTACK: 3+
 #VP: 3
 

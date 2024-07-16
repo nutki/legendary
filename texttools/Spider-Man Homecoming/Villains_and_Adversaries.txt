@@ -43,16 +43,16 @@
 #SUBNAME: High Tech Helmet
 #COPIES: 2
 {STRIKER 1}
-#FIGHT: Danger Sense 3
+#FIGHT: {DANGERSENSE 3}
 #ATTACK: 3+
 #VP: 3
 
 #SUBNAME: Razor Talons
 #COPIES: 2
 {STRIKER 1}
-#FIGHT: The next Hero you gain this turn has Wall Crawl.
-#VP: 2
+#FIGHT: The next Hero you gain this turn has {WALLCRAWL}.
 #ATTACK: 2+
+#VP: 2
 
 #SUBNAME: Turbine Powered
 #COPIES: 2

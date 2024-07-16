@@ -1,4 +1,3 @@
-
 <b>X-Gene</b>: This keyword represents X-Men combining unique mutant powers with their signature teamwork.
 * Some Heroes say things like "X-Gene [Ranged]: You get +2 Attack." This means "If you have a [Ranged] card in your discard pile, you get +2 Attack." You can use a card's X-Gene ability only if you have the specified kind of card in your discard pile.
 * You can only use a card's X-Gene ability once, no matter how many matching cards you have in your discard pile.
@@ -15,7 +14,7 @@
 * Berserk gives no benefit from discarding printed Recruit or Piercing values.
 {SOARING FLIGHT}: This ability represents X-Men flying into action as rapid reinforcements.
 * "Soaring Flight" means "When you recruit this Hero, set it aside. At the end of this turn, add it to your new hand as an extra card."
-{LIGHTSHOW} This keyword represents X-Men using fireworks and blinding bursts in spectacular combinations.
+<b>Lightshow</b>: This keyword represents X-Men using fireworks and blinding bursts in spectacular combinations.
 * Some Heroes say things like "Lightshow: You get +3 Attack." Once per turn, if you played at least two Lightshow cards this turn, you can use a single Lightshow ability from any of those cards.
 * If you play three, four, or more Lightshow cards you still use only a single Lightshow ability.
 <b>Dominate</b>: This keyword represents Villains using telepathy, sorcery, or illusions to twist Heroes' minds to evil.

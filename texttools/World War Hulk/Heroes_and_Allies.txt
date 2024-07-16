@@ -277,7 +277,7 @@ When you defeat a Villain this turn that has 6 Attack or more, {TRANSFORM} this 
 #COPIES: 3
 #CLASS: [Instinct]
 #ATTACK: 0+
-Choose a Villain in your Victory Pile, You get + Attack equal to it's printed VP.
+Choose a Villain in your Victory Pile, You get +Attack equal to it's printed VP.
 #COST: 6
 #FLAVOR: "Once I was the strongest there is. Now I'm everything there is."
 

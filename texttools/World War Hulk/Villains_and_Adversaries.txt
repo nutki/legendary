@@ -150,7 +150,7 @@ Doc Samson has +4 Attack unless you {OUTWIT} him.
 #SUBNAME: Gladiators' Colosseum
 #COPIES: 1
 #TRAP
-#TRAPCOND: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
+#TRAPCOND: Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., Avengers, X-Men, Warbound, etc.)
 #TRAPEFFECT: <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
 #VP: 4
 
