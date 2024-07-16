@@ -1,0 +1,190 @@
+
+#CARDNAME: Fantastic Four United
+#TEAM: Fantastic Four
+
+#SUBNAME: Thing
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2+
+#ATTACK: 0+
+{TEAMPOWER Fantastic Four} You get +1 Recruit.
+{FOCUS 3} You get +2 Attack.
+#COST: 4
+#FLAVOR: On Yancy Street or in deep space, there's always a time to clobber.
+
+#SUBNAME: Human Torch
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+#ATTACK: 0+
+{FOCUS 2} KO up to two Wounds from your hand and/or discard pile.
+{FOCUS 6} You get +6 Attack and gain a Wound.
+#COST: 4
+
+#SUBNAME: Invisible Woman
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 2+
+If you played any other cards that cost 4 this turn, you get +2 Recruit.
+{FOCUS 4} Rescue a Bystander, then you may KO a card from your hand or discard pile.
+#COST: 4
+
+#SUBNAME: Mr. Fantastic
+#COPIES: 1
+#CLASS: [Tech]
+#RECRUIT: 2
+#ATTACK: 0+
+Draw two cards.
+{FOCUS 5} You get +7 Attack usable only against the Mastermind.
+#COST: 7
+#GUN: 1
+
+#CARDNAME: Psi-Lord
+#TEAM: Fantastic Four
+
+#SUBNAME: Avert Future Tragedy
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+#ATTACK: 0+
+{FOCUS 2} Reveal the top card of the Villain Deck. If it's a Master Strike, you get +3 Attack, KO it, and replace it with the top card from the Bystander Stack.
+{POWER Instinct} {OUTOFTIME}
+#COST: 3
+
+#SUBNAME: Interdimensional Rescue
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+{FOCUS 1} Reveal the top card of the Villain Deck. If it's a Bystander, you get +2 Attack, rescue it, and shuffle the top card from the Bystander Stack into the Villain Deck.
+{POWER Covert} {OUTOFTIME}
+#COST: 4
+
+#SUBNAME: Slip the Timestream
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 3
+#ATTACK: 0+
+{FOCUS 1} Reveal the top card of the Villain Deck. If it's a Villain, you get +1 Attack and you may fight it this turn.
+{POWER Instinct Covert} {OUTOFTIME}
+#COST: 6
+
+#SUBNAME: Reshape Reality
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 3
+#ATTACK: 3+
+{FOCUS 3} Reveal the top card of the Villain Deck. If it's a Scheme Twist, you get +4 Attack and shuffle the Villain Deck.
+{TEAMPOWER Fantastic Four, Fantastic Four} {OUTOFTIME}
+#COST: 7
+
+#CARDNAME: Brainstorm
+#TEAM: Fantastic Four
+
+#SUBNAME: Time Loop Experiments
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 1
+Draw a card. Then put a card from your hand on top of your deck.
+{POWER Tech} {OUTOFTIME}
+#COST: 2
+#FLAVOR: The best way to predict the future is if it's already in the past.
+
+#SUBNAME: Borrow from the Future
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1
+Reveal the top card of your deck. If it costs 2 or more, draw it. Otherwise, discard it or put it back.
+{POWER Ranged} {OUTOFTIME}
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Reprogram Doombot Legions
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+{TEAMPOWER Fantastic Four} You may look at the top two cards of your deck. If you do, KO one of them and put the other back.
+#COST: 6
+
+#SUBNAME: Prot&eacute;g&eacute; of Dr. Doom
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+Use one of Dr. Doom's Mastermind Tactics. You can't use any of them more than once per game. If you have already used them all, get +4 Attack instead.
+(Take another turn; or draw three extra cards at end of turn; or you may recruit a [Tech] or [Ranged] Hero for free; or all other players draw a card or discard a card.)
+#COST: 8
+
+#CARDNAME: Heralds of Galactus
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Silver Surfer
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2
+{FOCUS 2} Draw a card, then you may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+#COST: 4
+
+#SUBNAME: Firelord
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+This turn, your Heroes' Conqueror abilities also give Attack if those city spaces have been destroyed.
+{POWER Ranged} {BRIDGE CONQUEROR 2}
+#COST: 3
+#FLAVOR: A former Nova Centurion, Pyreus Kril has really burned his bridges.
+
+#SUBNAME: Stardust
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 4
+#ATTACK: 0+
+{FOCUS 4} {ROOFTOPS CONQUEROR 4}
+{FOCUS 11} Search the Hero Deck, HQ, or your deck or discard pile for "Galactus Hungers" and put it on top of your deck. Shuffle any deck you searched.
+#COST: 6
+
+#SUBNAME: Galactus Hungers
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 8+
+If you have played another Herald of Galactus this turn, destroy the leftmost city space, defeat any Villain there, and then you get +2 Attack for each destroyed city space. If this destroys the last city space, Galactus consumes the Earth. You Win, Evil Wins, and all other players lose.
+#COST: 10
+
+#CARDNAME: Super-Skrull
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Stretching Credibility
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+<b>Focus 2 Attack -&gt;</b> When you draw a new hand of cards at the end of this turn, draw an extra card.
+#COST: 3
+#FLAVOR: Kl'rt could mimic Mr. Fantastic's elasticity, but never his genius intellengence.
+
+#SUBNAME: Rock Solid
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 2+
+{POWER Strength} {SEWERS CONQUEROR 1}.
+<b>Focus 3 Attack -&gt;</b> You get +2 Recruit.
+#COST: 4
+#FLAVOR: No one told Kl'rt that the sewers were not exactly a high-priority objective for intergalactic conquest.
+
+#SUBNAME: Transparent Motives
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2+
+{BANK CONQUEROR 1}
+<b>Focus 3 Attack -&gt;</b> You may KO a card from your hand or discard pile.
+#COST: 5
+#FLAVOR: It's hard to resist robbing a bank when you're invisible, invincible, and can smash steel vaults to pieces.
+
+#SUBNAME: Put to the Torch
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4+
+{BRIDGE CONQUEROR 1}
+{STREETS CONQUEROR 1}
+You may gain a Wound. If you do, you get {ROOFTOPS CONQUEROR 4}.
+#COST: 7
+
+

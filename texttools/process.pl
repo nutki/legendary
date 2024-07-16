@@ -148,6 +148,8 @@ while (<A>) {
       s!^<b>Lightshow</b>: *!{LIGHTSHOW} ! && next;
       s!^<b>Digest (\d+)</b>: *!{DIGEST $1} ! && next;
       s!^<b>Indigestion</b>: *!{INDIGESTION} ! && next;
+      s!^<b>Mass Momentum (\d+)</b>$!{MASSMOMENTUM $1}! && next;
+      s!^<b>Momentum (\d+)</b>$!{MOMENTUM $1}! && next;
 
       s!^<span style='font-size:14px;'><i><b>(.*?)</b></i></span>( \(first print run promo\))?$!\n#CARDNAME: $1!s && next;
       s!^<span style='font-size:14px;'><i><b>(.*?)</b>(</i></span>)? \((\S+) cop(y|ies)( in starting deck)?\)(</i></span>)?$!\n#CARDNAME: $1\n#COPIES: $3!s && next;

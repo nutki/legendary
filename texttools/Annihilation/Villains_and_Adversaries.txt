@@ -1,0 +1,72 @@
+
+#CARDNAME: Annihilation Wave
+
+#SUBNAME: Ravenous
+#COPIES: 2
+{MOMENTUM 3}
+#AMBUSH: Ravenous swaps places with an Annihilation Wave villain that isn't Weaponized Galactus.
+#ESCAPE: Each player reveals a [Strength] Hero or gains a wound.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Queens of Annihilation
+#COPIES: 3
+{MOMENTUM 3}
+#AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, play it.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+#FLAVOR: Eradica, Extermina, and Extirpia each lead a third of the Annihilation Wave as the royal consorts of Annihilus.
+
+#SUBNAME: Annihilation Armada
+#COPIES: 2
+{MOMENTUM 2}
+#AMBUSH: A Henchmen Villain from your Victory Pile enters the city.
+#ATTACK: 3+
+#VP: 2
+#FLAVOR: The Wave was alwyas advancing, always growing, always consuming.
+
+#SUBNAME: Weaponized Galactus
+#COPIES: 1
+{MOMENTUM 9}
+#AMBUSH: Weaponized Galactus swaps places with the leftmost Villain in the city.
+#ESCAPE: Destroy the leftmost city space. If this destroys the last city space, Evil Wins. Otherwise, each player gains a Wound, and you shuffle Weaponized Galactus back into the Villain Deck. Any Villain from the destroyed city space escapes.
+#ATTACK: 9+
+#VP: 7
+
+#CARDNAME: Timelines of Kang
+
+#SUBNAME: Immortus
+#COPIES: 2
+{STREETS CONQUEROR 3}
+#FIGHT: Reveal a [Ranged] Hero or reveal the top card of the Villain Deck. If it's a Villain worth 4VP or less, defeat it<i>(do its Fight effect)</i> and put Immortus in its place.
+#ESCAPE: Each player reveals a [Ranged] Hero or gains a Wound. Shuffle Immortus back into the Villain Deck.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: Pharaoh Rama-Tut
+#COPIES: 2
+{BRIDGE CONQUEROR 3}
+#AMBUSH: If the Bridge is empty, move a Villain to the Bridge.
+#FIGHT: Send a [Strength] or [Ranged] Hero you played this turn as a <b>Man or Woman Out of Time</b>.
+#ATTACK: 4+
+#VP: 4
+
+#SUBNAME: Scarlet Centurion
+#COPIES: 2
+{BANK CONQUEROR 2}
+#AMBUSH: Reveal your hand and send your highest-cost Hero as a <b>Man or Woman Out of Time</b>.
+#FIGHT: If you played a [Covert] Hero this turn, KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Iron Lad
+#COPIES: 2
+#FIGHT: The player of your choice gains this as a Hero.
+#ATTACK: 4
+#GAINABLE
+#CLASS: [Tech]
+{POWER Tech} {OUTOFTIME}
+#ATTACKG: 2
+
+

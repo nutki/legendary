@@ -1,0 +1,55 @@
+
+#CARDNAME: Annihilus
+{MASSMOMENTUM 2}
+#LEADS: Annihilation Wave <i>(1 player: Use 6 Henchmen.)</i>
+#STRIKE: Reveal the top card of the Villain Deck. If it's a Bystander, Annihilus captures it. If it's a Villain, it enters the city, captures a Bystander, and moves forward an extra space <i>(before doing any Ambush ability)</i>.
+#ATTACK: 10+
+#VP: 6
+
+#EPICNAME: Annihilus
+{MASSMOMENTUM 4}
+#LEADS: Annihilation Wave. Add an extra Villain Group <i>(even for 1 player.)</i>
+#STRIKE: Play a card from the Villain Deck. If it's a Villain, play a second card from the Villain Deck.
+#ATTACK: 12+
+#VP: 6
+
+#TACTIC: Deploy the Planet Killer
+#FIGHT: If this is not the final tactic, if Weaponized Galactus is in the city, he escapes. If Weaponized Galactus wasn't in the city and wasn't in any victory pile, then he enters the city from the villain deck and you shuffle the villain deck.
+
+#TACTIC: The Cosmic Control Rod
+#FIGHT: Each other player reveals the top three cards of their deck and KOs the highest-cost hero that is revealed this way and puts the rest back in any order.
+
+#TACTIC: Surging Annihilation
+#FIGHT: Check all Annihilation Wave villains from each other player's victory pile. The one worth the most VP enters the city, and that player rescues bystanders equal to that villain's VP.
+
+#TACTIC: Pull Into the Negative Zone
+#FIGHT: The cost of each hero currently in the HQ gets -2 this turn.
+#FLAVOR: He's got a really negative attitude.
+
+#CARDNAME: Kang the Conqueror
+Kang has <b>Conqueror 2</b> for each city space under a Time Incursion. <i>(He benefits from Villains there.)</i> Villains under a Time Incursion get +2 Attack.
+#LEADS: Timelines of Kang
+#STRIKE: This Strike becomes a "Time Incursion." Put it above the rightmost city space that doesn't yet have a Time Incursion.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Kang the Conqueror
+Kang has <b>Conqueror 3</b> for each city space under a Time Incursion. <i>(He benefits from Villains there.)</i> Villains under a Time Incursion get +3 Attack.
+#LEADS: Timelines of Kang
+#STRIKE: This Strike becomes a "Time Incursion." Put it above the rightmost city space that doesn't yet have a Time Incursion. If there are any Villains in any Time Incursions, each player gains a Wound.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Savior From Another Timeline
+#FIGHT: You may gain a Hero from any HQ space under a Time Incursion. Send it as a <b>Man or Woman Out of Time</b>.
+
+#TACTIC: Pull From the Future
+#FIGHT: Reveal the top two cards of the Villain Deck. Choose a Villain revealed this way to enter an empty city space under a Time Incursion. Put the rest back in any order.
+
+#TACTIC: Iron Lad Grows Up to Become Kang
+#FIGHT: If this is not the final Tactic: Each player reveals their hand. You choose a card named "Iron Lad" from the Escape Pile, or from {OUTOFTIME}, or from any player's hand or discard pile or that you played this turn. Shuffle Iron Lad into Kang's Tactics as a Mastermind Tactic that says "<b>Fight</b>: Gain this as a Hero."
+
+#TACTIC: Leap Into the Timestream
+#FIGHT: If this is not the final Tactic: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+
+
