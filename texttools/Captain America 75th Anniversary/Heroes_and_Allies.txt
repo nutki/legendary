@@ -113,6 +113,8 @@ You get +1 Attack for each Hero class you have.
 #SUBNAME: International Strike Force
 #COPIES: 5
 #CLASS: [Strength]
+#ATTACK: 0+
+#RECRUIT: 0+
 You get +1 Recruit for each Hero Class you have.
 {SAVIOR} You get +1 Attack for each Hero Class you have.
 #COST: 3

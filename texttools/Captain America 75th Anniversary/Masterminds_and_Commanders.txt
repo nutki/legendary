@@ -1,7 +1,7 @@
 
 #CARDNAME: Arnim Zola
 
-Ultimate Abomination
+{ULTIMATE ABOMINATION}
 #LEADS: Zola's Creations
 #STRIKE: For each Hero in the HQ that has less than 2 printed Attack, put that Hero on the bottom of the Hero Deck, and each player discards a card of that Hero's cost.
 #ATTACK: 6+
@@ -21,14 +21,14 @@ Ultimate Abomination
 
 #CARDNAME: Baron Heinrich Zemo
 
-Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron Zemo gets +9 Attack unless you are a Savior.
+Whenever you fight a Villain, you may use 2 Recruit to rescue a Bystander. Baron Zemo gets +9 Attack unless you are a <b>Savior</b>.
 #LEADS: Masters of Evil (WWII)
 #STRIKE: Each player KOs a Bystander from their Victory Pile. Any player who cannot do so gains a Wound.
 #ATTACK: 9+
 #VP: 6
 
 #TACTIC: Fallen Idols
-#FIGHT: Each other player that is not a Savior discards a card.
+#FIGHT: Each other player that is not a <b>Savior</b> discards a card.
 
 #TACTIC: Finding Zemo
 #FIGHT: Reveal the top five cards of the Villain Deck. If you revealed any Bystanders, KO them and each other player gains a Wound. Put the rest back in random order.

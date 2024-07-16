@@ -2713,7 +2713,7 @@ addHeroTemplates("Captain America 75th Anniversary", [
   team: "S.H.I.E.L.D.",
 // You get +1 Recruit for each Hero Class you have.
 // {SAVIOR} You get +1 Attack for each Hero Class you have.
-  c1: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "International Strike Force", 3, u, u, Color.STRENGTH, "S.H.I.E.L.D.", "G", [
+  c1: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "International Strike Force", 3, 0, 0, Color.STRENGTH, "S.H.I.E.L.D.", "G", [
     ev => addRecruitEvent(ev, numClasses()),
     ev => saviorPower() && addAttackEvent(ev, numClasses()),
  ]),

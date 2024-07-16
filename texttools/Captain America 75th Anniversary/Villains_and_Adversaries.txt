@@ -3,21 +3,21 @@
 
 #SUBNAME: Captain Zolandia
 #COPIES: 2
-Abomination
+{ABOMINATION}
 #FIGHT: You get +1 Recruit for each Hero Class you have.
 #ATTACK: 6+
 #VP: 5
 
 #SUBNAME: Doughboy
 #COPIES: 2
-Abomination
+{ABOMINATION}
 #FIGHT: KO one of your Heroes.
 #ATTACK: 4+
 #VP: 3
 
 #SUBNAME: Man-Fish
 #COPIES: 2
-Abomination
+{ABOMINATION}
 #FIGHT: If you fought Man-Fish in the Sewers or Bridge, then each other player gains a Wound.
 #ESCAPE: Each player gains a Wound.
 #ATTACK: 5+
