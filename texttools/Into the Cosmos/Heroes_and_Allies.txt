@@ -176,7 +176,7 @@ Choose one: Draw three cards or a Mastermind gains {COSMIC THREAT}[Ranged] this 
 #COPIES: 5
 #CLASS: [Ranged]
 Gain a Shard.
-{POWER Ranged} <b>Burn any number of Shards</b>: Defeat a Villain with printed VP equal to the number of Shards you turned. (This can't affect a Villain with 0 VP or no printed VP.)
+{POWER Ranged} <b>Burn any number of Shards</b>: Defeat a Villain with printed VP equal to the number of Shards you burned. (This can't affect a Villain with 0 VP or no printed VP.)
 #COST: 2
 #GUN: 1
 

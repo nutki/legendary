@@ -108,7 +108,7 @@ When an Ambush ability is played, before it takes effect, you may discard this c
 #SUBNAME: Dimensional Blade
 #COPIES: 5
 #CLASS: [Instinct]
-<b>Thrown artifact</b> - When you throw this you get +1 Recruit and +1 Attack.
+{THROWN ARTIFACT} When you throw this you get +1 Recruit and +1 Attack.
 #COST: 2
 #FLAVOR: Cutting a hole between dimensions, Sif can decapitate a Frost Giant and a Lava Elemental with a single swing.
 
@@ -139,6 +139,7 @@ During any player's turn, if a player would gain a Wound, you may throw this to 
 #SUBNAME: Fandral the Dashing
 #COPIES: 5
 #CLASS: [Instinct]
+#ATTACK: 2
 You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
 {POWER Covert} Draw a card.
 #COST: 3
@@ -165,7 +166,7 @@ You may move a Villain to an adjacent city space. If another Villain is already 
 #COPIES: 1
 #CLASS: [Strength]
 #ATTACK: 4+
-If you played at least three other non-grey Heroes with different cad ames this turn, you get +3 Attack
+If you played at least three other non-grey Heroes with different card names this turn, you get +3 Attack
 {TEAMPOWER Heroes of Asgard} {STREETS CONQUEROR 3}
 #COST: 8
 

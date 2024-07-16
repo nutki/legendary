@@ -65,12 +65,14 @@
 
 #TACTIC: Endless Resources
 #FIGHT: You get +4 Recruit.
+#FLAVOR: You'd be surprised how many people are willing to donate to a madman with no skin.
 
 #TACTIC: HYDRA Conspiracy
 #FIGHT: Draw two cards. Then draw another card for each HYDRA Villain in your Victory Pile.
 
 #TACTIC: Negablast Grenades
 #FIGHT: You get +3 Attack.
+#FLAVOR: "The only pure act of creation is destruction."
 
 #TACTIC: Ruthless Dictator
 #FIGHT: Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.

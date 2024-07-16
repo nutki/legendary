@@ -1,4 +1,3 @@
-
 {WORTHY}: Many Marvel stories involve Thor and others proving whether they are worth of wielding Asgard's mightiest weapons, like Mjolnir and Stormbreaker. This is represented by the new "Worthy" keyword. Some Hero cards say things like "If you are Worthy, draw a card."
 * <b>You are Worthy if you have a Hero that costs 5 or more.</b>
 * As usual, the phrases "your Heroes" and "Heroes you have" include both cards in your hand and cards you have played this turn. They also include Hero Artifacts you control. (Heroes in your deck and discard pile don't count.)
@@ -7,7 +6,6 @@
 <b>Artifacts</b>: See Guardians of the Galaxy
 
 <b>Thrown Artifacts</b>: See Fear Itself.
-
 <b>Villainous Weapons</b>: As a new Twist on the Artifacts of past sets, Legendary: Heroes of Asgard introduces an all-new card type: "Villainous Weapons." Villains and Masterminds can capture these ancient weapons to become even more powerful. But if you defeat them, you can seize those weapons to use as Artifacts of your own.
 * Each Villain Group in this set includes cards that say "Villainous Weapon." These are not Villains.
 * When a Villainous Weapon is played from the Villain Deck, <b>the Weapon is captured by the Villain in the city that's closest to the Villain Deck. If there are no Villains in the city, then KO the Weapon instead.</b>

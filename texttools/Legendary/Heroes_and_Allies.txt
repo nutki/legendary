@@ -407,7 +407,7 @@ Any Villain you fight on the Rooftops this turn gets -2 Attack.
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 4
-You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has Villain, swap them.)
+You may move a Villain to a new city space. Rescue any Bystanders captured by that Villain. (If you move a Villain to a city space that already has a Villain, swap them.)
 #COST: 6
 
 #SUBNAME: Tidal Wave

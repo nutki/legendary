@@ -41,6 +41,7 @@ You can't defeat Blob unless you have an X-Men Hero.
 #FIGHT: Draw three cards
 #ATTACK: 6
 #VP: 4
+#FLAVOR: "Illusions fade in time. Time fades in mind. Minds fade in my illusion."
 
 #SUBNAME: Frost Giant
 #COPIES: 3
@@ -63,6 +64,7 @@ You can't defeat Blob unless you have an X-Men Hero.
 #FIGHT: Play the top two cards of the Villain Deck.
 #ATTACK: 4
 #VP: 3
+#FLAVOR: "Hail HYDRA! Immortal HYDRA! Cut off a limb, and two more shall take its place!"
 
 #SUBNAME: HYDRA Kidnappers
 #COPIES: 3
@@ -129,6 +131,7 @@ Ultron is worth +1 VP for each [Tech] Hero you have among all your cards at the 
 #FIGHT: For each of your [Strength] Heroes, KO one of your Heroes.
 #ATTACK: 6
 #VP: 4
+#FLAVOR: "Traveling from the future, Maestro is an alternate-reality Hulk that has absorbed 100 years of radiation on a nuclear wasteland Earth."
 
 #SUBNAME: Zzzax
 #COPIES: 2

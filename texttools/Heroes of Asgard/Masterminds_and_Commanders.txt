@@ -33,14 +33,14 @@
 #FIGHT: You get +2 Recruit for each [Tech] Hero you have.
 
 #CARDNAME: Hela, Goddess of Death
-<b>Bridge Conqueror 5,</b> {STREETS CONQUEROR 5}
+{BRIDGE CONQUEROR 5}, {STREETS CONQUEROR 5}
 #LEADS: Omens of Ragnarok
 #STRIKE: This Strike enters the city as a 5 Attack "Army of the Dead" Villain worth 3VP. Then choose a Villain worth 3VP or more from your Victory Pile <i>(including an Army of the Dead)</i> to enter the city. If you didn't have any, each player gains a Wound.
 #ATTACK: 10+
 #VP: 6
 
 #EPICNAME: Hela, Goddess of Death
-<b>Bridge Conqueror 6,</b> <b>Streets Conqueror 6,</b> {ROOFTOPS CONQUEROR 6}
+{BRIDGE CONQUEROR 6}, {STREETS CONQUEROR 6}, {ROOFTOPS CONQUEROR 6}
 #LEADS: Omens of Ragnarok
 #STRIKE: This Strike enters the city as a 6 Attack "Army of the Dead" Villain worth 4VP. Then choose a Villain worth 4VP or more from your Victory Pile <i>(including an Army of the Dead)</i> to enter the city. If you didn't have any, each player gains a Wound.
 #ATTACK: 12+
