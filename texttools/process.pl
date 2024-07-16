@@ -53,10 +53,20 @@ while (<A>) {
   s/&reg;/®/g;
   s/<img .*?_(\d+)_.*?>/{IMG $1}/g;
   s/{IMG ($imgkeys)}/[$IMG{$1}]/g;
+  s/…/.../g;
+  s!<a href="/microbadge/.*?>(.*?)</a>!$1!g;
+  s/<b>([+-]?\d?)<.b>/$1/g;
+  s/<.b>([+-]?\d?)<b>/$1/g;
+  open TMP, '>res.html';
+  print TMP $_;
+  close TMP;
   @a = split/<h2><b>/;
   shift @a;
   for (@a) {
-    /(.*?)<.b><.h2><.p>(.*<).div><.div>/s;
+    if(!/(.*?)<.b><.h2>(.*<).div><.div>/s) {
+      print substr($_,0,10);
+      next;
+    }
     ($name, $_) = ($1, $2);
     $name =~ s/ /_/g;
     $name .= ".txt";
@@ -77,7 +87,7 @@ while (<A>) {
     s!<b>Savior</b>:!{SAVIOR}!g;
     s!<b>(Man|Woman) Out of Time</b>!{OUTOFTIME}!g;
     s!<[bi]>(\d+)(st|rd|th) Circle of (Kung|Quack)-Fu</[bi]>!{NTHCIRCLE $1}!g;
-    s!<b>Size-Changing</b> (\[($class)\](, \[($class)\])*)!'{SIZECHANGING '.(uc$1)=~s/[^a-z ]//gir.'}'!ge;
+    s!<b>Size-Changing</b>:? (\[($class)\](, \[($class)\])*)!'{SIZECHANGING '.(uc$1)=~s/[^a-z ]//gir.'}'!ge;
     s!<b>Microscopic Size-Changing</b> (\[($class)\]( \[\2\])*)\.?!'{USIZECHANGING '.(uc$2)=~s/[^a-z ]//gir.' '.$1=~y/]/]/.'}'!ge;
     s!Size-Changing: \[($class)\]!'{SIZECHANGING '.(uc$1).'}'!ge; # FIX CW villains
     s!(<b>)S.H.I.E.L.D. Clearance(</b>)!{SHIELDCLEARANCE}!g; #FIX? no formatting in most cases
@@ -108,8 +118,10 @@ while (<A>) {
     s!<b>When Recruited</b>:(.*)\n---<br />!{WHEN RECRUITED}$1!g;
     s!<b>Throne's Favor</b>!{THRONES FAVOR}!g;
     s!<b>((Double )?((Sewers|Bank|Rooftops|Streets|Bridge|Highest|Ultimate) )?Abomination)</b>!'{'.uc($1).'}'!ge;
-    my @lines = split m!<br />\n?|<p>\n?|</p>\n?!;
+    my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
+      s!^\s+!!;
+      s!\s+$!!;
       s!.*?<h3>(.*?)(\s*\(.*\))?<.h3>!#EXPANSION: $1!s && next;
       s!^Cost: ?(.*?)$!#COST: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
