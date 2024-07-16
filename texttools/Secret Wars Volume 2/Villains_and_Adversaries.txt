@@ -39,7 +39,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Drax the Destroyer
 #COPIES: 2
-#FIGHT: Reveal the top card of your deck. KO it or put it back. <b>Fateful Resurrection.</b>
+#FIGHT: Reveal the top card of your deck. KO it or put it back. {FATEFULRESURRECTION}.
 #ATTACK: 5
 #VP: 4
 
@@ -53,7 +53,7 @@ You can't fight Doop if there is a Villain in an adjacent city space.
 
 #SUBNAME: Groot
 #COPIES: 2
-#FIGHT: <b>Fateful Resurrection.</b> If Groot resurrects this way, then he becomes Tiny Dancing Groot with Attack 1 and no abilities for the rest of the turn.
+#FIGHT: {FATEFULRESURRECTION}. If Groot resurrects this way, then he becomes Tiny Dancing Groot with Attack 1 and no abilities for the rest of the turn.
 #ATTACK: 5
 #VP: 4
 
@@ -158,7 +158,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 
 #SUBNAME: '92 Beast
 #COPIES: 2
-#AMBUSH: Charge one space.
+#AMBUSH: {CHARGE} one space.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 #GAINABLE

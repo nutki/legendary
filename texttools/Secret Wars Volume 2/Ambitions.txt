@@ -1,4 +1,3 @@
-
 #CARDNAME: Puzzle Trap
 Choose a class. Other players can't recruit heroes of that class until the start of your next turn. Then, discard this card.
 #ATTACK: 6
@@ -24,7 +23,7 @@ This ambition ascends to become a new 9 Attack Mastermind worth 5 VP. It gains t
 {PATROL Bridge}: If there's a Villain there, each player gains a Wound.
 #ATTACK: 4
 
-#CARDNAME: Short Escape Tunnels
+#CARDNAME: Secret Escape Tunnels
 {PATROL Sewers}: If there's a Villain there, it escapes.
 #ATTACK: 5
 
@@ -39,5 +38,4 @@ Every other player reveals their hand and discards all their cards that cost 0.
 #CARDNAME: Rack and Ruin
 This card becomes a Master Strike that takes effect immediately. Then, this card becomes a Scheme Twist that takes effect immediately.
 #ATTACK: 10
-
 

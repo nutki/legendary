@@ -1,4 +1,3 @@
-
 {SPECTRUM} Some cards have abilities like "Spectrum: Draw a card." You can use a card's Spectrum abilities only if you have at least 3 classes of Hero.
 Grey S.H.I.E.L.D. Heroes, HYDRA Allies, New Recruits and Sidekicks don't have classes, so they don't help.
 You can count all the classes you have among cards you played this turn and cards in your hand.

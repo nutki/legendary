@@ -142,8 +142,8 @@ Reveal the top three cards of the Villain Deck. Rescue any Bystanders you reveal
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 0+
-Reveal the top five cards of the Villain Deck. You get + Attack equal to the printed Victory Point of one of those cards. Put them back in any order.
-{TEAMPOWER Cabal} Instead, you get + Attack for two of those cards.
+Reveal the top five cards of the Villain Deck. You get +Attack equal to the printed Victory Point of one of those cards. Put them back in any order.
+{TEAMPOWER Cabal} Instead, you get +Attack for two of those cards.
 #COST: 7
 
 #CARDNAME: The Captain and the Devil
@@ -187,7 +187,7 @@ Whenever you defeat a Villain this turn, each Villain and Mastermind adjacent to
 #COPIES: 5
 #CLASS: [Strength]
 #ATTACK: 0+
-You get +1 Attack for each different team icon among your heroes.
+You get +1 Attack for each different team icon among your Heroes.
 #COST: 4
 #FLAVOR: It's wise to respect 400 years of British history...Especially when it's punching you in the face.
 
@@ -195,7 +195,7 @@ You get +1 Attack for each different team icon among your heroes.
 #COPIES: 5
 #CLASS: [Covert]
 #RECRUIT: 0+
-You get +1 Recruit for each different team icon among your heroes.
+You get +1 Recruit for each different team icon among your Heroes.
 #COST: 3
 
 #SUBNAME: Raise the Union Jack
@@ -327,7 +327,7 @@ You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn.
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2+
-You may KO this card. If you do, you gain +2 Attack.
+You may KO this card. If you do, you get +2 Attack.
 #COST: 4
 #FLAVOR: Like Jean Grey before him, Cyclops became the vessel for the godlike Phoenix entity.
 

@@ -133,7 +133,7 @@ makeAmbitionCard("Shadowy Disciple", 9, ev => ascendToMastermind(ev, ev => eachP
 // {PATROL Bridge}: If there's a Villain there, each player gains a Wound.
 makeAmbitionCard("Detonate the Bridge", 4, ev => patrolCityForVillain('BRIDGE', () => eachPlayer(p => gainWoundEv(ev, p)))),
 // {PATROL Sewers}: If there's a Villain there, it escapes.
-makeAmbitionCard("Short Escape Tunnels", 5, ev => patrolCityForVillain('SEWERS', c => villainEscapeEv(ev, c))),
+makeAmbitionCard("Secret Escape Tunnels", 5, ev => patrolCityForVillain('SEWERS', c => villainEscapeEv(ev, c))),
 // A Villain in the city <b>charges</b> two spaces.
 makeAmbitionCard("Crazed Charge", 3, ev => villainChargeEv(ev, ev.source, 2)),
 // Every other player reveals their hand and discards all their cards that cost 0.

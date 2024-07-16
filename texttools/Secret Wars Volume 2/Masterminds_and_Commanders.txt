@@ -1,7 +1,7 @@
 
 #CARDNAME: Immortal Emperor Zheng-Zhu
 
-7th Circle of Kung-Fu
+{NTHCIRCLE 7}
 #LEADS: K'un-Lun
 #STRIKE: Each player reveals a Hero that costs 7 or more, or they discard down to 3 cards.
 #ATTACK: 7+
@@ -11,10 +11,10 @@
 #FIGHT: Each other player reveals a card with "Circle of Kung-Fu" from their Victory Pile or gains a Wound.
 
 #TACTIC: Emperor's Justice
-#FIGHT: Each other player reveals a Marvel Knight Hero or gains a Wound.
+#FIGHT: Each other player reveals a Marvel Knights Hero or gains a Wound.
 
 #TACTIC: Humble the Pretenders
-#FIGHT: Each other player reveals a Marvel Knight Hero or discards a card that costs less than 7.
+#FIGHT: Each other player reveals a Marvel Knights Hero or discards a card that costs less than 7.
 
 #TACTIC: Imperial Edict
 #FIGHT: Choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck in random order.
@@ -23,7 +23,7 @@
 
 #LEADS: Utopolis
 #STRIKE: King Hyperion enters the city if he was not already there. Then, he <b>charges</b> three spaces.
-Escape: Each player gains a wound. Put King Hyperion on the Mastermind space.
+<b>Escape</b>: Each player gains a wound. Put King Hyperion on the Mastermind space.
 #ATTACK: 12
 #VP: 6
 
@@ -78,9 +78,9 @@ Spider-Queen gets +1 Attack for each Bystander in the Escape pile.
 #FIGHT: Put a Bystander from the Bystander Deck into the Escape Pile. Then, each Spider-Infected in the city captures a Bystander.
 
 #TACTIC: Control Arachnid Genes
-#FIGHT: You may gain a Spider-Friend Hero from the HQ.
+#FIGHT: You may gain a Spider Friends Hero from the HQ.
 
 #TACTIC: Web the Skyscrapers
-#FIGHT: Each other player reveals a Spider-Friend Hero or puts a Bystander from their Victory Pile into the Escape pile.
+#FIGHT: Each other player reveals a Spider Friends Hero or puts a Bystander from their Victory Pile into the Escape pile.
 
 

@@ -1,4 +1,4 @@
-<b>Pure Evil</b>
+#CARDNAME: Pure Evil
 <i>Starting Ambition</i>
 Play a card from the Villain Deck. Keep this card in the Ambition Row.
 <i>(This card starts the game in the Ambition Row and cannot be discarded from the Ambition Row. You can use this card multiple times in the same turn.)</i>
