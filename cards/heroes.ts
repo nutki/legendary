@@ -5153,7 +5153,7 @@ addHeroTemplates("Heroes of Asgard", [
   team: "Heroes of Asgard",
 // You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
 // {POWER Covert} Draw a card.
-  c1: makeHeroCard("The Warriors Three", "Fandral the Dashing", 3, u, u, Color.INSTINCT, "Heroes of Asgard", "F", [
+  c1: makeHeroCard("The Warriors Three", "Fandral the Dashing", 3, u, 2, Color.INSTINCT, "Heroes of Asgard", "F", [
     ev => {
       selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
         selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));

@@ -1,4 +1,3 @@
-
 <b>Thrown Artifact</b>: Some Ally cards in this set are "Thrown Artifacts". These are Artifact cards that the player can "throw" at the perfect moment.
 * To "throw" a Thrown Artifact, put it on the bottom of your deck and use its ability.
 * You can throw as many Artifacts as you want in a turn. You can only throw during your turn.

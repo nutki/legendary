@@ -23,7 +23,7 @@
 #LEADS: Infinity Gems
 Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any player.
 #STRIKE: Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Bound Souls" pile.
-#ATTACK: 24
+#ATTACK: 24*
 #VP: 7
 
 #TACTIC: Centuries of Envy

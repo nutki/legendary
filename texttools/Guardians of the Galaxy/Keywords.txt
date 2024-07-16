@@ -1,4 +1,3 @@
-
 <b>Shards</b>: This set contains 18 "Shard" tokens. These tokens can be gained by players, Villains and Masterminds from the supply. <strike>If a Shard would be gained, but there are none left in the supply, then no Shard is gained, and the game continues.</strike> (Rule superseded by Into the Cosmos.)
 * <b>Players</b>: When you gain a Shard, put it in front of you. You can spend a Shard to get +1 Attack (returning the Shard to the supply). If you don't use a Shard immediately, you can keep it for future turns and use it later. You can spend as many as you wish in a single turn. Shards do not have Victory Points.
 * <b>Villains</b>: When a Villain gains Shards, put them on that Villain from the supply. That Villain gets +1 Attack for each Shard it has. After you defeat a Villain, you take one of its Shards. Return the rest to the supply. When a Villain escapes, the Mastermind gains one of the Shards on that Villain. Return the rest to the supply.

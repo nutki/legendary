@@ -3,61 +3,70 @@
 
 #SUBNAME: Firelord
 #COPIES: 2
-Cosmic Threat: [Ranged]
+{COSMIC THREAT}: [Ranged]
 #FIGHT: Each player reveals a [Ranged] Hero or gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 9*
 #VP: 4
+#FLAVOR: "Make peace with your oblivion
+<i>Galactus is nigh.</i>"</span>
 
 #SUBNAME: Morg
 #COPIES: 2
-Cosmic Threat: [Instinct]
+{COSMIC THREAT}: [Instinct]
 #AMBUSH: Put each non-[Instinct] Hero from the HQ on the bottom of the Hero Deck.
 #ATTACK: 12*
 #VP: 6
+#FLAVOR: "When you are converted to pure energy, you will know no pain."
 
 #SUBNAME: Stardust
 #COPIES: 2
-Cosmic Threat: [Covert]
+{COSMIC THREAT}: [Covert]
 #FIGHT: Choose one of your [Covert] Heroes. When you draw a new hand of cards at the end of this turn, add that Hero to your hand as a seventh card.
 #ATTACK: 10*
 #VP: 5
+#FLAVOR: When Morg went renegade, it took Silver Surfer and all the other Heralds to end his rampage.
 
 #SUBNAME: Terrax the Tamer
 #COPIES: 2
-Cosmic Threat: [Strength]
+{COSMIC THREAT}: [Strength]
 #AMBUSH: For each [Strength] Hero in the HQ, Terrax captures a Bystander.
 #ATTACK: 11*
 #VP: 5
+#FLAVOR: "You will be tamed."
 
 #CARDNAME: Subterranea
 
 #SUBNAME: Giganto
 #COPIES: 2
 #FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
-Burrow
+<b>Burrow</b>
 #ATTACK: 7
 #VP: 4
+#FLAVOR: The Fantastic Four's first foe is also their second-most gigantic.
 
 #SUBNAME: Megataur
 #COPIES: 2
 #AMBUSH: Megataur captures two Bystanders.
-Burrow
+<b>Burrow</b>
 #ATTACK: 6
 #VP: 4
+#FLAVOR: Ever wonder where earthquakes come from?
 
 #SUBNAME: Moloids
 #COPIES: 2
 #FIGHT: KO one of your Heroes.
-Burrow
+<b>Burrow</b>
 #ATTACK: 3
 #VP: 2
+#FLAVOR: The claws of a tiger, the foresight of a mole.
 
 #SUBNAME: Ra'ktar the Molan King
 #COPIES: 2
 #AMBUSH: Any Villain in the Streets moves to the Bridge, pushing any Villain already there to escape.
-Burrow
+<b>Burrow</b>
 #ATTACK: 4
 #VP: 2
+#FLAVOR: Ra'ktar always leaves his troops an escape route.
 
 

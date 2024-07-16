@@ -52,7 +52,7 @@ Captain Atlas gets +1 Attack for each Shard on the Mastermind.
 #COPIES: 1
 #AMBUSH: Mind Gem gains a Shard for each Scheme Twist in the KO pile and/or stacked next to the Scheme.
 #FIGHT: Put this into your discard pile as an Artifact.
-Artifact - Once per turn, you get +2 Recruit.
+<b>Artifact -</b> Once per turn, you get +2 Recruit.
 #ATTACK: 6
 #VP: 0
 
@@ -60,7 +60,7 @@ Artifact - Once per turn, you get +2 Recruit.
 #COPIES: 1
 #AMBUSH: Power Gem gains a Shard for each Master Strike in the KO pile and/or stacked next to the Mastermind.
 #FIGHT: Put this into your discard pile as an Artifact.
-Artifact - Once per turn, you get +2 Attack.
+<b>Artifact -</b> Once per turn, you get +2 Attack.
 #ATTACK: 7
 #VP: 0
 
@@ -68,7 +68,7 @@ Artifact - Once per turn, you get +2 Attack.
 #COPIES: 2
 #AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
 #FIGHT: Put this into your discard pile as an Artifact.
-Artifact - Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
+<b>Artifact -</b> Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
 #ATTACK: 5
 #VP: 0
 
@@ -76,7 +76,7 @@ Artifact - Before you play a card from the Villain Deck, you may first reveal th
 #COPIES: 1
 #AMBUSH: Soul Gem gains a Shard for each Villain in the city.
 #FIGHT: Put this into your discard pile as an Artifact.
-Artifact - Whenever you defeat a Villain, put a Shard on Soul Gem from the supply. Once per turn, you get + Attack equal to the number of Shards on Soul Gem.
+<b>Artifact -</b> Whenever you defeat a Villain, put a Shard on Soul Gem from the supply. Once per turn, you get +Attack equal to the number of Shards on Soul Gem.
 #ATTACK: 6
 #VP: 0
 
@@ -84,7 +84,7 @@ Artifact - Whenever you defeat a Villain, put a Shard on Soul Gem from the suppl
 #COPIES: 2
 #AMBUSH: Space Gem gains a Shard for each empty space in the city.
 #FIGHT: Put this into your discard pile as an Artifact.
-Artifact - Once per turn, you may move a Villain to another city space. If another Villain is already there, swap them. If you moved any Villains this way, gain a Shard.
+<b>Artifact -</b> Once per turn, you may move a Villain to another city space. If another Villain is already there, swap them. If you moved any Villains this way, gain a Shard.
 #ATTACK: 5
 #VP: 0
 
@@ -92,7 +92,7 @@ Artifact - Once per turn, you may move a Villain to another city space. If anoth
 #COPIES: 1
 #AMBUSH: Play another card from the Villain Deck. Time Gem gains Shards equal to that card's printed Victory Points.
 #FIGHT: Put this into your discard pile as an Artifact.
-Artifact - When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
+<b>Artifact -</b> When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
 #ATTACK: 6
 #VP: 0
 
