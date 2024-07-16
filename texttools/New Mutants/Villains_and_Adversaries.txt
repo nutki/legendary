@@ -81,7 +81,7 @@ During your turn, Empath gets +1 Attack for each grey Hero you have.
 
 #SUBNAME: Demon Bear
 #COPIES: 1
-#AMBUSH: Each player has a {WAKING NIGHTMARE}. The Demon Bear captures one of the Heroes discarded this way that has the lowest cost. The Demon Bear gets + Attack equal to that Hero's cost.
+#AMBUSH: Each player has a {WAKING NIGHTMARE}. The Demon Bear captures one of the Heroes discarded this way that has the lowest cost. The Demon Bear gets +Attack equal to that Hero's cost.
 #FIGHT: The player of your choice gains that Hero.
 #ESCAPE: KO the captured Hero.
 #ATTACK: 5+

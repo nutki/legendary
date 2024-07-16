@@ -1,6 +1,6 @@
 
 #CARDNAME: Hammer Drone Army
-#FIGHT: KO one of your Heroes.
+#FIGHT: Look at the top two cards of your deck. KO one of them and put the other back.
 #ATTACK: 3
 #VP: 1
 
@@ -15,7 +15,7 @@
 #VP: 1
 
 #CARDNAME: Ten Rings Fanatics
-#FIGHT: Look at the top two cards of your deck. KO one of them and put the other back.
+#FIGHT: KO one of your Heroes.
 #ATTACK: 3
 #VP: 1
 

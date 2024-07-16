@@ -1,8 +1,7 @@
-
 <b>"When Recruited" Abilities</b>: The Inhumans' powerful decision to go to war is shown with new special abilities they use "When Recruited."
 * Some Heroes say things like: "When Recruited: You get +3 Attack." <b>Use this "When Recruited" ability immediately when you recruit this Hero.</b>
 * You pay the Hero's normal recruit cost, move it from the HQ into your discard pile, and refill that HQ space with a card from the Hero Deck. When all that is done, then you must use then "When Recruited" ability.
-* When you play that card from your hand in later turns, don;t use the "When Recruited" ability again. Instead, use the card's normal abilities, Recruit, and Attack. A horizontal line seperates the "When Recruited" ability from the card's normal abilities.
+* When you play that card from your hand in later turns, don't use the "When Recruited" ability again. Instead, use the card's normal abilities, Recruit, and Attack. A horizontal line seperates the "When Recruited" ability from the card's normal abilities.
 * If a special ability tells you to <b>"gain"</b> a Hero or <b>"put"</b> a Hero somewhere, then you <b>don't</b> use that Hero's "When Recruited" ability, since you didn't pay Recruit and you didn't recruit that Hero. This is true even if the special ability tells you to "gain" the Hero from the HQ.
 * However, you <b>do</b> use the "When Recruited" ability if a special ability lets you "recruit a Hero for free" or recruit it at a reduced cost or from some unusual place, since then you are still recruiting the Hero.
 * You may wish to keep some Heroes in the HQ until you especially need their "When Recruited" ability.
@@ -10,16 +9,15 @@
 * Some Heroes say "You gain the Throne's Favor." When this happens, take a nearby object to represent the Throne's Favor in the game. If another player or Mastermind already has the Throne's Favor, and you gain it, then you take it from them.
 * If an ability tells you to gain the Throne's Favor, you must take it. You cannot leave it where it is.
 * Some Heroes say things like "You may spend the Throne's Favor to draw two cards." This means <b>if you have the Throne's Favor, you may give it up to use the listed ability.</b> You set aside the Throne's Favor object, and no one has the Throne's Favor until someone gains it again.
-* You can only spend the Throne's Favor at the moment the card tells you to do so. You can;t wait and spend it later in the turn.
+* You can only spend the Throne's Favor at the moment the card tells you to do so. You can't wait and spend it later in the turn.
 * Masterminds and Villains in this set have abilities that can cause the Mastermind to gain the Throne's Favor and/or benefit from having it. Then the Mastermind gains the Throne's Favor, they take it away form any player that may already have it.
 * The Throne's Favor is not a card. It never goes into decks or discard piles. Instead, when it comes up, just use whatever cool object is easily at hand. There's no need to store a special Throne's Favor object with the game.
 {ABOMINATION}: Some Inhuman Villains have become horrific, unpredictable, and even monstrous. Accordingly, they use the "Abomination" keyword that debuted in Legendary: Captain America 75th Anniversary in 2016.
 * There are also a few new twists on the Abomination keyword. The Hero Gorgon has abilities like <b>"Sewers Abomination."</b> It gives Attack equal to the printed Attack of the Hero in the HQ space under the Sewers.
 * The highly-evolved Mastermind Maximus and Gorgon also use <b>"Highest Abomination."</b> This gives Attack equal to the highest printied Attack of any single card in the HQ. So if the five Heroes in the HQ have printed Attack of 2, 4, 3+, 0+, and no printed Attack, then Highest Abomination would give 4 Attack.
-* <b>"DoublevAbomination"</b> double the Attack bonus.
-* Some "Divided Cards" from sets like Legendary: Civil War have two printed Attack numbers, one on each side. If you need to know that card's "printed Attack," and the card is not currently being played, add both those Attack numbers together. This applies to Abomination and Berserk (from Legendary: X-Men). 
+* <b>"Double Abomination"</b> double the Attack bonus.
+* Some "Divided Cards" from sets like Legendary: Civil War have two printed Attack numbers, one on each side. If you need to know that card's "printed Attack," and the card is not currently being played, add both those Attack numbers together. This applies to Abomination and Berserk (from Legendary: X-Men).
 {TELEPORT}: See Dark City.
-
 <b>"Choose a Villain Group"</b>: Some Karnak cards say things like "Choose a Villain Groups. You get +1 Attack for each Villain in your Victory Pile from that Group." For example, you can choose the Villain Group "Inhuman Rebellion."
 * You can also count a Henchman Villain Group like "Doombot Legion." However, you can't choose the generic word "Henchmen" and count Villains from multiple Henchmen Groups at once.
 * You also can't count two Villain Groups at once by choosing a word or phrase that appears in both Villain Groups. For example, if you choose the "Hydra" Villain Group, you can't also count "Hydra Elite" Villains. They are not the same Villain Group.

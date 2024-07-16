@@ -14,7 +14,6 @@
     <li> <b>If you pay</b>: You gain the {THRONES FAVOR}. You may KO one of your cards.</li>
     <li> <b>If you don't pay by the end of turn</b>: Right after you draw a new hand, stack a card from the S.H.I.E.L.D. Officer Stack next to the Scheme as a "Victorious General." The Mastermind gains the {THRONES FAVOR}. If they aleady have it, you gain a Wound.</li>
 </ul>
-
 #TWISTNR: NR[9-11] Same effect, but with two Victorious Generals.
 #EVILWINS: When there are 6 Victorious Generals.
 

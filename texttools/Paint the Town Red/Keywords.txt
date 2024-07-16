@@ -1,4 +1,3 @@
-
 {WALLCRAWL}: The new "{WALLCRAWL}" keyword lets Heroes set up powerful combos by placing cards at the top of their decks. "{WALLCRAWL}" means:
 "<b>When you recruit this Hero, you may put it on top of your deck.</b>"
 With {WALLCRAWL}, you get to use your new Hero much faster than you would if that Hero went in your discard pile. Keep an eye out for powerful combos you can create if you recruit a {WALLCRAWL} Hero early in your turn, before you play cards that reveal the top card of your deck.

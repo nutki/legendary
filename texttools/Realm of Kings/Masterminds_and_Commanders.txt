@@ -14,7 +14,7 @@
 #VP: 6
 
 #TACTIC: Echo-Tech Chorus Sentries
-#FIGHT: Each player KOs one of their [Tech] or Inhuman Heroes or gains a Wound.
+#FIGHT: Each player KOs one of their [Tech] or Inhumans Heroes or gains a Wound.
 #FLAVOR: Maximus Boltagon harnessed Black Bolt's sonic powers into technology, then turned them against him.
 
 #TACTIC: Sieve of Secrets
@@ -24,7 +24,7 @@
 #FIGHT: Each player discards down to 4 cards. Maximus gains the {THRONES FAVOR}. If he already has it, he spends it and each player discards down to 3 cards.
 
 #TACTIC: Terrigen Bomb
-#FIGHT: Put each Hero from the HQ that doesn;t have a printed ttack of 2 or more on the bottom of the Hero Deck. Maximus gains the {THRONES FAVOR}. If he already had it, he spends it and each player KOs one of their non-grey Heroes with an Attack icon.
+#FIGHT: Put each Hero from the HQ that doesn't have a printed Attack of 2 or more on the bottom of the Hero Deck. Maximus gains the {THRONES FAVOR}. If he already had it, he spends it and each player KOs one of their non-grey Heroes with an Attack icon.
 
 #CARDNAME: Emperor Vulcan of the Shi'ar
 Vulcan gets +3 Attack while he has the {THRONES FAVOR}.

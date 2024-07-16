@@ -7,7 +7,6 @@
 #FIGHT: Rescue Bystanders equal to the printed Attack of the Hero in the HQ space under Lineage.
 #ATTACK: 3+
 #VP: 2
-
 #SUBNAME: Omega
 #COPIES: 2
 {ABOMINATION}
@@ -16,7 +15,6 @@
     <li> <b>Alpha</b>: If that card costs 0, KO it.</li>
     <li> <b>Omega</b>: If that card costs 1 or more, draw it.</li>
 </ul>
-
 #ATTACK: 4+
 #VP: 3
 
