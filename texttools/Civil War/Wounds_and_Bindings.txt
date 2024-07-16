@@ -27,3 +27,4 @@
 #COPIES: 2
 #HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
 
+

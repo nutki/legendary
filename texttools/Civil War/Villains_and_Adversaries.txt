@@ -23,7 +23,7 @@ Penance gets +1 Attack for each Villain in your Victory Pile.
 #SUBNAME: Venom
 #COPIES: 2
 {SIZECHANGING COVERT}
-#ESCAPE: Fortify the Bystander Stack. While it's fortified, if a Bystander would be rescued from there, KO that Bystander instead.
+#ESCAPE: <b>Fortify</b> the Bystander Stack. While it's fortified, if a Bystander would be rescued from there, KO that Bystander instead.
 #ATTACK: 7*
 #VP: 4
 
@@ -53,7 +53,7 @@ Penance gets +1 Attack for each Villain in your Victory Pile.
 #SUBNAME: Squirrel Girl
 #COPIES: 2
 You can't fight Squirrel Girl if you played more than one card this turn.
-#ESCAPE: Fortify the Sidekick Stack. While it's fortified, Sidekicks can't be recruited or gained.
+#ESCAPE: <b>Fortify</b> the Sidekick Stack. While it's fortified, Sidekicks can't be recruited or gained.
 #ATTACK: 3*
 #VP: 2
 
@@ -62,7 +62,7 @@ You can't fight Squirrel Girl if you played more than one card this turn.
 #SUBNAME: Colleen Wing
 #COPIES: 2
 {BRIBE}
-#ESCAPE: Fortify the Mastermind. While it's fortified, the Mastermind can't be fought.
+#ESCAPE: <b>Fortify</b> the Mastermind. While it's fortified, the Mastermind can't be fought.
 #ATTACK: 9*
 #VP: 5
 
@@ -122,21 +122,21 @@ You can't fight Squirrel Girl if you played more than one card this turn.
 
 #SUBNAME: Agent Eric Marshall
 #COPIES: 2
-S.H.I.E.L.D. Clearance
+{SHIELDCLEARANCE}
 #AMBUSH: A S.H.I.E.L.D. Officer enters the city as a 3 Attack Villain. When you fight it, gain it as a Hero.
 #ATTACK: 1*
 #VP: 2
 
 #SUBNAME: Agent Gabe Jones
 #COPIES: 2
-S.H.I.E.L.D. Clearance
+{SHIELDCLEARANCE}
 #FIGHT: A S.H.I.E.L.D. Officer enters the city as a 3 Attack Villain. When you fight it, gain it as a Hero.
 #ATTACK: 2*
 #VP: 2
 
 #SUBNAME: Dum Dum Dugan
 #COPIES: 2
-S.H.I.E.L.D. Clearance
+{SHIELDCLEARANCE}
 #FIGHT: Each player with no S.H.I.E.L.D. Officers in their discard pile gains a Wound.
 #ESCAPE: Same effect.
 #ATTACK: 4*
@@ -144,8 +144,8 @@ S.H.I.E.L.D. Clearance
 
 #SUBNAME: Sharon Carter, Agent 13
 #COPIES: 2
-S.H.I.E.L.D. Clearance
-#ESCAPE: Fortify the S.H.I.E.L.D. Officer stack. While it's fortified, whenever any number of S.H.I.E.L.D. Officers become Villains, an extra one becomes a Villain.
+{SHIELDCLEARANCE}
+#ESCAPE: <b>Fortify</b> the S.H.I.E.L.D. Officer stack. While it's fortified, whenever any number of S.H.I.E.L.D. Officers become Villains, an extra one becomes a Villain.
 #ATTACK: 6*
 #VP: 5
 
@@ -153,28 +153,28 @@ S.H.I.E.L.D. Clearance
 
 #SUBNAME: Iron Spider
 #COPIES: 2
-#AMBUSH: Fortify your deck. While Iron Spider fortifies a players deck, that player draws one fewer card at the end of their turn.
+#AMBUSH: <b>Fortify</b> your deck. While Iron Spider fortifies a players deck, that player draws one fewer card at the end of their turn.
 #FIGHT: Reveal the top card of the Villain Deck. If that card is worth 2 VP or less, Iron Spider fortifies the deck of the player on your left.
 #ATTACK: 2
 #VP: 3
 
 #SUBNAME: Ms. Marvel
 #COPIES: 2
-#ESCAPE: Fortify an HQ space. While its fortified, Heroes can't be gained from that space.
+#ESCAPE: <b>Fortify</b> an HQ space. While its fortified, Heroes can't be gained from that space.
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: She-Hulk
 #COPIES: 2
 {SIZECHANGING STRENGTH}
-#ESCAPE: Fortify the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.
+#ESCAPE: <b>Fortify</b> the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.
 #ATTACK: 8*
 #VP: 5
 
 #SUBNAME: Yellowjacket
 #COPIES: 2
 {SIZECHANGING TECH}
-#ESCAPE: Fortify the Hero Deck. While it's fortified, whenever a Hero in the HQ costs 7 or more, KO that Hero.
+#ESCAPE: <b>Fortify</b> the Hero Deck. While it's fortified, whenever a Hero in the HQ costs 7 or more, KO that Hero.
 #ATTACK: 7*
 #VP: 4
 
@@ -195,7 +195,7 @@ S.H.I.E.L.D. Clearance
 
 #SUBNAME: Radioactive Man
 #COPIES: 2
-#ESCAPE: Fortify the Wound Stack. While it's fortified, whenever a player gains a Wound, that player gains an extra Wound.
+#ESCAPE: <b>Fortify</b> the Wound Stack. While it's fortified, whenever a player gains a Wound, that player gains an extra Wound.
 #ATTACK: 6
 #VP: 4
 

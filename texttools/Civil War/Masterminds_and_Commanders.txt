@@ -2,9 +2,8 @@
 #CARDNAME: Authoritarian Iron Man
 
 #LEADS: Superhuman Registration Act
-#STRIKE: Authoritarian Iron Man fortifies the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space.
-Villains in that space get +3 Attack.
-#ATTACK: 12
+#STRIKE: Authoritarian Iron Man <b>fortifies</b> the next city space to his right, starting with the Bridge. You can't fight him while there's a Villain in that space. Villains in that space get +3 Attack.
+#ATTACK: 12*
 #VP: 6
 
 #TACTIC: Armada of Armors
@@ -41,7 +40,7 @@ Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
 
 #CARDNAME: Maria Hill, Director of S.H.I.E.L.D.
 
-Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.H.I.E.L.D. Elite or Officers in the city.
+<b>Double S.H.I.E.L.D. Clearance</b>. You can't fight Maria Hill while there are any S.H.I.E.L.D. Elite or Officers in the city.
 #LEADS: S.H.I.E.L.D. Elite.
 #STRIKE: Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
 #ATTACK: 7*
@@ -68,16 +67,16 @@ Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.
 #VP: 6
 
 #TACTIC: Bionic Repulsor Field
-#FIGHT: Each other player reveals a Marvel Knight Hero or puts two cards from their hand on top of the deck.
+#FIGHT: Each other player reveals a Marvel Knights Hero or puts two cards from their hand on top of the deck.
 
 #TACTIC: Cyborg Detective
 #FIGHT: Reveal the top three cards of the Villain Deck. Put them back in any order.
 
 #TACTIC: Trusted Bodyguard
-#FIGHT: Going clockwise, the fist other player with Colleen Wing in their Victory Pile rescues 5 Bystanders and returns Colleen Wing to play fortifying Misty Knight.
+#FIGHT: Going clockwise, the fist other player with Colleen Wing in their Victory Pile rescues 5 Bystanders and returns Colleen Wing to play <b>fortifying</b> Misty Knight.
 
 #TACTIC: Vibranium Cyber Arm
-#FIGHT: Each other player reveals a Marvel Knight Hero or gains a Wound.
+#FIGHT: Each other player reveals a Marvel Knights Hero or gains a Wound.
 
 #CARDNAME: Ragnarok
 

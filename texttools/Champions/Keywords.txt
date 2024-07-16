@@ -1,4 +1,3 @@
-
 {CHEERING CROWDS}: This keyword represents the Champions being inspired to redouble their efforts by adoring fans.
 * Several Hero cards say "Cheering Crowds." This means "You may play this card twice in a row if you return a Bystander from your Victory Pile to the bottom of the Bystander Stack."
 Example 1: Say you have a Hero that gives 1 Recruit and says "Draw a card. {CHEERING CROWDS}." As you play this Hero, you could return a Bystander to play the Hero twice in a row, getting 2 Recruit and drawing two cards.

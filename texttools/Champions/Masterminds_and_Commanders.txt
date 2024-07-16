@@ -17,13 +17,13 @@
 #FIGHT: A Hero in the HQ gets {SIZECHANGING STRENGTH INSTINCT COVERT TECH RANGED} this turn.
 
 #TACTIC: Flammable Acid Breath
-#FIGHT: KO the top card of the Hero Deck. Then each other player KOs a Hero of that Hero class from their discard pile ([Strength] [Instinct] [Covert] [Tech] [Ranged] ).
+#FIGHT: KO the top card of the Hero Deck. Then each other player KOs a Hero of that Hero class from their discard pile ([Strength], [Instinct], [Covert], [Tech], [Ranged] ).
 
 #TACTIC: Multipronged Assault
 #FIGHT: Each other player reveals at least 3 Hero Classes ([Strength] [Instinct] [Covert] [Tech] [Ranged] ) or gains a Wound.
 
 #TACTIC: Supersonic Dive Attack
-#FIGHT: KO the top card of the Hero Deck. Then each other player reveals their hand and discards a Hero of that Hero Class ([Strength] [Instinct] [Covert] [Tech] [Ranged] ).
+#FIGHT: KO the top card of the Hero Deck. Then each other player reveals their hand and discards a Hero of that Hero Class ([Strength], [Instinct], [Covert], [Tech], [Ranged] ).
 
 #CARDNAME: Pagliacci
 #LEADS: Wrecking Crew
@@ -44,7 +44,7 @@
 
 #TACTIC: Creative Assassin
 #FIGHT: You get {VERSATILE 3}.
-As killer clowns go, Pagliacci is not one you want to find under your bed.
+#FLAVOR: "As killer clowns go, Pagliacci is not one you want to find under your bed."
 
 #TACTIC: Insane Clown Has a Posse
 #FIGHT: Each other player may KO a Wrecking Crew Villain from their Victory Pile. <b>Demolish</b> each of those players who does not.

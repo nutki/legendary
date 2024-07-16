@@ -1,4 +1,3 @@
-
 <b>Divided</b>: Matching the theme of division and duality, Civil War introduces "Divided Cards," which have two miniature cards printed on the same card.
 * You recruit a Divided Card from the HQ as normal by paying its cost. Each side of a Divided Card shows the same cost. (If it costs "3" on each side, you pay only 3 Recruit, not 6.)
 * When you play a Divided Card, you choose which side to play. You generate all the Recruit, Attack, and special abilities of that side as normal. You ignore the other side, as if it doesn't exist.

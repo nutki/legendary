@@ -5,8 +5,8 @@
 #COPIES: 1
 #AMBUSH: Goom captures a Bystander.
 #FIGHT: KO one of your Heroes.
-#VP: 4
 #ATTACK: 6
+#VP: 4
 
 #SUBNAME: Groot from Planet X
 #COPIES: 1
@@ -80,7 +80,7 @@ You can't fight Orrgo unless you have already defeated another Villain this turn
 
 #SUBNAME: The Wrecker
 #COPIES: 2
-#AMBUSH: For each Wrecking Crew Villain in the city, (including this one), <b>Demolish</b> each player.
+#AMBUSH: For each Wrecking Crew Villain in the city, <i>(including this one)</i>, <b>Demolish</b> each player.
 #ATTACK: 7
 #VP: 5
 
