@@ -30,7 +30,7 @@ Whenever you fight a Villain here, each other player gains a Wound.
 Whenever you fight a Villain here, each other player puts a Villain from their Victory Pile into the Escape Pile.
 
 #CARDNAME: Mandarin
-All Mandarin's Rings get +1 Attack. 
+All Mandarin's Rings get +1 Attack.
 Mandarin gets -1 Attack for each Mandarin's Ring among all players' Victory Piles. (-3 Attack for each in solo.)
 #LEADS: Mandarin's Rings
 #STRIKE: Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound instead.
@@ -38,7 +38,7 @@ Mandarin gets -1 Attack for each Mandarin's Ring among all players' Victory Pile
 #VP: 6
 
 #EPICNAME: Mandarin
-All Mandarin's Rings get +2 Attack. 
+All Mandarin's Rings get +2 Attack.
 Mandarin gets -2 Attack for each Mandarin's Ring among all players' Victory Piles. (-6 Attack for each in solo.)
 #LEADS: Mandarin's Rings
 #STRIKE: Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound to the top of their deck instead.
@@ -67,7 +67,7 @@ Whenever you fight a Villain here, each other player reveals their hand and KOs 
 #VP: 6
 
 #EPICNAME: Hood
- <b>Double Dark Memories</b>
+<b>Double Dark Memories</b>
 #LEADS: Hood's Gang
 #STRIKE: Each player discards their deck, then shuffles 6 random grey cards from their discard pile to form their new deck.
 #ATTACK: 10+

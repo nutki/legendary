@@ -3,6 +3,7 @@
 <b>Henchman Location</b>
 HYDRA Base gets +2 Attack while there's a Villain here.
 #FIGHT: KO one of your Heroes.
+#ATTACK: 2+
 #VP: 1
 
 #CARDNAME: Mandarin's Rings

@@ -1,4 +1,3 @@
-
 <b>Hyperspeed</b>: This new keyword represents how Heroes like Quicksilver and Speed move blindingly fast, battering opponents with a flurry of unpredictable strikes. It also includes hyperspeed flight, hypersonic cannons and hyper-fast volleys of arrows.
 * Some Hero cards say things like "Hyperspeed 5." This means "<b>Reveal the top 5 cards of your deck. You get +1 Attack for each card with an Attack icon you revealed this way. Discard all those cards.</b>"
 * It doesn't matter what numbers are in the Attack icons. Ignore Recruit and other icons on the revealed cards.

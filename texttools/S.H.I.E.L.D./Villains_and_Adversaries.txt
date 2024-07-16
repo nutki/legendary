@@ -3,26 +3,26 @@
 
 #SUBNAME: Crossbones
 #COPIES: 2
-#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player gains a Wound unless that player reveals at least as many S.H.I.E.L.D. Heroes as the <b>Hydra Level.</b>
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player gains a Wound unless that player reveals at least as many S.H.I.E.L.D. Heroes as the <b>Hydra Level</b>.
 #ATTACK: 4
 #VP: 2
 
 #SUBNAME: Gorgon
 #COPIES: 2
-#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then check the <b>Hydra Level.</b> You can't play Heroes of that cost this turn.
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then check the <b>Hydra Level</b>. You can't play Heroes of that cost this turn.
 #ATTACK: 6
 #VP: 4
 
 #SUBNAME: Growing Man
 #COPIES: 2
-Growing man gets + Attack equal to the Mastermind's <b>Hydra Level.</b>
+Growing man gets +Attack equal to the Mastermind's <b>Hydra Level</b>.
 #AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile.
 #ATTACK: 0+
 #VP: 3
 
 #SUBNAME: Hive
 #COPIES: 2
-#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals their hand and discards a card with cost equal to the <b>Hydra Level.</b>
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals their hand and discards a card with cost equal to the <b>Hydra Level</b>.
 #ATTACK: 5
 #VP: 3
 
@@ -37,8 +37,8 @@ Growing man gets + Attack equal to the Mastermind's <b>Hydra Level.</b>
 #SUBNAME: Mentallo
 #COPIES: 2
 Mentallo gets +1 Attack for each Officer he has.
-#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then Mentallo captures a S.H.I.E.L.D. Officer for each 2 <b>Hydra Level.</b>
-#FIGHT: Gain an Officer captured by Mentallo or send it <b>Undercover.</b> KO the rest.
+#AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then Mentallo captures a S.H.I.E.L.D. Officer for each 2 <b>Hydra Level</b>.
+#FIGHT: Gain an Officer captured by Mentallo or send it {UNDERCOVER}. KO the rest.
 #ATTACK: 3+
 #VP: 3
 

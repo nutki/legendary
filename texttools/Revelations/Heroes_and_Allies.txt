@@ -82,7 +82,7 @@ Whenever you Hyperspeed this turn, you get both Recruit from Recruit icons and A
 #ATTACK: 1+
 {POWER Instinct} Choose one - Draw a card or you get +1 Attack.
 #COST: 2
-#FLAVOR: Hiss…Leap…Claw…Purr.
+#FLAVOR: Hiss...Leap...Claw...Purr.
 
 #SUBNAME: Part-Time PI
 #COPIES: 5
@@ -194,7 +194,7 @@ As you play this card, you may choose a color and/or a team icon. This card is t
 {HYPERSPEED 4}
 {POWER Ranged} Draw a card.
 #COST: 4
-#FLAVOR: You wouldn't think arrows could reach super-sonic speeds. You wouldn't think so…
+#FLAVOR: You wouldn't think arrows could reach super-sonic speeds. You wouldn't think so...
 
 #SUBNAME: Haunted by Loss
 #COPIES: 3

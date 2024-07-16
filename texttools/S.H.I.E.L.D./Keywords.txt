@@ -1,4 +1,3 @@
-
 {UNDERCOVER}: This new keyword represents sending S.H.I.E.L.D. agents off the grid on special missions to recover valuable intel.
 * Some cards say things like "You may send a S.H.I.E.L.D. Hero from your hand Undercover." This means "<b>Put that Hero into your Victory Pile. It's worth 1VP.</b>"
 * This helps get your starting S.H.I.E.L.D. Agents and Troopers out of your deck so that you draw your more powerful Heroes more often. You can also use it to get rid of other S.H.I.E.L.D. cards like Officers that you might not need later in the game. The main heroes in this set are all part of the S.H.I.E.L.D. team too, so you can also send their cards Undercover.
@@ -13,7 +12,7 @@
 * Note: When playing with Hydra Villain Groups and/or multiple Heroes that use S.H.I.E.L.D. Levels, your S.H.I.E.L.D. Levels will naturally be higher.
 <b>Hydra Level</b>: Some Villain Groups also try to rise through the ranks of the Hydra organization, achieving higher Hydra Levels and ever-greater power. To do this, they help Hydra operatives achieve their missions and escape the city unharmed. They also subvert double agents to infiltrate S.H.I.E.L.D., then escape it with key intel.
 * <b>The Hydra Level is the number of S.H.I.E.L.D. and/or HYDRA cards in the Escape Pile.</b>
-* Some Villains and Masterminds say things like "Growing Man gets + Attack equal to the Hydra Level."
+* Some Villains and Masterminds say things like "Growing Man gets +Attack equal to the Hydra Level."
 * Like S.H.I.E.L.D. Level, this includes any card with the S.H.I.E.L.D. or HYDRA team icons, as well as any card with "S.H.I.E.L.D." or "Hydra" in its card name, Villain Group name, or Mastermind name.
 * Some abilities put S.H.I.E.L.D. cards directly from S.H.I.E.L.D. Officer Stack into the Escape Pile to increase the Hydra Level. This is not an "escape" unless it's a Villain escaping from the city, so it won't KO a Hero of cost 6 or less from the HQ.
 <b>Adapting Masterminds</b>: The Hydra Super-Adaptoid and the Hydra High Council constantly adapt their tactics to attack the Heroes in new ways. Accordingly, each of these Masterminds is a new "Adapting Mastermind" with 4 different Master Strikes. Here's how they work.
