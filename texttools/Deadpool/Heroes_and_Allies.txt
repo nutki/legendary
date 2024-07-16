@@ -59,7 +59,7 @@ If it's between 8 p.m. and midnight, you get +2 Attack. Otherwise, you get +2 Re
 #COPIES: 3
 #CLASS: [Covert]
 #ATTACK: 3 1/2+
-You get +1/2 Attack for each other card with flavor text you played this turn. Now maybe you'll stop telling me to shut up.
+You get <b>+1/2</b> Attack for each other card with flavor text you played this turn. Now maybe you'll stop telling me to shut up.
 #COST: 5
 #FLAVOR: You also get another +13 Attack, but this doesn't count because it's flavor text.
 

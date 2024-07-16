@@ -1,4 +1,3 @@
-
 <b>Switcheroo</b>: This new keyword represents how Heroes like Squirrel Girl and Jessica Jones unpredictably switch up their tactics. Sometimes they instantly switch to new fighting stances, while other times they switch in new Heroes altogether.
 * Some Hero cards say things like "{SWITCHEROO 4}."
 * This means “You can reveal this card from your hand and put it on the bottom of the Hero Deck. If you do, you may put a Hero of the specified printed cost from the HQ into your hand.”

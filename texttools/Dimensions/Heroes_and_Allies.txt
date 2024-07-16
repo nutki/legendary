@@ -123,7 +123,7 @@ You may move a Villain to another city space. If another Villain is already ther
 #ATTACK: 3
 {POWER Strength} Reveal the top card of your deck. KO it or {TELEPORT} it.
 #COST: 6
-#FLAVOR: She's here to take names and kick holes…in the fabric of spacetime.
+#FLAVOR: She's here to take names and kick holes...in the fabric of spacetime.
 
 #SUBNAME: Hyper-Cosmic Awareness
 #COPIES: 1

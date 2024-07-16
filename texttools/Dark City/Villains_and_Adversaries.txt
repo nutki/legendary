@@ -158,7 +158,7 @@ To fight Zero, you must also discard three cards that cost 0.
 
 #SUBNAME: Dracula
 #COPIES: 2
-#AMBUSH: Dracula captures the top card of the Hero Deck. Dracula gets + Attack equal to that card's Cost.
+#AMBUSH: Dracula captures the top card of the Hero Deck. Dracula gets +Attack equal to that card's Cost.
 #FIGHT: Gain that card.
 #ATTACK: 3+
 #VP: 4

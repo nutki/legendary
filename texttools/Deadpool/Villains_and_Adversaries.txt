@@ -38,7 +38,7 @@ During your turn, Taskmaster gets +Attack equal to the cost of the highest-cost 
 #SUBNAME: D.E.A.D.P.O.O.L.
 #COPIES: 2
 {REVENGE Evil Deadpool Corpse}
-#FIGHT: Excessive Violence: KO one of your Heroes. Remind them that if they were better at hero-ing, these accidents wouldn't happen.
+#FIGHT: {VIOLENCE} KO one of your Heroes. Remind them that if they were better at hero-ing, these accidents wouldn't happen.
 #ATTACK: 4+
 #VP: 3
 #FLAVOR: Destructive Engine of Assassination Despite Panpygoptosis Obsessed with Opponent Liquidation.
@@ -46,7 +46,7 @@ During your turn, Taskmaster gets +Attack equal to the cost of the highest-cost 
 #SUBNAME: The Deadpool Kid
 #COPIES: 2
 {REVENGE Evil Deadpool Corpse}
-#ESCAPE: Old West Shootout. Each player reveals the top card of their deck. KO the card with the highest cost (or tied for highest.)
+#ESCAPE: Old West Shootout. Each player reveals the top card of their deck. KO the card with the highest cost <i>(or tied for highest.)</i>
 #ATTACK: 5+
 #VP: 4
 #FLAVOR: If you're going to lose an 8-coster, distract the other players and cheat, varmint!
@@ -54,7 +54,7 @@ During your turn, Taskmaster gets +Attack equal to the cost of the highest-cost 
 #SUBNAME: Ultimate Deadpool
 #COPIES: 2
 {REVENGE Evil Deadpool Corpse}
-#FIGHT: Excessive Violence: Draw a card for each "Ultimate" in the HQ. You know, those totally kickass cards that cost 7 or more.
+#FIGHT: {VIOLENCE} Draw a card for each "Ultimate" in the HQ. You know, those totally kickass cards that cost 7 or more.
 #ESCAPE: KO all Ultimates from the HQ.
 #ATTACK: 5+
 #VP: 4

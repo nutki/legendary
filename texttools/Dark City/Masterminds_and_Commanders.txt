@@ -3,7 +3,7 @@
 
 #LEADS: Four Horsemen
 Four Horsemen Villains get +2 Attack
-Apocalypse Wins: When Famine, Pestilence, War, and Death have escaped
+<b>Apocalypse Wins</b>: When Famine, Pestilence, War, and Death have escaped
 #STRIKE: Each player reveals their hand and puts all their Heroes that cost 1 or more on top of their deck.
 #ATTACK: 12
 #VP: 6

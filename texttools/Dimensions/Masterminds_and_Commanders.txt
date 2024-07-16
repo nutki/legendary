@@ -16,16 +16,16 @@
 #ATTACK: 5*
 #VP: 5
 
-Incite Violent Riots
+#TACTIC: Incite Violent Riots
 #FIGHT: Each player puts a Wound from the Wound Stack into the Angry Mobs stack.
 
-Promote Spider-Slayer Security
+#TACTIC: Promote Spider-Slayer Security
 #FIGHT: Each other player puts a Spider-Slayer from their Victory Pile into the Angry Mobs stack. When a Spider-Slayer is revealed from the Angry Mobs, it enters the city.
 
-Slanderous Editorial
+#TACTIC: Slanderous Editorial
 #FIGHT: Each other player <b>Investigates</b> their deck for a non-grey Hero and puts it into the Angry Mobs stack. Players reveal all the cards they investigated.
 
-That Menace Spider-Man!
+#TACTIC: That Menace Spider-Man!
 #FIGHT: Each other player reveals their hand and discard a Spider-Friends Hero. Any player who cannot must instead put a non-grey card from their hand into the Angry Mobs stack.
 
 
