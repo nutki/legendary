@@ -11,7 +11,7 @@
 #SUBNAME: Zombie Loki
 #COPIES: 1
 #AMBUSH: {RISEOFTHELIVINGDEAD}
-#ESCAPE: Loki ascends to become a new Mastermind. He gains the ability, <b>"Master Strike</b>: Each player reveals a [Strength]  Hero or gains a Wound."
+#ESCAPE: Loki ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals a [Strength]  Hero or gains a Wound."
 #ATTACK: 8
 #VP: 6
 
@@ -172,7 +172,8 @@ You get +1 Attack for each color of Hero you have
 
 #SUBNAME: Rachel Summers of Future Past
 #COPIES: 2
-#FIGHT: <i>Rachel Summers alters the future:</i> During the next player's turn, all Villains and the Mastermind get -1 Attack. <b>Escape</b>: This turn, All Villains and the Mastermind get +1 Attack.
+#FIGHT: <i>Rachel Summers alters the future:</i> During the next player's turn, all Villains and the Mastermind get -1 Attack.
+#ESCAPE: This turn, All Villains and the Mastermind get +1 Attack.
 #ATTACK: 6
 #VP: 4
 
@@ -187,20 +188,22 @@ You get +1 Attack for each color of Hero you have
 
 #SUBNAME: The Hulk Gang
 #COPIES: 3
-#FIGHT: {XDRAMPAGE Hulk} <b>Escape</b>: Same effect.
-#ATTACK: 5 <b>VP</b>: 3
+#FIGHT: {XDRAMPAGE Hulk}
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
 
 #SUBNAME: Wasteland Kingpin
 #COPIES: 1
-#SUBNAME: Bribe
-#COPIES: 2
+{BRIBE}
 #ESCAPE: Kingpin ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Each player reveals an [Instinct] Hero or discards their hand and draws 5 cards."
 #ATTACK: 11*
 #VP: 6
 
 #SUBNAME: Wasteland Hawkeye
 #COPIES: 2
-#AMBUSH: Wasteland Hawkeye captures a Bystander. <b>Fight</b>: Choose one: Each other player draws a card, or each other player discards a card.
+#AMBUSH: Wasteland Hawkeye captures a Bystander.
+#FIGHT: Choose one: Each other player draws a card, or each other player discards a card.
 #ATTACK: 6
 #VP: 4
 

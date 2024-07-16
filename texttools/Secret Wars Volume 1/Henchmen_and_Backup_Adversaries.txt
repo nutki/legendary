@@ -1,6 +1,6 @@
 
 #CARDNAME: Ghost Racers
-#AMBUSH: Rise of the Living Dead
+#AMBUSH: {RISEOFTHELIVINGDEAD}
 #FIGHT: Reveal a [Covert] Hero or KO one of your Heroes with an Attack icon.
 #ATTACK: 3
 #VP: 1
@@ -12,11 +12,12 @@
 
 #CARDNAME: Thor Corps
 #FIGHT: Gain this as a Hero.
-#ATTACK: 3
 #GAINABLE
 #TEAM: Avengers
 Class: [Strength], [Ranged]
 #RECRUIT: 2+
 {POWER Strength Ranged} You get +1 Recruit.
+#ATTACK: 3
+#VP: 0
 
 

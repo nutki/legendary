@@ -37,13 +37,13 @@ You can't fight Nimrod unless you made at least 6 Recruit this turn.
 #FIGHT: Choose Recruit or Attack. Put all Heroes from the HQ with that icon on the bottom of the Hero Deck.
 
 #TACTIC: Teleport and Incarcerate
-#FIGHT: Choose Recruit or Attack. Then, reveal the top card of that Hero Deck. If that card has that icon, gain that card, and Teleport it.
+#FIGHT: Choose Recruit or Attack. Then, reveal the top card of that Hero Deck. If that card has that icon, gain that card, and {TELEPORT} it.
 
 #CARDNAME: Wasteland Hulk
 
 Wasteland Hulk gets +3 Attack for each of his Mastermind Tactics among all players' Victory Piles.
 #LEADS: Wasteland
-#STRIKE: Cross-Dimensional Hulk Rampage
+#STRIKE: {XDRAMPAGE Hulk}
 #ATTACK: 7+
 #VP: 6
 
@@ -63,20 +63,20 @@ Wasteland Hulk gets +3 Attack for each of his Mastermind Tactics among all playe
 
 Zombie Green Goblin gets +1 Attack for each Hero in the KO pile that costs 7 or more.
 #LEADS: The Deadlands
-#STRIKE: Rise of the Living Dead. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
+#STRIKE: {RISEOFTHELIVINGDEAD}. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
 #ATTACK: 11+
 #VP: 6
 
 #TACTIC: Army of Cadavers
-#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "Rise of the Living Dead."
+#FIGHT: {RISEOFTHELIVINGDEAD} (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "{RISEOFTHELIVINGDEAD}."
 
 #TACTIC: The Hungry Dead
-#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "Rise of the Living Dead".
+#FIGHT: {RISEOFTHELIVINGDEAD} (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "{RISEOFTHELIVINGDEAD}."
 
 #TACTIC: Love to Have You for Dinner
-#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
+#FIGHT: {RISEOFTHELIVINGDEAD} (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
 
 #TACTIC: Reign of Terror
-#FIGHT: Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
+#FIGHT: {RISEOFTHELIVINGDEAD} (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
 
 
