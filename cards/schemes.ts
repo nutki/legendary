@@ -464,7 +464,7 @@ makeSchemeCard("Mass Produce War Machine Armor", { twists: 8, vd_henchmen_counts
 makeSchemeCard("Resurrect Heroes with Norn Stones", { twists: 8 }, ev => {
   if (ev.nr <= 6) {
     // Twist 1-6 An Adversary from the current player's Victory Pile enters the Bridge. Then play the top card of the Adversary Deck.
-    selectCardEv(ev, "Select an Adversary", playerState.victory.limit(isVillain), c => villainDrawEv(ev, c));
+    selectCardEv(ev, "Select an Adversary", playerState.victory.limit(isVillain), c => withCity('BRIDGE', bridge => enterCityEv(ev, c, bridge)));
     villainDrawEv(ev);
   } else if (ev.nr >= 7 && ev.nr <= 8) {
     // Twist 7-8 Each player puts an Adversary from their Victory Pile into the Overrun Pile.
