@@ -48,6 +48,7 @@ sub autopower {
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
     s/^{FOCUS (\d+)} +// and $wrap = "setFocusEv(ev, $1, ev => XXX)";
+    s/^{FOCUSA (\d+)} +// and $wrap = "setFocusWithAttackEv(ev, $1, ev => XXX)";
     s/^{LIGHTSHOW} *// and $wrap = "lightShow: ev => XXX, cardActions: [ lightShowActionEv ]";
     s/^{OUTWIT}: *// and $wrap = "mayOutwitEv(ev, () => XXX)";
     s/^{DIGEST (\d)} *// and $wrap = "digestEv(ev, $1, () => XXX)";

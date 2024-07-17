@@ -51,6 +51,7 @@ while (<A>) {
   s/&ldquo;/“/g;
   s/&rdquo;/”/g;
   s/&reg;/®/g;
+  s/&eacute;/é/g;
   s/<img .*?_(\d+)_.*?>/{IMG $1}/g;
   s/{IMG ($imgkeys)}/[$IMG{$1}]/g;
   s/…/.../g;
@@ -133,6 +134,7 @@ while (<A>) {
       s!^(?:Team: )?($aff)/($aff)$!#TEAM: $1 | $2! && next;
       s!^(Bribe|Feast)$!'{'.(uc$1).'}'!e && next;
       s!^<b>Focus (\d+) Recruit -&gt;</b>!{FOCUS $1}! && next;
+      s!^<b>Focus (\d+) Attack -&gt;</b>!{FOCUSA $1}! && next;
 
       s!^($aff): (.*)$!{TEAMPOWER $1} $2! && next;
       s!^($aff),? ($aff): (.*)$!{TEAMPOWER $1, $2} $3! && next;
