@@ -28,8 +28,8 @@ for $type (keys %input) {
   sub checkimage {
     my $dir = shift @_;
     my $name = join' ',@_;
-    $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".png";
-    $imagename = "$exp/$imagename" if $exp ne 'Legendary';
+    $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".jpg";
+    $imagename = "../images/$exp/$imagename" if $exp ne 'Legendary';
     print STDERR "no image: $imagename\n" unless -f "../images/$imagename";
   }
   for (@items) {
@@ -56,7 +56,8 @@ for $type (keys %input) {
       checkimage("masterminds", $mastermindname);
       for (@subitems) {
         parse();
-        checkimage("masterminds", $mastermindname, $_{TACTIC});
+        checkimage("masterminds", "epic_$mastermindname") if $_{EPICNAME};
+        checkimage("masterminds", $mastermindname, $_{TACTIC}) if $_{TACTIC};
       }
     } elsif ($type eq "VILLAINS") {
       ($_, my @subitems) = split/^\n+/m;
