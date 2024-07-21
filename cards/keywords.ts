@@ -24,9 +24,8 @@ function versatileEv(ev: Ev, a: number): void {
 // You can use that Focus ability as many times as you want for the rest of the turn. You can even play more Heroes, recruit, fight, then use the Focus ability more.
 // Note: You can use Focus abilities and still use the "Healing" ability on Wounds.
 
-function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?: number) {
+function focusActionEv(ev: Ev, cost: ActionCost, effect: (ev: Ev) => void, limit?: number) {
   let func = effect;
-  const cost: ActionCost = { recruit };
   const what = ev.source;
   if (limit) {
     cost.cond = () => countPerTurn('focus', what) < limit;
@@ -34,8 +33,8 @@ function focusActionEv(ev: Ev, recruit: number, effect: (ev: Ev) => void, limit?
   }
   return new Ev(ev, 'FOCUS', { what, func, cost });
 }
-function setFocusEv(ev: Ev, cost: number, f: Handler, limit?: number) {
-  addTurnAction(focusActionEv(ev, cost, f, limit));
+function setFocusEv(ev: Ev, recruit: number, f: Handler, limit?: number) {
+  addTurnAction(focusActionEv(ev, { recruit }, f, limit));
 }
 
 
@@ -335,8 +334,8 @@ const chargeAmbushEffect = (n: number) => (ev: Ev) => villainChargeEv(ev, ev.sou
 // The card is discarded the second time you play it, so you play the card only twice total.
 // Play your returning Man Out of Time cards after the "Play a Villain Card" part of your turn and before you start playing out your hand.
 // You "played" a Man Out of Time card on both the first turn you played it and the second turn when you replayed it, so it can help activate your Superpower Abilities on both turns.
-function outOfTimeEv(ev: Ev) {
-  moveCardEv(ev, ev.source, playerState.outOfTime);
+function outOfTimeEv(ev: Ev, c: Card = ev.source) {
+  moveCardEv(ev, c, playerState.outOfTime);
 }
 function playOutOfTimeEv(ev: Ev) {
   cont(ev, () => {
@@ -751,8 +750,11 @@ function worthyPower(p: Player = playerState) {
 function hasConqueror(...locations: CityLocation[]) {
   return locations.count(l => gameState.city.limit(d => d.id === l).has(c => c.has(isVillain)));
 }
+function hadDestroyedConqueror(location: CityLocation) {
+  return turnState.destroyedConqueror && gameState.destroyedCitySpaces.has(d => d.id === location);
+}
 function heroConquerorEv(ev: Ev, l: CityLocation, amount: number) {
-  hasConqueror(l) && addAttackEvent(ev, amount);
+  (hasConqueror(l) || hadDestroyedConqueror(l)) && addAttackEvent(ev, amount);
 }
 function conquerorVarDefese(amount: number, ...l: CityLocation[]) {
   return (c: Card) => c.printedDefense + (hasConqueror(...l) * amount);
@@ -862,4 +864,17 @@ function heroAbominationEv(ev: Ev, l: CityLocation) {
 }
 function doubleAbominationVarDefense(c: Card) {
   return c.printedDefense + 2 * (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) || 0 : 0);
+}
+// Annihilation
+function hasMomentum(c: Card) {
+  return turnState.pastEvents.has(ev => ev.type == 'MOVECARD' && ev.what == c && ev.to.isCity);
+}
+function momentumVarDefense(n: number) {
+  return (c: Card) => c.printedDefense + (hasMomentum(c) ? n : 0);
+}
+function massMomentumVarDefense(n: number) {
+  return (c: Card) => c.printedDefense + n * cityVillains().count(hasMomentum);
+}
+function setFocusWithAttackEv(ev: Ev, attack: number, f: Handler, limit?: number) {
+  addTurnAction(focusActionEv(ev, { attack }, f, limit));
 }

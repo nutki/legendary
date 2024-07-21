@@ -2401,3 +2401,101 @@ makeSchemeCard("Devolve with Xerogen Crystals", { twists: [4, 5, 6, 7, 8], vd_he
   addStatMod('defense', c => c.cardName === extraHenchmenName(), abominationAmount);
 }),
 ]);
+addTemplates("SCHEMES", "Annihilation", [
+// SETUP: 9 Twists.
+// <b>Twist 1,3,5,7</b>: "Negative Pulse": This turn, Heroes in the HQ cost -1 Recruit and Villains and Masterminds get -1 Attack.
+// <b>Twist 2,4,6,8</b>: "Positive Pulse": This turn, Heroes in the HQ cost +1 Recruit and Villains and Masterminds get +1 Attack.
+makeSchemeCard<{ pulse: number }>("Pulse Waves From the Negative Zone", { twists: 9 }, ev => {
+  if (ev.nr < 9) {
+    // Twist: If the Twist number is odd, "Negative Pulse." If the Twist number is even, "Positive Pulse."
+    gameState.schemeState.pulse = ev.nr % 2 === 1 ? -1 : 1;
+  }
+  // Twist 9 Evil wins!
+  schemeProgressEv(ev, ev.nr);
+}, [{
+  event: 'CLEANUP',
+  after: () => gameState.schemeState.pulse = 0,
+}], s => {
+  s.pulse = 0;
+  addStatMod('cost', c => isHero(c) && c.location.isHQ, () => s.pulse);
+  addStatMod('defense', isEnemy, () => s.pulse);
+  setSchemeTarget(9);
+}),
+// SETUP: 6 Twists. Each player chooses a Hero to be part of the Hero Deck. Randomly select other Heroes up to the normal number of Heroes.
+// Each player adds to their starting deck three non-rare cards with different names from the Hero they chose and three Wounds.
+makeSchemeCard("Sneak Attack the Heroes' Homes", { twists: 6 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Each player discards a non-grey Hero or gains a Wound.
+    eachPlayer(p => selectCardOrEv(ev, "Choose a non-grey Hero to discard", p.hand.limit(isNonGrayHero), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
+  } 
+  // Twist 6 Evil Wins
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  eachPlayer(p => {
+    repeat(3, () => gameState.wounds.withTop(c => moveCard(c, p.hand)));
+    // TODO init time choices
+  });
+  setSchemeTarget(6);
+}),
+// SETUP: 11 Twists. Stack 11 Bystanders next to the Scheme face down as "Galactus Jurors."
+// RULE: Each Twist gives you a challenge to achieve this turn. If you do it, you have convinced a Juror, and you rescue them. If you don't,
+// put that Juror face up next to the Villain Deck, voting to condmen Humanity.
+// <b>Twist 3,5,7</b>: "Question Witnesses": Recruit a Hero that costs 5 or more.
+// <b>Twist 4,6,8</b>: "Introduce Evidence": Defeat Villain(s) worth 3VP or more.
+// EVILWINS: When 6 Jurors vote to Condmen Humanity.
+makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 }, ev => {
+  let done = false;
+  if (ev.nr <= 2) {
+    // Twist 1-2 "Opening Arguments": Discard three cards with different names.
+    addTurnAction(new Ev(ev, 'EFFECT', {
+      desc: "Discard three cards with different names",
+      cost: { cond: () => playerState.hand.deck.uniqueCount(c => c.cardName) >= 3 },
+      func: ev => {
+        const names = new Set<string>();
+        repeat(3, () => selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => !names.has(c.cardName)), c => {
+          names.add(c.cardName);
+          discardEv(ev, c);
+        }));
+        done = true;
+      }
+    }));
+  } else if (ev.nr === 3 || ev.nr === 5 || ev.nr === 7) {
+    // Twist 3,5,7 "Question Witnesses": Recruit a Hero that costs 5 or more.
+    addTurnTrigger('RECRUIT', ev => isHero(ev.what) && ev.what.cost >= 5, () => done = true);
+  } else if (ev.nr === 4 || ev.nr === 6 || ev.nr === 8) {
+    // Twist 4,6,8 "Introduce Evidence": Defeat Villain(s) worth 3VP or more.
+    let vp = 0;
+    addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => {
+      vp += ev.parent.what.vp;
+      if (vp >= 3) done = true;
+    });
+  } else if (ev.nr >= 9 && ev.nr <= 11) {
+    // Twist 9-11 "Closing Arguments": Defeat the Mastermind.
+    addTurnTrigger('DEFEAT', ev => isMastermind(ev.what), () => done = true);
+  }
+  addTurnTrigger('CLEANUP', () => true, ev => {
+    gameState.scheme.attachedDeck('JUROR').withTop(juror => {
+      if (done) {
+        rescueEv(ev, juror);
+      } else {
+        KOEv(ev, juror);
+        schemeProgressEv(ev, ++gameState.schemeState.condemnations);
+      }
+    });
+  });
+}, [], s => {
+  setSchemeTarget(6);
+  const jurors = gameState.scheme.attachedDeck('JUROR');
+  repeat(11, () => gameState.bystanders.withTop(c => moveCard(c, jurors)));
+  s.condemnations = 0;
+}),
+// SETUP: 6 Twists. Add 4 extra Bystanders to the Villain Deck. Deal the shuffled Villain Deck into several "Dimension" decks where the first
+// Dimension has 1 card, the next has 2 cards, then 3, 4, etc. <i>(The final Dimension might not have enough cards to reach its full number.)</i>
+// RULE: Each turn, you choose which Dimension you play a card from. All players have "<b>Focus 1 Recruit</b>-&gt; Reveal the top card of any
+// Dimension and put it back on the top or bottom of that deck." If a Dimension ever has no cards left, even in the middle of a card ability,
+// it is destroyed. Mark it with a face up Wound.
+// EVILWINS: When at least half of the original Dimensions are destroyed.
+makeSchemeCard("Breach Parallel Dimensions", { twists: 6 }, ev => {
+  // Twist: Choose a Dimension and play two cards from it. <i>(It's ok if it only has 1.)</i>
+}),
+]);

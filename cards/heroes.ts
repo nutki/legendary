@@ -1954,7 +1954,7 @@ addHeroTemplates("Fear Itself", [
 // KO up to two cards from your hand and/or discard pile. For each Bindings you KO this way, <b>demolish</b> each other player.
 // COST: 8
   ra: makeHeroCard("Nul, Breaker of Worlds", "Break the World", 8, u, 6, Color.STRENGTH, "Foes of Asgard", "", ev => {
-    selectObjectsUpToEv(ev, "Select cards to KO", 2, handOrDiscard(), c => isBindings(c) && demolishOtherEv(ev));
+    selectObjectsUpToEv(ev, "Select cards to KO", 2, handOrDiscard(), c => { KOEv(ev, c); isBindings(c) && demolishOtherEv(ev); });
   }),
 },
 {
@@ -2134,7 +2134,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // Once per turn, if you made at least 6 Recruit this turn, draw a card.
   c1: makeHeroCard("Lady Thor", "Mysterious Origin", 3, 2, u, Color.RANGED, "Avengers", "D", ev => {
     addTurnAction(new Ev(ev, 'EFFECT', {
-      cost: { cond: () => !countPerTurn('ladyThor', ev.what) && turnState.totalRecruit >= 6 },
+      cost: { cond: () => !countPerTurn('ladyThor', ev.source) && turnState.totalRecruit >= 6 },
       func: ev => { incPerTurn('ladyThor', ev.what); drawEv(ev); },
       what: ev.source,
     }));
@@ -2142,7 +2142,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // Once per turn, if you made at least 6 Recruit this turn, you get +2 Attack.
   c2: makeHeroCard("Lady Thor", "Chosen by Asgard", 4, 2, 0, Color.STRENGTH, "Avengers", "D", ev => {
     addTurnAction(new Ev(ev, 'EFFECT', {
-      cost: { cond: () => !countPerTurn('ladyThor', ev.what) && turnState.totalRecruit >= 6 },
+      cost: { cond: () => !countPerTurn('ladyThor', ev.source) && turnState.totalRecruit >= 6 },
       func: ev => { incPerTurn('ladyThor', ev.what); addAttackEvent(ev, 2); },
       what: ev.source,
     }));
@@ -2152,7 +2152,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // One per turn, if you made at least 6 Recruit this turn, you get +6 Attack.
   ra: makeHeroCard("Lady Thor", "Living Thunderstorm", 8, 4, 0, Color.STRENGTH, "Avengers", "F", ev => {
     addTurnAction(new Ev(ev, 'EFFECT', {
-      cost: { cond: () => !countPerTurn('ladyThor', ev.what) && turnState.totalRecruit >= 6 },
+      cost: { cond: () => !countPerTurn('ladyThor', ev.source) && turnState.totalRecruit >= 6 },
       func: ev => { incPerTurn('ladyThor', ev.what); addAttackEvent(ev, 6); },
       what: ev.source,
     }));
@@ -5706,5 +5706,194 @@ addHeroTemplates("Realm of Kings", [
     whenRecruited: ev => heroAbominationEv(ev, 'BRIDGE'),
     teleport: true,
   }),
+},
+]);
+addHeroTemplates("Annihilation", [
+{
+  name: "Fantastic Four United",
+  team: "Fantastic Four",
+// {TEAMPOWER Fantastic Four} You get +1 Recruit.
+// {FOCUS 3} You get +2 Attack.
+  c1: makeHeroCard("Fantastic Four United", "Thing", 4, 2, 0, Color.STRENGTH, "Fantastic Four", "FD", [ ev => superPower("Fantastic Four") && addRecruitEvent(ev, 1), ev => setFocusEv(ev, 3, ev => addAttackEvent(ev, 2)) ]),
+// {FOCUS 2} KO up to two Wounds from your hand and/or discard pile.
+// {FOCUS 6} You get +6 Attack and gain a Wound.
+  c2: makeHeroCard("Fantastic Four United", "Human Torch", 4, 2, 0, Color.RANGED, "Fantastic Four", "D", [
+    ev => setFocusEv(ev, 2, ev => selectObjectsUpToEv(ev, "Select cards to KO", 2, handOrDiscard().filter(isWound), c => KOEv(ev, c))),
+    ev => setFocusEv(ev, 6, ev => { addAttackEvent(ev, 6); gainWoundEv(ev); })
+  ]),
+// If you played any other cards that cost 4 this turn, you get +2 Recruit.
+// {FOCUS 4} Rescue a Bystander, then you may KO a card from your hand or discard pile.
+  uc: makeHeroCard("Fantastic Four United", "Invisible Woman", 4, 2, u, Color.COVERT, "Fantastic Four", "D", [
+    ev => pastEvWhat('PLAY').has(c => c.cost === 4) && addRecruitEvent(ev, 2),
+    ev => setFocusEv(ev, 4, ev => { rescueEv(ev); KOHandOrDiscardEv(ev); })
+  ]),
+// Draw two cards.
+// {FOCUS 5} You get +7 Attack usable only against the Mastermind.
+// GUN: 1
+  ra: makeHeroCard("Fantastic Four United", "Mr. Fantastic", 7, 2, 0, Color.TECH, "Fantastic Four", "GD", [
+    ev => drawEv(ev, 2),
+    ev => setFocusEv(ev, 5, ev => addAttackSpecialEv(ev, isMastermind, 7))
+  ]),
+},
+{
+  name: "Psi-Lord",
+  team: "Fantastic Four",
+// {FOCUS 2} Reveal the top card of the Villain Deck. If it's a Master Strike, you get +3 Attack, KO it, and replace it with the top card from the Bystander Stack.
+// {POWER Instinct} {OUTOFTIME}
+  c1: makeHeroCard("Psi-Lord", "Avert Future Tragedy", 3, 2, 0, Color.INSTINCT, "Fantastic Four", "D", [
+    ev => setFocusEv(ev, 2, ev => revealVillainDeckEv(ev, 1, r => r.limit(isStrike).each(c => {
+      addAttackEvent(ev, 3);
+      KOEv(ev, c);
+      gameState.bystanders.withTop(c => moveCardEv(ev, c, gameState.villaindeck));
+    }))),
+    ev => superPower(Color.INSTINCT) && outOfTimeEv(ev)
+  ]),
+// {FOCUS 1} Reveal the top card of the Villain Deck. If it's a Bystander, you get +2 Attack, rescue it, and shuffle the top card from the Bystander Stack into the Villain Deck.
+// {POWER Covert} {OUTOFTIME}
+  c2: makeHeroCard("Psi-Lord", "Interdimensional Rescue", 4, u, 2, Color.COVERT, "Fantastic Four", "D", [
+    ev => setFocusEv(ev, 1, ev => revealVillainDeckEv(ev, 1, r => r.limit(isBystander).each(c => {
+      addAttackEvent(ev, 2);
+      rescueEv(ev, c);
+      gameState.bystanders.withTop(c => shuffleIntoEv(ev, c, gameState.villaindeck));
+    }))),
+    ev => superPower(Color.COVERT) && outOfTimeEv(ev)
+  ]),
+// {FOCUS 1} Reveal the top card of the Villain Deck. If it's a Villain, you get +1 Attack and you may fight it this turn.
+// {POWER Instinct Covert} {OUTOFTIME}
+  uc: makeHeroCard("Psi-Lord", "Slip the Timestream", 6, 3, 0, Color.COVERT, "Fantastic Four", "", [
+    ev => setFocusEv(ev, 1, ev => revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => {
+      addAttackEvent(ev, 1);
+      addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+    }))),
+    ev => superPower(Color.INSTINCT, Color.COVERT) && outOfTimeEv(ev)
+  ]),
+// {FOCUS 3} Reveal the top card of the Villain Deck. If it's a Scheme Twist, you get +4 Attack and shuffle the Villain Deck.
+// {TEAMPOWER Fantastic Four, Fantastic Four} {OUTOFTIME}
+  ra: makeHeroCard("Psi-Lord", "Reshape Reality", 7, 3, 3, Color.INSTINCT, "Fantastic Four", "", [
+    ev => setFocusEv(ev, 3, ev => revealVillainDeckEv(ev, 1, r => r.limit(isTwist).each(c => {
+      addAttackEvent(ev, 4);
+      gameState.villaindeck.shuffle();
+    }))),
+    ev => superPower("Fantastic Four", "Fantastic Four") && outOfTimeEv(ev)
+  ]),
+},
+{
+  name: "Brainstorm",
+  team: "Fantastic Four",
+// Draw a card. Then put a card from your hand on top of your deck.
+// {POWER Tech} {OUTOFTIME}
+  c1: makeHeroCard("Brainstorm", "Time Loop Experiments", 2, 1, u, Color.TECH, "Fantastic Four", "FD", [
+    ev => drawEv(ev),
+    ev => pickTopDeckEv(ev),
+    ev => superPower(Color.TECH) && outOfTimeEv(ev)
+  ]),
+// Reveal the top card of your deck. If it costs 2 or more, draw it. Otherwise, discard it or put it back.
+// {POWER Ranged} {OUTOFTIME}
+// GUN: 1
+  c2: makeHeroCard("Brainstorm", "Borrow from the Future", 3, u, 1, Color.RANGED, "Fantastic Four", "GD", [
+    ev => revealPlayerDeckEv(ev, 1, cards => cards.each(c => c.cost >= 2 ? drawCardEv(ev, c) : selectCardOptEv(ev, "Choose a card to discard", [c], c => discardEv(ev, c)))),
+    ev => superPower(Color.RANGED) && outOfTimeEv(ev)
+  ]),
+// {TEAMPOWER Fantastic Four} You may look at the top two cards of your deck. If you do, KO one of them and put the other back.
+  uc: makeHeroCard("Brainstorm", "Reprogram Doombot Legions", 6, u, 3, Color.TECH, "Fantastic Four", "",
+    ev => superPower("Fantastic Four") && chooseMayEv(ev, "Look at the top two cards of your deck", () => {
+      revealPlayerDeckEv(ev, 2, cards => selectCardAndKOEv(ev, cards));
+    }),
+  ),
+// Use one of Dr. Doom's Mastermind Tactics. You can't use any of them more than once per game. If you have already used them all, get +4 Attack instead.
+// (Take another turn; or draw three extra cards at end of turn; or you may recruit a [Tech] or [Ranged] Hero for free; or all other players draw a card or discard a card.)
+  ra: makeHeroCard("Brainstorm", "Protégé of Dr. Doom", 8, u, 4, Color.TECH, "Fantastic Four", "",
+    ev => {
+      const options: [string, () => void][] = [];
+      countPerGame('tactic1', ev.source) || options.push(["Take another turn", () => {
+        incPerGame('tactic1', ev.source);
+        gameState.extraTurn = true; // TODO multiplayer
+      }]);
+      countPerGame('tactic2', ev.source) || options.push(["Draw three extra cards at end of turn", () => {
+        incPerGame('tactic2', ev.source);
+        addEndDrawMod(3);
+      }]);
+      countPerGame('tactic3', ev.source) || options.push(["Recruit a [Tech] or [Ranged] Hero for free", () => {
+        incPerGame('tactic3', ev.source);
+        selectCardEv(ev, "Recruit a Hero for free", hqHeroes().limit(Color.TECH | Color.RANGED), sel => recruitForFreeEv(ev, sel));
+      }]);
+      countPerGame('tactic4', ev.source) || options.push(["All other players draw a card or discard a card", () => {
+        incPerGame('tactic4', ev.source);
+        chooseOneEv(ev, "Each other player",
+          ["draws a card", () => eachOtherPlayerVM(p => drawEv(ev, 1, p))],
+          ["discards a card", () => eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p))]
+        );
+      }]);
+      options.length ? chooseOneEv(ev, "Choose a Dr. Doom Tactic", ...options) : addAttackEvent(ev, 4);
+    },
+  ),
+},
+{
+  name: "Heralds of Galactus",
+  team: "(Unaffiliated)",
+// {FOCUS 2} Draw a card, then you may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+  c1: makeHeroCard("Heralds of Galactus", "Silver Surfer", 4, 2, u, Color.RANGED, u, "D", ev =>
+    setFocusEv(ev, 2, ev => {
+      drawEv(ev);
+      cont(ev, () => selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+        selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+      }));
+    })
+  ),
+// This turn, your Heroes' Conqueror abilities also give Attack if those city spaces have been destroyed.
+// {POWER Ranged} {BRIDGE CONQUEROR 2}
+  c2: makeHeroCard("Heralds of Galactus", "Firelord", 3, u, 2, Color.RANGED, u, "FD", [
+    ev => turnState.destroyedConqueror = true,
+    ev => superPower(Color.RANGED) && heroConquerorEv(ev, 'BRIDGE', 2)
+  ]),
+// {FOCUS 4} {ROOFTOPS CONQUEROR 4}
+// {FOCUS 11} Search the Hero Deck, HQ, or your deck or discard pile for "Galactus Hungers" and put it on top of your deck. Shuffle any deck you searched.
+  uc: makeHeroCard("Heralds of Galactus", "Stardust", 6, 4, 0, Color.COVERT, u, "", [
+    ev => setFocusEv(ev, 4, ev => heroConquerorEv(ev, 'ROOFTOPS', 4)),
+    ev => setFocusEv(ev, 11, ev => {
+      const isHungers = (c: Card) => c.cardName === "Galactus Hungers";
+      const topDeck = (c: Card) => moveCardEv(ev, c, playerState.deck);
+      playerState.discard.deck.filter(isHungers).each(topDeck);
+      hqHeroes().filter(isHungers).each(topDeck);
+      if (gameState.herodeck.has(isHungers)) {
+        gameState.herodeck.deck.filter(isHungers).each(topDeck);
+        gameState.herodeck.shuffle();
+      }
+      if (playerState.deck.has(isHungers)) {
+        playerState.deck.deck.filter(isHungers).each(topDeck);
+        playerState.deck.shuffle();
+      }
+    })
+  ]),
+// If you have played another Herald of Galactus this turn, destroy the leftmost city space, defeat any Villain there, and then you get +2 Attack for each destroyed city space. If this destroys the last city space, Galactus consumes the Earth. You Win, Evil Wins, and all other players lose.
+  ra: makeHeroCard("Heralds of Galactus", "Galactus Hungers", 10, u, 8, Color.RANGED, u, "D",
+    ev => turnState.cardsPlayed.has(c => c.heroName === "Heralds of Galactus") && withLeftmostCitySpace(ev, space => {
+      destroyCity(space);
+      addAttackEvent(ev, 2 * gameState.destroyedCitySpaces.length);
+      if (!gameState.city.size) gameOverEv(ev, "LOSS", playerState);
+      space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
+    })
+  ),
+},
+{
+  name: "Super-Skrull",
+  team: "(Unaffiliated)",
+// {FOCUSA 2} When you draw a new hand of cards at the end of this turn, draw an extra card.
+  c1: makeHeroCard("Super-Skrull", "Stretching Credibility", 3, u, 2, Color.INSTINCT, u, "FD", ev => setFocusWithAttackEv(ev, 2, ev => addEndDrawMod(1))),
+// {POWER Strength} {SEWERS CONQUEROR 1}.
+// {FOCUSA 3} You get +2 Recruit.
+  c2: makeHeroCard("Super-Skrull", "Rock Solid", 4, 0, 2, Color.STRENGTH, u, "FD", [ ev => superPower(Color.STRENGTH) && heroConquerorEv(ev, 'SEWERS', 1), ev => setFocusWithAttackEv(ev, 3, ev => addRecruitEvent(ev, 2)) ]),
+// {BANK CONQUEROR 1}
+// {FOCUSA 3} You may KO a card from your hand or discard pile.
+  uc: makeHeroCard("Super-Skrull", "Transparent Motives", 5, u, 2, Color.COVERT, u, "FD", [ ev => heroConquerorEv(ev, 'BANK', 1), ev => setFocusWithAttackEv(ev, 3, ev => KOHandOrDiscardEv(ev)) ]),
+// {BRIDGE CONQUEROR 1}
+// {STREETS CONQUEROR 1}
+// You may gain a Wound. If you do, you get {ROOFTOPS CONQUEROR 4}.
+  ra: makeHeroCard("Super-Skrull", "Put to the Torch", 7, u, 4, Color.RANGED, u, "", [ ev => heroConquerorEv(ev, 'BRIDGE', 1), ev => heroConquerorEv(ev, 'STREETS', 1),
+    ev => chooseMayEv(ev, "Gain a Wound", () => {
+      gainWoundEv(ev);
+      heroConquerorEv(ev, 'ROOFTOPS', 4);
+    })
+  ]),
 },
 ]);

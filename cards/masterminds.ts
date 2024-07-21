@@ -2609,3 +2609,112 @@ addTemplates("MASTERMINDS", "Realm of Kings", [
   } ],
 ], { varDefense: c => c.printedDefense + (gameState.thronesFavorHolder === c ? c.epic ? 5 : 3 : 0) }),
 ]);
+addTemplates("MASTERMINDS", "Annihilation", [
+// {MASSMOMENTUM 2}
+//  <i>(1 player: Use 6 Henchmen.)</i>
+// EPICNAME: Annihilus
+//  Add an extra Villain Group <i>(even for 1 player.)</i>
+// {MASSMOMENTUM 4}
+// TODO: extra Villain Group
+...makeEpicMastermindCard("Annihilus", [ 10, 12 ], 6, "Annihilation Wave", ev => {
+  if (!ev.source.epic) {
+// Reveal the top card of the Villain Deck. If it's a Bystander, Annihilus captures it. If it's a Villain, it enters the city, captures a Bystander, and moves forward an extra space <i>(before doing any Ambush ability)</i>.
+    revealVillainDeckEv(ev, 1, cards => cards.forEach(c => {
+      isBystander(c) && captureEv(ev, ev.source, c);
+      if (isVillain(c)) enterCityEv(ev, c, undefined, () => {
+        captureEv(ev, c);
+        villainChargeEv(ev, c, 1);
+      });
+    }));
+  } else {
+// Play a card from the Villain Deck. If it's a Villain, play a second card from the Villain Deck.
+    revealVillainDeckEv(ev, 1, cards => cards.each(c => {
+      villainDrawEv(ev, c);
+      isVillain(c) && villainDrawEv(ev);
+    }));
+  }
+}, [
+  [ "Deploy the Planet Killer", ev => {
+  // If this is not the final tactic, if Weaponized Galactus is in the city, he escapes. If Weaponized Galactus wasn't in the city and wasn't in any victory pile, then he enters the city from the villain deck and you shuffle the villain deck.
+    if(!finalTactic(ev.source)) {
+      const isWeaponizedGalactus = (c: Card) => c.cardName === "Weaponized Galactus";
+      if (CityCards().has(isWeaponizedGalactus)) {
+        CityCards().limit(isWeaponizedGalactus).each(c => villainEscapeEv(ev, c));
+      } else if (gameState.villaindeck.has(isWeaponizedGalactus)) {
+        gameState.villaindeck.limit(isWeaponizedGalactus).each(c => enterCityEv(ev, c));
+        cont(ev, () => gameState.villaindeck.shuffle());
+      }
+    }
+  } ],
+  [ "The Cosmic Control Rod", ev => {
+  // Each other player reveals the top three cards of their deck and KOs the highest-cost hero that is revealed this way and puts the rest back in any order.
+    eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 3, cards => {
+      selectCardEv(ev, "Choose a Hero to KO", cards.limit(isHero).highest(c => c.cost), c => KOEv(ev, c), p);
+    }, p));
+  } ],
+  [ "Surging Annihilation", ev => {
+  // Check all Annihilation Wave villains from each other player's victory pile. The one worth the most VP enters the city, and that player rescues bystanders equal to that villain's VP.
+    const options = eachPlayer(p => p.victory.limit(isGroup(ev.source.mastermind.leads))).merge().highest(c => c.vp);
+    selectCardEv(ev, "Choose a Villain", options, c => {
+      enterCityEv(ev, c);
+      rescueByEv(ev, c.location.owner, c.vp);
+    });
+  } ],
+// FLAVOR: He's got a really negative attitude.
+  [ "Pull Into the Negative Zone", ev => {
+  // The cost of each hero currently in the HQ gets -2 this turn.
+    addTurnSet('recruitCost', c => isHero(c) && c.location.isHQ, (c, v) => ({ ...v, recruit: v.recruit - 2 }));
+  } ],
+], { varDefense: c => massMomentumVarDefense(c.epic ? 4 : 2)(c) }),
+// Kang has <b>Conqueror 2</b> for each city space under a Time Incursion. <i>(He benefits from Villains there.)</i> Villains under a Time Incursion get +2 Attack.
+// EPICNAME: Kang the Conqueror
+// Kang has <b>Conqueror 3</b> for each city space under a Time Incursion. <i>(He benefits from Villains there.)</i> Villains under a Time Incursion get +3 Attack.
+...makeEpicMastermindCard("Kang the Conqueror", [ 8, 10 ], 6, "Timelines of Kang", ev => {
+// This Strike becomes a "Time Incursion." Put it above the rightmost city space that doesn't yet have a Time Incursion.
+  // TODO city rightmost
+  gameState.city.limit(d => d.attached('TIMEINCURSION').size === 0).withLast(d => attachCardEv(ev, ev.source, d, 'TIMEINCURSION'));
+// This Strike becomes a "Time Incursion." Put it above the rightmost city space that doesn't yet have a Time Incursion. If there are any Villains in any Time Incursions, each player gains a Wound.
+  ev.source.epic && cont(ev, () => {
+    cityVillains().has(c => c.location.attached('TIMEINCURSION').size > 0) && eachPlayer(p => gainWoundEv(ev, p));
+  });
+}, [
+  [ "Savior From Another Timeline", ev => {
+  // You may gain a Hero from any HQ space under a Time Incursion. Send it as a <b>Man or Woman Out of Time</b>.
+    selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.location.below?.attached('TIMEINCURSION')?.size > 0), c => gainOutOfTimeEv(ev, c));
+  } ],
+  [ "Pull From the Future", ev => {
+  // Reveal the top two cards of the Villain Deck. Choose a Villain revealed this way to enter an empty city space under a Time Incursion. Put the rest back in any order.
+    revealVillainDeckEv(ev, 2, cards => {
+      selectCardEv(ev, "Choose a Villain to enter", cards.limit(isVillain), c =>
+        selectCardEv(ev, "Choose a city space", gameState.city.limit(isCityEmpty).limit(d => d.attached('TIMEINCURSION').size > 0), d =>
+          enterCityEv(ev, c, d)
+        )
+      )
+    }, false);
+  } ],
+  [ "Iron Lad Grows Up to Become Kang", ev => {
+  // If this is not the final Tactic: Each player reveals their hand. You choose a card named "Iron Lad" from the Escape Pile, or from {OUTOFTIME},
+  // or from any player's hand or discard pile or that you played this turn. Shuffle Iron Lad into Kang's Tactics as a Mastermind Tactic that says
+  // "<b>Fight</b>: Gain this as a Hero."
+    if (!finalTactic(ev.source)) {
+      // TODO multiplayer reveal
+      [
+        ...gameState.escaped.deck, ...playerState.outOfTime.deck, ...playerState.playArea.deck,
+        ...(eachPlayer(p => p.hand.deck).merge()), ...(eachPlayer(p => p.discard.deck).merge())
+      ].limit(c => c.cardName === "Iron Lad").withFirst(lad => {
+        shuffleIntoEv(ev, lad, ev.source.mastermind.attachedDeck("TACTICS"));
+        addStatSet('fight', c => c === lad && c.location === ev.source.mastermind.attachedDeck("TACTICS"), () => (ev => gainEv(ev, ev.source)));
+      });
+    }
+  } ],
+  [ "Leap Into the Timestream", ev => {
+  // If this is not the final Tactic: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+    if (!finalTactic(ev.source)) {
+      addFutureTrigger(ev => {
+        addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
+      });
+      gameState.extraTurn = true;
+    }
+  } ],
+], { varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * gameState.city.count(d => d.has(isVillain) && d.attached('TIMEINCURSION').size > 0) }),
+]);

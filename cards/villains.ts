@@ -4298,3 +4298,110 @@ addVillainTemplates("Realm of Kings", [
   })],
 ]},
 ]);
+addVillainTemplates("Annihilation", [
+{ name: "Annihilation Wave", cards: [
+// {MOMENTUM 3}
+// AMBUSH: Ravenous swaps places with an Annihilation Wave villain that isn't Weaponized Galactus.
+// ESCAPE: Each player reveals a [Strength] Hero or gains a wound.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Annihilation Wave", "Ravenous", 5, 4, {
+    ambush: ev => {
+      const cards = cityVillains().limit(c => isGroup("Annihilation Wave")(c) && c.cardName !== "Weaponized Galactus" && c !== ev.source);
+      selectCardEv(ev, "Choose a villain to swap with", cards, c => swapCardsEv(ev, ev.source, c));
+    },
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    varDefense: momentumVarDefense(3),
+  })],
+// {MOMENTUM 3}
+// AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, play it.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+// FLAVOR: Eradica, Extermina, and Extirpia each lead a third of the Annihilation Wave as the royal consorts of Annihilus.
+  [ 3, makeVillainCard("Annihilation Wave", "Queens of Annihilation", 4, 3, {
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => cards.each(c => villainDrawEv(ev, c))),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: momentumVarDefense(3),
+  })],
+// {MOMENTUM 2}
+// AMBUSH: A Henchmen Villain from your Victory Pile enters the city.
+// ATTACK: 3+
+// VP: 2
+// FLAVOR: The Wave was alwyas advancing, always growing, always consuming.
+  [ 2, makeVillainCard("Annihilation Wave", "Annihilation Armada", 3, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a henchman", playerState.victory.limit(isHenchman), c => enterCityEv(ev, c)),
+    varDefense: momentumVarDefense(2),
+  })],
+// {MOMENTUM 9}
+// AMBUSH: Weaponized Galactus swaps places with the leftmost Villain in the city.
+// ESCAPE: Destroy the leftmost city space. If this destroys the last city space, Evil Wins. Otherwise, each player gains a Wound, and you shuffle Weaponized Galactus back into the Villain Deck. Any Villain from the destroyed city space escapes.
+// ATTACK: 9+
+// VP: 7
+  [ 1, makeVillainCard("Annihilation Wave", "Weaponized Galactus", 9, 7, {
+    ambush: ev => cityVillains().withFirst(c => swapCardsEv(ev, ev.source, c)), // TODO leftmost villain
+    escape: ev => withLeftmostCitySpace(ev, space => {
+      destroyCity(space);
+      if (!gameState.city.size) evilWinsEv(ev);
+      else eachPlayer(p => gainWoundEv(ev, p));
+      shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+      space.deck.limit(isVillain).each(c => c !== ev.source && villainEscapeEv(ev, c));
+    }),
+    varDefense: momentumVarDefense(9),
+  })],
+]},
+{ name: "Timelines of Kang", cards: [
+// {STREETS CONQUEROR 3}
+// FIGHT: Reveal a [Ranged] Hero or reveal the top card of the Villain Deck. If it's a Villain worth 4VP or less, defeat it<i>(do its Fight effect)</i> and put Immortus in its place.
+// ESCAPE: Each player reveals a [Ranged] Hero or gains a Wound. Shuffle Immortus back into the Villain Deck.
+// ATTACK: 5+
+// VP: 5
+  [ 2, makeVillainCard("Timelines of Kang", "Immortus", 5, 5, {
+    fight: ev => {
+      revealOrEv(ev, Color.RANGED, () =>
+        revealVillainDeckEv(ev, 1, cards => cards.limit(c => c.vp <= 4).each(
+          c => { defeatEv(ev, c); moveCardEv(ev, ev.source, gameState.villaindeck); }
+        ))
+      );
+    },
+    escape: ev => {
+      eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p));
+      shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+    },
+    varDefense: conquerorVarDefese(3, 'STREETS'),
+  })],
+// {BRIDGE CONQUEROR 3}
+// AMBUSH: If the Bridge is empty, move a Villain to the Bridge.
+// FIGHT: Send a [Strength] or [Ranged] Hero you played this turn as a <b>Man or Woman Out of Time</b>.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Timelines of Kang", "Pharaoh Rama-Tut", 4, 4, {
+    ambush: ev => {
+      withCity('BRIDGE', bridge => bridge.size || selectCardEv(ev, "Choose a villain", villains(), c => moveCardEv(ev, c, bridge)));
+    },
+    fight: ev => {
+      selectCardEv(ev, "Choose an out of time hero", playerState.playArea.limit(isHero).limit(Color.STRENGTH | Color.RANGED), c => outOfTimeEv(ev, c));
+    },
+    varDefense: conquerorVarDefese(3, 'BRIDGE'),
+  })],
+// {BANK CONQUEROR 2}
+// AMBUSH: Reveal your hand and send your highest-cost Hero as a <b>Man or Woman Out of Time</b>.
+// FIGHT: If you played a [Covert] Hero this turn, KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Timelines of Kang", "Scarlet Centurion", 4, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a hero", playerState.hand.limit(isHero).highest(c => c.cost), c => outOfTimeEv(ev, c)),
+    fight: ev => superPower(Color.COVERT) && selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: conquerorVarDefese(2, 'BANK'),
+  })],
+// FIGHT: The player of your choice gains this as a Hero.
+// ATTACK: 4
+// GAINABLE
+// CLASS: [Tech]
+// {POWER Tech} {OUTOFTIME}
+// ATTACKG: 2
+  [ 2, makeGainableCard(makeVillainCard("Timelines of Kang", "Iron Lad", 4, u, {
+    fight: ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)),
+  }), u, 2, Color.TECH, u, "D", ev => superPower(Color.TECH) && outOfTimeEv(ev))],
+]},
+]);

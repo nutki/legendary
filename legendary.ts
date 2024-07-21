@@ -499,6 +499,7 @@ class Deck {
   faceup: boolean
   isHQ?: boolean
   isCity?: boolean
+  isDestoryed?: boolean
   next?: Deck
   below?: Deck
   above?: Deck
@@ -919,6 +920,7 @@ interface Turn extends Ev {
   smashMultiplier?: number
   hyperspeedBoth?: boolean
   actionFilters: ((ev: Ev) => boolean)[]
+  destroyedConqueror?: boolean
 }
 interface Trigger {
   event: TriggerableEvType
@@ -973,6 +975,7 @@ interface Game {
   cityEntry: Deck
   specialActions?: (ev: Ev) => Ev[]
   extraTurn?: boolean
+  perGame?: Map<string, number>
   schemeState: any
   schemeProgress?: number
   schemeTarget?: number
@@ -1103,7 +1106,7 @@ const undoLog: UndoLog = {
       this.gameSetup = JSON.parse(localStorage.getItem('legendarySetup'));
     }
   },
-  get replaying(this: UndoLog) { return this.pos < this.actions.length; },
+  get replaying() { return this.pos < this.actions.length; },
   read: function(this: UndoLog) { return this.actions[this.pos++]; },
   readInt: function(this: UndoLog) { return parseInt(this.read()); },
   readInts: function(this: UndoLog) {
@@ -1521,6 +1524,7 @@ function destroyCity(space: Deck) {
     if (d.below === space) d.below = undefined;
   });
   space.isCity = false;
+  space.isDestoryed = true;
 }
 function destroyHQ(space: Deck) {
   gameState.hq = gameState.hq.filter(d => d !== space);
@@ -1845,6 +1849,18 @@ function fightActionEv(ev: Ev, what: Card, withViolence?: boolean) {
 function fightPiercingActionEv(ev: Ev, what: Card) {
   return new Ev(ev, 'FIGHT', { what, func: villainFight, cost: { piercing: what.vp, cond: c => c.vp > 0 } }); // TODO some fight limitations may apply (for example wound healing)
 }
+function countPerGame(key: string, c?: Card) {
+  if (c) key += '-' + c.id;
+  if (!gameState.perGame) return 0;
+  return gameState.perGame.get(key) || 0;
+}
+function incPerGame(key: string, c?: Card) {
+  const prev = countPerTurn(key, c);
+  if (c) key += '-' + c.id;
+  if (!gameState.perGame) gameState.perGame = new Map();
+  gameState.perGame.set(key, prev + 1);
+  return prev;
+}
 function countPerTurn(key: string, c?: Card) {
   if (c) key += '-' + c.id;
   if (!turnState.perTurn) return 0;
@@ -2021,7 +2037,7 @@ function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS", us
   })
 }
 function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {
-  if (what && typeof what !== "number") pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: what, villain: villain });
+  if (typeof what !== "number") what && pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: what, villain: villain });
   else for (let i = 0; i < what; i++) cont(ev, () => {
     if (gameState.bystanders.top) pushEv(ev, "CAPTURE", { func: ev => attachCardEv(ev, ev.what, ev.villain, "CAPTURED"), what: gameState.bystanders.top, villain: villain });
   });
@@ -2273,12 +2289,12 @@ function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, ac
   const amount = turnState.investigateAmount || 2;
   if (src === playerState.deck && playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
   cont(ev, () => {
-    cards = playerState.deck.deck.slice(0, amount);
-    playerState.deck.registerRevealed(cards);
+    cards = src.deck.slice(0, amount);
+    src.registerRevealed(cards);
   })
   cont(ev, () => selectCardEv(ev, "Choose a card", cards.limit(f), action, agent));
   cont(ev, () => cleanupRevealedTopOrBottom(ev, cards, src, agent));
-  cont(ev, () => playerState.deck.clearRevealed(cards));
+  cont(ev, () => src.clearRevealed(cards));
 }
 function isFaceUp(c: Card) {
   const d = c.location;
@@ -2376,6 +2392,10 @@ function gainToDeckEv(ev: Ev, card: Card, who?: Player) {
 function gainSoaringEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
   pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.teleported });;
+}
+function gainOutOfTimeEv(ev: Ev, card: Card, who?: Player) {
+  who = who || playerState;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.outOfTime });;
 }
 function cleanUp(ev: Ev): void {
   moveAll(playerState.hand, playerState.discard);
@@ -2506,8 +2526,9 @@ function villainDraw(ev: Ev): void {
     throw Error("dont know what to do with: " + c.id);
   }
 }
-function enterCityEv(ev: Ev, c: Card, d?: Deck) {
+function enterCityEv(ev: Ev, c: Card, d?: Deck | undefined, extraEffects?: () => void) {
   moveCardEv(ev, c, d || gameState.cityEntry);
+  extraEffects?.();
   pushEffects(ev, c, 'ambush', c.ambush);
 }
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
@@ -2554,7 +2575,7 @@ function villainDefeat(ev: Ev): void {
   if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
 function rescueByEv(ev: Ev, who: Player, what: Card | number = 1): void {
-  if (what && typeof what !== "number") pushEv(ev, "RESCUE", { func: rescueBystander, what, who });
+  if (typeof what !== "number") what && pushEv(ev, "RESCUE", { func: rescueBystander, what, who });
   else for (let i = 0; i < what; i++) cont(ev, () => {
     if (gameState.bystanders.top) pushEv(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top, who });
   });

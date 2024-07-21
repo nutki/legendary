@@ -7,8 +7,9 @@
   MASTERMINDS => "Masterminds_and_Commanders.txt",
   SCHEMES => "Schemes_and_Plots.txt",
 );
+@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS);
 my ($exp) = @ARGV;
-for $type (keys %input) {
+for $type (@inputkeys) {
   my $file = $input{$type};
   open A, "<$exp/$file";
   undef $/;
@@ -29,8 +30,9 @@ for $type (keys %input) {
     my $dir = shift @_;
     my $name = join' ',@_;
     $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".jpg";
-    $imagename = "../images/$exp/$imagename" if $exp ne 'Legendary';
-    print STDERR "no image: $imagename\n" unless -f "../images/$imagename";
+    $imagename = "$exp/$imagename" if $exp ne 'Legendary';
+    print "'$imagename',\n";
+#    print STDERR "no image: $imagename\n" unless -f "../images/$imagename";
   }
   for (@items) {
     if ($type eq "HENCHMEN") {
