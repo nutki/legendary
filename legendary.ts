@@ -2261,7 +2261,7 @@ function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, 
   let cards: Card[] = [];
   if (playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
   cont(ev, () => {
-    cards = playerState.deck.deck.slice(0, amount);
+    cards = bottom ? playerState.deck.deck.slice(0, amount) : playerState.deck.deck.slice(-amount);
     playerState.deck.registerRevealed(cards);
   })
   cont(ev, () => action(cards));
