@@ -1230,14 +1230,14 @@ addVillainTemplates("Secret Wars Volume 1", [
 // CLASS: [Strength]
 // You get +1 Attack for each color of Hero you have
 // ATTACKG: 0+
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain America", 6, u, {}), u, 0, Color.STRENGTH, u, "", ev => addAttackEvent(ev, numColors()))],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain America", 6, u, {}), u, 0, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, numColors()))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 4
 // GAINABLE
 // CLASS: [Ranged]
 // {TELEPORT}
 // RECRUIT: 2
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain Marvel", 4, u, {}), 2, u, Color.RANGED, u, "D", [], { teleport: true })],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain Marvel", 4, u, {}), 2, u, Color.RANGED, "Avengers", "D", [], { teleport: true })],
 // FIGHT: Gain this as a Hero.
 // ESCAPE: {XDRAMPAGE Thor}
 // ATTACK: 7
@@ -1247,14 +1247,14 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACKG: 3+
   [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Thor", 7, u, {
     escape: ev => xdRampageEv(ev, 'Thor'),
-  }), u, 3, Color.RANGED, u, "", ev => superPower(Color.RANGED) && addAttackEvent(ev, 3))],
+  }), u, 3, Color.RANGED, "Avengers", "", ev => superPower(Color.RANGED) && addAttackEvent(ev, 3))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
 // CLASS: [Covert]
 // {POWER Covert} You get +2 Attack.
 // ATTACKG: 2+
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, u, "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2))],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, "Avengers", "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2))],
 ]},
 { name: "Sentinel Territories", cards: [
 // FIGHT: <i>Colossus changes the future:</i> Don't play a Villain card at the beginning of next turn.
@@ -1521,14 +1521,14 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Beast", 5, u, {
     ambush: chargeAmbushEffect(1),
-  }), u, 2, Color.STRENGTH, u, "D", ev => superPower(Color.TECH) && drawEv(ev, 1))],
+  }), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPower(Color.TECH) && drawEv(ev, 1))],
 // FIGHT: Gain this as a Hero.
 // ATTACKG: 4
 // GAINABLE
 // CLASS: [Ranged]
 // <i>Spectrum:</i> You get +2 Attack.
 // ATTACKG: 2+
-  [ 3, makeGainableCard(makeVillainCard("X-Men '92", "'92 Jubilee", 4, u, {}), u, 2, Color.RANGED, u, "D", ev => spectrumPower() && addAttackEvent(ev, 2)) ],
+  [ 3, makeGainableCard(makeVillainCard("X-Men '92", "'92 Jubilee", 4, u, {}), u, 2, Color.RANGED, "X-Men", "D", ev => spectrumPower() && addAttackEvent(ev, 2)) ],
 // ESCAPE: '92 Professor X ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Stack the two heroes from the HQ with the highest cost next to '92 Professor X. He gets +1 Attack for each Hero stacked there. Players can recruit the top card of the stack."
 // ATTACK: 8+
 // VP: 6
@@ -1553,7 +1553,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Wolverine", 7, u, {
     escape: ev => xdRampageEv(ev, 'Wolverine'),
-  }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 2))],
+  }), u, 2, Color.INSTINCT, "X-Men", "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 2))],
 ]},
 ]);
 addVillainTemplates("Captain America 75th Anniversary", [
@@ -3201,7 +3201,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 0+
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Captain America", 4, u, {
     fight: ev => poisonBondEv(ev, cityVillains()),
-  }), u, 0, Color.INSTINCT, u, "", ev => addAttackEvent(ev, numColors()))],
+  }), u, 0, Color.INSTINCT, "Venomverse", "", ev => addAttackEvent(ev, numColors()))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Bank. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3210,7 +3210,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 1
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Dr. Octopus", 3, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'BANK'))),
-  }), u, 1, Color.TECH, u, "", ev => drawEv(ev))],
+  }), u, 1, Color.TECH, "Venomverse", "", ev => drawEv(ev))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Henchman Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 5
 // GAINABLE
@@ -3219,7 +3219,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2+
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Hulk", 5, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(isHenchman)),
-  }), u, 2, Color.STRENGTH, u, "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 2))],
+  }), u, 2, Color.STRENGTH, "Venomverse", "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 2))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Streets. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 4
 // GAINABLE
@@ -3228,7 +3228,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Sabretooth", 4, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'STREETS'))),
-  }), u, 2, Color.INSTINCT, u, "D", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))))],
+  }), u, 2, Color.INSTINCT, "Venomverse", "D", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))))],
 // FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3237,7 +3237,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Scarlet Witch", 3, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => c.defense % 2 === 1)),
-  }), u, 2, Color.COVERT, u, "D", ev => drawIfEv(ev, isCostOdd))],
+  }), u, 2, Color.COVERT, "Venomverse", "D", ev => drawIfEv(ev, isCostOdd))],
 // FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 2
 // GAINABLE
@@ -3246,7 +3246,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Spider-Man", 2, u, {
     fight: ev => poisonBondEv(ev, cityVillains()),
-  }), u, 2, Color.COVERT, u, "D", ev => drawIfEv(ev, c => c.cost <= 2))],
+  }), u, 2, Color.COVERT, "Venomverse", "D", ev => drawIfEv(ev, c => c.cost <= 2))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Villain on the Rooftops or Bridge. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3255,7 +3255,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 2+
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Storm", 3, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'BRIDGE'))),
-  }), u, 2, Color.RANGED, u, "D", ev => superPower(Color.RANGED) && addAttackSpecialEv(ev, isMastermind, 2))],
+  }), u, 2, Color.RANGED, "Venomverse", "D", ev => superPower(Color.RANGED) && addAttackSpecialEv(ev, isMastermind, 2))],
 // AMBUSH: This Symbiote Bonds with the Mastermind. When you fight the Mastermind, defeat Symbiotic Armor and KO one of your Heroes instead of taking a Tactic.
 // ATTACK: 1
 // VP: 6

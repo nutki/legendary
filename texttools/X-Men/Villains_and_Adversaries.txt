@@ -163,6 +163,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Instinct]
 {XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
 #ATTACKG: 2
@@ -172,6 +173,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Tech]
 {XGENE [Tech]} You may KO a card from your hand or discard pile.
 #ATTACKG: 2
@@ -182,6 +184,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 7
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Ranged]
 {XGENE [Ranged]} Return a [Ranged] Hero from your discard pile to your hand.
 #ATTACKG: 3
@@ -191,6 +194,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Strength]
 {XGENE [Strength]} Draw a card.
 #ATTACKG: 2
@@ -201,6 +205,7 @@ Sebastian Shaw has +1 Attack for each card you've played from your hand this tur
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4+
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Covert]
 {XGENE [Covert]} Rescue a Bystander.
 #ATTACKG: 2

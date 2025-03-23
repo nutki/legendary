@@ -162,6 +162,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Strength]
 {POWER Tech} Draw a card.
 #ATTACKG: 2
@@ -171,6 +172,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Ranged]
 {SPECTRUM} You get +2 Attack.
 #ATTACKG: 2+
@@ -187,6 +189,7 @@ While in the Sewers, Rooftops or Bridge, Nighthawk gains +4 Attack.
 #ESCAPE: {XDRAMPAGE Wolverine}
 #ATTACK: 7
 #GAINABLE
+#TEAM: X-Men
 #CLASS: [Instinct]
 {POWER Instinct} Draw two cards.
 #ATTACKG: 2

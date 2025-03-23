@@ -124,6 +124,7 @@ You can't defeat Zombie Venom unless you have a [Covert] Hero.
 #FIGHT: Gain this as a Hero.
 #ATTACK: 6
 #GAINABLE
+#TEAM: Avengers
 #CLASS: [Strength]
 You get +1 Attack for each color of Hero you have
 #ATTACKG: 0+
@@ -133,6 +134,7 @@ You get +1 Attack for each color of Hero you have
 #FIGHT: Gain this as a Hero.
 #ATTACK: 4
 #GAINABLE
+#TEAM: Avengers
 #CLASS: [Ranged]
 {TELEPORT}
 #RECRUIT: 2
@@ -143,6 +145,7 @@ You get +1 Attack for each color of Hero you have
 #ESCAPE: {XDRAMPAGE Thor}
 #ATTACK: 7
 #GAINABLE
+#TEAM: Avengers
 #CLASS: [Ranged]
 {POWER Ranged} You get +3 Attack.
 #ATTACKG: 3+
@@ -152,6 +155,7 @@ You get +1 Attack for each color of Hero you have
 #FIGHT: Gain this as a Hero.
 #ATTACK: 5
 #GAINABLE
+#TEAM: Avengers
 #CLASS: [Covert]
 {POWER Covert} You get +2 Attack.
 #ATTACKG: 2+

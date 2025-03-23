@@ -427,7 +427,7 @@ Rescue a Bystander.
 #COST: 2
 #DIVIDED: Hot Bowl of Soup
 #DIVHERO: Aunt May
-#DIVTEAM: Spider-Friends
+#DIVTEAM: Spider Friends
 #CLASS: [Instinct]
 #RECRUIT: 1
 You may KO a Wound from your hand or discard pile.

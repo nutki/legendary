@@ -119,6 +119,7 @@ while (<A>) {
     s!<b>When Recruited</b>:(.*)\n---<br />!{WHEN RECRUITED}$1!g;
     s!<b>Throne's Favor</b>!{THRONES FAVOR}!g;
     s!<b>((Double )?((Sewers|Bank|Rooftops|Streets|Bridge|Highest|Ultimate) )?Abomination)</b>!'{'.uc($1).'}'!ge;
+    s!{IMG \d+} \(($aff)\)!$1!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;
