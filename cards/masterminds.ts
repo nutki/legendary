@@ -2412,7 +2412,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   // Rescue 4 Bystanders. This Tactic enters the city as a Villain. Then each Villain in the city gains a Shard. (You win when the Mastermind has no more Tactics stacked under it.)
     rescueEv(ev, 4);
     addStatSet('isVillain', c => c === ev.source, () => true);
-    addStatSet('fight', c => c === ev.source, () => undefined); // Remove this fight effect to prevent reenter loop
+    addStatSet('fight', c => c === ev.source, () => undefined as Handler[]); // Remove this fight effect to prevent reenter loop
     enterCityEv(ev, ev.source);
     cityVillains().each(c => attachShardEv(ev, c));
   } ],

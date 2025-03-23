@@ -1396,7 +1396,7 @@ addVillainTemplates("Secret Wars Volume 2", [
   [ 2, makeVillainCard("Guardians of Knowhere", "Groot", 5, 4, {
     fight: fatefulResurrectionAndEv(ev => {
       addTurnSet('defense', c => c === ev.source, () => 1);
-      addTurnSet('fight', c => c === ev.source, () => []);
+      addTurnSet('fight', c => c === ev.source, () => [] as Handler[]);
     }),
   })],
 // FIGHT: <i>(After this goes to your Victory Pile.)</i> {PATROL Bank}: If it's empty, draw a card. If it's not empty, KO one of your Heroes.

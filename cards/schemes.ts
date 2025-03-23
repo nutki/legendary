@@ -748,7 +748,7 @@ makeSchemeCard("Master of Tyrants", { twists: 8, extra_masterminds: 3 }, ev => {
   addStatMod('defense', isTyrant, c => c.attached('DARK_POWER').size * 2);
   addStatSet('isVillain', isTyrant, c => true);
   addStatSet('villainGroup', isTyrant, c => 'Tyrant Villain');
-  addStatSet('fight', isTyrant, c => []);
+  addStatSet('fight', isTyrant, c => [] as Handler[]);
   tyrants.each(t => t.attached('TACTICS').each(c => moveCard(c, gameState.villaindeck)));
   gameState.villaindeck.shuffle();
 }),
