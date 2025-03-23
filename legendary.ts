@@ -1103,7 +1103,8 @@ const undoLog: UndoLog = {
       localStorage.setItem('legendarySetup', JSON.stringify(gameSetup));
     } else {
       this.fromString(localStorage.getItem('legendaryLog'));
-      this.gameSetup = JSON.parse(localStorage.getItem('legendarySetup'));
+      if (localStorage.getItem('legendarySetup'))
+        this.gameSetup = JSON.parse(localStorage.getItem('legendarySetup'));
     }
   },
   get replaying() { return this.pos < this.actions.length; },
