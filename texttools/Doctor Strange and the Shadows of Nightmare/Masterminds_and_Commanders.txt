@@ -1,0 +1,54 @@
+
+#CARDNAME: Dormammu
+#LEADS: Lords of the Netherworld
+#STRIKE: Each player makes a {DEMONIC BARGAIN} with Dormammu to discard down to four cards.
+#ATTACK: 11
+#VP: 6
+
+#EPICNAME: Dormammu
+#LEADS: Lords of the Netherworld
+#STRIKE: Each player reveals the top card of their deck and discards it if it costs 0. Then each player makes a {DEMONIC BARGAIN} with Dormammu to discard down to three cards.
+#ATTACK: 13
+#VP: 6
+
+#TACTIC: Barter for Souls
+#FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Dormammu to gain a Hero from the HQ that costs 6 or less.
+
+#TACTIC: Flames of Regency
+#FIGHT: Each other player makes a {DEMONIC BARGAIN} with Dormammu to discard a card with an Attack icon.
+
+#TACTIC: Demonic Hellfire
+#FIGHT: Each other player makes a {DEMONIC BARGAIN} with Dormammu to KO a non-grey Hero from their discard pile.
+
+#TACTIC: Torments of the Dark Dimension
+#FIGHT: Each other player makes a {DEMONIC BARGAIN} with Dormammu to gain a 0-cost Hero from the KO pile.
+
+#CARDNAME: Nightmare
+When you fight Nightmare in the <b>Astral Plane</b>, instead of revealing a Tactic, KO one of your Heroes and Nightmare moves to the Mastermind Space.
+#LEADS: Fear Lords
+#STRIKE: Nightmare enters the <b>Astral Plane</b>. If he was already there, each player discards a random card.
+<b>Escape</b>: Each player KOs one of their non-grey Heroes. Nightmare moves to the Mastermind space.
+#ATTACK: 6
+#VP: 6
+
+#EPICNAME: Nightmare
+When you fight Nightmare in the <b>Astral Plane</b>, instead of revealing a Tactic, KO one of your Heroes and Nightmare moves to the Mastermind Space.
+#LEADS: Fear Lords
+#STRIKE: Nightmare enters the <b>Astral Plane</b>. If he was already there, each player discards two random cards.
+<b>Escape</b>: Each player KOs one of their non-grey Heroes. Nightmare moves to the Mastermind space.
+#ATTACK: 8
+#VP: 6
+
+#TACTIC: Don’t Fall Asleep
+#FIGHT: Each other player discards two cards with Recruit icons. Nightmare enters the <b>Astral Plane</b>.
+
+#TACTIC: Dream Weaver
+#FIGHT: For each of your [Ranged] Heroes, rescue a Bystander. Nightmare enters the <b>Astral Plane</b>.
+
+#TACTIC: Night Terrors
+#FIGHT: Each other player reveals a [Covert] Hero or gains a Wound. Nightmare enters the <b>Astral Plane</b>.
+
+#TACTIC: Deadly Waking Nightmares
+#FIGHT: Each other player KOs one of their non-grey Heroes. Each player who KO'd a Hero this way draws a card. Nightmare enters the <b>Astral Plane</b>.
+
+

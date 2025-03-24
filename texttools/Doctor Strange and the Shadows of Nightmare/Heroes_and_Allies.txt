@@ -1,0 +1,159 @@
+
+#CARDNAME: Doctor Strange
+#TEAM: Avengers
+
+#SUBNAME: Wand of Watoomb
+#COPIES: 5
+#CLASS: [Ranged]
+{RITUAL ARTIFACT} If you drew a card, you may discard Wand of Watoomb to get +3 Attack.
+#COST: 3
+
+#SUBNAME: Keeper of the Sanctum
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+If you control an Artifact, draw a card.
+#COST: 4
+#FLAVOR: Mystic treasures left unguarded attract demonic interests.
+
+#SUBNAME: Book Of Cagliostro
+#COPIES: 3
+#CLASS: [Instinct]
+{RITUAL ARTIFACT} If you fought a Villain, you may discard Book Of Cagliostro to get +Recruit equal to that enemy’s VP.
+#COST: 2
+
+#SUBNAME: The Eye of Agamotto
+#COPIES: 1
+#CLASS: [Ranged]
+{RITUAL ARTIFACT} If you played another Artifact or three other cards of the same Hero Class, you may discard the Eye of Agamotto to get +7 Attack.
+#COST: 8
+
+#CARDNAME: Clea
+#TEAM: Marvel Knights
+
+#SUBNAME: Prepare Dark Magic
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+Draw a card. Then put a card from your hand on top of your deck.
+#COST: 3
+#FLAVOR: When bargaining with demons, it helps to keep a trick up your sleeve.
+
+#SUBNAME: Demonic Descendant
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2+
+You may make a {DEMONIC BARGAIN} to get +2 Recruit.
+#COST: 4
+#FLAVOR: The daughter of Umar, niece of Dormammu, and one-time wife of Dr. Strange, Clea is used to awkward family reunions.
+
+#SUBNAME: Bind the Dark Dimension
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3
+{POWER Ranged} You may choose a player to make a {DEMONIC BARGAIN} to KO up to one Hero of their choice from their hand or discard pile.
+#COST: 6
+
+#SUBNAME: The Purple Gem
+#COPIES: 1
+#CLASS: [Covert]
+{RITUAL ARTIFACT} If any cards were “revealed”, “looked at”, or “discarded” from any deck, you may discard the Purple Gem to get +6 Attack. (Just drawing or playing a card from a deck doesn’t count.)
+#COST: 7
+
+#CARDNAME: Doctor Voodoo
+#TEAM: Avengers
+
+#SUBNAME: Commune with the Spirit World
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+You may discard an Artifact you control or three cards from your hand. If you do, KO a card from your hand or discard pile.
+#COST: 3
+
+#SUBNAME: Medallion of Many Loas
+#COPIES: 5
+#CLASS: [Tech]
+{RITUAL ARTIFACT} If you have at least three Hero Classes, you may discard Medallion of Many Loas to get +1 Attack for each Hero Class you have, including this one.
+#COST: 4
+#FLAVOR: Even microchips are infused with the Loas of Lightning.
+
+#SUBNAME: Staff of Legba
+#COPIES: 3
+#CLASS: [Strength]
+{RITUAL ARTIFACT} If you recruited a Hero, you may discard Staff of Legba to get +Attack equal to that Hero’s cost.
+#COST: 6
+
+#SUBNAME: Possessed by Brother’s Spirit
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 4+
+The first time that one of your Heroes or a Hero from your deck or discard pile is KO’d this turn, you get +4 Recruit or +4 Attack.
+#COST: 7
+
+#CARDNAME: The Ancient One
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Astral Confrontation
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+You may have a Villain from the city enter the <b>Astral Plane</b>.
+#COST: 3
+#FLAVOR: Physical power means nothing when a spirit transcends its body.
+
+#SUBNAME: Teachings of Kamar-Taj
+#COPIES: 5
+#CLASS: [Instinct]
+Draw two cards.
+#COST: 5
+#FLAVOR: Discipline opens the path to mastery. Impatience opens the path to catastrophe.
+
+#SUBNAME: War of the Mind
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 3+
+You may fight the Mastermind using only Recruit instead of Attack this turn.
+{POWER Covert} You get +3 Recruit.
+#COST: 6
+
+#SUBNAME: The Orb of Agamotto
+#COPIES: 1
+#CLASS: [Instinct]
+{RITUAL ARTIFACT} If you fought a Villain or Mastermind, you may set aside the Orb of Agamotto to reveal the top four cards of your deck. KO up to one of them, put two of them in your hand, and put the rest back on top in any order. Then discard the Orb of Agamotto.
+#COST: 8
+
+#CARDNAME: The Vishanti
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Oshtur
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+You may KO a Wound from your hand or discard pile. If you do, draw a card.
+#COST: 3
+#FLAVOR: Even a stray thought from Oshtur heals and ennobles.
+
+#SUBNAME: Hoggoth
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+You may make a {DEMONIC BARGAIN} to get +2 Attack.
+#COST: 5
+#FLAVOR: Though he's known for his Hoary Hosts of Hoggoth, he can also get a lot done on his own.
+
+#SUBNAME: Agamotto
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2
+Reveal the top card of your deck. Discard it or put it back.
+{POWER Ranged} You may choose a player to make a {DEMONIC BARGAIN} to draw two extra cards at the end of this turn.
+#COST: 4
+
+#SUBNAME: The Book of the Vishanti
+#COPIES: 1
+#CLASS: [Covert]
+{RITUAL ARTIFACT} If any player gained a Wound, you may set aside the Book of the Vishanti to KO up to one Wound from any player’s discard pile, then draw three cards. Then discard the Book of the Vishanti. You can use this during any player’s turn.
+#COST: 7
+
+

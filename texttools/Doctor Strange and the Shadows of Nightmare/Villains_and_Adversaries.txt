@@ -1,0 +1,67 @@
+
+#CARDNAME: Lords of the Netherworld
+
+#SUBNAME: Mindless Ones
+#COPIES: 2
+#AMBUSH: Mindless Ones capture the rightmost Hero in the HQ that costs 4 or less.
+#FIGHT: Choose a player to make a {DEMONIC BARGAIN} with the Lords of the Netherworld to gain that Hero.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Baron Mordo
+#COPIES: 2
+#FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Baron Mordo to draw two extra cards at the end of this turn.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Satana Hellstrom
+#COPIES: 2
+#FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Satana Hellstrom to rescue three Bystanders.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Satannish
+#COPIES: 1
+#AMBUSH: Choose a player to make a {DEMONIC BARGAIN} with Satannish to reveal the top card of the Hero Deck and gain it if it costs 4 or less.
+#FIGHT: Same effect, but cost 6 or less.
+#ESCAPE: Same effect, but cost 2 or less.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Umar
+#COPIES: 1
+#AMBUSH: Choose a player to make a {DEMONIC BARGAIN} with Umar to KO a Hero of their choice from the HQ.
+#FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Umar to gain a Hero of their choice that costs 6 or less from the KO pile.
+#ESCAPE: Same effect, but cost 0.
+#ATTACK: 7
+#VP: 5
+
+#CARDNAME: Fear Lords
+
+#SUBNAME: Dreamstalker
+#COPIES: 2
+#FIGHT: Draw two cards. Then, if Dreamstalker was in the city, it enters the <b>Astral Plane</b>.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Nox
+#COPIES: 2
+#FIGHT: KO one of your Heroes. Then, if Nox was in the city, she enters the <b>Astral Plane</b> and captures a Bystander.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: D'Spayre
+#COPIES: 2
+#AMBUSH: D’Spayre enters the <b>Astral Plane</b> and captures a Bystander.
+#FIGHT: KO a Hero. Then, if D’Spayre was in the Astral Plane, he enters the city, ignoring his Ambush ability.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: The Lurking Unknown
+#COPIES: 2
+#FIGHT: Reveal the top card of the Hero Deck. You may spend Recruit equal to that card’s cost to have the player of your choice gain that Hero. If you don’t, the Lurking Unknown enters the <b>Astral Plane</b> (even if it was already there).
+#ESCAPE: Reveal the top card of the Hero Deck. Each player reveals their hand and KOs a Hero with that cost.
+#ATTACK: 2
+#VP: 3
+
+
