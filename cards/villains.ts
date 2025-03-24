@@ -4405,3 +4405,106 @@ addVillainTemplates("Annihilation", [
   }), u, 2, Color.TECH, u, "D", ev => superPower(Color.TECH) && outOfTimeEv(ev))],
 ]},
 ]);
+addVillainTemplates("Doctor Strange and the Shadows of Nightmare", [
+{ name: "Lords of the Netherworld", cards: [
+// AMBUSH: Mindless Ones capture the rightmost Hero in the HQ that costs 4 or less.
+// FIGHT: Choose a player to make a {DEMONIC BARGAIN} with the Lords of the Netherworld to gain that Hero.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Lords of the Netherworld", "Mindless Ones", 4, 2, {
+    // TODO city rightmost
+    ambush: ev => hqHeroes().limit(c => c.cost <= 4).withLast(c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE')),
+    fight: ev => ev.source.attached('GAIN_CAPTURE').each(c => choosePlayerEv(ev, p => demonicBargain(ev, ev => gainEv(ev, c), p))),
+  })],
+// FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Baron Mordo to draw two extra cards at the end of this turn.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Lords of the Netherworld", "Baron Mordo", 5, 3, {
+    fight: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => p === playerState ? addEndDrawMod(2) : addTurnTrigger('CLEANUP', u, ev => drawEv(ev, 2, p)), p)),
+  })],
+// FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Satana Hellstrom to rescue three Bystanders.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Lords of the Netherworld", "Satana Hellstrom", 5, 3, {
+    fight: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => rescueByEv(ev, p, 3), p)),
+  })],
+// AMBUSH: Choose a player to make a {DEMONIC BARGAIN} with Satannish to reveal the top card of the Hero Deck and gain it if it costs 4 or less.
+// FIGHT: Same effect, but cost 6 or less.
+// ESCAPE: Same effect, but cost 2 or less.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Lords of the Netherworld", "Satannish", 6, 4, {
+    ambush: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => {
+      revealHeroDeckEv(ev, 1, cards => cards.limit(c => c.cost <= 4).each(c => gainEv(ev, c)));
+    }, p)),
+    fight: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => {
+      revealHeroDeckEv(ev, 1, cards => cards.limit(c => c.cost <= 6).each(c => gainEv(ev, c)));
+    }, p)),
+    escape: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => {
+      revealHeroDeckEv(ev, 1, cards => cards.limit(c => c.cost <= 2).each(c => gainEv(ev, c)));
+    }, p)),
+  })],
+// AMBUSH: Choose a player to make a {DEMONIC BARGAIN} with Umar to KO a Hero of their choice from the HQ.
+// FIGHT: Choose a player to make a {DEMONIC BARGAIN} with Umar to gain a Hero of their choice that costs 6 or less from the KO pile.
+// ESCAPE: Same effect, but cost 0.
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Lords of the Netherworld", "Umar", 7, 5, {
+    ambush: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => selectCardEv(ev, "Choose a Hero to KO", hqHeroes(), c => KOEv(ev, c), p), p)),
+    fight: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(c => c.cost <= 6), c => gainEv(ev, c), p), p)),
+    escape: ev => choosePlayerEv(ev, p => demonicBargain(ev, ev => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainEv(ev, c), p), p)),
+  })],
+]},
+{ name: "Fear Lords", cards: [
+// FIGHT: Draw two cards. Then, if Dreamstalker was in the city, it enters the <b>Astral Plane</b>.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Fear Lords", "Dreamstalker", 5, 3, {
+    fight: ev => {
+      drawEv(ev, 2);
+      ev.where.isCity && enterAstralPlaneEv(ev, ev.source);
+    },
+  })],
+// FIGHT: KO one of your Heroes. Then, if Nox was in the city, she enters the <b>Astral Plane</b> and captures a Bystander.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Fear Lords", "Nox", 4, 2, {
+    fight: ev => {
+      selectCardAndKOEv(ev, yourHeroes());
+      ev.where.isCity && enterAstralPlaneEv(ev, ev.source);
+      ev.where.isCity && captureEv(ev, ev.source);
+    },
+  })],
+// AMBUSH: D’Spayre enters the <b>Astral Plane</b> and captures a Bystander.
+// FIGHT: KO a Hero. Then, if D’Spayre was in the Astral Plane, he enters the city, ignoring his Ambush ability.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Fear Lords", "D'Spayre", 5, 3, {
+    ambush: ev => {
+      if (ev.where !== gameState.astralPlane) {
+        enterAstralPlaneEv(ev, ev.source);
+        captureEv(ev, ev.source);
+      }
+    },
+    fight: ev => {
+      selectCardAndKOEv(ev, yourHeroes());
+      ev.where === gameState.astralPlane && enterCityEv(ev, ev.source);
+    },
+  })],
+// FIGHT: Reveal the top card of the Hero Deck. You may spend Recruit equal to that card’s cost to have the player of your choice gain that Hero. If you don’t, the Lurking Unknown enters the <b>Astral Plane</b> (even if it was already there).
+// ESCAPE: Reveal the top card of the Hero Deck. Each player reveals their hand and KOs a Hero with that cost.
+// ATTACK: 2
+// VP: 3
+  [ 2, makeVillainCard("Fear Lords", "The Lurking Unknown", 2, 3, {
+    fight: ev => revealHeroDeckEv(ev, 1, cards => cards.limit(isHero).each(c => {
+      turnState.recruit >= c.cost ? chooseOneEv(ev, "Spend Recruit to have a player gain this Hero?", 
+        [ "Yes", () => { choosePlayerEv(ev, p => gainEv(ev, c, p)), turnState.recruit -= c.cost } ],
+        [ "No", () => enterAstralPlaneEv(ev, ev.source) ]
+      ) : enterAstralPlaneEv(ev, ev.source);
+    })),
+    escape: ev => revealHeroDeckEv(ev, 1, cards => cards.withFirst(c => {
+      eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(isHero).limit(h => h.cost === c.cost), p)); // TODO multiplayer reveal
+    }))
+  })],
+]},
+]);

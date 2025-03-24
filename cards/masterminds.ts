@@ -2718,3 +2718,82 @@ addTemplates("MASTERMINDS", "Annihilation", [
   } ],
 ], { varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * gameState.city.count(d => d.has(isVillain) && d.attached('TIMEINCURSION').size > 0) }),
 ]);
+addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
+// EPICNAME: Dormammu
+...makeEpicMastermindCard("Dormammu", [ 11, 13 ], 6, "Lords of the Netherworld", ev => {
+// Each player makes a {DEMONIC BARGAIN} with Dormammu to discard down to four cards.
+// Each player reveals the top card of their deck and discards it if it costs 0. Then each player makes a {DEMONIC BARGAIN} with Dormammu to discard down to three cards.
+  const epic = ev.source.epic;
+  epic && eachPlayerEv(ev, ({who: p}) => {
+    revealPlayerDeckEv(ev, 1, cards => cards.each(c => c.cost === 0 && discardEv(ev, c)), p);
+  });
+  eachPlayerEv(ev, ({who: p}) => pickDiscardEv(ev, epic ? -3 : -4, p));
+}, [
+  [ "Barter for Souls", ev => {
+  // Choose a player to make a {DEMONIC BARGAIN} with Dormammu to gain a Hero from the HQ that costs 6 or less.
+    choosePlayerEv(ev, p => {
+      demonicBargain(ev, () => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.cost <= 6), c => gainEv(ev, c, p)), p);
+    });
+  } ],
+  [ "Flames of Regency", ev => {
+  // Each other player makes a {DEMONIC BARGAIN} with Dormammu to discard a card with an Attack icon.
+    eachOtherPlayerVM(p => demonicBargain(ev, () => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasAttackIcon), c => discardEv(ev, c), p), p));
+  } ],
+  [ "Demonic Hellfire", ev => {
+  // Each other player makes a {DEMONIC BARGAIN} with Dormammu to KO a non-grey Hero from their discard pile.
+    eachOtherPlayerVM(p => demonicBargain(ev, () => selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p), p));
+  } ],
+  [ "Torments of the Dark Dimension", ev => {
+  // Each other player makes a {DEMONIC BARGAIN} with Dormammu to gain a 0-cost Hero from the KO pile.
+    eachOtherPlayerVM(p => demonicBargain(ev, () => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(c => c.cost === 0), c => gainEv(ev, c, p), p), p));
+  } ],
+]),
+// When you fight Nightmare in the <b>Astral Plane</b>, instead of revealing a Tactic, KO one of your Heroes and Nightmare moves to the Mastermind Space.
+// <b>Escape</b>: Each player KOs one of their non-grey Heroes. Nightmare moves to the Mastermind space.
+...makeEpicMastermindCard("Nightmare", [ 6, 8 ], 6, "Fear Lords", ev => {
+// Nightmare enters the <b>Astral Plane</b>. If he was already there, each player discards a random card.
+// Nightmare enters the <b>Astral Plane</b>. If he was already there, each player discards two random cards.
+  ev.source.location === gameState.astralPlane ? eachPlayer(p => {
+    p.hand.withRandom(c => discardEv(ev, c));
+    ev.source.epic && p.hand.withRandom(c => discardEv(ev, c));
+  }) : enterAstralPlaneEv(ev, ev.source);
+}, [
+  [ "Don’t Fall Asleep", ev => {
+  // Each other player discards two cards with Recruit icons. Nightmare enters the <b>Astral Plane</b>.
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", 2, p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p));
+    enterAstralPlaneEv(ev, ev.source);
+  } ],
+  [ "Dream Weaver", ev => {
+  // For each of your [Ranged] Heroes, rescue a Bystander. Nightmare enters the <b>Astral Plane</b>.
+    rescueEv(ev, yourHeroes().count(isColor(Color.RANGED)));
+    enterAstralPlaneEv(ev, ev.source);
+  } ],
+  [ "Night Terrors", ev => {
+  // Each other player reveals a [Covert] Hero or gains a Wound. Nightmare enters the <b>Astral Plane</b>.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p));
+    enterAstralPlaneEv(ev, ev.source);
+  } ],
+  [ "Deadly Waking Nightmares", ev => {
+  // Each other player KOs one of their non-grey Heroes. Each player who KO'd a Hero this way draws a card. Nightmare enters the <b>Astral Plane</b>.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(isNonGrayHero), c => {
+      KOEv(ev, c);
+      drawEv(ev, 1, p);
+    }, p));
+    enterAstralPlaneEv(ev, ev.source);
+  } ],
+], {
+  escape: ev => {
+    eachPlayer(p => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(isNonGrayHero), c => KOEv(ev, c), p));
+    moveCardEv(ev, ev.source, gameState.mastermind);
+  },
+  triggers: [
+    { event: 'MOVECARD',
+      match: ev => ev.what.mastermind.location === gameState.astralPlane && ev.to === playerState.victory,
+      replace: ev => {
+        const mastermind = ev.parent.what.mastermind;
+        moveCardEv(ev, mastermind, gameState.mastermind);
+      }
+    }
+  ]
+}),
+]);

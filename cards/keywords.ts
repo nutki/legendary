@@ -907,3 +907,6 @@ function demonicBargain(ev: Ev, effect: (ev: Ev) => void, p: Player = playerStat
   }, p);
   cont(ev, effect);
 }
+function enterAstralPlaneEv(ev: Ev, c: Card) {
+  moveCardEv(ev, c, gameState.astralPlane);
+}
