@@ -335,7 +335,7 @@ makeMastermindCard("Dr. Strange", 8, 6, "Defenders", ev => {
 // Command Strike: Reveal the top three cards of the Adversary Deck. Put the Adversary you revealed with the highest printed Attack on top of that deck. Then play a Plot Twist from among the cards you revealed. Then put the rest of those cards on the bottom of that deck in random order.
   revealVillainDeckEv(ev, 3, cards => {
     const max = cards.limit(isVillain).max(c => c.printedDefense);
-    selectCardEv(ev, "Select card to put on to of the Villain deck", cards.limit(c => isVillain(c) && c.defense === max), c => moveCardEv(ev, c, gameState.villaindeck));
+    selectCardEv(ev, "Select card to put on to of the Villain deck", cards.limit(c => isVillain(c) && c.printedDefense === max), c => moveCardEv(ev, c, gameState.villaindeck));
     cards.limit(isStrike).withFirst(c => villainDrawEv(ev, c));
   }, true, true);
 // 
@@ -2524,7 +2524,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   cosmicThreat: c => c.cost >= (epic ? 6 : 5),
   cardActions: [ cosmicThreatAction ],
   init: () => {
-    const amount = () => [...gameState.hq, ...gameState.city].count(c => c.attached('POCKET').size > 0); // TODO Should count destroyed spaces as well
+    const amount = () => [...gameState.hq, ...gameState.city, ...gameState.destroyedCitySpaces].count(c => c.attached('POCKET').size > 0);
     addStatSet('recruitCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, recruit: v.recruit + amount()}));
     addStatSet('fightCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: v.attack + amount()}));
   }

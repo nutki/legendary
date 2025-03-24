@@ -1262,7 +1262,7 @@ makeSchemeCard("Hidden Heart of Darkness", { twists: 8 }, ev => {
   gameState.mastermind.each(m => {
     m.attached('TACTICS').each(c => moveCard(c, gameState.villaindeck));
     addStatSet('isFightable', c => c === m, c => c.location === gameState.mastermind);
-    addStatSet('fightCost', c => c === m, (c, cost: ActionCost) => ({ ...cost, cond: c => cost.cond(c) && !cityVillains().has(isTactic) }));
+    addStatSet('fightCost', c => c === m, (c, cost: ActionCost) => ({ ...cost, cond: c => (!cost.cond || cost.cond(c)) && !cityVillains().has(isTactic) }));
   });
   addStatSet('isVillain', isTactic, () => true);
   gameState.villaindeck.shuffle();
