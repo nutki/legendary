@@ -114,7 +114,8 @@ function dodge(c: Card, ev: Ev) {
 
 // EXPANSION Guardians of the Galaxy
 
-function isControlledArtifact(c: Card) {
+function isControlledArtifact(c: Card, anyPlayer: boolean = false) {
+  if (anyPlayer) return gameState.players.has(p => p.artifact === c.location);
   return c.location === playerState.artifact;
 }
 function getArtifactEffects(c: Card) {
@@ -877,4 +878,32 @@ function massMomentumVarDefense(n: number) {
 }
 function setFocusWithAttackEv(ev: Ev, attack: number, f: Handler, limit?: number) {
   addTurnAction(focusActionEv(ev, { attack }, f, limit));
+}
+// EXPANSION Doctor Strange and the Shadows of Nightmare
+function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean) {
+  return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', {
+    what: c, source: c,
+    cost: { cond: c => isControlledArtifact(c, anyTurn) && cond(c) },
+    func: ev => {
+      const f = () => {
+        getArtifactEffects(ev.what)[0](ev);
+        discardEv(ev, ev.what);
+      }
+      playerState === owner(ev.what) ? f() : chooseMayEv(ev, "Use Ritual Artifact", f, owner(ev.what));
+    }
+  });
+}
+
+function ritualArifact(cond: (what: Card) => boolean, anyTurn: boolean = false) {
+  return {
+    isArtifact: true,
+    cardActions: [useRitualArtifactAction(cond, anyTurn)],
+  }
+}
+function demonicBargain(ev: Ev, effect: (ev: Ev) => void, p: Player = playerState) {
+  revealPlayerDeckEv(ev, 1, ([c]) => {
+    c?.cost > 0 && gainWoundEv(ev, p);
+    c && discardEv(ev, c);
+  }, p);
+  cont(ev, effect);
 }

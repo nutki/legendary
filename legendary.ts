@@ -610,6 +610,7 @@ type EvType =
 'PLAYCARDEFFECTS' |
 'RESHUFFLE' |
 'CARDEFFECT' |
+'REVEAL' |
 // UI
 'SELECTEVENT' |
 'SELECTCARD1' |
@@ -988,6 +989,7 @@ interface Game {
   actionFilters: ((ev: Ev) => boolean)[];
   contestOfCampionsEvilBonus?: number;
   thronesFavorHolder: Player | Card | undefined;
+  astralPlane: Deck;
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1313,6 +1315,15 @@ gameState = {
       match: () => true,
       after: ev => { if (!gameState.villaindeck.size || !gameState.herodeck.size) gameOverEv(ev, "DRAW"); },
     },
+    { // Escape from Astral Plane
+      event: "MOVECARD",
+      match: ev => ev.to === gameState.astralPlane && gameState.astralPlane.size > 0,
+      before: ev => {
+        const c = gameState.astralPlane.top;
+        if (isMastermind(c)) moveCardEv(ev, c, gameState.mastermind);
+        else if (isVillain(c)) villainEscapeEv(ev, c);
+      }
+    }
   ],
   endDrawAmount: 6,
   modifiers: {},
@@ -1327,6 +1338,7 @@ gameState = {
   destroyedCitySpaces: [],
   actionFilters: [],
   thronesFavorHolder: undefined,
+  astralPlane: new Deck('ASTRALPLANE', true),
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -1458,7 +1470,7 @@ function isShieldOfficer(c: Card) { return [ c.heroName, c.cardName ].includes('
 function isVillainousWeapon(c: Card): boolean { return getModifiedStat(c, 'isVillainousWeapon', c.cardType === "VILLAINOUSWEAPON")}
 function getCardActions(c: Card) { return getModifiedStat(c, 'cardActions', c.cardActions || [])}
 function isFightable(c: Card): boolean {
-  const res = isVillain(c) ?
+  const res = c.location == gameState.astralPlane ? true : isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
     isMastermind(c) ?
       c.location === gameState.mastermind && c.attachedDeck('TACTICS').size > 0 :
@@ -1496,7 +1508,7 @@ function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
 }
 function fightableCards(): Card[] {
-  return [...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c));
+  return [...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top, ...gameState.astralPlane.deck].filter(c => c && isFightable(c));
 }
 function heroBelow(c: Card) {
   return c.location && c.location.above ? c.location.above.limit(isHero) : [];
@@ -1744,6 +1756,9 @@ function defaultFightCost(c: Card, attack: number): ActionCost {
   attack = Math.max(attack, 0);
   return c.bribe ? { either: attack, cond: c.fightCond, attackBonus } : { attack, cond: c.fightCond, attackBonus };
 }
+function allRecruitFightCost(cost: ActionCost): ActionCost {
+  return { ...cost, recruit: (cost.recruit || 0) + (cost.attack || 0) + (cost.either || 0), attack: 0, either: 0 };
+}
 function getFightCost(c: Card): ActionCost {
   let attack = c.defense;
   const costFunc = c.varFightCost || defaultFightCost;
@@ -1843,8 +1858,9 @@ function recruitCardActionEv(ev: Ev, c: Card) {
   return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, where: c.location, cost: getRecruitCost(c) });
 }
 function fightActionEv(ev: Ev, what: Card, withViolence?: boolean) {
-  const cost = getFightCost(what);
+  let cost = getFightCost(what);
   if (withViolence) cost.attack++;
+  if (what.location === gameState.astralPlane) cost = allRecruitFightCost(cost);
   return new Ev(ev, 'FIGHT', { what, func: villainFight, cost, failFunc: what.fightFail, withViolence });
 }
 function fightPiercingActionEv(ev: Ev, what: Card) {
@@ -1914,7 +1930,7 @@ function getActions(ev: Ev): Ev[] {
   fightableCards().map(d => {
     p.push(fightActionEv(ev, d));
     if (canFightWithViolence(d)) p.push(fightActionEv(ev, d, true));
-    if (turnState.piercing || turnState.piercingWithAttack) p.push(fightPiercingActionEv(ev, d));
+    if ((turnState.piercing || turnState.piercingWithAttack) && d.location !== gameState.astralPlane) p.push(fightPiercingActionEv(ev, d));
   });
   gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
   gameState.sidekick.withTop(c => p.push(recruitSidekickActionEv(ev, c)));
@@ -1982,8 +1998,7 @@ function swapDecks(d1: Deck, d2: Deck) {
   d2.deck = tmp;
 }
 function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedDeck(name)); }
-function recruitForFreeEv(ev: Ev, card: Card, who?: Player): void {
-  who = who || playerState;
+function recruitForFreeEv(ev: Ev, card: Card): void {
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, where: card.location });
 }
 function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), where: card.location, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
@@ -2212,7 +2227,7 @@ function cleanupRevealed (ev: Ev, src: Card[], dst: Deck, bottom: boolean = fals
 function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
   const cards: Card[] = [];
-  cont(ev, () => {
+  pushEv(ev, "REVEAL", () => {
     for(let i = 0; typeof amount === "number" ? i < amount : amount(cards); i++) {
       const c = src.deck[src.deck.size - i - 1];
       if (!c) break;
@@ -2261,7 +2276,7 @@ function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, 
   agent = agent || who;
   let cards: Card[] = [];
   if (playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
-  cont(ev, () => {
+  pushEv(ev, "REVEAL", () => {
     cards = bottom ? playerState.deck.deck.slice(0, amount) : playerState.deck.deck.slice(-amount);
     playerState.deck.registerRevealed(cards);
   })
@@ -2303,10 +2318,10 @@ function isFaceUp(c: Card) {
   if (d.revealedCards && d.revealedCards.some(cards => cards.includes(c))) return true;
   return false;
 }
-function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => void) {
-  let cards = handOrDiscard();
+function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => void, who?: Player) {
+  let cards = handOrDiscard(who);
   if (filter) cards = cards.limit(filter);
-  selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, () => func(sel)); });
+  selectCardOptEv(ev, "Choose a card to KO", cards, sel => { KOEv(ev, sel); func && cont(ev, () => func(sel)); }, undefined, who);
 }
 
 function isCopy(c: Card) {

@@ -1786,12 +1786,12 @@ addHeroTemplates("Guardians of the Galaxy", [
       isArtifact: true,
       triggers: [ {
         event: "CARDEFFECT",
-        match: (ev, source) => ev.effectName === "ambush" && isControlledArtifact(source),
-        after: ev => gainShardEv(ev),
+        match: (ev, source) => ev.effectName === "ambush" && isControlledArtifact(source, true),
+        after: ev => gainShardEv(ev, 1, owner(ev.source)),
       },  {
         event: "STRIKE",
-        match: (ev, source) => isControlledArtifact(source),
-        after: ev => gainShardEv(ev),
+        match: (ev, source) => isControlledArtifact(source, true),
+        after: ev => gainShardEv(ev, 1, owner(ev.source)),
       } ],
     }),
   // ATTACK: 5+
@@ -3819,6 +3819,7 @@ addHeroTemplates("Spider-Man Homecoming", [
     a.cost.recruit = (a.cost.recruit || 0) + (a.cost.attack || 0) + (a.cost.either || 0);
     a.cost.attack = 0;
     a.cost.either = 0;
+    a.cost.cond = () => (!a.cost.cond || a.cost.cond(c)) && isFightable(c);
     addTurnAction(a);
   })),
 // {COORDINATE}
@@ -5895,5 +5896,128 @@ addHeroTemplates("Annihilation", [
       heroConquerorEv(ev, 'ROOFTOPS', 4);
     })
   ]),
+},
+]);
+addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
+{
+  name: "Doctor Strange",
+  team: "Avengers",
+// {RITUAL ARTIFACT} If you drew a card, you may discard Wand of Watoomb to get +3 Attack.
+  c1: makeHeroCard("Doctor Strange", "Wand of Watoomb", 3, u, u, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, 3), ritualArifact(() => turnState.cardsDrawn > 0)),
+// If you control an Artifact, draw a card.
+  c2: makeHeroCard("Doctor Strange", "Keeper of the Sanctum", 4, u, 2, Color.INSTINCT, "Avengers", "FD", ev => {
+    playerState.artifact.size && drawEv(ev);
+  }),
+// {RITUAL ARTIFACT} If you fought a Villain, you may discard Book Of Cagliostro to get +Recruit equal to that enemy’s VP.
+  uc: makeHeroCard("Doctor Strange", "Book Of Cagliostro", 2, u, u, Color.INSTINCT, "Avengers", "D", ev => {
+    const cards = pastEvents('FIGHT').map(ev => ev.what).limit(isVillain);
+    selectCardEv(ev, "Choose a Villain to get Recruit", cards, c => addRecruitEvent(ev, c.vp));
+  }, ritualArifact(() => pastEvents('FIGHT').map(ev => ev.what).has(isVillain))),
+// {RITUAL ARTIFACT} If you played another Artifact or three other cards of the same Hero Class, you may discard the Eye of Agamotto to get +7 Attack.
+  ra: makeHeroCard("Doctor Strange", "The Eye of Agamotto", 8, u, u, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, 7), ritualArifact(what => 
+    turnState.cardsPlayed.has(c => c !== what && (c.isArtifact || turnState.cardsPlayed.count(c2 => c2.color === c.color && c2 !== what) >= 3))
+  )),
+},
+{
+  name: "Clea",
+  team: "Marvel Knights",
+// Draw a card. Then put a card from your hand on top of your deck.
+  c1: makeHeroCard("Clea", "Prepare Dark Magic", 3, u, 2, Color.RANGED, "Marvel Knights", "FD", [
+    ev => drawEv(ev),
+    ev => pickTopDeckEv(ev),
+  ]),
+// You may make a {DEMONIC BARGAIN} to get +2 Recruit.
+  c2: makeHeroCard("Clea", "Demonic Descendant", 4, 2, u, Color.COVERT, "Marvel Knights", "FD", ev => {
+    chooseMayEv(ev, "Bargain", ev => demonicBargain(ev, ev => addRecruitEvent(ev, 2)));
+  }),
+// {POWER Ranged} You may choose a player to make a {DEMONIC BARGAIN} to KO up to one Hero of their choice from their hand or discard pile.
+  uc: makeHeroCard("Clea", "Bind the Dark Dimension", 6, u, 3, Color.RANGED, "Marvel Knights", "", ev => {
+    superPower(Color.RANGED) && chooseMayEv(ev, "Bargain", ev => choosePlayerEv(ev, p => {
+      demonicBargain(ev, ev => KOHandOrDiscardEv(ev, isHero, undefined, p), p);
+    }));
+  }),
+// {RITUAL ARTIFACT} If any cards were “revealed”, “looked at”, or “discarded” from any deck, you may discard the Purple Gem to get +6 Attack. (Just drawing or playing a card from a deck doesn’t count.)
+  ra: makeHeroCard("Clea", "The Purple Gem", 7, u, u, Color.COVERT, "Marvel Knights", "", ev => addAttackEvent(ev, 6),
+    ritualArifact(() => turnState.pastEvents.has(ev => ev.type === 'REVEAL' || ev.type === 'DISCARD'))),
+},
+{
+  name: "Doctor Voodoo",
+  team: "Avengers",
+// You may discard an Artifact you control or three cards from your hand. If you do, KO a card from your hand or discard pile.
+  c1: makeHeroCard("Doctor Voodoo", "Commune with the Spirit World", 3, 2, u, Color.COVERT, "Avengers", "D", ev => {
+    const options: [string, () => void][] = [];
+    playerState.artifact.size && options.push(["Discard an Artifact", () => {
+      selectCardEv(ev, "Choose an Artifact to discard", playerState.artifact.deck, c => discardEv(ev, c)); cont(ev, () => KOHandOrDiscardEv(ev));
+    }]);
+    playerState.hand.size >= 3 && options.push(["Discard three cards", () => {
+      selectObjectsEv(ev, "Choose three cards to discard", 3, playerState.hand.deck, c => discardEv(ev, c)); cont(ev, () => KOHandOrDiscardEv(ev));
+    }]);
+    if (options.length > 1) chooseOneEv(ev, "Choose a way to KO a card", ...options, ["Decline", () => {}]);
+    else if (options.length) chooseMayEv(ev, ...options[0]);
+  }),
+// {RITUAL ARTIFACT} If you have at least three Hero Classes, you may discard Medallion of Many Loas to get +1 Attack for each Hero Class you have, including this one.
+  c2: makeHeroCard("Doctor Voodoo", "Medallion of Many Loas", 4, u, u, Color.TECH, "Avengers", "F", ev => addAttackEvent(ev, numClasses()), ritualArifact(() => numClasses() >= 3)),
+// {RITUAL ARTIFACT} If you recruited a Hero, you may discard Staff of Legba to get +Attack equal to that Hero’s cost.
+  uc: makeHeroCard("Doctor Voodoo", "Staff of Legba", 6, u, u, Color.STRENGTH, "Avengers", "", ev => {
+    selectCardEv(ev, "Choose a Hero to get Attack", pastEvents('RECRUIT').map(ev => ev.what), c => addAttackEvent(ev, c.cost));
+  }, ritualArifact(() => pastEvents('RECRUIT').length > 0)),
+// The first time that one of your Heroes or a Hero from your deck or discard pile is KO’d this turn, you get +4 Recruit or +4 Attack.
+  ra: makeHeroCard("Doctor Voodoo", "Possessed by Brother’s Spirit", 7, 0, 4, Color.INSTINCT, "Avengers", "", ev => {
+    let done = false;
+    addTurnTrigger('KO', ev => isHero(ev.what) && (ev.where == playerState.hand || ev.where == playerState.discard), ev => {
+      if (!done) chooseOneEv(ev, "Choose a bonus", ["Recruit", () => addRecruitEvent(ev, 4)], ["Attack", () => addAttackEvent(ev, 4)]);
+      done = true;
+    });
+  }),
+},
+{
+  name: "The Ancient One",
+  team: "(Unaffiliated)",
+// You may have a Villain from the city enter the <b>Astral Plane</b>.
+  c1: makeHeroCard("The Ancient One", "Astral Confrontation", 3, 2, u, Color.COVERT, u, "FD", ev => {
+    selectCardEv(ev, "Choose a Villain to enter the Astral Plane", cityVillains(), c => moveCardEv(ev, c, gameState.astralPlane));
+  }),
+// Draw two cards.
+  c2: makeHeroCard("The Ancient One", "Teachings of Kamar-Taj", 5, u, u, Color.INSTINCT, u, "F", ev => drawEv(ev, 2)),
+// You may fight the Mastermind using only Recruit instead of Attack this turn.
+// {POWER Covert} You get +3 Recruit.
+  uc: makeHeroCard("The Ancient One", "War of the Mind", 6, 3, u, Color.COVERT, u, "", [ ev => {
+    // Similar effect to "Peter's Allies": "Michelle", where it is handled differently (adds an extra fight action)
+    // However this would be an issue when a new mastermind appears after the card was played.
+    let enabled = false;
+    addTurnAction(new Ev(ev, 'EFFECT', { func: () => enabled = !enabled, desc: "Switch Recruit and Attack for the Mastermind" }));
+    addTurnSet('fightCost', isMastermind, (c, cost) => (enabled ? allRecruitFightCost(cost) : cost));
+  }, ev => superPower(Color.COVERT) && addRecruitEvent(ev, 3) ]),
+// {RITUAL ARTIFACT} If you fought a Villain or Mastermind, you may set aside the Orb of Agamotto to reveal the top four cards of your deck. KO up to one of them, put two of them in your hand, and put the rest back on top in any order. Then discard the Orb of Agamotto.
+  ra: makeHeroCard("The Ancient One", "The Orb of Agamotto", 8, u, u, Color.INSTINCT, u, "", ev => revealPlayerDeckEv(ev, 4, cards => {
+    let koed: Card | undefined = undefined;
+    gameState.villaindeck
+    selectCardOptEv(ev, "Choose a card to KO", cards, c => (KOEv(ev, c), koed = c));
+    cont(ev, () => selectObjectsEv(ev, "Choose two cards to put in hand", 2, cards.filter(c => c !== koed), c => moveCardEv(ev, c, playerState.hand)));
+  }), ritualArifact(() => pastEvents('FIGHT').map(ev => ev.what).has(isEnemy))),
+},
+{
+  name: "The Vishanti",
+  team: "(Unaffiliated)",
+// You may KO a Wound from your hand or discard pile. If you do, draw a card.
+  c1: makeHeroCard("The Vishanti", "Oshtur", 3, 2, u, Color.STRENGTH, u, "FD", ev => KOHandOrDiscardEv(ev, isWound, () => drawEv(ev))),
+// You may make a {DEMONIC BARGAIN} to get +2 Attack.
+  c2: makeHeroCard("The Vishanti", "Hoggoth", 5, u, 2, Color.INSTINCT, u, "FD", ev => {
+    chooseMayEv(ev, "Bargain", ev => demonicBargain(ev, ev => addAttackEvent(ev, 2)));
+  }),
+// Reveal the top card of your deck. Discard it or put it back.
+// {POWER Ranged} You may choose a player to make a {DEMONIC BARGAIN} to draw two extra cards at the end of this turn.
+  uc: makeHeroCard("The Vishanti", "Agamotto", 4, u, 2, Color.RANGED, u, "D", [ ev => {
+    revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c)));
+  }, ev => superPower(Color.RANGED) && chooseMayEv(ev, "Bargain", ev => choosePlayerEv(ev, p => {
+    demonicBargain(ev, () => addTurnTrigger('CLEANUP', u, ev => drawEv(ev, 2, p)), p);
+  })) ]),
+// {RITUAL ARTIFACT} If any player gained a Wound, you may set aside the Book of the Vishanti to KO up to one Wound from any player’s discard pile, then draw three cards. Then discard the Book of the Vishanti. You can use this during any player’s turn.
+  ra: makeHeroCard("The Vishanti", "The Book of the Vishanti", 7, u, u, Color.COVERT, u, "", ev => {
+    // TODO any player - add card actions from other players artifacts - if allowed
+    const agent = owner(ev.what); // can be different that the current player
+    selectCardOptEv(ev, "Choose a Wound to KO", gameState.players.map(p => p.discard.deck).merge().limit(isWound), c => KOEv(ev, c), undefined, agent);
+    drawEv(ev, 3, agent);
+  }, ritualArifact(() => pastEvents('GAIN').map(ev => ev.what).has(isWound), true))
 },
 ]);

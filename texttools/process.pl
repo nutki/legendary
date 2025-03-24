@@ -52,6 +52,7 @@ while (<A>) {
   s/&rdquo;/”/g;
   s/&reg;/®/g;
   s/&eacute;/é/g;
+  s/&mdash;/—/g;
   s/<img .*?_(\d+)_.*?>/{IMG $1}/g;
   s/{IMG ($imgkeys)}/[$IMG{$1}]/g;
   s/…/.../g;
@@ -120,6 +121,8 @@ while (<A>) {
     s!<b>Throne's Favor</b>!{THRONES FAVOR}!g;
     s!<b>((Double )?((Sewers|Bank|Rooftops|Streets|Bridge|Highest|Ultimate) )?Abomination)</b>!'{'.uc($1).'}'!ge;
     s!{IMG \d+} \(($aff)\)!$1!g;
+    s!<b>Ritual Artifact</b> —!{RITUAL ARTIFACT}!g;
+    s!<b>Demonic Bargain</b>!{DEMONIC BARGAIN}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;
