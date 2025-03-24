@@ -2497,5 +2497,90 @@ makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 
 // EVILWINS: When at least half of the original Dimensions are destroyed.
 makeSchemeCard("Breach Parallel Dimensions", { twists: 6 }, ev => {
   // Twist: Choose a Dimension and play two cards from it. <i>(It's ok if it only has 1.)</i>
+  // TODO: Implement Breach Parallel Dimensions from Annihilation
+}),
+]);
+addTemplates("SCHEMES", "Doctor Strange and the Shadows of Nightmare", [
+// SETUP: 8 Twists.
+// EVILWINS: When the number of Tormented Souls is four times the number of players.
+makeSchemeCard("Claim Souls for Demons", { twists: 8 }, ev => {
+  const sourceDeck = ev.nr <= 3 ? gameState.bystanders : gameState.officer;
+  const nr = ev.nr;
+  // Twist 1-3 Each player makes a {DEMONIC BARGAIN} to rescue a Bystander. If that Bargain wounds that player, stack that Bystander next to the Scheme as a “Tormented Soul” instead.
+  // Twist 4-8 Each player makes a {DEMONIC BARGAIN} to gain a S.H.I.E.L.D. Officer. If that Bargain wounds that player, stack that Officer next to the Scheme as a “Tormented Soul” instead.
+  ev.nr <= 8 && eachPlayerEv(ev, ({who:p}) => sourceDeck.withTop(c => {
+    demonicBargain(ev, [() => nr <= 3 ? rescueByEv(ev, p, c) : gainEv(ev, c, p), () => attachCardEv(ev, c, gameState.scheme, 'SOUL')], p);
+  }));
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('SOUL').size));
+}, [], s => {
+  setSchemeTarget(4, true);
+}),
+// SETUP: 7 Twists. Add an extra Villain Group.
+// EVILWINS: When there are 3 Villains per player in the Escape Pile or the Villain Deck runs out.
+makeSchemeCard("War for the Dream Dimension", { twists: 7, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: Reveal the top two cards of the Villain Deck. The Villain you revealed with the highest printed Attack enters the <b>Astral Plane</b>.
+  // (It does not do any Ambush abilities.) If you revealed a second Villain this way, that Villain enters the city. Put the rest of the revealed
+  // cards back in any order.
+  revealVillainDeckEv(ev, 2, cards => {
+    const highestAttack = cards.limit(isVillain).highest(c => c.printedAttack);
+    let selected: Card | undefined = undefined;
+    selectCardEv(ev, "Choose a Villain to enter the Astral Plane", highestAttack, c => {
+      selected = c;
+      enterAstralPlaneEv(ev, c);
+    });
+    cont(ev, () => cards.limit(isVillain).limit(c => c !== selected).each(c => enterCityEv(ev, c)));
+  });
+}, [
+  escapeProgressTrigger(isVillain),
+  runOutProgressTrigger('VILLAIN', false),
+], s => {
+  setSchemeTarget(3, true);
+}),
+// SETUP: 11 Twists, representing Cursed Pages of the Darkhold Tome. Add an extra Villain Group.
+// RULE: Cursed Pages are Ritual Artifacts with “If you fought a Villain or Mastermind: You may discard this to get +3 Recruit.”
+// EVILWINS: When the Mastermind has 7 Cursed Pages at the end of any player’s turn or the Villain Deck runs out.
+makeSchemeCard("Cursed Pages of the Darkhold Tome", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist:  Put this Cursed Page next to the Mastermind, plus a Cursed Page from any player’s control or discard pile or the KO pile.
+  // For this turn only, the first time you fight a Villain or Mastermind, put one of the Mastermind’s Cursed Pages into your discard pile.
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'CURSED_PAGE');
+  const allCards = [...gameState.players.map(p => p.artifact), ...gameState.players.map(p => p.discard), gameState.ko].merge().limit(isTwist);
+  selectCardOptEv(ev, "Choose a Cursed Page to attach", allCards, c => attachCardEv(ev, c, gameState.mastermind, 'CURSED_PAGE'));
+  let done = false;
+  addTurnTrigger('FIGHT', ev => isEnemy(ev.what), ev => {
+    done || gameState.mastermind.attached('CURSED_PAGE').withFirst(c => moveCardEv(ev, c, playerState.discard));
+    done = true;
+  });
+}, [
+  { event: "CLEANUP", after: ev => schemeProgressEv(ev, gameState.mastermind.attached('CURSED_PAGE').size) },
+  runOutProgressTrigger('VILLAIN', false),
+], s => {
+  setSchemeTarget(7);
+  addStatSet('isArtifact', isTwist, () => true);
+  addStatSet('cardActions', isTwist, () => [ useRitualArtifactAction(() => pastEvents('FIGHT').map(ev => ev.what).has(isEnemy)) ]);
+  addStatSet('artifactEffects', isTwist, () => [ev => addRecruitEvent(ev, 3)]);
+}),
+// SETUP: 2 players: 9 Twists. 1 or 4 players: 10 Twists. 3 or 5 players: 11 Twists.
+// EVILWINS: When the Mastermind has won 5 Duels.
+makeSchemeCard("Duels of Science and Magic", { twists: [ 9, 10, 11, 10, 11] }, ev => {
+  let failed = 0;
+  if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5) {
+    // Twist 1, 3, and 5 “Duel of Science”: Each player reveals a [Tech] or [Ranged] Hero or discards down to 4 cards.
+    // If at least half the players (round up) failed to reveal, put this Twist next to the Mastermind as a “Duel Won.”
+    eachPlayer(p => revealOrEv(ev, c => c.color === Color.TECH || c.color === Color.RANGED, () => (failed++, pickDiscardEv(ev, -4, p))));
+  } else if (ev.nr === 2 || ev.nr === 4 || ev.nr === 6) {
+    // Twist 2, 4, and 6 “Duel of Magic”: Same effect, but with [Instinct] or [Covert].
+    eachPlayer(p => revealOrEv(ev, c => c.color === Color.INSTINCT || c.color === Color.COVERT, () => (failed++, pickDiscardEv(ev, -4, p))));
+  } else if (ev.nr >= 7 && ev.nr <= 11) {
+    // Twist 7-11 “Duel of Science and Magic”: Same effect, but each player must reveal at least three of these colors: [Instinct], [Covert], [Tech], [Ranged].
+    const colors = [Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED];
+    eachPlayer(p => {
+      const pass = colors.count(color => yourHeroes(p).has(isColor(color))) >= 3;
+      pass || (failed++, pickDiscardEv(ev, -4, p));
+    })
+  }
+  cont(ev, () => failed >= gameState.players.length / 2 && attachCardEv(ev, ev.twist, gameState.mastermind, 'DUEL_WON'));
+  cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('DUEL_WON').size));
+}, [], s => {
+  setSchemeTarget(5);
 }),
 ]);

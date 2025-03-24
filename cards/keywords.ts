@@ -880,7 +880,7 @@ function setFocusWithAttackEv(ev: Ev, attack: number, f: Handler, limit?: number
   addTurnAction(focusActionEv(ev, { attack }, f, limit));
 }
 // EXPANSION Doctor Strange and the Shadows of Nightmare
-function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean) {
+function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean = false) {
   return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', {
     what: c, source: c,
     cost: { cond: c => isControlledArtifact(c, anyTurn) && cond(c) },
@@ -900,12 +900,15 @@ function ritualArifact(cond: (what: Card) => boolean, anyTurn: boolean = false) 
     cardActions: [useRitualArtifactAction(cond, anyTurn)],
   }
 }
-function demonicBargain(ev: Ev, effect: (ev: Ev) => void, p: Player = playerState) {
+function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, (ev: Ev) => void], p: Player = playerState) {
   revealPlayerDeckEv(ev, 1, ([c]) => {
     c?.cost > 0 && gainWoundEv(ev, p);
     c && discardEv(ev, c);
   }, p);
-  cont(ev, effect);
+  cont(ev, () => {
+    const e = effect instanceof Array ? effect[pastEvents('GAIN').count(ev2 => ev2.parent === ev)] : effect;
+    e(ev);
+  });
 }
 function enterAstralPlaneEv(ev: Ev, c: Card) {
   moveCardEv(ev, c, gameState.astralPlane);
