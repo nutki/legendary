@@ -2354,7 +2354,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Angel", 4, u, {
-  }), u, 2, Color.INSTINCT, u, "D", ev => xGenePower(Color.INSTINCT) && (turnState.nextHeroRecruit = 'SOARING'))],
+  }), u, 2, Color.INSTINCT, "X-Men", "D", ev => xGenePower(Color.INSTINCT) && (turnState.nextHeroRecruit = 'SOARING'))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
@@ -2362,7 +2362,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Tech]} You may KO a card from your hand or discard pile.
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Beast", 5, u, {
-  }), u, 2, Color.TECH, u, "D", ev => xGenePower(Color.TECH) && KOHandOrDiscardEv(ev, undefined))],
+  }), u, 2, Color.TECH, "X-Men", "D", ev => xGenePower(Color.TECH) && KOHandOrDiscardEv(ev, undefined))],
 // AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
 // FIGHT: Gain this as a Hero.
 // ATTACK: 7
@@ -2372,7 +2372,7 @@ addVillainTemplates("X-Men", [
 // ATTACKG: 3
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Cyclops", 7, u, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p))),
-  }), u, 3, Color.RANGED, u, "", ev => xGenePower(Color.RANGED) && selectCardEv(ev, "Choose a Hero to put in your hand", playerState.discard.limit(isHero).limit(Color.RANGED), c => moveCardEv(ev, c, playerState.hand)))],
+  }), u, 3, Color.RANGED, "X-Men", "", ev => xGenePower(Color.RANGED) && selectCardEv(ev, "Choose a Hero to put in your hand", playerState.discard.limit(isHero).limit(Color.RANGED), c => moveCardEv(ev, c, playerState.hand)))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
@@ -2380,7 +2380,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Strength]} Draw a card.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Iceman", 5, u, {
-  }), u, 2, Color.STRENGTH, u, "D", ev => xGenePower(Color.STRENGTH) && drawEv(ev, 1))],
+  }), u, 2, Color.STRENGTH, "X-Men", "D", ev => xGenePower(Color.STRENGTH) && drawEv(ev, 1))],
 // AMBUSH: Dark Marvel Girl Dominates each X-Men Hero that costs 4 or less from the HQ.
 // FIGHT: Gain this as a Hero.
 // ATTACK: 4+
@@ -2390,7 +2390,7 @@ addVillainTemplates("X-Men", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Marvel Girl", 4, u, {
     ambush: ev => hqHeroes().limit('X-Men').limit(c => c.cost <= 4).each(c => dominateEv(ev, ev.source, c)),
-  }), u, 2, Color.COVERT, u, "D", ev => xGenePower(Color.COVERT) && rescueEv(ev))],
+  }), u, 2, Color.COVERT, "X-Men", "D", ev => xGenePower(Color.COVERT) && rescueEv(ev))],
 ]},
 { name: "Shi'ar Imperial Guard", cards: [
 // FIGHT: If you fought Blackthorn in the Sewers or Streets, each other player gains a Wound.
