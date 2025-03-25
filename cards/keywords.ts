@@ -906,7 +906,9 @@ function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, 
     c && discardEv(ev, c);
   }, p);
   cont(ev, () => {
-    const e = effect instanceof Array ? effect[pastEvents('GAIN').count(ev2 => ev2.parent === ev)] : effect;
+    const gainCount = pastEvents('GAIN').count(ev2 => ev2.parent === ev);
+    textLog.log(`Demonic Bargain: ${gainCount === 0 ? 'resisted' : 'corrupted'}`);
+    const e = effect instanceof Array ? effect[gainCount] : effect;
     e(ev);
   });
 }

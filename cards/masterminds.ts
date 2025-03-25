@@ -2727,7 +2727,7 @@ addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
   epic && eachPlayerEv(ev, ({who: p}) => {
     revealPlayerDeckEv(ev, 1, cards => cards.each(c => c.cost === 0 && discardEv(ev, c)), p);
   });
-  eachPlayerEv(ev, ({who: p}) => pickDiscardEv(ev, epic ? -3 : -4, p));
+  eachPlayerEv(ev, ({who: p}) => demonicBargain(ev, () => pickDiscardEv(ev, epic ? -3 : -4, p), p));
 }, [
   [ "Barter for Souls", ev => {
   // Choose a player to make a {DEMONIC BARGAIN} with Dormammu to gain a Hero from the HQ that costs 6 or less.
