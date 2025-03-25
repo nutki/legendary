@@ -1,0 +1,161 @@
+
+#CARDNAME: Reavers
+
+#SUBNAME: Donald Pierce
+#COPIES: 2
+#AMBUSH: <b>Prey</b> on the fewest [Tech].
+<b>Finish the Prey</b>: KO one of that player's non-grey Heroes.
+#FIGHT: KO one of your grey Heroes.
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Bonebreaker
+#COPIES: 2
+#AMBUSH: <b>Prey</b> on the fewest [Strength].
+<b>Finish the Prey</b>: That player gains a Wound to the top of their deck.
+#FIGHT: Reveal the top card of your deck. KO it or draw it.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Skullbuster
+#COPIES: 2
+#AMBUSH: <b>Prey</b> on the fewest [Ranged]. Skullbuster captures one Bystander from the Bystander Stack and two Bystanders from that player's Victory Pile of their choice.
+<b>Finish the Prey</b>: KO the captured Bystanders, and each player discards a card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Pretty Boy
+#COPIES: 2
+#AMBUSH: <b>Prey</b> on the fewest [Covert].
+<b>Finish the Prey</b>: That player discards a card.
+#FIGHT: Discard the top card of your deck. If it has a Recruit icon, you ger +1 Recruit and this Villain <b>Preys</b> on the fewest [Covert].
+#ATTACK: 2
+#VP: 2
+
+#CARDNAME: Purifiers
+
+#SUBNAME: Predator X
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most [Covert]. {CLONE}.
+<b>Finish the Prey</b>: That player discards a [Covert] Hero. If they can't, they discard any non-grey Hero instead.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Predator X
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most [Instinct]. {CLONE}.
+<b>Finish the Prey</b>: That player discards a [Instinct] Hero. If they can't, they discard any non-grey Hero instead.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Predator X
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most [Ranged]. {CLONE}.
+<b>Finish the Prey</b>: That player discards a [Ranged] Hero. If they can't, they discard any non-grey Hero instead.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Predator X
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most [Strength]. {CLONE}.
+<b>Finish the Prey</b>: That player discards a [Strength] Hero. If they can't, they discard any non-grey Hero instead.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Predator X
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most [Tech]. {CLONE}.
+<b>Finish the Prey</b>: That player discards a [Tech] Hero. If they can't, they discard any non-grey Hero instead.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Leper Queen
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood
+<b>Finish the Prey</b>: That player gains a Wound and KOs two Bystanders from their Victory Pile.
+#FIGHT: Shuffle two cards from the Bystander Stack into the Villain Deck.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Reverend William Stryker
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood. Stryker captures on Sidekick from the Sidekick Stack and two Sidekicks from that player's hand and/or discard pile of their choice.
+<b>Finish the Prey</b>: KO the captured Sidekicks.
+#FIGHT: Gain the captured Sidekicks.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Cameron Hodge
+#COPIES: 1
+#AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood. Cameron Hodge captures one of that player's non-grey Heroes of their choice.
+<b>Finish the Prey</b>: KO the captured Hero.
+#FIGHT: Choose a player to gain the captured Hero.
+#ATTACK: 6
+#VP: 4
+
+#CARDNAME: Acolytes
+
+#SUBNAME: Unuscione
+#COPIES: 2
+You may pay 2 Recruit any number of times to {SHATTER} Unuscione.
+#AMBUSH: Unuscione captures a Bystander.
+#ATTACK: 8*
+#VP: 4
+
+#SUBNAME: Tempo
+#COPIES: 2
+You may {SHATTER} Tempo any number of times. Each time you do this, draw one fewer card when you draw a new hand of cards at the end of this turn.
+#FIGHT: Draw two cards.
+#ATTACK: 16*
+#VP: 2
+
+#SUBNAME: Frenzy
+#COPIES: 2
+You may pay 1 Recruit any number of times to {SHATTER} Frenzy. Each time you do, reveal the top card of the Hero Deck and put it on the bottom of that deck. If it's [Strength], gain a Wound. If it's [Instinct], the player on your right gains a Wound.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 12*
+#VP: 3
+
+#SUBNAME: Random
+#COPIES: 2
+You may pay 1 Recruit any number of times to {SHATTER} Random. Each time you do, reveal the top card of the Hero Deck and put it on the bottom of that deck. If it's [Covert], [Tech], or [Ranged], Random then gets +Attack equal to that card's cost.
+#ESCAPE: Each player discards a card at random.
+#ATTACK: 10*
+#VP: 4
+
+#CARDNAME: Clan Yashida
+
+#SUBNAME: Silver Samurai
+#COPIES: 2
+<b>Chivalrous Duel</b>
+#AMBUSH: The Villain in the city worth the most VP captures a Bystander.
+#ATTACK: 3*
+#VP: 3
+
+#SUBNAME: Scarlet Samurai
+#COPIES: 2
+<b>Chivalrous Duel</b>
+#FIGHT: Gain this as a Hero.
+#ATTACK: 3*
+#GAINABLE
+#TEAM: Crime Syndicate
+#CLASS: [Instinct]
+{POWER Instinct} Draw a card.
+#ATTACK: 2
+
+#SUBNAME: Lord Shingen
+#COPIES: 2
+<b>Chivalrous Duel</b>
+#AMBUSH: Lord Shingen captures a Bystander. Bystanders held by Lord Shingen are “Samurai Bodyguards.” You can’t fight Lord Shingen while he has any Bodyguards. You can fight them as if they were 3 Attack Villains with “<b>Chivalrous Duel</b>. <b>Fight</b>: Rescue this as a Bystander.”
+#ATTACK: 4*
+#VP: 5
+
+#SUBNAME: Gorgon
+#COPIES: 2
+<b>Chivalrous Duel</b>
+#AMBUSH: Choose a Hero Name. You can't play Heroes this turn unless they are that Hero Name or grey Heroes.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 5*
+#VP: 4
+
+

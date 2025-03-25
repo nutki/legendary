@@ -45,25 +45,25 @@
 
 #SUBNAME: Bobby "Iceman" Drake
 #COPIES: 1
-#FIGHT: <b>Investigate</b> for a card with a Recruit icon.
+#FIGHT: {INVESTIGATE} for a card with a Recruit icon.
 #ATTACK: 4
 #VP: 2
 
 #SUBNAME: Comrade Rasputin, Steel Wall
 #COPIES: 2
-#FIGHT: <b>Investigate</b> for a Hero that costs 0 and KO it.
+#FIGHT: {INVESTIGATE} for a Hero that costs 0 and KO it.
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: Henry "Beast" McCoy
 #COPIES: 1
-#FIGHT: <b>Investigate</b> for any card that's [Tech] or [Strength].
+#FIGHT: {INVESTIGATE} for any card that's [Tech] or [Strength].
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: Jean Grey Noir
 #COPIES: 1
-#FIGHT: When you draw a new hand of cards at the end of your turn, <b>Investigate</b> for an extra card.
+#FIGHT: When you draw a new hand of cards at the end of your turn, {INVESTIGATE} for an extra card.
 #ATTACK: 5
 #VP: 3
 
@@ -75,13 +75,13 @@
 
 #SUBNAME: Warden Emma Frost
 #COPIES: 1
-#ESCAPE: <b>Investigate</b> the Villain Deck for a Scheme Twist and play it. Reveal all the cards you <b>Investigated</b>.
+#ESCAPE: {INVESTIGATE} the Villain Deck for a Scheme Twist and play it. Reveal all the cards you <b>Investigated</b>.
 #ATTACK: 6
 #VP: 4
 
 #SUBNAME: Ororo Munroe, Storm-Tossed
 #COPIES: 1
-#FIGHT: KO a Hero from the HQ. <b>Investigate</b> the Hero Deck for a card to put in that emptied HQ space.
+#FIGHT: KO a Hero from the HQ. {INVESTIGATE} the Hero Deck for a card to put in that emptied HQ space.
 #ATTACK: 4
 #VP: 2
 

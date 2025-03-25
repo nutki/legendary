@@ -1,0 +1,67 @@
+
+#CARDNAME: Layla Miller
+#COPIES: 2
+#TEAM: X-Factor
+#CLASS: [Tech]
+#ATTACK: 1
+Choose a team. {INVESTIGATE} for a card of that team.
+Put this on the bottom of the Sidekick Stack.
+#COST: 2
+
+#CARDNAME: Skids
+#COPIES: 2
+#TEAM: X-Men
+#CLASS: [Covert]
+#RECRUIT: 3
+If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+Put this on the bottom of the Sidekick Stack.
+#COST: 2
+
+#CARDNAME: Rockslide
+#COPIES: 2
+#TEAM: X-Men
+#CLASS: [Strength]
+{SHATTER} a Villain.
+Put this on the bottom of the Sidekick Stack.
+#COST: 2
+#FLAVOR: Danger: Brawling Rocks
+
+#CARDNAME: Darwin
+#COPIES: 2
+#TEAM: X-Factor
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+If the most recent Hero you previously played this turn has a Recruit icon, you get +2 Recruit. If it has a Attack icon, you get +2 Attack. (If both, you get both.)
+Put this on the bottom of the Sidekick Stack.
+#COST: 2
+
+#CARDNAME: Boom-Boom
+#COPIES: 2
+#TEAM: X-Force
+#CLASS: [Ranged]
+Choose one of her nicknames:
+<ul>
+    <li><b>“Time Bomb”</b>: You get +1 Attack and put this on top of your deck.</li>
+    <li><b>“Boomer”</b>: You get +3 Attack and put this on the bottom of the Sidekick Stack.</li>
+    <li><b>“Meltdown”</b>: You get +4 Attack, KO this, and gain a Wound.</li>
+</ul>
+#COST: 2
+
+#CARDNAME: Prodigy
+#COPIES: 2
+#TEAM: X-Men
+#CLASS: [Tech]
+Play this card as a copy of another Hero you played this turn that costs 6 or less. This card is both [Tech] and the Hero Class you copy.
+Put this on the bottom of the Sidekick Stack.
+#COST: 2
+
+#CARDNAME: Rusty "Firefist" Collins
+#COPIES: 2
+#TEAM: X-Men
+#CLASS: [Ranged]
+#ATTACK: 1
+{INVESTIGATE} your deck for a card that costs 0. KO it or discard it.
+Put this on the bottom of the Sidekick Stack.
+#COST: 2
+

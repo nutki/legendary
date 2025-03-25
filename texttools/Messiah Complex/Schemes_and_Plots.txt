@@ -1,0 +1,52 @@
+
+#CARDNAME: Hack Cerebro Servers to...
+Veiled Scheme
+#SETUP: 10 Twists
+#TWISTNR: NR[1-5] Put a card from the Bystander Stack next to this Scheme as a “Hacker.” KO a Hero from the HQ with cost equal to the number of Hackers. If you KO'd a Hero this way, stack this Twist next to the Mastermind as “Stolen Cerebro Data.”
+#TWISTNR: NR[6] Put the Hackers on the bottom of the Bystander Stack. This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+
+#CARDNAME: ...Control the Mutant Messiah
+Unveiled Scheme
+<b>When revealed</b>: Twists stacked next to the Mastermind are “Manipulations.” Shuffle a random extra Hero into a face down “Mutant Messiah” stack.
+#TWIST: Add this Twist to the Manipulations. {INVESTIGATE} the Mutant Messiah stack for a card and set it aside. This turn you may gain that card to the top of your deck by spending Recruit equal to its cost, +1 Recruit for each Manipulation. If you don’t, then put that card into a “Fallen Messiah” stack next to the Scheme.
+#EVILWINS: When there are 3 cards in the Fallen Messiah stack or the Villain Deck runs out.
+
+#CARDNAME: Drain Mutants' Powers to...
+Veiled Scheme
+#SETUP: 11 Twists
+#TWISTNR: NR[1-6]  Stack the top two cards of the Sidekick Stack face down next to the Scheme as “Kidnapped Mutants.” If there were any Kidnapped Mutants already there, put those on the bottom of the Sidekick Stack and put this Twist next to the Mastermind as a “Drained Power.”
+#RULE: Players may spend 3 Recruit or 3 Attack to gain a Kidnapped Mutant.
+#TWISTNR: NR[7] KO all Kidnapped Mutants. This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+
+#CARDNAME: ...Open Rifts to Future Timelines
+Unveiled Scheme
+<b>When revealed</b>: Shuffle a random additional Villain Group into the Villain Deck. Twists stacked next to the Mastermind are “Temporal Rifts.”
+#TWIST: Add this Twist to the Temporal Rifts. Then reveal and set aside cards from the Villain Deck equal to the number of Temporal Rifts. Play a Henchman you revealed, then play the Villain you revealed that is worth the most VP. Shuffle the other set aside cards into the Villain Deck. (If the Villain Deck runs out during this, this doesn't end the game.)
+#EVILWINS: When there are 7 Temporal Rifts or the Villain Deck runs out.
+
+#CARDNAME: Hire Singularity Investigations to...
+Veiled Scheme
+#SETUP: 9 Twists
+#TWISTNR: NR[1-4] If there are any “Singularity Investigators” in the city, stack this Twist next to the Mastermind as a “Dark Discovery.” Whether you did that or not, {INVESTIGATE} the Bystander Stack for a card and have it enter the city as a “Singularity Investigator” Villain. It has 6 Attack and “<b>Fight</b>: Rescue this as a Bystander. Then KO one of your Heroes. Then {INVESTIGATE} your deck for a card with a Recruit icon.”
+#TWISTNR: NR[5] This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+
+#CARDNAME: ...Reveal the Heroes' Evil Clones
+Unveiled Scheme
+<b>When revealed</b>: Twists stacked next to the Mastermind are “Cloning Breakthroughs.”
+#TWIST: Add this Twist to the Cloning Breakthroughs. The top card of the Hero Deck enters the city as an “Evil Clone” Villain. {CLONE} a copy of it from the Hero Deck as another Evil Clone.
+#RULE: Each Evil Clone has Attack equal to its cost plus the number of Cloning Breakthroughs. It has “<b>Fight</b>: A player gains this as a Hero. KO one of your Heroes.”
+#EVILWINS: When there are 7 Evil Clones in the city and/or Escape Pile, or the Villain Deck or Hero Deck runs out.
+
+#CARDNAME: Raid Gene Banks to...
+Veiled Scheme
+#SETUP: 8 Twists
+#TWISTNR: NR[1-3]  If there is a Villain in the Bank, stack this Twist next to the Mastermind as a “Mutant Genome.” Otherwise, move a Villain from another city space to the Bank.
+#TWISTNR: NR[4] This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+
+#CARDNAME: ...Unleash an Anti-Mutant Bioweapon
+Unveiled Scheme
+<b>When revealed</b>:  Twists stacked next to the Mastermind are “Bioweapon Adaptations.”
+#TWIST: Add this Twist to the Bioweapon Adaptations. Then for each card in that stack, choose a different number from 2-6. KO all Heroes from the HQ that have any of those costs.
+#EVILWINS: When there are 15 non-grey Heroes in the KO pile or the Villain Deck or Hero Deck runs out.
+
+

@@ -23,6 +23,7 @@ X-Men
 Champions
 Warbound
 Venomverse
+X-Factor
 END
 $aff = "(?:".(join'|',map s/[().]/\\$&/gr, @aff).")";
 $class = "(?:Instinct|Ranged|Tech|Covert|Strength)";
@@ -118,11 +119,16 @@ while (<A>) {
     s!<b>Burn a Shard</b>!{BURN A SHARD}!g;
     s!<b>Burn (\d+) Shards</b>!{BURN $1 SHARDS}!g;
     s!<b>When Recruited</b>:(.*)\n---<br />!{WHEN RECRUITED}$1!g;
+    s!<b>When Recruited —</b>(.*)\n---<br />!{WHEN RECRUITED}$1!g;
     s!<b>Throne's Favor</b>!{THRONES FAVOR}!g;
     s!<b>((Double )?((Sewers|Bank|Rooftops|Streets|Bridge|Highest|Ultimate) )?Abomination)</b>!'{'.uc($1).'}'!ge;
     s!{IMG \d+} \(($aff)\)!$1!g;
     s!<b>Ritual Artifact</b> —!{RITUAL ARTIFACT}!g;
     s!<b>Demonic Bargain</b>!{DEMONIC BARGAIN}!g;
+    s!<b>Shatter</b>!{SHATTER}!g;
+    s!<b>Clone</b>!{CLONE}!g;
+    s!<b>Tactical Formation (\d+)</b>!{TACTICAL FORMATION $1}!g;
+    s!<b>Investigate</b>!{INVESTIGATE}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;

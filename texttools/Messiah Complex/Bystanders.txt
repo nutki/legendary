@@ -1,0 +1,17 @@
+
+#CARDNAME: Private Investigator
+#COPIES: 1
+#RESCUE: choose Recruit or Attack. {INVESTIGATE} for a card with that icon.
+#VP: 1
+
+#CARDNAME: Opera Singer
+#COPIES: 1
+#RESCUE: {SHATTER} a Villain in the Bank or {SHATTER} a Hero in the HQ space under the Bank.
+#VP: 1
+
+#CARDNAME: Cloning Technician
+#COPIES: 1
+#RESCUE: {CLONE} the next Hero you recruit this turn that has printed cost 3 or less.
+#VP: 1
+
+

@@ -1,0 +1,284 @@
+
+#CARDNAME: Multiple Man
+#TEAM: X-Factor
+
+#SUBNAME: Me, Myself, and I
+#COPIES: 4
+#CLASS: [Instinct]
+#RECRUIT: 2
+{TACTICAL FORMATION 444}: Draw a card.
+{POWER Instinct} {CLONE}
+#COST: 4
+#FLAVOR: If anyone gets mad over something you did, just blame it on your clones.
+
+#SUBNAME: Finding Myself
+#COPIES: 4
+#CLASS: [Tech]
+#ATTACK: 1
+{INVESTIGATE} for a card that has the same card name as any of your cards. (You don't need to choose a specific card name before you Investigate.)
+{POWER Tech} {CLONE}
+#COST: 4
+
+#SUBNAME: Perfect Match
+#COPIES: 4
+#CLASS: [Tech]
+#ATTACK: 1+
+You get +1 Attack for each card name that you played at least twice this turn.
+{POWER Tech} {CLONE}
+#COST: 4
+
+#SUBNAME: Reabsorb Duplicates
+#COPIES: 2
+#CLASS: [Instinct]
+#ATTACK: 2
+{TACTICAL FORMATION 44}: You may KO a card from your hand or discard pile.
+{TEAMPOWER X-Factor} {CLONE}
+#COST: 4
+
+#CARDNAME: Shatterstar
+#TEAM: X-Force
+
+#SUBNAME: Strive for Greatness
+#COPIES: 4
+#CLASS: [Instinct]
+#RECRUIT: 2+
+{WHEN RECRUITED} [Instinct]: {CLONE}
+{POWER Instinct} You get another +2 Recruit usable only to recruit Heroes that cost 5 or more.
+#COST: 3
+
+#SUBNAME: Gladiator's Blades
+#COPIES: 4
+#CLASS: [Instinct]
+#ATTACK: 2
+{WHEN RECRUITED} [Instinct]: {CLONE}
+{POWER Instinct} Draw a card.
+#COST: 5
+#FLAVOR: Fight for your life. For your freedom. For your destiny.
+
+#SUBNAME: Bioelectric Surge
+#COPIES: 4
+#CLASS: [Ranged]
+#ATTACK: 2+
+{WHEN RECRUITED} [Ranged]: {CLONE}
+{TACTICAL FORMATION 55}: You get +1 Attack.
+#COST: 5
+
+#SUBNAME: Gene-Spliced Creation
+#COPIES: 2
+#CLASS: [Instinct]
+#ATTACK: 2
+{WHEN RECRUITED} X-Force: {CLONE}
+[Ranged] , [Instinct]: {SHATTER} the Mastermind.
+#COST: 5
+#FLAVOR: He's Longshot's son, but also kind of his father. Cloning and time travel get complicated.
+
+#CARDNAME: Stepford Cuckoos
+#TEAM: X-Men
+
+#SUBNAME: Find Mutants with Cerebro
+#COPIES: 4
+#CLASS: [Tech]
+#ATTACK: 1
+{WHEN RECRUITED} {CLONE}
+{POWER Tech} {INVESTIGATE} the Sidekick Stack for a card and put it in your discard pile.
+#COST: 2
+
+#SUBNAME: Shared Thoughts
+#COPIES: 4
+#CLASS: [Covert]
+#ATTACK: 1+
+{WHEN RECRUITED} {CLONE}
+{TACTICAL FORMATION 22}: You get +1 Attack.
+<b>Tactical Formation 33: Investigate</b> for a card with an Attack icon.
+#COST: 2
+
+#SUBNAME: Telepathic Warning
+#COPIES: 4
+#CLASS: [Ranged]
+#ATTACK: 2+
+{WHEN RECRUITED} {CLONE}
+{TACTICAL FORMATION 22}: You get +1 Attack.
+{TACTICAL FORMATION 33}: Reveal the top card of the Villain Deck. If it's a Master Strike you get +1 Attack and you may shuffle the Villain Deck.
+#COST: 3
+
+#SUBNAME: Mind Wipe
+#COPIES: 2
+#CLASS: [Ranged]
+#ATTACK: 2+
+{WHEN RECRUITED} {CLONE}
+{TACTICAL FORMATION 223}: Reveal the top card of the Villain Deck. If it's a Villain, you get +2 Attack and you may fight it this turn. If you fight it, put a card from the Bystander stack on top of the Villain Deck.
+#COST: 3
+
+#CARDNAME: M
+#TEAM: X-Factor
+
+#SUBNAME: Uncover Family Secrets
+#COPIES: 4
+#CLASS: [Covert]
+#RECRUIT: 2
+{WHEN RECRUITED} [Covert]: {CLONE}
+{INVESTIGATE} for a card that costs 3.
+#COST: 3
+
+#SUBNAME: Penance Form
+#COPIES: 4
+#CLASS: [Strength]
+#ATTACK: 2+
+{WHEN RECRUITED} [Strength]: {CLONE}
+If you have a Wound in your hand or discard pile, KO it and you get +1 Attack. Otherwise, gain a Wound.
+#COST: 3
+
+#SUBNAME: Three Sisters Combined
+#COPIES: 4
+#CLASS: [Strength]
+#ATTACK: 0+
+{WHEN RECRUITED} [Strength]: {CLONE}
+Draw a card.
+{TACTICAL FORMATION 333}: You get +2 Attack.
+#COST: 3
+
+#SUBNAME: Interweaving Powers
+#COPIES: 2
+#CLASS: [Covert]
+#ATTACK: 2+
+{WHEN RECRUITED} X-Factor: {CLONE}
+{TACTICAL FORMATION 3333}: You get +3 Attack.
+#COST: 3
+
+#CARDNAME: Strong Guy
+#TEAM: X-Factor
+
+#SUBNAME: X-Factor Investigation
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+{INVESTIGATE} for a card that's [Strength] and/or X-Factor.
+#COST: 4
+#FLAVOR: When Guido asks questions, he always gets answers.
+
+#SUBNAME: Absorb Kinetic Energy
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 3
+If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+#COST: 5
+
+#SUBNAME: Go Big
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+{TACTICAL FORMATION 445}: You get +3 Attack.
+#COST: 4
+#FLAVOR: If that doesn't work, try a new plan: go way bigger.
+#SUBNAME: Treasure Hunt
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 3
+{INVESTIGATE} for one of these options, then a different option, then a third different option:
+<ul>
+    <li> A [Strength] card.</li>
+    <li> An X-Factor card.</li>
+    <li> A card that costs 4.</li>
+    <li> A card that costs 5.</li>
+</ul>
+#COST: 8
+
+#CARDNAME: Warpath
+#TEAM: X-Force
+
+#SUBNAME: Grim Tracker
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1
+Choose a number 1 or more. {INVESTIGATE} for a card of that cost.
+#COST: 2
+#FLAVOR: The most dangerous prey are people. Specifically Apocalypse, Onslaught, Dark Phoenix, the Sentry...
+
+#SUBNAME: Endless Endurance
+#COPIES: 5
+#CLASS: [Strength]
+When you draw a new hand of cards at the end of this turn, draw two extra cards.
+#COST: 5
+
+#SUBNAME: Dangerous Maneuver
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 0+
+Reveal the top card of your deck. If it costs 0, you may KO it.
+{TACTICAL FORMATION 225}: You get +3 Attack.
+#COST: 2
+
+#SUBNAME: Superhuman Senses
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 3+
+Whenever you “reveal” or “look at” any number of cards from your deck this turn, you get +1 Attack. (Just drawing or discarding a card from your deck doesn’t count.)
+Choose a number 1 or more. {INVESTIGATE} for a card of that cost.
+#COST: 7
+
+#CARDNAME: Siryn
+#TEAM: X-Factor
+
+#SUBNAME: Echolocation
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1
+Choose a Hero Class. {INVESTIGATE} for a card of that Hero Class.
+#COST: 2
+#FLAVOR: When Siryn needs directions, she just calls ahead.
+
+#SUBNAME: Hypnotic Call
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+{POWER Covert} {SHATTER} each Hero currently in the HQ whose printed cost is 2, 4, 6, and/or 8.
+#COST: 4
+
+#SUBNAME: Three-Octave Arpeggio
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 4
+<b>Tactical Formation 246: Shatter</b> all Villains.
+#COST: 6
+#FLAVOR: You don't want to hear her hit that high note.
+
+#SUBNAME: Splintering Shriek
+#COPIES: 1
+#CLASS: [Covert]
+{SHATTER} the Mastermind. KO up to two cards from your hand and/or discard pile.
+#COST: 8
+
+#CARDNAME: Rictor
+#TEAM: X-Factor
+
+#SUBNAME: Underground Cave-In
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Ranged} {SHATTER} a Villain in the Sewers.
+#COST: 3
+#FLAVOR: Burial service included.
+
+#SUBNAME: Unearth Tectonic Power
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2
+{INVESTIGATE} for a card that’s [Ranged] and/or [Instinct].
+#COST: 5
+#FLAVOR: Few understand the vast forces under their feet.
+
+#SUBNAME: Trace the Fault Lines
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 2
+{POWER Ranged} {INVESTIGATE} for a card that costs 0, KO it or discard it.
+#COST: 4
+#FLAVOR: Quakes of the past leave scars on the present.
+
+#SUBNAME: Massive Earthquake
+#COPIES: 1
+#CLASS: [Ranged]
+{SHATTER} the Mastermind or {SHATTER} all Heroes currently in the HQ.
+#COST: 7
+
+

@@ -14,7 +14,7 @@
 #SUBNAME: Multitalented
 #COPIES: 5
 #CLASS: [Strength]
-Choose a Hero Class. <b>Investigate</b> for a card of that Hero Class.
+Choose a Hero Class. {INVESTIGATE} for a card of that Hero Class.
 #RECRUIT: 1
 #ATTACK: 1
 #COST: 4
@@ -31,7 +31,7 @@ You get the printed Recruit and Attack of a Hero in the HQ. Then put that Hero o
 #SUBNAME: Missing Person Case
 #COPIES: 1
 #CLASS: [Covert]
-<b>Investigate</b> the Hero Deck for any card and put that card in your hand.
+{INVESTIGATE} the Hero Deck for any card and put that card in your hand.
 #ATTACK: 3
 #COST: 8
 
@@ -50,7 +50,7 @@ The next Hero you recruit this turn goes on top of your deck.
 #SUBNAME: Listen for Heartbeats
 #COPIES: 5
 #CLASS: [Instinct]
-Choose a number 1 or more. <b>Investigate</b> for a card of that cost.
+Choose a number 1 or more. {INVESTIGATE} for a card of that cost.
 #ATTACK: 2
 #COST: 4
 #FLAVOR: "Hearing hearts a block away is easy. The tough part is discerning whose is whose."
@@ -59,7 +59,7 @@ Choose a number 1 or more. <b>Investigate</b> for a card of that cost.
 #SUBNAME: Discover the Bodies
 #COPIES: 3
 #CLASS: [Covert]
-{POWER Covert} <b>Investigate</b> for a card that costs 0. KO that card.
+{POWER Covert} {INVESTIGATE} for a card that costs 0. KO that card.
 #RECRUIT: 3
 #COST: 5
 #FLAVOR: "By the time I found them, they were already dead."
@@ -86,7 +86,7 @@ To play this, you must put another card from your hand on top of your deck.
 #SUBNAME: Mechanized Plate-Mail
 #COPIES: 5
 #CLASS: [Tech]
-<b>Investigate</b> for a [Tech] card.
+{INVESTIGATE} for a [Tech] card.
 #RECRUIT: 2
 #COST: 4
 #FLAVOR: "The best way to test a new invention is to let HYDRA shoot it with automatic weapons."
@@ -102,8 +102,8 @@ To play this, you must put another card from your hand on top of your deck.
 #SUBNAME: Adventurers Assemble!
 #COPIES: 1
 #CLASS: [Tech]
-Whenever you <b>Investigate</b> this turn, look at three cards instead of two.
-Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
+Whenever you {INVESTIGATE} this turn, look at three cards instead of two.
+Choose Recruit or Attack. {INVESTIGATE} for a card with that icon.
 #ATTACK: 4
 #COST: 7
 #GUN: 1
@@ -114,7 +114,7 @@ Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
 #SUBNAME: Private Investigations
 #COPIES: 5
 #CLASS: [Covert]
-<b>Investigate</b> for a card that costs 4 or more.
+{INVESTIGATE} for a card that costs 4 or more.
 #ATTACK: 2
 #COST: 4
 #FLAVOR: He doesn't stop until he clears his name ... or dies trying.
@@ -130,7 +130,7 @@ You get +1 Recruit for each other card you played this turn that costs 4 or more
 #SUBNAME: Unbreakable Cage
 #COPIES: 3
 #CLASS: [Strength]
-Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
+Once per turn, if a player would gain a Wound, you may reveal this card and {INVESTIGATE} for any card instead.
 #ATTACK: 4
 #COST: 6
 
@@ -147,7 +147,7 @@ You get +2 Attack for each other card you played this turn that costs 4 or more.
 #SUBNAME: Gumshoe's Revolver
 #COPIES: 5
 #CLASS: [Tech]
-<b>Investigate</b> for a card that costs 2 or less.
+{INVESTIGATE} for a card that costs 2 or less.
 #ATTACK: 1
 #COST: 2
 #FLAVOR: Stealth goes a long way, but some mysteries can only be unraveled with cold steel.
@@ -164,7 +164,7 @@ You get +2 Attack for each other card you played this turn that costs 4 or more.
 #SUBNAME: Solve the Crime
 #COPIES: 3
 #CLASS: [Instinct]
-{POWER Instinct} <b>Investigate</b> the Bystander Stack for a Bystander and rescue it.
+{POWER Instinct} {INVESTIGATE} the Bystander Stack for a Bystander and rescue it.
 #ATTACK: 2
 #COST: 2
 #FLAVOR: "Who murdered Uncle Ben?"
@@ -172,7 +172,7 @@ You get +2 Attack for each other card you played this turn that costs 4 or more.
 #SUBNAME: Spider-Totem's Chosen
 #COPIES: 1
 #CLASS: [Strength]
-{TEAMPOWER Spider Friends} <b>Investigate</b> each player's deck for a card that costs 2 or less, play a copy of that card, then put it into their discard pile.
+{TEAMPOWER Spider Friends} {INVESTIGATE} each player's deck for a card that costs 2 or less, play a copy of that card, then put it into their discard pile.
 #ATTACK: 1
 #COST: 2
 

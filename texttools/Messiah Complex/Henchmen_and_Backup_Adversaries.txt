@@ -1,0 +1,14 @@
+
+#CARDNAME: Mr. Sinister Clones
+#AMBUSH: {CLONE}. When the cloned copy enters the city, shuffle a Bystander into the Villain Deck.
+#FIGHT: {CLONE} the next Hero you recruit this turn that has printed cost 4 or less.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Sentinel Squad O*N*E*
+#AMBUSH: If there are no other Sentinel Squard O*N*E*s in the city, {CLONE}.
+#FIGHT: If there are no other Sentinel Squard O*N*E*s in the city, KO one of your Heroes and put this Villain on the bottom of the Villain Deck.
+#ATTACK: 2
+#VP: 1
+
+

@@ -46,7 +46,7 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #CLASS: [Covert]
 #ATTACK: 1
 {SWITCHEROO 5}
-<b>Investigate</b> for a card with an Attack icon.
+{INVESTIGATE} for a card with an Attack icon.
 #COST: 4
 
 #SUBNAME: Crack the Case
@@ -54,14 +54,14 @@ Reveal the top three cards of your deck. Draw one of them, discard one, and KO o
 #CLASS: [Strength]
 #RECRUIT: 3
 {SWITCHEROO 6}
-<b>Investigate</b> for a card with a Recruit icon. You may draw that card or KO it.
+{INVESTIGATE} for a card with a Recruit icon. You may draw that card or KO it.
 #COST: 5
 
 #SUBNAME: Uncover Hidden Evil
 #COPIES: 1
 #CLASS: [Covert]
 #ATTACK: 4
-{POWER Covert} <b>Investigate</b> the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
+{POWER Covert} {INVESTIGATE} the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
 #COST: 7
 
 #CARDNAME: Man-Thing
@@ -113,7 +113,7 @@ You may move a Villain to another city space. If another Villain is already ther
 #COPIES: 5
 #CLASS: [Ranged]
 #RECRUIT: 2
-<b>Investigate</b> for an Avengers card and {TELEPORT} that card.
+{INVESTIGATE} for an Avengers card and {TELEPORT} that card.
 #COST: 4
 #FLAVOR: She hails from the Utopian Parallel to rally the Avengers with a warning.
 
@@ -140,7 +140,7 @@ You get +1 Attack for each other card in your hand.
 #COPIES: 5
 #CLASS: [Instinct]
 {SWITCHEROO 3}
-<b>Investigate</b> for a card that costs 3 or less.
+{INVESTIGATE} for a card that costs 3 or less.
 #COST: 2
 
 #SUBNAME: Nut Punch
