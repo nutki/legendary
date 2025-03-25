@@ -2745,7 +2745,7 @@ addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
   } ],
   [ "Torments of the Dark Dimension", ev => {
   // Each other player makes a {DEMONIC BARGAIN} with Dormammu to gain a 0-cost Hero from the KO pile.
-    eachOtherPlayerVM(p => demonicBargain(ev, () => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(c => c.cost === 0), c => gainEv(ev, c, p), p), p));
+    eachOtherPlayerVM(p => demonicBargain(ev, () => selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainEv(ev, c, p), p), p));
   } ],
 ]),
 // When you fight Nightmare in the <b>Astral Plane</b>, instead of revealing a Tactic, KO one of your Heroes and Nightmare moves to the Mastermind Space.

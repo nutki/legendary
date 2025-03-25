@@ -5958,7 +5958,7 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
 // {RITUAL ARTIFACT} If you have at least three Hero Classes, you may discard Medallion of Many Loas to get +1 Attack for each Hero Class you have, including this one.
   c2: makeHeroCard("Doctor Voodoo", "Medallion of Many Loas", 4, u, u, Color.TECH, "Avengers", "F", ev => addAttackEvent(ev, numClasses()), ritualArifact(() => numClasses() >= 3)),
 // {RITUAL ARTIFACT} If you recruited a Hero, you may discard Staff of Legba to get +Attack equal to that Hero’s cost.
-  uc: makeHeroCard("Doctor Voodoo", "Staff of Legba", 6, u, u, Color.STRENGTH, "Avengers", "", ev => {
+  uc: makeHeroCard("Doctor Voodoo", "Staff of Legba", 5, u, u, Color.STRENGTH, "Avengers", "", ev => {
     selectCardEv(ev, "Choose a Hero to get Attack", pastEvents('RECRUIT').map(ev => ev.what), c => addAttackEvent(ev, c.cost));
   }, ritualArifact(() => pastEvents('RECRUIT').length > 0)),
 // The first time that one of your Heroes or a Hero from your deck or discard pile is KO’d this turn, you get +4 Recruit or +4 Attack.
