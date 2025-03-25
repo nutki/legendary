@@ -6,8 +6,9 @@
   BYSTANDERS => "Bystanders.txt",
   MASTERMINDS => "Masterminds_and_Commanders.txt",
   SCHEMES => "Schemes_and_Plots.txt",
+  SIDEKICKS => "Sidekicks_and_New_Recruits.txt",
 );
-@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS);
+@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS SIDEKICKS);
 my ($exp) = @ARGV;
 for $type (@inputkeys) {
   my $file = $input{$type};
@@ -29,9 +30,10 @@ for $type (@inputkeys) {
   sub checkimage {
     my $dir = shift @_;
     my $name = join' ',@_;
+    print "[\"$dir\",\"$name\"],\n";
     $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".jpg";
     $imagename = "$exp/$imagename" if $exp ne 'Legendary';
-    print "'$imagename',\n";
+#    print "'$imagename',\n";
 #    print STDERR "no image: $imagename\n" unless -f "../images/$imagename";
   }
   for (@items) {
@@ -58,7 +60,7 @@ for $type (@inputkeys) {
       checkimage("masterminds", $mastermindname);
       for (@subitems) {
         parse();
-        checkimage("masterminds", "epic_$mastermindname") if $_{EPICNAME};
+        checkimage("masterminds", "Epic $mastermindname") if $_{EPICNAME};
         checkimage("masterminds", $mastermindname, $_{TACTIC}) if $_{TACTIC};
       }
     } elsif ($type eq "VILLAINS") {
@@ -67,11 +69,14 @@ for $type (@inputkeys) {
       my $groupname = $_{CARDNAME};
       for (@subitems) {
         parse();
-        checkimage("villains", $groupname, $_{SUBNAME});
+        checkimage("villains", $groupname, $_{SUBNAME}, $_{VARIANT});
       }
     } elsif ($type eq "SCHEMES") {
       parse();
       checkimage("schemes", $_{CARDNAME});
+    } elsif ($type eq "SIDEKICKS") {
+      parse();
+      checkimage("sidekicks", $_{CARDNAME});
     }
   }
 }

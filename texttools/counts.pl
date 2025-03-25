@@ -27,6 +27,21 @@
 22 Heroes of Asgard
 23 New Mutants
 24 Into the Cosmos
+25 Realm of Kings
+26 Annihilation
+27 Messiah Complex
+28 Doctor Strange and the Shadows of Nightmare
+29 Marvel Studios' Guardians of the Galaxy
+30 Black Panther
+31 Black Widow
+32 Marvel Studios The Infinity Saga
+33 Midnight Sons
+-- Marvel Studios What If...?
+34 Ant-Man and the Wasp
+35 2099
+36 Weapon X
+-- Marvel Studios What if...? Season 2
+-- Legendary 2nd Edition
 END
 %n = (
 'h' => 'Heroes_and_Allies',
