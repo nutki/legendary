@@ -17,8 +17,7 @@ function imageName(path: string, card: Card, subname?: string): string {
   if (!name) name = subname;
   else if (subname !== undefined) name = subname + "_" + name;
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
-  if (card.set && card.set !== 'Legendary') path = card.set + '/' + path;
-  return "images/" + path + "/" + name + ".jpg";
+  return "images/" + (card.set || 'Legendary') + '/' + path + "/" + name + ".jpg";
 }
 function cardImageName(card: Card): string {
   if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);

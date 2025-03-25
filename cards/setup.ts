@@ -28,6 +28,11 @@ const bindingsTemplate = makeWoundCard("Bindings", () => !turnState.pastEvents.h
   forbidAction('FIGHT');
   forbidAction('RECRUIT');
 }, "BINDINGS");
+madameHydraTemplate.set = "Villains";
+hydraOperativeTemplate.set = "Villains";
+hydraSoldierTemplate.set = "Villains";
+newRecruitsTemplate.set = "Villains";
+bindingsTemplate.set = "Villains";
 
 // EXPANSION Guardian of the Galaxy
 
@@ -43,6 +48,7 @@ const shardTemplate = makeShardToken();
 const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
   chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.sidekick) && drawEv(ev, 2));
 });
+sidekickTemplate.set = "Secret Wars Volume 1";
 
 function makeAmbitionCard(name: string, defense: number, fight: Handler, starting: boolean = false) {
   const card = new Card('AMBITION', name);
@@ -160,6 +166,7 @@ const civilWarWounds: [number, Card][] =  [
 // HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
 [ 2, makeWoundCard("Subdermal Tracker", () => true, ev => { villainDrawEv(ev); KOEv(ev, ev.source); }) ],
 ];
+civilWarWounds.forEach(([n, c]) => c.set = "Civil War");
 
 const specialSidekickTemplates: [number, Card][] = [
 // Draw a card.
@@ -189,6 +196,7 @@ const specialSidekickTemplates: [number, Card][] = [
 // KO a card from your hand or discard pile. Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Zabu", 2, u, u, Color.INSTINCT, "Avengers", "FD", [ ev => KOHandOrDiscardEv(ev), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 ];
+specialSidekickTemplates.forEach(([n, c]) => c.set = "Civil War");
 
 // EXPANSION X-Men
 
@@ -241,6 +249,7 @@ makeHorrorCard("Viral Infection", ev => moveCardEv(ev, ev.source, playerState.di
 // The Mastermind has +3 Attack.
 makeHorrorCard("Tyrant Mastermind", ev => addStatMod('defense', isMastermind, 3)),
 ];
+horrorTemplates.forEach(c => c.set = "X-Men");
 
 // Expansion S.H.I.E.L.D.
 const shieldOfficerTemplates: [number, Card][] = [
@@ -286,3 +295,4 @@ const shieldOfficerTemplates: [number, Card][] = [
   ], f => f());
 }) ],
 ];
+shieldOfficerTemplates.forEach(([n, c]) => c.set = "S.H.I.E.L.D.");
