@@ -879,6 +879,39 @@ function massMomentumVarDefense(n: number) {
 function setFocusWithAttackEv(ev: Ev, attack: number, f: Handler, limit?: number) {
   addTurnAction(focusActionEv(ev, { attack }, f, limit));
 }
+// EXPANSION Messiah Complex
+function tacticalFormation(code: string) {
+  const heroes = yourHeroes();
+  return [...Array(10).keys()].every(n => heroes.count(c => c.cost === n) >= (code.split(n.toString()).length - 1));
+}
+function cloneHeroEv(ev: Ev) {
+  const cardName = ev.what.cardName;
+  const hqOptions = hqHeroes().limit(c => c.cardName === cardName);
+  if (hqOptions.size) {
+    selectCardEv(ev, "Choose a Hero to Clone", hqOptions, c => gainEv(ev, c));
+  } else {
+    gameState.herodeck.limit(c => c.cardName === cardName).withFirst(c => gainEv(ev, c));
+    cont(ev, () => gameState.herodeck.shuffle());
+  }
+}
+function shatterSelectEv(ev: Ev, c: Card[]) {
+  selectCardEv(ev, "Choose a card to shatter", c, c => shatterEv(ev, c));
+}
+function shatterAllEv(ev: Ev, c: Card[]) {
+  c.each(c => shatterEv(ev, c));
+}
+const shatterAmount = (n: number) => -Math.floor(n / 2);
+function shatterEv(ev: Ev, c: Card) {
+  if (isHero(c)) {
+    addTurnMod('cost', v => c === v, shatterAmount(c.cost));
+  } else if (isVillain(c)) {
+    addTurnMod('defense', v => c === v, shatterAmount(c.defense));
+  } else if (isMastermind(c)) {
+    let enabled = 1;
+    addTurnMod('defense', v => c === v, shatterAmount(c.defense) * enabled);
+    addTurnTrigger('FIGHT', ev => ev.what === c, () => enabled = 0);
+  }
+}
 // EXPANSION Doctor Strange and the Shadows of Nightmare
 function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean = false) {
   return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', {

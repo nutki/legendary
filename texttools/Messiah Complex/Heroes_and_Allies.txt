@@ -170,6 +170,7 @@ If any player would gain a Wound, you may discard this card instead. If you do, 
 {TACTICAL FORMATION 445}: You get +3 Attack.
 #COST: 4
 #FLAVOR: If that doesn't work, try a new plan: go way bigger.
+
 #SUBNAME: Treasure Hunt
 #COPIES: 1
 #CLASS: [Strength]

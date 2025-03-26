@@ -488,7 +488,8 @@ type Affiliation =
 'X-Men' |
 'Champions' |
 'Warbound' |
-'Venomverse';
+'Venomverse' |
+'X-Factor';
 type Filter<T> = number | Affiliation | ((c: T) => boolean)
 class Deck {
   id: string
@@ -659,7 +660,7 @@ type TriggerableEvType =
 // Expansion actions
 'TELEPORT' | 'DODGE' |
 // Expansion effects
-'COORDINATE' | 'OUTWIT' |
+'COORDINATE' | 'OUTWIT' | 'REVEAL' |
 // Special
 'CLEANUP' | 'MOVECARD' | 'TURNSTART';
 interface Ev<TSchemeState = any> {
@@ -906,7 +907,7 @@ interface Turn extends Ev {
   bystandersRescued: number
   endDrawMod: number
   endDrawAmount: number
-  cardsPlayed: Card[]
+  cardsPlayed: Card[] // excluding card currently played
   modifiers: Modifiers
   triggers: Trigger[]
   versatileBoth?: boolean
@@ -2227,14 +2228,14 @@ function cleanupRevealed (ev: Ev, src: Card[], dst: Deck, bottom: boolean = fals
 function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
   const cards: Card[] = [];
-  pushEv(ev, "REVEAL", () => {
+  pushEv(ev, "REVEAL", { where: src, who: agent, func: () => {
     for(let i = 0; typeof amount === "number" ? i < amount : amount(cards); i++) {
       const c = src.deck[src.deck.size - i - 1];
       if (!c) break;
       cards.push(c);
     }
     src.registerRevealed(cards);
-  });
+  }});
   cont(ev, () => action(cards));
   if (random) cont(ev, () => cards.shuffled().each(c => moveCard(c, src)));
   else cont(ev, () => cleanupRevealed(ev, cards, src, bottom, agent));
@@ -2276,10 +2277,10 @@ function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, 
   agent = agent || who;
   let cards: Card[] = [];
   if (playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
-  pushEv(ev, "REVEAL", () => {
+  pushEv(ev, "REVEAL", { where: playerState.deck, who: agent, func: () => {
     cards = bottom ? playerState.deck.deck.slice(0, amount) : playerState.deck.deck.slice(-amount);
     playerState.deck.registerRevealed(cards);
-  })
+  }});
   cont(ev, () => action(cards));
   cont(ev, () => cleanupRevealed(ev, cards, who.deck, bottom, agent));
   cont(ev, () => playerState.deck.clearRevealed(cards));
@@ -2304,10 +2305,10 @@ function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, ac
   let cards: Card[] = [];
   const amount = turnState.investigateAmount || 2;
   if (src === playerState.deck && playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
-  cont(ev, () => {
+  pushEv(ev, "REVEAL", { where: src, who: agent, func: () => {
     cards = src.deck.slice(0, amount);
     src.registerRevealed(cards);
-  })
+  }})
   cont(ev, () => selectCardEv(ev, "Choose a card", cards.limit(f), action, agent));
   cont(ev, () => cleanupRevealedTopOrBottom(ev, cards, src, agent));
   cont(ev, () => src.clearRevealed(cards));
@@ -2385,13 +2386,14 @@ function playCard(ev: Ev): void {
 function buyCard(ev: Ev): void {
   textLog.log(`Recruited ${ev.what.cardName || ev.what.id}`);
   let where = turnState.nextHeroRecruit;
-  ev.what.whenRecruited && ev.what.whenRecruited(ev);
   turnState.nextHeroRecruit = undefined;
+  // TODO let player choose where to put the card if multiple options available
   if (where === "HAND") gainToHandEv(ev, ev.what);
   else if (where === "DECK") gainToDeckEv(ev, ev.what);
   else if (where === "SOARING" || ev.what.soaring) gainSoaringEv(ev, ev.what);
   else if (ev.what.hasWallCrawl()) gainToDeckEv(ev, ev.what);
   else gainEv(ev, ev.what);
+  ev.what.whenRecruited && cont(ev, () => ev.what.whenRecruited(ev));
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;

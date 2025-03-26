@@ -2888,7 +2888,7 @@ addHeroTemplates("Civil War", [
 // {POWER Tech} Draw a card
   c2: makeHeroCard("Goliath", "Growth Industry", 5, u, 2, Color.TECH, "Avengers", "FD", ev => superPower(Color.TECH) && drawEv(ev, 1), { sizeChanging: Color.TECH }),
 // {SIZECHANGING STRENGTH}
-// You get +1 for each other card you played this turn that costs 4 or more. TODO +1 what?
+// You get +1 Attack for each other card you played this turn that costs 4 or more.
   uc: makeHeroCard("Goliath", "Being Big is Best", 6, u, 3, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, turnState.cardsPlayed.count(c => c.cost >= 4)), { sizeChanging: Color.STRENGTH }),
 // {SIZECHANGING STRENGTH}
 // You get +Attack equal to the cost of another card you played this turn.
@@ -5896,6 +5896,200 @@ addHeroTemplates("Annihilation", [
       heroConquerorEv(ev, 'ROOFTOPS', 4);
     })
   ]),
+},
+]);
+addHeroTemplates("Messiah Complex", [
+{
+  name: "Multiple Man",
+  team: "X-Factor",
+// {TACTICAL FORMATION 444}: Draw a card.
+// {POWER Instinct} {CLONE}
+  c1: makeHeroCard("Multiple Man", "Me, Myself, and I", 4, 2, u, Color.INSTINCT, "X-Factor", "FD", [ ev => tacticalFormation('444') && drawEv(ev), ev => superPower(Color.INSTINCT) && cloneHeroEv(ev) ]),
+// {INVESTIGATE} for a card that has the same card name as any of your cards. (You don't need to choose a specific card name before you Investigate.)
+// {POWER Tech} {CLONE}
+  c2: makeHeroCard("Multiple Man", "Finding Myself", 4, u, 1, Color.TECH, "X-Factor", "", [
+    ev => investigateEv(ev, c => revealable().has(c2 => c2.cardName === c.cardName)),
+    ev => superPower(Color.TECH) && cloneHeroEv(ev) ]),
+// You get +1 Attack for each card name that you played at least twice this turn.
+// {POWER Tech} {CLONE}
+  uc: makeHeroCard("Multiple Man", "Perfect Match", 4, u, 1, Color.TECH, "X-Factor", "", [
+    ev => addAttackEvent(ev, turnState.cardsPlayed.unique(c => c.cardName).count(cardName => [...turnState.cardsPlayed, ev.source].count(c => c.cardName === cardName) >= 2)),
+    ev => superPower(Color.TECH) && cloneHeroEv(ev) ]),
+// {TACTICAL FORMATION 44}: You may KO a card from your hand or discard pile.
+// {TEAMPOWER X-Factor} {CLONE}
+  ra: makeHeroCard("Multiple Man", "Reabsorb Duplicates", 4, u, 2, Color.INSTINCT, "X-Factor", "D", [ ev => tacticalFormation('44') && KOHandOrDiscardEv(ev, undefined), ev => superPower("X-Factor") && cloneHeroEv(ev) ]),
+},
+{
+  name: "Shatterstar",
+  team: "X-Force",
+// {WHEN RECRUITED} [Instinct]: {CLONE}
+// {POWER Instinct} You get another +2 Recruit usable only to recruit Heroes that cost 5 or more.
+  c1: makeHeroCard("Shatterstar", "Strive for Greatness", 3, 2, u, Color.INSTINCT, "X-Force", "D",
+    ev => superPower(Color.INSTINCT) && addRecruitSpecialEv(ev, c => isHero(c) && c.cost >= 5, 2),
+    { whenRecruited: ev => superPower(Color.INSTINCT) && cloneHeroEv(ev) }),
+// {WHEN RECRUITED} [Instinct]: {CLONE}
+// {POWER Instinct} Draw a card.
+  c2: makeHeroCard("Shatterstar", "Gladiator's Blades", 5, u, 2, Color.INSTINCT, "X-Force", "FD", ev => superPower(Color.INSTINCT) && drawEv(ev),
+    { whenRecruited: ev => superPower(Color.INSTINCT) && cloneHeroEv(ev) }),
+// {WHEN RECRUITED} [Ranged]: {CLONE}
+// {TACTICAL FORMATION 55}: You get +1 Attack.
+  uc: makeHeroCard("Shatterstar", "Bioelectric Surge", 5, u, 2, Color.RANGED, "X-Force", "D", ev => tacticalFormation('55') && addAttackEvent(ev, 1),
+    { whenRecruited: ev => superPower(Color.RANGED) && cloneHeroEv(ev) }),
+// {WHEN RECRUITED} X-Force: {CLONE}
+// [Ranged] , [Instinct]: {SHATTER} the Mastermind.
+  ra: makeHeroCard("Shatterstar", "Gene-Spliced Creation", 5, u, 2, Color.INSTINCT, "X-Force", "FD",
+    ev => superPower(Color.RANGED, Color.INSTINCT) && shatterSelectEv(ev, gameState.mastermind.deck),
+    { whenRecruited: ev => superPower("X-Force") && cloneHeroEv(ev) }),
+},
+{
+  name: "Stepford Cuckoos",
+  team: "X-Men",
+// {WHEN RECRUITED} {CLONE}
+// {POWER Tech} {INVESTIGATE} the Sidekick Stack for a card and put it in your discard pile.
+  c1: makeHeroCard("Stepford Cuckoos", "Find Mutants with Cerebro", 2, u, 1, Color.TECH, "X-Men", "D",
+    ev => superPower(Color.TECH) && investigateEv(ev, () => true, gameState.sidekick),
+    { whenRecruited: ev => cloneHeroEv(ev) }),
+// {WHEN RECRUITED} {CLONE}
+// {TACTICAL FORMATION 22}: You get +1 Attack.
+// <b>Tactical Formation 33: Investigate</b> for a card with an Attack icon.
+  c2: makeHeroCard("Stepford Cuckoos", "Shared Thoughts", 2, u, 1, Color.COVERT, "X-Men", "D", [
+    ev => tacticalFormation('22') && addAttackEvent(ev, 1),
+    ev => tacticalFormation('33') && investigateEv(ev, hasAttackIcon)],
+    { whenRecruited: ev => cloneHeroEv(ev) }),
+// {WHEN RECRUITED} {CLONE}
+// {TACTICAL FORMATION 22}: You get +1 Attack.
+// {TACTICAL FORMATION 33}: Reveal the top card of the Villain Deck. If it's a Master Strike you get +1 Attack and you may shuffle the Villain Deck.
+  uc: makeHeroCard("Stepford Cuckoos", "Telepathic Warning", 3, u, 2, Color.RANGED, "X-Men", "D", [
+    ev => tacticalFormation('22') && addAttackEvent(ev, 1),
+    ev => {
+      let hasStrike = false;
+      tacticalFormation('33') && revealVillainDeckEv(ev, 1, cards => (hasStrike = cards.has(isStrike)) && addAttackEvent(ev, 1));
+      cont(ev, () => hasStrike && chooseMayEv(ev, "Shuffle the Villain Deck", () => gameState.villaindeck.shuffle()));
+    } ], { whenRecruited: ev => cloneHeroEv(ev) }),
+// {WHEN RECRUITED} {CLONE}
+// {TACTICAL FORMATION 223}: Reveal the top card of the Villain Deck. If it's a Villain, you get +2 Attack and you may fight it this turn. If you fight it, put a card from the Bystander stack on top of the Villain Deck.
+  ra: makeHeroCard("Stepford Cuckoos", "Mind Wipe", 3, u, 2, Color.RANGED, "X-Men", "D",
+    ev => {
+      if (tacticalFormation('223')) revealVillainDeckEv(ev, 1, r => {
+        r.limit(isVillain).each(c => {
+          addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+          addTurnTrigger('FIGHT', ev => ev.what === c, ev => gameState.bystanders.withTop(b => moveCardEv(ev, b, gameState.villaindeck)) );
+          // TODO reveal until end of turn
+          addAttackEvent(ev, 2);
+        });
+      });
+    },
+    { whenRecruited: ev => cloneHeroEv(ev) }),
+},
+{
+  name: "M",
+  team: "X-Factor",
+// {WHEN RECRUITED} [Covert]: {CLONE}
+// {INVESTIGATE} for a card that costs 3.
+  c1: makeHeroCard("M", "Uncover Family Secrets", 3, 2, u, Color.COVERT, "X-Factor", "D",
+    ev => investigateEv(ev, c => c.cost === 3), { whenRecruited: ev => superPower(Color.COVERT) && cloneHeroEv(ev) }),
+// {WHEN RECRUITED} [Strength]: {CLONE}
+// If you have a Wound in your hand or discard pile, KO it and you get +1 Attack. Otherwise, gain a Wound.
+  c2: makeHeroCard("M", "Penance Form", 3, u, 2, Color.STRENGTH, "X-Factor", "D",
+    ev => handOrDiscard().has(isWound) ? (KOHandOrDiscardEv(ev, isWound), addAttackEvent(ev, 1)) : gainWoundEv(ev),
+    { whenRecruited: ev => superPower(Color.STRENGTH) && cloneHeroEv(ev) }),
+// {WHEN RECRUITED} [Strength]: {CLONE}
+// Draw a card.
+// {TACTICAL FORMATION 333}: You get +2 Attack.
+  uc: makeHeroCard("M", "Three Sisters Combined", 3, u, 0, Color.STRENGTH, "X-Factor", "D", [
+    ev => drawEv(ev), ev => tacticalFormation('333') && addAttackEvent(ev, 2)
+  ], { whenRecruited: ev => superPower(Color.STRENGTH) && cloneHeroEv(ev) }),
+// {WHEN RECRUITED} X-Factor: {CLONE}
+// {TACTICAL FORMATION 3333}: You get +3 Attack.
+  ra: makeHeroCard("M", "Interweaving Powers", 3, u, 2, Color.COVERT, "X-Factor", "D",
+    ev => tacticalFormation('3333') && addAttackEvent(ev, 3), { whenRecruited: ev => superPower("X-Factor") && cloneHeroEv(ev) }),
+},
+{
+  name: "Strong Guy",
+  team: "X-Factor",
+// {INVESTIGATE} for a card that's [Strength] and/or X-Factor.
+  c1: makeHeroCard("Strong Guy", "X-Factor Investigation", 4, 2, u, Color.STRENGTH, "X-Factor", "FD", ev => investigateEv(ev, c => isTeam("X-Factor")(c) || isColor(Color.STRENGTH)(c))),
+// If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+  c2: makeHeroCard("Strong Guy", "Absorb Kinetic Energy", 5, u, 3, Color.STRENGTH, "X-Factor", "", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
+    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
+      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// {TACTICAL FORMATION 445}: You get +3 Attack.
+  uc: makeHeroCard("Strong Guy", "Go Big", 4, u, 2, Color.STRENGTH, "X-Factor", "FD", ev => tacticalFormation('445') && addAttackEvent(ev, 3)),
+// {INVESTIGATE} for one of these options, then a different option, then a third different option:
+// <ul>
+//     <li> A [Strength] card.</li>
+//     <li> An X-Factor card.</li>
+//     <li> A card that costs 4.</li>
+//     <li> A card that costs 5.</li>
+// </ul>
+  ra: makeHeroCard("Strong Guy", "Treasure Hunt", 8, u, 3, Color.STRENGTH, "X-Factor", "", ev => {
+    const options: [Filter<Card>, string][] = [
+      [Color.STRENGTH, "A [Strength] card"],
+      ["X-Factor", "An X-Factor card"],
+      [(c: Card) => c.cost === 4, "A card that costs 4"],
+      [(c: Card) => c.cost === 5, "A card that costs 5"],
+    ];
+    repeat(3, i => cont(ev, () => chooseOneEv(ev, "Investigate for a card", ...options.map(([match, text]) => [text, () => {
+      investigateEv(ev, match);
+      options.splice(options.findIndex(([,t]) => t === text), 1);
+    }] as [string, () => void]))));
+  }),
+},
+{
+  name: "Warpath",
+  team: "X-Force",
+// Choose a number 1 or more. {INVESTIGATE} for a card of that cost.
+  c1: makeHeroCard("Warpath", "Grim Tracker", 2, u, 1, Color.INSTINCT, "X-Force", "FD", ev => {
+    chooseCostEv(ev, cost => investigateEv(ev, c => c.cost === cost), 1);
+  }),
+// When you draw a new hand of cards at the end of this turn, draw two extra cards.
+  c2: makeHeroCard("Warpath", "Endless Endurance", 5, u, u, Color.STRENGTH, "X-Force", "", ev => addEndDrawMod(2)),
+// Reveal the top card of your deck. If it costs 0, you may KO it.
+// {TACTICAL FORMATION 225}: You get +3 Attack.
+  uc: makeHeroCard("Warpath", "Dangerous Maneuver", 2, u, 0, Color.COVERT, "X-Force", "D", [
+    ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards.limit(c => c.cost === 0), c => KOEv(ev, c))),
+    ev => tacticalFormation('225') && addAttackEvent(ev, 3) ]),
+// Whenever you “reveal” or “look at” any number of cards from your deck this turn, you get +1 Attack. (Just drawing or discarding a card from your deck doesn’t count.)
+// Choose a number 1 or more. {INVESTIGATE} for a card of that cost.
+  ra: makeHeroCard("Warpath", "Superhuman Senses", 7, u, 3, Color.INSTINCT, "X-Force", "", [ ev => {
+    addTurnTrigger('REVEAL', ev => ev.where === playerState.deck && ev.who === playerState, ev => addAttackEvent(ev, 1));
+  }, ev => chooseCostEv(ev, cost => investigateEv(ev, c => c.cost === cost), 1) ]),
+},
+{
+  name: "Siryn",
+  team: "X-Factor",
+// Choose a Hero Class. {INVESTIGATE} for a card of that Hero Class.
+  c1: makeHeroCard("Siryn", "Echolocation", 2, u, 1, Color.COVERT, "X-Factor", "FD", ev => chooseClassEv(ev, color => investigateEv(ev, color))),
+// {POWER Covert} {SHATTER} each Hero currently in the HQ whose printed cost is 2, 4, 6, and/or 8.
+  c2: makeHeroCard("Siryn", "Hypnotic Call", 4, u, 2, Color.COVERT, "X-Factor", "D",
+    ev => superPower(Color.COVERT) && shatterAllEv(ev, hqHeroes().limit(c => [2, 4, 6, 8].includes(c.cost)))),
+// <b>Tactical Formation 246: Shatter</b> all Villains.
+  uc: makeHeroCard("Siryn", "Three-Octave Arpeggio", 6, u, 4, Color.RANGED, "X-Factor", "FD",
+    ev => tacticalFormation('246') && shatterAllEv(ev, fightableCards().limit(isVillain))),
+// {SHATTER} the Mastermind. KO up to two cards from your hand and/or discard pile.
+  ra: makeHeroCard("Siryn", "Splintering Shriek", 8, u, u, Color.COVERT, "X-Factor", "", [
+    ev => shatterSelectEv(ev, gameState.mastermind.deck),
+    ev => selectObjectsUpToEv(ev, "KO up to two cards", 2, handOrDiscard(), c => KOEv(ev, c)),
+  ]),
+},
+{
+  name: "Rictor",
+  team: "X-Factor",
+// {POWER Ranged} {SHATTER} a Villain in the Sewers.
+  c1: makeHeroCard("Rictor", "Underground Cave-In", 3, u, 2, Color.RANGED, "X-Factor", "FD", ev => superPower(Color.RANGED) && shatterSelectEv(ev, villainIn('SEWERS'))),
+// {INVESTIGATE} for a card that’s [Ranged] and/or [Instinct].
+  c2: makeHeroCard("Rictor", "Unearth Tectonic Power", 5, u, 2, Color.INSTINCT, "X-Factor", "FD", ev => investigateEv(ev, Color.RANGED | Color.INSTINCT)),
+// {POWER Ranged} {INVESTIGATE} for a card that costs 0, KO it or discard it.
+  uc: makeHeroCard("Rictor", "Trace the Fault Lines", 4, 2, u, Color.RANGED, "X-Factor", "FD",
+    ev => superPower(Color.RANGED) && investigateEv(ev, c => c.cost === 0, playerState.deck, c => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c)))),
+// {SHATTER} the Mastermind or {SHATTER} all Heroes currently in the HQ.
+  ra: makeHeroCard("Rictor", "Massive Earthquake", 7, u, u, Color.RANGED, "X-Factor", "", ev => {
+    chooseOneEv(ev, "Choose a target", ["Mastermind", () => shatterSelectEv(ev, gameState.mastermind.deck)], ["Heroes in HQ", () => shatterAllEv(ev, hqHeroes())]);
+  }),
 },
 ]);
 addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
