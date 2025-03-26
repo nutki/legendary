@@ -2393,7 +2393,7 @@ function buyCard(ev: Ev): void {
   else if (where === "SOARING" || ev.what.soaring) gainSoaringEv(ev, ev.what);
   else if (ev.what.hasWallCrawl()) gainToDeckEv(ev, ev.what);
   else gainEv(ev, ev.what);
-  ev.what.whenRecruited && cont(ev, () => ev.what.whenRecruited(ev));
+  ev.what.whenRecruited && pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.whenRecruited });
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
