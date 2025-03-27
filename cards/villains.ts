@@ -4414,7 +4414,7 @@ addVillainTemplates("Messiah Complex", [
 // VP: 4
   [ 2, makeVillainCard("Reavers", "Donald Pierce", 6, 4, {
     ambush: ev => preyEv(ev, p => -p.hand.count(Color.TECH), () => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY))),
-    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY)),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(c => !isColor(Color.GRAY))),
   })],
 // AMBUSH: <b>Prey</b> on the fewest [Strength].
 // <b>Finish the Prey</b>: That player gains a Wound to the top of their deck.
