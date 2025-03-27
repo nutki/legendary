@@ -926,8 +926,7 @@ function preyEv(ev: Ev, handScore: (p: Player) => number, finishEffect: (ev: Ev)
     const setupTrigger = () => addTurnTrigger('CLEANUP', u, ev => {
       if (card.location === p.playArea.attachedDeck('PREYING')) {
         pushEv(ev, "EFFECT", { source: card, func: finishEffect });
-        enterCityEv(ev, card); // TODO no ambush effect, rules say enters sewers
-        // moveCardEv(ev, card, d || gameState.cityEntry);
+        enterSewersEv(ev, card, true);
       }
     });
     if (p == playerState) setupTrigger(); else addFutureTrigger(setupTrigger, p);

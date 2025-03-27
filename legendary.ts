@@ -2557,10 +2557,13 @@ function villainDraw(ev: Ev): void {
     throw Error("dont know what to do with: " + c.id);
   }
 }
-function enterCityEv(ev: Ev, c: Card, d?: Deck | undefined, extraEffects?: () => void) {
+function enterCityEv(ev: Ev, c: Card, d?: Deck | undefined, extraEffects?: () => void, noAmbush?: boolean) {
   moveCardEv(ev, c, d || gameState.cityEntry);
   extraEffects?.();
-  pushEffects(ev, c, 'ambush', c.ambush);
+  noAmbush || pushEffects(ev, c, 'ambush', c.ambush);
+}
+function enterSewersEv(ev: Ev, c: Card, noAmbush?: boolean) {
+  withCity('SEWERS', d => enterCityEv(ev, c, d, undefined, noAmbush));
 }
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
 function villainEscape(ev: Ev): void {
