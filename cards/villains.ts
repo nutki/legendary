@@ -4611,6 +4611,7 @@ addVillainTemplates("Messiah Complex", [
 // {POWER Instinct} Draw a card.
 // ATTACK: 2
   [ 2, makeGainableCard(makeVillainCard("Clan Yashida", "Scarlet Samurai", 3, u, {
+    chivalrousDuel: true,
   }), u, 2, Color.INSTINCT, "Crime Syndicate", "D", ev => superPower(Color.INSTINCT) && drawEv(ev))],
 // <b>Chivalrous Duel</b>
 // AMBUSH: Lord Shingen captures a Bystander. Bystanders held by Lord Shingen are “Samurai Bodyguards.” You can’t fight Lord Shingen while he has
@@ -4619,6 +4620,7 @@ addVillainTemplates("Messiah Complex", [
 // VP: 5
   [ 2, makeVillainCard("Clan Yashida", "Lord Shingen", 4, 5, {
     chivalrousDuel: true,
+    fightCond: c => !c.captured.has(isBystander),
     ambush: ev => {
       captureEv(ev, ev.source);
       const isBodyguard = (c: Card) => c.location === ev.source.attachedDeck('CAPTURE') && isBystander(c);
@@ -4637,7 +4639,7 @@ addVillainTemplates("Messiah Complex", [
     chivalrousDuel: true,
     ambush: ev => {
       const names = owned(ev.who).limit(isHero).unique(c => c.heroName).map(n => ({l:n, v:n}));
-      chooseOptionEv(ev, "Choose a Hero Name", names, n => forbidAction('PLAY', c => c.heroName !== n && isColor(Color.GRAY)(c)));
+      chooseOptionEv(ev, "Choose a Hero Name", names, n => forbidAction('PLAY', c => c.heroName !== n && !isColor(Color.GRAY)(c)));
     },
     fight: ev => {},
   })],

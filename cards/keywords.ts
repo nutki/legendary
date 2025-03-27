@@ -914,18 +914,20 @@ function shatterEv(ev: Ev, c: Card) {
   } else if (isVillain(c)) {
     addTurnMod('defense', v => c === v, shatterAmount(c.defense));
   } else if (isMastermind(c)) {
-    let enabled = 1;
-    addTurnMod('defense', v => c === v, shatterAmount(c.defense) * enabled);
-    addTurnTrigger('FIGHT', ev => ev.what === c, () => enabled = 0);
+    let amount = shatterAmount(c.defense);
+    addTurnMod('defense', v => c === v, () => amount);
+    addTurnTrigger('FIGHT', ev => ev.what === c, () => amount = 0);
   }
 }
 function preyEv(ev: Ev, handScore: (p: Player) => number, finishEffect: (ev: Ev) => void, immediateEffect?: (p: Player) => void) {
   _choosePlayerEv(ev, p => {
-    attachCardEv(ev, ev.source, p.playArea, 'PREYING');
-    const setupTrigger = () => addTurnTrigger('CLEANUP', u, () => {
-      if (ev.source.location === p.playArea.attachedDeck('PREYING')) {
-        pushEv(ev, "EFFECT", { source: ev.source, func: finishEffect });
-        enterCityEv(ev, ev.source); // TODO no ambush effect, rules say enters sewers
+    const card = ev.source;
+    attachCardEv(ev, card, p.playArea, 'PREYING');
+    const setupTrigger = () => addTurnTrigger('CLEANUP', u, ev => {
+      if (card.location === p.playArea.attachedDeck('PREYING')) {
+        pushEv(ev, "EFFECT", { source: card, func: finishEffect });
+        enterCityEv(ev, card); // TODO no ambush effect, rules say enters sewers
+        // moveCardEv(ev, card, d || gameState.cityEntry);
       }
     });
     if (p == playerState) setupTrigger(); else addFutureTrigger(setupTrigger, p);
