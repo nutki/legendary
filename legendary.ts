@@ -197,6 +197,7 @@ class Card {
   get cost() { return getModifiedStat(this, 'cost', (this.gainable ? this.printedDefense : this.printedCost) || 0); }
   get attack() { return getModifiedStat(this, 'attack', this.printedAttack); }
   get recruit() { return this.printedRecruit; }
+  get piercing() { return this.printedPiercing; }
   get baseDefense() {
     if (this.varDefense) return this.varDefense(this);
     return this.printedDefense;
@@ -629,6 +630,7 @@ type EvType =
 'USEARTIFACT' |
 'THROWARTIFACT' |
 // Expansion effects
+'ADDPIERCING' |
 'URUENCHANTEDREVEAL' |
 'NTHCIRCLEREVEAL' |
 'COORDINATE' |
@@ -1510,7 +1512,10 @@ function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
 }
 function fightableCards(): Card[] {
-  return [...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top, ...gameState.astralPlane.deck].filter(c => c && isFightable(c));
+  return [
+    ...[...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c)),
+    ...gameState.players.map(p => attachedCards('PREYING', p.playArea)).merge(), ...gameState.astralPlane.deck
+  ];
 }
 function heroBelow(c: Card) {
   return c.location && c.location.above ? c.location.above.limit(isHero) : [];
@@ -1954,6 +1959,7 @@ function getActions(ev: Ev): Ev[] {
 
 function addAttackEvent(ev: Ev, c: number): void { pushEv(ev, "ADDATTACK", { func: ev => { turnState.attack += ev.amount; turnState.totalAttack += ev.amount; }, amount: c }); }
 function addRecruitEvent(ev: Ev, c: number): void { pushEv(ev, "ADDRECRUIT", { func: ev => { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; }, amount: c }); }
+function addPierciengEvent(ev: Ev, c: number): void { pushEv(ev, "ADDPIERCING", { func: ev => turnState.piercing += ev.amount, amount: c }); }
 function addAttackSpecialEv(ev: Ev, cond: (c: Card) => boolean, amount: number) {
   cont(ev, () => {
     turnState.attackSpecial.push({ cond, amount });
@@ -2341,6 +2347,7 @@ function playCopyEv(ev: Ev, what: Card) {
 function playCardEffects(ev: Ev, card: Card) {
   if (card.attack) addAttackEvent(ev, card.attack);
   if (card.recruit) addRecruitEvent(ev, card.recruit);
+  if (card.piercing) addPierciengEvent(ev, card.piercing);
   const effects = getModifiedStat(card, "effects", card.effects);
   for (let i = 0; effects && i < effects.length; i++) {
     pushEv(ev, "EFFECT",  { source: card, func: effects[i] } );
