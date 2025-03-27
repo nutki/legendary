@@ -535,6 +535,7 @@ class Deck {
   attachedDeck(name: string): Deck { return attachedDeck(name, this); }
   attached(name: string): Card[] { return attachedCards(name, this); }
   registerRevealed(cards: Card[]) {
+    textLog.log('Revealed ' + cards.map(c => c.cardName).join(', ') + ' from ' + this.id);
     this.revealedCards = this.revealedCards || [];
     this.revealedCards.push(cards);
   }
@@ -2223,7 +2224,7 @@ function pickTopDeckEv(ev: Ev, n: number = 1, who: Player = playerState, cond: F
 function cleanupRevealed (ev: Ev, src: Card[], dst: Deck, bottom: boolean = false, agent: Player = playerState) {
   if (src.size === 0) return;
   if (src.size === 1) moveCardEv(ev, src[0], dst, bottom);
-  else selectCardEv(ev, "Choose a card to put back", src, sel => { moveCardEv(ev, sel, dst, bottom); cleanupRevealed(ev, src, dst, bottom, agent); }, agent);
+  else selectCardEv(ev, "Choose a card to put back", src, sel => { moveCardEv(ev, sel, dst, bottom); cont(ev, () => cleanupRevealed(ev, src, dst, bottom, agent)); }, agent);
 };
 function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
@@ -2272,18 +2273,16 @@ function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?
 function lookAtThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction, who?: Player) {
   revealThreeEv(ev, a1, a2, a3, who);
 }
-function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
-  who = who || playerState;
-  agent = agent || who;
+function revealPlayerDeckTopOrBottomEv(ev: Ev, amount: number, bottom: boolean, action: (cards: Card[]) => void, who: Player = playerState, agent: Player = who) {
   let cards: Card[] = [];
-  if (playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
-  pushEv(ev, "REVEAL", { where: playerState.deck, who: agent, func: () => {
-    cards = bottom ? playerState.deck.deck.slice(0, amount) : playerState.deck.deck.slice(-amount);
-    playerState.deck.registerRevealed(cards);
+  if (who.deck.size < amount) reshufflePlayerDeckEv(ev, who);
+  pushEv(ev, "REVEAL", { where: who.deck, who: agent, func: () => {
+    cards = bottom ? who.deck.deck.slice(0, amount) : who.deck.deck.slice(-amount);
+    who.deck.registerRevealed(cards);
   }});
   cont(ev, () => action(cards));
   cont(ev, () => cleanupRevealed(ev, cards, who.deck, bottom, agent));
-  cont(ev, () => playerState.deck.clearRevealed(cards));
+  cont(ev, () => who.deck.clearRevealed(cards));
 }
 function lookAtDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   revealPlayerDeckTopOrBottomEv(ev, amount, false, action, who, agent);
@@ -2298,15 +2297,16 @@ function revealPlayerDeckBottomEv(ev: Ev, amount: number, action: (cards: Card[]
 function cleanupRevealedTopOrBottom(ev: Ev, src: Card[], dst: Deck, agent: Player) {
   if (src.size === 0) return;
   selectCardOptEv(ev, "Choose a card to put back on the bottom", src,
-    sel => { moveCardEv(ev, sel, dst, true); cleanupRevealedTopOrBottom(ev, src, dst, agent); },
+    sel => { moveCardEv(ev, sel, dst, true); cont(ev, () => cleanupRevealedTopOrBottom(ev, src, dst, agent)); },
     () => cleanupRevealed(ev, src, dst, false, agent), agent);
 };
 function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, action: (c: Card) => void = c => drawCardEv(ev, c), agent: Player = playerState, reveal: boolean = false) {
+  // TODO reveal - reveal cards to all players (multiplayer reveal)
   let cards: Card[] = [];
   const amount = turnState.investigateAmount || 2;
-  if (src === playerState.deck && playerState.deck.size < amount) pushEv(ev, 'RESHUFFLE', reshufflePlayerDeck);
+  gameState.players.each(p => src === p.deck && p.deck.size < amount && reshufflePlayerDeckEv(ev, p));
   pushEv(ev, "REVEAL", { where: src, who: agent, func: () => {
-    cards = src.deck.slice(0, amount);
+    cards = src.deck.slice(-amount);
     src.registerRevealed(cards);
   }})
   cont(ev, () => selectCardEv(ev, "Choose a card", cards.limit(f), action, agent));
@@ -2419,7 +2419,7 @@ function cleanUp(ev: Ev): void {
   moveAll(playerState.hand, playerState.discard);
   moveAll(playerState.playArea, playerState.discard);
   moveAll(playerState.teleported, playerState.hand);
-  let drawAmount = (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0);
+  let drawAmount = Math.max(0, (turnState.endDrawAmount || gameState.endDrawAmount) + (turnState.endDrawMod || 0));
   drawEv(ev, drawAmount);
 }
 function drawCardEv(ev: Ev, what: Card, who: Player = playerState) {
@@ -2437,15 +2437,21 @@ function drawEv(ev: Ev, amount: number = 1, who: Player = playerState) {
 function drawOne(ev: Ev): void {
   if (!ev.who.deck.size && !ev.who.discard.size) {
   } else if (!ev.who.deck.size) {
-    pushEv(ev, "RESHUFFLE", reshufflePlayerDeck);
+    reshufflePlayerDeckEv(ev, ev.who);
     pushEvents(ev);
   } else {
     turnState.cardsDrawn++;
     moveCardEv(ev, ev.who.deck.top, ev.who.hand);
   }
 }
-function reshufflePlayerDeck(): void {
-  for(const c of playerState.discard.deck.shuffled()) moveCard(c, playerState.deck, true);
+function reshufflePlayerDeckEv(ev: Ev, p: Player = playerState): void {
+  pushEv(ev, "RESHUFFLE", () => {
+    for(const c of p.discard.deck.shuffled()) moveCard(c, p.deck, true);
+  });
+}
+function withPlayerDeckTopEv(ev: Ev, effect: (c: Card) => void, who: Player = playerState) {
+  cont(ev, ev => who.deck.size || reshufflePlayerDeckEv(ev, who));
+  cont(ev, () => who.deck.withTop(effect));
 }
 function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist, what: what }); }
 function playTwist(ev: Ev): void {
@@ -2702,7 +2708,6 @@ function clickCard(ev: MouseEvent): void {
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     const id = node.id || (node.getAttribute && node.getAttribute('data-id'));
     const deckId = node.getAttribute && node.getAttribute('data-deck-id');
-    console.log(id, node);
     if (id && clickActions[id]) {
       clickActions[id]();
       return;
@@ -2858,6 +2863,8 @@ TODO Champions cheering crowds
 TODO heroName fixes (setup option vs heroName, divided names, transformed names?, gray card names, gainable and other hero names)
 TODO many fortify effects
 TODO venom Bonding
+TODO repeat(x, () => cont()) to repeatEv(x)
+TODO Choose a Hero Name
 
 https://boardgamegeek.com/thread/1817207/edge-cases-so-many
 

@@ -60,7 +60,7 @@ makeHenchmenCard("Multiple Man", 3, {
 // ATTACK: 3
 makeHenchmenCard("S.H.I.E.L.D. Assault Squad", 3, {
   fight: [
-    ev => playerState.deck.withTop(c => discardEv(ev, c)),
+    ev => withPlayerDeckTopEv(ev, c => discardEv(ev, c)),
     ev => selectCardAndKOEv(ev, playerState.discard.limit(isHero)),
   ],
 }),

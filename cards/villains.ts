@@ -4405,6 +4405,244 @@ addVillainTemplates("Annihilation", [
   }), u, 2, Color.TECH, u, "D", ev => superPower(Color.TECH) && outOfTimeEv(ev))],
 ]},
 ]);
+addVillainTemplates("Messiah Complex", [
+{ name: "Reavers", cards: [
+// AMBUSH: <b>Prey</b> on the fewest [Tech].
+// <b>Finish the Prey</b>: KO one of that player's non-grey Heroes.
+// FIGHT: KO one of your grey Heroes.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Reavers", "Donald Pierce", 6, 4, {
+    ambush: ev => preyEv(ev, p => -p.hand.count(Color.TECH), () => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY))),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY)),
+  })],
+// AMBUSH: <b>Prey</b> on the fewest [Strength].
+// <b>Finish the Prey</b>: That player gains a Wound to the top of their deck.
+// FIGHT: Reveal the top card of your deck. KO it or draw it.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Reavers", "Bonebreaker", 5, 3, {
+    ambush: ev => preyEv(ev, p => -p.hand.count(Color.STRENGTH), ev => gainWoundToDeckEv(ev)),
+    fight: ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))
+  })],
+// AMBUSH: <b>Prey</b> on the fewest [Ranged]. Skullbuster captures one Bystander from the Bystander Stack and two Bystanders from that player's Victory Pile of their choice.
+// <b>Finish the Prey</b>: KO the captured Bystanders, and each player discards a card.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Reavers", "Skullbuster", 5, 3, {
+    ambush: ev => {
+      preyEv(ev, p => -p.hand.count(Color.RANGED), ev => {
+        ev.source.captured.limit(isBystander).each(c => KOEv(ev, c));
+        eachPlayer(p => pickDiscardEv(ev, 1, p));
+      }, p => {
+        captureEv(ev, ev.source);
+        selectObjectsEv(ev, "Choose two Bystanders to capture", 2, p.victory.limit(isBystander), c => captureEv(ev, ev.source, c));
+      });
+    },
+  })],
+// AMBUSH: <b>Prey</b> on the fewest [Covert].
+// <b>Finish the Prey</b>: That player discards a card.
+// FIGHT: Discard the top card of your deck. If it has a Recruit icon, you ger +1 Recruit and this Villain <b>Preys</b> on the fewest [Covert].
+// ATTACK: 2
+// VP: 2
+  [ 2, makeVillainCard("Reavers", "Pretty Boy", 2, 2, {
+    ambush: ev => preyEv(ev, p => -p.hand.count(Color.COVERT), ev => pickDiscardEv(ev)),
+    fight: ev => withPlayerDeckTopEv(ev, c => {
+      discardEv(ev, c);
+      if (hasRecruitIcon(c)) {
+        addRecruitEvent(ev, 1);
+        preyEv(ev, p => -p.hand.count(Color.COVERT), ev => pickDiscardEv(ev));
+      }
+    }),
+  })],
+]},
+{ name: "Purifiers", cards: [
+// AMBUSH: <b>Prey</b> on the most [Covert]. {CLONE}.
+// <b>Finish the Prey</b>: That player discards a [Covert] Hero. If they can't, they discard any non-grey Hero instead.
+// ATTACK: 3
+// VP: 2
+  [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    ambush: ev => {
+      preyEv(ev, p => p.hand.count(Color.COVERT), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.COVERT) ? Color.COVERT : isNonGrayHero));
+      cloneVillainEv(ev);
+    },
+  })],
+// AMBUSH: <b>Prey</b> on the most [Instinct]. {CLONE}.
+// <b>Finish the Prey</b>: That player discards a [Instinct] Hero. If they can't, they discard any non-grey Hero instead.
+// ATTACK: 3
+// VP: 2
+  [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    ambush: ev => {
+      preyEv(ev, p => p.hand.count(Color.INSTINCT), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.INSTINCT) ? Color.INSTINCT : isNonGrayHero)),
+      cloneVillainEv(ev);
+    }
+  })],
+// AMBUSH: <b>Prey</b> on the most [Ranged]. {CLONE}.
+// <b>Finish the Prey</b>: That player discards a [Ranged] Hero. If they can't, they discard any non-grey Hero instead.
+// ATTACK: 3
+// VP: 2
+  [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    ambush: ev => {
+      preyEv(ev, p => p.hand.count(Color.RANGED), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.RANGED) ? Color.RANGED : isNonGrayHero)),
+      cloneVillainEv(ev);
+    }
+  })],
+// AMBUSH: <b>Prey</b> on the most [Strength]. {CLONE}.
+// <b>Finish the Prey</b>: That player discards a [Strength] Hero. If they can't, they discard any non-grey Hero instead.
+// ATTACK: 3
+// VP: 2
+  [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    ambush: ev => {
+      preyEv(ev, p => p.hand.count(Color.STRENGTH), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.STRENGTH) ? Color.STRENGTH : isNonGrayHero)),
+      cloneVillainEv(ev);
+    }
+  })],
+// AMBUSH: <b>Prey</b> on the most [Tech]. {CLONE}.
+// <b>Finish the Prey</b>: That player discards a [Tech] Hero. If they can't, they discard any non-grey Hero instead.
+// ATTACK: 3
+// VP: 2
+  [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    ambush: ev => {
+      preyEv(ev, p => p.hand.count(Color.TECH), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.TECH) ? Color.TECH : isNonGrayHero)),
+      cloneVillainEv(ev);
+    }
+  })],
+// AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood
+// <b>Finish the Prey</b>: That player gains a Wound and KOs two Bystanders from their Victory Pile.
+// FIGHT: Shuffle two cards from the Bystander Stack into the Villain Deck.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("Purifiers", "Leper Queen", 4, 2, {
+    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), ev => {
+      gainWoundEv(ev);
+      selectObjectsEv(ev, "Choose cards to KO", 2, playerState.victory.limit(isBystander), c => KOEv(ev, c));
+    }),
+    fight: ev => repeat(2, () => cont(ev, () => gameState.bystanders.withTop(c => shuffleIntoEv(ev, c, gameState.villaindeck)))),
+  })],
+// AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood. Stryker captures on Sidekick from the Sidekick Stack and two Sidekicks from that player's hand and/or discard pile of their choice.
+// <b>Finish the Prey</b>: KO the captured Sidekicks.
+// FIGHT: Gain the captured Sidekicks.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Purifiers", "Reverend William Stryker", 5, 3, {
+    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), ev => {
+      ev.source.attachedDeck('GAIN_CAPTURE').limit(isSidekick).each(c => KOEv(ev, c));
+    }, p => {
+      gameState.sidekick.withTop(c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE'));
+      selectObjectsEv(ev, "Choose two Sidekicks to capture", 2, handOrDiscard().limit(isSidekick), c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE'));
+    }),
+    fight: ev => ev.source.attachedDeck('GAIN_CAPTURE').limit(isSidekick).each(c => gainEv(ev, c)),
+  })],
+// AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood. Cameron Hodge captures one of that player's non-grey Heroes of their choice.
+// <b>Finish the Prey</b>: KO the captured Hero.
+// FIGHT: Choose a player to gain the captured Hero.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Purifiers", "Cameron Hodge", 6, 4, {
+    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), ev => {
+      ev.source.attachedDeck('GAIN_CAPTURE').limit(isNonGrayHero).each(c => KOEv(ev, c));
+    }, p => {
+      selectCardEv(ev, "Choose a hero to capture", playerState.hand.limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE'));
+    }),
+    fight: ev => ev.source.attachedDeck('GAIN_CAPTURE').limit(isNonGrayHero).each(c => gainEv(ev, c)),
+  })],
+]},
+{ name: "Acolytes", cards: [
+// You may pay 2 Recruit any number of times to {SHATTER} Unuscione.
+// AMBUSH: Unuscione captures a Bystander.
+// ATTACK: 8*
+// VP: 4
+  [ 2, makeVillainCard("Acolytes", "Unuscione", 8, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 2 }, func: ev => shatterEv(ev, ev.source)})],
+  })],
+// You may {SHATTER} Tempo any number of times. Each time you do this, draw one fewer card when you draw a new hand of cards at the end of this turn.
+// FIGHT: Draw two cards.
+// ATTACK: 16*
+// VP: 2
+  [ 2, makeVillainCard("Acolytes", "Tempo", 16, 2, {
+    fight: ev => drawEv(ev, 2),
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { func: ev => { shatterEv(ev, ev.source); addEndDrawMod(-1); }})],
+  })],
+// You may pay 1 Recruit any number of times to {SHATTER} Frenzy. Each time you do, reveal the top card of the Hero Deck and put it on the bottom of that deck. If it's [Strength], gain a Wound. If it's [Instinct], the player on your right gains a Wound.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 12*
+// VP: 3
+  [ 2, makeVillainCard("Acolytes", "Frenzy", 12, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, func: ev => {
+      shatterEv(ev, ev.source);
+      revealHeroDeckEv(ev, 1, cards => {
+        cards.has(Color.STRENGTH) && gainWoundEv(ev);
+        cards.has(Color.INSTINCT) && gainWoundEv(ev, playerState.right);
+      }, false, true);
+    }})],
+  })],
+// You may pay 1 Recruit any number of times to {SHATTER} Random. Each time you do, reveal the top card of the Hero Deck and put it on the bottom of that deck.
+// If it's [Covert], [Tech], or [Ranged], Random then gets +Attack equal to that card's cost.
+// ESCAPE: Each player discards a card at random.
+// ATTACK: 10*
+// VP: 4
+  [ 2, makeVillainCard("Acolytes", "Random", 10, 4, {
+    escape: ev => eachPlayer(p => p.hand.withRandom(c => discardEv(ev, c))),
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, func: ev => {
+      shatterEv(ev, ev.source);
+      revealHeroDeckEv(ev, 1, cards => cards.limit(Color.COVERT | Color.TECH | Color.RANGED).each(c => {
+        addTurnMod('defense', c => c === ev.source, c.cost); // TODO It is worded as it should be permanent
+      }), false, true);
+    }})],
+  })],
+]},
+{ name: "Clan Yashida", cards: [
+// <b>Chivalrous Duel</b>
+// AMBUSH: The Villain in the city worth the most VP captures a Bystander.
+// ATTACK: 3*
+// VP: 3
+  [ 2, makeVillainCard("Clan Yashida", "Silver Samurai", 3, 3, {
+    chivalrousDuel: true,
+    ambush: ev => selectCardEv(ev, "Choose a villain to capture a bystander", cityVillains().highest(c => c.vp), c => captureEv(ev, c)),
+  })],
+// <b>Chivalrous Duel</b>
+// FIGHT: Gain this as a Hero.
+// ATTACK: 3*
+// GAINABLE
+// TEAM: Crime Syndicate
+// CLASS: [Instinct]
+// {POWER Instinct} Draw a card.
+// ATTACK: 2
+  [ 2, makeGainableCard(makeVillainCard("Clan Yashida", "Scarlet Samurai", 3, u, {
+  }), u, 2, Color.INSTINCT, "Crime Syndicate", "D", ev => superPower(Color.INSTINCT) && drawEv(ev))],
+// <b>Chivalrous Duel</b>
+// AMBUSH: Lord Shingen captures a Bystander. Bystanders held by Lord Shingen are “Samurai Bodyguards.” You can’t fight Lord Shingen while he has
+// any Bodyguards. You can fight them as if they were 3 Attack Villains with “<b>Chivalrous Duel</b>. <b>Fight</b>: Rescue this as a Bystander.”
+// ATTACK: 4*
+// VP: 5
+  [ 2, makeVillainCard("Clan Yashida", "Lord Shingen", 4, 5, {
+    chivalrousDuel: true,
+    ambush: ev => {
+      captureEv(ev, ev.source);
+      const isBodyguard = (c: Card) => c.location === ev.source.attachedDeck('CAPTURE') && isBystander(c);
+      addStatSet('defense', isBodyguard, () => 3);
+      addStatSet('chivalrousDuel', isBodyguard, () => true);
+      addStatSet('isVillain', isBodyguard, () => true);
+      addStatSet('fight', isBodyguard, () => ev => rescueEv(ev, ev.source));
+    },
+  })],
+// <b>Chivalrous Duel</b>
+// AMBUSH: Choose a Hero Name. You can't play Heroes this turn unless they are that Hero Name or grey Heroes.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 5*
+// VP: 4
+  [ 2, makeVillainCard("Clan Yashida", "Gorgon", 5, 4, {
+    chivalrousDuel: true,
+    ambush: ev => {
+      const names = owned(ev.who).limit(isHero).unique(c => c.heroName).map(n => ({l:n, v:n}));
+      chooseOptionEv(ev, "Choose a Hero Name", names, n => forbidAction('PLAY', c => c.heroName !== n && isColor(Color.GRAY)(c)));
+    },
+    fight: ev => {},
+  })],
+]},
+]);
 addVillainTemplates("Doctor Strange and the Shadows of Nightmare", [
 { name: "Lords of the Netherworld", cards: [
 // AMBUSH: Mindless Ones capture the rightmost Hero in the HQ that costs 4 or less.

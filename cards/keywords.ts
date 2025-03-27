@@ -450,7 +450,7 @@ function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
 function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
 function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {
   repeat(n, () => {
-    revealPlayerDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); f ? f(c) : discardEv(ev, c); }));
+    withPlayerDeckTopEv(ev, c => { addAttackEvent(ev, c.printedAttack || 0); f ? f(c) : discardEv(ev, c); });
   });
 }
 function addPiercingEv(ev: Ev, amount: number) {
@@ -894,6 +894,13 @@ function cloneHeroEv(ev: Ev) {
     cont(ev, () => gameState.herodeck.shuffle());
   }
 }
+function cloneVillainEv(ev: Ev) {
+  const cardName = ev.source.cardName;
+  gameState.villaindeck.limit(c => c.cardName === cardName).withFirst(c => {
+    enterCityEv(ev, c); // TODO no clone effect
+  });
+  cont(ev, () => gameState.villaindeck.shuffle());
+}
 function shatterSelectEv(ev: Ev, c: Card[]) {
   selectCardEv(ev, "Choose a card to shatter", c, c => shatterEv(ev, c));
 }
@@ -911,6 +918,19 @@ function shatterEv(ev: Ev, c: Card) {
     addTurnMod('defense', v => c === v, shatterAmount(c.defense) * enabled);
     addTurnTrigger('FIGHT', ev => ev.what === c, () => enabled = 0);
   }
+}
+function preyEv(ev: Ev, handScore: (p: Player) => number, finishEffect: (ev: Ev) => void, immediateEffect?: (p: Player) => void) {
+  _choosePlayerEv(ev, p => {
+    attachCardEv(ev, ev.source, p.playArea, 'PREYING');
+    const setupTrigger = () => addTurnTrigger('CLEANUP', u, () => {
+      if (ev.source.location === p.playArea.attachedDeck('PREYING')) {
+        pushEv(ev, "EFFECT", { source: ev.source, func: finishEffect });
+        enterCityEv(ev, ev.source); // TODO no ambush effect, rules say enters sewers
+      }
+    });
+    if (p == playerState) setupTrigger(); else addFutureTrigger(setupTrigger, p);
+    immediateEffect && cont(ev, () => immediateEffect(p));
+  }, gameState.players.highest(handScore), playerState);
 }
 // EXPANSION Doctor Strange and the Shadows of Nightmare
 function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean = false) {
@@ -934,9 +954,9 @@ function ritualArifact(cond: (what: Card) => boolean, anyTurn: boolean = false) 
   }
 }
 function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, (ev: Ev) => void], p: Player = playerState) {
-  revealPlayerDeckEv(ev, 1, ([c]) => {
-    c?.cost > 0 && gainWoundEv(ev, p);
-    c && discardEv(ev, c);
+  withPlayerDeckTopEv(ev, c => {
+    discardEv(ev, c);
+    c.cost > 0 && gainWoundEv(ev, p);
   }, p);
   cont(ev, () => {
     const gainCount = pastEvents('GAIN').count(ev2 => ev2.parent === ev);
