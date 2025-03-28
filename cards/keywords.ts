@@ -884,8 +884,8 @@ function tacticalFormation(code: string) {
   const heroes = yourHeroes();
   return [...Array(10).keys()].every(n => heroes.count(c => c.cost === n) >= (code.split(n.toString()).length - 1));
 }
-function cloneHeroEv(ev: Ev) {
-  const cardName = ev.source.cardName;
+function cloneHeroEv(ev: Ev, c: Card = ev.source) {
+  const cardName = c.cardName;
   const hqOptions = hqHeroes().limit(c => c.cardName === cardName);
   if (hqOptions.size) {
     selectCardEv(ev, "Choose a Hero to Clone", hqOptions, c => gainEv(ev, c));

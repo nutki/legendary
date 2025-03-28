@@ -289,3 +289,30 @@ makeHenchmenCard("Universal Church of Truth", 2, {
   fight: ev => setBurnShardEv(ev, 2, ev => selectCardAndKOEv(ev, yourHeroes())),
 }),
 ]);
+addHenchmenTemplates("Messiah Complex", [
+// AMBUSH: {CLONE}. When the cloned copy enters the city, shuffle a Bystander into the Villain Deck.
+// FIGHT: {CLONE} the next Hero you recruit this turn that has printed cost 4 or less.
+// ATTACK: 3
+makeHenchmenCard("Mr. Sinister Clones", 3, {
+  fight: ev => addTurnTrigger('RECRUIT', ev => ev.what.printedCost <= 4, ev => {
+    cloneHeroEv(ev, ev.parent.what);
+  }),
+  ambush: ev => {
+    cloningInProgress(ev) ? gameState.bystanders.withTop(c => shuffleIntoEv(ev, c, gameState.villaindeck)) : cloneVillainEv(ev);
+  },
+}),
+// AMBUSH: If there are no other Sentinel Squard O*N*E*s in the city, {CLONE}.
+// FIGHT: If there are no other Sentinel Squard O*N*E*s in the city, KO one of your Heroes and put this Villain on the bottom of the Villain Deck.
+// ATTACK: 2
+makeHenchmenCard("Sentinel Squad O*N*E*", 2, {
+  fight: ev => {
+    if (!cityVillains().limit(c => c !== ev.source).has(isGroup("Sentinel Squad O*N*E*"))) {
+      selectCardAndKOEv(ev, yourHeroes());
+      moveCardEv(ev, ev.source, gameState.villaindeck, true);
+    }
+  },
+  ambush: ev => {
+    cityVillains().limit(c => c !== ev.source).has(isGroup("Sentinel Squad O*N*E*")) || cloneVillainEv(ev);
+  },
+}),
+]);

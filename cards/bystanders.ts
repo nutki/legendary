@@ -193,3 +193,21 @@ addBystanderTemplates("Into the Cosmos", [
   chooseOneEv(ev, "Choose one", ["Draw now", () => drawEv(ev)], ["Draw at the end of turn", () => addEndDrawMod(1)])
 ) ],
 ]);
+addBystanderTemplates("Messiah Complex", [
+// RESCUE: choose Recruit or Attack. {INVESTIGATE} for a card with that icon.
+[ 1, makeBystanderCard("Private Investigator", ev => {
+  chooseOptionEv(ev, "Choose an icon", [{l:"Recruit",v:hasRecruitIcon},{l:"Attack",v:hasAttackIcon}],
+    cond => investigateEv(ev, cond, ev.who.deck, u, ev.who), ev.who);
+}) ],
+// RESCUE: {SHATTER} a Villain in the Bank or {SHATTER} a Hero in the HQ space under the Bank.
+[ 1, makeBystanderCard("Opera Singer", ev => {
+  const opts = [...villainIn('BANK'), ...hqHeroes().limit(c => isLocation(c.location.below, 'BANK'))];
+  selectCardEv(ev, "Choose a card to shatter", opts, c => shatterEv(ev, c), ev.who);
+}) ],
+// RESCUE: {CLONE} the next Hero you recruit this turn that has printed cost 3 or less.
+[ 1, makeBystanderCard("Cloning Technician", ev => {
+  playerState === ev.who && addTurnTrigger('RECRUIT', ev => ev.what.printedCost <= 3, ev => {
+    cloneHeroEv(ev, ev.parent.what);
+  });
+}) ],
+]);
