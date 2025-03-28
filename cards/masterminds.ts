@@ -2672,7 +2672,7 @@ addTemplates("MASTERMINDS", "Annihilation", [
 ...makeEpicMastermindCard("Kang the Conqueror", [ 8, 10 ], 6, "Timelines of Kang", ev => {
 // This Strike becomes a "Time Incursion." Put it above the rightmost city space that doesn't yet have a Time Incursion.
   // TODO city rightmost
-  gameState.city.limit(d => d.attached('TIMEINCURSION').size === 0).withLast(d => attachCardEv(ev, ev.source, d, 'TIMEINCURSION'));
+  gameState.city.limit(d => d.attached('TIMEINCURSION').size === 0).withLast(d => attachCardEv(ev, ev.what, d, 'TIMEINCURSION'));
 // This Strike becomes a "Time Incursion." Put it above the rightmost city space that doesn't yet have a Time Incursion. If there are any Villains in any Time Incursions, each player gains a Wound.
   ev.source.epic && cont(ev, () => {
     cityVillains().has(c => c.location.attached('TIMEINCURSION').size > 0) && eachPlayer(p => gainWoundEv(ev, p));
@@ -2717,6 +2717,179 @@ addTemplates("MASTERMINDS", "Annihilation", [
     }
   } ],
 ], { varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * gameState.city.count(d => d.has(isVillain) && d.attached('TIMEINCURSION').size > 0) }),
+]);
+addTemplates("MASTERMINDS", "Messiah Complex", [
+// EPICNAME: Lady Deathstrike
+...makeEpicMastermindCard("Lady Deathstrike", [ 8, 11 ], 6, "Reavers", ev => {
+  const preying = isPreying(ev.source);
+// If she is <b>Preying</b> on a player, <b>Finish the Prey</b>. Otherwise, <b>Prey</b> on the fewest [Instinct].
+// If she is <b>Preying</b> on a player, <b>Finish the Prey</b>. Then, whether she is preying or not, <b>Prey</b> on the fewest [Instinct].
+  preying && finishThePreyEv(ev, ev.source);
+  (!preying || ev.source.epic) && preyEv(ev, p => -p.hand.count(Color.INSTINCT));
+}, [
+  [ "Cybernetic Healing Factor", ev => {
+  // If this is not the final Tactic, and if Lady Deathstrike was not <b>Preying</b> on a player: KO up to two of your Heroes, rescue 4 Bystanders, and shuffle this Tactic back into her remaining Tactics.
+    if (!finalTactic(ev.source) && !(ev.source.mastermind.location !== gameState.mastermind)) { // TODO check for preying deck location instead
+      selectObjectsUpToEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c));
+      rescueEv(ev, 4);
+      shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+    }
+  } ],
+  [ "Prey on the Weak", ev => {
+  // Each Villain that's <b>Preying</b> on a player <b>Finishes the Prey</b>. After those have all entered the city, then each Villain in the city with a <b>"Prey"</b> Ambush does that Ambush, starting from the Sewers.
+    eachPlayer(p => p.playArea.attachedDeck("PREYING").each(c => finishThePreyEv(ev, c)));
+    cont(ev, () => cityVillains().reverse().limit(c => !!c.finishThePrey).each(c => {
+      pushEffects(ev, c, 'ambush', c.ambush);
+    }));
+  } ],
+  [ "Relentless Assassin", ev => {
+  // If Lady Deathstrike was not <b>Preying</b> on a player, each other player reveals their hand. She <b>Preys</b> on the one of those players with the fewest non-grey Heroes.
+    if (!isPreying(ev.source.mastermind)) preyEv(ev, p => p === playerState ? -1000 : -p.hand.count(isNonGrayHero), u, ev.source.mastermind);
+  } ],
+  [ "Stretching Adamantium Claws", ev => {
+  // You may KO one of your Heroes. If you have a [Instinct] Hero, you may instead KO up to two of you Heroes.
+    superPower(Color.INSTINCT) ? selectObjectsUpToEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c)) :
+      selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+  } ],
+], {
+  finishThePrey: ev => {
+// <b>Finish the Prey</b>: That player gains two Wounds. Each other player discards two cards. (1-player game: Instead, gain a Wound and discard a card.)
+// <b>Finish the Prey</b>: That player gains Wounds to the top and bottom of thir deck. Each other player discards down to three cards. (1-player game: Instead, gain a Wound and discard two cards.)
+    const epic = ev.source.epic;
+    if (gameState.players.length === 1) {
+      gainWoundEv(ev, ev.who);
+      pickDiscardEv(ev, epic ? 2 : 1, ev.who);
+    } else eachPlayer(p => {
+      if (p == ev.who) {
+        epic ? gainWoundToDeckEv(ev, p, false) : gainWoundEv(ev, p);
+        epic ? gainWoundToDeckEv(ev, p, true) : gainWoundEv(ev, p);
+      } else {
+        pickDiscardEv(ev, epic ? -3 : 2, p);
+      }
+    });
+  }
+}),
+// All Sentinel Masterminds get +1 Attack for each Master Strike in the KO pile, even after Bastion is defeated.
+// EPICNAME: Bastion, Fused Sentinel
+...makeEpicMastermindCard("Bastion, Fused Sentinel", [ 4, 6 ], 6, "Purifiers" /* and any Sentinel Henchmen Group. TODO */, ev => {
+// A card from the Bystander Stack ascends to become a 3 Attack "Prime Sentinel" Mastermind with "<b>Fight</b>: Rescue this. <b>Master Strike</b>: Each player reveals the top card of their deck and discards it if it costs 1 or more."
+// A card from the Bystander Stack ascends to become a 4 Attack "Prime Sentinel" Mastermind with "<b>Fight</b>: Rescue this. <b>Master Strike</b>: Each player reveals the top card of their deck and KOs it if it costs 1 or more."
+  const epic = ev.source.epic;
+  gameState.bystanders.withTop(c => {
+    villainify("Prime Sentinel", c, () => (epic ? 4 : 3) + gameState.ko.count(isStrike), "RESCUE");
+    ascendToMastermind(ev, ev => eachPlayer(p => {
+      revealPlayerDeckEv(ev, 1, cards => cards.each(c => c.cost >= 1 && (epic ? KOEv(ev, c) : discardEv(ev, c))), p)
+    }));
+  });
+}, [
+// ---
+// STRIKE: A Sentinel Henchman from the Villain Deck enters the city. Shuffle the Villain Deck.
+// ATTACK: 4+
+  makeTacticsCard("Master Mold, Sentinel Factory", { printedDefense: 4, fight: ev => {
+  // Rescue three Bystanders. KO one of your Heroes. Master Mold ascends to become an additional Mastermind whose only ability is:
+    rescueEv(ev, 3);
+    addStatSet('fight', c => c === ev.source, () => () => {});
+    ascendToMastermind(ev, ev => gameState.villaindeck.limit(isHenchman /* TODO and is sentinel */).withFirst(c => {
+      enterCityEv(ev, c);
+      cont(ev, () => gameState.villaindeck.shuffle());
+    }));
+  }}),
+// ---
+// STRIKE: Each player reveals a [Covert] Hero or discards one of their non-grey Heroes.
+// ATTACK: 5+
+  makeTacticsCard("Template, Infected Sentinel", { printedDefense: 5, fight: ev => {
+  // Rescue three Bystanders. KO one of your Heroes. Template ascends to become an additional Mastermind whose only ability is:
+    rescueEv(ev, 3);
+    addStatSet('fight', c => c === ev.source, () => () => {});
+    ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev,
+      Color.COVERT, () => selectCardEv(ev, "Choose a Hero to discard", yourHeroes(p).limit(isNonGrayHero), c => discardEv(ev, c), p), p)));
+  }}),
+// ---
+// STRIKE: Choose Recruit or Attack. Each player discards a card with the chosen icon.
+// ATTACK: 6+
+  makeTacticsCard("Nimrod, Future Sentinel", { printedDefense: 6, fight: ev => {
+  // Rescue three Bystanders. KO one of your Heroes. Nimrod ascends to become an additional Mastermind whose only abilities are:
+    rescueEv(ev, 3);
+    addStatSet('fight', c => c === ev.source, () => () => {});
+    ascendToMastermind(ev, ev => chooseOptionEv(ev, "Choose an icon", [{l: "Recruit", v: hasRecruitIcon}, {l: "Attack", v: hasAttackIcon}], icon => {
+      eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(icon), c => discardEv(ev, c), p));
+    }));
+  }}),
+// ---
+// STRIKE: Each player reveals a [Tech] Hero or gains a Wound.
+// ATTACK: 7+
+  makeTacticsCard("Machine Man, Sentinel Supreme", { printedDefense: 7, fight: ev => {
+  // Rescue three Bystanders. KO one of your Heroes. Machine Man ascends to become an additional Mastermind whose only ability is:
+    rescueEv(ev, 3);
+    addStatSet('fight', c => c === ev.source, () => () => {});
+    ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)));
+  }}),
+], {
+  init: c => {
+    addStatSet('defense', c2 => c2.mastermind === c || c2 === c, (c, v) => v + gameState.ko.count(isStrike));
+  },
+}),
+// You may pay 3 Recruit any number of times to {SHATTER} Exodus.
+// EPICNAME: Exodus
+// Any number of times, you may {SHATTER} Exodus by spending 2 Recruit pules 1 Recruit for each Immortlity stacked here.
+...makeEpicMastermindCard("Exodus", [ 32, 36 ], 7, "Acolytes", ev => {
+// Choose X-Men, X-Force, X-Factor, or Brotherhood. Each player discards one of those Heroes or gains a Wound.
+// Stack this Strike next to Exodus as an "Immortality." Choose X-Men, X-Force, X-Factor, or Brotherhood. Each player KOs one of those Heroes or gains a Wound to the top of their deck.
+  const epic = ev.source.epic;
+  epic && attachCardEv(ev, ev.what, ev.source, 'IMMORTALITY');
+  chooseOptionEv(ev, "Choose a team", Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").map(t => ({l:t,v:t})), team => eachPlayer(p => {
+    epic ? selectCardOptEv(ev, "Choose a Hero to KO", p.hand.limit(team), c => KOEv(ev, c), () => gainWoundToDeckEv(ev, p), p) :
+    selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(team), c => discardEv(ev, c), () => gainWoundEv(ev, p), p);
+  }));
+}, [
+  [ "Unite All Mutantkind", ev => {
+  // Each other player chooses one of their X-Men, X-Force, X-Factor, or Brotherhood Heroes to enter the city as a Villain with Attack equal to its cost and "<b>Fight</b>: Gain this as a Hero." If no card enters the city this way, then each player gains a Wound.
+    const teams = Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood");
+    let safe = false;
+    eachOtherPlayerVM(p => {
+      const options = yourHeroes(p).limit(c => teams.includes(c.team));
+      if (options.size > 0) {
+        safe = true;
+        selectCardEv(ev, "Choose a Hero to enter city", options, c => {
+          villainify(c.cardName, c, c => c.cost, "GAIN");
+          enterCityEv(ev, c);
+        }, p);
+      }
+    });
+    safe || eachPlayer(p => gainWoundEv(ev, p));
+  } ],
+  [ "Omega-Level Mutant", ev => {
+  // Each other player reveals their hand, discards all their cards that cost 1 or more, then draws that many cards.
+    eachOtherPlayerVM(p => {
+      // TODO: reveal hand
+      const count = p.hand.count(c => c.cost >= 1);
+      p.hand.limit(c => c.cost >= 1).each(c => discardEv(ev, c));
+      drawEv(ev, count, p);
+    });
+  } ],
+  [ "Avalon, Asteroid Haven", ev => {
+  // You may gain a X-Men, X-Force, X-Factor, or Brotherhood Hero from the HQ. Each other player discards two cards that aren't any of those teams.
+    const teams = Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood");
+    selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => teams.includes(c.team)), c => gainEv(ev, c));
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", 2, p.hand.limit(c => !teams.includes(c.team)), c => discardEv(ev, c), p));
+  } ],
+  [ "Resurrect the Dead", ev => {
+  // Choose a player. That player gains a X-Men, X-Force, X-Factor, or Brotherhood from the KO pile, then chooses a Non-Henchmen Villain from their Victory Pile to enter the city.
+    const teams = Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood");
+    choosePlayerEv(ev, p => {
+      selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(c => teams.includes(c.team)), c => {
+        gainEv(ev, c, p);
+        selectCardEv(ev, "Choose a Villain to enter", p.victory.limit(c => !isHenchman(c)), c => enterCityEv(ev, c), p);
+      }, p);
+    });
+  } ],
+], {
+  cardActions: [
+    (c, ev) => { return new Ev(ev, "EFFECT", { what: c, cost: { recruit: c.epic ? 2 + c.attachedDeck('IMMORTALITY').size : 3 }, func: ev => {
+      shatterEv(ev, ev.what);
+    }}); },
+  ]
+}),
 ]);
 addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
 // EPICNAME: Dormammu
