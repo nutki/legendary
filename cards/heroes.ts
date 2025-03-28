@@ -5912,7 +5912,7 @@ addHeroTemplates("Messiah Complex", [
     ev => superPower(Color.TECH) && cloneHeroEv(ev) ]),
 // You get +1 Attack for each card name that you played at least twice this turn.
 // {POWER Tech} {CLONE}
-  uc: makeHeroCard("Multiple Man", "Perfect Match", 4, u, 1, Color.TECH, "X-Factor", "", [
+  c3: makeHeroCard("Multiple Man", "Perfect Match", 4, u, 1, Color.TECH, "X-Factor", "", [
     ev => addAttackEvent(ev, turnState.cardsPlayed.unique(c => c.cardName).count(cardName => [...turnState.cardsPlayed, ev.source].count(c => c.cardName === cardName) >= 2)),
     ev => superPower(Color.TECH) && cloneHeroEv(ev) ]),
 // {TACTICAL FORMATION 44}: You may KO a card from your hand or discard pile.
@@ -5933,7 +5933,7 @@ addHeroTemplates("Messiah Complex", [
     { whenRecruited: ev => superPower(Color.INSTINCT) && cloneHeroEv(ev) }),
 // {WHEN RECRUITED} [Ranged]: {CLONE}
 // {TACTICAL FORMATION 55}: You get +1 Attack.
-  uc: makeHeroCard("Shatterstar", "Bioelectric Surge", 5, u, 2, Color.RANGED, "X-Force", "D", ev => tacticalFormation('55') && addAttackEvent(ev, 1),
+  c3: makeHeroCard("Shatterstar", "Bioelectric Surge", 5, u, 2, Color.RANGED, "X-Force", "D", ev => tacticalFormation('55') && addAttackEvent(ev, 1),
     { whenRecruited: ev => superPower(Color.RANGED) && cloneHeroEv(ev) }),
 // {WHEN RECRUITED} X-Force: {CLONE}
 // [Ranged] , [Instinct]: {SHATTER} the Mastermind.
@@ -5959,7 +5959,7 @@ addHeroTemplates("Messiah Complex", [
 // {WHEN RECRUITED} {CLONE}
 // {TACTICAL FORMATION 22}: You get +1 Attack.
 // {TACTICAL FORMATION 33}: Reveal the top card of the Villain Deck. If it's a Master Strike you get +1 Attack and you may shuffle the Villain Deck.
-  uc: makeHeroCard("Stepford Cuckoos", "Telepathic Warning", 3, u, 2, Color.RANGED, "X-Men", "D", [
+  c3: makeHeroCard("Stepford Cuckoos", "Telepathic Warning", 3, u, 2, Color.RANGED, "X-Men", "D", [
     ev => tacticalFormation('22') && addAttackEvent(ev, 1),
     ev => {
       let hasStrike = false;
@@ -5996,7 +5996,7 @@ addHeroTemplates("Messiah Complex", [
 // {WHEN RECRUITED} [Strength]: {CLONE}
 // Draw a card.
 // {TACTICAL FORMATION 333}: You get +2 Attack.
-  uc: makeHeroCard("M", "Three Sisters Combined", 3, u, 0, Color.STRENGTH, "X-Factor", "D", [
+  c3: makeHeroCard("M", "Three Sisters Combined", 3, u, 0, Color.STRENGTH, "X-Factor", "D", [
     ev => drawEv(ev), ev => tacticalFormation('333') && addAttackEvent(ev, 2)
   ], { whenRecruited: ev => superPower(Color.STRENGTH) && cloneHeroEv(ev) }),
 // {WHEN RECRUITED} X-Factor: {CLONE}

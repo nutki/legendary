@@ -4413,8 +4413,9 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Reavers", "Donald Pierce", 6, 4, {
-    ambush: ev => preyEv(ev, p => -p.hand.count(Color.TECH), () => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY))),
-    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(c => !isColor(Color.GRAY))),
+    ambush: ev => preyEv(ev, p => -p.hand.count(Color.TECH)),
+    finishThePrey: ev => selectCardAndKOEv(ev, yourHeroes().limit(isNonGrayHero), ev.who),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY)),
   })],
 // AMBUSH: <b>Prey</b> on the fewest [Strength].
 // <b>Finish the Prey</b>: That player gains a Wound to the top of their deck.
@@ -4422,7 +4423,8 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Reavers", "Bonebreaker", 5, 3, {
-    ambush: ev => preyEv(ev, p => -p.hand.count(Color.STRENGTH), ev => gainWoundToDeckEv(ev)),
+    ambush: ev => preyEv(ev, p => -p.hand.count(Color.STRENGTH)),
+    finishThePrey: ev => gainWoundToDeckEv(ev, ev.who),
     fight: ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))
   })],
 // AMBUSH: <b>Prey</b> on the fewest [Ranged]. Skullbuster captures one Bystander from the Bystander Stack and two Bystanders from that player's Victory Pile of their choice.
@@ -4431,14 +4433,15 @@ addVillainTemplates("Messiah Complex", [
 // VP: 3
   [ 2, makeVillainCard("Reavers", "Skullbuster", 5, 3, {
     ambush: ev => {
-      preyEv(ev, p => -p.hand.count(Color.RANGED), ev => {
-        ev.source.captured.limit(isBystander).each(c => KOEv(ev, c));
-        eachPlayer(p => pickDiscardEv(ev, 1, p));
-      }, p => {
+      preyEv(ev, p => -p.hand.count(Color.RANGED), p => {
         captureEv(ev, ev.source);
         selectObjectsEv(ev, "Choose two Bystanders to capture", 2, p.victory.limit(isBystander), c => captureEv(ev, ev.source, c));
       });
     },
+    finishThePrey: ev => {
+      ev.source.captured.limit(isBystander).each(c => KOEv(ev, c));
+      eachPlayer(p => pickDiscardEv(ev, 1, p));
+    }
   })],
 // AMBUSH: <b>Prey</b> on the fewest [Covert].
 // <b>Finish the Prey</b>: That player discards a card.
@@ -4446,14 +4449,15 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 2
 // VP: 2
   [ 2, makeVillainCard("Reavers", "Pretty Boy", 2, 2, {
-    ambush: ev => preyEv(ev, p => -p.hand.count(Color.COVERT), ev => pickDiscardEv(ev)),
+    ambush: ev => preyEv(ev, p => -p.hand.count(Color.COVERT)),
     fight: ev => withPlayerDeckTopEv(ev, c => {
       discardEv(ev, c);
       if (hasRecruitIcon(c)) {
         addRecruitEvent(ev, 1);
-        preyEv(ev, p => -p.hand.count(Color.COVERT), ev => pickDiscardEv(ev));
+        preyEv(ev, p => -p.hand.count(Color.COVERT));
       }
     }),
+    finishThePrey: ev => pickDiscardEv(ev, 1, ev.who),
   })],
 ]},
 { name: "Purifiers", cards: [
@@ -4464,9 +4468,10 @@ addVillainTemplates("Messiah Complex", [
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
     variant: 'COVERT',
     ambush: ev => {
-      preyEv(ev, p => p.hand.count(Color.COVERT), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.COVERT) ? Color.COVERT : isNonGrayHero));
+      preyEv(ev, p => p.hand.count(Color.COVERT));
       cloneVillainEv(ev);
     },
+    finishThePrey: ev => pickDiscardEv(ev, 1, ev.who, ev.who.hand.has(Color.COVERT) ? Color.COVERT : isNonGrayHero),
   })],
 // AMBUSH: <b>Prey</b> on the most [Instinct]. {CLONE}.
 // <b>Finish the Prey</b>: That player discards a [Instinct] Hero. If they can't, they discard any non-grey Hero instead.
@@ -4475,9 +4480,10 @@ addVillainTemplates("Messiah Complex", [
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
     variant: 'INSTINCT',
     ambush: ev => {
-      preyEv(ev, p => p.hand.count(Color.INSTINCT), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.INSTINCT) ? Color.INSTINCT : isNonGrayHero)),
+      preyEv(ev, p => p.hand.count(Color.INSTINCT)),
       cloneVillainEv(ev);
-    }
+    },
+    finishThePrey: ev => pickDiscardEv(ev, 1, ev.who, ev.who.hand.has(Color.INSTINCT) ? Color.INSTINCT : isNonGrayHero),
   })],
 // AMBUSH: <b>Prey</b> on the most [Ranged]. {CLONE}.
 // <b>Finish the Prey</b>: That player discards a [Ranged] Hero. If they can't, they discard any non-grey Hero instead.
@@ -4486,9 +4492,10 @@ addVillainTemplates("Messiah Complex", [
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
     variant: 'RANGED',
     ambush: ev => {
-      preyEv(ev, p => p.hand.count(Color.RANGED), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.RANGED) ? Color.RANGED : isNonGrayHero)),
+      preyEv(ev, p => p.hand.count(Color.RANGED)),
       cloneVillainEv(ev);
-    }
+    },
+    finishThePrey: ev => pickDiscardEv(ev, 1, ev.who, ev.who.hand.has(Color.RANGED) ? Color.RANGED : isNonGrayHero),
   })],
 // AMBUSH: <b>Prey</b> on the most [Strength]. {CLONE}.
 // <b>Finish the Prey</b>: That player discards a [Strength] Hero. If they can't, they discard any non-grey Hero instead.
@@ -4497,9 +4504,10 @@ addVillainTemplates("Messiah Complex", [
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
     variant: 'STRENGTH',
     ambush: ev => {
-      preyEv(ev, p => p.hand.count(Color.STRENGTH), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.STRENGTH) ? Color.STRENGTH : isNonGrayHero)),
+      preyEv(ev, p => p.hand.count(Color.STRENGTH)),
       cloneVillainEv(ev);
-    }
+    },
+    finishThePrey: ev => pickDiscardEv(ev, 1, ev.who, ev.who.hand.has(Color.STRENGTH) ? Color.STRENGTH : isNonGrayHero),
   })],
 // AMBUSH: <b>Prey</b> on the most [Tech]. {CLONE}.
 // <b>Finish the Prey</b>: That player discards a [Tech] Hero. If they can't, they discard any non-grey Hero instead.
@@ -4508,9 +4516,10 @@ addVillainTemplates("Messiah Complex", [
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
     variant: 'TECH',
     ambush: ev => {
-      preyEv(ev, p => p.hand.count(Color.TECH), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.TECH) ? Color.TECH : isNonGrayHero)),
+      preyEv(ev, p => p.hand.count(Color.TECH)),
       cloneVillainEv(ev);
-    }
+    },
+    finishThePrey: ev => pickDiscardEv(ev, 1, ev.who, ev.who.hand.has(Color.TECH) ? Color.TECH : isNonGrayHero),
   })],
 // AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood
 // <b>Finish the Prey</b>: That player gains a Wound and KOs two Bystanders from their Victory Pile.
@@ -4518,10 +4527,11 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 4
 // VP: 2
   [ 1, makeVillainCard("Purifiers", "Leper Queen", 4, 2, {
-    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), ev => {
-      gainWoundEv(ev);
-      selectObjectsEv(ev, "Choose cards to KO", 2, playerState.victory.limit(isBystander), c => KOEv(ev, c));
-    }),
+    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team))),
+    finishThePrey: ev => {
+      gainWoundEv(ev, ev.who);
+      selectObjectsEv(ev, "Choose cards to KO", 2, ev.who.victory.limit(isBystander), c => KOEv(ev, c), ev.who);
+    },
     fight: ev => repeat(2, () => cont(ev, () => gameState.bystanders.withTop(c => shuffleIntoEv(ev, c, gameState.villaindeck)))),
   })],
 // AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood. Stryker captures on Sidekick from the Sidekick Stack and two Sidekicks from that player's hand and/or discard pile of their choice.
@@ -4530,12 +4540,11 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Purifiers", "Reverend William Stryker", 5, 3, {
-    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), ev => {
-      ev.source.attachedDeck('GAIN_CAPTURE').limit(isSidekick).each(c => KOEv(ev, c));
-    }, p => {
+    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), p => {
       gameState.sidekick.withTop(c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE'));
       selectObjectsEv(ev, "Choose two Sidekicks to capture", 2, handOrDiscard().limit(isSidekick), c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE'));
     }),
+    finishThePrey: ev => ev.source.attachedDeck('GAIN_CAPTURE').limit(isSidekick).each(c => KOEv(ev, c)),
     fight: ev => ev.source.attachedDeck('GAIN_CAPTURE').limit(isSidekick).each(c => gainEv(ev, c)),
   })],
 // AMBUSH: <b>Prey</b> on the most X-Men + X-Force + X-Factor + Brotherhood. Cameron Hodge captures one of that player's non-grey Heroes of their choice.
@@ -4544,11 +4553,10 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("Purifiers", "Cameron Hodge", 6, 4, {
-    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), ev => {
-      ev.source.attachedDeck('GAIN_CAPTURE').limit(isNonGrayHero).each(c => KOEv(ev, c));
-    }, p => {
+    ambush: ev => preyEv(ev, p => Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").sum(team => p.hand.count(team)), p => {
       selectCardEv(ev, "Choose a hero to capture", playerState.hand.limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'GAIN_CAPTURE'));
     }),
+    finishThePrey: ev => ev.source.attachedDeck('GAIN_CAPTURE').limit(isNonGrayHero).each(c => KOEv(ev, c)),
     fight: ev => ev.source.attachedDeck('GAIN_CAPTURE').limit(isNonGrayHero).each(c => gainEv(ev, c)),
   })],
 ]},

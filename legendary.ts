@@ -118,6 +118,7 @@ interface Card {
   mastermindName?: string;
   whenRecruited?: Handler;
   variant?: string;
+  finishThePrey?: Handler
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -144,6 +145,7 @@ interface VillainCardAbillities {
   modifiers?: Modifiers;
   cosmicThreat?: Filter<Card>;
   variant?: string;
+  finishThePrey?: Handler
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -160,6 +162,7 @@ interface MastermindCardAbillities {
   sizeChanging?: number
   chivalrousDuel?: boolean
   cosmicThreat?: Filter<Card>;
+  finishThePrey?: Handler
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -781,7 +784,9 @@ interface Templates {
     name: string
     c1: Card
     c2: Card
-    uc: Card
+    c3?: Card
+    uc?: Card
+    u2?: Card
     ra: Card
   }[]
   HENCHMEN: (Card | {
@@ -824,7 +829,8 @@ function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS'
 }
 function addHeroTemplates(set: string, templates: Templates['HEROES']) {
   templates.forEach(t => {
-    t.set = t.c1.set = t.c2.set = t.uc.set = t.ra.set = set;
+    t.set = set;
+    for (const c of [t.c1, t.c2, t.c3, t.uc, t.u2, t.ra]) if (c) c.set = set;
     t.templateId = t.name;
     if (findHeroTemplate(t.templateId)) t.templateId += '@' + set;
     cardTemplates.HEROES.push(t);
@@ -1380,10 +1386,10 @@ gameState.players.forEach(p => {
 });
 // Init hero deck and populate initial HQ
 gameSetup.heroes.map(findHeroTemplate).forEach(h => {
-  gameState.herodeck.addNewCard(h.c1, 5);
-  gameState.herodeck.addNewCard(h.c2, 5);
-  gameState.herodeck.addNewCard(h.uc, 3);
-  gameState.herodeck.addNewCard(h.ra);
+  const cards: [Card, number][] =
+    h.uc ? [[h.c1, 5], [h.c2, 5], [h.uc, 3], [h.ra, 1]] :
+           [[h.c1, 4], [h.c2, 4], [h.c3, 4], [h.ra, 2]]; // Messiah Complex clone heroes
+  for (const [c, n] of cards) gameState.herodeck.addNewCard(c, n);
 });
 gameState.herodeck.shuffle();
 // Init auxiliary decks
@@ -2080,8 +2086,8 @@ function gainBindingsEv(ev: Ev, who: Player = playerState): void {
 function gainWoundToHandEv(ev: Ev, who: Player = playerState): void {
   cont(ev, () => gameState.wounds.withTop(c => gainToHandEv(ev, c, who)));
 }
-function gainWoundToDeckEv(ev: Ev, who: Player = playerState): void {
-  cont(ev, () => gameState.wounds.withTop(c => gainToDeckEv(ev, c, who)));
+function gainWoundToDeckEv(ev: Ev, who: Player = playerState, bottom: boolean = false): void {
+  cont(ev, () => gameState.wounds.withTop(c => gainToDeckEv(ev, c, who, bottom)));
 }
 function cont(ev: Ev, func: (ev: Ev) => void): void { pushEv(ev, "EFFECT", func); }
 function pushEv(ev: Ev, name: EvType, params: EvParams | ((ev: Ev) => void)): Ev { let nev = new Ev(ev, name, params); pushEvents(nev); return nev; }
@@ -2412,9 +2418,9 @@ function gainToHandEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
   pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.hand });;
 }
-function gainToDeckEv(ev: Ev, card: Card, who?: Player) {
+function gainToDeckEv(ev: Ev, card: Card, who?: Player, bottom: boolean = false) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.deck });;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where, ev.bottom), what: card, who, where: who.deck, bottom });;
 }
 function gainSoaringEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
