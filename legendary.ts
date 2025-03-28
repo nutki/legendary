@@ -117,6 +117,7 @@ interface Card {
   cosmicThreat?: Filter<Card>;
   mastermindName?: string;
   whenRecruited?: Handler;
+  variant?: string;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -142,6 +143,7 @@ interface VillainCardAbillities {
   chivalrousDuel?: boolean
   modifiers?: Modifiers;
   cosmicThreat?: Filter<Card>;
+  variant?: string;
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  

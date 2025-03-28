@@ -16,6 +16,7 @@ function imageName(path: string, card: Card, subname?: string): string {
   let name = card.cardName;
   if (!name) name = subname;
   else if (subname !== undefined) name = subname + "_" + name;
+  if (card.variant) name = name + "_" + card.variant;
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
   return "images/" + (card.set || 'Legendary') + '/' + path + "/" + name + ".jpg";
 }

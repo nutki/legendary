@@ -4462,6 +4462,7 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 3
 // VP: 2
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    variant: 'COVERT',
     ambush: ev => {
       preyEv(ev, p => p.hand.count(Color.COVERT), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.COVERT) ? Color.COVERT : isNonGrayHero));
       cloneVillainEv(ev);
@@ -4472,6 +4473,7 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 3
 // VP: 2
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    variant: 'INSTINCT',
     ambush: ev => {
       preyEv(ev, p => p.hand.count(Color.INSTINCT), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.INSTINCT) ? Color.INSTINCT : isNonGrayHero)),
       cloneVillainEv(ev);
@@ -4482,6 +4484,7 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 3
 // VP: 2
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    variant: 'RANGED',
     ambush: ev => {
       preyEv(ev, p => p.hand.count(Color.RANGED), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.RANGED) ? Color.RANGED : isNonGrayHero)),
       cloneVillainEv(ev);
@@ -4492,6 +4495,7 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 3
 // VP: 2
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    variant: 'STRENGTH',
     ambush: ev => {
       preyEv(ev, p => p.hand.count(Color.STRENGTH), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.STRENGTH) ? Color.STRENGTH : isNonGrayHero)),
       cloneVillainEv(ev);
@@ -4502,6 +4506,7 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 3
 // VP: 2
   [ 1, makeVillainCard("Purifiers", "Predator X", 3, 2, {
+    variant: 'TECH',
     ambush: ev => {
       preyEv(ev, p => p.hand.count(Color.TECH), ev => pickDiscardEv(ev, 1, playerState, playerState.hand.has(Color.TECH) ? Color.TECH : isNonGrayHero)),
       cloneVillainEv(ev);

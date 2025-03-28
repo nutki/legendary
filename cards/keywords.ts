@@ -894,12 +894,18 @@ function cloneHeroEv(ev: Ev) {
     cont(ev, () => gameState.herodeck.shuffle());
   }
 }
-function cloneVillainEv(ev: Ev) {
-  const cardName = ev.source.cardName;
-  gameState.villaindeck.limit(c => c.cardName === cardName).withFirst(c => {
-    enterCityEv(ev, c); // TODO no clone effect
-  });
+function _cloneVillain(ev: Ev) {
+  const cardName = ev.parent.source.cardName;
+  gameState.villaindeck.limit(c => c.cardName === cardName).withFirst(c => enterCityEv(ev, c));
   cont(ev, () => gameState.villaindeck.shuffle());
+}
+function cloningInProgress(ev: Ev) {
+  for (let e = ev; e; e = e.parent) if (e.func === _cloneVillain) return true;
+  return false;
+}
+
+function cloneVillainEv(ev: Ev) {
+  cloningInProgress(ev) || cont(ev, _cloneVillain);
 }
 function shatterSelectEv(ev: Ev, c: Card[]) {
   selectCardEv(ev, "Choose a card to shatter", c, c => shatterEv(ev, c));
