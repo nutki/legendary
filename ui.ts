@@ -21,6 +21,7 @@ function imageName(path: string, card: Card, subname?: string): string {
   return "images/" + (card.set || 'Legendary') + '/' + path + "/" + name + ".jpg";
 }
 function cardImageName(card: Card): string {
+  if (card.cardType === "HERO" && card.heroName === "Special Sidekick") return imageName("sidekicks", card);
   if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
   if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
   if (card.cardType === "VILLAIN") return imageName("villains", card, card.villainGroup);
@@ -247,9 +248,9 @@ function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name'
     makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.templateId === name);
   });
 }
-function makeBystanderSelects(id: string) {
+function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTANDERS') {
   const e = document.getElementById(id);
-  cardTemplates.BYSTANDERS.each(({set}) => {
+  cardTemplates[templateType].each(({set}) => {
     const i = document.createElement('input');
     i.setAttribute('data-set', set);
     i.type = "checkbox";
@@ -294,9 +295,8 @@ function setupChange(): void {
   const s4 = getSelects("setup_mastermind", tmp.mastermind);
   tmp.bystanders = getBystanderSelects("setup_bystanders");
   tmp.withOfficers = (<HTMLInputElement>document.getElementById('withOfficers')).checked;
-  tmp.withSidekicks = (<HTMLInputElement>document.getElementById('withSidekicks')).checked;
+  tmp.sidekicks = getBystanderSelects("setup_sidekicks");
   tmp.withSpecialOfficers = (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked;
-  tmp.withSpecialSidekicks = (<HTMLInputElement>document.getElementById('withSpecialSidekicks')).checked;
   tmp.withWounds = true;
   tmp.withBindings = true;
   tmp.withMadame = (<HTMLInputElement>document.getElementById('withMadame')).checked;
@@ -308,6 +308,7 @@ function setupChange(): void {
 }
 function setupInit(): void {
   makeBystanderSelects("setup_bystanders");
+  makeBystanderSelects("setup_sidekicks", 'SIDEKICKS');
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
   makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Extra Mastermind", [ undefined ]);
@@ -337,12 +338,11 @@ function setupSet(s: Setup): void {
   (<HTMLInputElement>document.getElementById('withMadame')).checked = s.withMadame;
   (<HTMLInputElement>document.getElementById('withNewRecruits')).checked = s.withNewRecruits;
   (<HTMLInputElement>document.getElementById('withOfficers')).checked = s.withOfficers;
-  (<HTMLInputElement>document.getElementById('withSidekicks')).checked = s.withSidekicks;
   (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked = s.withSpecialOfficers;
-  (<HTMLInputElement>document.getElementById('withSpecialSidekicks')).checked = s.withSpecialSidekicks;
   (<HTMLSelectElement>document.getElementById('handType')).value = s.handType;
   (<HTMLSelectElement>document.getElementById('cityType')).value = s.cityType;
   setBysternderSelects("setup_bystanders", s.bystanders);
+  setBysternderSelects("setup_sidekicks", s.sidekicks);
   globalFormSetup = s;
 }
 function getPopups() {

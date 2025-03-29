@@ -45,10 +45,10 @@ const shardTemplate = makeShardToken();
 
 // EXPANSION Secret Wars Volume 1
 
-const sidekickTemplate = makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
+addTemplatesWithCounts("SIDEKICKS", "Secret Wars Volume 1", [
+[15, makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
   chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.sidekick) && drawEv(ev, 2));
-});
-sidekickTemplate.set = "Secret Wars Volume 1";
+})]]);
 
 function makeAmbitionCard(name: string, defense: number, fight: Handler, starting: boolean = false) {
   const card = new Card('AMBITION', name);
@@ -168,7 +168,7 @@ const civilWarWounds: [number, Card][] =  [
 ];
 civilWarWounds.forEach(([n, c]) => c.set = "Civil War");
 
-const specialSidekickTemplates: [number, Card][] = [
+addTemplatesWithCounts("SIDEKICKS", "Civil War", [
 // Draw a card.
 // Put this on the bottom of the Sidekick Stack.
 [ 3, makeHeroCard("Special Sidekick", "Hairball", 2, u, 1, Color.COVERT, "Avengers", "FD", [ ev => drawEv(ev, 1), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
@@ -195,8 +195,7 @@ const specialSidekickTemplates: [number, Card][] = [
 }, ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // KO a card from your hand or discard pile. Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Zabu", 2, u, u, Color.INSTINCT, "Avengers", "FD", [ ev => KOHandOrDiscardEv(ev), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
-];
-specialSidekickTemplates.forEach(([n, c]) => c.set = "Civil War");
+]);
 
 // EXPANSION X-Men
 
@@ -296,3 +295,60 @@ const shieldOfficerTemplates: [number, Card][] = [
 }) ],
 ];
 shieldOfficerTemplates.forEach(([n, c]) => c.set = "S.H.I.E.L.D.");
+
+addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
+// Choose a team. {INVESTIGATE} for a card of that team.
+// Put this on the bottom of the Sidekick Stack.
+[ 2, makeHeroCard("Special Sidekick", "Layla Miller", 2, u, 1, Color.TECH, "X-Factor", "D", [ ev => {
+  const teams = [...playerState.deck.deck, ...playerState.discard.deck].unique(c => c.team).map(v => ({l:v, v}));
+  chooseOptionEv(ev, "Choose a team", teams, t => investigateEv(ev, t));
+}, ev => returnToStackEv(ev, gameState.sidekick) ]) ],
+// If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
+// Put this on the bottom of the Sidekick Stack.
+[ 2, makeHeroCard("Special Sidekick", "Skids", 2, 3, u, Color.COVERT, "X-Men", "D", ev => returnToStackEv(ev, gameState.sidekick), { trigger: {
+  event: "GAIN",
+  match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
+  replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
+    discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
+  }, () => doReplacing(ev), owner(ev.source))
+}}) ],
+// {SHATTER} a Villain.
+// Put this on the bottom of the Sidekick Stack.
+[ 2, makeHeroCard("Special Sidekick", "Rockslide", 2, u, u, Color.STRENGTH, "X-Men", "FD", [ ev => shatterSelectEv(ev, fightableCards().limit(isVillain)), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
+// If the most recent Hero you previously played this turn has a Recruit icon, you get +2 Recruit. If it has a Attack icon, you get +2 Attack. (If both, you get both.)
+// Put this on the bottom of the Sidekick Stack.
+[ 2, makeHeroCard("Special Sidekick", "Darwin", 2, 0, 0, Color.INSTINCT, "X-Factor", "D", [
+  ev => turnState.cardsPlayed.withLast(c => hasRecruitIcon(c) && addRecruitEvent(ev, 2)),
+  ev => returnToStackEv(ev, gameState.sidekick) ]
+)],
+// Choose one of her nicknames:
+// <ul>
+//     <li><b>“Time Bomb”</b>: You get +1 Attack and put this on top of your deck.</li>
+//     <li><b>“Boomer”</b>: You get +3 Attack and put this on the bottom of the Sidekick Stack.</li>
+//     <li><b>“Meltdown”</b>: You get +4 Attack, KO this, and gain a Wound.</li>
+// </ul>
+[ 2, makeHeroCard("Special Sidekick", "Boom-Boom", 2, u, u, Color.RANGED, "X-Force", "D", ev => {
+  chooseOneEv(ev, "Choose a nickname",
+    [ "Time Bomb", () => { addAttackEvent(ev, 1); moveCardEv(ev, ev.source, playerState.deck); }],
+    [ "Boomer", () => { addAttackEvent(ev, 3); returnToStackEv(ev, gameState.sidekick); }],
+    [ "Meltdown", () => { addAttackEvent(ev, 4); KOEv(ev, ev.source); gainWoundEv(ev); }]
+  );
+}) ],
+// Play this card as a copy of another Hero you played this turn that costs 6 or less. This card is both [Tech] and the Hero Class you copy.
+// Put this on the bottom of the Sidekick Stack.
+[ 2, makeHeroCard("Special Sidekick", "Prodigy", 2, u, u, Color.TECH, "X-Men", "D", ev => returnToStackEv(ev, gameState.sidekick), {
+  copyPasteCard: true,
+  copyPasteLimit: c => c.cost <= 6,
+  trigger: {
+    event: 'PLAY',
+    match: (ev, source) => ev.what === source,
+    after: ev => moveCardEv(ev, ev.parent.what, gameState.sidekick, true)
+  }
+}) ],
+// {INVESTIGATE} your deck for a card that costs 0. KO it or discard it.
+// Put this on the bottom of the Sidekick Stack.
+[ 2, makeHeroCard("Special Sidekick", "Rusty \"Firefist\" Collins", 2, u, 1, Color.RANGED, "X-Men", "D", [
+  ev => investigateEv(ev, c => c.cost === 0, playerState.deck, c => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c))),
+  ev => returnToStackEv(ev, gameState.sidekick)
+]) ],
+]);

@@ -78,6 +78,7 @@ interface Card {
   effects?: ((ev: Ev) => void)[]
   strike?: (ev: Ev) => void
   copyPasteCard?: boolean
+  copyPasteLimit?: Filter<Card>
   heroName?: string
   printedVillainGroup?: string
   leads?: string
@@ -179,6 +180,7 @@ interface HeroCardAbillities {
   playCostType?: 'TOPDECK' | 'DISCARD' | 'BOTTOMDECK';
   playCostLimit?: (c: Card) => boolean;
   copyPasteCard?: boolean
+  copyPasteLimit?: Filter<Card>
   teleport?: boolean
   soaring?: boolean
   wallcrawl?: boolean
@@ -808,6 +810,11 @@ interface Templates {
     cards: [number, Card][]
   }[]
   AMBITIONS: Card[]
+  SIDEKICKS: {
+    set?: string
+    templateId?: string
+    cards: [number, Card][]
+  }[]
 }
 // Card definitions
 let cardTemplates: Templates = {
@@ -818,6 +825,7 @@ let cardTemplates: Templates = {
   SCHEMES: [],
   BYSTANDERS: [],
   AMBITIONS: [],
+  SIDEKICKS: [],
 };
 function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS', set: string, templates: Card[]) {
   templates.forEach(t => {
@@ -844,13 +852,16 @@ function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
     cardTemplates.VILLAINS.push(t);
   });
 }
-function addBystanderTemplates(set: string, cards: [number, Card][]) {
+function addTemplatesWithCounts(type: 'BYSTANDERS' | 'SIDEKICKS', set: string, cards: [number, Card][]) {
   cards.forEach(c => c[1].set = set);
-  cardTemplates.BYSTANDERS.push({
+  cardTemplates[type].push({
     templateId: set,
     set,
     cards,
   });
+}
+function addBystanderTemplates(set: string, cards: [number, Card][]) {
+  addTemplatesWithCounts('BYSTANDERS', set, cards);
 }
 function addHenchmenTemplates(set: string, templates: Templates['HENCHMEN']) {
   templates.forEach(t => {
@@ -870,6 +881,7 @@ function findVillainTemplate(name: string) { return cardTemplates.VILLAINS.filte
 function findMastermindTemplate(name: string): Card { return cardTemplates.MASTERMINDS.filter(t => t.templateId === name)[0]; }
 function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.templateId === name)[0]; }
 function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.templateId === name)[0]; }
+function findSidekickTemplate(name: string) { return cardTemplates.SIDEKICKS.filter(t => t.templateId === name)[0]; }
 const u: undefined = undefined;
 
 function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
@@ -1094,8 +1106,7 @@ const exampleGameSetup: Setup = {
   bystanders: ["Legendary"],
   withOfficers: true,
   withSpecialOfficers: true,
-  withSidekicks: true,
-  withSpecialSidekicks: true,
+  sidekicks: ["Secret Wars Valume 1", "Civil War", "Messiah Complex"],
   withWounds: true,
   withMadame: true,
   withNewRecruits: true,
@@ -1159,8 +1170,7 @@ interface Setup {
   heroes: string[]
   bystanders: string[]
   withOfficers: boolean
-  withSidekicks: boolean
-  withSpecialSidekicks: boolean;
+  sidekicks: string[]
   withSpecialOfficers: boolean;
   withWounds: boolean
   withNewRecruits: boolean
@@ -1206,9 +1216,8 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     heroes: [],
     bystanders: undefined,
     withOfficers: undefined,
-    withSidekicks: undefined,
     withSpecialOfficers: undefined,
-    withSpecialSidekicks: undefined,
+    sidekicks: undefined,
     withWounds: undefined,
     withNewRecruits: undefined,
     withMadame: undefined,
@@ -1399,9 +1408,8 @@ if (gameSetup.withSpecialOfficers) {
   gameState.officer.faceup = false;
   gameState.officer.shuffle();
 }
-if (gameSetup.withSidekicks) gameState.sidekick.addNewCard(sidekickTemplate, 15);
-if (gameSetup.withSpecialSidekicks) {
-  specialSidekickTemplates.each(([n, c]) => gameState.sidekick.addNewCard(c, n));
+gameSetup.sidekicks.map(findSidekickTemplate).forEach(t => t.cards.forEach(c => gameState.sidekick.addNewCard(c[1], c[0])));
+if (gameState.sidekick.deck.uniqueCount(c => c.cardName) > 1) {
   gameState.sidekick.faceup = false;
   gameState.sidekick.shuffle();
 }
@@ -1411,7 +1419,7 @@ if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTempla
 if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
 if (gameSetup.withShards) gameState.shard.addNewCard(shardTemplate, getParam('shards'));
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
-if (gameSetup.bystanders.has(b => b !== 'Legendary')) {
+if (gameState.bystanders.deck.uniqueCount(b => b.cardName) > 1) {
   gameState.bystanders.faceup = false;
   gameState.bystanders.shuffle();
 }
@@ -2390,7 +2398,8 @@ function playCard(ev: Ev): void {
   if (!canPlay(ev.what)) return;
   moveCardEv(ev, ev.what, playerState.playArea);
   if (ev.what.copyPasteCard) {
-    selectCardEv(ev, "Choose a card to copy", turnState.cardsPlayed, target => {
+    const cards = ev.what.copyPasteLimit ? turnState.cardsPlayed.limit(ev.what.copyPasteLimit) : turnState.cardsPlayed;
+    selectCardEv(ev, "Choose a card to copy", cards, target => {
       makeCardCopyPaste(target, ev.what);
       if (canPlay(ev.what)) playCard1(ev);
     });
