@@ -1,0 +1,64 @@
+
+#CARDNAME: Ronan the Accuser
+#LEADS: Followers of Ronan
+#STRIKE: Each player discards a card at random. Ronan captures this Strike as a "Necrocraft Ship" {VILLAINOUS WEAPON} that gives +1 Attack. When you gain a Necrocraft ship, it becomes a <b>Triggered Artifact</b> that says "Whenever a Master Strike is completed, draw a card."
+#ATTACK: 6
+
+#EPICNAME: Ronan the Accuser
+#LEADS: Followers of Ronan
+#STRIKE: Each player with six or more cards in hand discards two cards at random. Ronan captures this Strike as a "Necrocraft Ship" {VILLAINOUS WEAPON} that gives +2 Attack. When you gain a Necrocraft ship, it becomes a <b>Triggered Artifact</b> that says "Whenever a Master Strike is completed, draw a card."
+#ATTACK: 7
+
+#TACTIC: Hood of the Accuser
+#FIGHT: KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
+---
+<b>Triggered Artifact</b> - Whenever a Master Strike is completed, you may KO one of your cards.
+#ATTACK: +4
+
+#TACTIC: Ancient Kree Armor
+#FIGHT: KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
+---
+<b>Triggered Artifact</b> - Whenever you gain your first Wound in any turn, you may KO it.
+#ATTACK: +5
+
+#TACTIC: The Cosmi-Rod Warhammer
+#FIGHT: KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
+---
+<b>Triggered Artifact</b> - Whenever you recruit a Hero from the HQ, you get +2 Attack.
+#ATTACK: +6
+
+#TACTIC: Ronan's Throne
+#FIGHT: KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
+---
+<b>Triggered Artifact</b> - Whenever a Scheme Twist is completed, draw two cards.
+#ATTACK: +3
+
+#CARDNAME: Ego, The Living Planet
+Ego gets +1 Attack for each city space. When there are no more city spaces, Good Wins.
+#LEADS: Any Villain Group, plus add an additional Villain Group <i>(even for 1 player).</i>
+#STRIKE: Create an extra city space on the left side of the city. If there are at least 3 Villains in the city, each player gains a Wound. Play another card from the Villain Deck.
+#ATTACK: 3+
+
+#EPICNAME: Ego, The Living Planet
+Ego gets +2 Attack for each city space. When there are no more city spaces, Good Wins.
+#LEADS: Any Villain Group, plus add two additional Villain Group <i>(even for 1 player).</i>
+#STRIKE: This Strike becomes an extra city space to the left side of the city. If there are at least 2 Villains in the city, each player gains a Wound. Play two cards from the Villain Deck.
+#ATTACK: 1+
+
+#TACTIC: Until Everything Is . . . Me!
+#FIGHT: Rescue three Bystanders.
+Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+
+#TACTIC: I'm a Celestial, Sweetheart
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
+Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+
+#TACTIC: The Expansion Is My Purpose
+#FIGHT: You get +1 Recruit for each empty city space.
+Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+
+#TACTIC: Cover All That Exists
+#FIGHT: You may KO one of your Heroes. Choose a Henchman from any Victory Pile to enter the city.
+Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+
+

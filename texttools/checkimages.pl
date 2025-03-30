@@ -29,7 +29,7 @@ for $type (@inputkeys) {
   }
   sub checkimage {
     my $dir = shift @_;
-    my $name = join' ',@_;
+    my $name = join' ',grep$_,@_;
     print "[\"$dir\",\"$name\"],\n";
     $imagename = $dir."/".((lc$name) =~ y/ /_/r =~ s/[^_a-z0-9]//gr).".jpg";
     $imagename = "$exp/$imagename" if $exp ne 'Legendary';

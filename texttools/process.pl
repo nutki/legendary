@@ -129,6 +129,7 @@ while (<A>) {
     s!<b>Clone</b>!{CLONE}!g;
     s!<b>Tactical Formation (\d+)</b>!{TACTICAL FORMATION $1}!g;
     s!<b>Investigate</b>!{INVESTIGATE}!g;
+    s!<b>Excessive Kindness</b>:?!{KINDNESS}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;

@@ -1,0 +1,28 @@
+
+#CARDNAME: Inescapable "Kyln" Space Prison
+#SETUP: 8 Twists. Add an extra Villain Group.
+#RULE: Heroes that start in or enter the HQ are "Imprisoned" face down, can't be recruited, and cost 0. You can spend 1Attack each to flip them face up.
+#TWIST: Spend this amount this turn "for the escape plan" or else after you draw your new hand, gain a Wound then Imprison and mix up all Heroes in the HQ.
+<b>Twist 1-3: 3</b> Attack (Quarnyx Battery)
+<b>Twist 4-5: 5</b> Attack (Prison Control Device)
+<b>Twist 6: 6</b> Recruit (That Guy's Leg)
+<b>Twist 7: 7</b> Attack (Cassette Player)
+#TWISTNR: NR[8] Evil wins!
+
+#CARDNAME: Provoke the Sovereign War Fleet
+#SETUP: 11 Twists. Add an extra Villain Group.
+#TWIST: This Twist enters the city as a 2 Attack "Sovereign Omnicraft" Villain worth 1VP with "<b>Fight</b>: You get +1 Recruit." Each player shuffles all Twists from their Victory Piles back into the Villain Deck. Play another card from the Villain Deck.
+#EVILWINS: When 3 Omnicraft escape.
+
+#CARDNAME: Star-Lord's Awesome Mix Tape
+#SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups, but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
+#TWIST: KO all Heroes from HQ. Villains in the Sewers and Bridge swap spaces. Likewise Villains in the Bank and Streets.
+#EVILWINS: When there are 32 non-grey Heroes in the KO pile.
+
+#CARDNAME: Unleash the Abilisk Space Monster
+#SETUP: 9 Twists.
+#TWISTNR: NR[1-8] Put this Twist next the the Scheme as an "Abilisk Tentacle" Villain worth 4VP. It captures a non-grey Hero from your discard pile. Its Attack is 3 + the cost of that Hero. It has "<b>Fight</b>: KO one of your grey Heroes." A player of your choice gains the captured Hero." 2+ players:The player on your right plays a Tentacle from their Victory Pile, capturing from them.
+#TWISTNR: NR[9] Replay all the captured Tentacles.
+#EVILWINS: When there are 5 Tentacles.
+
+

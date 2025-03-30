@@ -1,0 +1,304 @@
+
+#CARDNAME: Star-Lord
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Starship Sensors
+#COPIES: 3
+#CLASS: [Tech]
+<b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +1 Recruit.
+#COST: 2
+
+#SUBNAME: Borrowed Nova Blaster
+#COPIES: 3
+#CLASS: [Ranged]
+<b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +1 Attack.
+#COST: 3
+#GUN: 1
+
+#SUBNAME: Expandable Helmet
+#COPIES: 3
+#CLASS: [Tech]
+<b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, draw a card.
+#COST: 5
+#GUN: 1
+
+#SUBNAME: Give/Take
+#COPIES: 2
+#DIVIDED: Give
+#DIVHERO: Star-Lord
+#CLASS: [Covert]
+#RECRUIT: 2+
+You may discard an Artifact you control to get +1 Recruit.
+#COST: 4
+#DIVIDED: Take
+#DIVHERO: Yondu
+#CLASS: [Ranged]
+#ATTACK: 2
+{TEAMPOWER Guardians of the Galaxy} Reveal the top card of your deck. If it's an Artifact, draw it.
+#COST: 4
+
+#SUBNAME: Don't Need That Stuff
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 3+
+You may discard an Artifact you control to get +1 Attack.
+#COST: 6
+#FLAVOR: "I don't even know what that is. ... I was just—just checking stuff out."
+#GUN: 1
+
+#SUBNAME: Hadron Enforcer
+#COPIES: 1
+#CLASS: [Ranged]
+<b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +3 Attack.
+#COST: 7
+#GUN: 1
+
+#CARDNAME: Gamora
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Sharpen Blades
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 2
+If you control an Artifact, draw a card.
+#COST: 3
+#FLAVOR: "Surgically modified and trained as a living weapon.
+
+#SUBNAME: Resourceful Fugitive
+#COPIES: 3
+#CLASS: [Covert]
+To play this, you must put a card from your hand on the bottom of your deck.
+Draw two cards.
+#COST: 4
+
+#SUBNAME: Retractable Sword
+#COPIES: 3
+#CLASS: [Instinct]
+<b>Triggered Artifact</b> — Whenever you draw a card during your turn, you get +1 Attack.
+#COST: 5
+
+#SUBNAME: Forgive/Resent
+#COPIES: 2
+#DIVIDED: Forgive
+#DIVHERO: Gamora
+#CLASS: [Covert]
+#RECRUIT: 1
+{POWER Covert} Draw a card.
+#COST: 2
+#DIVIDED: Resent
+#DIVHERO: Nebula
+#CLASS: [Instinct]
+#ATTACK: 1+
+{POWER Instinct} You get +1 Attack.
+#COST: 2
+
+#SUBNAME: Stolen Necroblaster
+#COPIES: 2
+#CLASS: [Ranged]
+#ATTACK: 3
+If you drew at least two cards this turn, you may KO a card from your hand or discard pile.
+#COST: 6
+#GUN: 1
+
+#SUBNAME: Guardians Escape
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5+
+If you drew at least two cards this turn, you get +2 Attack.
+#COST: 7
+#FLAVOR: "We're about to die, and this is what we're discussing?"
+
+#CARDNAME: Rocket & Groot
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Baby Groot
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 2
+{KINDNESS} Rescue a Bystander.
+#COST: 3
+#FLAVOR: Even hardened assassins can't resist Baby Groot's galactic-level adorability.
+
+#SUBNAME: Passion/Compassion
+#COPIES: 3
+#DIVIDED: Passion
+#DIVHERO: Rocket
+#CLASS: [Tech]
+#ATTACK: 1
+{VIOLENCE} Draw a card.
+#COST: 2
+#DIVIDED: Compassion
+#DIVHERO: Baby Groot
+#CLASS: [Covert]
+#RECRUIT: 1
+{KINDNESS} Draw a card.
+#COST: 2
+
+#SUBNAME: Don't Press This Button/Press the Button
+#COPIES: 3
+#DIVIDED: Don't Press This Button
+#DIVHERO: Rocket
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} You get +1 Attack.
+#COST: 4
+#DIVIDED: Press the Button
+#DIVHERO: Baby Groot
+#CLASS: [Tech]
+#RECRUIT: 1
+{POWER Tech} You may KO a card from your hand or discard pile.
+#COST: 4
+
+#SUBNAME: Gravity Mines
+#COPIES: 2
+#CLASS: [Tech]
+<b>Triggered Artifact</b> — Whenever you use <b>Excessive Violence</b>, draw a card.
+#COST: 4
+#FLAVOR: What goes up, must come down to be slammed on the ground repeatedly.
+
+#SUBNAME: Tricky/Simple
+#COPIES: 2
+#DIVIDED: Tricky
+#DIVHERO: Rocket
+#CLASS: [Tech]
+#RECRUIT: 2+
+If you have at least five different card names, you get +2 Recruit.
+#COST: 5
+#DIVIDED: Simple
+#DIVHERO: Groot
+#CLASS: [Strength]
+#ATTACK: 3
+#COST: 5
+
+#SUBNAME: We Are Groot
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 0+
+Reveal your hand. You get +1 Attack for each different card name in your hand.
+<i>(Each Divided Card has two different card names.)</i>
+#COST: 7
+
+#CARDNAME: Drax
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Nothing Goes Over My Head
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2
+{VIOLENCE} Look at the top two cards of your deck. Discard any number of them and put the rest back in any order.
+#COST: 3
+
+#SUBNAME: Prison Riot
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 3
+{VIOLENCE} You get +2 Recruit.
+#COST: 5
+#FLAVOR: "Do not ever call me a thesaurus!"
+
+#SUBNAME: I Am Invisible/Xandar Is Invincible
+#COPIES: 3
+#DIVIDED: I Am Invisible
+#DIVHERO: Drax - Guardians of the Glaxy
+#CLASS: [Instinct]
+#ATTACK: 2
+{VIOLENCE} Reveal the top card of your deck. If it's [Strength] or [Instinct], draw it.
+#COST: 4
+#DIVIDED: Xandar Is Invincible
+#DIVHERO: Irani Rael - Unaffiliated
+#CLASS: [Tech]
+#RECRUIT: 2+
+If there are no Villains in the city, you get +1 Recruit.
+#COST: 4
+
+#SUBNAME: Dual Knives
+#COPIES: 2
+#CLASS: [Strength]
+<b>Triggered Artifact</b> — Whenever you play another [Strength] or [Instinct] card, you get +1 Attack.
+#COST: 4
+#FLAVOR: "Die, spaceship!"
+
+#SUBNAME: Remove His Spine/Also Illegal
+#COPIES: 2
+#DIVIDED: Remove His Spine
+#DIVHERO: Drax - Guardians of the Glaxy
+#CLASS: [Strength]
+#ATTACK: 3
+{VIOLENCE} Reveal the top card of your deck. You may KO it.
+#COST: 6
+#DIVIDED: Also Illegal
+#DIVHERO: Rhomann Dey - Unaffiliated
+#CLASS: [Instinct]
+#RECRUIT: 3+
+{POWER Instinct} You get +1 Recruit.
+#COST: 6
+
+#SUBNAME: Revenge For My Family
+#COPIES: 1
+#CLASS: [Strength]
+Double the Attack you have.
+{VIOLENCE} You may KO a Villain from your Victory Pile to do its Fight effect.
+#COST: 8
+
+#CARDNAME: Mantis
+#TEAM: Guardians of the Galaxy
+
+#SUBNAME: Empathic Bond
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 2
+{KINDNESS} Put the Hero you recruited this way on the top of your deck.
+#COST: 3
+#FLAVOR: "Telepaths know thoughts. Empaths feel feelings—emotions."
+
+#SUBNAME: Selfless/Selfish
+#COPIES: 3
+#DIVIDED: Selfless
+#DIVHERO: Mantis - Guardians of the Glaxy
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} Draw a card.
+Another player draws a card.
+#COST: 4
+#DIVIDED: Selfish
+#DIVHERO: Ego - Unaffiliated
+#CLASS: [Ranged]
+#ATTACK: 2
+{POWER Ranged} Draw a card.
+Another player discards a card.
+#COST: 4
+
+#SUBNAME: Inspire Courage
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 3
+#ATTACK: 0+
+{KINDNESS} You get +2 Attack.
+#COST: 5
+#FLAVOR: "We must hurry. It will not take Ego long to find us."
+
+#SUBNAME: Sleep
+#COPIES: 2
+#CLASS: [Covert]
+#RECRUIT: 2
+{KINDNESS} You may KO one of your cards.
+#COST: 5
+#FLAVOR: Her touch can induce fear, friendship, or even a light, refreshing coma.
+
+#SUBNAME: Emotional Wave
+#COPIES: 2
+#CLASS: [Ranged]
+#RECRUIT: 3
+#ATTACK: 0+
+{KINDNESS} You get +Attack equal to the total of all the printed Recruit and Attack of the Hero you recruited this way.
+#COST: 6
+
+#SUBNAME: Discover the Dead
+#COPIES: 1
+#CLASS: [Instinct]
+{KINDNESS} You get +Attack equal to the cost of the Hero you recruited this way.
+#COST: 7
+#FLAVOR: "I should have told you earlier. ... You are in danger."
+
+

@@ -39,6 +39,7 @@ sub autopower {
     s/^{XGENE \[(.*?)\]} *// and $cond = "xGenePower(Color.".(uc$1).")";
     s/^{XGENE (.*?)} *// and $cond = "xGenePower(\"$1\")";
     s/^{VIOLENCE} *// and $wrap = "excessiveViolence: ev => XXX";
+    s/^{KINDNESS} *// and $wrap = "excessiveKindness: ev => XXX";
     s/^{SHIELDLEVEL (.*?)} *// and $cond = "shieldLevelPower($1)";
     s/^If you are \{WORTHY\},? *// and $cond = "worthyPower()";
     s/^{SUNLIGHT} *// and $cond = "sunlightPower()";
@@ -215,9 +216,9 @@ sub maketrap {
       print "{\n";
       print "  name: \"$heroname\",\n";
       print "  team: \"$team\",\n";
-      for (0..3) {
+      for (0..$#subitems) {
         my $count = (5, 5, 3, 1)[$_];
-        my $pname = qw(c1 c2 uc ra)[$_];
+        my $pname = ($#subitems == 3 ? qw(c1 c2 uc ra):qw(c1 c2 c3 uc u2 ra))[$_];
         $_ = $subitems[$_];
         my @divided = split m/(?=#DIVIDED)/g;
         my @transformed = split m/(?=#TRANSFORMED\n)/g;

@@ -1,0 +1,17 @@
+<b>Divided Cards</b>: See Civil War and X-Men
+
+<b>Artifacts</b>: See Guardians of the Galaxy
+<b>Triggered Artifacts</b>:
+* Some cards say things like "Triggered Artifact - Whenever you draw a card during your turn, you get +1 Attack." While you control this Artifact, <b>every time you do that trigger, you get the listed effect.</b>
+* If a card lets you "copy" a Triggered Artifact card of "play a copy of it," then you can use that Triggered Artifact ability (or "Thrown Artifact," "Once per turn" Artifact or "Ritual Aritfact" ability) once, and you don't need to fulfill the trigger. The copy doesn't stay in play as an Artifact. The 'Legendry Outlaw' card from the 2014 Guardians set cannot copy any Artifacts in this set.
+<b>Villainous Weapons</b>: See Heroes of Asgard
+
+{VIOLENCE} See Deadpool and Venom
+
+{KINDNESS}
+By contrast, the empath Mantis and the adorable Baby Groot are often way kinder than necessary. Their "Excessive Kindness" abilities work just like Excessive Violence, except that you trigger them by spending 1 Recruit more than you need when recruiting a Hero.
+<b>Command</b>:
+Some Villains say things like "Taserface gets +2 Attack while he Commands the Ravagers."
+* <b>A Villain "Commands" their group and gets these abilities as long as it's the leftmost Villain of that Villain Group in the city.</b>
+* If there's only one Villain of a Villain Group in the city, it still Commands that Villain Group.
+
