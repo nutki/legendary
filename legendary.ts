@@ -522,6 +522,7 @@ class Deck {
   Deck.deckList.push(this);
   }
   get size(): number { return this.deck.length; }
+  // TODO auto create treansformed hero cards on the transformed pile
   addNewCard(c: Card, n?: number): Card { let r = undefined; for (let i = 0; i < (n || 1); i++) r = makeCardInPlay(c, this); return r; }
   _put(c: Card) { this.deck.push(c); c.location = this; }
   _putBottom(c: Card) { this.deck.unshift(c); c.location = this; }
@@ -773,12 +774,6 @@ class Ev implements EvParams {
 };
 
 interface Templates {
-  [s: string]: {
-    set?: string
-    templateId?: string
-    name?: string
-    cardName?: string
-  }[]
   HEROES: {
     set?: string
     templateId?: string
@@ -794,6 +789,7 @@ interface Templates {
   HENCHMEN: (Card | {
     set?: string;
     templateId?: string;
+    name: string;
     cards: [number, Card][];
   })[]
   VILLAINS: {
@@ -869,11 +865,15 @@ function addHenchmenTemplates(set: string, templates: Templates['HENCHMEN']) {
     if (t instanceof Card) {
       t.templateId = t.cardName;
     } else {
-      t.templateId = t.cards[0][1].printedVillainGroup;
+      t.templateId = t.name;
       t.cards.forEach(c => c[1].set = set);
     }
     cardTemplates.HENCHMEN.push(t);
   });
+}
+function heroToCardTamplates(h: Templates['HEROES'][0]): [Card, number][] {
+  return h.uc ? [[h.c1, 5], [h.c2, 5], [h.uc, 3], [h.ra, 1]] :
+                [[h.c1, 4], [h.c2, 4], [h.c3, 4], [h.ra, 2]]; // Messiah Complex clone heroes
 }
 function findHeroTemplate(name: string) { return cardTemplates.HEROES.filter(t => t.templateId === name)[0]; }
 function findHenchmanTemplate(name: string) { return cardTemplates.HENCHMEN.filter(t => t.templateId === name)[0]; }
@@ -1188,6 +1188,12 @@ function extraHenchmenName(n: number = 1) {
   const h = gameState.gameSetup.henchmen;
   return h[h.length - n];
 }
+function availiableHeroTemplates() {
+  return cardTemplates.HEROES.filter(t => gameState.gameSetup.heroes.includes(t.templateId));
+}
+function availiableVillainTemplates() {
+  return cardTemplates.VILLAINS.filter(t => gameState.gameSetup.villains.includes(t.templateId));
+}
 function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_counts'>, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
     vd_villain: [ 1, 2, 3, 3, 4 ],
@@ -1395,10 +1401,7 @@ gameState.players.forEach(p => {
 });
 // Init hero deck and populate initial HQ
 gameSetup.heroes.map(findHeroTemplate).forEach(h => {
-  const cards: [Card, number][] =
-    h.uc ? [[h.c1, 5], [h.c2, 5], [h.uc, 3], [h.ra, 1]] :
-           [[h.c1, 4], [h.c2, 4], [h.c3, 4], [h.ra, 2]]; // Messiah Complex clone heroes
-  for (const [c, n] of cards) gameState.herodeck.addNewCard(c, n);
+  for (const [c, n] of heroToCardTamplates(h)) gameState.herodeck.addNewCard(c, n);
 });
 gameState.herodeck.shuffle();
 // Init auxiliary decks
@@ -2042,6 +2045,22 @@ function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card |
   textLog.log("Game Over: " + desc);
   pushEv(ev, "GAMEOVER", { ui: true, result, desc });
 }
+function unvailSchemeEv(ev: Ev) {
+  attachCardEv(ev, gameState.scheme.top, gameState.scheme, "VAILED");
+  cont(ev, () => {
+    unvailedSchemeTemplates.withRandom(c => {
+      gameState.scheme.addNewCard(c);
+      c.init(gameState.schemeState);
+    });
+    pushEv(ev, "EFFECT", { ...ev, source: gameState.scheme.top, func: gameState.scheme.top.twist });
+  });
+}
+function vailedSchemeProgressEv(ev: Ev, amount: number = ev.nr) {
+  cont(ev, () => {
+    gameState.schemeProgress = amount;
+    if (getSchemeCountdown() <= 0) unvailSchemeEv(ev);
+  });
+}
 function schemeProgressEv(ev: Ev, amount: number) {
   cont(ev, () => {
     if (amount < 0) amount = 0;
@@ -2058,17 +2077,19 @@ function getSchemeCountdown() {
 }
 function setSchemeTarget(n: number, perPlayer: boolean = false) {
   gameState.schemeTarget = perPlayer ? gameState.players.size * n : n;
+  gameState.schemeProgress = 0;
 }
-function _ProgressTrigger(f: Filter<Card>, escaped: boolean, ko: boolean): Trigger {
+function _ProgressTrigger(f: Filter<Card>, escaped: boolean, ko: boolean, city:boolean = false): Trigger {
   return ({
     event: "MOVECARD",
-    match: ev => escaped && ev.to === gameState.escaped || ko && ev.to === gameState.ko,
-    after: ev => schemeProgressEv(ev, (escaped ? gameState.escaped.count(f) : 0) + (ko ? gameState.ko.count(f) : 0)),
+    match: ev => escaped && ev.to === gameState.escaped || ko && ev.to === gameState.ko || city && ev.to.isCity,
+    after: ev => schemeProgressEv(ev, (escaped ? gameState.escaped.count(f) : 0) + (ko ? gameState.ko.count(f) : 0) + (city ? cityVillains().count(f) : 0)),
   });
 }
 function escapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, false); }
 function koProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, false, true); }
 function koOrEscapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, true); }
+function escapeOrCityProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, false, true); }
 function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS", useProgress: boolean = true): Trigger {
   return ({
     event: "MOVECARD",

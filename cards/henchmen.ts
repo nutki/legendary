@@ -201,7 +201,7 @@ makeHenchmenLocationCard("HYDRA Base", 2, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
   varDefense: c => c.printedDefense + (c.location.attachedTo instanceof Deck && c.location.attachedTo.has(isVillain) ? 2 : 0)
 }),
-{cards:[
+{name: "Mandarin's Rings", cards:[
 // FIGHT: Draw a card.
 // ATTACK: 3
 [1, makeHenchmenCard("Daimonic, The White Light", 3, {

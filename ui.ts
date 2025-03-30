@@ -216,7 +216,7 @@ function setMessage(msg: string, gameOverMsg: string): void {
 }
 
 // Game setup selection screen
-function makeOptions(id: string, templateType: keyof Templates, nameProp: 'name' | 'cardName', current: string, f: (name: any) => boolean = () => true) {
+function makeOptions(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN' | 'MASTERMINDS' | 'SCHEMES', current: string, f: (name: any) => boolean = () => true) {
   const values = cardTemplates[templateType].filter(f);
   const el = <HTMLSelectElement>document.getElementById(id);
   el.addEventListener("change", setupChange);
@@ -231,13 +231,13 @@ function makeOptions(id: string, templateType: keyof Templates, nameProp: 'name'
       el.add(option);
     }
     const option = document.createElement("option");
-    option.text = s[nameProp];
+    option.text = s instanceof Card ? s.cardName : s.name;
     option.value = s.templateId;
     if (current === s.templateId) option.selected = true;
     el.add(option);
   });
 }
-function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name' | 'cardName', name: string, values: string[]) {
+function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN' | 'MASTERMINDS' | 'SCHEMES', name: string, values: string[]) {
   let selected = values.map((a, i) => {
     let e = document.getElementById(id + i);
     if (!e) return undefined;
@@ -245,7 +245,7 @@ function makeSelects(id: string, templateType: keyof Templates, nameProp: 'name'
   });
   document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
   values.forEach((name, i) => {
-    makeOptions(id + i, templateType, nameProp, selected[i], n => name === undefined || n.templateId === name);
+    makeOptions(id + i, templateType, selected[i], n => name === undefined || n.templateId === name);
   });
 }
 function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTANDERS') {
@@ -285,10 +285,10 @@ function setupChange(): void {
   const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
   if (!sel.value || !mel.value) return;
   const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
-  makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
-  makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
-  makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
-  makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Mastermind", tmp.mastermind);
+  makeSelects("setup_heroes", "HEROES", "Hero", tmp.heroes);
+  makeSelects("setup_villains", "VILLAINS", "Villains Group", tmp.villains);
+  makeSelects("setup_henchmen", "HENCHMEN", "Henchmen Group", tmp.henchmen);
+  makeSelects("setup_mastermind", "MASTERMINDS", "Mastermind", tmp.mastermind);
   const s1 = getSelects("setup_heroes", tmp.heroes);
   const s2 = getSelects("setup_villains", tmp.villains);
   const s3 = getSelects("setup_henchmen", tmp.henchmen);
@@ -311,7 +311,7 @@ function setupInit(): void {
   makeBystanderSelects("setup_sidekicks", 'SIDEKICKS');
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
-  makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Extra Mastermind", [ undefined ]);
+  makeSelects("setup_mastermind", "MASTERMINDS", "Extra Mastermind", [ undefined ]);
 }
 function chooseSelects(name: string, values: string[]): void {
   values.forEach((v, i) => {
@@ -327,10 +327,10 @@ function setupSet(s: Setup): void {
   sel.value = s.scheme;
   mel.value = s.mastermind[0];
   const tmp = getGameSetup(s.scheme, s.mastermind[0], s.numPlayers);
-  makeSelects("setup_heroes", "HEROES", "name", "Hero", tmp.heroes);
-  makeSelects("setup_villains", "VILLAINS", "name", "Villains Group", tmp.villains);
-  makeSelects("setup_henchmen", "HENCHMEN", "cardName", "Henchmen Group", tmp.henchmen);
-  makeSelects("setup_mastermind", "MASTERMINDS", "cardName", "Mastermind", tmp.mastermind);
+  makeSelects("setup_heroes", "HEROES", "Hero", tmp.heroes);
+  makeSelects("setup_villains", "VILLAINS", "Villains Group", tmp.villains);
+  makeSelects("setup_henchmen", "HENCHMEN", "Henchmen Group", tmp.henchmen);
+  makeSelects("setup_mastermind", "MASTERMINDS", "Mastermind", tmp.mastermind);
   chooseSelects("setup_heroes", s.heroes);
   chooseSelects("setup_villains", s.villains);
   chooseSelects("setup_henchmen", s.henchmen);

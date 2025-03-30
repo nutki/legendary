@@ -943,7 +943,7 @@ function preyEv(ev: Ev, handScore: (p: Player) => number, immediateEffect?: (p: 
     const setupTrigger = () => {
       addTurnTrigger('CLEANUP', u, ev => finishThePreyEv(ev, card));
       if (isMastermind(card)) addTurnTrigger('DEFEAT', ev => ev.what === card, ev => {
-        if (!finalTactic(card)) moveCardEv(ev, card, gameState.mastermind);
+        if (card.attached("TACTICS").size) moveCardEv(ev, card, gameState.mastermind);
       });
     }
     if (p == playerState) setupTrigger(); else addFutureTrigger(setupTrigger, p);

@@ -2500,6 +2500,203 @@ makeSchemeCard("Breach Parallel Dimensions", { twists: 6 }, ev => {
   // TODO: Implement Breach Parallel Dimensions from Annihilation
 }),
 ]);
+addTemplates("SCHEMES", "Messiah Complex", [
+// Veiled Scheme
+// SETUP: 10 Twists
+makeSchemeCard("Hack Cerebro Servers to...", { twists: 10 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Put a card from the Bystander Stack next to this Scheme as a “Hacker.” KO a Hero from the HQ with cost equal to the number of Hackers.
+    // If you KO'd a Hero this way, stack this Twist next to the Mastermind as “Stolen Cerebro Data.”
+    gameState.bystanders.withTop(c => attachCardEv(ev, c, gameState.scheme, 'HACKER'));
+    cont(ev, () => selectCardEv(ev, "Select a Hero to KO", hqHeroes().limit(c => c.cost === gameState.scheme.attached('HACKER').size), c => {
+      KOEv(ev, c);
+      attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+    }));
+  } else if (ev.nr === 6) {
+    // Twist 6 Put the Hackers on the bottom of the Bystander Stack. This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+    gameState.scheme.attachedDeck('HACKER').each(c => moveCardEv(ev, c, gameState.bystanders, true));
+  }
+  vailedSchemeProgressEv(ev);
+}, [], () => {
+  setSchemeTarget(6);
+}),
+// Veiled Scheme
+// SETUP: 11 Twists
+// RULE: Players may spend 3 Recruit or 3 Attack to gain a Kidnapped Mutant.
+makeSchemeCard("Drain Mutants' Powers to...", { twists: 11 }, ev => {
+  const kidnappedMutants = gameState.scheme.attachedDeck('KIDNAPPED');
+  if (ev.nr <= 6) {
+    if (gameState.scheme.attachedDeck('KIDNAPPED').size > 0) {
+      kidnappedMutants.each(c => moveCardEv(ev, c, gameState.sidekick, true));
+      attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+    }
+    // Twist 1-6  Stack the top two cards of the Sidekick Stack face down next to the Scheme as “Kidnapped Mutants.”
+    repeat(2, () => gameState.sidekick.withTop(c => attachCardEv(ev, c, kidnappedMutants, 'KIDNAPPED')));
+    // If there were any Kidnapped Mutants already there, put those on the bottom of the Sidekick Stack and put this Twist next to the Mastermind
+    // as a “Drained Power.”
+  } else if (ev.nr === 7) {
+    // Twist 7 KO all Kidnapped Mutants. This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+    kidnappedMutants.each(c => KOEv(ev, c));
+  }
+  vailedSchemeProgressEv(ev);
+}, [], () => {
+  gameState.specialActions = ev => gameState.scheme.attachedDeck('KIDNAPPED').deck.map(c =>
+    [new Ev(ev, 'EFFECT', { cost: { recruit: 3 }, what: c, func: ev => gainEv(ev, c) }),
+     new Ev(ev, 'EFFECT', { cost: { attack: 3 }, what: c, func: ev => gainEv(ev, c) })]
+  ).merge();
+  setSchemeTarget(7);
+}),
+// Veiled Scheme
+// SETUP: 9 Twists
+makeSchemeCard("Hire Singularity Investigations to...", { twists: 9 }, ev => {
+  if (ev.nr <= 4) {
+    // Twist 1-4 If there are any “Singularity Investigators” in the city, stack this Twist next to the Mastermind as a “Dark Discovery.”
+    cityVillains().has(c => c.cardName === "Singularity Investigator") && attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+    // Whether you did that or not, {INVESTIGATE} the Bystander Stack for a card and have it enter the city as a “Singularity Investigator” Villain.
+    // It has 6 Attack and “<b>Fight</b>: Rescue this as a Bystander. Then KO one of your Heroes.
+    // Then {INVESTIGATE} your deck for a card with a Recruit icon.”
+    investigateEv(ev, u, gameState.bystanders, c => {
+      villainify("Singularity Investigator", c1 => c1 === c, 6, ev => {
+        rescueEv(ev, ev.source);
+        selectCardAndKOEv(ev, yourHeroes());
+        investigateEv(ev, hasRecruitIcon);
+      });
+      enterCityEv(ev, c);
+    });
+  } else if (ev.nr === 5) {
+    // Twist 5 This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+  }
+  vailedSchemeProgressEv(ev);
+}, [], () => {
+  setSchemeTarget(5);
+}),
+// Veiled Scheme
+// SETUP: 8 Twists
+makeSchemeCard("Raid Gene Banks to...", { twists: 8 }, ev => {
+  if (ev.nr <= 3) {
+    // Twist 1-3  If there is a Villain in the Bank, stack this Twist next to the Mastermind as a “Mutant Genome.”
+    villainIn('BANK').each(c => attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST'));
+    // Otherwise, move a Villain from another city space to the Bank.
+    withCity('BANK', bank => {
+      bank.size == 0 && selectCardEv(ev, "Choose a Villain to move to the Bank", cityVillains(), c => {
+        moveCardEv(ev, c, bank);
+      });
+    });
+  } else if (ev.nr === 4) {
+    // Twist 4 This Scheme {TRANSFORM} into a random Unveiled Scheme. Do its Twist effect.
+  }
+  vailedSchemeProgressEv(ev);
+}, [], () => {
+  setSchemeTarget(4);
+}),
+]);
+const unvailedSchemeTemplates: Card[] = [
+// Unveiled Scheme
+// <b>When revealed</b>: Twists stacked next to the Mastermind are “Manipulations.” Shuffle a random extra Hero into a face down “Mutant Messiah” stack.
+// EVILWINS: When there are 3 cards in the Fallen Messiah stack or the Villain Deck runs out.
+makeSchemeCard("...Control the Mutant Messiah", { }, ev => {
+  // Twist: Add this Twist to the Manipulations. {INVESTIGATE} the Mutant Messiah stack for a card and set it aside.
+  // This turn you may gain that card to the top of your deck by spending Recruit equal to its cost, +1 Recruit for each Manipulation.
+  // If you don’t, then put that card into a “Fallen Messiah” stack next to the Scheme.
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+  investigateEv(ev, u, gameState.scheme.attachedDeck('MUTANTMESSIAH'), c => {
+    attachCardEv(ev, c, gameState.scheme, 'ASIDE');
+    addTurnTrigger('CLEANUP', u, ev => {
+      if (c.location === gameState.scheme.attachedDeck('ASIDE')) {
+        moveCardEv(ev, c, gameState.scheme.attachedDeck('FALLEN'));
+        schemeProgressEv(ev, gameState.scheme.attachedDeck('FALLEN').size);
+      }
+    });
+  });
+}, [], () => {
+  gameState.specialActions = ev => gameState.scheme.attachedDeck('MUTANTMESSIAH').deck.map(c => new Ev(ev, 'EFFECT', {
+    cost: { recruit: c.cost + gameState.scheme.attached('TWIST').size },
+    func: ev => gainEv(ev, c),
+  }));
+  availiableHeroTemplates().withRandom(heroTemplate => {
+    const mutantMessiah = gameState.scheme.attachedDeck('MUTANTMESSIAH');
+    mutantMessiah.faceup = false;
+    heroToCardTamplates(heroTemplate).each(([c, n]) => mutantMessiah.addNewCard(c, n));
+    mutantMessiah.shuffle();
+  });
+  setSchemeTarget(3);
+}),
+// Unveiled Scheme
+// <b>When revealed</b>: Shuffle a random additional Villain Group into the Villain Deck. Twists stacked next to the Mastermind are “Temporal Rifts.”
+// EVILWINS: When there are 7 Temporal Rifts or the Villain Deck runs out.
+makeSchemeCard("...Open Rifts to Future Timelines", { }, ev => {
+  // Twist: Add this Twist to the Temporal Rifts. Then reveal and set aside cards from the Villain Deck equal to the number of Temporal Rifts.
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+  cont(ev, () => {
+    revealVillainDeckEv(ev, gameState.mastermind.attached('TWIST').size, (cards) => {
+      // Play a Henchman you revealed, then play the Villain you revealed that is worth the most VP.
+      selectCardEv(ev, "Choose a Henchman to play", cards.limit(isHenchman), c => villainDrawEv(ev, c));
+      selectCardEv(ev, "Choose a Villain to play", cards.limit(isVillain).highest(c => c.vp), c => villainDrawEv(ev, c));
+      // Shuffle the other set aside cards into the Villain Deck. (If the Villain Deck runs out during this, this doesn't end the game.)
+    }, true);
+  });
+  cont(ev, () => gameState.villaindeck.shuffle());
+  cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attachedDeck('TWIST').size));
+}, [], () => {
+  setSchemeTarget(7);
+  availiableVillainTemplates().withRandom(({cards}) => {
+    cards.each(([n, c]) => gameState.villaindeck.addNewCard(c, n));
+    gameState.villaindeck.shuffle();
+  });
+}),
+// Unveiled Scheme
+// <b>When revealed</b>: Twists stacked next to the Mastermind are “Cloning Breakthroughs.”
+// RULE: Each Evil Clone has Attack equal to its cost plus the number of Cloning Breakthroughs.
+// It has “<b>Fight</b>: A player gains this as a Hero. KO one of your Heroes.”
+// EVILWINS: When there are 7 Evil Clones in the city and/or Escape Pile, or the Villain Deck or Hero Deck runs out.
+makeSchemeCard("...Reveal the Heroes' Evil Clones", { }, ev => {
+  // Twist: Add this Twist to the Cloning Breakthroughs.
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+  // The top card of the Hero Deck enters the city as an “Evil Clone” Villain.
+  gameState.herodeck.withTop(c => {
+    const clones = [gameState.herodeck.limit(c2 => c2.cardName === c.cardName && c2 !== c).firstOnly(), [c]].merge();
+    cont(ev, () => gameState.herodeck.shuffle());
+    clones.each(c => {
+      villainify("Evil Clone", c1 => c1 === c, c => c.cost + gameState.mastermind.attached('TWIST').size, ev => {
+        gainEv(ev, ev.source);
+        selectCardAndKOEv(ev, yourHeroes());
+      });
+      enterCityEv(ev, c);
+    });
+  });
+  // {CLONE} a copy of it from the Hero Deck as another Evil Clone.
+  cloneVillainEv
+}, [
+  escapeOrCityProgressTrigger(c => c.villainGroup === "Evil Clone"),
+  runOutProgressTrigger('VILLAIN', false),
+  runOutProgressTrigger('HERO', false),
+], () => {
+  setSchemeTarget(7);
+}),
+// Unveiled Scheme
+// <b>When revealed</b>:  Twists stacked next to the Mastermind are “Bioweapon Adaptations.”
+// EVILWINS: When there are 15 non-grey Heroes in the KO pile or the Villain Deck or Hero Deck runs out.
+makeSchemeCard("...Unleash an Anti-Mutant Bioweapon", { }, ev => {
+  // Twist: Add this Twist to the Bioweapon Adaptations.
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
+  // Then for each card in that stack, choose a different number from 2-6. KO all Heroes from the HQ that have any of those costs.
+  cont(ev, () => {
+    const options = [2, 3, 4, 5, 6];
+    const selected: number[] = [];
+    gameState.mastermind.attachedDeck('TWIST').each(() => cont(ev, () => {
+      options.length > 0 && chooseOptionEv(ev, "Choose a cost", options.map(v => ({l:v.toString(), v})), v => selected.push(v));
+    }));
+    cont(ev, () => hqHeroes().each(c => selected.includes(c.cost) && KOEv(ev, c)));
+  });
+}, [
+  koProgressTrigger(isNonGrayHero),
+  runOutProgressTrigger('VILLAIN', false),
+  runOutProgressTrigger('HERO', false),
+], () => {
+  setSchemeTarget(15);
+}),
+];
+unvailedSchemeTemplates.forEach(c => c.set = "Messiah Complex");
 addTemplates("SCHEMES", "Doctor Strange and the Shadows of Nightmare", [
 // SETUP: 8 Twists.
 // EVILWINS: When the number of Tormented Souls is four times the number of players.
