@@ -424,6 +424,8 @@ function villainifyOfficers(ev: Ev, n: number = 1, where?: Deck | Deck[]) {
 // * Some bad guys also have Excessive Violence abilities that let you do something awesome. If you spend one more attack point than you need to fight them, you can do that awesome thing!
 function canFightWithViolence(c: Card) {
   if (turnState.pastEvents.has(e => e.type === 'FIGHT' && e.withViolence)) return false;
+  // Check for artifacts triggering off violence
+  if(playerState.artifact.has(c => c.trigger?.event === 'FIGHT')) return true;
   return turnState.cardsPlayed.has(c => c.excessiveViolence !== undefined) || c.excessiveViolence;
 }
 function playViolenceEv(ev: Ev) {
@@ -985,4 +987,26 @@ function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, 
 }
 function enterAstralPlaneEv(ev: Ev, c: Card) {
   moveCardEv(ev, c, gameState.astralPlane);
+}
+// Marvel Studios' Guardians of the Galaxy
+function canRecruitWithKindness(c: Card) {
+  if (turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.withViolence)) return false;
+  return turnState.cardsPlayed.has(c => c.excessiveKindness !== undefined);
+}
+function playKindnessEv(ev: Ev) {
+  const cards = turnState.cardsPlayed.limit(c => c.excessiveKindness !== undefined);
+  if (ev.what.excessiveKindness) cards.push(ev.what);
+  selectCardOrderEv(ev, "Choose Excessive Kindness order", cards, c => {
+    pushEv(ev, 'EFFECT', { source: c, func: c.excessiveKindness });
+  });
+}
+function triggeredArifact(event: TriggerableEvType, cond: (ev: Ev, source: Card) => boolean, selfTrigger: boolean = false): HeroCardAbillities {
+  return {
+    isArtifact: true,
+    trigger: {
+      event,
+      match: (ev, source) => (source.location === owner(source)?.artifact || (selfTrigger && ev.what === source)) && cond(ev, source),
+      after: ev => getArtifactEffects(ev.source)[0](ev),
+    }
+  }
 }

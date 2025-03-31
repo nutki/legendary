@@ -21,10 +21,11 @@ function imageName(path: string, card: Card, subname?: string): string {
   return "images/" + (card.set || 'Legendary') + '/' + path + "/" + name + ".jpg";
 }
 function cardImageName(card: Card): string {
+  if (card.instance) card = card.instance;
   if (card.cardType === "HERO" && card.heroName === "Special Sidekick") return imageName("sidekicks", card);
   if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
   if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
-  if (card.cardType === "VILLAIN") return imageName("villains", card, card.villainGroup);
+  if (card.cardType === "VILLAIN") return imageName("villains", card, card.printedVillainGroup);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermindName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
@@ -81,7 +82,7 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true):
   const faceUp = isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
   const options: {[key: string]: string} = {
-    onmouseover: `setSourceImg('${src}')`,
+    onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}')`,
     onmouseleave: "clearSourceImg()",
   };
   if (id) options.id = c.id;

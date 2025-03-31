@@ -6215,3 +6215,191 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
   }, ritualArifact(() => pastEvents('GAIN').map(ev => ev.what).has(isWound), true))
 },
 ]);
+addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
+{
+  name: "Star-Lord",
+  team: "Guardians of the Galaxy",
+// <b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +1 Recruit.
+  c1: makeHeroCard("Star-Lord", "Starship Sensors", 2, u, u, Color.TECH, "Guardians of the Galaxy", "D", ev => addRecruitEvent(ev, 1),
+  triggeredArifact('PLAY', ev => isArtifact(ev.what) && !pastEvents('PLAY').has(ev => isArtifact(ev.what)), true)),  
+// <b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +1 Attack.
+// GUN: 1
+  c2: makeHeroCard("Star-Lord", "Borrowed Nova Blaster", 3, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => addAttackEvent(ev, 1),
+  triggeredArifact('PLAY', ev => isArtifact(ev.what) && !pastEvents('PLAY').has(ev => isArtifact(ev.what)), true)),
+// <b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, draw a card.
+// GUN: 1
+  c3: makeHeroCard("Star-Lord", "Expandable Helmet", 5, u, u, Color.TECH, "Guardians of the Galaxy", "G", ev => drawEv(ev),
+  triggeredArifact('PLAY', ev => isArtifact(ev.what) && !pastEvents('PLAY').has(ev => isArtifact(ev.what)), true)),
+  uc: makeDividedHeroCard(
+// DIVIDED: Give
+// DIVHERO: Star-Lord
+// You may discard an Artifact you control to get +1 Recruit.
+    makeHeroCard("Star-Lord", "Give", 4, 2, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => {
+      selectCardOptEv(ev, "Choose an Artifact to discard", playerState.artifact.deck, c => { discardEv(ev, c); addRecruitEvent(ev, 1); });
+    }),
+// DIVIDED: Take
+// DIVHERO: Yondu
+// {TEAMPOWER Guardians of the Galaxy} Reveal the top card of your deck. If it's an Artifact, draw it.
+    makeHeroCard("Yondu", "Take", 4, u, 2, Color.RANGED, "Guardians of the Galaxy", "D", ev => superPower("Guardians of the Galaxy") && revealPlayerDeckEv(ev, 1, cards => cards.has(isArtifact) && cards.each(c => drawCardEv(ev, c)))),
+  ),
+// You may discard an Artifact you control to get +1 Attack.
+// GUN: 1
+  u2: makeHeroCard("Star-Lord", "Don't Need That Stuff", 6, u, 3, Color.STRENGTH, "Guardians of the Galaxy", "GF", ev => {
+    selectCardOptEv(ev, "Choose an Artifact to discard", playerState.artifact.deck, c => { discardEv(ev, c); addAttackEvent(ev, 1); });
+  }),
+// <b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +3 Attack.
+// GUN: 1
+  ra: makeHeroCard("Star-Lord", "Hadron Enforcer", 7, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => addAttackEvent(ev, 3),
+  triggeredArifact('PLAY', ev => isArtifact(ev.what) && !pastEvents('PLAY').has(ev => isArtifact(ev.what)), true)),
+},
+{
+  name: "Gamora",
+  team: "Guardians of the Galaxy",
+// If you control an Artifact, draw a card.
+  c1: makeHeroCard("Gamora", "Sharpen Blades", 3, 2, u, Color.COVERT, "Guardians of the Galaxy", "FD", ev => playerState.artifact.size && drawEv(ev)),
+// To play this, you must put a card from your hand on the bottom of your deck.
+// Draw two cards.
+  c2: makeHeroCard("Gamora", "Resourceful Fugitive", 4, u, u, Color.COVERT, "Guardians of the Galaxy", "", ev => drawEv(ev, 2), { playCost: 1, playCostType: 'BOTTOMDECK'}),
+// <b>Triggered Artifact</b> — Whenever you draw a card during your turn, you get +1 Attack.
+  c3: makeHeroCard("Gamora", "Retractable Sword", 5, u, u, Color.INSTINCT, "Guardians of the Galaxy", "",
+    // TODO not in CLEANUP
+    ev => addAttackEvent(ev, 1), triggeredArifact('DRAW', (ev, source) => owner(source) === playerState && ev.who === playerState)),
+  uc: makeDividedHeroCard(
+// DIVIDED: Forgive
+// DIVHERO: Gamora
+// {POWER Covert} Draw a card.
+    makeHeroCard("Gamora", "Forgive", 2, 1, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => superPower(Color.COVERT) && drawEv(ev)),
+// DIVIDED: Resent
+// DIVHERO: Nebula
+// {POWER Instinct} You get +1 Attack.
+    makeHeroCard("Nebula", "Resent", 2, u, 1, Color.INSTINCT, "Guardians of the Galaxy", "D", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 1)),
+  ),
+// If you drew at least two cards this turn, you may KO a card from your hand or discard pile.
+// GUN: 1
+  u2: makeHeroCard("Gamora", "Stolen Necroblaster", 6, u, 3, Color.RANGED, "Guardians of the Galaxy", "G", ev => pastEvents('DRAW').count(ev => ev.who === playerState) >= 2 && selectCardAndKOEv(ev, handOrDiscard())),
+// If you drew at least two cards this turn, you get +2 Attack.
+  ra: makeHeroCard("Gamora", "Guardians Escape", 7, u, 5, Color.TECH, "Guardians of the Galaxy", "FD", ev => pastEvents('DRAW').count(ev => ev.who === playerState) >= 2 && addAttackEvent(ev, 2)),
+},
+{
+  name: "Rocket & Groot",
+  team: "Guardians of the Galaxy",
+// {KINDNESS} Rescue a Bystander.
+  c1: makeHeroCard("Rocket & Groot", "Baby Groot", 3, 2, u, Color.INSTINCT, "Guardians of the Galaxy", "FD", [], { excessiveKindness: ev => rescueEv(ev) }),
+// DIVIDED: Passion
+// DIVHERO: Rocket
+// {VIOLENCE} Draw a card.
+// DIVIDED: Compassion
+// DIVHERO: Baby Groot
+// {KINDNESS} Draw a card.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Rocket", "Passion", 2, u, 1, Color.TECH, "Guardians of the Galaxy", "D", [], { excessiveViolence: ev => drawEv(ev) }),
+    makeHeroCard("Baby Groot", "Compassion", 2, 1, u, Color.COVERT, "Guardians of the Galaxy", "D", [], { excessiveKindness: ev => drawEv(ev) }),
+  ),
+// DIVIDED: Don't Press This Button
+// DIVHERO: Rocket
+// {POWER Ranged} You get +1 Attack.
+// DIVIDED: Press the Button
+// DIVHERO: Baby Groot
+// {POWER Tech} You may KO a card from your hand or discard pile.
+  c3: makeDividedHeroCard(
+    makeHeroCard("Rocket", "Don't Press This Button", 4, u, 2, Color.RANGED, "Guardians of the Galaxy", "D", ev => superPower(Color.RANGED) && addAttackEvent(ev, 1)),
+    makeHeroCard("Baby Groot", "Press the Button", 4, 1, u, Color.TECH, "Guardians of the Galaxy", "", ev => superPower(Color.TECH) && KOHandOrDiscardEv(ev, undefined)),
+  ),
+// <b>Triggered Artifact</b> — Whenever you use <b>Excessive Violence</b>, draw a card.
+  uc: makeHeroCard("Rocket & Groot", "Gravity Mines", 4, u, u, Color.TECH, "Guardians of the Galaxy", "F", ev => drawEv(ev),
+    triggeredArifact('FIGHT', (ev, source) => owner(source) === playerState && ev.withViolence)),
+// DIVIDED: Tricky
+// DIVHERO: Rocket
+// If you have at least five different card names, you get +2 Recruit.
+// DIVIDED: Simple
+// DIVHERO: Groot
+  u2: makeDividedHeroCard(
+    // TODO multiplayer reveal hand
+    makeHeroCard("Rocket", "Tricky", 5, 2, u, Color.TECH, "Guardians of the Galaxy", "D", ev => revealableSplit().uniqueCount(c => c.cardName) >= 5 && addRecruitEvent(ev, 2)),
+    makeHeroCard("Groot", "Simple", 5, u, 3, Color.STRENGTH, "Guardians of the Galaxy", "N"),
+  ),
+// Reveal your hand. You get +1 Attack for each different card name in your hand.
+// <i>(Each Divided Card has two different card names.)</i>
+  // TODO multiplayer reveal hand
+  ra: makeHeroCard("Rocket & Groot", "We Are Groot", 7, u, 0, Color.STRENGTH, "Guardians of the Galaxy", "", ev => addAttackEvent(ev, splitDivided(playerState.hand.deck).uniqueCount(c => c.cardName))),
+},
+{
+  name: "Drax",
+  team: "Guardians of the Galaxy",
+// {VIOLENCE} Look at the top two cards of your deck. Discard any number of them and put the rest back in any order.
+  c1: makeHeroCard("Drax", "Nothing Goes Over My Head", 3, u, 2, Color.INSTINCT, "Guardians of the Galaxy", "D", [], { excessiveViolence: ev =>
+    revealPlayerDeckEv(ev, 2, cards => selectObjectsAnyEv(ev, "Choose cards to discard", cards, c => discardEv(ev, c)))
+   }),
+// {VIOLENCE} You get +2 Recruit.
+  c2: makeHeroCard("Drax", "Prison Riot", 5, 0, 3, Color.STRENGTH, "Guardians of the Galaxy", "FD", [], { excessiveViolence: ev => addRecruitEvent(ev, 2) }),
+// DIVIDED: I Am Invisible
+// DIVHERO: Drax - Guardians of the Glaxy
+// {VIOLENCE} Reveal the top card of your deck. If it's [Strength] or [Instinct], draw it.
+// DIVIDED: Xandar Is Invincible
+// DIVHERO: Irani Rael - Unaffiliated
+// If there are no Villains in the city, you get +1 Recruit.
+  c3: makeDividedHeroCard(
+    makeHeroCard("Drax", "I Am Invisible", 4, u, 2, Color.INSTINCT, "Guardians of the Galaxy", "D", [], { excessiveViolence: ev =>
+      revealPlayerDeckEv(ev, 1, cards => cards.limit(Color.STRENGTH | Color.INSTINCT).each(c => drawCardEv(ev, c)))
+     }),
+    makeHeroCard("Irani Rael", "Xandar Is Invincible", 4, 2, u, Color.TECH, u, "D", ev =>
+      cityVillains().size === 0 && addRecruitEvent(ev, 1)
+    ),
+  ),
+// <b>Triggered Artifact</b> — Whenever you play another [Strength] or [Instinct] card, you get +1 Attack.
+  uc: makeHeroCard("Drax", "Dual Knives", 4, u, u, Color.STRENGTH, "Guardians of the Galaxy", "F", ev => addAttackEvent(ev, 1),
+  triggeredArifact('PLAY', (ev, source) => owner(source) === playerState && isColor(Color.STRENGTH | Color.INSTINCT)(ev.what))),
+// DIVIDED: Remove His Spine
+// DIVHERO: Drax - Guardians of the Glaxy
+// {VIOLENCE} Reveal the top card of your deck. You may KO it.
+// DIVIDED: Also Illegal
+// DIVHERO: Rhomann Dey - Unaffiliated
+// {POWER Instinct} You get +1 Recruit.
+  u2: makeDividedHeroCard(
+    makeHeroCard("Drax", "Remove His Spine", 6, u, 3, Color.STRENGTH, "Guardians of the Galaxy", "", [], { excessiveViolence: ev =>
+      revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))
+     }),
+    makeHeroCard("Rhomann Dey", "Also Illegal", 6, 3, u, Color.INSTINCT, u, "", ev => superPower(Color.INSTINCT) && addRecruitEvent(ev, 1)),
+  ),
+// Double the Attack you have.
+// {VIOLENCE} You may KO a Villain from your Victory Pile to do its Fight effect.
+  ra: makeHeroCard("Drax", "Revenge For My Family", 8, u, u, Color.STRENGTH, "Guardians of the Galaxy", "", ev => doubleAttackEv(ev), { excessiveViolence: ev =>
+    selectCardOptEv(ev, "Choose a Villain to KO", playerState.victory.limit(isVillain), c => {
+      KOEv(ev, c);
+      pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use
+    })
+   }),
+},
+{
+  name: "Mantis",
+  team: "Guardians of the Galaxy",
+// {KINDNESS} Put the Hero you recruited this way on the top of your deck.
+  c1: makeHeroCard("Mantis", "Empathic Bond", 3, 2, u, Color.RANGED, "Guardians of the Galaxy", "FD", [], { excessiveKindness: ev => moveCardEv(ev, ev.what, playerState.deck) }),
+// DIVIDED: Selfless
+// DIVHERO: Mantis - Guardians of the Glaxy
+// {POWER Instinct} Draw a card.
+// Another player draws a card.
+// DIVIDED: Selfish
+// DIVHERO: Ego - Unaffiliated
+// {POWER Ranged} Draw a card.
+// Another player discards a card.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Mantis", "Selfless", 4, 2, u, Color.INSTINCT, "Guardians of the Galaxy", "D", [
+      ev => superPower(Color.INSTINCT) && drawEv(ev),
+      ev => chooseOtherPlayerEv(ev, p => drawEv(ev, 1, p))
+     ]),
+    makeHeroCard("Ego", "Selfish", 4, u, 2, Color.RANGED, u, "D", [
+      ev => superPower(Color.RANGED) && drawEv(ev),
+      ev => chooseOtherPlayerEv(ev, p => pickDiscardEv(ev, 1, p))
+    ]),
+  ),
+// {KINDNESS} You get +2 Attack.
+  c3: makeHeroCard("Mantis", "Inspire Courage", 5, 3, 0, Color.INSTINCT, "Guardians of the Galaxy", "FD", [], { excessiveKindness: ev => addAttackEvent(ev, 2) }),
+// {KINDNESS} You may KO one of your cards.
+  uc: makeHeroCard("Mantis", "Sleep", 5, 2, u, Color.COVERT, "Guardians of the Galaxy", "FD", [], { excessiveKindness: ev => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)) }),
+// {KINDNESS} You get +Attack equal to the total of all the printed Recruit and Attack of the Hero you recruited this way.
+  u2: makeHeroCard("Mantis", "Emotional Wave", 6, 3, 0, Color.RANGED, "Guardians of the Galaxy", "", [], { excessiveKindness: ev => addAttackEvent(ev, ev.what.printedAttack + ev.what.printedRecruit) }),
+// {KINDNESS} You get +Attack equal to the cost of the Hero you recruited this way.
+  ra: makeHeroCard("Mantis", "Discover the Dead", 7, u, u, Color.INSTINCT, "Guardians of the Galaxy", "F", [], { excessiveKindness: ev => addAttackEvent(ev, ev.what.cost) }),
+},
+]);

@@ -119,7 +119,8 @@ interface Card {
   mastermindName?: string;
   whenRecruited?: Handler;
   variant?: string;
-  finishThePrey?: Handler
+  finishThePrey?: Handler;
+  excessiveKindness?: Handler;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -195,6 +196,7 @@ interface HeroCardAbillities {
   coordinate?: boolean
   cheeringCrowds?: boolean
   whenRecruited?: Handler;
+  excessiveKindness?: Handler;
 }
 class Card {
   constructor (t: string, n: string) {
@@ -287,7 +289,7 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
   return c;
 }
 function makeDividedHeroCard(c1: Card, c2: Card) {
-  let c = new Card("HERO", `${c1.cardName} / ${c2.cardName}`);
+  let c = new Card("HERO", `${c1.cardName}/${c2.cardName}`);
   const sumPrintedStat = (a: number, b: number) => a === undefined ? b : a + (b || 0);
   const orStat = (a: number, b: number) => a === undefined ? b : a | (b || 0);
   const mergeArrayStat = <T>(a: T[], b: T[]) => a === undefined ? b : b === undefined ? a : [...a, ...b].unique(a => a);
@@ -296,7 +298,7 @@ function makeDividedHeroCard(c1: Card, c2: Card) {
   c.printedAttack = sumPrintedStat(c1.printedAttack, c2.printedAttack);
   c.printedCost = c1.printedCost;
   c.color = c1.color | c2.color;
-  c.heroName; // TODO handle in ???
+  c.heroName = c1.heroName; // TODO handle in ???
   c.flags = c1.flags;
   c.effects = c1.effects ? c2.effects ? c1.effects.concat(c2.effects) : c1.effects : undefined;
   c.sizeChanging = orStat(c1.sizeChanging, c2.sizeChanging); // TODO this works differently in Champions
@@ -445,7 +447,7 @@ function makeCardCopyPaste(c: Card, p: Card): Card {
 }
 function makeCardDividedChoice(c: Card, rightSide: boolean) {
   if (c.ctype !== 'P') throw TypeError("need card in play");
-  Object.setPrototypeOf(c, Object.getPrototypeOf(rightSide ? c.divided.right : c.divided.left));
+  Object.setPrototypeOf(c, rightSide ? c.divided.right : c.divided.left);
 }
 function moveCard(c: Card, where: Deck, bottom?: boolean): void {
   // Card copies do not have a location and cannot be moved
@@ -835,6 +837,11 @@ function addHeroTemplates(set: string, templates: Templates['HEROES']) {
   templates.forEach(t => {
     t.set = set;
     for (const c of [t.c1, t.c2, t.c3, t.uc, t.u2, t.ra]) if (c) c.set = set;
+    for (const c of [t.c1, t.c2, t.c3, t.uc, t.u2, t.ra]) if (c) {
+      if (t.name !== c.heroName) {
+        console.error("Hero name mismatch " + t.name + " >> ", c.divided.left.heroName, "///", c.divided.right.heroName);
+      }
+    }
     t.templateId = t.name;
     if (findHeroTemplate(t.templateId)) t.templateId += '@' + set;
     cardTemplates.HEROES.push(t);
@@ -1612,6 +1619,13 @@ function revealable(who = playerState) {
   return [...who.hand.deck, ...who.playArea.deck, ...who.artifact.deck];
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
+function splitDivided(cards: Card[]) {
+  return cards.map(c => c.divided ? [c.divided.left, c.divided.right] : [c]).merge();
+}
+function revealableSplit(who: Player = playerState) {
+  if (!who.hand.has(c => !!c.divided)) return revealable(who);
+  return [...splitDivided(who.hand.deck), ...who.playArea.deck, ...who.artifact.deck];
+}
 function numColors(heroes: Card[] = yourHeroes()) {
   const colors = [Color.COVERT, Color.INSTINCT, Color.TECH, Color.RANGED, Color.STRENGTH, Color.GRAY];
   return colors.count(color => heroes.some(hero => hero.isColor(color)));
@@ -1880,8 +1894,10 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
 function noOpActionEv(ev: Ev) {
   return new Ev(ev, 'NOOP', { func: () => {}, cost: { cond: () => false }});
 }
-function recruitCardActionEv(ev: Ev, c: Card) {
-  return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, where: c.location, cost: getRecruitCost(c) });
+function recruitCardActionEv(ev: Ev, c: Card, withKindness?: boolean) {
+  const cost = getRecruitCost(c);
+  if (withKindness) cost.recruit++;
+  return new Ev(ev, 'RECRUIT', { what: c, func: buyCard, where: c.location, cost, withViolence: withKindness });
 }
 function fightActionEv(ev: Ev, what: Card, withViolence?: boolean) {
   let cost = getFightCost(what);
@@ -1946,22 +1962,24 @@ function addTurnAction(action: Ev) {
   if (!turnState.turnActions) turnState.turnActions = [];
   turnState.turnActions.push(action);
 }
+function recruitableCards(): Card[] {
+  return [...hqHeroes(), gameState.officer.top, gameState.sidekick.top, gameState.madame.top, gameState.newRecruit.top].filter(c => c);
+}
 function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => (isHero(c) || isArtifact(c)) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   // TODO any deck with recruitable
-  p = p.concat(hqHeroes().map(d => recruitCardActionEv(ev, d)));
+  recruitableCards().map(d => {
+    p.push(recruitCardActionEv(ev, d));
+    if (canRecruitWithKindness(d)) p.push(recruitCardActionEv(ev, d, true));
+  });
   // TODO any deck with fightable
   fightableCards().map(d => {
     p.push(fightActionEv(ev, d));
     if (canFightWithViolence(d)) p.push(fightActionEv(ev, d, true));
     if ((turnState.piercing || turnState.piercingWithAttack) && d.location !== gameState.astralPlane) p.push(fightPiercingActionEv(ev, d));
   });
-  gameState.officer.withTop(c => p.push(recruitCardActionEv(ev, c)));
-  gameState.sidekick.withTop(c => p.push(recruitSidekickActionEv(ev, c)));
-  gameState.madame.withTop(c => p.push(recruitCardActionEv(ev, c)));
-  gameState.newRecruit.withTop(c => p.push(recruitCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   fightableCards().each(c => getCardActions(c).each(a => p.push(a(c, ev))));
@@ -2439,6 +2457,7 @@ function buyCard(ev: Ev): void {
   else if (ev.what.hasWallCrawl()) gainToDeckEv(ev, ev.what);
   else gainEv(ev, ev.what);
   ev.what.whenRecruited && pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.whenRecruited });
+  if (ev.withViolence) playKindnessEv(ev);
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
