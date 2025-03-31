@@ -1394,8 +1394,6 @@ makeCityAdjacent(gameState.city);
 
 // Init Scheme
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
-if (gameState.scheme.top.triggers)
-gameState.triggers = gameState.triggers.concat(gameState.scheme.top.triggers);
 // Init starting decks
 const handCards = {
   SHIELD: [ shieldAgentTemplate, shieldTrooperTemplate ],
@@ -2695,6 +2693,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     if (c.triggers) c.triggers.forEach(t => checkTrigger(c)(t))
   };
   gameState.triggers.forEach(checkTrigger());
+  gameState.scheme.top.triggers.forEach(checkTrigger());
   turnState.triggers.forEach(checkTrigger());
   gameState.mastermind.each(checkCardTrigger);
   CityCards().each(checkCardTrigger);

@@ -2677,6 +2677,7 @@ makeSchemeCard("...Reveal the Heroes' Evil Clones", { }, ev => {
 // <b>When revealed</b>:  Twists stacked next to the Mastermind are “Bioweapon Adaptations.”
 // EVILWINS: When there are 15 non-grey Heroes in the KO pile or the Villain Deck or Hero Deck runs out.
 makeSchemeCard("...Unleash an Anti-Mutant Bioweapon", { }, ev => {
+  cont(ev, () => schemeProgressEv(ev, gameState.ko.count(isNonGrayHero)));
   // Twist: Add this Twist to the Bioweapon Adaptations.
   attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
   // Then for each card in that stack, choose a different number from 2-6. KO all Heroes from the HQ that have any of those costs.
