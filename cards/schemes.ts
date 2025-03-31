@@ -2684,7 +2684,7 @@ makeSchemeCard("...Unleash an Anti-Mutant Bioweapon", { }, ev => {
     const options = [2, 3, 4, 5, 6];
     const selected: number[] = [];
     gameState.mastermind.attachedDeck('TWIST').each(() => cont(ev, () => {
-      options.length > 0 && chooseOptionEv(ev, "Choose a cost", options.map(v => ({l:v.toString(), v})), v => selected.push(v));
+      options.length > 0 && chooseOptionEv(ev, "Choose a cost", options.filter(v => !selected.includes(v)).map(v => ({l:v.toString(), v})), v => selected.push(v));
     }));
     cont(ev, () => hqHeroes().each(c => selected.includes(c.cost) && KOEv(ev, c)));
   });
