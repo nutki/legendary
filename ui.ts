@@ -20,6 +20,14 @@ function imageName(path: string, card: Card, subname?: string): string {
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
   return "images/" + (card.set || 'Legendary') + '/' + path + "/" + name + ".jpg";
 }
+function cardImageTransform(card: Card): string {
+  if (card.instance?.divided) {
+    const proto = Object.getPrototypeOf(card);
+    return card.instance === proto ? 'rotate(90deg) scale(1.4,calc(1/1.4))' :
+      `scaleX(2) translate(${proto === card.instance.divided.left ? '': '-'}25%)`;
+  }
+  return undefined;
+}
 function cardImageName(card: Card): string {
   if (card.instance) card = card.instance;
   if (card.cardType === "HERO" && card.heroName === "Special Sidekick") return imageName("sidekicks", card);
@@ -56,10 +64,11 @@ function makeDisplayPlayAreaImg(c: Card) {
   const gone = !playerState.playArea.deck.includes(c);;
   return makeDisplayCardImg(c, gone);
 }
-function img(src: string, className?: string) {
+function img(src: string, className?: string, transform?: string) {
   const e = document.createElement('img');
   e.setAttribute('class', className);
   e.setAttribute('src', src);
+  if (transform) e.setAttribute('style', `transform: ${transform}`);
   return e;
 }
 function div(className: string, options?: {[key: string]: string}, ...children: Node[]) {
@@ -81,12 +90,13 @@ function text(value: string | number) { return document.createTextNode(value.toS
 function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true): HTMLDivElement {
   const faceUp = isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
+  const transform = faceUp ? cardImageTransform(c) : undefined;
   const options: {[key: string]: string} = {
     onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}')`,
     onmouseleave: "clearSourceImg()",
   };
   if (id) options.id = c.id;
-  const d = div(gone ? "card gone" : "card", options, img(src, "cardface"));
+  const d = div(gone ? "card gone" : "card", options, img(src, "cardface", transform));
   if (isMastermind(c)) d.appendChild(div("count", {}, text(c.attached("TACTICS").size)))
   if (isScheme(c) && getSchemeCountdown() !== undefined)
     d.appendChild(div("count", {}, text(getSchemeCountdown())))
