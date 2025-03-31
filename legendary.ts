@@ -879,7 +879,8 @@ function addHenchmenTemplates(set: string, templates: Templates['HENCHMEN']) {
   });
 }
 function heroToCardTamplates(h: Templates['HEROES'][0]): [Card, number][] {
-  return h.uc ? [[h.c1, 5], [h.c2, 5], [h.uc, 3], [h.ra, 1]] :
+  return h.c3 ? [[h.c1, 3], [h.c2, 3], [h.c3, 3], [h.uc, 2], [h.u2, 2], [h.ra, 1]] : // MCU GotG, MCU Ant Man
+         h.uc ? [[h.c1, 5], [h.c2, 5], [h.uc, 3], [h.ra, 1]] :
                 [[h.c1, 4], [h.c2, 4], [h.c3, 4], [h.ra, 2]]; // Messiah Complex clone heroes
 }
 function findHeroTemplate(name: string) { return cardTemplates.HEROES.filter(t => t.templateId === name)[0]; }
