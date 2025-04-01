@@ -2970,3 +2970,112 @@ addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
   ]
 }),
 ]);
+addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
+// EPICNAME: Ronan the Accuser
+...makeEpicMastermindCard("Ronan the Accuser", [ 6, 7 ], u, "Followers of Ronan", ev => {
+// Each player discards a card at random. Ronan captures this Strike as a "Necrocraft Ship" {VILLAINOUS WEAPON} that gives +1 Attack.
+// When you gain a Necrocraft ship, it becomes a <b>Triggered Artifact</b> that says "Whenever a Master Strike is completed, draw a card."
+// Each player with six or more cards in hand discards two cards at random. Ronan captures this Strike as a "Necrocraft Ship" {VILLAINOUS WEAPON} that gives +2 Attack.
+// When you gain a Necrocraft ship, it becomes a <b>Triggered Artifact</b> that says "Whenever a Master Strike is completed, draw a card."
+  const epic = ev.source.epic;
+  epic ? eachPlayer(p => p.hand.size >= 6 && repeat(2, () => cont(ev, () => p.hand.withRandom(c => discardEv(ev, c)))))
+    : eachPlayer(p => p.hand.withRandom(c => discardEv(ev, c)));
+  const thisStrikeCard = (c: Card) => c === ev.what;
+  addStatSet('isVillainousWeapon', thisStrikeCard, () => true);
+  addStatSet('isArtifact', thisStrikeCard, () => true);
+  addStatSet('defense', thisStrikeCard, () => epic ? 2 : 1);
+  addStatSet('effects', thisStrikeCard, () => [ playArtifact ]);
+  addStatSet('triggers', thisStrikeCard, () => [ triggeredArifact('STRIKE', () => true).trigger ]);
+  addStatSet('artifactEffects', thisStrikeCard, () => [ (ev: Ev) => drawEv(ev) ]);
+  attachCardEv(ev, ev.what, ev.source, 'WEAPON');
+}, [
+// ---
+// <b>Triggered Artifact</b> - Whenever a Master Strike is completed, you may KO one of your cards.
+// ATTACK: +4
+  [ "Hood of the Accuser", ev => {
+  // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
+  } ],
+  makeGainableCard(makeTacticsCard("Hood of the Accuser", { printedDefense: 4, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
+  u, u, Color.GRAY, u, "D", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)), triggeredArifact('STRIKE', () => true)),
+// ---
+// <b>Triggered Artifact</b> - Whenever you gain your first Wound in any turn, you may KO it.
+// ATTACK: +5
+  makeGainableCard(makeTacticsCard("Ancient Kree Armor", { printedDefense: 5, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
+  u, u, Color.GRAY, u, "D", ev => {
+    selectCardOptEv(ev, "Choose a Wound to KO", handOrDiscard().limit(isWound), c => KOEv(ev, c));
+  }, { isArtifact: true, trigger: { event: 'GAIN', match: (ev, source) => isWound(ev.what) && ev.who === owner(source) && !pastEvents('GAIN').has(pev => isWound(pev.what) && pev.who === owner(source)), after: ev => chooseMayEv(ev, "KO the Wound", () => KOEv(ev, ev.parent.what))}}),
+// ---
+// <b>Triggered Artifact</b> - Whenever you recruit a Hero from the HQ, you get +2 Attack.
+// ATTACK: +6
+  makeGainableCard(makeTacticsCard("The Cosmi-Rod Warhammer", { printedDefense: 6, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
+  u, u, Color.GRAY, u, "D", ev => addAttackEvent(ev, 2), triggeredArifact('RECRUIT', ev => ev.where.isHQ)),
+// ---
+// <b>Triggered Artifact</b> - Whenever a Scheme Twist is completed, draw two cards.
+// ATTACK: +3
+  makeGainableCard(makeTacticsCard("Ronan's Throne", { printedDefense: 3, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
+  u, u, Color.GRAY, u, "D", ev => drawEv(ev, 2), triggeredArifact('TWIST', () => true)),
+], {
+  commonTacticEffect: ev => {
+    // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
+    selectCardAndKOEv(ev, yourHeroes());
+    rescueEv(ev, 2);
+    attachCardEv(ev, ev.source, ev.source.mastermind, 'WEAPON');
+  }
+}),
+// Ego gets +1 Attack for each city space. When there are no more city spaces, Good Wins.
+// Leads: Any Villain Group, plus add an additional Villain Group <i>(even for 1 player).</i>
+// TODO extra villain group
+// EPICNAME: Ego, The Living Planet
+// Ego gets +2 Attack for each city space. When there are no more city spaces, Good Wins.
+...makeEpicMastermindCard("Ego, The Living Planet", [ 3, 1 ], u, u, ev => {
+// Create an extra city space on the left side of the city. If there are at least 3 Villains in the city, each player gains a Wound. Play another card from the Villain Deck.
+// This Strike becomes an extra city space to the left side of the city. If there are at least 2 Villains in the city, each player gains a Wound. Play two cards from the Villain Deck.
+  withLeftmostCitySpace(ev, space => {
+    let i = 0;
+    while(Deck.deckList.has(d => d.id === "EXTRACITY" + i)) i++;
+    const newSpace = new Deck('EXTRACITY' + i, true);
+    newSpace.isCity = true;
+    newSpace.adjacentRight = space;
+    space.adjacentLeft = newSpace;
+    gameState.city.unshift(newSpace);
+  });
+  cityVillains().size >= (ev.source.epic ? 2 : 3) && eachPlayer(p => gainWoundEv(ev, p));
+  villainDrawEv(ev);
+  ev.source.epic && villainDrawEv(ev);
+}, [
+// Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+  [ "Until Everything Is . . . Me!", ev => {
+  // Rescue three Bystanders.
+    rescueEv(ev, 3);
+    ev.source.mastermind.commonTacticEffect(ev);
+  } ],
+// Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+  [ "I'm a Celestial, Sweetheart", ev => {
+  // When you draw a new hand of cards at the end of this turn, draw two extra cards.
+    addEndDrawMod(2);
+    ev.source.mastermind.commonTacticEffect(ev);
+  } ],
+// Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+  [ "The Expansion Is My Purpose", ev => {
+  // You get +1 Recruit for each empty city space.
+    addRecruitEvent(ev, gameState.city.count(isCityEmpty));
+    ev.source.mastermind.commonTacticEffect(ev);
+  } ],
+// Destroy the leftmost city space. Any Villain there escapes. Shuffle this Tactic back into Ego's Tactics.
+  [ "Cover All That Exists", ev => {
+  // You may KO one of your Heroes. Choose a Henchman from any Victory Pile to enter the city.
+    selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+    selectCardEv(ev, "Choose a Henchman to enter", gameState.players.flatMap(p => p.victory.deck).limit(isHenchman), c => enterCityEv(ev, c));
+  } ],
+], {
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.city.size,
+  commonTacticEffect: ev => {
+    withLeftmostCitySpace(ev, space => {
+      destroyCity(space);
+      if (!gameState.city.size) gameOverEv(ev, "WIN");
+      space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
+    });
+    shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+  }
+}),
+]);

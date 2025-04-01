@@ -6263,7 +6263,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> — Whenever you draw a card during your turn, you get +1 Attack.
   c3: makeHeroCard("Gamora", "Retractable Sword", 5, u, u, Color.INSTINCT, "Guardians of the Galaxy", "",
     // TODO not in CLEANUP
-    ev => addAttackEvent(ev, 1), triggeredArifact('DRAW', (ev, source) => owner(source) === playerState && ev.who === playerState)),
+    ev => addAttackEvent(ev, 1), triggeredArifact('DRAW', (ev, source) => ev.who === playerState)),
   uc: makeDividedHeroCard(
 // DIVIDED: Forgive
 // DIVHERO: Gamora
@@ -6307,7 +6307,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
   ),
 // <b>Triggered Artifact</b> — Whenever you use <b>Excessive Violence</b>, draw a card.
   uc: makeHeroCard("Rocket & Groot", "Gravity Mines", 4, u, u, Color.TECH, "Guardians of the Galaxy", "F", ev => drawEv(ev),
-    triggeredArifact('FIGHT', (ev, source) => owner(source) === playerState && ev.withViolence)),
+    triggeredArifact('FIGHT', (ev, source) => ev.withViolence)),
 // DIVIDED: Tricky
 // DIVHERO: Rocket
 // If you have at least five different card names, you get +2 Recruit.
@@ -6348,7 +6348,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
   ),
 // <b>Triggered Artifact</b> — Whenever you play another [Strength] or [Instinct] card, you get +1 Attack.
   uc: makeHeroCard("Drax", "Dual Knives", 4, u, u, Color.STRENGTH, "Guardians of the Galaxy", "F", ev => addAttackEvent(ev, 1),
-  triggeredArifact('PLAY', (ev, source) => owner(source) === playerState && isColor(Color.STRENGTH | Color.INSTINCT)(ev.what))),
+  triggeredArifact('PLAY', (ev, source) => isColor(Color.STRENGTH | Color.INSTINCT)(ev.what))),
 // DIVIDED: Remove His Spine
 // DIVHERO: Drax - Guardians of the Glaxy
 // {VIOLENCE} Reveal the top card of your deck. You may KO it.

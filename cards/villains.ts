@@ -4761,3 +4761,188 @@ addVillainTemplates("Doctor Strange and the Shadows of Nightmare", [
   })],
 ]},
 ]);
+addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
+{ name: "Followers of Ronan", cards: [
+// Exolon Monks get +2 Attack while another Villain is <b>Commanding</b> the Followers of Ronan.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 2
+  [ 1, makeVillainCard("Followers of Ronan", "Exolon Monks", 3, 2, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: commandingVarDefense(0, 2),
+  })],
+// Exolon Attendants get +2 Attack while another Villain is <b>Commanding</b> the Followers of Ronan.
+// AMBUSH: Reveal the top card of the Villain Deck. If it's a Villain, it enters an empty city space.
+// ATTACK: 3+
+// VP: 2
+  [ 1, makeVillainCard("Followers of Ronan", "Exolon Attendants", 3, 2, {
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => {
+      cards.limit(isVillain).each(c => selectCardEv(ev, "Select empty city space", gameState.city.limit(isCityEmpty), d => enterCityEv(ev, c, d)));
+    }),
+    varDefense: commandingVarDefense(0, 2),
+  })],
+// Sakaaran Mercenaries get +2 Attack while another Villain is <b>Commanding</b> the Followers of Ronan.
+// AMBUSH: If another Villain is <b>Commanding</b> the Followers of Ronan, each player gains a Wound.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Followers of Ronan", "Sakaaran Mercenaries", 4, 3, {
+    ambush: ev => isCommanding(ev.source) || eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: commandingVarDefense(0, 2),
+  })],
+// Korath gets +2 Attack while he <b>Commands</b> the Followers of Ronan.
+// AMBUSH: Each player may draw a card. For each player that did, reveal a card from the Villain deck. Play a Followers of Ronan card from among the cards you revealed this way. Put the rest back in any order.
+// FIGHT: Same effect.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Followers of Ronan", "Korath the Pursuer", 4, 3, {
+    ambush: ev => {
+      let n = 0;
+      eachPlayer(p => chooseMayEv(ev, "Draw a card?", () => {
+        drawEv(ev, 1, p);
+        n++;
+      }, p));
+      cont(ev, () => n && revealVillainDeckEv(ev, n, cards => {
+        selectCardEv(ev, "Choose a card to play", cards.limit(isVillain).limit(isGroup("Followers of Ronan")), c => villainDrawEv(ev, c));
+      }));
+    },
+    fight: sameEffect,
+    varDefense: commandingVarDefense(2),
+  })],
+// Nebula gets +2 Attack while she <b>Commands</b> the Followers of Ronan.
+// AMBUSH: Nebula captures a {VILLAINOUS WEAPON} from another Villain in the city or captures an Artifact from a player's control as a {VILLAINOUS WEAPON}. If it doesn't already give a {VILLAINOUS WEAPON} bonus, it gives +2 Attack.
+// FIGHT: Same effect.
+// ATTACK: 4+
+// VP: 4
+  [ 1, makeVillainCard("Followers of Ronan", "Nebula", 4, 4, {
+    ambush: ev => {
+      const options = [...cityVillains().flatMap(v => v.attached('WEAPON')), ...gameState.players.flatMap(p => p.artifact.deck)];
+      selectCardEv(ev, "Choose a weapon to capture", options, c => {
+        if (!isVillainousWeapon(c)) {
+          const thisCard = (c2: Card) => c2 === c;
+          addStatSet('isVillainousWeapon', thisCard, () => true);
+          addStatSet('defense', thisCard, () => 2);
+        }
+        attachCardEv(ev, c, ev.source, 'WEAPON');
+      });
+    },
+    varDefense: commandingVarDefense(2),
+  })],
+// {VILLAINOUS WEAPON}
+// AMBUSH: If Korath is in the city, he captures this.
+// GAINABLE
+// <b>Triggered Artifact</b> - Whenever you play a card that costs 6 or more, you get +1 Attack.
+// ATTACK: +3
+// FLAVOR: Art contains a gun.
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "Korath's Disrupter Rifle", 3, {
+    ambush: ev => cityVillains().limit(c => c.cardName === "Korath the Pursuer").firstOnly().each(c => attachCardEv(ev, ev.source, c, 'WEAPON')),
+  }), u, u, Color.GRAY, u, "G", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => ev.what.cost >= 6))],
+// {VILLAINOUS WEAPON}
+// AMBUSH: If a Follower of Ronan captures this, each player gains a Wound.
+// GAINABLE
+// <b>Triggered Artifact</b> - Whenever you defeat a Villain, you get +1 Recruit.
+// ATTACK: +4
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "\"The Dark Aster\" Flagship", 4, {
+    ambush: ev => ev.where.has(isGroup("Followers of Ronan")) && eachPlayer(p => gainWoundEv(ev, p)),
+  }), u, u, Color.GRAY, u, "", ev => addRecruitEvent(ev, 1), triggeredArifact('DEFEAT', ev => isVillain(ev.what)))],
+// {VILLAINOUS WEAPON}
+// AMBUSH: Put all Heroes from the HQ on the bottom of the Hero Deck.
+// GAINABLE
+// <b>Triggered Artifact</b> - When you fight the Mastermind, take another turn after this one. Don't play a card from the Villain Deck at the start of that turn. This ability can only be used once per game.
+// ATTACK: +6
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "The Orb", 6, {
+    ambush: ev => hqHeroes().each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+  }), u, u, Color.GRAY, u, "", ev => {
+    // This is Kang the Conqueror's tactic ability
+    if (!incPerGame('extra-turn', ev.source)) {
+      addFutureTrigger(ev => {
+        addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
+      });
+      gameState.extraTurn = true;
+    }
+}, triggeredArifact('FIGHT', ev => isMastermind(ev.what)))],
+]},
+{ name: "Ravagers", cards: [
+// Gef gets +2 Attack while he <b>Commands</b> the Ravagers.
+// AMBUSH: Swap Gef with the leftmost Ravager in the city.
+// '<i>Fight<b>: If Gef was </b></i><b>Commanding</b> the Ravagers, draw a card.
+// ATTACK: 3+
+// VP: 3
+  [ 1, makeVillainCard("Ravagers", "Gef", 3, 3, {
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    fight: ev => wasCommanding(ev) && drawEv(ev),
+    varDefense: commandingVarDefense(2),
+  })],
+// Tullik gets +2 Attack while he <b>Commands</b> the Ravagers.
+// AMBUSH: Swap Tullik with the leftmost Ravager in the city.
+// '<i>Fight<b>: If Tullik was </b></i><b>Commanding</b> the Ravagers, KO one of your Heroes.
+// ATTACK: 3+
+// VP: 3
+  [ 1, makeVillainCard("Ravagers", "Tullik", 3, 3, {
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    fight: ev => wasCommanding(ev) && selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: commandingVarDefense(2),
+  })],
+// Kraglin gets +2 Attack while he <b>Commands</b> the Ravagers.
+// AMBUSH: Swap Kraglin with the leftmost Ravager in the city.
+// '<i>Fight<b>: If Kraglin was </b></i><b>Commanding</b> the Ravagers, draw two cards.
+// ATTACK: 4+
+// VP: 4
+  [ 1, makeVillainCard("Ravagers", "Kraglin Obfonteri", 4, 4, {
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    fight: ev => wasCommanding(ev) && drawEv(ev, 2),
+    varDefense: commandingVarDefense(2),
+  })],
+// Taserface gets +2 Attack while he <b>Commands</b> the Ravagers.
+// AMBUSH: Swap Taserface with the leftmost Ravager in the city.
+// '<i>Fight<b>: If Taserface was </b></i><b>Commanding</b> the Ravagers, you get +2 Recruit.
+// ATTACK: 4+
+// VP: 4
+  [ 1, makeVillainCard("Ravagers", "Taserface", 4, 4, {
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    fight: ev => wasCommanding(ev) && addRecruitEvent(ev, 2),
+    varDefense: commandingVarDefense(2),
+  })],
+// Yondu gets +2 Attack while he <b>Commands</b> the Ravagers.
+// AMBUSH: Swap Yondu with the leftmost Ravager in the city.
+// '<i>Fight<b>: If Yondu was </b></i><b>Commanding</b> the Ravagers, KO up to two of your Heroes.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Ravagers", "Yondu Udonta", 5, 5, {
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    fight: ev => wasCommanding(ev) && selectObjectsUpToEv(ev, "Choose cards to KO", 2, yourHeroes(), c => KOEv(ev, c)),
+    varDefense: commandingVarDefense(2),
+  })],
+// {VILLAINOUS WEAPON}
+// AMBUSH: Play another card from the Villain Deck.
+// GAINABLE
+// <b>Triggered Artifact</b> - When you play a [Strength] or [Instinct] card, you may get +2 Attack. If you do, shuffle this into the Villain Deck.
+// ATTACK: +2
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Scavanged Blade", 2, {
+    ambush: ev => villainDrawEv(ev),
+  }), u, u, Color.GRAY, u, "D", ev => chooseMayEv(ev, "Get +2 Attack?", () => {
+    addAttackEvent(ev, 2);
+    isCopy(ev.source) || shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+  }), triggeredArifact('PLAY', ev => isColor(Color.STRENGTH | Color.INSTINCT)(ev.what)))],
+// {VILLAINOUS WEAPON}
+// AMBUSH: If a Ravager captures this, that Ravager swaps spaces with the leftmost Ravager in the city.
+// GAINABLE
+// <b>Triggered Artifact</b> - Whenever you play a [Tech] card, you get +1 Attack.
+// ATTACK: +3
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Ravager Starship \"Eclector\"", 3, {
+    ambush: ev => ev.where.limit(isGroup("Ravagers")).withFirst(c2 => cityVillains().filter(c => isGroup("Ravagers") && c !== c2).withFirst(c => swapCardsEv(ev, c2, c))),
+  }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.TECH)(ev.what)))],
+// {VILLAINOUS WEAPON}
+// AMBUSH: If Yondu is in the city, he captures this. If he is in any player's Victory Pile, he enters an empty city space, then ca[tures this.
+// GAINABLE
+// <b>Triggered Artifact</b> - Whenever you play a [Covert] or [Ranged] card, you get +1 Attack.
+// ATTACK: +4
+  [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Yaka Arrow", 4, {
+    ambush: ev => {
+      gameState.players.flatMap(p => p.victory.limit(c => c.cardName === "Yondu Udonta")).withFirst(c => {
+        selectCardEv(ev, "Select empty city space", gameState.city.limit(isCityEmpty), d => enterCityEv(ev, c, d))
+      });
+      cont(ev, () => cityVillains().limit(c => c.cardName === "Yondu Udonta").withFirst(c => attachCardEv(ev, ev.source, c, 'WEAPON')));
+    },
+  }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.COVERT | Color.RANGED)(ev.what)))],
+]},
+]);

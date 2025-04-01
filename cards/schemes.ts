@@ -2782,3 +2782,74 @@ makeSchemeCard("Duels of Science and Magic", { twists: [ 9, 10, 11, 10, 11] }, e
   setSchemeTarget(5);
 }),
 ]);
+addTemplates("SCHEMES", "Marvel Studios' Guardians of the Galaxy", [
+// SETUP: 8 Twists. Add an extra Villain Group.
+// RULE: Heroes that start in or enter the HQ are "Imprisoned" face down, can't be recruited, and cost 0. You can spend 1Attack each to flip them face up.
+makeSchemeCard("Inescapable \"Kyln\" Space Prison", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: Spend this amount this turn "for the escape plan" or else after you draw your new hand, gain a Wound then Imprison and mix up all Heroes in the HQ.
+  // <b>Twist 1-3: 3</b> Attack (Quarnyx Battery)
+  // <b>Twist 4-5: 5</b> Attack (Prison Control Device)
+  // <b>Twist 6: 6</b> Recruit (That Guy's Leg)
+  // <b>Twist 7: 7</b> Attack (Cassette Player)
+  // Twist 8 Evil wins!
+  if (ev.nr <= 7) {
+    const cost: ActionCost = ev.nr <= 3 ? { attack: 3 } : ev.nr <= 5 ? { attack: 5 } : ev.nr <= 6 ? { recruit: 6 } : { attack: 7 };
+    const desc = ev.nr <= 3 ? "Quarnyx Battery" : ev.nr <= 5 ? "Prison Control Device" : ev.nr <= 6 ? "That Guy's Leg" : "Cassette Player";
+    let done = false;
+    addTurnAction(new Ev(ev, 'EFFECT', {
+      desc: `Advance Escape Plan: ${desc}`,
+      cost,
+      func: ev => done = true,
+    }));
+    addTurnTrigger('CLEANUP', () => true, ev => {
+      if (!done) {
+        gainWoundEv(ev, playerState);
+        gameState.hq.each(c => c.faceup = false);
+        // TODO shuffle the Heroes in the HQ
+      }
+    });
+  }
+  schemeProgressEv(ev, ev.nr);
+  forbidAction('RECRUIT', c => c.location.isHQ && !c.location.faceup, true);
+}, [{
+  event: 'MOVECARD',
+  match: ev => isHero(ev.what) && ev.to.isHQ && !ev.from.isHQ,
+  before: ev => {
+    ev.to.faceup = false;
+  },
+}], () => {
+  setSchemeTarget(8);
+  gameState.specialActions = ev => gameState.hq.map(d => new Ev(ev, 'EFFECT', {
+    cost: { attack: 1, cond: () => !d.faceup },
+    func: ev => { d.faceup = true; }
+  }));
+}),
+// SETUP: 11 Twists. Add an extra Villain Group.
+// EVILWINS: When 3 Omnicraft escape.
+makeSchemeCard("Provoke the Sovereign War Fleet", { twists: 11, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+  // Twist: This Twist enters the city as a 2 Attack "Sovereign Omnicraft" Villain worth 1VP with "<b>Fight</b>: You get +1 Recruit."
+  villainify("Sovereign Omnicraft", c => c === ev.twist, 2, ev => addRecruitEvent(ev, 1));
+  enterCityEv(ev, ev.twist);
+  // Each player shuffles all Twists from their Victory Piles back into the Villain Deck. Play another card from the Villain Deck.
+  gameState.players.flatMap(p => p.victory.limit(isTwist)).each(c => shuffleIntoEv(ev, c, gameState.villaindeck));
+  villainDrawEv(ev);
+}, [
+  escapeProgressTrigger(c => c.villainGroup === "Sovereign Omnicraft"),
+], () => {
+  setSchemeTarget(3);
+}),
+// SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups, but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
+// EVILWINS: When there are 32 non-grey Heroes in the KO pile.
+makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7 }, ev => {
+  // Twist: KO all Heroes from HQ. Villains in the Sewers and Bridge swap spaces. Likewise Villains in the Bank and Streets.
+}),
+// SETUP: 9 Twists.
+// EVILWINS: When there are 5 Tentacles.
+makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
+  if (ev.nr <= 8) {
+    // Twist 1-8 Put this Twist next the the Scheme as an "Abilisk Tentacle" Villain worth 4VP. It captures a non-grey Hero from your discard pile. Its Attack is 3 + the cost of that Hero. It has "<b>Fight</b>: KO one of your grey Heroes." A player of your choice gains the captured Hero." 2+ players:The player on your right plays a Tentacle from their Victory Pile, capturing from them.
+  } else if (ev.nr === 9) {
+    // Twist 9 Replay all the captured Tentacles.
+  }
+}),
+]);

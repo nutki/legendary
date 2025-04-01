@@ -1005,8 +1005,21 @@ function triggeredArifact(event: TriggerableEvType, cond: (ev: Ev, source: Card)
     isArtifact: true,
     trigger: {
       event,
-      match: (ev, source) => (source.location === owner(source)?.artifact || (selfTrigger && ev.what === source)) && cond(ev, source),
+      match: (ev, source) => owner(source) === playerState && (source.location === owner(source)?.artifact || (selfTrigger && ev.what === source)) && cond(ev, source),
       after: ev => getArtifactEffects(ev.source)[0](ev),
     }
   }
+}
+// <b>Command</b>:
+// Some Villains say things like "Taserface gets +2 Attack while he Commands the Ravagers."
+// * <b>A Villain "Commands" their group and gets these abilities as long as it's the leftmost Villain of that Villain Group in the city.</b>
+// * If there's only one Villain of a Villain Group in the city, it still Commands that Villain Group.
+function isCommanding(c: Card) {
+  return cityVillains().limit(c2 => c2.villainGroup === c.villainGroup)[0] === c;
+}
+function commandingVarDefense(n: number, m: number = 0) {
+  return (c: Card) => c.printedDefense + (isCommanding(c) ? n : m);
+}
+function wasCommanding(ev: Ev) {
+  return gameState.city.reduce(([commanding, passed], l) => [commanding && (passed || !l.has(isGroup(ev.what.villainGroup))), passed || (l === ev.where)], [true, false])[0];
 }

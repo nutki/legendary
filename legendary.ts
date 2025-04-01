@@ -121,6 +121,7 @@ interface Card {
   variant?: string;
   finishThePrey?: Handler;
   excessiveKindness?: Handler;
+  commonTacticEffect?: Handler;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -165,6 +166,7 @@ interface MastermindCardAbillities {
   chivalrousDuel?: boolean
   cosmicThreat?: Filter<Card>;
   finishThePrey?: Handler
+  commonTacticEffect?: Handler
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -1680,6 +1682,7 @@ interface ModifiableStats {
   cardActions?: ((c: Card, ev: Ev) => Ev)[];
   artifactEffects?: ((ev: Ev) => void)[];
   cosmicThreat?: number;
+  triggers?: Trigger[];
 }
 
 function safePlus(a: number, b: number) {
@@ -2549,9 +2552,9 @@ function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func:
 } }); }
 
 function playVillainousWeapon(ev: Ev, what: Card) {
+  let i = gameState.cityEntry;
+  while (i && !i.has(isVillain)) i = i.next;
   function putIntoCity() {
-    let i = gameState.cityEntry;
-    while (i && !i.has(isVillain)) i = i.next;
     if (i) {
       attachCardEv(ev, what, i, 'WEAPON');
     } else {
@@ -2559,7 +2562,7 @@ function playVillainousWeapon(ev: Ev, what: Card) {
     }
   }
   if (what.ambush) {
-    pushEffects(ev, what, 'ambush', what.ambush);
+    pushEffects(ev, what, 'ambush', what.ambush, { where: i });
     cont(ev, () => what.location.attachedTo instanceof Card || putIntoCity());
   } else {
     putIntoCity();
@@ -2690,8 +2693,8 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     if(t.event === ev.type && (!t.match || t.match(ev, source))) triggers.push({trigger:t, source:source});
   };
   let checkCardTrigger = (c: Card) => {
-    if (c.trigger) checkTrigger(c)(c.trigger);
-    if (c.triggers) c.triggers.forEach(t => checkTrigger(c)(t))
+    const triggers = getModifiedStat(c, "triggers", c.triggers || c.trigger && [ c.trigger ]);
+    if (triggers) c.triggers.forEach(t => checkTrigger(c)(t))
   };
   gameState.triggers.forEach(checkTrigger());
   gameState.scheme.top.triggers.forEach(checkTrigger());
