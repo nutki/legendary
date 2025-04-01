@@ -2838,18 +2838,65 @@ makeSchemeCard("Provoke the Sovereign War Fleet", { twists: 11, vd_villain: [ 2,
 ], () => {
   setSchemeTarget(3);
 }),
-// SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups, but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
+// SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups,
+// but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
 // EVILWINS: When there are 32 non-grey Heroes in the KO pile.
-makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7 }, ev => {
+makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, vd_villain: [ 2, 4, 6, 6, 8 ], vd_henchmen_counts: [[2, 2], [10, 10], [10, 10], [10, 10, 10, 10], [10, 10, 10, 10]] }, ev => {
   // Twist: KO all Heroes from HQ. Villains in the Sewers and Bridge swap spaces. Likewise Villains in the Bank and Streets.
+  hqHeroes().each(c => KOEv(ev, c));
+  withCity('SEWERS', sewers => withCity('BRIDGE', bridge => swapCardsEv(ev, sewers, bridge)));
+  withCity('BANK', bank => withCity('STREETS', streets => swapCardsEv(ev, bank, streets)));
+}, [
+  koProgressTrigger(isNonGrayHero),
+], () => {
+  setSchemeTarget(32);
+  const groups = gameState.villaindeck.deck.unique(c => c.printedVillainGroup);
+  const outOfGame = gameState.scheme.attachedDeck('REMOVED');
+  outOfGame.faceup = false;
+  groups.each(g => {
+    const cards = gameState.villaindeck.limit(isGroup(g));
+    const half = cards.slice(0, cards.length/2);
+    half.each(c => moveCard(c, outOfGame));
+  });
+  gameState.villaindeck.shuffle();
 }),
 // SETUP: 9 Twists.
 // EVILWINS: When there are 5 Tentacles.
 makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
   if (ev.nr <= 8) {
-    // Twist 1-8 Put this Twist next the the Scheme as an "Abilisk Tentacle" Villain worth 4VP. It captures a non-grey Hero from your discard pile. Its Attack is 3 + the cost of that Hero. It has "<b>Fight</b>: KO one of your grey Heroes." A player of your choice gains the captured Hero." 2+ players:The player on your right plays a Tentacle from their Victory Pile, capturing from them.
-  } else if (ev.nr === 9) {
-    // Twist 9 Replay all the captured Tentacles.
+    // Twist 1-8 Put this Twist next the the Scheme as an "Abilisk Tentacle" Villain worth 4VP. It captures a non-grey Hero from your discard pile.
+    // Its Attack is 3 + the cost of that Hero. It has "<b>Fight</b>: KO one of your grey Heroes." A player of your choice gains the captured Hero."
+    villainify("Abilisk Tentacle", c => c === ev.twist, c => 3 + c.attached('TENTACLECAPTURE').sum(c => c.cost), ev => {
+      selectCardEv(ev, "Choose a grey Hero to KO", yourHeroes().limit(Color.GRAY), c => KOEv(ev, c));
+      ev.source.attached('TENTACLECAPTURE').each(c => choosePlayerEv(ev, p => {
+        gainEv(ev, c, p);
+      }));
+    });
+    attachCardEv(ev, ev.twist, gameState.scheme, 'TENTACLE');
+    selectCardEv(ev, "Choose a non-grey Hero to capture", playerState.discard.limit(isNonGrayHero), c => {
+      attachCardEv(ev, c, ev.twist, 'TENTACLECAPTURE');
+    });
+    // 2+ players:The player on your right plays a Tentacle from their Victory Pile, capturing from them.
+    if (gameState.players.size >= 2) {
+      const p = playerState.right;
+      selectCardEv(ev, "Choose tentacle", p.victory.limit(c => c.villainGroup === "Abilisk Tentacle"), c => {
+        attachCardEv(ev, c, gameState.scheme, 'TENTACLE');
+        selectCardEv(ev, "Choose a non-grey Hero to capture", p.discard.limit(isNonGrayHero), c2 => {
+          attachCardEv(ev, c2, c, 'TENTACLECAPTURE');
+        }, p);
+      }, p);
+    } else if (ev.nr === 9) {
+      // Twist 9 Replay all the captured Tentacles.
+      eachPlayer(p => p.victory.limit(c => c.villainGroup === "Abilisk Tentacle").each(c => {
+        attachCardEv(ev, c, gameState.scheme, 'TENTACLE');
+        selectCardEv(ev, "Choose a non-grey Hero to capture", p.discard.limit(isNonGrayHero), c2 => {
+          attachCardEv(ev, c2, c, 'TENTACLECAPTURE');
+        }, p);
+      }));
+    }
+    schemeProgressEv(ev, gameState.scheme.attached('TENTACLE').size);
   }
+}, [], () => {
+  setSchemeTarget(5);
 }),
 ]);
