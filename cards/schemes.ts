@@ -2803,6 +2803,7 @@ makeSchemeCard("Inescapable \"Kyln\" Space Prison", { twists: 8, vd_villain: [ 2
     }));
     addTurnTrigger('CLEANUP', () => true, ev => {
       if (!done) {
+        textLog.log(`You gain a Wound for failing to advance the Escape Plan!`);
         gainWoundEv(ev, playerState);
         gameState.hq.each(c => c.faceup = false);
         // TODO shuffle the Heroes in the HQ
@@ -2810,19 +2811,22 @@ makeSchemeCard("Inescapable \"Kyln\" Space Prison", { twists: 8, vd_villain: [ 2
     });
   }
   schemeProgressEv(ev, ev.nr);
-  forbidAction('RECRUIT', c => c.location.isHQ && !c.location.faceup, true);
 }, [{
   event: 'MOVECARD',
   match: ev => isHero(ev.what) && ev.to.isHQ && !ev.from.isHQ,
   before: ev => {
-    ev.to.faceup = false;
+    ev.parent.to.faceup = false;
   },
 }], () => {
   setSchemeTarget(8);
+  forbidAction('RECRUIT', c => c.location.isHQ && !c.location.faceup, true);
   gameState.specialActions = ev => gameState.hq.map(d => new Ev(ev, 'EFFECT', {
     cost: { attack: 1, cond: () => !d.faceup },
+    what: d.top,
     func: ev => { d.faceup = true; }
   }));
+  addStatSet('cost', c => c.location.isHQ && !c.location.faceup, () => 0);
+  gameState.hq.each(c => c.faceup = false);
 }),
 // SETUP: 11 Twists. Add an extra Villain Group.
 // EVILWINS: When 3 Omnicraft escape.

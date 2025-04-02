@@ -218,7 +218,7 @@ class Card {
     if (value === undefined) return value;
     value += this.attached('SHARD').size;
     if (this.nthCircle) value += nthCircleDefense(this);
-    value += this.attached('WEAPON').sum(c => this.defense);
+    value += this.attached('WEAPON').sum(c => c.defense);
     if (isSizeChanged(this)) value -= 2;
     if (value < 0) value = 0;
     value -= uSizeChangingAmount(this); // Only this can make the attack negative
@@ -2694,7 +2694,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
   };
   let checkCardTrigger = (c: Card) => {
     const triggers = getModifiedStat(c, "triggers", c.triggers || c.trigger && [ c.trigger ]);
-    if (triggers) c.triggers.forEach(t => checkTrigger(c)(t))
+    triggers?.forEach(t => checkTrigger(c)(t))
   };
   gameState.triggers.forEach(checkTrigger());
   gameState.scheme.top.triggers.forEach(checkTrigger());

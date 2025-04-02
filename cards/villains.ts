@@ -4842,7 +4842,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> - Whenever you defeat a Villain, you get +1 Recruit.
 // ATTACK: +4
   [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "\"The Dark Aster\" Flagship", 4, {
-    ambush: ev => ev.where.has(isGroup("Followers of Ronan")) && eachPlayer(p => gainWoundEv(ev, p)),
+    ambush: ev => ev.where?.has(isGroup("Followers of Ronan")) && eachPlayer(p => gainWoundEv(ev, p)),
   }), u, u, Color.GRAY, u, "", ev => addRecruitEvent(ev, 1), triggeredArifact('DEFEAT', ev => isVillain(ev.what)))],
 // {VILLAINOUS WEAPON}
 // AMBUSH: Put all Heroes from the HQ on the bottom of the Hero Deck.

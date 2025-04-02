@@ -1021,5 +1021,6 @@ function commandingVarDefense(n: number, m: number = 0) {
   return (c: Card) => c.printedDefense + (isCommanding(c) ? n : m);
 }
 function wasCommanding(ev: Ev) {
-  return gameState.city.reduce(([commanding, passed], l) => [commanding && (passed || !l.has(isGroup(ev.what.villainGroup))), passed || (l === ev.where)], [true, false])[0];
+  if (ev.parent.type !== 'DEFEAT') throw new Error("wasCommanding can only be used on DEFEAT events");
+  return gameState.city.reduce(([commanding, passed], l) => [commanding && (passed || !l.has(isGroup(ev.parent.what.villainGroup))), passed || (l === ev.parent.where)], [true, false])[0];
 }
