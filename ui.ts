@@ -33,7 +33,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "HERO" && card.heroName === "Special Sidekick") return imageName("sidekicks", card);
   if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
   if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
-  if (card.cardType === "VILLAIN") return imageName("villains", card, card.printedVillainGroup);
+  if (card.cardType === "VILLAIN" || card.cardType === "VILLAINOUSWEAPON") return imageName("villains", card, card.printedVillainGroup);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermindName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
@@ -54,7 +54,7 @@ function makeDisplayCard(c: Card): string {
 }
 function setSourceImg(name: string) {
   const r = div("card", { id: "source2" }, img(name, "cardface"), div("frame"));
-  positionCard(r, 'large', 7, 0);
+  positionCard(r, {size: 'large', x:7, y:0});
   document.getElementById("card-container").appendChild(r);
 }
 function clearSourceImg() {
@@ -106,11 +106,15 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true):
   d.appendChild(div("frame"));
   return d;
 }
-function positionCard(card: HTMLElement, scale: string | undefined, x: number, y: number, i: number = 0) {
+function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0) {
   card.style.position = "absolute";
   card.style.top = y * 288 + (y >= 2 ? 60 : 0) + "px";
-  card.style.left = (x + i) * 212 + "px";
-  if (scale) card.classList.add(scale);
+  card.style.left = (fan ? ((w||1) - 1)/2 * 212: (x + i) * 212) + "px";
+  if (fan) {
+    card.style.transform = `rotate(${(i - ((w||1) - 3)/2) * 3.5}deg)`;
+    card.style.transformOrigin = "center 3000px";
+  }
+  if (size) card.classList.add(size);
 }
 const mainDecks = [
   { id: 'MASTERMIND', x: 0, y: 0 },
@@ -134,7 +138,7 @@ const mainDecks = [
   { id: 'KO', x: 6, y: 1.5, size: 'small', count: 'KO', popupid: 'popko' },
   { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS' },
   { id: 'PLAYAREA0', x: 0, y: 2, w: 9 },
-  { id: 'HAND0', x: 1, y: 3, w: 8 },
+  { id: 'HAND0', x: 1, y: 3, w: 8, fan: true },
   { id: 'DECK0', x: 0, y: 3, size: 'small', count: 'DECK', popupid: 'popdeck'},
   { id: 'DISCARD0', x: .5, y: 3, size: 'small', count: 'DISCARD', popupid: 'popdiscard'},
   { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory'},
@@ -162,7 +166,7 @@ function displayDecks(ev: Ev): void {
     const deck = deckById[deckPos.id];
     const d = div('deck', { id: deck.id });
     let topDiv = d;
-    positionCard(d, deckPos.size, deckPos.x, deckPos.y);
+    positionCard(d, deckPos);
     cardsContainer.appendChild(d);
     const cardDivs = deck.id === "PLAYAREA0" ? [
       ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
@@ -175,12 +179,12 @@ function displayDecks(ev: Ev): void {
     cardDivs.forEach((cardDiv, i) => {
       cardsContainer.appendChild(cardDiv);
       cardDiv.setAttribute('data-deck-id', deck.id);
-      positionCard(cardDiv, deckPos.size, deckPos.x, deckPos.y, i * spread);
+      positionCard(cardDiv, deckPos, i * spread);
       topDiv = cardDiv;
     });
     if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid).classList.toggle("hidden"));
     const d1 = div('deck-overlay', { 'data-deck-id': deck.id });
-    positionCard(d1, deckPos.size, deckPos.x, deckPos.y);
+    positionCard(d1, deckPos);
     cardsContainer.appendChild(d1);
     if (deckPos.count) {
       if (deckPos.count === 'VP') {
@@ -196,13 +200,13 @@ function displayDecks(ev: Ev): void {
     deck.deck.forEach((card, i) => {
       const cardDiv = makeDisplayCardImg(card);
       container.appendChild(cardDiv);
-      positionCard(cardDiv, undefined, 0, 0, deck.deck.size - 1 - i);
+      positionCard(cardDiv, { x: 0, y: 0 }, deck.deck.size - 1 - i);
     });
   }
   const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
   if (s instanceof Card) {
     const sDiv = makeDisplayCardImg(s, false, false);
-    positionCard(sDiv, 'large', 7, 0);
+    positionCard(sDiv, { size: 'large', x: 7, y: 0 });
     cardsContainer.appendChild(sDiv);
   }
   let divs = document.getElementsByClassName("text-deck");
