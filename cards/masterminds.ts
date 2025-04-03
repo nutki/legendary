@@ -2992,9 +2992,7 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
 // ---
 // <b>Triggered Artifact</b> - Whenever a Master Strike is completed, you may KO one of your cards.
 // ATTACK: +4
-  [ "Hood of the Accuser", ev => {
   // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
-  } ],
   makeGainableCard(makeTacticsCard("Hood of the Accuser", { printedDefense: 4, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
   u, u, Color.GRAY, u, "D", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)), triggeredArifact('STRIKE', () => true)),
 // ---
