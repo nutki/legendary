@@ -2765,7 +2765,6 @@ function playTurn(ev: Turn) {
       pushEvents(ev);
     } else if (turnState.villainCardsToPlay > 0) {
       turnState.villainCardsToPlay--;
-      console.log("villainCardsToPlay", turnState.villainCardsToPlay);
       villainDrawEv(turnState);
       pushEvents(ev);
     }
@@ -2774,7 +2773,6 @@ function playTurn(ev: Turn) {
   pushEv(ev, "ACTIONS", ev => {
     if (!ev.endofturn) {
       if (turnState.villainCardsToPlay > 0) {
-        console.log("villainCardsToPlay2", turnState.villainCardsToPlay);
         turnState.villainCardsToPlay--;
         villainDrawEv(ev);
       } else
