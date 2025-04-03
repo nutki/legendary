@@ -4918,7 +4918,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> - When you play a [Strength] or [Instinct] card, you may get +2 Attack. If you do, shuffle this into the Villain Deck.
 // ATTACK: +2
   [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Scavanged Blade", 2, {
-    ambush: ev => villainDrawEv(ev),
+    ambush: ev =>  false && villainDrawEv(ev), // TODO this is a loop because weapon is still on the villain deck
   }), u, u, Color.GRAY, u, "D", ev => chooseMayEv(ev, "Get +2 Attack?", () => {
     addAttackEvent(ev, 2);
     isCopy(ev.source) || shuffleIntoEv(ev, ev.source, gameState.villaindeck);
@@ -4929,7 +4929,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> - Whenever you play a [Tech] card, you get +1 Attack.
 // ATTACK: +3
   [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Ravager Starship \"Eclector\"", 3, {
-    ambush: ev => ev.where.limit(isGroup("Ravagers")).withFirst(c2 => cityVillains().filter(c => isGroup("Ravagers") && c !== c2).withFirst(c => swapCardsEv(ev, c2, c))),
+    ambush: ev => ev.where && ev.where.limit(isGroup("Ravagers")).withFirst(c2 => cityVillains().filter(c => isGroup("Ravagers") && c !== c2).withFirst(c => swapCardsEv(ev, c2, c))),
   }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.TECH)(ev.what)))],
 // {VILLAINOUS WEAPON}
 // AMBUSH: If Yondu is in the city, he captures this. If he is in any player's Victory Pile, he enters an empty city space, then ca[tures this.

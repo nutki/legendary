@@ -319,6 +319,7 @@ addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
 // Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Darwin", 2, 0, 0, Color.INSTINCT, "X-Factor", "D", [
   ev => turnState.cardsPlayed.withLast(c => hasRecruitIcon(c) && addRecruitEvent(ev, 2)),
+  ev => turnState.cardsPlayed.withLast(c => hasAttackIcon(c) && addAttackEvent(ev, 2)),
   ev => returnToStackEv(ev, gameState.sidekick) ]
 )],
 // Choose one of her nicknames:
