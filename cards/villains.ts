@@ -4868,7 +4868,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: 3+
 // VP: 3
   [ 1, makeVillainCard("Ravagers", "Gef", 3, 3, {
-    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers")(c) && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
     fight: ev => wasCommanding(ev) && drawEv(ev),
     varDefense: commandingVarDefense(2),
   })],
@@ -4878,7 +4878,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: 3+
 // VP: 3
   [ 1, makeVillainCard("Ravagers", "Tullik", 3, 3, {
-    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers")(c) && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
     fight: ev => wasCommanding(ev) && selectCardAndKOEv(ev, yourHeroes()),
     varDefense: commandingVarDefense(2),
   })],
@@ -4888,7 +4888,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: 4+
 // VP: 4
   [ 1, makeVillainCard("Ravagers", "Kraglin Obfonteri", 4, 4, {
-    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers")(c) && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
     fight: ev => wasCommanding(ev) && drawEv(ev, 2),
     varDefense: commandingVarDefense(2),
   })],
@@ -4898,7 +4898,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: 4+
 // VP: 4
   [ 1, makeVillainCard("Ravagers", "Taserface", 4, 4, {
-    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    ambush: ev => cityVillains().filter(c => isGroup("Ravagers")(c) && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
     fight: ev => wasCommanding(ev) && addRecruitEvent(ev, 2),
     varDefense: commandingVarDefense(2),
   })],
@@ -4908,7 +4908,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: 5+
 // VP: 5
   [ 1, makeVillainCard("Ravagers", "Yondu Udonta", 5, 5, {
-    ambush: ev => cityVillains().filter(c => isGroup("Ravagers") && c !== ev.source).withFirst(c => swapCardsEv(ev, ev.source, c)),
+    ambush: ev => cityVillains().filter(isGroup("Ravagers")).withFirst(c => c !== ev.source && swapCardsEv(ev, ev.source, c)),
     fight: ev => wasCommanding(ev) && selectObjectsUpToEv(ev, "Choose cards to KO", 2, yourHeroes(), c => KOEv(ev, c)),
     varDefense: commandingVarDefense(2),
   })],
@@ -4918,7 +4918,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> - When you play a [Strength] or [Instinct] card, you may get +2 Attack. If you do, shuffle this into the Villain Deck.
 // ATTACK: +2
   [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Scavanged Blade", 2, {
-    ambush: ev =>  false && villainDrawEv(ev), // TODO this is a loop because weapon is still on the villain deck
+    ambush: ev =>  playAnotherEv(ev),
   }), u, u, Color.GRAY, u, "D", ev => chooseMayEv(ev, "Get +2 Attack?", () => {
     addAttackEvent(ev, 2);
     isCopy(ev.source) || shuffleIntoEv(ev, ev.source, gameState.villaindeck);
@@ -4929,7 +4929,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> - Whenever you play a [Tech] card, you get +1 Attack.
 // ATTACK: +3
   [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Ravager Starship \"Eclector\"", 3, {
-    ambush: ev => ev.where && ev.where.limit(isGroup("Ravagers")).withFirst(c2 => cityVillains().filter(c => isGroup("Ravagers") && c !== c2).withFirst(c => swapCardsEv(ev, c2, c))),
+    ambush: ev => ev.where && ev.where.limit(isGroup("Ravagers")).withFirst(c2 => cityVillains().filter(c => isGroup("Ravagers")(c) && c !== c2).withFirst(c => swapCardsEv(ev, c2, c))),
   }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.TECH)(ev.what)))],
 // {VILLAINOUS WEAPON}
 // AMBUSH: If Yondu is in the city, he captures this. If he is in any player's Victory Pile, he enters an empty city space, then ca[tures this.

@@ -12,7 +12,7 @@ makeSchemeCard("The Legacy Virus", { twists: 8, wounds: [ 6, 12, 18, 24, 30 ] },
 makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
   // Twist: Any Villain in the Bank captures 2 Bystanders. Then play the top card of the Villain Deck.
   villainIn('BANK').each(v => { captureEv(ev, v); captureEv(ev, v); });
-  ev.another = true;
+  playAnotherEv(ev);
 }, escapeProgressTrigger(isBystander), () => {
   addStatMod('defense', isVillain, c => c.captured.count(isBystander));
   setSchemeTarget(8);
@@ -20,7 +20,7 @@ makeSchemeCard("Midtown Bank Robbery", { twists: 8, vd_bystanders: 12 }, ev => {
 // SETUP: 8 Twists. Add an extra Henchman group to the Villain Deck.
 // EVILWINS: If 12 Villains escape.
 // Single player version based on https://boardgamegeek.com/thread/1567774/negative-zone-prison-break-out-advanced-solo
-makeSchemeCard("Negative Zone Prison Breakout", { twists: 8, vd_henchmen_counts: [ [10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], vd_villain: [ 2, 2, 3, 3, 4 ]  }, ev => {
+makeSchemeCard("Negative Zone Prison Breakout", { twists: 8, solo_henchmen: [10], vd_villain: [ 2, 2, 3, 3, 4 ]  }, ev => {
   // Twist: Play the top 2 cards of the Villain Deck.
   villainDrawEv(ev); villainDrawEv(ev);
 }, escapeProgressTrigger(isVillain), () => setSchemeTarget(gameState.players.length === 1 ? 8 : 12)),
@@ -144,7 +144,7 @@ makeSchemeCard("Massive Earthquake Generator", { twists: 8 }, ev => {
 // SETUP: 8 Twists. Include 10 Maggia Goons as one of the Henchman Groups.
 // RULE: Goons also have the ability "Ambush: Play another card from the Villain Deck."
 // EVILWINS: When 5 Goons escape.
-makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: "Maggia Goons" } }, ev => {
+makeSchemeCard<{isGoon: (c: Card) => boolean}>("Organized Crime Wave", { twists: 8, solo_henchmen: [10], required: { henchmen: "Maggia Goons" } }, ev => {
   // Twist: Each Goon in the city escapes. Shuffle all Goons from each players' Victory Piles into the Villain Deck.
   cityVillains().limit(ev.state.isGoon).each(c => villainEscapeEv(ev, c));
   eachPlayer(p => p.victory.limit(ev.state.isGoon).each(c => moveCardEv(ev, c, gameState.villaindeck)));
@@ -292,7 +292,7 @@ makeSchemeCard("The Clone Saga", { twists: 8 }, ev => {
 // SETUP: 8 Twists. Add 6 extra Henchmen from a single Henchman Group to the Hero Deck.
 // RULE: You can fight Villains in the HQ.
 // EVILWINS: When there are 5 Villains in the HQ.
-makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen_counts: [[3, 6], [10, 6], [10, 6], [10, 10, 6], [10, 10, 6]] }, ev => {
+makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen: [2, 2, 2, 3, 3] }, ev => {
   // Twist: KO a Hero from the HQ. Put the highest-Attack Villain from the city into that HQ space.
   let space: Deck;
   addTurnTrigger('MOVECARD', ev => space && ev.to === space && ev.from === gameState.herodeck, { replace: ev => {
@@ -306,7 +306,7 @@ makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen_counts
   after: ev => schemeProgressEv(ev, hqCards().count(isVillain)),
 }, () => {
   setSchemeTarget(5);
-  gameState.villaindeck.deck.filter(c => c.cardName === extraHenchmenName()).each(c => moveCard(c, gameState.herodeck));
+  gameState.villaindeck.deck.filter(c => c.cardName === extraHenchmenName()).forEach((c, i) => moveCard(c, i < 6 ? gameState.herodeck : gameState.outOfGame));
   gameState.herodeck.shuffle();
   addStatSet('isFightable', c => isVillain(c) && c.location.isHQ, () => true);
 }),
@@ -358,7 +358,7 @@ makeSchemeCard("Build an Underground MegaVault Prison", { twists: 8, bindings: [
 // SETUP: 8 Twists. Stack 2 Cops per player next to this Plot.
 // RULE: You can fight any Cop on top of Allies. If you do, the player of your choice gains that Ally.
 // EVILWINS: When a Twist must put out a Cop, but the Cop Stack is already empty.
-makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_henchmen_counts: [[3, 2], [10, 4], [10, 6], [10, 10, 8], [10, 10, 10]], required: { henchmen: 'Cops' } }, ev => {
+makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: 'Cops' } }, ev => {
   // Twist: Each player returns all Cops from their Victory Pile to the Cop Stack. Then each player puts a non-grey Ally from their hand in front of them. Put a Cop from the Cop Stack on top of each of those Allies.
   const copStack = gameState.scheme.attachedDeck('COPS');
   eachPlayer(p => p.victory.each(c => moveCardEv(ev, c, copStack)));
@@ -371,7 +371,7 @@ makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_hench
   }, p));
 }, [], () => {
   const copStack = gameState.scheme.attachedDeck('COPS');
-  gameState.villaindeck.limit(c => c.villainGroup === 'Cops').each(c => moveCard(c, copStack));
+  gameState.villaindeck.limit(c => c.villainGroup === 'Cops').forEach((c, i) => moveCard(c, i < 2 * gameState.players.size ? copStack : gameState.outOfGame));
   gameState.schemeProgress = copStack.size + 1;
   gameState.specialActions = ev => playerState.deck.attached('COPS').map(c => fightActionEv(ev, c));
 }),
@@ -451,7 +451,7 @@ makeSchemeCard("Infiltrate the Lair with Spies", { twists: 8 }, ev => {
 // SETUP: 8 Twists, Include 10 S.H.I.E.L.D. Assault Squads as one of the Backup Adversary groups.
 // RULE: Assault Squads get +1 Attack for each War Machine Technology next to the Plot.
 // EVILWINS: When there are 3 Assault Squads in the Overrun Pile.
-makeSchemeCard("Mass Produce War Machine Armor", { twists: 8, vd_henchmen_counts: [[10], [10], [10], [10, 10], [10, 10]], required: { henchmen: 'S.H.I.E.L.D. Assault Squad' } }, ev => {
+makeSchemeCard("Mass Produce War Machine Armor", { twists: 8, solo_henchmen: [10], required: { henchmen: 'S.H.I.E.L.D. Assault Squad' } }, ev => {
   // Twist: Stack this Twist next to the Plot as "War Machine Technology." An Assault Squad from the current player's Victory Pile enters the Bridge.
   attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   selectCardEv(ev, "Select an Assault Squad", playerState.victory.limit(isGroup('S.H.I.E.L.D. Assault Squad')), c => villainDrawEv(ev, c));
@@ -624,19 +624,19 @@ makeSchemeCard<{traitor: Player}>("The Traitor", { twists: 8 }, ev => {
 addTemplates("SCHEMES", "Secret Wars Volume 1", [
 // SETUP: 9 Twists. Put 10 extra Annihilation Wave Henchmen in that KO pile.
 // EVILWINS: When there are 10 Annihilation Henchmen next to the Mastermind.
-makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], /* required: { henchmen: 'Annihilation Wave' } this is not a real Henchmen group */}, ev => {
+makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen: [ 2, 2, 2, 3, 3, 3 ] }, ev => {
   // Twist: KO all Annihilation Henchmen from the players' Victory Piles. Stack this Twist next to the Scheme. Then, for each Twist in that stack, put an Annihilation Henchman from the KO pile next to the Mastermind. Players can fight those Henchmen.
-  eachPlayer(p => p.victory.limit(c => c.cardName === 'Annihilation Wave').each(c => KOEv(ev, c)));
+  eachPlayer(p => p.victory.limit(isGroup(extraHenchmenName())).each(c => KOEv(ev, c)));
   attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
   cont(ev, () => {
-    const w = gameState.ko.limit(c => c.cardName === 'Annihilation Wave');
+    const w = gameState.ko.limit(isGroup(extraHenchmenName()));
     const n = gameState.scheme.attached('TWIST').size;
     w.forEach((c, i) => i < n && attachCardEv(ev, c, gameState.mastermind, 'WAVE'));
   });
   cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('WAVE').size));
 }, [], () => {
   setSchemeTarget(10);
-  gameState.villaindeck.limit(c => c.cardName === 'Annihilation Wave').each(c => moveCard(c, gameState.ko));
+  gameState.villaindeck.limit(isGroup(extraHenchmenName())).each(c => moveCard(c, gameState.ko));
   gameState.specialActions = ev => gameState.mastermind.attached('WAVE').map(c => fightActionEv(ev, c));
 }),
 // SETUP: 8 Twists. Add 10 Sidekicks to the Villain Deck.
@@ -1272,7 +1272,7 @@ addTemplates("SCHEMES", "X-Men", [
 // SETUP: 8 Twists. Add 10 Brood as extra Henchmen. No Bystanders in Villain Deck.
 // RULE: Cards are played from the Villain Deck face-down. You may spend 1 Attack to "scan" a face-down card in the city, turning it face-up and doing any Ambush effect, Twist, Trap, or Master Strike. If a face-down card would escape, scan it, and then it escapes if it's a Villain.
 // EVILWINS: When 3 Villains per player have escaped.
-makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], required: { henchmen: 'Brood' } }, ev => {
+makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen: [ 2, 2, 2, 3, 3 ], required: { henchmen: 'Brood' } }, ev => {
   // Twist: The player on your right gains this Twist as a "Brood Infection." When drawn, they KO it and gain 2 Wounds.
   gainEv(ev, ev.twist, playerState.right);
 }, [
@@ -1347,7 +1347,7 @@ makeSchemeCard("Horror of Horrors", { twists: 6 }, ev => {
 // SETUP: 9 Twists. Include 10 Sentinels as extra Henchmen (or substitute another Henchman group.)
 // RULE: All Sentinels get +1 Attack for each Sentinel Upgrade next to the Scheme.
 // EVILWINS: When 3 Sentinels have Escaped.
-makeSchemeCard("Mutant-Hunting Super Sentinels", { twists: 9, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ], required: { henchmen: 'Sentinel' }}, ev => {
+makeSchemeCard("Mutant-Hunting Super Sentinels", { twists: 9, vd_henchmen: [ 2, 2, 2, 3, 3 ], required: { henchmen: 'Sentinel' }}, ev => {
   // Twist: Stack this Twist next to the Scheme as a "Sentinel Upgrade." Shuffle all Sentinels from players' Victory Piles into the Villain Deck. Play another card from the Villain Deck.
   attachCardEv(ev, ev.twist, gameState.scheme, 'UPGRADE');
   gameState.players.each(p => p.victory.limit(c => c.cardName === "Sentinel").each(c => shuffleIntoEv(ev, c, gameState.villaindeck)));
@@ -1469,7 +1469,7 @@ makeSchemeCard<{ferryPos: Deck}>("Ferry Disaster", { twists: 9 }, ev => {
 // SETUP: 7 Twists. Add an extra Henchmen Group of 10 cards as Smugglers.
 // RULE: Smugglers have Striker.
 // EVILWINS: When 3 Villains per player have escaped or the Villain Deck runs out.
-makeSchemeCard("Scavenge Alien Weaponry", { twists: 7, vd_henchmen_counts: [[3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]] }, ev => {
+makeSchemeCard("Scavenge Alien Weaponry", { twists: 7, vd_henchmen: [2, 2, 2, 3, 3] }, ev => {
   // Twist: Play two cards from the Villain Deck.
   villainDrawEv(ev); villainDrawEv(ev);
 }, [ runOutProgressTrigger('VILLAIN', false), escapeProgressTrigger(isVillain)], () => {
@@ -1580,7 +1580,7 @@ makeSchemeCard("Break the Planet Asunder", { twists: 9 }, ev => {
 }, escapeProgressTrigger(isNonGrayHero), () => setSchemeTarget(25)),
 // SETUP: 10 Twists. Shuffle together 20 Bystanders and 10 Cytoplasm Spike Henchmen as an "Infected Deck."
 // EVILWINS: When the KO pile and Escape Pile combine to have 18 Bystanders and/or Spikes.
-makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10]], required: { henchmen: "Cytoplasm Spike" } }, ev => {
+makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: "Cytoplasm Spike" } }, ev => {
   // Twist: Reveal the top three cards of the Infected Deck. KO all Bystanders you revealed. All Spikes you revealed enter the city.
   const infected = gameState.scheme.attachedDeck('INFECTED');
   repeat(3, () => cont(ev, () => {
@@ -1778,7 +1778,7 @@ makeSchemeCard("Trap Heroes in the Microverse", { twists: 11, heroes: [ 4, 6, 6,
 addTemplates("SCHEMES", "Venom", [
 // SETUP: 8 Twists. Add an extra Henchman Group.
 // EVILWINS: When the Escape Pile has 3 cards per player, or the Villain Deck runs out.
-makeSchemeCard("Invasion of the Venom Symbiotes", { twists: 8, vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ] }, ev => {
+makeSchemeCard("Invasion of the Venom Symbiotes", { twists: 8, vd_henchmen: [2, 2, 2, 3, 3] }, ev => {
   // Twist: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush</b>: This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
   villainify('Symbiote', ev.twist, 3, 3);
   addStatSet('ambush', c => c === ev.twist, () => ev => symbioteBondEv(ev, cityVillains().limit(v => v !== ev.twist), ev.twist));
@@ -2387,7 +2387,7 @@ makeSchemeCard<{ locations: Map<Player, Deck>, tornado: Card }>("Tornado of Terr
 // SETUP: Add Twists equal to the number of players plus 3. Add an extra Henchman Group of 10 cards as "Xerogen Experiments."
 // RULE: All Xerogen Experiments also have {ABOMINATION}.
 // EVILWINS: When there are 3 Villains per player in the Escape Pile or the Villain Deck runs out.
-makeSchemeCard("Devolve with Xerogen Crystals", { twists: [4, 5, 6, 7, 8], vd_henchmen_counts: [ [3, 10], [10, 10], [10, 10], [10, 10, 10], [10, 10, 10] ] }, ev => {
+makeSchemeCard("Devolve with Xerogen Crystals", { twists: [4, 5, 6, 7, 8], vd_henchmen: [2, 2, 2, 3, 3] }, ev => {
   // Twist: Choose a Hero in the HQ that doesn't have a printed Attack of 2 or more.
   // Put it on the bottom of the Hero Deck. Then play two cards from the Villain Deck.
   selectCardEv(ev, "Choose a card to put on Hero Deck bottom", hqHeroes().limit(c => !(c.printedAttack >= 2)), c => moveCardEv(ev, c, gameState.herodeck, true));
@@ -2796,6 +2796,7 @@ makeSchemeCard("Inescapable \"Kyln\" Space Prison", { twists: 8, vd_villain: [ 2
     const cost: ActionCost = ev.nr <= 3 ? { attack: 3 } : ev.nr <= 5 ? { attack: 5 } : ev.nr <= 6 ? { recruit: 6 } : { attack: 7 };
     const desc = ev.nr <= 3 ? "Quarnyx Battery" : ev.nr <= 5 ? "Prison Control Device" : ev.nr <= 6 ? "That Guy's Leg" : "Cassette Player";
     let done = false;
+    cost.cond = () => !done;
     addTurnAction(new Ev(ev, 'EFFECT', {
       desc: `Advance Escape Plan: ${desc}`,
       cost,
@@ -2845,7 +2846,7 @@ makeSchemeCard("Provoke the Sovereign War Fleet", { twists: 11, vd_villain: [ 2,
 // SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups,
 // but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
 // EVILWINS: When there are 32 non-grey Heroes in the KO pile.
-makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, vd_villain: [ 2, 4, 6, 6, 8 ], vd_henchmen_counts: [[2, 2], [10, 10], [10, 10], [10, 10, 10, 10], [10, 10, 10, 10]] }, ev => {
+makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, vd_villain: [ 2, 4, 6, 6, 8 ], solo_henchmen: [4, 4], vd_henchmen: [2, 2, 2, 4, 4] }, ev => {
   // Twist: KO all Heroes from HQ. Villains in the Sewers and Bridge swap spaces. Likewise Villains in the Bank and Streets.
   hqHeroes().each(c => KOEv(ev, c));
   withCity('SEWERS', sewers => withCity('BRIDGE', bridge => swapCardsEv(ev, sewers, bridge)));
@@ -2855,12 +2856,10 @@ makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, vd_villain: [ 2, 4, 
 ], () => {
   setSchemeTarget(32);
   const groups = gameState.villaindeck.deck.unique(c => c.printedVillainGroup);
-  const outOfGame = gameState.scheme.attachedDeck('REMOVED');
-  outOfGame.faceup = false;
   groups.each(g => {
     const cards = gameState.villaindeck.limit(isGroup(g));
     const half = cards.slice(0, cards.length/2);
-    half.each(c => moveCard(c, outOfGame));
+    half.each(c => moveCard(c, gameState.outOfGame));
   });
   gameState.villaindeck.shuffle();
 }),

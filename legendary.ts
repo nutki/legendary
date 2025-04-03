@@ -707,7 +707,6 @@ interface Ev<TSchemeState = any> {
   // Twist EFFECT
   twist?: Card
   nr?: number
-  another?: boolean
   state?: TSchemeState
   cost?: ActionCost
   effectName?: EffectStat
@@ -956,6 +955,7 @@ interface Turn extends Ev {
   hyperspeedBoth?: boolean
   actionFilters: ((ev: Ev) => boolean)[]
   destroyedConqueror?: boolean
+  villainCardsToPlay?: number
 }
 interface Trigger {
   event: TriggerableEvType
@@ -966,7 +966,7 @@ interface Trigger {
 }
 type CityLocation = "SEWERS" | "STREETS" | "BANK" | "ROOFTOPS" | "BRIDGE";
 interface SetupParams {
-  vd_henchmen_counts?: number[][]
+  vd_henchmen?: number[],
   vd_villain?: number[] | number,
   vd_bystanders?: number[] | number,
   heroes?: number[] | number,
@@ -976,6 +976,7 @@ interface SetupParams {
   shards?: number[] | number,
   required?: { heroes?: string | string[], villains?: string | string[], henchmen?:string | string[] },
   extra_masterminds?: number[] | number,
+  solo_henchmen?: number[],
 }
 interface Game {
   gameRand: RNG
@@ -1000,11 +1001,12 @@ interface Game {
   horror: Deck
   trap: Deck
   transformed: Deck
+  outOfGame: Deck
   triggers: Trigger[]
   endDrawAmount: number
   modifiers: Modifiers
   players: Player[]
-  advancedSolo: boolean
+  advancedSolo: boolean | 'WHATIF'
   villainsEscaped: number
   bystandersCarried: number
   cityEntry: Deck
@@ -1208,6 +1210,7 @@ function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_cou
   let defaults: SetupParams = {
     vd_villain: [ 1, 2, 3, 3, 4 ],
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
+    vd_henchmen: [ 1, 1, 1, 2, 2 ],
     heroes: [ 3, 5, 5, 5, 6 ],
     wounds: 30,
     bindings: 30,
@@ -1216,9 +1219,6 @@ function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_cou
   };
   let r = name in s.params ? s.params[name] : defaults[name];
   return r instanceof Array ? r[numPlayers - 1] : r;
-}
-function getHenchmenCounts(s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length) {
-  return (s.params.vd_henchmen_counts || [[3], [10], [10], [10, 10], [10, 10]])[numPlayers - 1]
 }
 function getGameSetup(schemeName: string, mastermindName: string, numPlayers: number = 1): Setup {
   let scheme = findSchemeTemplate(schemeName);
@@ -1253,7 +1253,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   }
   setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
   setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
-  setup.henchmen = Array(getHenchmenCounts(scheme, numPlayers).length).fill(undefined);
+  setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
   setup.mastermind = Array(1 + getParam('extra_masterminds', scheme, numPlayers)).fill(undefined);
   if (numPlayers > 1) {
     const leads = mastermind.leads;
@@ -1316,6 +1316,7 @@ gameState = {
   trap: new Deck('TRAP', true),
   horror: new Deck('HORROR'),
   transformed: new Deck('TRANSFORMED', true),
+  outOfGame: new Deck('OUTOFGAME', false),
   hq: [
     new Deck("HQ1", true),
     new Deck("HQ2", true),
@@ -1365,7 +1366,7 @@ gameState = {
   endDrawAmount: 6,
   modifiers: {},
   players: [ playerState ],
-  advancedSolo: true,
+  advancedSolo: 'WHATIF',
   villainsEscaped: 0,
   bystandersCarried: 0,
   schemeState: {},
@@ -1436,7 +1437,8 @@ if (gameState.bystanders.deck.uniqueCount(b => b.cardName) > 1) {
 }
 // Init villain deck
 function getHenchmenTemplates(template: Card | { cards: [number, Card][]}, groupNr: number): Card[] {
-  const count = getHenchmenCounts()[groupNr];
+  const count = isSoloGame() && gameState.scheme.top.params.solo_henchmen?.[groupNr] ||
+    (groupNr > 0 ? 10 : (gameState.advancedSolo === 'WHATIF' ? 4 : 3));
   if (template instanceof Card) return Array(count).fill(template);
   const cards = template.cards.map(([n, c]) => Array(n).fill(c)).merge();
   if (count === cards.length) return cards;
@@ -1463,6 +1465,10 @@ gameSetup.mastermind.forEach((m, i) => {
 if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
 if (gameState.mastermind.top.isAdaptingMastermind) adaptMastermind(gameState.mastermind.top);
 if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
+if (gameState.advancedSolo === 'WHATIF') for (let i = 0; i < 2; i++) {
+  const c = gameState.villaindeck.deck.find(c => c.printedVillainGroup === gameState.gameSetup.henchmen[0]);
+  c && moveCard(c, gameState.villaindeck.attachedDeck('WHATIF_SOLO_HENCHMEN'));
+}
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 // Populate HQ
@@ -1650,7 +1656,7 @@ function superPower(...f: (number | Affiliation)[]): number {
 }
 function addEndDrawMod(a: number): void { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a: number): void { turnState.endDrawAmount = a; }
-
+function isSoloGame(): boolean { return gameState.players.length === 1; }
 interface ModifiableStats {
   defense?: number
   vp?: number
@@ -2504,7 +2510,7 @@ function drawOne(ev: Ev): void {
   if (!ev.who.deck.size && !ev.who.discard.size) {
   } else if (!ev.who.deck.size) {
     reshufflePlayerDeckEv(ev, ev.who);
-    pushEvents(ev);
+    pushEvents(ev); // TODO fixme, this causes double triggers!!!!
   } else {
     turnState.cardsDrawn++;
     moveCardEv(ev, ev.who.deck.top, ev.who.hand);
@@ -2523,13 +2529,12 @@ function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist
 function playTwist(ev: Ev): void {
   moveCardEv(ev, ev.what, gameState.ko);
   confirmEv(ev, 'Scheme Twist!', gameState.scheme.top);
-  let e = pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
-  cont(ev, () => {
-    if (gameState.players.length === 1) {
+  pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
+  isSoloGame() && cont(ev, () => {
+    if (!(gameState.advancedSolo === "WHATIF" && pastEvents("TWIST").size)) {
       if (gameState.advancedSolo) selectCardEv(ev, "Choose a card to put on the bottom of the Hero deck", hqHeroes().limit(c => c.cost <= 6), sel => moveCardEv(ev, sel, gameState.herodeck, true));
       else selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
     }
-    if (e.another) villainDrawEv(e);
   });
 }
 function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStrike, what: what }); }
@@ -2541,7 +2546,7 @@ function playStrike(ev: Ev) {
     pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr });
     m.isAdaptingMastermind && adaptMastermindEv(ev, m);
   });
-  if (gameState.advancedSolo) villainDrawEv(ev);
+  if (gameState.advancedSolo === true) playAnotherEv(ev);
 }
 function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: ev => {
   // TODO Locations
@@ -2584,6 +2589,9 @@ function adaptMastermind(mastermind: Card) {
 }
 function adaptMastermindEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { func: () => adaptMastermind(what) }); }
 
+function playAnotherEv(ev: Ev, count: number = 1) {
+  cont(ev, () => turnState.villainCardsToPlay += count);
+}
 function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { func: villainDraw, what }); }
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
@@ -2741,12 +2749,29 @@ function playTurn(ev: Turn) {
   gameState.turnNum++;
   textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
+  turnState.villainCardsToPlay = 1;
   pushEv(ev, "TURNSTART", () => {});
-  villainDrawEv(ev);
+  pushEv(ev, "EFFECT", ev => {
+    const extra = gameState.villaindeck.attached('WHATIF_SOLO_HENCHMEN');
+    if (extra.size) {
+      villainDrawEv(turnState, extra[0]);
+      pushEvents(ev);
+    } else if (turnState.villainCardsToPlay > 0) {
+      turnState.villainCardsToPlay--;
+      console.log("villainCardsToPlay", turnState.villainCardsToPlay);
+      villainDrawEv(turnState);
+      pushEvents(ev);
+    }
+  });
   playOutOfTimeEv(ev);
   pushEv(ev, "ACTIONS", ev => {
     if (!ev.endofturn) {
-      pushEv(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), ui: true });
+      if (turnState.villainCardsToPlay > 0) {
+        console.log("villainCardsToPlay2", turnState.villainCardsToPlay);
+        turnState.villainCardsToPlay--;
+        villainDrawEv(ev);
+      } else
+        pushEv(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), ui: true });
       pushEvents(ev);
     } else {
       pushEv(ev, "CLEANUP", cleanUp);
