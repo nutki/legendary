@@ -2509,8 +2509,15 @@ function drawEv(ev: Ev, amount: number = 1, who: Player = playerState) {
 function drawOne(ev: Ev): void {
   if (!ev.who.deck.size && !ev.who.discard.size) {
   } else if (!ev.who.deck.size) {
-    reshufflePlayerDeckEv(ev, ev.who);
-    pushEvents(ev); // TODO fixme, this causes double triggers!!!!
+    if (ev.who.discard.size) {
+      reshufflePlayerDeckEv(ev, ev.who);
+      cont(ev, () => {
+        if (ev.who.deck.size) {
+          turnState.cardsDrawn++;
+          moveCardEv(ev, ev.who.deck.top, ev.who.hand);
+        }
+      });
+    }
   } else {
     turnState.cardsDrawn++;
     moveCardEv(ev, ev.who.deck.top, ev.who.hand);
