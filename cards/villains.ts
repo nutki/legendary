@@ -4946,3 +4946,111 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
   }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.COVERT | Color.RANGED)(ev.what)))],
 ]},
 ]);
+addVillainTemplates("Black Panther", [
+{ name: "Killmonger's League", cards: [
+// AMBUSH: Each player reveals a [Instinct] Hero or gains a Wound that was on a Mastermind or Villain.
+// While Preyy has more than 0 Attack, you cannot fight him. Instead, you may spend Attack equal to his Attack to Wound him and draw a card.
+// ATTACK: 3*
+// VP: 2
+  [ 2, makeVillainCard("Killmonger's League", "Preyy", 3, 2, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => {
+      selectCardEv(ev, "Choose a Wound to gain", fightableCards().limit(isEnemy).flatMap(c => c.attached('WOUND')), c => gainEv(ev, c, p), p);
+    }, p)),
+    fightCond: c => c.defense <= 0,
+    cardActions: [payToWoundEv(ev => drawEv(ev))]
+  })],
+// AMBUSH: Return a Wound from the Mastermind and from each Villain to the Wound Stack.
+// While Malice has more than 0 Attack, you cannot fight her. Instead, you may spend Attack equal to her Attack to Wound her and rescue a Bystander.
+// ATTACK: 4*
+// VP: 2
+  [ 2, makeVillainCard("Killmonger's League", "Malice", 4, 2, {
+    ambush: ev => {
+      selectCardEv(ev, "Choose a Wound to return", fightableCards().limit(isEnemy).flatMap(c => c.attached('WOUND')), c => returnToStackEv(ev, gameState.wounds, c));
+    },
+    fightCond: c => c.defense <= 0,
+    cardActions: [payToWoundEv(ev => rescueEv(ev))],
+  })],
+// AMBUSH: A Villain from your Victory Pile enters the city. Wound that Villain. Then Wound Baron Macabre a number of times equal to that Villain's VP.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Killmonger's League", "Baron Macabre", 5, 3, {
+    ambush: ev => {
+      selectCardEv(ev, "Choose a Villain to enter the city", playerState.victory.limit(isVillain), c => {
+        enterCityEv(ev, c);
+        woundEnemyEv(ev, c);
+        woundEnemyEv(ev, ev.source, c.vp);
+      });
+    },
+  })],
+// AMBUSH: Wound Venomm. Each player may discard a card to Wound Venomm again.
+// ESCAPE: Choose which players gain each of Venomm's Wounds, dividing them as evenly as possible.
+// ATTACK: 9
+// VP: 4
+  [ 2, makeVillainCard("Killmonger's League", "Venomm", 9, 4, {
+    ambush: ev => {
+      woundEnemyEv(ev, ev.source);
+      eachPlayer(p => chooseMayEv(ev, "Discard a card to Wound Venomm?", () => {
+        pickDiscardEv(ev, 1, p);
+        woundEnemyEv(ev, ev.source);
+      }, p));
+    },
+    escape: ev => {
+      const wounds = ev.source.attached('WOUND');
+      let availablePlayers = [...gameState.players];
+      wounds.each(c => cont(ev, () => choosePlayerLimitedEv(ev, p => {
+        gainEv(ev, c, p);
+        availablePlayers = availablePlayers.filter(p2 => p2 !== p);
+        if (availablePlayers.length === 0) availablePlayers = [...gameState.players];
+      }, availablePlayers)))
+    },
+  })],
+]},
+{ name: "Enemies of Wakanda", cards: [
+// <b>Empowered</b> by [Tech].
+// FIGHT: You get +1 Recruit for each [Tech] Hero in the HQ.
+// ATTACK: 3+
+// VP: 2
+// FLAVOR: A brilliant physicist and biochemist, Nightshade has created a cast array of advanced weaponry and experimental serums.
+  [ 2, makeVillainCard("Enemies of Wakanda", "Nightshade", 3, 2, {
+    fight: ev => addRecruitEvent(ev, hqHeroes().count(Color.TECH)),
+    varDefense: stableEmpowerVarDefense.get(Color.TECH),
+  })],
+// <b>Empowered</b> by [Strength].
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+// FLAVOR: Infusing himself with vast amounts of raw Vibranium, Jakarra's blood flows with pure power.
+  [ 2, makeVillainCard("Enemies of Wakanda", "Jakarra", 4, 3, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: stableEmpowerVarDefense.get(Color.STRENGTH),
+  })],
+// <b>Empowered</b> by [Ranged].
+// AMBUSH: Put a Hero from the HQ that isn't <b>Empowering</b> any Enemies of Wakanda on the bottom of the Hero Deck.
+// FIGHT: Same effect. <i>[Tetu isn't in the city.]</i>
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Enemies of Wakanda", "Tetu", 4, 3, {
+    ambush: ev => hqHeroes().limit(c => !isColor(empoweringVillainGroup(ev.source.villainGroup))).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+    fight: sameEffect,
+    varDefense: stableEmpowerVarDefense.get(Color.RANGED),
+  })],
+// <b>Empowered</b> by [Instinct].
+// AMBUSH: Zenzi captures a Bystander for each [Instinct] Hero in the HQ.
+// ATTACK: 5+
+// VP: 4
+// FLAVOR: With wide-ranging empathic powers, Zenzi rallies thousands to her cause.
+  [ 1, makeVillainCard("Enemies of Wakanda", "Zenzi", 5, 4, {
+    ambush: ev => captureEv(ev, ev.source, hqHeroes().count(Color.INSTINCT)),
+    varDefense: stableEmpowerVarDefense.get(Color.INSTINCT),
+  })],
+// <b>Empowered</b> by [Covert].
+// ESCAPE: Reverend Achebe becomes a Scheme Twist that takes effect immediately.
+// ATTACK: 6+
+// VP: 5
+// FLAVOR: An insane genius, schemer, and ventriloquist, Achebe works to turn Wakanda against Black Panther.
+  [ 1, makeVillainCard("Enemies of Wakanda", "Reverend Achebe", 6, 5, {
+    escape: ev => playTwistEv(ev, ev.source),
+    varDefense: stableEmpowerVarDefense.get(Color.COVERT),
+  })],
+]},
+]);

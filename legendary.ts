@@ -2258,7 +2258,7 @@ function chooseNumberEv(ev: Ev, desc: string, min: number, max: number, effect: 
   for (let i = min; i <= max; i++) options.push(new Ev(ev, "EFFECT", { func: () => effect(i), desc: `${i}` }));
   pushEv(ev, "SELECTEVENT", { desc, ui: true, agent, options });
 }
-function _choosePlayerEv(ev: Ev, effect: (p: Player) => void, list: Player[], agent: Player) {
+function choosePlayerLimitedEv(ev: Ev, effect: (p: Player) => void, list: Player[], agent: Player = playerState) {
   pushEv(ev, "SELECTEVENT", { desc: "Choose a player", ui: true, agent, options: list.map(p => new Ev(ev, "EFFECT", {
     func: () => effect(p),
     desc: p.name,
@@ -2266,10 +2266,10 @@ function _choosePlayerEv(ev: Ev, effect: (p: Player) => void, list: Player[], ag
 }
 function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
   gameState.players.size === 1 ? cont(ev, () => effect(gameState.players[0])) :
-  _choosePlayerEv(ev, effect, gameState.players, agent);
+  choosePlayerLimitedEv(ev, effect, gameState.players, agent);
 }
 function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
-  gameState.players.length > 1 && _choosePlayerEv(ev, effect, gameState.players.limit(p => p !== agent), agent);
+  gameState.players.length > 1 && choosePlayerLimitedEv(ev, effect, gameState.players.limit(p => p !== agent), agent);
 }
 function chooseClassEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean) {
   chooseOptionEv(ev, "Choose a Hero Class",
@@ -2410,7 +2410,7 @@ function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => vo
 function isCopy(c: Card) {
   return !c.instance || Object.getPrototypeOf(c) !== c.instance; // TODO could be also transformed or dual
 }
-function returnToStackEv(ev: Ev, deck: Deck, what: Card = ev.source) {
+function returnToStackEv(ev: Ev, deck: Deck, c: Card = ev.source) {
   // Cannot return copies or copyPaste cards
   if (isCopy(c)) return false;
   moveCardEv(ev, c, deck, true);

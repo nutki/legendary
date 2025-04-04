@@ -470,7 +470,7 @@ function dominateEv(ev: Ev, villain: Card, hero: Card) {
 function _chooseForEachPlayerEv(ev: Ev, desc: string, players: Player[], cards: Card[], effect1: (p: Player, c: Card) => void, effect0: (c: Card) => void, agent: Player = playerState) {
   if (players.size > 0) {
     selectCardEv(ev, desc, cards, c => {
-      _choosePlayerEv(ev, p => {
+      choosePlayerLimitedEv(ev, p => {
         effect1(p, c);
         _chooseForEachPlayerEv(ev, desc, players.limit(v => v !== p), cards.limit(v => v !== c), effect1, effect0, agent);
       }, players, agent);
@@ -940,7 +940,7 @@ function finishThePreyEv(ev: Ev, card: Card) {
   });
 }
 function preyEv(ev: Ev, handScore: (p: Player) => number, immediateEffect?: (p: Player) => void, card: Card = ev.source) {
-  _choosePlayerEv(ev, p => {
+  choosePlayerLimitedEv(ev, p => {
     attachCardEv(ev, card, p.playArea, 'PREYING');
     const setupTrigger = () => {
       addTurnTrigger('CLEANUP', u, ev => finishThePreyEv(ev, card));
@@ -1037,6 +1037,12 @@ function woundEnemyEv(ev: Ev, enemy: Card, amount: number = 1) {
       attachCardEv(ev, c, enemy, 'WOUND'); // use it in defense calculation
     });
   }));
+}
+function payToWoundEv(effect?: Handler): Card['cardActions'][0] {
+  return (c, ev) => new Ev(ev, "EFFECT", { what: c, cost: {cond: c => c.defense > 0, attack: c.defense}, func: ev => {
+    woundEnemyEv(ev, ev.what);
+    effect?.(ev);
+  }})
 }
 function empowerRecruitEv(ev: Ev, color: number) {
   addRecruitEvent(ev, hqCards().count(color));
