@@ -2855,7 +2855,7 @@ makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, vd_villain: [ 2, 4, 
   koProgressTrigger(isNonGrayHero),
 ], () => {
   setSchemeTarget(32);
-  const groups = gameState.villaindeck.deck.unique(c => c.printedVillainGroup);
+  const groups = gameState.villaindeck.limit(c => c.printedVillainGroup !== undefined).unique(c => c.printedVillainGroup);
   groups.each(g => {
     const cards = gameState.villaindeck.limit(isGroup(g));
     const half = cards.slice(0, cards.length/2);
