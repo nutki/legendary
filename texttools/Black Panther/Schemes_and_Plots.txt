@@ -1,0 +1,31 @@
+
+#CARDNAME: Seize the Wakandan Throne
+#SETUP: 6 Twists.
+#TWIST: If the Mastermind has the {THRONES FAVOR}, they spend it to stack this Twist next to the Scheme as a 'Tribe of Wkanda Defeated." Otherwise: The Mastermind gains the {THRONES FAVOR}, shuffle this Twist back into the Villain Deck, and then play a card from the Villain Deck.
+#RULE: Whenever you fight the Mastermind, you gain the {THRONES FAVOR}.
+#EVILWINS: When the 5 Trides of Wakanda have been defeated.
+
+#CARDNAME: Poison Lakes with Nanite Microbots
+#SETUP: Twists equal to 5 plus the number of players. 30 Wounds in the Wound Stack.
+#TWIST: Stack this Twist next to the Scheme as an "Infected Nanite." Wound the Mastermind. Then for each Infected Nanite, Wound a Hero in the HQ, dividing these new Wounds as evenly as possible.
+#RULE: Whenever you recruit a Hero <i>[or it leaves the HQ]</i>, pay 1 Recruit less for each Wound on it and choose players to gain those Wounds, dividing them as evenly as possible. Whenever a Wound is KO'd from anywhere, return it to the bottom of the Wound Stack.
+#EVILWINS: When the Wound Stack or Villain Deck runs out.
+
+#CARDNAME: Plunder Wakanda's Vibranium
+#SETUP: 10 Twists, representing "Vibranium."
+#TWIST: Put any Vibranium from the city into the Escape Pile. A Bystander enters the city as a 3 Attack "Smuggler" Villain with "Fight: Rescue this as a Bystander." Then the highest Attack Villain captures this Twist. Put the top card of the Hero Deck next to the Scheme as a "Vibranium Attunement," putting any previous Attunement on the bottom of the Hero Deck.
+#RULE: A Villain holding Vibranium is <b>Empowered</b> by the colors of the Vibranium Attunement. When you defeat them, put the Vibranium in your Victory Pile, worth 3VP.
+#EVILWINS: When 4 Vibranium are in the Escape Pile or the Villain Deck runs out.
+
+#CARDNAME: Provoke Clash of Nations
+#SETUP: 11 Twists.
+#TWISTNR: NR[1-8] Wihtout talking, all players simultaneously vote with a Fist, Palm, or 2 Fingers. Break ties at random. Then only you discard your hand and draw six cards. You must do the voted task below by the end of this turn or stack this twist next to the Mastermind as an "International Crisis"/
+<ul>
+    <li> <b>Fist</b>: "War" - Defeat a non-Henchman Villain or Mastermind Tactic.</li>
+    <li> <b>Palm</b>: "Diplomacy" - Play three Heroes that share a Hero Class.</li>
+    <li> <b>Two Fingers</b>: "Commerce" - Recruit two Heroes from the HQ.</li>
+</ul>
+#TWISTNR: NR[9-11] Do all three tasks this turn or add an International Crisis.
+#EVILWINS: At 6 International Crises.
+
+

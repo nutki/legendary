@@ -1,0 +1,54 @@
+
+#CARDNAME: Killmonger
+While Killmonger has more than 0 Attack, you cannot fight him. Instead, you may spend Attack equal to his Attack to Wound him and get +1 Recruit.
+#LEADS: Killmonger's League
+#STRIKE: Each player must reveal 4 different Hero Classes or gain one of the Wounds on Killmonger. Any playere who can't do wither must discard down to 4 cards.
+#ATTACK: 5*
+#VP: 4
+
+#EPICNAME: Killmonger
+While Killmonger has more than 0 Attack, you cannot fight him. Instead, you may spend Attack equal to his Attack to Wound him and get +1 Recruit. When you do fight him, each other player gains one of his Wounds.
+#LEADS: Killmonger's League
+#STRIKE: Each player gains a Wound. Gain them from Killmonger's Wounds if possible.
+#ATTACK: 6*
+#VP: 4
+
+#TACTIC: A Scar for Every Kill
+#FIGHT: You get +1 Recruit for each non-Henchman Villain in your Victory Pile.
+
+#TACTIC: Rite of Challenge
+#FIGHT: Each player with no Killmonger Tactics in their Victory Pile gains a Wound that was on Killmonger. <i>[You have this Tactic, so you won't gain a Wound.]</i>
+
+#TACTIC: Throw From the Waterfall
+#FIGHT: Draw two cards. Then each other player discards a card.
+
+#TACTIC: Altar of Resurrection
+#FIGHT: The player on your left chooses a non-Henchman Villain from their Victory Pile. It enters the city with a Wound on it. Then the player on your right does the same effect. <i>[In solo, you do both.]</i>
+
+#CARDNAME: Klaw
+Klaw is <b>Double Empowered</b> by the color(s) of his "Sonic Frequency."
+#LEADS: Enemies of Wakanda
+#STRIKE: Put the top card of the Hero Deck next to Klaw as a "Sonic Frequency," putting any previous Frequency on the bottom of the Hero Deck. Each player must reveal a card that shares a color with it or gain a Wound.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Klaw
+Klaw is <b>Double Empowered</b> by the color(s) of his "Sonic Frequency."
+#LEADS: Enemies of Wakanda
+#STRIKE: Put the top card of the Hero Deck next to Klaw as a "Sonic Frequency." Put any previous Frequency and each card from the HQ that does not share a color with the new Frequency on the bottom of the Hero Deck. Each player gains a Wound.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Cohesive Sound Construct
+#FIGHT: Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "Escape: This card becomes a Master Strike that takes effect immediately."
+
+#TACTIC: Convert Matter to Sound
+#FIGHT: Each other player simultaneously KOs one of their non-grey Heroes. Put one of those cards with the lowest cost next to Klaw as his new Sonic Frequency. Put any previous Frequency on the bottom of the Hero Deck.
+
+#TACTIC: Ultrasonic Boom
+#FIGHT: Put the top card of the Hero Deck next to Klaw as a Sonic Frequency. Each other player must discard a card that shares a color with it. Put any previous Frequency on the bottom of the Hero Deck.
+
+#TACTIC: Cruelty Provokes Resistance
+#FIGHT: Set aside all Heroes from the HQ that do not share any colors with Klaw's Sonic Frequency. Gain one of them. Put the rest on the bottom of the Hero Deck. Then refill the empty HQ spaces.
+
+

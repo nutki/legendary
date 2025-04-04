@@ -1,0 +1,73 @@
+
+#CARDNAME: Killmonger's League
+
+#SUBNAME: Preyy
+#COPIES: 2
+#AMBUSH: Each player reveals a [Instinct] Hero or gains a Wound that was on a Mastermind or Villain.
+While Preyy has more than 0 Attack, you cannot fight him. Instead, you may spend Attack equal to his Attack to Wound him and draw a card.
+#ATTACK: 3*
+#VP: 2
+
+#SUBNAME: Malice
+#COPIES: 2
+#AMBUSH: Return a Wound from the Mastermind and from each Villain to the Wound Stack.
+While Malice has more than 0 Attack, you cannot fight her. Instead, you may spend Attack equal to her Attack to Wound her and rescue a Bystander.
+#ATTACK: 4*
+#VP: 2
+
+#SUBNAME: Baron Macabre
+#COPIES: 2
+#AMBUSH: A Villain from your Victory Pile enters the city. Wound that Villain. Then Wound Baron Macabre a number of times equal to that Villain's VP.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Venomm
+#COPIES: 2
+#AMBUSH: Wound Venomm. Each player may discard a card to Wound Venomm again.
+#ESCAPE: Choose which players gain each of Venomm's Wounds, dividing them as evenly as possible.
+#ATTACK: 9
+#VP: 4
+
+#CARDNAME: Enemies of Wakanda
+
+#SUBNAME: Nightshade
+#COPIES: 2
+<b>Empowered</b> by [Tech].
+#FIGHT: You get +1 Recruit for each [Tech] Hero in the HQ.
+#ATTACK: 3+
+#VP: 2
+#FLAVOR: A brilliant physicist and biochemist, Nightshade has created a cast array of advanced weaponry and experimental serums.
+
+#SUBNAME: Jakarra
+#COPIES: 2
+<b>Empowered</b> by [Strength].
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+#FLAVOR: Infusing himself with vast amounts of raw Vibranium, Jakarra's blood flows with pure power.
+
+#SUBNAME: Tetu
+#COPIES: 2
+<b>Empowered</b> by [Ranged].
+#AMBUSH: Put a Hero from the HQ that isn't <b>Empowering</b> any Enemies of Wakanda on the bottom of the Hero Deck.
+#FIGHT: Same effect. <i>[Tetu isn't in the city.]</i>
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Zenzi
+#COPIES: 1
+<b>Empowered</b> by [Instinct].
+#AMBUSH: Zenzi captures a Bystander for each [Instinct] Hero in the HQ.
+#ATTACK: 5+
+#VP: 4
+#FLAVOR: With wide-ranging empathic powers, Zenzi rallies thousands to her cause.
+
+#SUBNAME: Reverend Achebe
+#COPIES: 1
+<b>Empowered</b> by [Covert].
+#ESCAPE: Reverend Achebe becomes a Scheme Twist that takes effect immediately.
+#ATTACK: 6+
+#VP: 5
+#FLAVOR: An insane genius, schemer, and ventriloquist, Achebe works to turn Wakanda against Black Panther.
+
+

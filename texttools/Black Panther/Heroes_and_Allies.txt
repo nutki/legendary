@@ -1,0 +1,192 @@
+
+#CARDNAME: King Black Panther
+#TEAM: Heroes of Wakanda
+
+#SUBNAME: Unseen Protector
+#COPIES: 5
+#CLASS: [Instinct], [Covert]
+Heroes of Wakanda <b>Ambush</b>: Rescue a Bystander.
+---
+#RECRUIT: 1+
+Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
+#COST: 2
+
+#SUBNAME: Vibranium Claws
+#COPIES: 5
+#CLASS: [Instinct], [Tech]
+[Instinct] <b>Ambush</b>: You get +2 Attack.
+---
+#ATTACK: 2+
+Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
+#COST: 4
+
+#SUBNAME: Heart-Shaped Herb
+#COPIES: 3
+#CLASS: [Strength], [Covert]
+[Covert] <b>Ambush</b>: Look at the top card of your deck. Draw or KO it.
+---
+#ATTACK: 3
+{POWER Covert} Gain the {THRONES FAVOR}. If you already have it, you may look at the top card of your deck. Draw or KO it.
+#COST: 5
+
+#SUBNAME: Unite the Tribes of Wakanda
+#COPIES: 1
+#CLASS: [Strength], [Ranged]
+Heroes of Wakanda <b>Ambush</b>: You get +1 Attack for each Hero Class you have.
+---
+#RECRUIT: 0+
+#ATTACK: 5+
+{TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +1 Recruit and +1 Attack for each Hero Class you have.
+#COST: 8
+
+#CARDNAME: Queen Storm of Wakanda
+#TEAM: Heroes of Wakanda
+
+#SUBNAME: Hurricane Winds
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2
+#ATTACK: 0+
+You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+{POWER Covert} You get <b>Empowered</b> by [Covert].
+#COST: 3
+
+#SUBNAME: Torrential Downpour
+#COPIES: 5
+#CLASS: [Ranged]
+[Ranged] <b>Ambush</b>: You get <b>Empowered</b> by [Ranged].
+---
+#ATTACK: 2+
+{POWER Ranged} You get <b>Empowered</b> by [Ranged].
+#COST: 4
+#FLAVOR: From scorching desert to soothing streams to crushing flood.
+
+#SUBNAME: Forked Lightning
+#COPIES: 3
+#CLASS: [Covert], [Ranged]
+#ATTACK: 3
+Wound Villains on the Rooftops and Bridge.
+{POWER Covert Ranged} Gain the {THRONES FAVOR}. If you already had it, you may spend it to Wound the Mastermind twice.
+#COST: 6
+
+#SUBNAME: Thunderous Tempest
+#COPIES: 1
+#CLASS: [Ranged]
+Choose up to three Heroes from the HQ. Put them on the bottom of the Hero Deck.
+{TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already had it, you may spend it to get <b>Empowered</b> by [Covert], then get <b>Empowered</b> by [Ranged].
+#ATTACK: 5+
+#COST: 8
+
+#CARDNAME: General Okoye
+#TEAM: Heroes of Wakanda
+
+#SUBNAME: To My Last Breath
+#COPIES: 5
+#CLASS: [Instinct]
+[Instinct] <b>Ambush</b>: Draw a card.
+---
+#ATTACK: 2+
+{POWER Instinct} You may draw a card and get +1 Attack. If you do, gain a Wound.
+#COST: 3
+
+#SUBNAME: Lead the Dora Milaje
+#COPIES: 5
+#CLASS: [Strength], [Instinct]
+#ATTACK: 2+
+You may gain a S.H.I.E.L.D. Officer.
+{POWER Strength} Instead, you may KO a S.H.I.E.L.D. Officer or Wound from your hand or discard pile to get +2 Attack.
+#COST: 4
+
+#SUBNAME: Sovereign Bodyguard
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3
+Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack, draw a card, and Wound a Villain.
+#COST: 5
+
+#SUBNAME: Direct the Agents of Wakanda
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+{TEAMPOWER Heroes of Wakanda} You may KO a S.H.I.E.L.D. Hero or Wound from your hand or discard pile to get +2 Attack.
+#COST: 7
+#GUN: 1
+
+#CARDNAME: Princess Shuri
+#TEAM: Heroes of Wakanda
+
+#SUBNAME: Vibranium Experiments
+#COPIES: 5
+#CLASS: [Tech]
+[Tech] <b>Ambush</b>: Draw a card.
+---
+#ATTACK: 0+
+Draw a card.
+{POWER Tech} You get <b>Empowered</b> by [Tech].
+#COST: 2
+
+#SUBNAME: Kimoyo Beads
+#COPIES: 5
+#CLASS: [Tech], [Ranged]
+#RECRUIT: 0+
+You get <b>Empowered</b> by the color of your choice, getting Recruit instead of Attack.
+#COST: 4
+#FLAVOR: Extremely adaptable, Kimoyo Beads can communicate with and control many Wakandan devices.
+
+#SUBNAME: Shock Net
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3+
+You may put a card from the HQ on the bottom of the Hero Deck.
+{POWER Tech} You get <b>Empowered</b> by the color of your choice.
+#COST: 6
+
+#SUBNAME: Become the Next Black Panther
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 3
+#ATTACK: 3+
+{TEAMPOWER Heroes of Wakanda} This turn, each card entering the HQ also has "<b>Ambush</b>: If you have any cards that share a color with this, you get +2 Attack."
+#COST: 7
+
+#CARDNAME: White Wolf
+#TEAM: Heroes of Wakanda
+
+#SUBNAME: Cloaking Tech Ambush
+#COPIES: 5
+#CLASS: [Tech]
+[Tech] <b>Ambush</b>: Wound a Villain.
+---
+#ATTACK: 2
+{POWER Tech} Wound a Villain.
+#COST: 4
+#FLAVOR: The White Wolf takes on missions too extreme for official Wakandan approval.
+
+#SUBNAME: Secret Assignment
+#COPIES: 5
+#CLASS: [Covert]
+{POWER Covert} <b>Ambush</b>: Wound the Mastermind.
+---
+#RECRUIT: 2+
+{POWER Covert} If any Villain or Mastermind has any Wounds, you get +2 Recruit.
+#COST: 3
+
+#SUBNAME: Command the Hatut Zeraze
+#COPIES: 3
+#CLASS: [Covert], [Tech]
+Heroes of Wakanda <b>Ambush</b>: You may KO one of your cards.
+---
+#ATTACK: 3
+{TEAMPOWER Heroes of Wakanda} If any Villain or Mastermind has any Wounds, you may KO a card from your hand or discard pile.
+#COST: 5
+
+#SUBNAME: Reflective Vibranium Armor
+#COPIES: 1
+#CLASS: [Tech]
+[Tech] <b>Ambush</b>: Wound each Villain and the Mastermind.
+---
+#ATTACK: 4
+If a Master Strike would occur, you may reveal this card to KO that Strike and Wound the Mastermind instead.
+#COST: 7
+
+

@@ -24,6 +24,7 @@ Champions
 Warbound
 Venomverse
 X-Factor
+Heroes of Wakanda
 END
 $aff = "(?:".(join'|',map s/[().]/\\$&/gr, @aff).")";
 $class = "(?:Instinct|Ranged|Tech|Covert|Strength)";
