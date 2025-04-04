@@ -106,12 +106,12 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true):
   d.appendChild(div("frame"));
   return d;
 }
-function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0) {
+function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
   card.style.position = "absolute";
   card.style.top = y * 288 + (y >= 2 ? 60 : 0) + "px";
-  card.style.left = (fan ? ((w||1) - 1)/2 * 212: (x + i) * 212) + "px";
+  card.style.left = (fan ? ((w||1))/2 * 212: (x + i) * 212) + "px";
   if (fan) {
-    card.style.transform = `rotate(${(i - ((w||1) - 3)/2) * 3.5}deg)`;
+    card.style.transform = `rotate(${(i - ((t||w||1) - 1)/2) * 3.5}deg)`;
     card.style.transformOrigin = "center 3000px";
   }
   if (size) card.classList.add(size);
@@ -179,7 +179,7 @@ function displayDecks(ev: Ev): void {
     cardDivs.forEach((cardDiv, i) => {
       cardsContainer.appendChild(cardDiv);
       cardDiv.setAttribute('data-deck-id', deck.id);
-      positionCard(cardDiv, deckPos, i * spread);
+      positionCard(cardDiv, deckPos, i * spread, n);
       topDiv = cardDiv;
     });
     if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid).classList.toggle("hidden"));
