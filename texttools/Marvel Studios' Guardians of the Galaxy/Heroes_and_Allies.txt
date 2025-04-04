@@ -50,7 +50,7 @@ You may discard an Artifact you control to get +1 Attack.
 #COPIES: 1
 #CLASS: [Ranged]
 <b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +3 Attack.
-#COST: 8
+#COST: 7
 #GUN: 1
 
 #CARDNAME: Gamora
