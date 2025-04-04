@@ -2737,7 +2737,7 @@ makeSchemeCard("War for the Dream Dimension", { twists: 7, vd_villain: [ 2, 3, 4
 // SETUP: 11 Twists, representing Cursed Pages of the Darkhold Tome. Add an extra Villain Group.
 // RULE: Cursed Pages are Ritual Artifacts with “If you fought a Villain or Mastermind: You may discard this to get +3 Recruit.”
 // EVILWINS: When the Mastermind has 7 Cursed Pages at the end of any player’s turn or the Villain Deck runs out.
-makeSchemeCard("Cursed Pages of the Darkhold Tome", { twists: 8, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+makeSchemeCard("Cursed Pages of the Darkhold Tome", { twists: 11, vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
   // Twist:  Put this Cursed Page next to the Mastermind, plus a Cursed Page from any player’s control or discard pile or the KO pile.
   // For this turn only, the first time you fight a Villain or Mastermind, put one of the Mastermind’s Cursed Pages into your discard pile.
   attachCardEv(ev, ev.twist, gameState.mastermind, 'CURSED_PAGE');
@@ -2957,8 +2957,33 @@ makeSchemeCard("Poison Lakes with Nanite Microbots", { twists: [ 6, 7, 8, 9, 10 
 // SETUP: 10 Twists, representing "Vibranium."
 // RULE: A Villain holding Vibranium is <b>Empowered</b> by the colors of the Vibranium Attunement. When you defeat them, put the Vibranium in your Victory Pile, worth 3VP.
 // EVILWINS: When 4 Vibranium are in the Escape Pile or the Villain Deck runs out.
-makeSchemeCard("Plunder Wakanda's Vibranium", { twists: 8 }, ev => {
-  // Twist: Put any Vibranium from the city into the Escape Pile. A Bystander enters the city as a 3 Attack "Smuggler" Villain with "Fight: Rescue this as a Bystander." Then the highest Attack Villain captures this Twist. Put the top card of the Hero Deck next to the Scheme as a "Vibranium Attunement," putting any previous Attunement on the bottom of the Hero Deck.
+makeSchemeCard("Plunder Wakanda's Vibranium", { twists: 10 }, ev => {
+  // Twist: Put any Vibranium from the city into the Escape Pile.
+  cityVillains().each(c => c.attached('VIBRANIUM').each(v => moveCardEv(ev, v, gameState.escaped)));
+  // A Bystander enters the city as a 3 Attack "Smuggler" Villain with "Fight: Rescue this as a Bystander."
+  cont(ev, () => gameState.bystanders.withTop(c => {
+    villainify("Smuggler", c1 => c1 === c, 3, ev => rescueEv(ev, ev.source));
+    enterCityEv(ev, c);
+  }));
+  // Then the highest Attack Villain captures this Twist.
+  cont(ev, () => selectCardEv(ev, "Choose a Villain to capture this Twist", villains().highest(c => c.defense), c => attachCardEv(ev, ev.twist, c, 'VIBRANIUM')));
+  // Put the top card of the Hero Deck next to the Scheme as a "Vibranium Attunement," putting any previous Attunement on the bottom of the Hero Deck.
+  cont(ev, () => gameState.herodeck.withTop(c => {
+    gameState.scheme.attachedDeck('VIBRANIUM_ATTUNEMENT').each(c => moveCardEv(ev, c, gameState.herodeck, true));
+    attachCardEv(ev, c, gameState.scheme, 'VIBRANIUM_ATTUNEMENT');
+  }));
+}, [
+  escapeProgressTrigger(isTwist),
+  runOutProgressTrigger('VILLAIN', false),
+  {
+    event: 'DEFEAT',
+    match: ev => ev.what.attached('VIBRANIUM').size > 0,
+    after: ev => ev.parent.what.attached('VIBRANIUM').each(c => moveCardEv(ev, c, playerState.victory))
+  }
+], () => {
+  setSchemeTarget(4);
+  addStatMod('defense', c => isVillain(c) && c.attached('VIBRANIUM').size > 0, c => hqCards().count(gameState.scheme.attached('VIBRANIUM_ATTUNEMENT').sum(c => c.color)));
+  addStatSet('vp', isTwist, () => 3);
 }),
 // SETUP: 11 Twists.
 // <ul>
@@ -2968,10 +2993,44 @@ makeSchemeCard("Plunder Wakanda's Vibranium", { twists: 8 }, ev => {
 // </ul>
 // EVILWINS: At 6 International Crises.
 makeSchemeCard("Provoke Clash of Nations", { twists: 11 }, ev => {
+  const twist = ev.twist;
+  let resolveWar = false;
+  let resolveDiplomacy = false;
+  let resolveCommerce = false;
+  const votes: string[] = [];
   if (ev.nr <= 8) {
-    // Twist 1-8 Wihtout talking, all players simultaneously vote with a Fist, Palm, or 2 Fingers. Break ties at random. Then only you discard your hand and draw six cards. You must do the voted task below by the end of this turn or stack this twist next to the Mastermind as an "International Crisis"/
+    // Twist 1-8 Wihtout talking, all players simultaneously vote with a Fist, Palm, or 2 Fingers. Break ties at random.
+    // Then only you discard your hand and draw six cards. You must do the voted task below by the end of this turn or stack this twist
+    // next to the Mastermind as an "International Crisis"/
+    eachPlayer(p => chooseOptionEv(ev, "Vote!", ['War', 'Diplomacy', 'Commerce'].map(v => ({l: v, v})), v => votes.push(v), p));
+    cont(ev, () => {
+      votes.highest(v => votes.count(v1 => v1 === v)).withRandom(v => {
+        if(v === 'War') {
+          resolveWar = true;
+        } else if(v === 'Diplomacy') {
+          resolveDiplomacy = true;
+        } else if(v === 'Commerce') {
+          resolveCommerce = true;
+        }
+        textLog.log(`You voted for ${v}!`);
+      });
+    });
+    cont(ev, () => discardHandEv(ev));
+    cont(ev, () => drawEv(ev, 6));
   } else if (ev.nr >= 9 && ev.nr <= 11) {
     // Twist 9-11 Do all three tasks this turn or add an International Crisis.
+    resolveCommerce = resolveWar = resolveDiplomacy = true;
   }
+  addTurnTrigger('CLEANUP', () => true, ev => {
+    if (resolveWar) resolveWar = !(pastEvents('DEFEAT').count(ev => isVillain(ev.what) && !isHenchman(ev.what) || isTactic(ev.what)) > 0);
+    if (resolveDiplomacy) resolveDiplomacy = !(classes.has(c => pastEvents('PLAY').limit(ev => isHero(ev.what)).count(ev => isColor(c)(ev.what)) >= 3));
+    if (resolveCommerce) resolveCommerce = !(pastEvents('RECRUIT').limit(ev => isHero(ev.what) && ev.where.isHQ).size >= 2);
+    if (resolveCommerce || resolveDiplomacy || resolveWar) {
+      attachCardEv(ev, twist, gameState.mastermind, 'INTERNATIONAL_CRISIS');
+      cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('INTERNATIONAL_CRISIS').size));
+    }
+  });
+}, [], () => {
+  setSchemeTarget(6);
 }),
 ]);
