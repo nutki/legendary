@@ -1027,14 +1027,14 @@ function wasCommanding(ev: Ev) {
 // EXPANSION: Black Panther
 function heroAmbush(cond: Filter<Card>, func: Handler): HeroCardAbillities {
   return {
-    heroAmbush: ev => revealable().has(cond) && chooseMayEv(ev, "Use Hero Ambush", () => func(ev)) // TODO use this ability
+    heroAmbush: ev => revealable().has(cond) && chooseMayEv(ev, "Use Hero Ambush", () => func(ev))
   }
 }
 function woundEnemyEv(ev: Ev, enemy: Card, amount: number = 1) {
   repeat(amount, () => cont(ev, () => {
     const options = [gameState.ko.limit(isWound), gameState.wounds.deck.firstOnly()].merge();
     selectCardEv(ev, "Choose a Wound", options, c => {
-      attachCardEv(ev, c, enemy, 'WOUND'); // use it in defense calculation
+      attachCardEv(ev, c, enemy, 'WOUND');
     });
   }));
 }

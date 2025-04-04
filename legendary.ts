@@ -2292,6 +2292,14 @@ function chooseColorEv(ev: Ev, f: ((color: number) => void), limit?: (color: num
     f
   );
 }
+function distributeEvenlyEv<P,C>(ev: Ev, desc: (o: C) => string, objects: C[], targets: P[], effect: (o: C, t: P) => void, who: Player = playerState) {
+  let availableTargets = [...targets];
+  objects.each(c => cont(ev, () => selectCardEv(ev, desc(c), availableTargets, p => {
+    effect(c, p);
+    availableTargets = availableTargets.filter(p2 => p2 !== p);
+    if (availableTargets.length === 0) availableTargets = [...targets];
+  }, who)));
+}
 function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {
   const options = fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
   options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);

@@ -2903,3 +2903,75 @@ makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
   setSchemeTarget(5);
 }),
 ]);
+addTemplates("SCHEMES", "Black Panther", [
+// SETUP: 6 Twists.
+// RULE: Whenever you fight the Mastermind, you gain the {THRONES FAVOR}.
+// EVILWINS: When the 5 Trides of Wakanda have been defeated.
+makeSchemeCard("Seize the Wakandan Throne", { twists: 6 }, ev => {
+  // Twist: If the Mastermind has the {THRONES FAVOR}, they spend it to stack this Twist next to the Scheme as a 'Tribe of Wkanda Defeated."
+  if (mastermindHasThronesFavor()) {
+    gameState.thronesFavorHolder = undefined;
+    attachCardEv(ev, ev.twist, gameState.scheme, 'TRIBE');
+    schemeProgressEv(ev, gameState.scheme.attached('TRIBE').size);
+  } else {
+  // Otherwise: The Mastermind gains the {THRONES FAVOR}, shuffle this Twist back into the Villain Deck, and then play a card from the Villain Deck.
+    withMastermind(ev, c => {
+      gameState.thronesFavorHolder = c;
+    });
+    shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+    playAnotherEv(ev);
+  }
+}, [
+  { event: 'FIGHT', match: ev => isMastermind(ev.what), after: ev => thronesFavorGainEv(ev) },
+], () => {
+  setSchemeTarget(5);
+}),
+// SETUP: Twists equal to 5 plus the number of players. 30 Wounds in the Wound Stack.
+// RULE: Whenever you recruit a Hero <i>[or it leaves the HQ]</i>, pay 1 Recruit less for each Wound on it and choose players to gain those Wounds, dividing them as evenly as possible.
+// Whenever a Wound is KO'd from anywhere, return it to the bottom of the Wound Stack.
+// EVILWINS: When the Wound Stack or Villain Deck runs out.
+makeSchemeCard("Poison Lakes with Nanite Microbots", { twists: [ 6, 7, 8, 9, 10 ], wounds: 30 }, ev => {
+  // Twist: Stack this Twist next to the Scheme as an "Infected Nanite."
+  attachCardEv(ev, ev.twist, gameState.scheme, 'INFECTED_NANITE');
+  // Wound the Mastermind.
+  withMastermind(ev, c => woundEnemyEv(ev, c));
+  // Then for each Infected Nanite, Wound a Hero in the HQ, dividing these new Wounds as evenly as possible.
+  cont(ev, () => {
+    const wounds = gameState.scheme.attached('INFECTED_NANITE');
+    distributeEvenlyEv(ev, () => "Wound a Hero in the HQ", wounds, hqHeroes(), (w, h) => woundEnemyEv(ev, h));
+  });
+}, [
+  { event: 'KO', match: ev => isWound(ev.what), after: ev => returnToStackEv(ev, gameState.wounds, ev.parent.what) },
+  {
+    event: 'MOVECARD',
+    match: ev => ev.what.location.isHQ && !ev.to.isHQ && ev.what.attached('WOUND').size > 0,
+    before: ev => {
+      distributeEvenlyEv(ev, w => `Choose a player to gain ${w.cardName}`, ev.parent.what.attached('WOUND'), gameState.players, (w, p) => gainEv(ev, w, p));
+    },
+  },
+  runOutProgressTrigger('WOUNDS'),
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
+  addStatMod('cost', c => isHero(c), c => -c.attached('WOUND').size);
+}),
+// SETUP: 10 Twists, representing "Vibranium."
+// RULE: A Villain holding Vibranium is <b>Empowered</b> by the colors of the Vibranium Attunement. When you defeat them, put the Vibranium in your Victory Pile, worth 3VP.
+// EVILWINS: When 4 Vibranium are in the Escape Pile or the Villain Deck runs out.
+makeSchemeCard("Plunder Wakanda's Vibranium", { twists: 8 }, ev => {
+  // Twist: Put any Vibranium from the city into the Escape Pile. A Bystander enters the city as a 3 Attack "Smuggler" Villain with "Fight: Rescue this as a Bystander." Then the highest Attack Villain captures this Twist. Put the top card of the Hero Deck next to the Scheme as a "Vibranium Attunement," putting any previous Attunement on the bottom of the Hero Deck.
+}),
+// SETUP: 11 Twists.
+// <ul>
+//     <li> <b>Fist</b>: "War" - Defeat a non-Henchman Villain or Mastermind Tactic.</li>
+//     <li> <b>Palm</b>: "Diplomacy" - Play three Heroes that share a Hero Class.</li>
+//     <li> <b>Two Fingers</b>: "Commerce" - Recruit two Heroes from the HQ.</li>
+// </ul>
+// EVILWINS: At 6 International Crises.
+makeSchemeCard("Provoke Clash of Nations", { twists: 11 }, ev => {
+  if (ev.nr <= 8) {
+    // Twist 1-8 Wihtout talking, all players simultaneously vote with a Fist, Palm, or 2 Fingers. Break ties at random. Then only you discard your hand and draw six cards. You must do the voted task below by the end of this turn or stack this twist next to the Mastermind as an "International Crisis"/
+  } else if (ev.nr >= 9 && ev.nr <= 11) {
+    // Twist 9-11 Do all three tasks this turn or add an International Crisis.
+  }
+}),
+]);

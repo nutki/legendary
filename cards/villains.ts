@@ -4996,12 +4996,7 @@ addVillainTemplates("Black Panther", [
     },
     escape: ev => {
       const wounds = ev.source.attached('WOUND');
-      let availablePlayers = [...gameState.players];
-      wounds.each(c => cont(ev, () => choosePlayerLimitedEv(ev, p => {
-        gainEv(ev, c, p);
-        availablePlayers = availablePlayers.filter(p2 => p2 !== p);
-        if (availablePlayers.length === 0) availablePlayers = [...gameState.players];
-      }, availablePlayers)))
+      distributeEvenlyEv(ev, c => `Choose a player to gain ${c.cardName}`, wounds, gameState.players, (c, p) => gainEv(ev, c, p));
     },
   })],
 ]},
