@@ -3077,3 +3077,109 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
   }
 }),
 ]);
+addTemplates("MASTERMINDS", "Black Panther", [
+// While Killmonger has more than 0 Attack, you cannot fight him. Instead, you may spend Attack equal to his Attack to Wound him and get +1 Recruit.
+// EPICNAME: Killmonger
+// While Killmonger has more than 0 Attack, you cannot fight him. Instead, you may spend Attack equal to his Attack to Wound him and get +1 Recruit. When you do fight him, each other player gains one of his Wounds.
+...makeEpicMastermindCard("Killmonger", [ 5, 6 ], 4, "Killmonger's League", ev => {
+  eachPlayerEv(ev, ({who: p}) => {
+    if (ev.source.epic)
+      // Each player gains a Wound. Gain them from Killmonger's Wounds if possible.
+      selectCardOrEv(ev, "Choose a Wound to gain", ev.source.attached('WOUND'), c => gainEv(ev, c, p), () => gainWoundEv(ev, p), p);
+    else
+      // Each player must reveal 4 different Hero Classes or gain one of the Wounds on Killmonger. Any playere who can't do wither must discard down to 4 cards.
+      numClasses(revealable(p)) >= 4 || selectCardOrEv(ev, "Choose a Wound to gain", ev.source.attached('WOUND'), c => gainEv(ev, c, p), () => pickDiscardEv(ev, -4, p), p);
+  });
+}, [
+  [ "A Scar for Every Kill", ev => {
+  // You get +1 Recruit for each non-Henchman Villain in your Victory Pile.
+    addRecruitEvent(ev, playerState.victory.count(c => isVillain(c) && !isHenchman(c)));
+  } ],
+  [ "Rite of Challenge", ev => {
+  // Each player with no Killmonger Tactics in their Victory Pile gains a Wound that was on Killmonger. <i>[You have this Tactic, so you won't gain a Wound.]</i>
+    eachPlayer(p => p.victory.has(c => isTactic(c) && c.mastermind === ev.source.mastermind) || selectCardEv(ev, "Choose a Wound to gain", ev.source.attached('WOUND'), c => gainEv(ev, c, p), p));
+  } ],
+  [ "Throw From the Waterfall", ev => {
+  // Draw two cards. Then each other player discards a card.
+    drawEv(ev, 2);
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p));
+  } ],
+  [ "Altar of Resurrection", ev => {
+  // The player on your left chooses a non-Henchman Villain from their Victory Pile. It enters the city with a Wound on it. Then the player on your right does the same effect. <i>[In solo, you do both.]</i>
+      [playerState.left, playerState.right].each(p => {
+        selectCardEv(ev, "Choose a Villain to enter", p.victory.limit(c => isVillain(c) && !isHenchman(c)), c => {
+          enterCityEv(ev, c);
+          woundEnemyEv(ev, c);
+        }, p);
+      });
+  } ],
+], {
+  triggers: [{
+    event: 'FIGHT',
+    match: (ev, source) => ev.what === source && source.epic,
+    before: ev => {
+      eachOtherPlayerVM(p => {
+        selectCardEv(ev, "Choose a Wound to gain", ev.source.attached('WOUND'), c => gainEv(ev, c, p), p);
+      })
+    },
+  }],
+  cardActions: [payToWoundEv(ev => addRecruitEvent(ev, 1))],
+}),
+// Klaw is <b>Double Empowered</b> by the color(s) of his "Sonic Frequency."
+// EPICNAME: Klaw
+...makeEpicMastermindCard("Klaw", [ 8, 10 ], 6, "Enemies of Wakanda", ev => {
+// Put the top card of the Hero Deck next to Klaw as a "Sonic Frequency," putting any previous Frequency on the bottom of the Hero Deck.
+// Put the top card of the Hero Deck next to Klaw as a "Sonic Frequency." Put any previous Frequency and each card from the HQ that does not share a color with the new Frequency on the bottom of the Hero Deck.
+  ev.source.attached('SONICFQ').each(c => {
+    moveCardEv(ev, c, gameState.herodeck, true);
+    ev.source.epic && hqHeroes().limit(c => !isColor(c.color)).each(c => moveCardEv(ev, c, gameState.herodeck, true));
+  });
+// Each player must reveal a card that shares a color with it or gain a Wound.
+// Each player gains a Wound.
+  gameState.herodeck.withTop(c => {
+    attachCardEv(ev, c, ev.source, 'SONICFQ');
+    eachPlayer(p => (!ev.source.epic && revealable(p).has(c.color)) || gainWoundEv(ev, p));
+  });
+}, [
+  [ "Cohesive Sound Construct", ev => {
+  // Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is "Escape: This card becomes a Master Strike that takes effect immediately."
+    rescueEv(ev, 4);
+    villainify(u, ev.source, u, () => {});
+    addStatSet('escape', c => c === ev.source, () => ev => playStrikeEv(ev, ev.source));
+    enterCityEv(ev, ev.source);
+  } ],
+  [ "Convert Matter to Sound", ev => {
+  // Each other player simultaneously KOs one of their non-grey Heroes. Put one of those cards with the lowest cost next to Klaw as his new Sonic Frequency. Put any previous Frequency on the bottom of the Hero Deck.
+    const heroes: Card[] = [];
+    eachOtherPlayerVM(p => {
+      selectCardEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(isNonGrayHero), c => heroes.push(c), p);
+    });
+    cont(ev, () => {
+      heroes.each(c => KOEv(ev, c));
+      selectCardEv(ev, "Choose a Hero to attach", heroes.highest(c => -c.cost), c => {
+        ev.source.attached('SONICFQ').each(c => {
+          moveCardEv(ev, c, gameState.herodeck, true);
+        });
+        attachCardEv(ev, c, ev.source, 'SONICFQ');
+      });
+    });
+  } ],
+  [ "Ultrasonic Boom", ev => {
+  // Put the top card of the Hero Deck next to Klaw as a Sonic Frequency. Each other player must discard a card that shares a color with it. Put any previous Frequency on the bottom of the Hero Deck.
+    gameState.herodeck.withTop(c => {
+      ev.source.attached('SONICFQ').each(c => moveCardEv(ev, c, gameState.herodeck, true));
+      attachCardEv(ev, c, ev.source, 'SONICFQ');
+      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to discard", revealable().limit(c.color), c => discardEv(ev, c), p)); // TODO: multiplayer reveal hand?
+    });
+  } ],
+  [ "Cruelty Provokes Resistance", ev => {
+  // Set aside all Heroes from the HQ that do not share any colors with Klaw's Sonic Frequency. Gain one of them. Put the rest on the bottom of the Hero Deck. Then refill the empty HQ spaces.
+    const options = hqHeroes().limit(c => !isColor(c.attached('SONICFQ').sum(c => c.color)));
+    selectCardEv(ev, "Choose a Hero to gain", options, c => {
+      options.each(c1 => c1 === c ? gainEv(ev, c) : moveCardEv(ev, c1, gameState.herodeck, true));
+    });
+  } ],
+], {
+  varDefense: empowerVarDefense(c => c.attached('SONICFQ').sum(c => c.color), 2)
+}),
+]);
