@@ -1024,3 +1024,26 @@ function wasCommanding(ev: Ev) {
   if (ev.parent.type !== 'DEFEAT') throw new Error("wasCommanding can only be used on DEFEAT events");
   return gameState.city.reduce(([commanding, passed], l) => [commanding && (passed || !l.has(isGroup(ev.parent.what.villainGroup))), passed || (l === ev.parent.where)], [true, false])[0];
 }
+// EXPANSION: Black Panther
+function heroAmbush(cond: Filter<Card>, func: Handler): HeroCardAbillities {
+  return {
+    heroAmbush: ev => revealable().has(cond) && chooseMayEv(ev, "Use Hero Ambush", () => func(ev)) // TODO use this ability
+  }
+}
+function woundEnemyEv(ev: Ev, enemy: Card, amount: number = 1) {
+  repeat(amount, () => cont(ev, () => {
+    const options = [gameState.ko.limit(isWound), gameState.wounds.deck.firstOnly()].merge();
+    selectCardEv(ev, "Choose a Wound", options, c => {
+      attachCardEv(ev, c, enemy, 'WOUND'); // use it in defense calculation
+    });
+  }));
+}
+function empowerRecruitEv(ev: Ev, color: number) {
+  addRecruitEvent(ev, hqCards().count(color));
+}
+const stableEmpowerVarDefense = new Map([
+  Color.COVERT, Color.INSTINCT, Color.RANGED, Color.STRENGTH, Color.TECH
+].map(c => [c, empowerVarDefense(c)]));
+function empoweringVillainGroup(g: string) {
+  return [...stableEmpowerVarDefense.entries()].filter(([, f]) => villains().limit(c => c.varDefense === f && c.villainGroup === g)).reduce((acc, [c]) => acc | c, 0);
+}

@@ -6403,3 +6403,166 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
   ra: makeHeroCard("Mantis", "Discover the Dead", 7, u, u, Color.INSTINCT, "Guardians of the Galaxy", "F", [], { excessiveKindness: ev => addAttackEvent(ev, ev.what.cost) }),
 },
 ]);
+addHeroTemplates("Black Panther", [
+{
+  name: "King Black Panther",
+  team: "Heroes of Wakanda",
+// Heroes of Wakanda <b>Ambush</b>: Rescue a Bystander.
+// ---
+// Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
+  c1: makeHeroCard("King Black Panther", "Unseen Protector", 2, 1, u, Color.INSTINCT | Color.COVERT, "Heroes of Wakanda", "D",
+    ev => thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2)), heroAmbush("Heroes of Wakanda", ev => rescueEv(ev))),
+// [Instinct] <b>Ambush</b>: You get +2 Attack.
+// ---
+// Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
+  c2: makeHeroCard("King Black Panther", "Vibranium Claws", 4, u, 2, Color.INSTINCT | Color.TECH, "Heroes of Wakanda", "D",
+    ev => thronesFavorGainOrMaySpendEv(ev, () => addAttackEvent(ev, 2)), heroAmbush(Color.INSTINCT, ev => addAttackEvent(ev, 2)),
+  ),
+// [Covert] <b>Ambush</b>: Look at the top card of your deck. Draw or KO it.
+// ---
+// {POWER Covert} Gain the {THRONES FAVOR}. If you already have it, you may look at the top card of your deck. Draw or KO it.
+  uc: makeHeroCard("King Black Panther", "Heart-Shaped Herb", 5, u, 3, Color.STRENGTH | Color.COVERT, "Heroes of Wakanda", "",
+    ev => thronesFavorGainOrEv(ev, () => chooseMayEv(ev, "Look at the deck", () =>
+      revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))
+    )),
+    heroAmbush(Color.COVERT, ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))),
+  ),
+// Heroes of Wakanda <b>Ambush</b>: You get +1 Attack for each Hero Class you have.
+// ---
+// {TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +1 Recruit and +1 Attack for each Hero Class you have.
+  ra: makeHeroCard("King Black Panther", "Unite the Tribes of Wakanda", 8, 0, 5, Color.STRENGTH | Color.RANGED, "Heroes of Wakanda", "", ev => {
+    thronesFavorGainOrMaySpendEv(ev, () => { addRecruitEvent(ev, numClasses()); addAttackEvent(ev, numClasses()); });
+  }, heroAmbush("Heroes of Wakanda", ev => addAttackEvent(ev, numClasses()))),
+},
+{
+  name: "Queen Storm of Wakanda",
+  team: "Heroes of Wakanda",
+// You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+// {POWER Covert} You get <b>Empowered</b> by [Covert].
+  c1: makeHeroCard("Queen Storm of Wakanda", "Hurricane Winds", 3, 2, 0, Color.COVERT, "Heroes of Wakanda", "D", [ ev => {
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    });
+  }, ev => superPower(Color.COVERT) && empowerEv(ev, Color.COVERT) ]),
+// [Ranged] <b>Ambush</b>: You get <b>Empowered</b> by [Ranged].
+// ---
+// {POWER Ranged} You get <b>Empowered</b> by [Ranged].
+  c2: makeHeroCard("Queen Storm of Wakanda", "Torrential Downpour", 4, u, 2, Color.RANGED, "Heroes of Wakanda", "FD", ev => superPower(Color.RANGED) && empowerEv(ev, Color.RANGED),
+    heroAmbush(Color.RANGED, ev => empowerEv(ev, Color.RANGED))),
+// Wound Villains on the Rooftops and Bridge.
+// {POWER Covert Ranged} Gain the {THRONES FAVOR}. If you already had it, you may spend it to Wound the Mastermind twice.
+  uc: makeHeroCard("Queen Storm of Wakanda", "Forked Lightning", 6, u, 3, Color.COVERT | Color.RANGED, "Heroes of Wakanda", "", [
+    ev => villainIn('ROOFTOPS', 'BRIDGE').each(c => woundEnemyEv(ev, c)),
+    ev => superPower(Color.COVERT, Color.RANGED) && thronesFavorGainOrMaySpendEv(ev, () => withMastermind(ev, c => woundEnemyEv(ev, c, 2)))]),
+// Choose up to three Heroes from the HQ. Put them on the bottom of the Hero Deck.
+// {TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already had it, you may spend it to get <b>Empowered</b> by [Covert], then get <b>Empowered</b> by [Ranged].
+  ra: makeHeroCard("Queen Storm of Wakanda", "Thunderous Tempest", 8, u, 5, Color.RANGED, "Heroes of Wakanda", "", [
+    ev => selectObjectsUpToEv(ev, "Choose Heroes to put on the bottom of the Hero Deck", 3, hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => superPower("Heroes of Wakanda") && thronesFavorGainOrMaySpendEv(ev, () => {
+      empowerEv(ev, Color.COVERT);
+      empowerEv(ev, Color.RANGED);
+    }),
+  ]),
+},
+{
+  name: "General Okoye",
+  team: "Heroes of Wakanda",
+// [Instinct] <b>Ambush</b>: Draw a card.
+// ---
+// {POWER Instinct} You may draw a card and get +1 Attack. If you do, gain a Wound.
+  c1: makeHeroCard("General Okoye", "To My Last Breath", 3, u, 2, Color.INSTINCT, "Heroes of Wakanda", "D",
+    ev => superPower(Color.INSTINCT) && chooseMayEv(ev, "Activate superpower", () => { drawEv(ev); addAttackEvent(ev, 1); gainWoundEv(ev); }),
+    heroAmbush(Color.INSTINCT, ev => drawEv(ev))
+  ),
+// You may gain a S.H.I.E.L.D. Officer.
+// {POWER Strength} Instead, you may KO a S.H.I.E.L.D. Officer or Wound from your hand or discard pile to get +2 Attack.
+  c2: makeHeroCard("General Okoye", "Lead the Dora Milaje", 4, u, 2, Color.STRENGTH | Color.INSTINCT, "Heroes of Wakanda", "D", [
+    ev => chooseMayEv(ev, "Gain a S.H.I.E.L.D. Officer", () => gameState.officer.withTop(c => gainEv(ev, c))),
+    ev => superPower(Color.STRENGTH) && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isShieldOfficer(c)), c => {
+      KOEv(ev, c);
+      addAttackEvent(ev, 2);
+    })
+  ]),
+// Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack, draw a card, and Wound a Villain.
+  uc: makeHeroCard("General Okoye", "Sovereign Bodyguard", 5, u, 3, Color.STRENGTH, "Heroes of Wakanda", "", ev => [], { trigger: {
+    event: "GAIN",
+    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !turnState.pastEvents.has(e => e.type === 'RESCUE' && e.getSource() === source),
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+      returnToStackEv(ev, gameState.wounds, ev.parent.what);
+      drawEv(ev, 1, owner(ev.source));
+      selectCardEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c), owner(ev.source));
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// {TEAMPOWER Heroes of Wakanda} You may KO a S.H.I.E.L.D. Hero or Wound from your hand or discard pile to get +2 Attack.
+// GUN: 1
+  ra: makeHeroCard("General Okoye", "Direct the Agents of Wakanda", 7, u, 4, Color.COVERT, "Heroes of Wakanda", "GD",
+    ev => superPower("Heroes of Wakanda") && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isShieldOfficer(c)), c => {
+      KOEv(ev, c);
+      addAttackEvent(ev, 2);
+    })),
+},
+{
+  name: "Princess Shuri",
+  team: "Heroes of Wakanda",
+// [Tech] <b>Ambush</b>: Draw a card.
+// ---
+// Draw a card.
+// {POWER Tech} You get <b>Empowered</b> by [Tech].
+  c1: makeHeroCard("Princess Shuri", "Vibranium Experiments", 2, u, 0, Color.TECH, "Heroes of Wakanda", "D", [
+    ev => drawEv(ev),
+    ev => superPower(Color.TECH) && empowerEv(ev, Color.TECH)
+  ], heroAmbush(Color.TECH, ev => drawEv(ev))),
+// You get <b>Empowered</b> by the color of your choice, getting Recruit instead of Attack.
+  c2: makeHeroCard("Princess Shuri", "Kimoyo Beads", 4, 0, u, Color.TECH | Color.RANGED, "Heroes of Wakanda", "F", ev => chooseColorEv(ev, c => empowerRecruitEv(ev, c))),
+// You may put a card from the HQ on the bottom of the Hero Deck.
+// {POWER Tech} You get <b>Empowered</b> by the color of your choice.
+  uc: makeHeroCard("Princess Shuri", "Shock Net", 6, u, 3, Color.RANGED, "Heroes of Wakanda", "", [ ev => {
+    selectCardOptEv(ev, "Choose a card to put on the bottom of the Hero Deck", hqCards(), c => {
+      moveCardEv(ev, c, gameState.herodeck, true);
+    });
+  }, ev => superPower(Color.TECH) && chooseColorEv(ev, c => empowerEv(ev, c)) ]),
+// {TEAMPOWER Heroes of Wakanda} This turn, each card entering the HQ also has "<b>Ambush</b>: If you have any cards that share a color with this, you get +2 Attack."
+  ra: makeHeroCard("Princess Shuri", "Become the Next Black Panther", 7, 3, 3, Color.INSTINCT, "Heroes of Wakanda", "D",
+    ev => superPower("Heroes of Wakanda") && addTurnSet('heroAmbush', c => c.location.isHQ, (c, v) => combineHandlers(v,
+      heroAmbush(c.color, ev => addAttackEvent(ev, 2)).heroAmbush
+  ))),
+},
+{
+  name: "White Wolf",
+  team: "Heroes of Wakanda",
+// [Tech] <b>Ambush</b>: Wound a Villain.
+// ---
+// {POWER Tech} Wound a Villain.
+  c1: makeHeroCard("White Wolf", "Cloaking Tech Ambush", 4, u, 2, Color.TECH, "Heroes of Wakanda", "FD", ev => superPower(Color.TECH) &&
+    selectCardOptEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c)),
+    heroAmbush(Color.TECH, ev => selectCardOptEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c)))
+  ),
+// {POWER Covert} <b>Ambush</b>: Wound the Mastermind.
+// ---
+// {POWER Covert} If any Villain or Mastermind has any Wounds, you get +2 Recruit.
+  c2: makeHeroCard("White Wolf", "Secret Assignment", 3, 2, u, Color.COVERT, "Heroes of Wakanda", "D",
+    ev => superPower(Color.COVERT) && fightableCards().limit(isEnemy).has(c => c.attached('WOUND').size > 0) && addRecruitEvent(ev, 2),
+    heroAmbush(Color.COVERT, ev => withMastermind(ev, c => woundEnemyEv(ev, c)))
+  ),
+// Heroes of Wakanda <b>Ambush</b>: You may KO one of your cards.
+// ---
+// {TEAMPOWER Heroes of Wakanda} If any Villain or Mastermind has any Wounds, you may KO a card from your hand or discard pile.
+  uc: makeHeroCard("White Wolf", "Command the Hatut Zeraze", 5, u, 3, Color.COVERT | Color.TECH, "Heroes of Wakanda", "",
+    ev => superPower("Heroes of Wakanda") && fightableCards().limit(isEnemy).has(c => c.attached('WOUND').size > 0) && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c)),
+    heroAmbush("Heroes of Wakanda", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)))
+  ),
+// [Tech] <b>Ambush</b>: Wound each Villain and the Mastermind.
+// ---
+// If a Master Strike would occur, you may reveal this card to KO that Strike and Wound the Mastermind instead.
+  ra: makeHeroCard("White Wolf", "Reflective Vibranium Armor", 7, u, 4, Color.TECH, "Heroes of Wakanda", "", [], {
+    trigger: {
+      event: "STRIKE",
+      replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+        KOEv(ev, ev.parent.what);
+        withMastermind(ev, c => woundEnemyEv(ev, c)); // TODO owner(ev.source) to control this choice
+      }, () => doReplacing(ev), owner(ev.source)),
+    },
+    ...heroAmbush(Color.TECH, ev => fightableCards().limit(isEnemy).each(c => woundEnemyEv(ev, c))),
+  }),
+},
+]);

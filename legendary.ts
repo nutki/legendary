@@ -122,6 +122,7 @@ interface Card {
   finishThePrey?: Handler;
   excessiveKindness?: Handler;
   commonTacticEffect?: Handler;
+  heroAmbush?: Handler | Handler[];
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -199,6 +200,7 @@ interface HeroCardAbillities {
   cheeringCrowds?: boolean
   whenRecruited?: Handler;
   excessiveKindness?: Handler;
+  heroAmbush?: Handler
 }
 class Card {
   constructor (t: string, n: string) {
@@ -219,6 +221,7 @@ class Card {
     value += this.attached('SHARD').size;
     if (this.nthCircle) value += nthCircleDefense(this);
     value += this.attached('WEAPON').sum(c => c.defense);
+    value -= this.attached('WOUND').size;
     if (isSizeChanged(this)) value -= 2;
     if (value < 0) value = 0;
     value -= uSizeChangingAmount(this); // Only this can make the attack negative
@@ -501,7 +504,8 @@ type Affiliation =
 'Champions' |
 'Warbound' |
 'Venomverse' |
-'X-Factor';
+'X-Factor' |
+'Heroes of Wakanda';
 type Filter<T> = number | Affiliation | ((c: T) => boolean)
 class Deck {
   id: string
@@ -1361,6 +1365,14 @@ gameState = {
         if (isMastermind(c)) moveCardEv(ev, c, gameState.mastermind);
         else if (isVillain(c)) villainEscapeEv(ev, c);
       }
+    },
+    { // Hero ambush
+      event: "MOVECARD",
+      match: ev => ev.to.isCity && isHero(ev.what) && !!getModifiedStat(ev.what, 'heroAmbush', ev.what.heroAmbush),
+      after: ev => {
+        const what = ev.parent.what;
+        pushEffects(ev, what, 'heroAmbush', what.heroAmbush, { where: ev.parent.to });
+      }
     }
   ],
   endDrawAmount: 6,
@@ -1689,6 +1701,7 @@ interface ModifiableStats {
   artifactEffects?: ((ev: Ev) => void)[];
   cosmicThreat?: number;
   triggers?: Trigger[];
+  heroAmbush?: Handler | Handler[];
 }
 
 function safePlus(a: number, b: number) {
@@ -1699,7 +1712,7 @@ function safeOr(a: number, b: number) {
 }
 
 type NumericStat = 'defense' | 'vp' | 'cost';
-type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape' | 'strike';
+type EffectStat = 'fight' | 'ambush' | 'rescue' | 'escape' | 'strike' | 'heroAmbush';
 type Modifier<T> = {cond: (c: Card) => boolean, func: (c: Card, v?: T) => T};
 type Modifiers = {[stat in keyof ModifiableStats]:Modifier<ModifiableStats[stat]>[]};
 function addMod<T extends keyof ModifiableStats>(modifiers: Modifiers, stat: T, cond: (c: Card) => boolean, func: (c: Card, v?: ModifiableStats[T]) => ModifiableStats[T]) {
@@ -2397,8 +2410,7 @@ function KOHandOrDiscardEv(ev: Ev, filter?: Filter<Card>, func?: (c: Card) => vo
 function isCopy(c: Card) {
   return !c.instance || Object.getPrototypeOf(c) !== c.instance; // TODO could be also transformed or dual
 }
-function returnToStackEv(ev: Ev, deck: Deck) {
-  const c = ev.source;
+function returnToStackEv(ev: Ev, deck: Deck, what: Card = ev.source) {
   // Cannot return copies or copyPaste cards
   if (isCopy(c)) return false;
   moveCardEv(ev, c, deck, true);
@@ -2649,6 +2661,7 @@ function villainEscape(ev: Ev): void {
   c.attached('SHARD').withFirst(c => withMastermind(ev, m => attachShardEv(ev, m, c)));
   cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   c.attached('WEAPON').each(c => withMastermind(ev, m => attachCardEv(ev, c, m, 'WEAPON')));
+  c.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   gameState.bystandersCarried += b.count(isBystander);
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, 1, p));
@@ -2677,6 +2690,7 @@ function villainDefeat(ev: Ev): void {
   ev.what.attached('SHARD').withFirst(c => gainShardEv(ev, c));
   cont(ev, () => ev.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   ev.what.attached('WEAPON').each(c => gainEv(ev, c));
+  ev.what.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
   b.each(bc => rescueEv(ev, bc));
   // TODO fight effect should be first
   moveCardEv(ev, c, playerState.victory);
