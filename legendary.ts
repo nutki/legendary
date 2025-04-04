@@ -2566,9 +2566,10 @@ function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func:
 function playVillainousWeapon(ev: Ev, what: Card) {
   let i = gameState.cityEntry;
   while (i && !i.has(isVillain)) i = i.next;
+  let villain = i.limit(isVillain)[0];
   function putIntoCity() {
-    if (i) {
-      attachCardEv(ev, what, i, 'WEAPON');
+    if (villain) {
+      attachCardEv(ev, what, villain, 'WEAPON');
     } else {
       KOEv(ev, what);
     }
