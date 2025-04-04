@@ -6249,7 +6249,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
   }),
 // <b>Triggered Artifact</b> — The first time you play an Artifact each turn <i>(including this one)</i>, you get +3 Attack.
 // GUN: 1
-  ra: makeHeroCard("Star-Lord", "Hadron Enforcer", 7, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => addAttackEvent(ev, 3),
+  ra: makeHeroCard("Star-Lord", "Hadron Enforcer", 8, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => addAttackEvent(ev, 3),
   triggeredArifact('PLAY', ev => isArtifact(ev.what) && !pastEvents('PLAY').has(ev => isArtifact(ev.what)), true)),
 },
 {
