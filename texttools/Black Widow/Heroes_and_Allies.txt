@@ -1,0 +1,210 @@
+
+#CARDNAME: Black Widow
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Evasive Acrobatics
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{DODGE}
+When you {DODGE} with or play this card, you may also {DODGE} with another card from your hand.
+#COST: 3
+#FLAVOR: She's laser-focused.
+
+#SUBNAME: Widow's Bite
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 1+
+{DODGE}
+{DARK MEMORIES}
+#COST: 4
+#FLAVOR: Those expecting her defenseless find themselves shocked.
+
+#SUBNAME: Weave A Web of Spies
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+{DODGE}
+If you drew any cards this turn, you may send one of your other Heroes {UNDERCOVER}.
+#COST: 5
+
+#SUBNAME: Infiltrate the Conspiracy
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4+
+You may send one of your Heroes {UNDERCOVER}.
+You get +3 Attack if you have at least 4 Bystanders and/or Undercover Heroes in your Victory Pile.
+#COST: 7
+
+#CARDNAME: Yelena Belova
+#TEAM: S.H.I.E.L.D.
+
+#SUBNAME: Strike and Fade
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 3
+Send this {UNDERCOVER}.
+#COST: 2
+#FLAVOR: Good plans are like assassinations: it's all in the execution.
+
+#SUBNAME: Unveil Identity
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} You may <b>Unleash</b> one of your Heroes from {UNDERCOVER}.
+#COST: 3
+#FLAVOR: A carefully-honed secret can be more deadly than a blade.
+#GUN: 1
+
+#SUBNAME: Twilight Ops
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+{DODGE}
+When you {DODGE} with this card, you may <b>Unleash</b> one of your other Heroes from {UNDERCOVER}.
+When you play this card, send it {UNDERCOVER}.
+#COST: 6
+
+#SUBNAME: Destroy the Red Room
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4
+You may <b>Unleash</b> one of your Heroes from {UNDERCOVER}.
+You may send a Hero from your discard pile {UNDERCOVER}.
+#COST: 8
+
+#CARDNAME: Red Guardian
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Sleeper Agent
+#COPIES: 5
+#CLASS: [Covert]
+<b>When Recruited</b>: Send this {UNDERCOVER}.
+When you fight a Villain, you may <b>Unleash</b> this card from {UNDERCOVER}.
+---
+#RECRUIT: 2
+{POWER Covert} Draw a card.
+#COST: 3
+
+#SUBNAME: Magnetic Shield
+#COPIES: 5
+#CLASS: [Covert]
+<b>When Recruited</b>: Send this {UNDERCOVER}.
+When you recruit another [Covert] Hero, you may <b>Unleash</b> this card from {UNDERCOVER}.
+---
+#ATTACK: 2+
+{POWER Covert} You get +2 Attack.
+#COST: 4
+
+#SUBNAME: Death Was Only A Ruse
+#COPIES: 3
+#CLASS: [Strength]
+<b>When Recruited</b>: Send this {UNDERCOVER}.
+When a Master Strike is completed or any player fights the Mastermind, you may <b>Unleash</b> this card from {UNDERCOVER}.
+---
+#ATTACK: 3
+{POWER Covert} You may send one of your other Heroes {UNDERCOVER}.
+#COST: 6
+
+#SUBNAME: Champion of the Winter Guard
+#COPIES: 1
+#CLASS: [Covert]
+<b>When Recruited</b>: Send this {UNDERCOVER}.
+When a Scheme Twist is completed or you play your third [Covert] Hero in a turn, you may <b>Unleash</b> this card from {UNDERCOVER}.
+---
+#ATTACK: 4+
+{POWER Covert} You get +2 Attack for each other [Covert] Hero you played this turn.
+#COST: 8
+
+#CARDNAME: White Tiger
+#TEAM: Marvel Knights
+
+#SUBNAME: Amulets of the Tiger God
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+Reveal the top two cards of your deck. Draw one of them that cost 0 and discard the rest.
+#COST: 4
+#FLAVOR: Murdered by Lady Bullseye and ensorcelled by the Hand, Angela del Toro has finally seized her own destiny.
+
+#SUBNAME: Dark Influence of the Hand
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 0+
+{DODGE}
+{DARK MEMORIES}
+Once this turn, you may fight the top card of the Bystander Stack as if it were a 3 Attack "Hand Ninjas" Henchman Villain with "<b>Fight</b>: You get +1 Recruit. Rescue this as a Bystander."
+#COST: 3
+
+#SUBNAME: Camouflaged Huntress
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3
+Whenever you defeat a Henchman this turn, you may KO one of your cards.
+#COST: 5
+#FLAVOR: With her FBI training and supernatural senses, she preys freely on the criminal element.
+
+#SUBNAME: Shadowed Resurrection
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 3
+{DARK MEMORIES}, drawing that many cards instead of gaining Attack.
+#COST: 8
+
+#CARDNAME: Falcon & Winter Soldier
+#TEAM: Avengers
+
+#SUBNAME: Attune/Atone
+#COPIES: 5
+#DIVIDED: Attune
+#DIVHERO: Falcon
+#CLASS: [Ranged]
+#RECRUIT: 3
+To play this side, you must discard a card.
+#COST: 3
+#DIVIDED: Atone
+#DIVHERO: Winter Soldier
+#CLASS: [Strength]
+#ATTACK: 0+
+{DARK MEMORIES}
+#COST: 3
+
+#SUBNAME: Relocate/Reload
+#COPIES: 5
+#DIVIDED: Relocate
+#DIVHERO: Falcon
+#CLASS: [Instinct]
+#ATTACK: 2+
+{DODGE}
+{POWER Instinct} You get +1 Attack.
+#COST: 4
+#DIVIDED: Reload
+#DIVHERO: Winter Soldier
+#CLASS: [Tech]
+#ATTACK: 2
+{POWER Tech} Draw a card.
+#COST: 4
+
+#SUBNAME: New Wings/New Plan
+#COPIES: 3
+#DIVIDED: New Wings
+#DIVHERO: Falcon
+#CLASS: [Tech]
+#ATTACK: 0+
+If you discarded any cards this turn, you get +4 Attack.
+#COST: 5
+#DIVIDED: New Plans
+#DIVHERO: Winter Soldier
+#CLASS: [Covert]
+Draw two cards.
+#COST: 5
+
+#SUBNAME: Captain America's Legacy
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 2+
+You get +1 Attack for each Hero Class you have.
+{TEAMPOWER Avengers} {DARK MEMORIES}
+#COST: 7
+
+

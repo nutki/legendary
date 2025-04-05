@@ -1,0 +1,69 @@
+
+#CARDNAME: Taskmaster
+Henchmen get +1 Attack for each "Henchman Training" stacked here.
+During your turn, Taskmaster gets +Attack equal to the highest cost Hero you played this turn.
+#LEADS: Taskmaster's Thunderbolts
+#STRIKE: Stack this Strike next to Taskmaster as "Henchman Training." If there are any Henchmen in the city, each player gains a Wound.
+#ATTACK: 5+
+#VP: 6
+
+#EPICNAME: Taskmaster
+Henchmen get +2 Attack for each "Henchman Training" stacked here.
+During your turn, Taskmaster gets +Attack equal to double the highest cost Hero you played this turn.
+#LEADS: Taskmaster's Thunderbolts
+#STRIKE: Stack this Strike next to Taskmaster as "Henchman Training." If there are any Henchmen in the city, each player gains a Wound.
+#ATTACK: 5+
+#VP: 6
+
+#TACTIC: S.H.I.E.L.D. Initiative Trainer
+#FIGHT: Choose a Henchman from any player's Victory Pile to enter the city.
+KO any number of your S.H.I.E.L.D. Agents and/or Troopers. Gain that many S.H.I.E.L.D. Officers.
+
+#TACTIC: Photographic Reflexes
+#FIGHT: Choose a Henchman from any player's Victory Pile to enter the city.
+Play a copy of a Hero in the HQ that costs 6 or less.
+
+#TACTIC: Teacher and Assassin
+#FIGHT: Choose a Henchman from any player's Victory Pile to enter the city.
+Each other player reveals their hand and puts one of their non-grey Heroes on the bottom of the Hero Deck.
+
+#TACTIC: Henchman Instructor
+#FIGHT: Choose a Henchman from any player's Victory Pile to enter the city.
+Then each other player discards a card for each Henchman in the city and/or Escape Pile.
+
+#CARDNAME: Indestructible Man
+You can't use Attack to fight Indestructible Man.
+Once during each of your turns, you may shuffle two Elite Assassins from your Victory Pile into the Villain Deck. If you do, fight Indestructible Man.
+#LEADS: Elite Assassins
+#STRIKE: Shuffle an Elite Assassin from your Victory Pile into the Villain Deck. If you can't, each player gains a Wound.
+#ATTACK: *
+#VP: 6
+
+#EPICNAME: Indestructible Man
+You can't use Attack to fight Indestructible Man.
+Once during each of your turns, you may shuffle three Elite Assassins from your Victory Pile into the Villain Deck. If you do, fight Indestructible Man.
+#LEADS: Elite Assassins
+#STRIKE: Each player shuffles an Elite Assassin from their Victory Pile into the Villain Deck. Each player that can't gains a Wound.
+#ATTACK: *
+#VP: 6
+
+#TACTIC: Manipulate Murderous Mad Monk
+#FIGHT: If this is not the last Tactic, rescue four Bystanders and this Tactic enters the city as a "Molot Boga" Villain whose abilities are:
+"<b>Ambush</b>: Play two cards from the Villain Deck
+#FIGHT: KO one of your Heroes.
+<b>Escape</b>: Shuffle this back into Indestructiblee Man's Mastermind Tactics."
+#ATTACK: 8
+
+#TACTIC: Secrets of Indestructibility
+#FIGHT: KO up to two Wounds from your hand and/or discard pile.
+If this is not the last Tactic, play two cards from the Villain Deck.
+
+#TACTIC: International Arms Dealer
+#FIGHT: Gain a [Tech] Hero from the HQ. EAch other playere reveals a [Tech] Hero or gains a Wound.
+If this is not the last Tactic, play two cards from the Villain Deck.
+
+#TACTIC: Unveil Project Four
+#FIGHT: Each other player reveals their hand and discards each card with a "4" printed anywhere on it. (The copyright date line doesn't count.)
+If this is not the last Tactic, play two cards from the Villain Deck.
+
+

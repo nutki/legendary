@@ -1,0 +1,23 @@
+
+#CARDNAME: Corrupt The Spy Agencies
+#SETUP: 7 Twists.
+#TWISTNR: NR[1-6] Each player sends one of their non-grey Heroes {UNDERCOVER}. Then each player may <b>Unleash</b> a Hero from {UNDERCOVER} with a lower cost than the one that player just sent {UNDERCOVER}.
+#TWISTNR: NR[7] Evil Wins!
+
+#CARDNAME: Train Black Widows in the Red Room
+#SETUP: 8 Twists, minus 1 Twist per player. Add 8 S.H.I.E.L.D. Officers to the Villain Deck.
+#RULE: Officers in the Villain Deck and city are "Black Widow Initiate" Villains with <b>3+</b> Attack and "<b>Dark Memories. Fight</b>: Gain this as an Officer <i>(without {DARK MEMORIES})</i> or send it {UNDERCOVER}."
+#TWISTNR: NR[10] Evil Wins!
+
+#CARDNAME: Sniper Rifle Assassins
+#SETUP: 11 Twists, minus 1 Twist per player.
+#TWIST: Each player must {DODGE} with a Hero from their hand, revealing the card they drew. KO each non-grey Hero drawn this way.
+#EVILWINS: When there are four non-grey Heroes per player in the KO pile.
+
+#CARDNAME: Frame Heroes For Murder
+#SETUP: 7 Twists. 6 Heroes.
+#TWISTNR: NR[1-6] Stack a card from the HQ next to the Scheme as "Incriminating Evidence" that has a different cost than any card already in that stack.
+#TWISTNR: NR[7] Add any card from the HQ to the Incriminating Evidence.
+#EVILWINS: When there are 5 pieces of Incriminating Evidence.
+
+

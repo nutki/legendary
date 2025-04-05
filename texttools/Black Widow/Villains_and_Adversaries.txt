@@ -1,0 +1,65 @@
+
+#CARDNAME: Taskmaster's Thunderbolts
+
+#SUBNAME: Jester
+#COPIES: 2
+#AMBUSH: Jester captures a Bystander.
+#FIGHT: Reveal the top four cards of the Villain Deck. Play all the Henchmen you find. Put the rest back in any order.
+#ATTACK: 2
+#VP: 2
+
+#SUBNAME: Joystick
+#COPIES: 2
+#AMBUSH: Choose a Henchman from a player's Victory Pile to enter the city.
+#ATTACK: 3
+#VP: 2
+#FLAVOR: Get in her way and you'll be the one getting played.
+
+#SUBNAME: Jack O'Lantern
+#COPIES: 2
+#FIGHT: Choose a Henchman from any player's Victory Pile to enter the city.
+#ESCAPE: Each player with fewer than two Henchmen in their Victory Pile gains a Wound.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Bullseye
+#COPIES: 2
+#AMBUSH: Choose Recruit or Attack, then reveal the top card of the Hero Deck. If it has that icon, Bullseye captures it and gets +Attack equal to that Hero's cost.
+#FIGHT: The player of your chose gains the captured Hero.
+#ESCAPE: KO that Hero.
+#ATTACK: 4+
+#VP: 3
+
+#CARDNAME: Elite Assassins
+
+#SUBNAME: Blue Talon
+#COPIES: 2
+{DARK MEMORIES}
+#AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+#FIGHT: You may send a Herofro your discard pile {UNDERCOVER}.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Iron Maiden
+#COPIES: 2
+{DARK MEMORIES}
+#AMBUSH: Each player must send one of their non-grey Heroes {UNDERCOVER}.
+#FIGHT: Each player may <b>Unleash</b> one of their Heroes from {UNDERCOVER}.
+#ATTACK: 4+
+#VP: 2
+
+#SUBNAME: Snapdragon
+#COPIES: 2
+#AMBUSH: Each player discards a non-grey Hero. Then each player draws a card.
+#FIGHT: You may send one of your Heroes {UNDERCOVER}.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Black Lotus
+#COPIES: 2
+#AMBUSH: Each player discards a card that costs 0.
+#FIGHT: You get +3 Recruit.
+#ATTACK: 6
+#VP: 3
+
+

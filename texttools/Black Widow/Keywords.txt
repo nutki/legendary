@@ -1,0 +1,18 @@
+{UNDERCOVER}: See S.H.I.E.L.D.
+<b>Unleash from Undercover</b>
+* When an effect says to "Unleash a Hero from Undercover": <b>Return that Hero from your Victory Pile to your hand.</b>
+* If you have several cards Undercover with a trigger like "When you fight a Villain, you may Unleash this card from Undercover," fighting one Villain is enough to Unleash any number of those cards.
+* When you Unleash a Hero back to your hand, you can play that Hero on that same turn as normal. At the end of your turn, it will go to your discard pile as normal. It doesn't return to your Victory Pile unless an effect tells the card to go Undercover again.
+* If you Unleash cards based on fighting Villains or the Mastermind, you can do the Unleash effects and/or Fight effects from that enemy in any order.
+<b>When Recruited</b>: <b>Send This Undercover</b>: See Realm of Kings and Messiah Complex
+* "When Recruited" means: <b>"Do this ability when you recruit this Hero."</b>
+* In this case, you pay the Hero's normal recruit cost, put it in your Victory Pile worth 1VP. and refill that HQ space with a card from the Hero Deck.
+* Other abilities Unleash the card at the right time.
+* If you recruit a Hero with miltiple effects telling you to put it in different places <i>(like {WALLCRAWL}, Soaring Flight, "When Recruited: Send this Undercover", etc.)</i>, you choose which one applies.
+{DODGE}: See Villains and Fear Itself
+
+{DARK MEMORIES}: See Revelations
+<b>Divided Cards</b>: See Civil War, X-Men, and Marvel Studios' Guardians of the Galaxy
+* While a Divided Card is in your hand, deck, the HQ, or anywhere else besides being played, it counts as all of its Hero Classes, Teams, Hero names, card names, icons, etc. So one Divided Card in your discard pile could potentially power up Dark Memories by +2 Attack, since it has two Hero Classes. It still counts as one card though, not two cards, so you can't discard a single Divided Card for an effect that says to "discard two cards."
+* You can Dodge with a Divided Card if either side has Dodge.
+
