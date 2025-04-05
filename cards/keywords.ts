@@ -1066,8 +1066,11 @@ function whenRecruitedSendUndercover(ev: Ev) {
   // this can be hacked by matching the whenRecruited field to this specific function
 }
 // EXPANSION: Marvel Studios The Infinity Saga
-function isEndgame(ev: Ev) {
-  return getModifiedStat(ev.source, 'isEndgame', gameState.villaindeck.size <= 8 * gameState.players.size);
+function isEndgame(c: Card) {
+  return getModifiedStat(c, 'isEndgame', gameState.villaindeck.size <= 8 * gameState.players.size);
+}
+function endgameVarDefense(n: number) {
+  return (c: Card) => c.printedDefense + (isEndgame(c) ? n : 0);
 }
 function sacrificeEv(ev: Ev, color: number, effect: Handler) {
   const what = ev.source;

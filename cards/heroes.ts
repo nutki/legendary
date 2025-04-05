@@ -6917,19 +6917,19 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // Draw a card.
 // {ENDGAME} This card makes Attack instead of Recruit.
   c1: makeHeroCard("Captain Marvel", "Infused By the Tesseract", 3, 1, 0, Color.RANGED, "Avengers", "F", [
-    ev => isEndgame(ev) ? addAttackEvent(ev, ev.source.printedRecruit) : addRecruitEvent(ev, ev.source.printedRecruit),
+    ev => isEndgame(ev.source) ? addAttackEvent(ev, ev.source.printedRecruit) : addRecruitEvent(ev, ev.source.printedRecruit),
     ev => drawEv(ev),
   ], { customRecruitAndAttack: true }),
 // {POWER Strength} You get +2 Recruit.
 // {ENDGAME} This card makes all Attack instead of Recruit.
   c2: makeHeroCard("Captain Marvel", "Return From the Stars", 4, 2, 0, Color.STRENGTH, "Avengers", "FD", ev => {
     const amount = ev.source.printedRecruit + superPower(Color.STRENGTH) ? 2 : 0;
-    isEndgame(ev) ? addAttackEvent(ev, amount) : addRecruitEvent(ev, amount);
+    isEndgame(ev.source) ? addAttackEvent(ev, amount) : addRecruitEvent(ev, amount);
   }, { customRecruitAndAttack: true }),
 // For the rest of this turn, it is the Endgame for your Hero cards.
 // If it was already the Endgame, you get +2 Attack.
   c3: makeHeroCard("Captain Marvel", "Turning Point", 5, u, 2, Color.STRENGTH | Color.RANGED, "Avengers", "D", ev => {
-    isEndgame(ev) && addAttackEvent(ev, 2);
+    isEndgame(ev.source) && addAttackEvent(ev, 2);
     addTurnSet('isEndgame', isHero, () => true);
   }),
 // Draw a card.
@@ -6940,7 +6940,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // You get +1 Attack for each other [Ranged] and/or [Strength] card you played this turn.
 // {ENDGAME} Instead, you get +2 Attack for each.
   ra: makeHeroCard("Captain Marvel", "Time to End It", 8, u, 5, Color.RANGED, "Avengers", "D",
-    ev => addAttackEvent(ev, pastEvents('PLAY').count(ev => isColor(Color.RANGED | Color.STRENGTH)(ev.what)) * (isEndgame(ev) ? 2 : 1))
+    ev => addAttackEvent(ev, pastEvents('PLAY').count(ev => isColor(Color.RANGED | Color.STRENGTH)(ev.what)) * (isEndgame(ev.source) ? 2 : 1))
   ),
 },
 ]);

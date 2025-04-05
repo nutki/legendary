@@ -5126,3 +5126,202 @@ addVillainTemplates("Black Widow", [
   })],
 ]},
 ]);
+addVillainTemplates("Marvel Studios The Infinity Saga", [
+{ name: "Children of Thanos", cards: [
+// <b>Endgame: +3</b> Attack
+// AMBUSH: It is the Endgame this turn. If it was already the Endgame, each player reveals a [Instinct] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 7+
+// VP: 5
+  [ 1, makeVillainCard("Children of Thanos", "Proxima Midnight", 7, 5, {
+    ambush: ev => {
+      isEndgame(ev.source) && eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p));
+      addTurnSet('isEndgame', () => true, () => true);
+    },
+    escape: sameEffect,
+    varDefense: endgameVarDefense(3),
+  })],
+// <b>Endgame: +3</b> Attack
+// AMBUSH: It is the Endgame this turn. If it was already the Endgame, each player Kos a Bystander from their Victory Pile or gains a Wound.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Children of Thanos", "Corvus Glaive", 6, 5, {
+    ambush: ev => {
+      isEndgame(ev.source) && eachPlayer(p => selectCardOrEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+      addTurnSet('isEndgame', () => true, () => true);
+    },
+    varDefense: endgameVarDefense(3),
+  })],
+// <b>Endgame: +3</b> Attack
+// AMBUSH: It is the Endgame this turn. If it was already the Endgame, each player reveals a Hero that costs 6 or more or gains a Wound.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Children of Thanos", "Cull Obsidian", 6, 5, {
+    ambush: ev => {
+      isEndgame(ev.source) && eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => gainWoundEv(ev, p), p));
+      addTurnSet('isEndgame', () => true, () => true);
+    },
+    varDefense: endgameVarDefense(3),
+  })],
+// <b>Endgame: +2</b> Attack
+// AMBUSH: Chitauri Gorilla captures a Bystander.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Children of Thanos", "Chitauri Gorilla", 5, 4, {
+    ambush: ev => captureEv(ev, ev.source),
+    varDefense: endgameVarDefense(2),
+  })],
+// <b>Endgame: +2</b> Attack
+// FIGHT: KO one of your Heroes. Then choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Children of Thanos", "Outrider Threshers", 5, 4, {
+    fight: ev => {
+      selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+      selectObjectsAnyEv(ev, "Choose Heroes to put on the bottom of the Hero Deck", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true));
+    },
+    varDefense: endgameVarDefense(2),
+  })],
+// <b>Endgame: +2</b> Attack
+// FIGHT: KO one of your Heroes. Then reveal the top card of the Villain Deck. If it's a Children of Thanos Villain, Endless Armies of Chitauri renenters the Sewers.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Children of Thanos", "Endless Armies of Chitauri", 4, 3, {
+    fight: ev => {
+      selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+      revealVillainDeckEv(ev, 1, cards => {
+        cards.has(isGroup("Children of Thanos")) && enterSewersEv(ev, ev.source);
+      });
+    },
+    varDefense: endgameVarDefense(2),
+  })],
+// <b>Endgame: +2</b> Attack
+// FIGHT: You may KO a card from your discard pile.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Children of Thanos", "Outriders", 4, 3, {
+    fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
+    varDefense: endgameVarDefense(2),
+  })],
+// <b>Endgame: +2</b> Attack
+// AMBUSH: A Villain worth 2VP, 3VP, or 4VP from any player's Victory pile enters the city.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Children of Thanos", "Outrider Dropship", 4, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a Villain to enter the city", gameState.players.flatMap(p => p.victory.limit(c => [2, 3, 4].includes(c.vp))), c => enterCityEv(ev, c)),
+    varDefense: endgameVarDefense(2),
+  })],
+]},
+{ name: "Infinity Stones", cards: [
+// The Power Stone gets +1 Attack for each other Infinity Stone in the city and/or Escape Pile.
+// AMBUSH: Each player without an Infinity Stone in their Victory Pile gains a Wound.
+// FIGHT: KO one of your Heroes. Then KO a Wound from your hand or discard pile.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Infinity Stones", "The Power Stone", 6, 5, {
+    ambush: ev => eachPlayer(p => p.victory.has(isGroup("Infinity Stones")) || gainWoundEv(ev, p)),
+    fight: ev => {
+      selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+      selectCardEv(ev, "Choose a Wound to KO", handOrDiscard().limit(isWound), c => KOEv(ev, c));
+    },
+    varDefense: c => c.printedDefense + [...cityVillains(), ...gameState.escaped.limit(isVillain)].count(isGroup("Infinity Stones")),
+  })],
+// The Space Stone gets +1 Attack for each empty space in the city.
+// AMBUSH: The Space Stone captures three Bystanders. Then move an Infinity Stone from any city space to the Bridge. If there's already a Villain there, swap them.
+// FIGHT: Move and/or swap any number of Villains to other city spaces.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Infinity Stones", "The Space Stone", 5, 5, {
+    ambush: ev => {
+      captureEv(ev, ev.source, 3);
+      withCity('BRIDGE', bridge => {
+        selectCardEv(ev, "Choose an Infinity Stone to move", cityVillains().filter(isGroup("Infinity Stones")), c => swapCardsEv(ev, c, bridge));
+      });
+    },
+    fight: ev => {
+      const f = () => selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), c => {
+        selectCardEv(ev, "Choose a city space to move to", gameState.city, d => {
+          swapCardsEv(ev, c, d);
+          f();
+        });
+      });
+      f();
+    },
+    varDefense: c => c.printedDefense + gameState.city.count(isCityEmpty),
+  })],
+// The Reality Stone gets +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind.
+// AMBUSH: Reveal the top three cards of the villain Deck. Play a Master strike from among them. Put the rest back in any order.
+// FIGHT: Same effect, but KO the Master Strike instead of playing it. Then, whether you KO or not, put a card from the Bystander Deck on top of the Villain Deck.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Infinity Stones", "The Reality Stone", 5, 5, {
+    ambush: ev => revealVillainDeckEv(ev, 3, cards => {
+      cards.limit(isStrike).withFirst(c => villainDrawEv(ev, c));
+    }, false),
+    fight: ev => revealVillainDeckEv(ev, 3, cards => {
+      cards.limit(isStrike).withFirst(c => KOEv(ev, c));
+      cont(ev, () => gameState.bystanders.withTop(c => moveCardEv(ev, c, gameState.villaindeck)));
+    }, false),
+    varDefense: c => c.printedDefense + gameState.ko.count(isStrike) + gameState.mastermind.attached('STRIKE').size,
+  })],
+// The Soul Stone gets +1 Attack for each other Villain in the city.
+// AMBUSH: Each player without an Infinity Stone in their Victory Pile KOs a non0grey Hero from their discard pile.
+// FIGHT: Reveal the top two cards of your deck. KO one of them and draw the other.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Infinity Stones", "The Soul Stone", 5, 5, {
+    ambush: ev => eachPlayer(p => p.victory.has(isGroup("Infinity Stones")) || selectCardEv(ev, "Choose a Hero to KO", p.discard.limit(isNonGrayHero), c => KOEv(ev, c), p)),
+    fight: ev => revealPlayerDeckEv(ev, 2, cards => selectCardEv(ev, "Choose a card to KO", cards, c => {
+      KOEv(ev, c);
+      cards.filter(c2 => c !== c2).each(c2 => drawCardEv(ev, c2));
+    })),
+    varDefense: c => c.printedDefense + cityVillains().count(c1 => c !== c1),
+  })],
+// <b>Endgame: +4</b> Attack
+// AMBUSH: Play another card from the Villain Deck.
+// FIGHT: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Infinity Stones", "The Time Stone", 5, 5, {
+    ambush: ev => playAnotherEv(ev),
+    fight: ev => {
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
+      gameState.extraTurn = true;
+    },
+    varDefense: endgameVarDefense(4),
+  })],
+// The Mind Stone gets +Attack equal to the highest cost of Hero in the HQ.
+// AMBUSH: All Heroes currently in the HQ cost 2 more this turn.
+// FIGHT: Gain a Hero form the HQ.
+// ATTACK: 1+
+// VP: 5
+  [ 1, makeVillainCard("Infinity Stones", "The Mind Stone", 1, 5, {
+    ambush: ev => hqHeroes().each(c => addTurnMod('cost', c1 => c1 === c, 2)),
+    fight: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes(), c => gainEv(ev, c)),
+    varDefense: c => c.printedDefense + hqHeroes().max(c => c.cost),
+  })],
+// AMBUSH: If the Soul Stone is in the city or Escape Pile, each player discards a card. If it's in a player's Victory Pile, that player draws two cards.
+// FIGHT: Each player KOs one their Heroes.
+// (This card counts as "an Infinity Stone.")
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Infinity Stones", "Stonekeeper", 5, 3, {
+    ambush: ev => {
+      [...cityVillains(), ...gameState.escaped.deck].has(c => c.cardName === "The Soul Stone") && eachPlayer(p => pickDiscardEv(ev, 1, p));
+      eachPlayer(p => p.victory.has(c => c.cardName === "The Soul Stone") && drawEv(ev, 2, p));
+    },
+    fight: ev => eachPlayer(p => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(p), c => KOEv(ev, c), p)),
+  })],
+// AMBUSH: Nebula captures a Hero from the Officer Deck or HQ that costs 4 or less.
+// FIGHT: Either KO that Hero or choose a player to gain it.
+// (This card counts as "an Infinity Stone.")
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("Infinity Stones", "Nebula, Stone Seeker", 4, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero to capture", [gameState.officer.top, ...hqHeroes().limit(c => c.cost <= 4)], c => attachCardEv(ev, c, ev.source, 'NEBULA_CAPTURE')),
+    fight: ev => {
+      ev.source.attached('NEBULA_CAPTURE').each(c => selectCardOptEv(ev, "Choose a player to gain the captured Hero", gameState.players, p => gainEv(ev, c, p), () => KOEv(ev, c)));
+    },
+  })],
+]},
+]);

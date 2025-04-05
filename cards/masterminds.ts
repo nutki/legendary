@@ -2834,7 +2834,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
 // Choose X-Men, X-Force, X-Factor, or Brotherhood. Each player discards one of those Heroes or gains a Wound.
 // Stack this Strike next to Exodus as an "Immortality." Choose X-Men, X-Force, X-Factor, or Brotherhood. Each player KOs one of those Heroes or gains a Wound to the top of their deck.
   const epic = ev.source.epic;
-  epic && attachCardEv(ev, ev.what, ev.source, 'IMMORTALITY');
+  epic && attachCardEv(ev, ev.what, gameState.mastermind, 'STRIKE');
   chooseOptionEv(ev, "Choose a team", Array<Affiliation>("X-Men", "X-Force", "X-Factor", "Brotherhood").map(t => ({l:t,v:t})), team => eachPlayer(p => {
     epic ? selectCardOptEv(ev, "Choose a Hero to KO", p.hand.limit(team), c => KOEv(ev, c), () => gainWoundToDeckEv(ev, p), p) :
     selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(team), c => discardEv(ev, c), () => gainWoundEv(ev, p), p);
@@ -2883,7 +2883,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   } ],
 ], {
   cardActions: [
-    (c, ev) => { return new Ev(ev, "EFFECT", { what: c, cost: { recruit: c.epic ? 2 + c.attachedDeck('IMMORTALITY').size : 3 }, func: ev => {
+    (c, ev) => { return new Ev(ev, "EFFECT", { what: c, cost: { recruit: c.epic ? 2 + gameState.mastermind.attached('STRIKE').size : 3 }, func: ev => {
       shatterEv(ev, ev.what);
     }}); },
   ]
@@ -3188,7 +3188,7 @@ addTemplates("MASTERMINDS", "Black Widow", [
 // During your turn, Taskmaster gets +Attack equal to double the highest cost Hero you played this turn.
 ...makeEpicMastermindCard("Taskmaster", [ 5, 5 ], 6, "Taskmaster's Thunderbolts", ev => {
 // Stack this Strike next to Taskmaster as "Henchman Training."
-  attachCardEv(ev, ev.what, gameState.mastermind, 'HENCHMANTRAINING');
+  attachCardEv(ev, ev.what, gameState.mastermind, 'STRIKE');
 // If there are any Henchmen in the city, each player gains a Wound.
   cityVillains().has(isHenchman) && eachPlayer(p => gainWoundEv(ev, p));
 }, [
@@ -3225,7 +3225,7 @@ addTemplates("MASTERMINDS", "Black Widow", [
   } ],
 ], {
   init: c => {
-    addStatMod('defense', isHenchman, () => gameState.mastermind.attachedDeck('HENCHMANTRAINING').size * (c.epic ? 2 : 1));
+    addStatMod('defense', isHenchman, () => gameState.mastermind.attached('STRIKE').size * (c.epic ? 2 : 1));
   },
   varDefense: c => c.printedAttack + pastEvents('PLAY').max(ev => ev.what.cost) * (c.epic ? 2 : 1),
   commonTacticEffect: ev => {
