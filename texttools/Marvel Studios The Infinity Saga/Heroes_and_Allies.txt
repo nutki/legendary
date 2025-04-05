@@ -80,7 +80,7 @@ You get +1 Attack for each other Hero with an odd-numbered cost you played this 
 #COPIES: 3
 #CLASS: [Covert], [Tech]
 #ATTACK: 1
-{POWER Covert} You get Draw a card.
+{POWER Covert} Draw a card.
 #COST: 2
 #FLAVOR: "You will have my King's Guard, the Border Tribe, the Dora Milaje. . ."
 
@@ -119,11 +119,10 @@ Reveal the top card of your deck. If it's multicolored, draw it. Otherwise, put 
 
 #SUBNAME: Fateful Return
 #COPIES: 1
-#CLASS: [Ranged]
-#ATTACK: 4
-{PHASING}
-{POWER Ranged} Reveal the top five cards of the Hero Deck. You may put one of them with an odd-numbered cost into your hand. You may KO one of them. Put the rest back in any order.
-#COST: 7
+#CLASS: [Instinct], [Tech]
+#ATTACK: 0+
+You get +2 Attack for each Hero Class you have.
+#COST: 8
 
 #CARDNAME: Doctor Strange
 #TEAM: Avengers
@@ -220,7 +219,7 @@ You may KO a Wound from you hand or discard pile. If you do, you get +2 Recruit.
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 5
-[Tech] {SACRIFICE}: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cafds that cost 0 into your discard pile. Shuffle the rest into a new deck.
+[Tech] {SACRIFICE}: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cards that cost 0 into your discard pile. Shuffle the rest into a new deck.
 #COST: 7
 
 #CARDNAME: Captain Marvel
