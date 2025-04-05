@@ -1065,3 +1065,14 @@ function whenRecruitedSendUndercover(ev: Ev) {
   // TODO possibly move to victory ealier as part of wall crawl / soaring resolution to match the rulebook (choice of destination when recruited)
   // this can be hacked by matching the whenRecruited field to this specific function
 }
+// EXPANSION: Marvel Studios The Infinity Saga
+function isEndgame(ev: Ev) {
+  return getModifiedStat(ev.source, 'isEndgame', gameState.villaindeck.size <= 8 * gameState.players.size);
+}
+function sacrificeEv(ev: Ev, color: number, effect: Handler) {
+  const what = ev.source;
+  superPower(color) && chooseMayEv(ev, "Sacrifice", () => {
+    KOEv(ev, what);
+    pushEv(ev, 'EFFECT', effect);
+  });
+}

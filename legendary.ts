@@ -123,6 +123,7 @@ interface Card {
   excessiveKindness?: Handler;
   commonTacticEffect?: Handler;
   heroAmbush?: Handler | Handler[];
+  customRecruitAndAttack?: boolean;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -201,6 +202,7 @@ interface HeroCardAbillities {
   whenRecruited?: Handler;
   excessiveKindness?: Handler;
   heroAmbush?: Handler
+  customRecruitAndAttack?: boolean
 }
 class Card {
   constructor (t: string, n: string) {
@@ -1661,6 +1663,9 @@ function numHeroNames(heroes: Card[]) {
   return heroes.limit(isHero).uniqueCount(c => c.heroName || c.cardName);
   // TODO CW
 }
+function isMuliColor(c: Card) {
+  return c.color && (c.color & c.color - 1) !== 0;
+}
 
 function superPower(...f: (number | Affiliation)[]): number {
   if (f.length > 1) return f.count(c => superPower(c) < f.count(e => c === e)) === 0 ? 1 : 0;
@@ -1703,6 +1708,7 @@ interface ModifiableStats {
   triggers?: Trigger[];
   heroAmbush?: Handler | Handler[];
   isHenchman?: boolean;
+  isEndgame?: boolean;
 }
 
 function safePlus(a: number, b: number) {
@@ -2441,8 +2447,8 @@ function playCopyEv(ev: Ev, what: Card) {
   pushEv(ev, "PLAY", { func: playCard, what: makeCardCopy(what) });
 }
 function playCardEffects(ev: Ev, card: Card) {
-  if (card.attack) addAttackEvent(ev, card.attack);
-  if (card.recruit) addRecruitEvent(ev, card.recruit);
+  if (!card.customRecruitAndAttack && card.attack) addAttackEvent(ev, card.attack);
+  if (!card.customRecruitAndAttack && card.recruit) addRecruitEvent(ev, card.recruit);
   if (card.piercing) addPierciengEvent(ev, card.piercing);
   const effects = getModifiedStat(card, "effects", card.effects);
   for (let i = 0; effects && i < effects.length; i++) {

@@ -1261,9 +1261,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Sentinel Territories", "Colossus of Future Past", 5, 3, {
-    fight: ev => addFutureTrigger(ev => {
-      addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
-    }),
+    fight: ev => addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--),
   })],
 // FIGHT: You get +1 Recruit. Then, <i>Kate Pryde alters the future:</i> At the beginning of the next player's turn, that player gets +1 Recruit.
 // ATTACK: 4
@@ -4147,9 +4145,7 @@ addVillainTemplates("Into the Cosmos", [
 // VP: 6
   [ 1, makeVillainCard("From Beyond", "Kosmos", 13, 6, {
     fight: ev => {
-      addFutureTrigger(ev => {
-        addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
-      });
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && gameState.reversePlayerOrder);
       gameState.reversePlayerOrder = true;
       gameState.extraTurn = true;
     },
@@ -4854,9 +4850,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
   }), u, u, Color.GRAY, u, "", ev => {
     // This is Kang the Conqueror's tactic ability
     if (!incPerGame('extra-turn', ev.source)) {
-      addFutureTrigger(ev => {
-        addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
-      });
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
       gameState.extraTurn = true;
     }
 }, triggeredArifact('FIGHT', ev => isMastermind(ev.what)))],

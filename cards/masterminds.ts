@@ -2710,9 +2710,7 @@ addTemplates("MASTERMINDS", "Annihilation", [
   [ "Leap Into the Timestream", ev => {
   // If this is not the final Tactic: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
     if (!finalTactic(ev.source)) {
-      addFutureTrigger(ev => {
-        addTurnTrigger('VILLAINDRAW', (ev, source) => countPerTurn('futureChange', source) === 0, { replace: ev => incPerTurn('futureChange', ev.source) });
-      });
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
       gameState.extraTurn = true;
     }
   } ],
