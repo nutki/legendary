@@ -193,7 +193,7 @@ To play this side, you must discard a card.
 #ATTACK: 0+
 If you discarded any cards this turn, you get +4 Attack.
 #COST: 5
-#DIVIDED: New Plans
+#DIVIDED: New Plan
 #DIVHERO: Winter Soldier
 #CLASS: [Covert]
 Draw two cards.

@@ -6633,7 +6633,7 @@ addHeroTemplates("Black Widow", [
     whenRecruited: whenRecruitedSendUndercover,
     trigger: {
       event: "FIGHT",
-      match: ev => ev.who === playerState && isVillain(ev.what),
+      match: (ev, source) => owner(source) === playerState && isVillain(ev.what),
       after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
     },
   }),
@@ -6645,7 +6645,7 @@ addHeroTemplates("Black Widow", [
     whenRecruited: whenRecruitedSendUndercover,
     trigger: {
       event: "RECRUIT",
-      match: ev => ev.who === playerState && isHero(ev.what) && isColor(Color.COVERT)(ev.what),
+      match: (ev, source) => ev.what !== source && owner(source) === playerState && isHero(ev.what) && isColor(Color.COVERT)(ev.what),
       after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
     },
   }),
@@ -6653,7 +6653,8 @@ addHeroTemplates("Black Widow", [
 // When a Master Strike is completed or any player fights the Mastermind, you may <b>Unleash</b> this card from {UNDERCOVER}.
 // ---
 // {POWER Covert} You may send one of your other Heroes {UNDERCOVER}.
-  uc: makeHeroCard("Red Guardian", "Death Was Only A Ruse", 6, u, 3, Color.STRENGTH, u, "", ev => superPower(Color.COVERT) && sendUndercoverEv(ev), {
+  uc: makeHeroCard("Red Guardian", "Death Was Only A Ruse", 6, u, 3, Color.STRENGTH, u, "",
+    ev => superPower(Color.COVERT) && selectCardOptEv(ev, "Choose a Hero to send Undercover", yourHeroes().limit(c => c !== ev.source), c => sendUndercoverEv(ev, c)), {
     whenRecruited: whenRecruitedSendUndercover,
     triggers: [{
       event: "STRIKE",
@@ -6739,12 +6740,12 @@ addHeroTemplates("Black Widow", [
 // DIVIDED: New Wings
 // DIVHERO: Falcon
 // If you discarded any cards this turn, you get +4 Attack.
-// DIVIDED: New Plans
+// DIVIDED: New Plan
 // DIVHERO: Winter Soldier
 // Draw two cards.
   uc: makeDividedHeroCard(
     makeHeroCard("Falcon", "New Wings", 5, u, 0, Color.TECH, "Avengers", "", ev => pastEvents('DISCARD').has(e => e.who === playerState) && addAttackEvent(ev, 4)),
-    makeHeroCard("Winter Soldier", "New Plans", 5, u, u, Color.COVERT, "Avengers", "", ev => drawEv(ev, 2)),
+    makeHeroCard("Winter Soldier", "New Plan", 5, u, u, Color.COVERT, "Avengers", "", ev => drawEv(ev, 2)),
   ),
 // You get +1 Attack for each Hero Class you have.
 // {TEAMPOWER Avengers} {DARK MEMORIES}

@@ -1732,10 +1732,12 @@ function modifyStat<T>(c: Card, modifiers: Modifier<T>[], value: T): T {
   return (modifiers || []).filter(mod => mod.cond(c)).reduce((v, mod) => mod.func(c, v), value);
 }
 function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, value: ModifiableStats[T]): ModifiableStats[T] {
-  const fortifyModifiers = c.location.attached("FORTIFY").map(c => c.modifiers && c.modifiers[stat]).filter(m => m);
-  const locationModifiers = c.location.attached("LOCATION").map(c => c.modifiers && c.modifiers[stat]).filter(m => m);
-  for (const mod of fortifyModifiers) value = modifyStat(c, mod, value);
-  for (const mod of locationModifiers) value = modifyStat(c, mod, value);
+  if (c.location) {
+    const fortifyModifiers = c.location.attached("FORTIFY").map(c => c.modifiers && c.modifiers[stat]).filter(m => m);
+    const locationModifiers = c.location.attached("LOCATION").map(c => c.modifiers && c.modifiers[stat]).filter(m => m);
+    for (const mod of fortifyModifiers) value = modifyStat(c, mod, value);
+    for (const mod of locationModifiers) value = modifyStat(c, mod, value);
+  }
   return modifyStat(c, turnState && turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
 }
 function combineHandlers(prev: Handler | Handler[], h: Handler) {
