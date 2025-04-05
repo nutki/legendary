@@ -3103,3 +3103,99 @@ makeSchemeCard("Frame Heroes For Murder", { twists: 7, heroes: [6, 6, 6, 6, 6] }
   setSchemeTarget(5);
 }),
 ]);
+addTemplates("SCHEMES", "Marvel Studios The Infinity Saga", [
+// SETUP: 5 Twists.
+// <b>Twist 1,3,5</b>: Choose 3 Heroes from the HQ and KO them.
+// <b>Twist 2,4</b>: Deal the Hero Deck into two facedown piles (as equally as possible). KO one of them.
+// EVILWINS: When the Hero Deck or Villain Deck runs out.
+makeSchemeCard("Halve All Life In The Universe", { twists: 5 }, ev => {
+  if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5) {
+    selectObjectsEv(ev, "Choose 3 Heroes to KO", 3, hqCards().limit(isHero), c => KOEv(ev, c));
+  } else if (ev.nr === 2 || ev.nr === 4) {
+    gameState.herodeck.deck.forEach((c, i) => i % 2 && KOEv(ev, c));
+  }
+}, [
+  runOutProgressTrigger('HERO'),
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
+  setSchemeTarget(gameState.herodeck.size);
+}),
+// SETUP: Twists equal to the number of players plus 4.
+// EVILWINS: When the Mastermind has sacrificed 5 Heroes for the Soul Stone.
+makeSchemeCard("Sacrifice For The Soul Stone", { twists: [5, 6, 7, 8, 9] }, ev => {
+  // Twist: You may KO one of your non-grey Heroes and one of your grey Heroes to "Sacrifice for the Soul Stone." If you do, draw three cards,
+  // shuffle this Twist back into Villain Deck. If you don't stack a Hero from the HQ next to the Mastermind, "Sacrificed for the Soul Stone."
+  selectCardOptEv(ev, "Choose a non-grey Hero to sacrifice", yourHeroes().has(isColor(Color.GRAY)) ? yourHeroes().limit(isNonGrayHero) : [], c => {
+    selectCardEv(ev, "Choose a grey Hero to sacrifice", yourHeroes().limit(Color.GRAY), c2 => {
+      KOEv(ev, c); KOEv(ev, c2);
+      drawEv(ev, 3);
+      shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+    });
+  }, () => {
+    selectCardEv(ev, "Choose a hero", hqCards().limit(isHero), c => {
+      attachCardEv(ev, c, gameState.mastermind, 'SOULSTONE');
+    });
+    cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('SOULSTONE').size));
+  });
+}, [], () => {
+  setSchemeTarget(5);
+}),
+// SETUP: 11 Twists. Use 4 Heroes in the Hero Deck, plus 4 other Heroes to make a "Past Hero Deck." Above the Board, make room for an alternate city called "The Past."
+// It has the normal 5 spaces, from Sewers to Bridge. The Past has its own "Past HQ" filled by the "Past Hero Deck." To start, play as if "The Past" city, HQ, and Hero Deck don't exist.
+makeSchemeCard<{
+  deckPairs: [Deck, Deck][],
+}>("The Time Heist", { twists: 11, heroes: 8 }, ev => {
+  // <b>Twist 1,3,5,7,9</b>: Until the next Twist, move the Villain Deck next to "The Past," and play as if "The Past" city, HQ, and Hero Deck exist, while the normal
+  // city, HQ, and Hero Deck don't exist. (Use the normal decks and spaces for everything except the city, HQ, and Hero Deck.)
+  const swapDecks = (d1: Deck, d2: Deck) => {
+    [d1.deck, d2.deck] = [d2.deck, d1.deck];
+    [d1._attached, d2._attached] = [d2._attached, d1._attached];
+    [d1.faceup, d2.faceup] = [d2.faceup, d1.faceup];
+  };
+  if (ev.nr <= 9) {
+    gameState.schemeState.deckPairs.each((pair: [Deck, Deck]) => swapDecks(...pair));
+  }
+  schemeProgressEv(ev, ev.nr);
+}, [], s => {
+  const pastHeroes = gameState.herodeck.limit(c => c.heroName === extraHeroName(1) || c.heroName === extraHeroName(2) || c.heroName === extraHeroName(3) || c.heroName === extraHeroName(4));
+  const pastHeroDeck = new Deck("HERO_PAST", false);
+  s.deckPairs = [];
+  s.deckPairs.push([gameState.herodeck, pastHeroDeck]);
+  pastHeroes.each(c => moveCard(c, pastHeroDeck));
+  gameState.city.each(c => s.deckPairs.push([c, new Deck(c.id + "_PAST", true)]));
+  gameState.hq.each(c => {
+    const pastHQSpace = new Deck(c.id + "_PAST", true)
+    s.deckPairs.push([c, pastHQSpace]);
+    moveCard(pastHeroDeck.top, pastHQSpace);
+  });
+  setSchemeTarget(10);
+}),
+
+// SETUP: 11 Twists. The rightmost city space represents a TV show from the "50s." The space on its left is the "60s," then the "70s." The city is only those 3 soaces.
+// The HQ is only 3 spaces beneath those. Move the Mastermind & Officer Deck to mark the city's left edge.
+// EVILWINS: When all TV is destroyed.
+makeSchemeCard("Warp Reality Into a TV Show", { twists: 11 }, ev => {
+  if (ev.nr <= 4) {
+    // Twist 1-4 Another TV show (city space) appears on the left side of the city, representing the 80s, 90s, 2000s, & 2010s. Another HQ space appears beneath it.
+    const era = ["80s", "90s", "2000s", "2010s"][ev.nr - 1];
+    gameState.city = [new Deck("CITY_" + era, true), ...gameState.city];
+    gameState.hq = [new Deck("HQ_" + era, true), ...gameState.hq];
+    makeCityAdjacent(gameState.city);
+    // TODO fix hq adjecency
+  } else if (ev.nr >= 5 && ev.nr <= 11) {
+    // Twist 5-11 Destroy the rightmost TV show and the HQ space beneath it. KO any Hero in that HQ space. Push forward any Villain there.
+    // Move the Villain Deck & Hero Deck to mark the city's right edge.
+    gameState.city.withLast(d => {
+      destroyCity(d);
+      d.deck.each(c => d.next ? moveCardEv(ev, c, d.next) : villainEscapeEv(ev, c));
+    });
+    gameState.hq.withLast(d => {
+      destroyHQ(d);
+      d.deck.each(c => KOEv(ev, c));
+    });
+  }
+  schemeProgressEv(ev, ev.nr);
+}, [], s => {
+  setSchemeTarget(11);
+}),
+]);

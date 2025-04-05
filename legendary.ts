@@ -518,7 +518,6 @@ class Deck {
   faceup: boolean
   isHQ?: boolean
   isCity?: boolean
-  isDestoryed?: boolean
   next?: Deck
   below?: Deck
   above?: Deck
@@ -1593,7 +1592,6 @@ function destroyCity(space: Deck) {
     if (d.below === space) d.below = undefined;
   });
   space.isCity = false;
-  space.isDestoryed = true;
 }
 function destroyHQ(space: Deck) {
   gameState.hq = gameState.hq.filter(d => d !== space);
