@@ -1,0 +1,280 @@
+
+#CARDNAME: Wanda & Vision
+#TEAM: Avengers
+
+#SUBNAME: We Have to Destroy It
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 1+
+{PHASING}
+[Tech] <b>Sacrifice</b>: You get +3 Recruit. You may KO a card from your hand or discard pile.
+#COST: 1
+
+#SUBNAME: Witchcraft
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is even.)
+#COST: 3
+
+#SUBNAME: Hold On/Let Go
+#COPIES: 3
+#DIVIDED: Hold On
+#DIVHERO: Wanda
+#CLASS: [Covert]
+#ATTACK: 1+
+{POWER Covert} You get +2 Attack.
+#COST: 3
+#DIVIDED: Let Go
+#DIVHERO: Vision
+#CLASS: [Ranged]
+#RECRUIT: 2
+{PHASING}
+[Ranged] <b>Sacrifice</b>: Draw 3 cards. You may KO a card from your hand or discard pile.
+#COST: 3
+
+#SUBNAME: Rage/Grief
+#COPIES: 2
+#DIVIDED: Rage
+#DIVHERO: Wanda
+#CLASS: [Covert]
+#ATTACK: 2+
+If a Hero was put into the KO pile this turn, you get +2 Attack.
+#COST: 5
+#DIVIDED: Grief
+#DIVHERO: Vision
+#CLASS: [Tech]
+#RECRUIT: 2+
+{PHASING}
+If a Master Strike was completed this turn, you get +2 Recruit.
+#COST: 5
+
+#SUBNAME: Magic/Science
+#COPIES: 2
+#DIVIDED: Magic
+#DIVHERO: Wanda
+#CLASS: [Ranged]
+#ATTACK: 1+
+You get +1 Attack for each other Hero with an odd-numbered cost you played this turn.
+#COST: 5
+#DIVIDED: Science
+#DIVHERO: Vision
+#CLASS: [Tech]
+#ATTACK: 2+
+{PHASING}
+{POWER Tech} You get +2 Attack.
+#COST: 5
+
+#SUBNAME: Odd Couple
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4
+{PHASING}
+{POWER Ranged} Reveal the top five cards of the Hero Deck. You may put one of them with an odd-numbered cost into your hand. You may KO one of them. Put the rest back in any order.
+#COST: 7
+
+#CARDNAME: Black Panther
+#TEAM: Avengers
+
+#SUBNAME: Wakanda Forever
+#COPIES: 3
+#CLASS: [Covert], [Tech]
+#ATTACK: 1
+{POWER Covert} You get Draw a card.
+#COST: 2
+#FLAVOR: "You will have my King's Guard, the Border Tribe, the Dora Milaje. . ."
+
+#SUBNAME: Avengers Reassembled
+#COPIES: 3
+#CLASS: [Instinct], [Covert]
+#ATTACK: 2+
+If you have all five Hero Classes, you get +3 Attack.
+#COST: 3
+#FLAVOR: "Evacuate the city. Engage all defense procedures. And get this man a shield."
+
+#SUBNAME: Great Many Lives Lost
+#COPIES: 3
+#CLASS: [Strength], [Instinct]
+#RECRUIT: 2
+[Instinct] <b>Sacrifice</b>: KO up to two cards from your hand and/or discard pile.
+#COST: 4
+#FLAVOR: "You are in Wakanda now. Thanos will have nothing but dust and blood."
+
+#SUBNAME: Council of War
+#COPIES: 2
+#CLASS: [Strength], [Covert]
+#RECRUIT: 3+
+#ATTACK: 0+
+You get +1 Recruit for each other multicolored Hero you have.
+{POWER Strength} You may have this card make all Attack instead of Recruit.
+#COST: 5
+
+#SUBNAME: Vibranium Nanites
+#COPIES: 2
+#CLASS: [Tech], [Ranged]
+#ATTACK: 3
+Reveal the top card of your deck. If it's multicolored, draw it. Otherwise, put it back or discard it.
+{POWER Tech} You may KO that card.
+#COST: 6
+
+#SUBNAME: Fateful Return
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 4
+{PHASING}
+{POWER Ranged} Reveal the top five cards of the Hero Deck. You may put one of them with an odd-numbered cost into your hand. You may KO one of them. Put the rest back in any order.
+#COST: 7
+
+#CARDNAME: Doctor Strange
+#TEAM: Avengers
+
+#SUBNAME: Open Portals
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 1+
+{PHASING}
+{POWER Ranged} You get +2 Recruit.
+#COST: 2
+#FLAVOR: "I think you'll find our wills equal to yours."
+
+#SUBNAME: Defend This Dimension
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2+
+{POWER Instinct} Reveal the top card of the Villain Deck. If it's a Villain, you get +2 Attack.
+#COST: 3
+#FLAVOR: "Thanos...can destroy life on a scale hither to undreamt of."
+
+#SUBNAME: Sift Futures
+#COPIES: 3
+#CLASS: [Instinct], [Ranged]
+#ATTACK: 2
+{PHASING}
+Choose a Hero Class. Reveal the top card of your deck. If it's the Hero Class you named, draw it.
+#COST: 4
+
+#SUBNAME: Invoke the Time Stone
+#COPIES: 2
+#CLASS: [Ranged]
+#RECRUIT: 2
+{PHASING}
+[Ranged] <b>Sacrifice</b>: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+#COST: 5
+
+#SUBNAME: Bind Evil
+#COPIES: 2
+#CLASS: [Instinct]
+#ATTACK: 4+
+{POWER Instinct} Reveal the top card of the Villain Deck. If it's a Master Strike, KO that Strike, you get +3 Attack, and put a card from the Bystander Deck on top of the Villain Deck.
+#COST: 6
+
+#SUBNAME: 1 In 14,000,065
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+[Instinct] <b>Sacrifice</b>: Guess the name of the top card of the Villain Deck, then reveal it. If you guessed right, draw six cards.
+#COST: 7
+
+#CARDNAME: Bruce Banner
+#TEAM: Avengers
+
+#SUBNAME: Burst of Rage
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 1+
+[Strength] <b>Sacrifice</b>: You get +3 Attack. You may KO card from your hand or discard pile.
+#COST: 1
+
+#SUBNAME: Brains and Brawn
+#COPIES: 3
+#CLASS: [Strength], [Tech]
+#ATTACK: 2+
+{POWER Tech Strength} You get +2 Attack.
+#COST: 3
+#FLAVOR: "I see this as an absolute win!"
+
+#SUBNAME: Hulkbuster Armor
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 2+
+You may KO a Wound from you hand or discard pile. If you do, you get +2 Recruit.
+#COST: 4
+#FLAVOR: "I think I'm getting the hang of it. Wow! It's like being the Hulk without actually..."
+
+#SUBNAME: Hulk Gets Smashed
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 2
+{POWER Strength} You may gain a Wound. If you do, KO up to two other cards from your hand and/or discard pile.
+#COST: 5
+
+#SUBNAME: Crush Puny Weaklings
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 3+
+{POWER Tech} You get +1 Attack for each Henchman in your Victory Pile.
+#COST: 6
+#FLAVOR: "Haha! You guys are so screwed now!"
+
+#SUBNAME: Reverse The Snap
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5
+[Tech] <b>Sacrifice</b>: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cafds that cost 0 into your discard pile. Shuffle the rest into a new deck.
+#COST: 7
+
+#CARDNAME: Captain Marvel
+#TEAM: Avengers
+
+#SUBNAME: Infused By the Tesseract
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 1
+#ATTACK: 0+
+Draw a card.
+<b>Endgame</b>: This card makes Attack instead of Recruit.
+#COST: 3
+#FLAVOR: The Tesseract contained an even greater power: the Space Stone.
+
+#SUBNAME: Return From the Stars
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 2+
+#ATTACK: 0+
+{POWER Strength} You get +2 Recruit.
+<b>Endgame</b>: This card makes all Attack instead of Recruit.
+#COST: 4
+#FLAVOR: "The things that are happening on Earth are happening everywhere."
+
+#SUBNAME: Turning Point
+#COPIES: 3
+#CLASS: [Strength], [Ranged]
+#ATTACK: 2+
+For the rest of this turn, it is the Endgame for your Hero cards.
+If it was already the Endgame, you get +2 Attack.
+#COST: 5
+
+#SUBNAME: Dawning Hope
+#COPIES: 2
+#CLASS: [Ranged]
+Draw a card.
+If you had already drawn any cards this turn, draw two cards instead.
+#COST: 2
+
+#SUBNAME: Moment of Destiny
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 4+
+{POWER Ranged} You get +2 Attack.
+#COST: 6
+#FLAVOR: "Answer the question!"
+
+#SUBNAME: Time to End It
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+You get +1 Attack for each other [Ranged] and/or [Strength] card you played this turn.
+<b>Endgame</b>: Instead, you get +2 Attack for each.
+#COST: 8
+
+

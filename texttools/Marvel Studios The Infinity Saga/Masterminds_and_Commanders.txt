@@ -1,0 +1,60 @@
+
+#CARDNAME: Ebony Maw
+<b>Endgame: +4</b> Attack
+#LEADS: Children of Thanos
+#STRIKE: It is the Endgame this turn. Each player reveals their hand and discards their highest-cost Hero. If it was already the Endgame, KO those Heroes.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Ebony Maw
+<b>Endgame: +5</b> Attack
+#LEADS: Children of Thanos
+#STRIKE: It is the Endgame this turn. Each player reveals their hand and KOs their highest-cost Hero. If it was already the Endgame, play another card from the Villain Deck.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Hear Me and Rejoice
+#FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
+<b>Endgame</b>: Same effect, but three cards instead.
+
+#TACTIC: Smile...Even in Death
+#FIGHT: KO up to two of your Heroes.
+<b>Endgame</b>: Then KO up to one Hero from your discard pile.
+
+#TACTIC: You May Think This Is Suffereing
+#FIGHT: Each other player reveals a [Covert] Hero or gains a Wound.
+<b>Endgame</b>: Then each other player reveals a [Ranged] Hero or gains a Wound.
+
+#TACTIC: Your Powers Are Quaint
+#FIGHT: Each other player chooses a Hero Class, then reveals their hand and discards all non-grey Heroes that aren't that Hero Class.
+<b>Endgame</b>: Then they also discard all their grey Heroes.
+
+#CARDNAME: Thanos
+Thanos gets +1 Attack for each Infinity Stone in the city and/or Escape Pile.
+#LEADS: Infinity Stones
+#STRIKE: The leftmost Infinity Stone in the city escapes. Then an Infinity Stone worth 4VP or more enters the city from your Victory Pile. If you don't have any, each player gains a Wound.
+<b>Thanos Wins</b>: When 6 Infinity Stones escape.
+#ATTACK: 11+
+#VP: 7
+
+#CARDNAME:  Epic Thanos
+Thanos gets +2 Attack for each Infinity Stone in the city and/or Escape Pile.
+#LEADS: Infinity Stones
+#STRIKE: The lowest Attack Infinity Stone in the city escapes. Then an Infinity Stone worth 4VP or more enters the city from your Victory Pile. Each player that didn't have any gains a Wound.
+<b>Thanos Wins</b>: When 6 Infinity Stones escape.
+#ATTACK: 13+
+#VP: 7
+
+#TACTIC: Destiny Arrives All The Same
+#FIGHT: Each other player reveals a Hero that costs 7 or more or gains a Wound.
+
+#TACTIC: Price To Pay
+#FIGHT: Each other player discards cards equal to the number of Infinity Stones in the city and/or Escape Pile or gains a Wound.
+
+#TACTIC: The Snap
+#FIGHT: Each other player discards half of their cards. Destroy half of the HQ spaces. (Round down the losses.) Turn the Heroes there face down to mark the destroyed spaces. Don't refill those spaces.
+
+#TACTIC: You Should Have Gone For The Head
+#FIGHT: KO one of your Heroes. If this is the last Mastermind Tactic: You do not win the game. Players must fight Thanos one more time to put the Mastermind card in their Victory Pile and win the game.
+
+

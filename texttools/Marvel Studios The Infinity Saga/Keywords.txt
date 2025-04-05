@@ -1,0 +1,23 @@
+<b>Endgame</b>
+* <b>It is the "Endgame" whenever the Villain Deck holds 8 cards per player or fewer.</b>
+* This gives Enemies their Endgame Attack bonus or other listed Endgame abilities.
+* Captain Marvel uses the Endgame keyword in the same way Enemies do.
+* If you reach the Endgame and then cards are added back into the Villain Deck somehow, if might not be the Endgame anymore. If a Scheme has multiple Villain Decks, it is the Endgame if any of them are small enough.
+* Some Enemies have special abilites that say "It is the Endgame this turn." This temporarily activates Engame abilites for all Heores and Enemies accross the game this turn.
+* Captain Marvel also has a card which says "For the rest of this turn, it is the Endgame for your Hero cards." This turns on Heroes' Endgame abilities, but it does not activate Enemies' Endgmae abilities.
+<b>Sacrifice</b>
+Several Heroes say things like "[Ranged] <b>Sacrifice</b>: Take another turn after this one. Don't play a card from the Villain Deck at the start of the turn."
+* <b>This means "You may KO this card to use its Sacrifice ability only if you played another [Ranged] Hero earlier this turn."</b>
+* Sacrificing is always optional: you don't have to use the Sacrifice ability and KO the card, even if you played the matching Hero Class earlier this turn. However, if you don't KO the Sacrifice card, you can't use the Sacrifice ability.
+* You still get the normal Recruit, Attack, and any non-Sacrifice abilites from the card, whether you Sacrifice it or not.
+* You have to choice whether to Sacrifice the card at the moment you play it. You can't wait then Sacrifice it later in the turn.
+* If you Sacrifice it, you still "played it this turn," for triggering abilites like "[Strength]: You get +1 Attack," However, it's no longer "one of your Heroes" or "a Hero you have," since it has gone to the KO pile.
+{PHASING}: See Civil War
+
+<b>Multiclass Cards</b>: See Secret Wars and Black Panther
+
+<b>Divided Cards</b>: See Civil War, X-Men, Marvel Studios' Guardians of the Galaxy, and Black Widow
+<b>Thanos and the Infinity Stones</b>
+* "Stonekeeper" and "Nebula, Stone Seeker" are both part of the Infinity Stones Villain Group, so they both count as "Infinity Stones" for all purposes.
+* Remember: in a 1-player game, if you use Thanos with a different Villain Group, his abilites that refer to Infinity Stones will apply instead to whichever Villain Group you use.
+

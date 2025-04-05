@@ -1,0 +1,127 @@
+
+#CARDNAME: Children of Thanos
+
+#SUBNAME: Proxima Midnight
+#COPIES: 1
+<b>Endgame: +3</b> Attack
+#AMBUSH: It is the Endgame this turn. If it was already the Endgame, each player reveals a [Instinct] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 7+
+#VP: 5
+
+#SUBNAME: Corvus Glaive
+#COPIES: 1
+<b>Endgame: +3</b> Attack
+#AMBUSH: It is the Endgame this turn. If it was already the Endgame, each player Kos a Bystander from their Victory Pile or gains a Wound.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: Cull Obsidian
+#COPIES: 1
+<b>Endgame: +3</b> Attack
+#AMBUSH: It is the Endgame this turn. If it was already the Endgame, each player reveals a Hero that costs 6 or more or gains a Wound.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: Chitauri Gorilla
+#COPIES: 1
+<b>Endgame: +2</b> Attack
+#AMBUSH: Chitauri Gorilla captures a Bystander.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Outrider Threshers
+#COPIES: 1
+<b>Endgame: +2</b> Attack
+#FIGHT: KO one of your Heroes. Then choose any number of Heroes from the HQ. Put them on the bottom of the Hero Deck.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Endless Armies of Chitauri
+#COPIES: 1
+<b>Endgame: +2</b> Attack
+#FIGHT: KO one of your Heroes. Then reveal the top card of the Villain Deck. If it's a Children of Thanos Villain, Endless Armies of Chitauri renenters the Sewers.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Outriders
+#COPIES: 1
+<b>Endgame: +2</b> Attack
+#FIGHT: You may KO a card from your discard pile.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Outrider Dropship
+#COPIES: 1
+<b>Endgame: +2</b> Attack
+#AMBUSH: A Villain worth 2VP, 3VP, or 4VP from any player's Victory pile enters the city.
+#ATTACK: 4+
+#VP: 3
+
+#CARDNAME: Infinity Stones
+
+#SUBNAME: The Power Stone
+#COPIES: 1
+The Power Stone gets +1 Attack for each other Infinity Stone in the city and/or Escape Pile.
+#AMBUSH: Each player without an Infinity Stone in their Victory Pile gains a Wound.
+#FIGHT: KO one of your Heroes. Then KO a Wound from your hand or discard pile.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: The Space Stone
+#COPIES: 1
+The Space Stone gets +1 Attack for each empty space in the city.
+#AMBUSH: The Space Stone captures three Bystanders. Then move an Infinity Stone from any city space to the Bridge. If there's already a Villain there, swap them.
+#FIGHT: Move and/or swap any number of Villains to other city spaces.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: The Reality Stone
+#COPIES: 1
+The Reality Stone gets +1 Attack for each Master Strike in the KO pile and/or stacked next to the Mastermind.
+#AMBUSH: Reveal the top three cards of the villain Deck. Play a Master strike from among them. Put the rest back in any order.
+#FIGHT: Same effect, but KO the Master Strike instead of playing it. Then, whether you KO or not, put a card from the Bystander Deck on top of the Villain Deck.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: The Soul Stone
+#COPIES: 1
+The Soul Stone gets +1 Attack for each other Villain in the city.
+#AMBUSH: Each player without an Infinity Stone in their Victory Pile KOs a non0grey Hero from their discard pile.
+#FIGHT: Reveal the top two cards of your deck. KO one of them and draw the other.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: The Time Stone
+#COPIES: 1
+<b>Endgame: +4</b> Attack
+#AMBUSH: Play another card from the Villain Deck.
+#FIGHT: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+#ATTACK: 5+
+#VP: 5
+
+#SUBNAME: The Mind Stone
+#COPIES: 1
+The Mind Stone gets +Attack equal to the highest cost of Hero in the HQ.
+#AMBUSH: All Heroes currently in the HQ cost 2 more this turn.
+#FIGHT: Gain a Hero form the HQ.
+#ATTACK: 1+
+#VP: 5
+
+#SUBNAME: Stonekeeper
+#COPIES: 1
+#AMBUSH: If the Soul Stone is in the city or Escape Pile, each player discards a card. If it's in a player's Victory Pile, that player draws two cards.
+#FIGHT: Each player KOs one their Heroes.
+(This card counts as "an Infinity Stone.")
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Nebula, Stone Seeker
+#COPIES: 1
+#AMBUSH: Nebula captures a Hero from the Officer Deck or HQ that costs 4 or less.
+#FIGHT: Either KO that Hero or choose a player to gain it.
+(This card counts as "an Infinity Stone.")
+#ATTACK: 4
+#VP: 2
+
+
