@@ -2501,7 +2501,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   [ "Dimensional Collapse", ev => {
   // Destroy an HQ space that's in a Pocket Dimension. (That space doesn't refill.) To mark this, turn the Hero there face down. The Pocket Dimension card stays in play.
     selectCardEv(ev, "Choose an HQ space", gameState.hq.limit(d => d.attached('POCKET').size > 0), d => {
-      destroyHQ(d); // TODO turn the Hero face down
+      destroyHQ(d); d.faceup = false;
     });
   } ],
   [ "Pull Earth Into The Beyond", ev => {
@@ -3289,5 +3289,100 @@ addTemplates("MASTERMINDS", "Black Widow", [
       shuffleIntoEv(ev, c, gameState.villaindeck);
     });
   },
+}),
+]);
+addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
+// <b>Endgame: +4</b> Attack
+// EPICNAME: Ebony Maw
+// <b>Endgame: +5</b> Attack
+...makeEpicMastermindCard("Ebony Maw", [ 8, 10 ], 6, "Children of Thanos", ev => {
+// It is the Endgame this turn. Each player reveals their hand and discards their highest-cost Hero. If it was already the Endgame, KO those Heroes.
+// It is the Endgame this turn. Each player reveals their hand and KOs their highest-cost Hero. If it was already the Endgame, play another card from the Villain Deck.
+  ev.source.epic || isEndgame(ev.source) ?
+    eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p).highest(c => c.cost), p)) :
+    eachPlayer(p => pickDiscardEv(ev, 1, p, c => c.cost === p.hand.deck.max(c => c.cost)));
+  ev.source.epic && isEndgame(ev.source) && playAnotherEv(ev);
+  addTurnSet('isEndgame', () => true, () => true);
+}, [
+  [ "Hear Me and Rejoice", ev => {
+  // When you draw a new hand of cards at the end of this turn, draw two extra cards.
+  // {ENDGAME} Same effect, but three cards instead.
+    addEndDrawMod(isEndgame(ev.source) ? 3 : 2);
+  } ],
+  [ "Smile...Even in Death", ev => {
+  // KO up to two of your Heroes.
+    selectObjectsUpToEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c));
+  // {ENDGAME} Then KO up to one Hero from your discard pile.
+    isEndgame(ev.source) && selectCardOptEv(ev, "Choose a Hero to KO", playerState.discard.deck, c => KOEv(ev, c));
+  } ],
+  [ "You May Think This Is Suffereing", ev => {
+  // Each other player reveals a [Covert] Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p));
+  // {ENDGAME} Then each other player reveals a [Ranged] Hero or gains a Wound.
+    isEndgame(ev.source) && eachOtherPlayerVM(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Your Powers Are Quaint", ev => {
+  // Each other player chooses a Hero Class, then reveals their hand and discards all non-grey Heroes that aren't that Hero Class.
+    eachOtherPlayerVM(p => {
+      chooseClassEv(ev, color => {
+        p.hand.limit(isNonGrayHero).each(c => isColor(color)(c) || discardEv(ev, c));
+        isEndgame(ev.source) && p.hand.limit(isColor(Color.GRAY)).each(c => discardEv(ev, c));
+      }, u, p);
+    });
+  // {ENDGAME} Then they also discard all their grey Heroes.
+  } ],
+], {
+  varDefense: c => c.printedDefense + (isEndgame(c) ? c.epic ? 5 : 4 : 0),
+}),
+// Thanos gets +1 Attack for each Infinity Stone in the city and/or Escape Pile.
+// Thanos gets +2 Attack for each Infinity Stone in the city and/or Escape Pile.
+// <b>Thanos Wins</b>: When 6 Infinity Stones escape.
+...makeEpicMastermindCard("Thanos", [11, 13], 7, "Infinity Stones", ev => {
+  const cityStones = cityVillains().limit(isGroup(ev.source.leads));
+// The leftmost Infinity Stone in the city escapes.
+// The lowest Attack Infinity Stone in the city escapes.
+  ev.source.epic ? selectCardEv(ev, "Choose a card to escape", cityStones.highest(c => -c.defense), c => villainEscapeEv(ev, c)) : cityStones.withFirst(c => villainEscapeEv(ev, c));
+// Then an Infinity Stone worth 4VP or more enters the city from your Victory Pile.
+// If you don't have any, each player gains a Wound. (Epic: Each player that didn't have any gains a Wound.)
+  cont(ev, () => {
+    const options: (p: Player) => Card[] = p => p.victory.limit(c => isGroup(c.leads) && c.vp >= 4);
+    selectCardOrEv(ev, "Choose an Infinity Stone to enter the city", options(playerState), c => {
+      enterCityEv(ev, c);
+      ev.source.epic && eachPlayer(p => p !== playerState && options(p).size === 0 && gainWoundEv(ev, p));
+    }, () => {
+      eachPlayer(p => (ev.source.epic && options(p).size) || gainWoundEv(ev, p));
+    });
+  });
+
+}, [
+  [ "Destiny Arrives All The Same", ev => {
+  // Each other player reveals a Hero that costs 7 or more or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, c => c.cost >= 7, () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Price To Pay", ev => {
+  // Each other player discards cards equal to the number of Infinity Stones in the city and/or Escape Pile or gains a Wound.
+    const num = cityVillains().count(isGroup(ev.source.leads)) + gameState.escaped.count(isGroup(ev.source.leads));
+    num && eachOtherPlayerVM(p => {
+      p.hand.size >= num ?
+        chooseOptionEv(ev, "Choose", [{l:"Discard", v: () => pickDiscardEv(ev, num, p)},{l:"Gain a Wound", v: () => gainWoundEv(ev, p)}], v => v(), p) :
+        gainWoundEv(ev, p);
+    });
+  } ],
+  [ "The Snap", ev => {
+  // Each other player discards half of their cards. Destroy half of the HQ spaces. (Round down the losses.) Turn the Heroes there face down to mark the destroyed spaces. Don't refill those spaces.
+    const toDestroy = Math.floor(gameState.hq.size / 2);
+    eachOtherPlayerVM(p => pickDiscardEv(ev, Math.floor(p.hand.size / 2), p));
+    selectObjectsEv(ev, "Choose an HQ space to destroy", toDestroy, gameState.hq, d => { destroyHQ(d); d.faceup = false; });
+  } ],
+  [ "You Should Have Gone For The Head", ev => {
+  // KO one of your Heroes. If this is the last Mastermind Tactic: You do not win the game. Players must fight Thanos one more time to put the Mastermind card in their Victory Pile and win the game.
+    selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+    gameState.finalBlow = true;
+  } ],
+], {
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * [...cityVillains(), ...gameState.escaped.deck].count(isGroup(c.leads)),
+  trigger: {event: 'ESCAPE', match: (ev, source) => isGroup(source.leads)(ev.what), after: ev => {
+    gameState.escaped.deck.count(isGroup(ev.source.leads)) >= 6 && gameOverEv(ev, 'LOSS', ev.source);
+  }}
 }),
 ]);

@@ -1032,6 +1032,7 @@ interface Game {
   contestOfCampionsEvilBonus?: number;
   thronesFavorHolder: Player | Card | undefined;
   astralPlane: Deck;
+  finalBlow: boolean;
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1381,6 +1382,7 @@ gameState = {
   modifiers: {},
   players: [ playerState ],
   advancedSolo: 'WHATIF',
+  finalBlow: false,
   villainsEscaped: 0,
   bystandersCarried: 0,
   schemeState: {},
@@ -1524,7 +1526,7 @@ function isFightable(c: Card): boolean {
   const res = c.location == gameState.astralPlane ? true : isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
     isMastermind(c) ?
-      c.location === gameState.mastermind && c.attachedDeck('TACTICS').size > 0 :
+      c.location === gameState.mastermind && (c.attachedDeck('TACTICS').size > 0 || gameState.finalBlow) :
       false;
   return getModifiedStat(c, 'isFightable', res);
 }
@@ -2280,14 +2282,15 @@ function choosePlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = pla
 function chooseOtherPlayerEv(ev: Ev, effect: (p: Player) => void, agent: Player = playerState) {
   gameState.players.length > 1 && choosePlayerLimitedEv(ev, effect, gameState.players.limit(p => p !== agent), agent);
 }
-function chooseClassEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean) {
+function chooseClassEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean, who: Player = playerState) {
   chooseOptionEv(ev, "Choose a Hero Class",
     [{l:'Strength', v:Color.STRENGTH},
     {l:'Instinct', v:Color.INSTINCT},
     {l:'Covert', v:Color.COVERT},
     {l:'Tech', v:Color.TECH},
     {l:'Ranged', v:Color.RANGED}].filter(o => !limit || limit(o.v)),
-    f
+    f,
+    who
   );
 }
 function chooseColorEv(ev: Ev, f: ((color: number) => void), limit?: (color: number) => boolean) {
