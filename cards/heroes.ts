@@ -6566,3 +6566,188 @@ addHeroTemplates("Black Panther", [
   }),
 },
 ]);
+addHeroTemplates("Black Widow", [
+{
+  name: "Black Widow",
+  team: "S.H.I.E.L.D.",
+// {DODGE}
+// When you {DODGE} with or play this card, you may also {DODGE} with another card from your hand.
+  c1: makeHeroCard("Black Widow", "Evasive Acrobatics", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "FD", ev => {
+    selectCardOptEv(ev, "Choose a card to Dodge", playerState.hand.limit(c => c !== ev.source), c => dodgeCardEv(ev, c));
+  }, { cardActions: [ dodge ], trigger: {
+    event: "DODGE",
+    match: (ev, source) => ev.what === source,
+    before: ev => selectCardOptEv(ev, "Choose a card to Dodge", playerState.hand.limit(c => c !== ev.parent.what), c => dodgeCardEv(ev, c))
+  }}),
+// {DODGE}
+// {DARK MEMORIES}
+  c2: makeHeroCard("Black Widow", "Widow's Bite", 4, u, 1, Color.TECH, "S.H.I.E.L.D.", "F", ev => darkMemoriesEv(ev), { cardActions: [ dodge ] }),
+// {DODGE}
+// If you drew any cards this turn, you may send one of your other Heroes {UNDERCOVER}.
+  uc: makeHeroCard("Black Widow", "Weave A Web of Spies", 5, u, 2, Color.COVERT, "S.H.I.E.L.D.", "D", ev => {
+    pastEvents('DRAW').has(ev => ev.who === playerState) && selectCardOptEv(ev, "Choose a Hero to send Undercover", yourHeroes().limit(c => c !== ev.source), c => {
+      sendUndercoverEv(ev, c);
+    });
+  }, { cardActions: [ dodge ] }),
+// You may send one of your Heroes {UNDERCOVER}.
+// You get +3 Attack if you have at least 4 Bystanders and/or Undercover Heroes in your Victory Pile.
+  ra: makeHeroCard("Black Widow", "Infiltrate the Conspiracy", 7, u, 4, Color.RANGED, "S.H.I.E.L.D.", "", [
+    ev => selectCardOptEv(ev, "Choose a Hero to send Undercover", yourHeroes(), c => sendUndercoverEv(ev, c)),
+    ev => playerState.victory.count(c => isBystander(c) || isHero(c)) >= 4 && addAttackEvent(ev, 3),
+  ]),
+},
+{
+  name: "Yelena Belova",
+  team: "S.H.I.E.L.D.",
+// Send this {UNDERCOVER}.
+  c1: makeHeroCard("Yelena Belova", "Strike and Fade", 2, u, 3, Color.COVERT, "S.H.I.E.L.D.", "FD", ev => sendUndercoverEv(ev)),
+// {POWER Instinct} You may <b>Unleash</b> one of your Heroes from {UNDERCOVER}.
+// GUN: 1
+  c2: makeHeroCard("Yelena Belova", "Unveil Identity", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "GFD", ev => superPower(Color.INSTINCT) && unleashFromUndercoverEv(ev)),
+// {DODGE}
+// When you {DODGE} with this card, you may <b>Unleash</b> one of your other Heroes from {UNDERCOVER}.
+// When you play this card, send it {UNDERCOVER}.
+  uc: makeHeroCard("Yelena Belova", "Twilight Ops", 6, u, 3, Color.TECH, "S.H.I.E.L.D.", "", ev => sendUndercoverEv(ev), {
+    cardActions: [ dodge ],
+    trigger: {
+      event: "DODGE",
+      match: (ev, source) => ev.what === source,
+      after: ev => unleashFromUndercoverEv(ev),
+    },
+  }),
+// You may <b>Unleash</b> one of your Heroes from {UNDERCOVER}.
+// You may send a Hero from your discard pile {UNDERCOVER}.
+  ra: makeHeroCard("Yelena Belova", "Destroy the Red Room", 8, u, 4, Color.TECH, "S.H.I.E.L.D.", "", [
+    ev => unleashFromUndercoverEv(ev),
+    ev => selectCardOptEv(ev, "Choose a Hero to send Undercover", playerState.discard.limit(isHero), c => sendUndercoverEv(ev, c)),
+  ]),
+},
+{
+  name: "Red Guardian",
+  team: "(Unaffiliated)",
+// <b>When Recruited</b>: Send this {UNDERCOVER}.
+// When you fight a Villain, you may <b>Unleash</b> this card from {UNDERCOVER}.
+// ---
+// {POWER Covert} Draw a card.
+  c1: makeHeroCard("Red Guardian", "Sleeper Agent", 3, 2, u, Color.COVERT, u, "D", ev => superPower(Color.COVERT) && drawEv(ev), {
+    whenRecruited: whenRecruitedSendUndercover,
+    trigger: {
+      event: "FIGHT",
+      match: ev => ev.who === playerState && isVillain(ev.what),
+      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+    },
+  }),
+// <b>When Recruited</b>: Send this {UNDERCOVER}.
+// When you recruit another [Covert] Hero, you may <b>Unleash</b> this card from {UNDERCOVER}.
+// ---
+// {POWER Covert} You get +2 Attack.
+  c2: makeHeroCard("Red Guardian", "Magnetic Shield", 4, u, 2, Color.COVERT, u, "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2), {
+    whenRecruited: whenRecruitedSendUndercover,
+    trigger: {
+      event: "RECRUIT",
+      match: ev => ev.who === playerState && isHero(ev.what) && isColor(Color.COVERT)(ev.what),
+      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+    },
+  }),
+// <b>When Recruited</b>: Send this {UNDERCOVER}.
+// When a Master Strike is completed or any player fights the Mastermind, you may <b>Unleash</b> this card from {UNDERCOVER}.
+// ---
+// {POWER Covert} You may send one of your other Heroes {UNDERCOVER}.
+  uc: makeHeroCard("Red Guardian", "Death Was Only A Ruse", 6, u, 3, Color.STRENGTH, u, "", ev => superPower(Color.COVERT) && sendUndercoverEv(ev), {
+    whenRecruited: whenRecruitedSendUndercover,
+    triggers: [{
+      event: "STRIKE",
+      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+    }, {
+      event: "FIGHT",
+      match: ev => isMastermind(ev.what),
+      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+    }],
+  }),
+// <b>When Recruited</b>: Send this {UNDERCOVER}.
+// When a Scheme Twist is completed or you play your third [Covert] Hero in a turn, you may <b>Unleash</b> this card from {UNDERCOVER}.
+// ---
+// {POWER Covert} You get +2 Attack for each other [Covert] Hero you played this turn.
+  ra: makeHeroCard("Red Guardian", "Champion of the Winter Guard", 8, u, 4, Color.COVERT, u, "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2 * superPower(Color.COVERT)), {
+    whenRecruited: whenRecruitedSendUndercover,
+    triggers: [{
+      event: "TWIST",
+      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+    }, {
+      event: "PLAY",
+      match: ev => [ev, ...pastEvents('PLAY')].count(e => e.who === playerState && isHero(ev.what) && isColor(Color.COVERT)(ev.what)) === 3,
+      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+    }],
+  }),
+},
+{
+  name: "White Tiger",
+  team: "Marvel Knights",
+// Reveal the top two cards of your deck. Draw one of them that cost 0 and discard the rest.
+  c1: makeHeroCard("White Tiger", "Amulets of the Tiger God", 4, 2, u, Color.STRENGTH, "Marvel Knights", "FD", ev => {
+    revealPlayerDeckEv(ev, 2, cards => {
+      selectCardOptEv(ev, "Choose a card to draw", cards.limit(c => c.cost === 0), c => {
+        drawCardEv(ev, c);
+        cards.each(c => c !== ev.source && discardEv(ev, c));
+      }, () => cards.each(c => discardEv(ev, c)));
+    });
+  }),
+// {DODGE}
+// {DARK MEMORIES}
+// Once this turn, you may fight the top card of the Bystander Stack as if it were a 3 Attack "Hand Ninjas" Henchman Villain with "<b>Fight</b>: You get +1 Recruit. Rescue this as a Bystander."
+  c2: makeHeroCard("White Tiger", "Dark Influence of the Hand", 3, u, 0, Color.RANGED, "Marvel Knights", "", [ ev => darkMemoriesEv(ev), ev => {
+    let done = false;
+    const cond: (c: Card) => boolean = c => !done && c === gameState.bystanders.top
+    addTurnSet('isHenchman', cond, () => true);
+    villainify("Hand Ninjas", cond, 3, ev => {
+      addRecruitEvent(ev, 1);
+      rescueEv(ev, ev.source);
+      done = true;
+    });
+  } ], { cardActions: [ dodge ] }),
+// Whenever you defeat a Henchman this turn, you may KO one of your cards.
+  uc: makeHeroCard("White Tiger", "Camouflaged Huntress", 5, u, 3, Color.COVERT, "Marvel Knights", "F", ev => {
+    addTurnTrigger('DEFEAT', ev => isHenchman(ev.what), () => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)));
+  }),
+// {DARK MEMORIES}, drawing that many cards instead of gaining Attack.
+  ra: makeHeroCard("White Tiger", "Shadowed Resurrection", 8, u, 3, Color.INSTINCT, "Marvel Knights", "", ev => drawEv(ev, darkMemoriesAmount())),
+},
+{
+  name: "Falcon & Winter Soldier",
+  team: "Avengers",
+// DIVIDED: Attune
+// DIVHERO: Falcon
+// To play this side, you must discard a card.
+// DIVIDED: Atone
+// DIVHERO: Winter Soldier
+// {DARK MEMORIES}
+  c1: makeDividedHeroCard(
+    makeHeroCard("Falcon", "Attune", 3, 3, u, Color.RANGED, "Avengers", "", [], { playCost: 1, playCostType: 'DISCARD' }),
+    makeHeroCard("Winter Soldier", "Atone", 3, u, 0, Color.STRENGTH, "Avengers", "", ev => darkMemoriesEv(ev)),
+  ),
+// DIVIDED: Relocate
+// DIVHERO: Falcon
+// {DODGE}
+// {POWER Instinct} You get +1 Attack.
+// DIVIDED: Reload
+// DIVHERO: Winter Soldier
+// {POWER Tech} Draw a card.
+  c2: makeDividedHeroCard(
+    makeHeroCard("Falcon", "Relocate", 4, u, 2, Color.INSTINCT, "Avengers", "D", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 1), { cardActions: [ dodge ] }),
+    makeHeroCard("Winter Soldier", "Reload", 4, u, 2, Color.TECH, "Avengers", "D", ev => superPower(Color.TECH) && drawEv(ev)),
+  ),
+// DIVIDED: New Wings
+// DIVHERO: Falcon
+// If you discarded any cards this turn, you get +4 Attack.
+// DIVIDED: New Plans
+// DIVHERO: Winter Soldier
+// Draw two cards.
+  uc: makeDividedHeroCard(
+    makeHeroCard("Falcon", "New Wings", 5, u, 0, Color.TECH, "Avengers", "", ev => pastEvents('DISCARD').has(e => e.who === playerState) && addAttackEvent(ev, 4)),
+    makeHeroCard("Winter Soldier", "New Plans", 5, u, u, Color.COVERT, "Avengers", "", ev => drawEv(ev, 2)),
+  ),
+// You get +1 Attack for each Hero Class you have.
+// {TEAMPOWER Avengers} {DARK MEMORIES}
+  ra: makeHeroCard("Falcon & Winter Soldier", "Captain America's Legacy", 7, u, 2, Color.STRENGTH, "Avengers", "D", [ ev => addAttackEvent(ev, numClasses()), ev => superPower("Avengers") && darkMemoriesEv(ev) ]),
+},
+]);

@@ -1053,3 +1053,15 @@ const stableEmpowerVarDefense = new Map([
 function empoweringVillainGroup(g: string) {
   return [...stableEmpowerVarDefense.entries()].filter(([, f]) => villains().limit(c => c.varDefense === f && c.villainGroup === g)).reduce((acc, [c]) => acc | c, 0);
 }
+// EXPANSION: Black Widow
+function dodgeCardEv(ev: Ev, c: Card) {
+  pushEv(ev, 'DODGE', { what: c, func: ev => { discardEv(ev, ev.what); drawEv(ev); }, cost: { cond: c => c.location === playerState.hand } });
+}
+function unleashFromUndercoverEv(ev: Ev, filter: Filter<Card> = () => true, p: Player = playerState) {
+  selectCardOptEv(ev, "Choose a hero to unleash", p.victory.limit(isHero).limit(filter), c => moveCardEv(ev, c, p.hand), u, p);
+}
+function whenRecruitedSendUndercover(ev: Ev) {
+  ev.source.location !== playerState.victory && sendUndercoverEv(ev, ev.source);
+  // TODO possibly move to victory ealier as part of wall crawl / soaring resolution to match the rulebook (choice of destination when recruited)
+  // this can be hacked by matching the whenRecruited field to this specific function
+}
