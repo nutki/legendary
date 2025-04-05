@@ -3183,3 +3183,113 @@ addTemplates("MASTERMINDS", "Black Panther", [
   varDefense: empowerVarDefense(c => c.attached('SONICFQ').sum(c => c.color), 2)
 }),
 ]);
+addTemplates("MASTERMINDS", "Black Widow", [
+// Henchmen get +1 Attack for each "Henchman Training" stacked here.
+// Henchmen get +2 Attack for each "Henchman Training" stacked here.
+// During your turn, Taskmaster gets +Attack equal to the highest cost Hero you played this turn.
+// During your turn, Taskmaster gets +Attack equal to double the highest cost Hero you played this turn.
+...makeEpicMastermindCard("Taskmaster", [ 5, 5 ], 6, "Taskmaster's Thunderbolts", ev => {
+// Stack this Strike next to Taskmaster as "Henchman Training."
+  attachCardEv(ev, ev.what, gameState.mastermind, 'HENCHMANTRAINING');
+// If there are any Henchmen in the city, each player gains a Wound.
+  cityVillains().has(isHenchman) && eachPlayer(p => gainWoundEv(ev, p));
+}, [
+// KO any number of your S.H.I.E.L.D. Agents and/or Troopers. Gain that many S.H.I.E.L.D. Officers.
+  [ "S.H.I.E.L.D. Initiative Trainer", ev => {
+  // Choose a Henchman from any player's Victory Pile to enter the city.
+    ev.source.mastermind.commonTacticEffect(ev);
+    selectObjectsAnyEv(ev, "Choose cards to KO", yourHeroes().limit(c => ["S.H.I.E.L.D. Agent", "S.H.I.E.L.D. Trooper"].includes(c.cardName)), c => {
+      KOEv(ev, c);
+      gameState.officer.withTop(c => gainEv(ev, c));
+    });
+  } ],
+// Play a copy of a Hero in the HQ that costs 6 or less.
+  [ "Photographic Reflexes", ev => {
+  // Choose a Henchman from any player's Victory Pile to enter the city.
+    ev.source.mastermind.commonTacticEffect(ev);
+    selectCardEv(ev, "Choose a Hero to play", hqHeroes().limit(c => c.cost <= 6), c => playCopyEv(ev, c));
+  } ],
+// Each other player reveals their hand and puts one of their non-grey Heroes on the bottom of the Hero Deck.
+  [ "Teacher and Assassin", ev => {
+  // Choose a Henchman from any player's Victory Pile to enter the city.
+    ev.source.mastermind.commonTacticEffect(ev);
+    eachOtherPlayerVM(p => {
+      selectCardEv(ev, "Choose a Hero to put on the bottom of the Hero Deck", yourHeroes(p).limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.herodeck, true), p);
+    });
+  } ],
+// Then each other player discards a card for each Henchman in the city and/or Escape Pile.
+  [ "Henchman Instructor", ev => {
+  // Choose a Henchman from any player's Victory Pile to enter the city.
+    ev.source.mastermind.commonTacticEffect(ev);
+    cont(ev, () => eachOtherPlayerVM(p => {
+      pickDiscardEv(ev, cityVillains().count(isHenchman) + gameState.escaped.count(isHenchman), p);
+    }));
+  } ],
+], {
+  init: c => {
+    addStatMod('defense', isHenchman, () => gameState.mastermind.attachedDeck('HENCHMANTRAINING').size * (c.epic ? 2 : 1));
+  },
+  varDefense: c => c.printedAttack + pastEvents('PLAY').max(ev => ev.what.cost) * (c.epic ? 2 : 1),
+  commonTacticEffect: ev => {
+    selectCardEv(ev, "Choose a Henchman to enter", gameState.players.flatMap(p => p.victory.deck).limit(isHenchman), c => enterCityEv(ev, c));
+  },
+}),
+// You can't use Attack to fight Indestructible Man.
+// Once during each of your turns, you may shuffle two Elite Assassins from your Victory Pile into the Villain Deck. If you do, fight Indestructible Man.
+// Once during each of your turns, you may shuffle three Elite Assassins from your Victory Pile into the Villain Deck. If you do, fight Indestructible Man.
+...makeEpicMastermindCard("Indestructible Man", [u, u], 6, "Elite Assassins", ev => {
+// Shuffle an Elite Assassin from your Victory Pile into the Villain Deck. If you can't, each player gains a Wound.
+// Each player shuffles an Elite Assassin from their Victory Pile into the Villain Deck. Each player that can't gains a Wound.
+  const f: ((p: Player) => void) = p => {
+    selectCardOrEv(ev, "Choose a card to shuffle in", p.victory.limit(isGroup(ev.source.leads)), c => {
+      shuffleIntoEv(ev, c, gameState.villaindeck);
+    }, () => gainWoundEv(ev, p), p);
+  };
+  ev.source.epic ? eachPlayer(f) : f(playerState);
+}, [
+// "<b>Ambush</b>: Play two cards from the Villain Deck
+// <b>Escape</b>: Shuffle this back into Indestructiblee Man's Mastermind Tactics."
+// ATTACK: 8
+  makeTacticsCard("Manipulate Murderous Mad Monk", { printedDefense: 8, fight: ev => {
+  // If this is not the last Tactic, rescue four Bystanders and this Tactic enters the city as a "Molot Boga" Villain whose abilities are:|KO one of your Heroes.
+    if (!finalTactic(ev.source)) {
+      rescueEv(ev, 4);
+      villainify("Molot Boga", ev.source, u, ev => selectCardAndKOEv(ev, yourHeroes()));
+      addStatSet('escape', c => c === ev.source, () => ev => shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS")));
+      enterCityEv(ev, ev.source);
+    }
+  }}),
+  [ "Secrets of Indestructibility", ev => {
+  // KO up to two Wounds from your hand and/or discard pile.
+    selectObjectsUpToEv(ev, "Choose cards to KO", 2, handOrDiscard().limit(isWound), c => KOEv(ev, c));
+  // If this is not the last Tactic, play two cards from the Villain Deck.
+    ev.source.mastermind.commonTacticEffect(ev);
+  } ],
+  [ "International Arms Dealer", ev => {
+  // Gain a [Tech] Hero from the HQ. EAch other playere reveals a [Tech] Hero or gains a Wound.
+    selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(isColor(Color.TECH)), c => gainEv(ev, c));
+    cont(ev, () => eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)));
+  // If this is not the last Tactic, play two cards from the Villain Deck.
+    ev.source.mastermind.commonTacticEffect(ev);
+  } ],
+  [ "Unveil Project Four", ev => {
+  // Each other player reveals their hand and discards each card with a "4" printed anywhere on it. (The copyright date line doesn't count.)
+    eachOtherPlayerVM(p => {
+      // TODO make it a deuce like flag
+      // TODO multiplayer reveal
+      p.hand.limit(c => `${c.cardName}${c.printedAttack}${c.printedCost}${c.printedRecruit}${c.printedPiercing}`.includes("4")).each(c => discardEv(ev, c));
+    });
+  // If this is not the last Tactic, play two cards from the Villain Deck.
+    ev.source.mastermind.commonTacticEffect(ev);
+  } ],
+],
+{
+  commonTacticEffect: ev => finalTactic(ev.source) || playAnotherEv(ev, 2),
+  fightCond: c => playerState.victory.count(isGroup(c.leads)) >= (c.epic ? 3 : 2),
+  fightCost: ev => {
+    selectObjectsEv(ev, "Choose cards to shuffle", ev.source.epic ? 3 : 2, playerState.victory.limit(isGroup(ev.source.leads)), c => {
+      shuffleIntoEv(ev, c, gameState.villaindeck);
+    });
+  },
+}),
+]);
