@@ -3034,3 +3034,72 @@ makeSchemeCard("Provoke Clash of Nations", { twists: 11 }, ev => {
   setSchemeTarget(6);
 }),
 ]);
+addTemplates("SCHEMES", "Black Widow", [
+// SETUP: 7 Twists.
+makeSchemeCard("Corrupt The Spy Agencies", { twists: 7 }, ev => {
+  if (ev.nr <= 6) {
+    // Twist 1-6 Each player sends one of their non-grey Heroes {UNDERCOVER}. Then each player may <b>Unleash</b> a Hero from {UNDERCOVER} with a lower cost
+    // than the one that player just sent {UNDERCOVER}.
+    eachPlayer(p => {
+      selectCardEv(ev, "Choose a Hero to send undercover", yourHeroes(p).limit(isNonGrayHero), c => {
+        sendUndercoverEv(ev, c);
+        unleashFromUndercoverEv(ev, c1 => c1.cost < c.cost, p);
+      }, p);
+    })
+  } else if (ev.nr === 7) {
+    // Twist 7 Evil Wins!
+  }
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  setSchemeTarget(7);
+}),
+// SETUP: 8 Twists, minus 1 Twist per player. Add 8 S.H.I.E.L.D. Officers to the Villain Deck.
+// RULE: Officers in the Villain Deck and city are "Black Widow Initiate" Villains with <b>3+</b> Attack and
+// "<b>Dark Memories. Fight</b>: Gain this as an Officer <i>(without {DARK MEMORIES})</i> or send it {UNDERCOVER}."
+makeSchemeCard("Train Black Widows in the Red Room", { twists: [7, 6, 5, 4, 3] }, ev => {
+  gameState.officer.withTop(c => enterCityEv(ev, c));
+  playAnotherEv(ev);
+}, [
+  escapeProgressTrigger(isGroup("Black Widow Initiate")),
+], () => {
+  const isInitiate = (c: Card) => isShieldOfficer(c) && (c.location?.isHQ || c.location == gameState.villaindeck);
+  villainify("Black Widow Initiate", isInitiate, 3, ev => {
+    chooseOneEv(ev, "Gain this",
+      ["as an Officer", () => gainEv(ev, ev.source)],
+      ["undercover", () => sendUndercoverEv(ev, ev.source)]);
+  });
+  addStatSet('defense', isInitiate, darkMemoriesVarDefense(1));
+  setSchemeTarget(3, true);
+  repeat(8, () => gameState.officer.withTop(c => moveCard(c, gameState.villaindeck)));
+  gameState.villaindeck.shuffle();
+}),
+// SETUP: 11 Twists, minus 1 Twist per player.
+// EVILWINS: When there are four non-grey Heroes per player in the KO pile.
+makeSchemeCard("Sniper Rifle Assassins", { twists: [10, 9, 8, 7, 6] }, ev => {
+  // Twist: Each player must {DODGE} with a Hero from their hand, revealing the card they drew. KO each non-grey Hero drawn this way.
+  eachPlayer(p => {
+    selectCardEv(ev, "Choose a Hero to dodge", p.hand.limit(isHero), c => dodgeCardEv(ev, c), p);
+  });
+  addTurnTrigger('DRAW', fev => fev.parent === ev, ev => isNonGrayHero(ev.parent.what) && KOEv(ev, ev.parent.what)); // TODO add isChildOf
+}, [
+  koProgressTrigger(isNonGrayHero),
+], () => {
+  setSchemeTarget(4);
+}),
+// SETUP: 7 Twists. 6 Heroes.
+// EVILWINS: When there are 5 pieces of Incriminating Evidence.
+makeSchemeCard("Frame Heroes For Murder", { twists: 7, heroes: [6, 6, 6, 6, 6] }, ev => {
+  if (ev.nr <= 6) {
+    // Twist 1-6 Stack a card from the HQ next to the Scheme as "Incriminating Evidence" that has a different cost than any card already in that stack.
+    selectCardEv(ev, "Choose a card to incriminate", hqCards().limit(c => !gameState.scheme.attached('EVIDENCE').unique(c => c.cost).includes(c.cost)), c => {
+      attachCardEv(ev, c, gameState.scheme, 'EVIDENCE');
+    });
+  } else if (ev.nr === 7) {
+    // Twist 7 Add any card from the HQ to the Incriminating Evidence.
+    hqCards().each(c => attachCardEv(ev, c, gameState.scheme, 'EVIDENCE'));
+  }
+  schemeProgressEv(ev, gameState.scheme.attached('EVIDENCE').size);
+}, [], () => {
+  setSchemeTarget(5);
+}),
+]);

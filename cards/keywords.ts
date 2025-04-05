@@ -1055,7 +1055,7 @@ function empoweringVillainGroup(g: string) {
 }
 // EXPANSION: Black Widow
 function dodgeCardEv(ev: Ev, c: Card) {
-  pushEv(ev, 'DODGE', { what: c, func: ev => { discardEv(ev, ev.what); drawEv(ev); }, cost: { cond: c => c.location === playerState.hand } });
+  pushEv(ev, 'DODGE', { what: c, func: ev => { discardEv(ev, ev.what); drawEv(ev); } });
 }
 function unleashFromUndercoverEv(ev: Ev, filter: Filter<Card> = () => true, p: Player = playerState) {
   selectCardOptEv(ev, "Choose a hero to unleash", p.victory.limit(isHero).limit(filter), c => moveCardEv(ev, c, p.hand), u, p);
