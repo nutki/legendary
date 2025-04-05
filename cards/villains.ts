@@ -5049,3 +5049,86 @@ addVillainTemplates("Black Panther", [
   })],
 ]},
 ]);
+addVillainTemplates("Black Widow", [
+{ name: "Taskmaster's Thunderbolts", cards: [
+// AMBUSH: Jester captures a Bystander.
+// FIGHT: Reveal the top four cards of the Villain Deck. Play all the Henchmen you find. Put the rest back in any order.
+// ATTACK: 2
+// VP: 2
+  [ 2, makeVillainCard("Taskmaster's Thunderbolts", "Jester", 2, 2, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => revealVillainDeckEv(ev, 4, cards => {
+      chooseOrderEv(ev, "Choose order to play Henchmen", cards.filter(isHenchman), c => villainDrawEv(ev, c));
+    }),
+  })],
+// AMBUSH: Choose a Henchman from a player's Victory Pile to enter the city.
+// ATTACK: 3
+// VP: 2
+// FLAVOR: Get in her way and you'll be the one getting played.
+  [ 2, makeVillainCard("Taskmaster's Thunderbolts", "Joystick", 3, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a Henchman to enter the city", gameState.players.flatMap(p => p.victory.limit(isHenchman)), c => enterCityEv(ev, c)),
+  })],
+// FIGHT: Choose a Henchman from any player's Victory Pile to enter the city.
+// ESCAPE: Each player with fewer than two Henchmen in their Victory Pile gains a Wound.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Taskmaster's Thunderbolts", "Jack O'Lantern", 4, 2, {
+    fight: ev => selectCardEv(ev, "Choose a Henchman to enter the city", gameState.players.flatMap(p => p.victory.limit(isHenchman)), c => enterCityEv(ev, c)),
+    escape: ev => eachPlayer(p => p.victory.count(isHenchman) < 2 && gainWoundEv(ev, p)),
+  })],
+// AMBUSH: Choose Recruit or Attack, then reveal the top card of the Hero Deck. If it has that icon, Bullseye captures it and gets +Attack equal to that Hero's cost.
+// FIGHT: The player of your chose gains the captured Hero.
+// ESCAPE: KO that Hero.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Taskmaster's Thunderbolts", "Bullseye", 4, 3, {
+    ambush: ev => chooseOptionEv(ev, "Choose an icon", [ {l: "Recruit", v: hasRecruitIcon}, {l: "Attack", v: hasAttackIcon}], f => revealHeroDeckEv(ev, 1, cards => cards.limit(f).each(c => {
+      attachCardEv(ev, c, ev.source, 'BULLSEYE_CAPTURE');
+    }))),
+    fight: ev => ev.source.attached('BULLSEYE_CAPTURE').each(c => gainEv(ev, c)),
+    escape: ev => ev.source.attached('BULLSEYE_CAPTURE').each(c => KOEv(ev, c)),
+    varDefense: c => c.printedDefense + c.attached('BULLSEYE_CAPTURE').sum(c => c.cost),
+  })],
+]},
+{ name: "Elite Assassins", cards: [
+// {DARK MEMORIES}
+// AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+// FIGHT: You may send a Herofro your discard pile {UNDERCOVER}.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Elite Assassins", "Blue Talon", 3, 2, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    fight: ev => selectCardOptEv(ev, "Choose a Hero to send Undercover", playerState.discard.limit(isHero), c => sendUndercoverEv(ev, c)),
+    varDefense: darkMemoriesVarDefense()
+  })],
+// {DARK MEMORIES}
+// AMBUSH: Each player must send one of their non-grey Heroes {UNDERCOVER}.
+// FIGHT: Each player may <b>Unleash</b> one of their Heroes from {UNDERCOVER}.
+// ATTACK: 4+
+// VP: 2
+  [ 2, makeVillainCard("Elite Assassins", "Iron Maiden", 4, 2, {
+    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a Hero to send Undercover", yourHeroes(p).limit(isNonGrayHero), c => sendUndercoverEv(ev, c), p)),
+    fight: ev => eachPlayer(p => unleashFromUndercoverEv(ev, () => true, p)),
+    varDefense: darkMemoriesVarDefense()
+  })],
+// AMBUSH: Each player discards a non-grey Hero. Then each player draws a card.
+// FIGHT: You may send one of your Heroes {UNDERCOVER}.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Elite Assassins", "Snapdragon", 4, 2, {
+    ambush: ev => {
+      eachPlayer(p => selectCardEv(ev, "Choose a Hero to discard", p.hand.limit(isNonGrayHero), c => discardEv(ev, c), p));
+      eachPlayer(p => drawEv(ev, 1, p));
+    },
+    fight: ev => selectCardOptEv(ev, "Choose a Hero to send Undercover", yourHeroes(), c => sendUndercoverEv(ev, c)),
+  })],
+// AMBUSH: Each player discards a card that costs 0.
+// FIGHT: You get +3 Recruit.
+// ATTACK: 6
+// VP: 3
+  [ 2, makeVillainCard("Elite Assassins", "Black Lotus", 6, 3, {
+    ambush: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(c => c.cost === 0), c => discardEv(ev, c), p)),
+    fight: ev => addRecruitEvent(ev, 3),
+  })],
+]},
+]);

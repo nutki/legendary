@@ -2303,6 +2303,16 @@ function distributeEvenlyEv<P,C>(ev: Ev, desc: (o: C) => string, objects: C[], t
     if (availableTargets.length === 0) availableTargets = [...targets];
   }, who)));
 }
+function chooseOrderEv<T>(ev: Ev, desc: string, objects: T[], effect: (o: T) => void, who: Player = playerState) {
+  if (objects.length === 1) {
+    cont(ev, () => effect(objects[0]));
+  } if (objects.length > 1) {
+    selectCardEv(ev, desc, objects, o => {
+      effect(o);
+      chooseOrderEv(ev, desc, objects.filter(o2 => o2 !== o), effect, who);
+    });
+  }
+}
 function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {
   const options = fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
   options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);
