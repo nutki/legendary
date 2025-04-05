@@ -15,19 +15,19 @@
 
 #TACTIC: Hear Me and Rejoice
 #FIGHT: When you draw a new hand of cards at the end of this turn, draw two extra cards.
-<b>Endgame</b>: Same effect, but three cards instead.
+{ENDGAME} Same effect, but three cards instead.
 
 #TACTIC: Smile...Even in Death
 #FIGHT: KO up to two of your Heroes.
-<b>Endgame</b>: Then KO up to one Hero from your discard pile.
+{ENDGAME} Then KO up to one Hero from your discard pile.
 
 #TACTIC: You May Think This Is Suffereing
 #FIGHT: Each other player reveals a [Covert] Hero or gains a Wound.
-<b>Endgame</b>: Then each other player reveals a [Ranged] Hero or gains a Wound.
+{ENDGAME} Then each other player reveals a [Ranged] Hero or gains a Wound.
 
 #TACTIC: Your Powers Are Quaint
 #FIGHT: Each other player chooses a Hero Class, then reveals their hand and discards all non-grey Heroes that aren't that Hero Class.
-<b>Endgame</b>: Then they also discard all their grey Heroes.
+{ENDGAME} Then they also discard all their grey Heroes.
 
 #CARDNAME: Thanos
 Thanos gets +1 Attack for each Infinity Stone in the city and/or Escape Pile.

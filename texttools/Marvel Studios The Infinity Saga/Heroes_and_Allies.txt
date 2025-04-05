@@ -7,7 +7,7 @@
 #CLASS: [Tech]
 #RECRUIT: 1+
 {PHASING}
-[Tech] <b>Sacrifice</b>: You get +3 Recruit. You may KO a card from your hand or discard pile.
+[Tech] {SACRIFICE}: You get +3 Recruit. You may KO a card from your hand or discard pile.
 #COST: 1
 
 #SUBNAME: Witchcraft
@@ -30,7 +30,7 @@ Reveal the top card of your deck. If it has an odd-numbered cost, draw it. (0 is
 #CLASS: [Ranged]
 #RECRUIT: 2
 {PHASING}
-[Ranged] <b>Sacrifice</b>: Draw 3 cards. You may KO a card from your hand or discard pile.
+[Ranged] {SACRIFICE}: Draw 3 cards. You may KO a card from your hand or discard pile.
 #COST: 3
 
 #SUBNAME: Rage/Grief
@@ -96,7 +96,7 @@ If you have all five Hero Classes, you get +3 Attack.
 #COPIES: 3
 #CLASS: [Strength], [Instinct]
 #RECRUIT: 2
-[Instinct] <b>Sacrifice</b>: KO up to two cards from your hand and/or discard pile.
+[Instinct] {SACRIFICE}: KO up to two cards from your hand and/or discard pile.
 #COST: 4
 #FLAVOR: "You are in Wakanda now. Thanos will have nothing but dust and blood."
 
@@ -158,7 +158,7 @@ Choose a Hero Class. Reveal the top card of your deck. If it's the Hero Class yo
 #CLASS: [Ranged]
 #RECRUIT: 2
 {PHASING}
-[Ranged] <b>Sacrifice</b>: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+[Ranged] {SACRIFICE}: Take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
 #COST: 5
 
 #SUBNAME: Bind Evil
@@ -172,7 +172,7 @@ Choose a Hero Class. Reveal the top card of your deck. If it's the Hero Class yo
 #COPIES: 1
 #CLASS: [Instinct]
 #ATTACK: 5
-[Instinct] <b>Sacrifice</b>: Guess the name of the top card of the Villain Deck, then reveal it. If you guessed right, draw six cards.
+[Instinct] {SACRIFICE}: Guess the name of the top card of the Villain Deck, then reveal it. If you guessed right, draw six cards.
 #COST: 7
 
 #CARDNAME: Bruce Banner
@@ -182,7 +182,7 @@ Choose a Hero Class. Reveal the top card of your deck. If it's the Hero Class yo
 #COPIES: 3
 #CLASS: [Strength]
 #ATTACK: 1+
-[Strength] <b>Sacrifice</b>: You get +3 Attack. You may KO card from your hand or discard pile.
+[Strength] {SACRIFICE}: You get +3 Attack. You may KO card from your hand or discard pile.
 #COST: 1
 
 #SUBNAME: Brains and Brawn
@@ -220,7 +220,7 @@ You may KO a Wound from you hand or discard pile. If you do, you get +2 Recruit.
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 5
-[Tech] <b>Sacrifice</b>: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cafds that cost 0 into your discard pile. Shuffle the rest into a new deck.
+[Tech] {SACRIFICE}: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cafds that cost 0 into your discard pile. Shuffle the rest into a new deck.
 #COST: 7
 
 #CARDNAME: Captain Marvel
@@ -232,7 +232,7 @@ You may KO a Wound from you hand or discard pile. If you do, you get +2 Recruit.
 #RECRUIT: 1
 #ATTACK: 0+
 Draw a card.
-<b>Endgame</b>: This card makes Attack instead of Recruit.
+{ENDGAME} This card makes Attack instead of Recruit.
 #COST: 3
 #FLAVOR: The Tesseract contained an even greater power: the Space Stone.
 
@@ -242,7 +242,7 @@ Draw a card.
 #RECRUIT: 2+
 #ATTACK: 0+
 {POWER Strength} You get +2 Recruit.
-<b>Endgame</b>: This card makes all Attack instead of Recruit.
+{ENDGAME} This card makes all Attack instead of Recruit.
 #COST: 4
 #FLAVOR: "The things that are happening on Earth are happening everywhere."
 
@@ -274,7 +274,7 @@ If you had already drawn any cards this turn, draw two cards instead.
 #CLASS: [Ranged]
 #ATTACK: 5+
 You get +1 Attack for each other [Ranged] and/or [Strength] card you played this turn.
-<b>Endgame</b>: Instead, you get +2 Attack for each.
+{ENDGAME} Instead, you get +2 Attack for each.
 #COST: 8
 
 
