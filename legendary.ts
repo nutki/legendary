@@ -582,6 +582,7 @@ interface Array<T> {
   withLast: (f: (c: T) => void) => void
   withRandom: (f: (c: T) => void) => void
   firstOnly: () => T[]
+  lastOnly: () => T[]
   shuffled: () => T[]
 }
 Array.prototype.count = function (f) { return count(this, f); };
@@ -602,6 +603,7 @@ Array.prototype.withFirst = function (f) { if (this.size !== 0) f(this.first); }
 Array.prototype.withLast = function (f) { if (this.size !== 0) f(this.last); };
 Array.prototype.withRandom = function (f) { if (this.size !== 0) f(this[this.size === 1 ? 0 : gameState.gameRand.nextRange(0, this.size)]); };
 Array.prototype.firstOnly = function () { return this.length ? [ this[0] ] : [] };
+Array.prototype.lastOnly = function () { return this.length ? [ this[this.length - 1] ] : [] };
 function repeat(n: number, f: (i: number) => void) { for (let i = 0; i < n; i++) f(i); }
 
 type Option = Card | Ev;
@@ -1352,7 +1354,7 @@ gameState = {
     { // Win by defeating masterminds
       event: "DEFEAT",
       match: ev => isMastermind(ev.what),
-      after: ev => fightableCards().has(isMastermind) || gameOverEv(ev, "WIN"),
+      after: ev => fightableCards().has(isMastermind) || gameState.hq.has(d => d.attached('HAUNTED').has(isMastermind)) || gameOverEv(ev, "WIN"),
     },
     { // Loss by villain deck or hero deck running out
       event: "CLEANUP",
@@ -1389,7 +1391,10 @@ gameState = {
   turnNum: 0,
   strikeCount: 0,
   destroyedCitySpaces: [],
-  actionFilters: [],
+  actionFilters: [
+    // Can't recruit haunted heroes
+    ev => !(ev.type === 'RECRUIT' && ev.where && ev.where.attached('HAUNTED').size > 0),
+  ],
   thronesFavorHolder: undefined,
   astralPlane: new Deck('ASTRALPLANE', true),
 };
@@ -1593,7 +1598,8 @@ function destroyCity(space: Deck) {
   });
   space.isCity = false;
 }
-function destroyHQ(space: Deck) {
+function destroyHQ(ev: Ev, space: Deck) {
+  space.attached('HAUNTED').each(c => returnFromHauntEv(ev, c));
   gameState.hq = gameState.hq.filter(d => d !== space);
   gameState.city.forEach(d => {
     if (d.above === space) d.above = undefined;
@@ -2010,6 +2016,8 @@ function getActions(ev: Ev): Ev[] {
     if (canFightWithViolence(d)) p.push(fightActionEv(ev, d, true));
     if ((turnState.piercing || turnState.piercingWithAttack) && d.location !== gameState.astralPlane) p.push(fightPiercingActionEv(ev, d));
   });
+  // Midnight Sons haunted heroes
+  hqHeroes().map(c => c.location.attached("HAUNTED") && p.push(exorciseCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   fightableCards().each(c => getCardActions(c).each(a => p.push(a(c, ev))));

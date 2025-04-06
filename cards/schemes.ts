@@ -572,7 +572,7 @@ makeSchemeCard("Fear Itself", { twists: 10 }, ev => {
     for (let i = gameState.hq.indexOf(c.location); i < gameState.hq.size - 1; i++)
       swapCardsEv(ev, gameState.hq[i], gameState.hq[i + 1]);
   });
-  cont(ev, () => gameState.hq.withLast(d => { destroyHQ(d); d.each(c => KOEv(ev, c)); }));
+  cont(ev, () => gameState.hq.withLast(d => { destroyHQ(ev, d); d.each(c => KOEv(ev, c)); }));
   cont(ev, () => schemeProgressEv(ev, gameState.hq.size));
 }, [], () => {
   const extraLair = [new Deck("HQ11", true), new Deck("HQ12", true), new Deck("HQ13", true)];
@@ -3190,7 +3190,7 @@ makeSchemeCard("Warp Reality Into a TV Show", { twists: 11 }, ev => {
       d.deck.each(c => d.next ? moveCardEv(ev, c, d.next) : villainEscapeEv(ev, c));
     });
     gameState.hq.withLast(d => {
-      destroyHQ(d);
+      destroyHQ(ev, d);
       d.deck.each(c => KOEv(ev, c));
     });
   }

@@ -4109,7 +4109,7 @@ addVillainTemplates("Into the Cosmos", [
     escape: ev => {
       ev.source.attached('NEWREALITY').each(c => KOEv(ev, c));
       selectCardEv(ev, "Choose an HQ space", gameState.hq, d => {
-        destroyHQ(d);
+        destroyHQ(ev, d);
         d.each(c => KOEv(ev, c));
       });
     },
@@ -5322,6 +5322,108 @@ addVillainTemplates("Marvel Studios The Infinity Saga", [
     fight: ev => {
       ev.source.attached('NEBULA_CAPTURE').each(c => selectCardOptEv(ev, "Choose a player to gain the captured Hero", gameState.players, p => gainEv(ev, c, p), () => KOEv(ev, c)));
     },
+  })],
+]},
+]);
+addVillainTemplates("Midnight Sons", [
+{ name: "Fallen", cards: [
+// AMBUSH: <b>Haunt</b> the leftmost unhaunted Hero in the HQ.
+// FIGHT: Rescue a Bystander.
+// ATTACK: 3
+// VP: 2
+  [ 2, makeVillainCard("Fallen", "Atrocity", 3, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().firstOnly(), c => hauntEv(ev, c)),
+    fight: ev => rescueEv(ev),
+  })],
+// AMBUSH: <b>Haunt</b> an unhaunted Hero in the HQ that costs 3 or less.
+// FIGHT: Reveal the top card of your deck. If it costs 3 or less, draw it.
+// ATTACK: 4
+// VP: 3
+  [ 3, makeVillainCard("Fallen", "Patriarch", 4, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().limit(c => c.cost <= 3), c => hauntEv(ev, c)),
+    fight: ev => drawIfEv(ev, c => c.cost <= 3),
+  })],
+// {BLOOD FRENZY}
+// AMBUSH: <b>Haunt</b> the rightmost unhaunted Hero in the HQ.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 3+
+// VP: 4
+  [ 2, makeVillainCard("Fallen", "Metarchus", 3, 4, {
+    ambush: ev => selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().lastOnly(), c => hauntEv(ev, c)),
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    varDefense: bloodFrenzyVarDefense(),
+  })],
+// {BLOOD FRENZY}
+// FIGHT: KO up to two cards from your discard pile.
+// ESCAPE: Salomé ascends to become an additional Mastermind. She gains the ability "<b>Master Strike</b>: Each player discards a Marvel Knights Hero or gains a Wound."
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Fallen", "Salomé, Sorceress Supreme", 6, 5, {
+    fight: ev => selectObjectsEv(ev, "Choose cards to KO", 2, playerState.discard.deck, c => KOEv(ev, c)),
+    escape: ascendToMastermind,
+    varDefense: bloodFrenzyVarDefense(),
+    strike: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit("Marvel Knights"), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
+  })],
+]},
+{ name: "Lilin", cards: [
+// AMBUSH: <b>Hunt for Victims.</b> Then each player reveals a random card from their hand. If that card costs less than the number of Bystanders in the KO pile,
+// that player discards that card.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Lilin", "Outcast", 4, 2, {
+    ambush: ev => {
+      huntForVictimsEv(ev);
+      cont(ev, () => eachPlayer(p => {
+        p.hand.withRandom(c => (c.cost < gameState.ko.count(isBystander)) && discardEv(ev, c));
+      }));
+    },
+  })],
+// Meatmarket gets +1 Attack for each Bystander in the KO pile.
+// AMBUSH: <b>Hunt for Victims</b>
+// FIGHT: You may KO a card from your discard pile.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Lilin", "Meatmarket", 3, 3, {
+    ambush: ev => huntForVictimsEv(ev),
+    fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
+  })],
+// Skinner gets +2 Attack if there are at least four Bystanders in the KO pile.
+// AMBUSH: <b>Hunt for Victims</b>
+// FIGHT: KO one of your Heroes.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Lilin", "Skinner", 5, 4, {
+    ambush: ev => huntForVictimsEv(ev),
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    varDefense: c => c.printedDefense + (gameState.ko.count(isBystander) >= 4 ? 2 : 0),
+  })],
+// {MOONLIGHT} Sister Nil gets +2 Attack.
+// AMBUSH: <b>Hunt for Victims.</b> Then each player reveals more non-grey Heroes than the number of Bystanders in the KO pile or gains a Wound.
+// ESCAPE: Each player discards a Hero with an odd-numbered cost.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Lilin", "Sister Nil", 5, 4, {
+    ambush: ev => {
+      huntForVictimsEv(ev);
+      cont(ev, () => eachPlayer(p => {
+        if (p.hand.count(isNonGrayHero) < gameState.ko.count(isBystander)) gainWoundEv(ev, p);
+      }));
+    },
+    escape: ev => eachPlayer(p => selectCardEv(ev, "Choose a Hero to discard", p.hand.limit(isHero).limit(isCostOdd), c => discardEv(ev, c), p)),
+    varDefense: c => c.printedDefense + (moonlightPower() ? 2 : 0),
+  })],
+// {MOONLIGHT} Blackout gets +1 Attack for each Bystander in the KO pile.
+// AMBUSH: <b>Hunt for Victims.</b> If it's Moonlight, <b>Hunt for Victims</b> again.
+// ESCAPE: <i>[After the normal Escape KO]</i> If it's Moonlight, each player gains a Wound.
+// ATTACK: 7+
+// VP: 5
+  [ 1, makeVillainCard("Lilin", "Blackout", 7, 5, {
+    ambush: ev => {
+      huntForVictimsEv(ev);
+      if (moonlightPower()) huntForVictimsEv(ev);
+    },
+    escape: ev => moonlightPower() && eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: c => c.printedDefense + (moonlightPower() ? gameState.ko.count(isBystander) : 0),
   })],
 ]},
 ]);

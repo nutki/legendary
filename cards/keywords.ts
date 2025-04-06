@@ -1089,6 +1089,9 @@ function bloodFrenzyEv(ev: Ev) {
 function bloodFrenzyRecruitEv(ev: Ev) {
   addRecruitEvent(ev, bloodFrenzyAmount());
 }
+function bloodFrenzyVarDefense(n: number = 1) {
+  return (c: Card) => c.printedDefense + bloodFrenzyAmount() * n;
+}
 // <b>Hunt for Victims</b>: Some sadistic Villains say "Ambush: Hunt for Victims."
 // * This means <b>"KO a Bystander that is captured by any Enemy or from the Escape Pile. If you can't, then this captures a Bystander instead."</b>
 // * If a player fights Lilith, and her Mastermind Tactic Hunts for Victims and captures a Bystander, the player doesn't immediately rescue that Bystander.
@@ -1098,5 +1101,44 @@ function huntForVictimsEv(ev: Ev, hunter: Card = ev.source, whenKOed?: (c: Card)
     whenKOed && cont(ev, () => whenKOed(c));
   }, () => {
     captureEv(ev, hunter);
+  });
+}
+// <b>Haunt</b>: Zarathos and his Fallen can control Heroes' bodies like twisted puppets, saying things like "Ambush: This Villain Haunts the rightmost Hero in the HQ."
+// * This means: <b>Tuck this Villain beneath that Hero, 'Haunting' it, so you can see the Villain's name. Players can't recruit the Haunted Hero while the Haunting Villain is under it.</b>
+// * Instead, a player can spend Attack equal to the Haunted Hero's cost to "exorcise" that Haunted Hero. If a player does, they either KO the Haunted Hero or choose a player
+// to gain it. Then the Haunting Villain enters the city, ignoring any Ambush effects it has.
+// * While a Villain is Haunting a Hero, you can't fight the Haunting Villain itself – you have to spend Attack to exorcise the Haunted Hero first, driving the Haunting Villain
+// into the city so you can finish it off there.
+// * A Hero can't be Haunted by two Villains at once. Haunt abilities all say to Haunt an "unhaunted Hero."
+// * Zarathos's Master Strikes and Mastermind Tactics can cause him to Haunt Heroes in the same way.
+// Exorcizing that Hero drives Zarathos back to the Mastermind space.
+// * A “Haunted Hero” is still a Hero, so it can still be affected by things that affect Heroes in the HQ. A Villain escaping the city that KOs a Hero from the HQ 
+// (that costs 6 or less) can KO a Haunted Hero. Card effects that let you "gain a Hero from the HQ" or "Put a Hero from the HQ on the bottom of the Hero Deck" still
+// work on Haunted Heroes. However, card effects that say "recruit a Hero from the HQ for free" don’t work on Haunted Heroes, since you can't recruit them.
+// * If something causes a Haunted Hero to leave the HQ, then the Haunting Villain stays in that HQ space and Haunts the new Hero that arrives to refill that HQ space.
+// * If an HQ space is "destroyed," KO any Haunted Hero there and the Haunting Villain there enters the city, ignoring any Ambush effects.
+function hauntEv(ev: Ev, d: Card, c: Card = ev.source) {
+  attachCardEv(ev, c, d.location, 'HAUNTED');
+}
+function unhauntedHQHeroes() {
+  return hqHeroes().limit(c => !c.location.attached('HAUNTED'));
+}
+function returnFromHauntEv(ev: Ev, c: Card) {
+  if (isMastermind(c)) moveCardEv(ev, c, gameState.mastermind);
+  else enterCityEv(ev, c, u, u, true);
+};
+function exorciseCardActionEv(ev: Ev, c: Card) {
+  return new Ev(ev, 'EFFECT', {
+    what: c,
+    where: c.location,
+    cost: { attack: c.cost },
+    func: ev => {
+      selectCardOrEv(ev, "Choose a player to gain the Haunted Hero", gameState.players, p => {
+        gainEv(ev, c, p);
+      }, () => {
+        KOEv(ev, ev.what);
+      });
+      ev.where.attached('HAUNTED').each(c => returnFromHauntEv(ev, c));
+    }
   });
 }

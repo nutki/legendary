@@ -2501,7 +2501,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   [ "Dimensional Collapse", ev => {
   // Destroy an HQ space that's in a Pocket Dimension. (That space doesn't refill.) To mark this, turn the Hero there face down. The Pocket Dimension card stays in play.
     selectCardEv(ev, "Choose an HQ space", gameState.hq.limit(d => d.attached('POCKET').size > 0), d => {
-      destroyHQ(d); d.faceup = false;
+      destroyHQ(ev, d); d.faceup = false;
     });
   } ],
   [ "Pull Earth Into The Beyond", ev => {
@@ -3372,7 +3372,7 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
   // Each other player discards half of their cards. Destroy half of the HQ spaces. (Round down the losses.) Turn the Heroes there face down to mark the destroyed spaces. Don't refill those spaces.
     const toDestroy = Math.floor(gameState.hq.size / 2);
     eachOtherPlayerVM(p => pickDiscardEv(ev, Math.floor(p.hand.size / 2), p));
-    selectObjectsEv(ev, "Choose an HQ space to destroy", toDestroy, gameState.hq, d => { destroyHQ(d); d.faceup = false; });
+    selectObjectsEv(ev, "Choose an HQ space to destroy", toDestroy, gameState.hq, d => { destroyHQ(ev, d); d.faceup = false; });
   } ],
   [ "You Should Have Gone For The Head", ev => {
   // KO one of your Heroes. If this is the last Mastermind Tactic: You do not win the game. Players must fight Thanos one more time to put the Mastermind card in their Victory Pile and win the game.
