@@ -624,7 +624,7 @@ makeSchemeCard<{traitor: Player}>("The Traitor", { twists: 8 }, ev => {
 addTemplates("SCHEMES", "Secret Wars Volume 1", [
 // SETUP: 9 Twists. Put 10 extra Annihilation Wave Henchmen in that KO pile.
 // EVILWINS: When there are 10 Annihilation Henchmen next to the Mastermind.
-makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen: [ 2, 2, 2, 3, 3, 3 ] }, ev => {
+makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen: [ 2, 2, 2, 3, 3 ] }, ev => {
   // Twist: KO all Annihilation Henchmen from the players' Victory Piles. Stack this Twist next to the Scheme. Then, for each Twist in that stack, put an Annihilation Henchman from the KO pile next to the Mastermind. Players can fight those Henchmen.
   eachPlayer(p => p.victory.limit(isGroup(extraHenchmenName())).each(c => KOEv(ev, c)));
   attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
@@ -3197,5 +3197,129 @@ makeSchemeCard("Warp Reality Into a TV Show", { twists: 11 }, ev => {
   schemeProgressEv(ev, ev.nr);
 }, [], s => {
   setSchemeTarget(11);
+}),
+]);
+addTemplates("SCHEMES", "Midnight Sons", [
+// SETUP: 11 Twists. Add all 14 cards for any Blade Hero to the Villain Deck.
+// RULE: Blade Hero cards in the Villain Deck and city are demonically possessed "Switchblade" Villains with Attack equal to their printed cost.
+// Their only abilities are "{SUNLIGHT} To fight this, you must also spend <b>3 Recruit. Moonlight</b>: <b>Blood Frenzy. Fight</b>: Either KO this card
+// or choose a player to gain it as a Hero."
+// EVILWINS: When the Hero Deck or Villain Deck runs out.
+makeSchemeCard("Midnight Massacre", { twists: 11, heroes: [ 4, 6, 6, 6, 7] }, ev => {
+  // Twist: For each Switchblade Villain in the city and/or Escape Pile. KO the top three cards of the Hero Deck.
+  const n = 3 * (cityVillains().count(isGroup("Switchblade")) + gameState.escaped.count(isGroup("Switchblade")));
+  repeat(n, () => cont(ev, () => gameState.herodeck.withTop(c => KOEv(ev, c))));
+  // No matter how many there were, play another card from the Villain Deck.
+  playAnotherEv(ev);
+}, [
+  runOutProgressTrigger('HERO'),
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
+  const isExtra = (c: Card) => c.heroName === extraHeroName();
+  villainify("Switchblade", isExtra, c => c.printedCost + (moonlightPower() ? bloodFrenzyAmount() : 0), ev => {
+    chooseOneEv(ev, "Switchblade", ["KO", () => KOEv(ev, ev.source)], ["Gain as a Hero", () => gainEv(ev, ev.source)]);
+  });
+  addStatSet('fightCost', isExtra, (c, cost) => sunlightPower() ? { recruit: (cost.recruit || 0) + 3, ...cost} : cost);
+  gameState.herodeck.limit(isExtra).each(c => moveCard(c, gameState.villaindeck));
+  gameState.villaindeck.shuffle();
+  setSchemeTarget(gameState.herodeck.size);
+}),
+// SETUP: 6 Twists, plus 1 per player. Add Lilin as an extra Villain Group. If using Lilith: Use 1 Twist total <i>[and still use and extra Villain Group]</i>.
+// RULE: When 5 Bystanders are in the KO pile, shuffle all Twists from the KO pile back into the Villain Deck. Then this Scheme {TRANSFORM} into "Great Old One Chthon."
+// <i>[Flip it over.]</i> then KO all other Masterminds and their remaining Tactics.
+// EVILWINS: When there are 3 Villains per player in the Escape Pile or the Villain Deck runs out.
+makeSchemeCard("Ritual Sacrifice To Summon Chthon", { twists: [ 7, 8, 9, 10, 11 ], vd_villain: [ 2, 3, 4, 4, 5 ], required: { villains: ["Lilin"] } }, ev => {
+  if (ev.nr <= 4) {
+    // Twist 1-4 A Villain or Mastermind <b>Hunts for Victims.</b>
+    selectCardEv(ev, "Choose an enemy to hunt", fightableCards().limit(isEnemy), c => huntForVictimsEv(ev, c));
+  } else if (ev.nr >= 5 && ev.nr <= 11) {
+    // Twist 5-11 The Mastermind <b>Hunts for Victims.</b>
+    selectCardEv(ev, "Choose an enemy to hunt", fightableCards().limit(isMastermind), c => huntForVictimsEv(ev, c));
+  }
+}, [
+  runOutProgressTrigger('VILLAIN', false),
+  escapeProgressTrigger(isVillain),
+  { event: 'MOVECARD', match: ev => isBystander(ev.what) && ev.to === gameState.ko, after: ev => {
+    if (gameState.ko.count(isBystander) >= 5 && !incPerGame('SUMMONCHTHON')) {
+      gameState.ko.limit(isTwist).each(c => shuffleIntoEv(ev, c, gameState.villaindeck));
+      // <b>Master Strike or Twist</b>: Destroy the current player. Shuffle this Strike or Twist back into the Villain Deck.
+      // <b>Chthon Wins: When all players are destroyed.</b>
+      // <i>[This card can only start the game as the Scheme on the other side.]</i>
+      const chton = makeSchemeCard("Great Old One Chthon", {}, ev => {
+        shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+        gameState.players.length === 1 ? gameOverEv(ev, 'LOSS', ev.source) : destroyCurrentPlayer(ev);
+      });
+      chton.set = "Midnight Sons";
+      chton.printedVP = 13;
+      chton.strike = ev => {
+        shuffleIntoEv(ev, ev.what, gameState.villaindeck);
+        gameState.players.length === 1 ? gameOverEv(ev, 'LOSS', ev.source) : destroyCurrentPlayer(ev);
+      }
+      Object.setPrototypeOf(ev.source, Object.getPrototypeOf(chton));
+      // addStatSet('isMastermind', chton, () => true); TODO
+    }
+  }},
+], () => {
+  if (setupMastermindName() === "Lilith") {
+    gameState.villaindeck.limit(isTwist).forEach((c, i) => i > 0 && moveCard(c, gameState.outOfGame));
+    gameState.villaindeck.shuffle();
+  }
+  setSchemeTarget(3, true);
+}),
+// SETUP: 10 Twists. Add an extra Henchman Group of 10 cards as "Vampire Neonates." Put this Scheme above the Bank to mark it as the "Blood Bank."
+// RULE: All "Vampire Neonates" also have {BLOOD FRENZY}. While in the Blood Bank, they instead have double {BLOOD FRENZY}.
+// EVILWINS: When there are 5 Vampire Thralls or the Villain Deck runs out.
+makeSchemeCard("Sire Vampires at the Blood Bank", { twists: 10, vd_henchmen: [ 2, 2, 2, 3, 3 ] }, ev => {
+  // Twist:  If there is a Villain in the Blood Bank, stack a card from the Bystander Deck next to the Scheme as a "Vampire Thrall".
+  villainIn('BANK').size ? gameState.bystanders.withTop(c => {
+    attachCardEv(ev, c, gameState.scheme, 'VAMPIRE_THRALL');
+    schemeProgressEv(ev, gameState.scheme.attached('VAMPIRE_THRALL').size);
+  }) :
+  // Otherwise, move a Villain from another city space to the Blood Bank.
+  withCity('BANK', bank => {
+    selectCardEv(ev, "Choose a Villain to move", cityVillains(), c => moveCardEv(ev, c, bank));
+  });
+  // Either way, play another card form the Villain Deck.
+  playAnotherEv(ev);
+}, [], () => {
+  const isVampire = (c: Card) => c.villainGroup == extraHenchmenName();
+  addStatMod('defense', isVampire, c => bloodFrenzyAmount() * (isLocation(c.location, 'BANK') ? 2 : 1));
+  setSchemeTarget(5);
+}),
+// SETUP: 11 Twists. Add two extra Heroes.
+makeSchemeCard("Wager at Blackjack For Heroes' Souls", { twists: 11, heroes: [5, 7, 7, 7, 8]  }, ev => {
+  // Twist: Reveal cards from the Hero Deck, adding up their total cost until you choose to stop or your Total exceeds 21.
+  // If your Total exceeds 21 you "bust" and the <b>Mastermind wins</b> the wager. If you didn't bust, then do the same thing for the Mastermind,
+  // stopping as soon as their Total is at least 17. If their Total exceeds 21, then the "bust" and <b>you win</b> the wager.
+  // If no one busts, then <b>you win</b> the wager if your Total is higher. If the Mastermind's Total is equal or higher: <b>they win.</b>
+  const won = true;
+  // <b>If you win</b>, you may gain one of the revealed Heroes that costs 6 or less.
+  // <b>If the Mastermind wins,</b> stack one of the revelaed Heroes next to the Scheme as a "Wagered Soul."
+  chooseOptionEv(ev, "Stop at", [18, 19, 20, 21].map(v => ({l:`${v}`,v})), ourStop => {
+    revealHeroDeckEv(ev, cards => {
+      const [ourSum, stopped] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= ourStop], [0, false]);
+      if (ourSum > 21) return false;
+      if (!stopped) return true;
+      const [theirSum, stopped2] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= 17], [-ourSum, false]);
+      return !stopped2;
+    }, cards => {
+      const [ourSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= ourStop], [0, false]);
+      const [theirSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= 17], [-ourSum, false]);
+      if (ourSum > 21 || (theirSum < 21 && theirSum >= ourSum)) {
+        selectCardOptEv(ev, "Choose a Hero to gain", cards.limit(c => c.cost <= 6), c => gainEv(ev, c));
+      } else {
+        selectCardEv(ev, "Choose a Hero to wager", cards.limit(isHero), c => {
+          attachCardEv(ev, c, gameState.scheme, 'WAGERED_SOUL');
+        });
+      };
+    }, true, true);
+  });
+  cont(ev, () => {
+    schemeProgressEv(ev, gameState.scheme.attached('WAGERED_SOUL').size);
+  });
+  // Either way, put the rest of the revealed Heroes on the bottom of the Hero Deck in random order.
+  // EVILWINS: When there are 4 Wagered Souls.
+}, [], () => {
+  setSchemeTarget(4);
 }),
 ]);

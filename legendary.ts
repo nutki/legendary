@@ -1208,6 +1208,9 @@ function extraHenchmenName(n: number = 1) {
   const h = gameState.gameSetup.henchmen;
   return h[h.length - n];
 }
+function setupMastermindName() {
+  return gameState.gameSetup.mastermind[0];
+}
 function availiableHeroTemplates() {
   return cardTemplates.HEROES.filter(t => gameState.gameSetup.heroes.includes(t.templateId));
 }
@@ -1950,7 +1953,7 @@ function countPerGame(key: string, c?: Card) {
   return gameState.perGame.get(key) || 0;
 }
 function incPerGame(key: string, c?: Card) {
-  const prev = countPerTurn(key, c);
+  const prev = countPerGame(key, c);
   if (c) key += '-' + c.id;
   if (!gameState.perGame) gameState.perGame = new Map();
   gameState.perGame.set(key, prev + 1);
@@ -2100,6 +2103,9 @@ function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card |
   let desc = result === "LOSS" ? `${winnerName} Wins` : result === "WIN" ? "Good Wins" : "Draw between Good and Evil";
   textLog.log("Game Over: " + desc);
   pushEv(ev, "GAMEOVER", { ui: true, result, desc });
+}
+function destroyCurrentPlayer(ev: Ev) {
+  // TODO multiplayer
 }
 function unvailSchemeEv(ev: Ev) {
   attachCardEv(ev, gameState.scheme.top, gameState.scheme, "VAILED");
