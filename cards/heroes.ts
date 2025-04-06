@@ -6944,3 +6944,153 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
   ),
 },
 ]);
+addHeroTemplates("Midnight Sons", [
+{
+  name: "Blade, Daywalker",
+  team: "Marvel Knights",
+// {PATROL Rooftops}: If it's empty, draw a card.
+// {PATROL Sewers}: If it's empty, you get +1 Recruit.
+  c1: makeHeroCard("Blade, Daywalker", "Where Monsters Lurk", 4, 2, u, Color.STRENGTH, "Marvel Knights", "D", [
+    ev => patrolCity('ROOFTOPS', () => drawEv(ev)),
+    ev => patrolCity('SEWERS', () => addRecruitEvent(ev, 1)) ]),
+// You may move a Villain to another city space. If another Villain is already there, swap them.
+// {MOONLIGHT} You get +1 Attack.
+  c2: makeHeroCard("Blade, Daywalker", "Ride By Moonlight", 5, u, 3, Color.TECH, "Marvel Knights", "", [
+    ev => {
+      selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+        selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+      });
+    },
+    ev => moonlightPower() && addAttackEvent(ev, 1) ]),
+// {PATROL Rooftops}: If it's empty, reveal the top card of your deck. You may KO it.
+// {PATROL Sewers}: If it's empty, reveal the bottom card of your deck. You may KO it.
+  uc: makeHeroCard("Blade, Daywalker", "Hunt High and Low", 3, u, 2, Color.INSTINCT, "Marvel Knights", "D", [
+    ev => patrolCity('ROOFTOPS', () => revealPlayerDeckEv(ev, 1, cards => {
+      selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c));
+    })),
+    ev => patrolCity('SEWERS', () => revealPlayerDeckBottomEv(ev, 1, cards => {
+      selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c));
+    }))
+  ]),
+// {SUNLIGHT} You get +2 Attack and you may put a Hero from the HQ on the bottom of the Hero Deck.
+// {MOONLIGHT} {BLOOD FRENZY}
+  ra: makeHeroCard("Blade, Daywalker", "Creature of Dawn and Dask", 7, u, 4, Color.STRENGTH, "Marvel Knights", "D", [
+    ev => sunlightPower() && addAttackEvent(ev, 2),
+    ev => sunlightPower() && selectCardOptEv(ev, "Choose a Hero to put on the bottom of the Hero Deck", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => moonlightPower() && bloodFrenzyEv(ev)
+ ]),
+},
+{
+  name: "Elsa Bloodstone",
+  team: "Marvel Knights",
+// {PATROL Streets}: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack.
+// {POWER Instinct} Instead, you get both.
+  c1: makeHeroCard("Elsa Bloodstone", "Axe of the Slayer", 3, 0, 0, Color.INSTINCT, "Marvel Knights", "D",
+    ev => patrolCity('STREETS', () => {
+      addRecruitEvent(ev, 2);
+      superPower(Color.INSTINCT) && addAttackEvent(ev, 2);
+    }, () => {
+      addAttackEvent(ev, 2);
+      superPower(Color.INSTINCT) && addRecruitEvent(ev, 2);
+    })),
+// {PATROL Streets}: If it's empty, you get +1 Attack.
+// {POWER Tech} You get +1 Attack.
+// GUN: 1
+  c2: makeHeroCard("Elsa Bloodstone", "Silver Bullets", 4, u, 2, Color.TECH, "Marvel Knights", "GFD", [ ev => patrolCity('STREETS', () => addAttackEvent(ev, 1)), ev => superPower(Color.TECH) && addAttackEvent(ev, 1) ]),
+// You may have a Villain or Mastermind <b>Hunt for Victims</b>. If it KOs a Bystander this way, you may KO a Hero from your hand or discard pile.
+// {POWER Tech} If a Bystander is KO'd this way, you may also rescue that Bystander instead of putting it in the KO pile.
+  uc: makeHeroCard("Elsa Bloodstone", "Stalk the Night Stalkers", 6, u, 3, Color.TECH, "Marvel Knights", "",
+    ev => selectCardOptEv(ev, "Choose a Villain to Hunt for Victims", fightableCards(), c => {
+      huntForVictimsEv(ev, c, b => {
+        selectCardOptEv(ev, "Choose a Hero to KO", handOrDiscard().limit(isHero), c => KOEv(ev, c));
+        superPower(Color.TECH) && chooseMayEv(ev, "Rescue the Bystander", () => rescueEv(ev, b));
+      });
+    })),
+// {PATROL any city space}: If it's empty, you get the printed Recruit and Attack of the Hero in the HQ space under that city space.
+// {TEAMPOWER Marvel Knights, Marvel Knights} {BLOOD FRENZY}
+// GUN: 1
+  ra: makeHeroCard("Elsa Bloodstone", "Vengeance of the Bloodstone Gem", 8, 0, 4, Color.INSTINCT, "Marvel Knights", "G", [
+    ev => selectCardEv(ev, "Choose a city space", gameState.city, c => patrolDeck(c, () => {
+      const h = c.below?.top;
+      h?.printedRecruit && addRecruitEvent(ev, h.printedRecruit);
+      h?.printedAttack && addAttackEvent(ev, h.printedAttack);
+    })),
+    ev => superPower("Marvel Knights", "Marvel Knights") && bloodFrenzyEv(ev) ]),
+},
+{
+  name: "Morbius",
+  team: "Marvel Knights",
+// {MOONLIGHT} {BLOOD FRENZY}, gaining Recrcuit instead of Attack.
+  c1: makeHeroCard("Morbius", "Mesmerize", 3, 2, u, Color.COVERT, "Marvel Knights", "FD", ev => moonlightPower() && bloodFrenzyRecruitEv(ev)),
+// {POWER Covert} {BLOOD FRENZY}
+// TRANSFORMED by a blood transfusion from bats, Morbius the Living Vampire now has all vampiric strengths and only one desperate, thirsting weakness.
+  c2: makeHeroCard("Morbius", "Insatiable Craving", 5, u, 2, Color.COVERT, "Marvel Knights", "D", ev => superPower(Color.COVERT) && bloodFrenzyEv(ev)),
+// {SUNLIGHT} You may gain a Wound. If you do, you get +2 Attack.
+// {MOONLIGHT} You may KO a Wound from your hand or discard pile. If you do, you get +2 Attack.
+  uc: makeHeroCard("Morbius", "Scalded By Sunlight", 4, u, 2, Color.STRENGTH, "Marvel Knights", "D", [
+    ev => sunlightPower() && chooseMayEv(ev, "Gain a Wound", () => { gainEv(ev, gameState.wounds.top); addAttackEvent(ev, 2); }),
+    ev => moonlightPower() && KOHandOrDiscardEv(ev, isWound, () => addAttackEvent(ev, 2)) ]),
+// {POWER Covert} {BLOOD FRENZY}, drawing that many cards instead of gaining Attack.
+  ra: makeHeroCard("Morbius", "It's Morbin' Time!", 7, u, 3, Color.COVERT, "Marvel Knights", "", ev => superPower(Color.COVERT) && drawEv(ev, bloodFrenzyAmount())),
+},
+{
+  name: "Werewolf by Night",
+  team: "Marvel Knights",
+// {SUNLIGHT} You get +1 Attack.
+// {MOONLIGHT} Draw a card.
+  c1: makeHeroCard("Werewolf by Night", "Starlit Path", 2, u, 1, Color.INSTINCT, "Marvel Knights", "FD", [
+    ev => sunlightPower() && addAttackEvent(ev, 1), ev => moonlightPower() && drawEv(ev) ]),
+// {SUNLIGHT} You may put a Hero from the HQ on the bottom of the Hero Deck.
+// {MOONLIGHT} Whenever you defeat a Villain or Mastermind this turn, you may KO one of your Heroes.
+  c2: makeHeroCard("Werewolf by Night", "Snarling Fangs", 3, u, 2, Color.STRENGTH, "Marvel Knights", "D", [
+    ev => sunlightPower() && selectCardOptEv(ev, "Choose a Hero to put on the bottom of the Hero Deck", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ev => moonlightPower() && addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), () => {
+        selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+    })]),
+// {SUNLIGHT} You get +3 Recruit.
+// {MOONLIGHT} {BLOOD FRENZY}
+// {POWER Instinct} Instead, you get both.
+  uc: makeHeroCard("Werewolf by Night", "Release the Beast", 5, 0, 0, Color.INSTINCT, "Marvel Knights", "", [
+    ev => (superPower(Color.INSTINCT) || sunlightPower()) && addRecruitEvent(ev, 3),
+    ev => (superPower(Color.INSTINCT) || moonlightPower()) && bloodFrenzyEv(ev),
+  ]),
+// {MOONLIGHT} Whenever you defeat a Villain or Mastermind this turn, you may rescue a Bystander or gain a Hero from the HQ or Sidekick Deck whose cost is less than that Enemy's Attack.
+// {POWER Instinct} You get +2 Attack.
+  ra: makeHeroCard("Werewolf by Night", "Track the Captives", 7, u, 5, Color.INSTINCT, "Marvel Knights", "D", [
+    ev => moonlightPower() && addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), () => {
+      const max = ev.what.defense;
+      const options: [string, (() => void)][] = [["Rescue a Bystander", () => rescueEv(ev)]];
+      max >= 2 && options.push(["Gain a Sidekick", () => gainSidekickEv(ev)]);
+      hqHeroes().has(c => c.cost < max) && options.push(["Gain a Hero", () => selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.cost < max), c => gainEv(ev, c))]);
+      options.push(["Decline", () => {}]);
+      chooseOneEv(ev, "Choose Track the Captives bonus", ...options);
+    }),
+    ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 2) ]),
+},
+{
+  name: "Wong, Master of the Mystic Arts",
+  team: "Marvel Knights",
+// {PATROL Bridge}: If it's empty, draw a card.
+  c1: makeHeroCard("Wong, Master of the Mystic Arts", "Bridge Between Dimensions", 2, u, 1, Color.RANGED, "Marvel Knights", "FD", ev => patrolCity('BRIDGE', () => drawEv(ev))),
+// {SUNLIGHT} You get +1 Attack.
+// {POWER Ranged} You get +1 Attack.
+  c2: makeHeroCard("Wong, Master of the Mystic Arts", "Searing Shards of Sunlight", 4, u, 2, Color.RANGED, "Marvel Knights", "FD", [ ev => sunlightPower() && addAttackEvent(ev, 1), ev => superPower(Color.RANGED) && addAttackEvent(ev, 1) ]),
+// {PATROL Bridge}: If it's empty, draw two cards. If it's not, you get +5 Attack usable only to fight Villains on the Bridge.
+  uc: makeHeroCard("Wong, Master of the Mystic Arts", "Seal the Rift", 5, u, 0, Color.COVERT, "Marvel Knights", "",
+    ev => patrolCity('BRIDGE', () => drawEv(ev, 2), () => addAttackSpecialEv(ev, c => isVillain(c) && isLocation(c.location, 'BRIDGE'), 5))),
+// Once this turn, you may fight the top card of the Bystander Deck as if it were a 4 Attack "Darkhold Demon" Villain with
+// "<b>Fight</b>: KO up to two of your Heroes. Rescue this card as a Bystander."
+// {SUNLIGHT} You get +2 Attack.
+  ra: makeHeroCard("Wong, Master of the Mystic Arts", "Face Your Demons", 8, u, 6, Color.RANGED, "Marvel Knights", "D", [
+    ev => {
+      let done = false;
+      const cond: (c: Card) => boolean = c => !done && c === gameState.bystanders.top
+      villainify("Darkhold Demon", cond, 4, ev => {
+        selectObjectsEv(ev, "Choose a Hero to KO", 2, yourHeroes(), c => KOEv(ev, c));
+        rescueEv(ev, ev.source);
+        done = true;
+      });
+    },
+    ev => sunlightPower() && addAttackEvent(ev, 2) ]),
+},
+]);

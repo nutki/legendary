@@ -1079,3 +1079,24 @@ function sacrificeEv(ev: Ev, color: number, effect: Handler) {
     pushEv(ev, 'EFFECT', effect);
   });
 }
+// EXPANSION: Midnight Sons
+function bloodFrenzyAmount(p: Player = playerState) {
+  return p.victory.deck.uniqueCount(c => c.vp);
+}
+function bloodFrenzyEv(ev: Ev) {
+  addAttackEvent(ev, bloodFrenzyAmount());
+}
+function bloodFrenzyRecruitEv(ev: Ev) {
+  addRecruitEvent(ev, bloodFrenzyAmount());
+}
+// <b>Hunt for Victims</b>: Some sadistic Villains say "Ambush: Hunt for Victims."
+// * This means <b>"KO a Bystander that is captured by any Enemy or from the Escape Pile. If you can't, then this captures a Bystander instead."</b>
+// * If a player fights Lilith, and her Mastermind Tactic Hunts for Victims and captures a Bystander, the player doesn't immediately rescue that Bystander.
+function huntForVictimsEv(ev: Ev, hunter: Card = ev.source, whenKOed?: (c: Card) => void) {
+  selectCardOrEv(ev, "Choose a Victim", [...cityVillains().flatMap(c => c.captured.limit(isBystander)), ...gameState.escaped.limit(isBystander)], c => {
+    KOEv(ev, c);
+    whenKOed && cont(ev, () => whenKOed(c));
+  }, () => {
+    captureEv(ev, hunter);
+  });
+}
