@@ -1,0 +1,65 @@
+
+#CARDNAME: Zarathos
+#LEADS: The Fallen
+#STRIKE: If any Heroes in the HQ are haunted, each player gains a Wound. Then if Zarathos is not already haunting, he <b>Haunts</b> the highest-cost unhaunted Hero in the HQ.
+#ATTACK: 7
+#VP: 6
+
+#EPICNAME: Zarathos
+#LEADS: The Fallen
+#STRIKE: If any Heroes in the HQ are haunted, each player gains a Wound. Then if Zarathos is not already haunting, he <b>Haunts</b> the highest-cost unhaunted Hero in the HQ. Then reveal the top card of the Villain Deck. If it's a Villain, it Haunts the highest-cost unhaunted Hero in the HQ.
+#ATTACK: 9
+#VP: 6
+
+#TACTIC: Corrupted Spirit of Vengeance
+#FIGHT: Zarathos <b>Haunts</b> the highest-cost unhaunted [Instinct] and/or [Covert] Hero in the HQ.
+Each other player discards a [Instinct] or [Covert] Hero or discards down to 3 cards.
+
+#TACTIC: Demonic Essence of Ghost Rider
+#FIGHT: Zarathos <b>Haunts</b> the highest-cost unhaunted [Ranged] and/or [Strength] Hero in the HQ.
+If you have a [Ranged] Hero, you may KO one of your Heroes.
+If you have a [Strength] Hero, you may KO one of your Heroes.
+
+#TACTIC: Eruptions of Hellfire
+#FIGHT: Zarathos <b>Haunts</b> the highest-cost unhaunted [Covert] and/or [Ranged] Hero in the HQ.
+Each other player discards a [Covert] or [Ranged] Hero or gains a Wound.
+
+#TACTIC: Imprison in the Soul Crystal
+#FIGHT: Zarathos <b>Haunts</b> the highest-cost unhaunted [Strength] and/or [Instinct] Hero in the HQ.
+If you have a [Strength] or [Instinct] Hero, you may KO a Villain from your Victory Pile. If you do, draw cards equal to that Villain's VP.
+
+#CARDNAME: Lilith, Mother of Demons
+Lilith gets +1 Attack for each Bystander in the KO pile.
+#LEADS: Lilin
+#STRIKE: Lilith <b>Hunts for Victims</b>. If she KOs a Bystander this way, each player gains a Wound.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Lilith
+Lilith gets +2 Attack for each Bystander in the KO pile.
+#LEADS: Lilin
+#STRIKE: Lilith <b>Hunts for Victims</b>. If she KOs a Bystander this way, each player gains a Wound to the top of your deck.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Connoisseur of Souls
+#FIGHT: You get +1 Recruit for each Bystander in the KO pile.
+Then Lilith <b>Hunts for Victims</b>.
+
+#TACTIC: Mesopotamian Demon Goddess
+#FIGHT: Each other player may discard a card for each Bystander in the KO pile. Each of those players who didn't must gain a Wound instead.
+Then Lilith <b>Hunts for Victims</b>.
+
+#TACTIC: Offer of Corruption
+#FIGHT: Choose one:
+- Gain a Wound and and each other player KOs one of their Heroes, or
+- KO one of your Heroes and each other player gains a Wound.
+Then Lilith <b>Hunts for Victims</b>.
+
+#TACTIC: Respawn Demonic Offspring
+#FIGHT: The highest-VP Lilin Villain from among all Victory Piles reenters the city. The player who had that Villain rescues three Bystanders.
+Then Lilith <b>Hunts for Victims</b>.
+
+#TACTIC: [Don't do any Escape or Ambush effects until after you've done all the other effects on this card.]
+
+

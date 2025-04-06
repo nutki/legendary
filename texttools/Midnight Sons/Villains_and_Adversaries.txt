@@ -1,0 +1,74 @@
+
+#CARDNAME: Fallen
+
+#SUBNAME: Atrocity
+#COPIES: 2
+#AMBUSH: <b>Haunt</b> the leftmost unhaunted Hero in the HQ.
+#FIGHT: Rescue a Bystander.
+#ATTACK: 3
+#VP: 2
+
+#SUBNAME: Patriarch
+#COPIES: 3
+#AMBUSH: <b>Haunt</b> an unhaunted Hero in the HQ that costs 3 or less.
+#FIGHT: Reveal the top card of your deck. If it costs 3 or less, draw it.
+#ATTACK: 4
+#VP: 3
+
+#SUBNAME: Metarchus
+#COPIES: 2
+{BLOOD FRENZY}
+#AMBUSH: <b>Haunt</b> the rightmost unhaunted Hero in the HQ.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 4
+
+#SUBNAME: Salomé, Sorceress Supreme
+#COPIES: 1
+{BLOOD FRENZY}
+#FIGHT: KO up to two cards from your discard pile.
+#ESCAPE: Salomé ascends to become an additional Mastermind. She gains the ability "<b>Master Strike</b>: Each player discards a Marvel Knights Hero or gains a Wound."
+#ATTACK: 6+
+#VP: 5
+
+#CARDNAME: Lilin
+
+#SUBNAME: Outcast
+#COPIES: 2
+#AMBUSH: <b>Hunt for Victims.</b> Then each player reveals a random card from their hand. If that card costs less than the number of Bystanders in the KO pile, that player discards that card.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Meatmarket
+#COPIES: 2
+Meatmarket gets +1 Attack for each Bystander in the KO pile.
+#AMBUSH: <b>Hunt for Victims</b>
+#FIGHT: You may KO a card from your discard pile.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Skinner
+#COPIES: 2
+Skinner gets +2 Attack if there are at least four Bystanders in the KO pile.
+#AMBUSH: <b>Hunt for Victims</b>
+#FIGHT: KO one of your Heroes.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Sister Nil
+#COPIES: 1
+{MOONLIGHT} Sister Nil gets +2 Attack.
+#AMBUSH: <b>Hunt for Victims.</b> Then each player reveals more non-grey Heroes than the number of Bystanders in the KO pile or gains a Wound.
+#ESCAPE: Each player discards a Hero with an odd-numbered cost.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Blackout
+#COPIES: 1
+{MOONLIGHT} Blackout gets +1 Attack for each Bystander in the KO pile.
+#AMBUSH: <b>Hunt for Victims.</b> If it's Moonlight, <b>Hunt for Victims</b> again.
+#ESCAPE: <i>[After the normal Escape KO]</i> If it's Moonlight, each player gains a Wound.
+#ATTACK: 7+
+#VP: 5
+
+

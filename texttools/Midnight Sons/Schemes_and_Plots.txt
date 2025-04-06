@@ -1,0 +1,34 @@
+
+#CARDNAME: Midnight Massacre
+#SETUP: 11 Twists. Add all 14 cards for any Blade Hero to the Villain Deck.
+#RULE: Blade Hero cards in the Villain Deck and city are demonically possessed "Switchblade" Villains with Attack equal to their printed cost. Their only abilities are "{SUNLIGHT} To fight this, you must also spend <b>3 Recruit. Moonlight</b>: <b>Blood Frenzy. Fight</b>: Either KO this card or choose a player to gain it as a Hero."
+#TWIST: For each Switchblade Villain in the city and/or Escape Pile. KO the top three cards of the Hero Deck. No matter how many there were, play another card from the Villain Deck.
+#EVILWINS: When the Hero Deck or Villain Deck runs out.
+
+#CARDNAME: Ritual Sacrifice To Summon Chthon
+#SETUP: 6 Twists, plus 1 per player. Add Lilin as an extra Villain Group. If using Lilith: Use 1 Twist total <i>[and still use and extra Villain Group]</i>.
+#TWISTNR: NR[1-4] A Villain or Mastermind <b>Hunts for Victims.</b>
+#TWISTNR: NR[5-11] The Mastermind <b>Hunts for Victims.</b>
+#RULE: When 5 Bystanders are in the KO pile, shuffle all Twists from the KO pile back into the Villain Deck. Then this Scheme {TRANSFORM} into "Great Old One Chthon." <i>[Flip it over.]</i> then KO all other Masterminds and their remaining Tactics.
+#EVILWINS: When there are 3 Villains per player in the Escape Pile or the Villain Deck runs out.
+
+Mastermind Transformed
+
+#CARDNAME: Great Old One Chthon
+<b>Master Strike or Twist</b>: Destroy the current player. Shuffle this Strike or Twist back into the Villain Deck.
+<b>Chthon Wins: When all players are destroyed.</b>
+<i>[This card can only start the game as the Scheme on the other side.]</i>
+
+#CARDNAME: Sire Vampires at the Blood Bank
+#SETUP: 10 Twists. Add an extra Henchman Group of 10 cards an "Vampire Neonates. "Put this Scheme above the Bank to mark it as the "Blood Bank."
+#RULE: All "Vampire Neonates" also have {BLOOD FRENZY}. While in the Blood Bank, they instead have double {BLOOD FRENZY}.
+#TWIST:  If there is a Villain in the Blood Bank, stack a card from the Bystander Deck next to the Scheme as a "Vampire Thrall"." Otherwise, move a Villain from another city space to the Blood Bank. Either way, play another card form the Villain Deck.
+#EVILWINS: When there are 5 Vampire Thralls or the Villain Deck runs out.
+
+#CARDNAME: Wager at Blackjack For Heroes' Souls
+#SETUP: 11 Twists. Add two extra Heroes.
+#TWIST: Reveal cards from the Hero Deck, adding up their total cost until you choose to stop or your Total exceeds 21. If your Total exceeds 21 you "bust" and the <b>Mastermind wins</b> the wager. If you didn't bust, then do the same thing for the Mastermind, stopping as soon as their Total is at least 17. If their Total exceeds 21, then the "bust" and <b>you win</b> the wager. If no one busts, then <b>you win</b> the wager if your Total is higher. If the Mastermind's Total is equal or higher: <b>they win.</b>
+<b>If you win</b>, you may gain one of the revealed Heroes that costs 6 or less. <b>If the Mastermind wins,</b> stack one of the revelaed Heroes next to the Scheme as a "Wagered Soul." Either way, put the rest of the revealed Heroes on the bottom of the Hero Deck in random order.
+#EVILWINS: When there are 4 Wagered Souls.
+
+

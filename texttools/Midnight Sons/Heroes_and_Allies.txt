@@ -1,0 +1,185 @@
+
+#CARDNAME: Blade, Daywalker
+#TEAM: Marvel Knights
+
+#SUBNAME: Where Monsters Lurk
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2+
+{PATROL Rooftops}: If it's empty, draw a card.
+{PATROL Sewers}: If it's empty, you get +1 Recruit.
+#COST: 4
+
+#SUBNAME: Ride By Moonlight
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 3+
+You may move a Villain to another city space. If another Villain is already there, swap them.
+{MOONLIGHT} You get +1 Attack.
+#COST: 5
+
+#SUBNAME: Hunt High and Low
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2
+{PATROL Rooftops}: If it's empty, reveal the top card of your deck. You may KO it.
+{PATROL Sewers}: If it's empty, reveal the bottom card of your deck. You may KO it.
+#COST: 3
+
+#SUBNAME: Creature of Dawn and Dask
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+{SUNLIGHT} You get +2 Attack and you may put a Hero from the HQ on the bottom of the Hero Deck.
+{MOONLIGHT} {BLOOD FRENZY}
+#COST: 7
+
+#CARDNAME: Elsa Bloodstone
+#TEAM: Marvel Knights
+
+#SUBNAME: Axe of the Slayer
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+{PATROL Streets}: If it's empty, you get +2 Recruit. If it's not, you get +2 Attack.
+{POWER Instinct} Instead, you get both.
+#COST: 3
+
+#SUBNAME: Silver Bullets
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+{PATROL Streets}: If it's empty, you get +1 Attack.
+{POWER Tech} You get +1 Attack.
+#COST: 4
+#FLAVOR: When demons want to scare each other, they tell stories of Elsa.
+#GUN: 1
+
+#SUBNAME: Stalk the Night Stalkers
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+You may have a Villain or Mastermind <b>Hunt for Victims</b>. If it KOs a Bystander this way, you may KO a Hero from your hand or discard pile.
+{POWER Tech} If a Bystander is KO'd this way, you may also rescue that Bystander instead of putting it in the KO pile.
+#COST: 6
+
+#SUBNAME: Vengeance of the Bloodstone Gem
+#COPIES: 1
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 4+
+{PATROL any city space}: If it's empty, you get the printed Recruit and Attack of the Hero in the HQ space under that city space.
+{TEAMPOWER Marvel Knights, Marvel Knights} {BLOOD FRENZY}
+#COST: 8
+#GUN: 1
+
+#CARDNAME: Morbius
+#TEAM: Marvel Knights
+
+#SUBNAME: Mesmerize
+#COPIES: 5
+#CLASS: [Covert]
+#RECRUIT: 2+
+{MOONLIGHT} {BLOOD FRENZY}, gaining Recrcuit instead of Attack.
+#COST: 3
+#FLAVOR: Stare into his deep red eyes and find your mind drowning in a sea of bloody visions.
+
+#SUBNAME: Insatiable Craving
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2+
+{POWER Covert} {BLOOD FRENZY}
+#COST: 5
+#FLAVOR: 
+#TRANSFORMED by a blood transfusion from bats, Morbius the Living Vampire now has all vampiric strengths and only one desperate, thirsting weakness.
+
+#SUBNAME: Scalded By Sunlight
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+{SUNLIGHT} You may gain a Wound. If you do, you get +2 Attack.
+{MOONLIGHT} You may KO a Wound from your hand or discard pile. If you do, you get +2 Attack.
+#COST: 4
+
+#SUBNAME: It's Morbin' Time!
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 3
+{POWER Covert} {BLOOD FRENZY}, drawing that many cards instead of gaining Attack.
+#COST: 7
+
+#CARDNAME: Werewolf by Night
+#TEAM: Marvel Knights
+
+#SUBNAME: Starlit Path
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 1+
+{SUNLIGHT} You get +1 Attack.
+{MOONLIGHT} Draw a card.
+#COST: 2
+#FLAVOR: By day, a talented adventurer. By night, a taloned killer.
+
+#SUBNAME: Snarling Fangs
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2
+{SUNLIGHT} You may put a Hero from the HQ on the bottom of the Hero Deck.
+{MOONLIGHT} Whenever you defeat a Villain or Mastermind this turn, you may KO one of your Heroes.
+#COST: 3
+
+#SUBNAME: Release the Beast
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 0+
+{SUNLIGHT} You get +3 Recruit.
+{MOONLIGHT} {BLOOD FRENZY}
+{POWER Instinct} Instead, you get both.
+#COST: 5
+
+#SUBNAME: Track the Captives
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5+
+{MOONLIGHT} Whenever you defeat a Villain or Mastermind this turn, you may rescue a Bystander or gain a Hero from the HQ or Sidekick Deck whose cost is less than that Enemy's Attack.
+{POWER Instinct} You get +2 Attack.
+#COST: 7
+
+#CARDNAME: Wong, Master of the Mystic Arts
+#TEAM: Marvel Knights
+
+#SUBNAME: Bridge Between Dimensions
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 1
+{PATROL Bridge}: If it's empty, draw a card.
+#COST: 2
+#FLAVOR: The mystics of Kamar-Taj are duty-bound to guard the portals of this world from extraplanar demons.
+
+#SUBNAME: Searing Shards of Sunlight
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{SUNLIGHT} You get +1 Attack.
+{POWER Ranged} You get +1 Attack.
+#COST: 4
+#FLAVOR: You can be burned to death, stabbed to death, or irradiated to death, but only while fighting Wong can you do all three at once.
+
+#SUBNAME: Seal the Rift
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 0+
+{PATROL Bridge}: If it's empty, draw two cards. If it's not, you get +5 Attack usable only to fight Villains on the Bridge.
+#COST: 5
+
+#SUBNAME: Face Your Demons
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 6+
+Once this turn, you may fight the top card of the Bystander Deck as if it were a 4 Attack "Darkhold Demon" Villain with "<b>Fight</b>: KO up to two of your Heroes. Rescue this card as a Bystander."
+{SUNLIGHT} You get +2 Attack.
+#COST: 8
+
+

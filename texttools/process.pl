@@ -74,6 +74,7 @@ while (<A>) {
     ($name, $_) = ($1, $2);
     $name =~ s/ /_/g;
     $name .= ".txt";
+    s!light: Blood!light</b>: <b>Blood!g; #FIX
     s!(: ?)</b>!</b>$1!g; #FIX
     s!Favor\.</b>!Favor</b>.!g; #FIX realm of kings
     s!Favor\,</b>!Favor</b>,!g; #FIX realm of kings
@@ -133,6 +134,7 @@ while (<A>) {
     s!<b>Excessive Kindness</b>:?!{KINDNESS}!g;
     s!<b>Sacrifice</b>!{SACRIFICE}!g;
     s!<b>Endgame</b>:?!{ENDGAME}!g;
+    s!<b>Blood Frenzy</b>!{BLOOD FRENZY}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;
