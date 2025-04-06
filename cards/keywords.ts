@@ -1121,7 +1121,10 @@ function hauntEv(ev: Ev, d: Card, c: Card = ev.source) {
   attachCardEv(ev, c, d.location, 'HAUNTED');
 }
 function unhauntedHQHeroes() {
-  return hqHeroes().limit(c => !c.location.attached('HAUNTED'));
+  return hqHeroes().limit(c => !c.location.attached('HAUNTED').size);
+}
+function isHaunting(c: Card) {
+  return c.location.attachedTo instanceof Deck && c.location.attachedTo.attached('HAUNTED').includes(c);
 }
 function returnFromHauntEv(ev: Ev, c: Card) {
   if (isMastermind(c)) moveCardEv(ev, c, gameState.mastermind);

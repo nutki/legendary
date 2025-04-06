@@ -3386,3 +3386,103 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
   }}
 }),
 ]);
+addTemplates("MASTERMINDS", "Midnight Sons", [
+...makeEpicMastermindCard("Zarathos", [ 7, 9 ], 6, "The Fallen", ev => {
+// If any Heroes in the HQ are haunted, each player gains a Wound.
+  hqHeroes().has(c => c.location.attached('HAUNTED').size > 0) && eachPlayer(p => gainWoundEv(ev, p));
+// Then if Zarathos is not already haunting, he <b>Haunts</b> the highest-cost unhaunted Hero in the HQ.
+  cont(ev, () => {
+    isHaunting(ev.source) || selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().highest(c => c.cost), c => hauntEv(ev, c));
+  });
+// Epic: Then reveal the top card of the Villain Deck. If it's a Villain, it Haunts the highest-cost unhaunted Hero in the HQ.
+  ev.source.epic && revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(v => {
+    selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().highest(c => c.cost), c => hauntEv(ev, c, v));
+  }));
+}, [
+  [ "Corrupted Spirit of Vengeance", ev => {
+    // Zarathos <b>Haunts</b> the highest-cost unhaunted [Instinct] and/or [Covert] Hero in the HQ.
+    const zarthos = ev.source.mastermind;
+    selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().limit(Color.INSTINCT | Color.COVERT).highest(c => c.cost), c => {
+      hauntEv(ev, c, zarthos);
+    });
+    // Each other player discards a [Instinct] or [Covert] Hero or discards down to 3 cards.
+    eachOtherPlayerVM(p => {
+      selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.COVERT), c => discardEv(ev, c), () => pickDiscardEv(ev, -3, p), p);
+    });
+  } ],
+  [ "Demonic Essence of Ghost Rider", ev => {
+    // Zarathos <b>Haunts</b> the highest-cost unhaunted [Ranged] and/or [Strength] Hero in the HQ.
+    const zarthos = ev.source.mastermind;
+    selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().limit(Color.RANGED | Color.STRENGTH).highest(c => c.cost), c => {
+      hauntEv(ev, c, zarthos);
+    });
+    // If you have a [Ranged] Hero, you may KO one of your Heroes.
+    yourHeroes().has(isColor(Color.RANGED)) && selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+    // If you have a [Strength] Hero, you may KO one of your Heroes.
+    yourHeroes().has(isColor(Color.STRENGTH)) && selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+  } ],
+  [ "Eruptions of Hellfire", ev => {
+    // Zarathos <b>Haunts</b> the highest-cost unhaunted [Covert] and/or [Ranged] Hero in the HQ.
+    const zarthos = ev.source.mastermind;
+    selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().limit(Color.COVERT | Color.RANGED).highest(c => c.cost), c => {
+      hauntEv(ev, c, zarthos);
+    });
+    // Each other player discards a [Covert] or [Ranged] Hero or gains a Wound.
+    eachOtherPlayerVM(p => {
+      selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT | Color.RANGED), c => discardEv(ev, c), () => gainWoundEv(ev, p), p);
+    });
+  } ],
+  [ "Imprison in the Soul Crystal", ev => {
+    // Zarathos <b>Haunts</b> the highest-cost unhaunted [Strength] and/or [Instinct] Hero in the HQ.
+    const zarthos = ev.source.mastermind;
+    selectCardEv(ev, "Choose a Hero to haunt", unhauntedHQHeroes().limit(Color.STRENGTH | Color.INSTINCT).highest(c => c.cost), c => {
+      hauntEv(ev, c, zarthos);
+    });
+    // If you have a [Strength] or [Instinct] Hero, you may KO a Villain from your Victory Pile. If you do, draw cards equal to that Villain's VP.
+    yourHeroes().has(Color.STRENGTH | Color.INSTINCT) && selectCardOptEv(ev, "Choose a Villain to KO", playerState.victory.limit(isVillain), c => {
+      KOEv(ev, c);
+      drawEv(ev, c.vp);
+    });
+  } ],
+]),
+// EPICNAME: Lilith
+// Lilith gets +1 Attack for each Bystander in the KO pile.
+// Lilith gets +2 Attack for each Bystander in the KO pile.
+...makeEpicMastermindCard("Lilith, Mother of Demons", [ 8, 10 ], 6, "Lilin", ev => {
+// Lilith <b>Hunts for Victims</b>. If she KOs a Bystander this way, each player gains a Wound.
+// Lilith <b>Hunts for Victims</b>. If she KOs a Bystander this way, each player gains a Wound to the top of your deck.
+  huntForVictimsEv(ev, ev.source, () => eachPlayer(p => ev.source.epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p)));
+}, [
+  [ "Connoisseur of Souls", ev => {
+    // You get +1 Recruit for each Bystander in the KO pile.
+    addRecruitEvent(ev, gameState.ko.count(isBystander));
+    // Then Lilith <b>Hunts for Victims</b>.
+    huntForVictimsEv(ev, ev.source.mastermind);
+  } ],
+  [ "Mesopotamian Demon Goddess", ev => {
+    // Each other player may discard a card for each Bystander in the KO pile. Each of those players who didn't must gain a Wound instead.
+    // Then Lilith <b>Hunts for Victims</b>.
+    huntForVictimsEv(ev, ev.source.mastermind);
+  } ],
+  [ "Offer of Corruption", ev => {
+    // Choose one:
+    // - Gain a Wound and and each other player KOs one of their Heroes, or
+    // - KO one of your Heroes and each other player gains a Wound.
+    // Then Lilith <b>Hunts for Victims</b>.
+    huntForVictimsEv(ev, ev.source.mastermind);
+  } ],
+  [ "Respawn Demonic Offspring", ev => {
+    // The highest-VP Lilin Villain from among all Victory Piles reenters the city. The player who had that Villain rescues three Bystanders.
+    // Then Lilith <b>Hunts for Victims</b>.
+    huntForVictimsEv(ev, ev.source.mastermind);
+    // [Don't do any Escape or Ambush effects until after you've done all the other effects on this card.]
+    const options = gameState.players.flatMap(p => p.victory.limit(isGroup(ev.source.leads))).highest(c => c.vp);
+    selectCardEv(ev, "Choose a Villain to enter", options, c => {
+      enterCityEv(ev, c);
+      rescueByEv(ev, c.location.owner, 3);
+    });
+  } ],
+], {
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.ko.count(isBystander),
+}),
+]);
