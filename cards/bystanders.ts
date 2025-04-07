@@ -211,3 +211,37 @@ addBystanderTemplates("Messiah Complex", [
   });
 }) ],
 ]);
+addBystanderTemplates("Marvel Studios What If...?/", [
+[ 25, makeBystanderCard("Bystander") ],
+// RESCUE: reveal the top card of the Villain Deck. If it's a Master Strike or Scheme Twist, you may shuffle that deck.
+[ 1, makeBystanderCard("Happy Hogan", ev => {
+  let shuffle: boolean = false;
+  revealVillainDeckEv(ev, 1, cards => {
+    (cards.has(isStrike) || cards.has(isTwist)) && chooseMayEv(ev, "Shuffle the Villain Deck?", () => shuffle = true, ev.who);
+  });
+  cont(ev, () => shuffle && gameState.villaindeck.shuffle());
+}) ],
+// RESCUE: reveal the top four cards of your deck. Draw each [Tech] and [Ranged] Hero you revealed. Put the rest back in any order.
+[ 1, makeBystanderCard("Howard Stark", ev => {
+  revealPlayerDeckEv(ev, 4, cards => {
+    cards.limit(Color.TECH | Color.RANGED).each(c => drawCardEv(ev, c, ev.who));
+  }, ev.who);
+}) ],
+// RESCUE: reveal the top four cards of the Bystander Deck. You may rescue a Special Bystander from among them, then put the rest back on the bottom of that deck.
+[ 1, makeBystanderCard("Howard the Duck", ev => {
+  revealDeckEv(ev, gameState.bystanders, 4, cards => {
+    selectCardEv(ev, "Choose a Special Bystander", cards.limit(c => !!c.rescue), c => {
+      rescueByEv(ev, ev.who, c);
+    }, ev.who);
+  }, false, true, ev.who);
+}) ],
+// RESCUE: you get +1 Recruit if the Bank is empty and +1 Recruit if the Rooftops are empty.
+[ 1, makeBystanderCard("Pepper Potts", ev => {
+  playerState === ev.who && withCity('ROOFTOPS', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
+  playerState === ev.who && withCity('BANK', d => isCityEmpty(d) && addRecruitEvent(ev, 1));
+}) ],
+// RESCUE: whichever player is a head <i>(has the most VP or tied for most)</i> may KO one of their cards.
+[ 1, makeBystanderCard("Scott Lang's Head", ev => {
+  gameState.players.highest(currentVP).each(p => selectCardOptEv(ev, "KO a card", revealable(p), c => KOEv(ev, c), undefined, p));
+}) ],
+]);
