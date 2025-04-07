@@ -507,7 +507,8 @@ type Affiliation =
 'Warbound' |
 'Venomverse' |
 'X-Factor' |
-'Heroes of Wakanda';
+'Heroes of Wakanda' |
+'Guardians of the Multiverse';
 type Filter<T> = number | Affiliation | ((c: T) => boolean)
 class Deck {
   id: string
@@ -773,6 +774,7 @@ class Ev implements EvParams {
     for (let e: Ev<any> = this; e; e = e.parent) evList.unshift(e);
     let r = evList.map(e => `${e.type} ${e.id}`).join(' => ');
     if (this.what) r += ` (${this.what.id})`;
+    if (this.getSource()) r += ` (S: ${this.getSource().id})`;
     return r;
   }
   setId() {
@@ -1869,6 +1871,11 @@ function canPayCost(action: Ev) {
 }
 function payCost(action: Ev, resolve: (r: boolean) => void) {
   function payMin(a: { amount: number }, amount: number) {
+    if (a.amount === Infinity) {
+      // Gamora infinite attack, hardcoded usable only once here
+      a.amount = 0;
+      return amount;
+    }
     const n = Math.min(a.amount, amount);
     a.amount -= n;
     return n;
@@ -1977,6 +1984,11 @@ function limitPerTurn(f: (ev: Ev) => boolean, n: number = 1) {
 function pastEvents(t: EvType) {
   return turnState.pastEvents.limit(e => e.type === t);
 }
+function ancestorEvents(ev: Ev) {
+  const r: Ev[] = [];
+  for(let e = ev.parent; e; e = e.parent) r.push(ev);
+  return r;
+}
 function pastEvWhat(t: EvType) {
   return pastEvents(t).map(e => e.what);
 }
@@ -2020,7 +2032,7 @@ function getActions(ev: Ev): Ev[] {
     if ((turnState.piercing || turnState.piercingWithAttack) && d.location !== gameState.astralPlane) p.push(fightPiercingActionEv(ev, d));
   });
   // Midnight Sons haunted heroes
-  hqHeroes().map(c => c.location.attached("HAUNTED") && p.push(exorciseCardActionEv(ev, c)));
+  hqHeroes().map(c => c.location.attached("HAUNTED").size && p.push(exorciseCardActionEv(ev, c)));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   fightableCards().each(c => getCardActions(c).each(a => p.push(a(c, ev))));
@@ -2217,6 +2229,9 @@ function selectObjectsEv<T>(ev: Ev, desc: string, num: number, objects: T[], eff
 }
 function selectObjectsUpToEv<T>(ev: Ev, desc: string, num: number, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv(ev, desc, 0, num, objects, effect1, undefined, false, who);
+}
+function each<T>(f: (e: T)=>void) {
+  return (a: T[]) => a.each(f);
 }
 function selectObjectsAnyEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: T) => void, who?: Player) {
   selectObjectsMinMaxEv<T>(ev, desc, 0, undefined, objects, effect1, undefined, false, who);
@@ -2620,7 +2635,7 @@ function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func:
 function playVillainousWeapon(ev: Ev, what: Card) {
   let i = gameState.cityEntry;
   while (i && !i.has(isVillain)) i = i.next;
-  let villain = i.limit(isVillain)[0];
+  let villain = i && i.limit(isVillain)[0];
   function putIntoCity() {
     if (villain) {
       attachCardEv(ev, what, villain, 'WEAPON');

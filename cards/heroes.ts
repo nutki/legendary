@@ -6486,8 +6486,9 @@ addHeroTemplates("Black Panther", [
 // Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack, draw a card, and Wound a Villain.
   uc: makeHeroCard("General Okoye", "Sovereign Bodyguard", 5, u, 3, Color.STRENGTH, "Heroes of Wakanda", "", ev => [], { trigger: {
     event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !turnState.pastEvents.has(e => e.type === 'RESCUE' && e.getSource() === source),
+    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !countPerTurn("onceperturntrigger", source),
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+      incPerTurn("onceperturntrigger", ev.source);
       returnToStackEv(ev, gameState.wounds, ev.parent.what);
       drawEv(ev, 1, owner(ev.source));
       selectCardEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c), owner(ev.source));
@@ -7092,5 +7093,245 @@ addHeroTemplates("Midnight Sons", [
       });
     },
     ev => sunlightPower() && addAttackEvent(ev, 2) ]),
+},
+]);
+addHeroTemplates("Marvel Studios What If...?", [
+{
+  name: "Apocalyptic Black Widow",
+  team: "Guardians of the Multiverse",
+// If you have at least 4 Bystanders in your Victory Pile, you get +2 Recruit.
+// GUN: 1
+  c1: makeHeroCard("Apocalyptic Black Widow", "Humanity's Final Hope", 3, 2, u, Color.TECH, "Guardians of the Multiverse", "GFD",
+    ev => playerState.victory.count(isBystander) >= 4 && addRecruitEvent(ev, 2)),
+// Draw a card.
+// You may have a Villain capture a Bystander.
+// GUN: 1
+  c2: makeHeroCard("Apocalyptic Black Widow", "Plant Hidden Asset", 4, 1, u, Color.COVERT, "Guardians of the Multiverse", "GF", [
+    ev => drawEv(ev),
+    ev => selectCardOptEv(ev, "Choose a Villain to capture a Bystander", villains(), v => captureEv(ev, v))
+  ]),
+// {POWER Tech} You get +2 Attack.
+  c3: makeHeroCard("Apocalyptic Black Widow", "Precision Strike", 5, u, 3, Color.TECH, "Guardians of the Multiverse", "FD", ev => superPower(Color.TECH) && addAttackEvent(ev, 2)),
+// Draw a card.
+// {POWER Covert} {LIBERATE 3}
+// GUN: 1
+  uc: makeHeroCard("Apocalyptic Black Widow", "Relentless", 2, u, 0, Color.COVERT, "Guardians of the Multiverse", "GFD", [ ev => drawEv(ev), ev => superPower(Color.COVERT) && liberateEv(ev, 3) ]),
+// {WHAT IF} {LIBERATE 4}
+  u2: makeHeroCard("Apocalyptic Black Widow", "The Last Avenger", 6, u, 3, Color.TECH, "Guardians of the Multiverse", "F", ev => whatIfEv(ev, () => liberateEv(ev, 4))),
+// <b>Liberate</b> equal to the number of Bystanders in your Victory Pile.
+// GUN: 1
+  ra: makeHeroCard("Apocalyptic Black Widow", "Time to Save the Multiverse", 8, u, 4, Color.COVERT, "Guardians of the Multiverse", "GF",
+    ev => liberateEv(ev, playerState.victory.count(isBystander))),
+},
+{
+  name: "Captain Carter",
+  team: "Guardians of the Multiverse",
+// {WHAT IF} You get +2 Recruit and +2 Attack.
+  c1: makeHeroCard("Captain Carter", "Super Soldier Serum", 2, 0, 0, Color.STRENGTH, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => {
+    addRecruitEvent(ev, 2);
+    addAttackEvent(ev, 2);
+  })),
+// You get +1 Recruit for each different printed Recruit number among all your Heroes.
+// <i>(1+ is the same printed number as 1.)</i>
+  c2: makeHeroCard("Captain Carter", "Wartime Logistics", 3, 1, u, Color.INSTINCT, "Guardians of the Multiverse", "", ev => {
+    addRecruitEvent(ev, yourHeroes().limit(c => c.printedRecruit !== undefined).uniqueCount(c => c.printedRecruit));
+  }),
+// You get +1 Attack for each different printed Attack number among all your Heroes.
+// <i>(1+ is the same printed number as 1.)</i>
+  c3: makeHeroCard("Captain Carter", "Coordinated Assault", 4, u, 1, Color.TECH, "Guardians of the Multiverse", "", ev => {
+    addAttackEvent(ev, yourHeroes().limit(c => c.printedAttack !== undefined).uniqueCount(c => c.printedAttack));
+  }),
+// Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack. If you do, the player whose turn it is gets {LIBERATE 3}.
+  uc: makeHeroCard("Captain Carter", "The Shield of Britain", 5, u, 3, Color.TECH, "Guardians of the Multiverse", "", [], { trigger: {
+    event: "GAIN",
+    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !countPerTurn("onceperturntrigger", source),
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+      incPerTurn("onceperturntrigger", ev.source);
+      returnToStackEv(ev, gameState.wounds, ev.parent.what);
+      liberateEv(ev, 3);
+    }, () => doReplacing(ev), owner(ev.source))
+  }}),
+// To play this, you must put another card from your hand on top of your deck.
+  u2: makeHeroCard("Captain Carter", "Give Them All We've Got", 6, u, 5, Color.STRENGTH, "Guardians of the Multiverse", "F", [], { playCost: 1, playCostType: "TOPDECK" }),
+// You get +1 Recruit for each different printed Recruit number among all your Heroes.
+// You get +1 Attack for each different printed Attack number among all your Heroes.
+// <i>(1+ is the same printed number as 1.)</i>
+  ra: makeHeroCard("Captain Carter", "Icon of Hope", 8, 2, 4, Color.STRENGTH, "Guardians of the Multiverse", "D", [
+    ev => addRecruitEvent(ev, yourHeroes().limit(c => c.printedRecruit !== undefined).uniqueCount(c => c.printedRecruit)),
+    ev => addAttackEvent(ev, yourHeroes().limit(c => c.printedAttack !== undefined).uniqueCount(c => c.printedAttack))
+  ]),
+},
+{
+  name: "Doctor Strange Supreme",
+  team: "Guardians of the Multiverse",
+// [Instinct] {SOULBIND} You get +Recruit equal to that Villain's printed VP.
+  c1: makeHeroCard("Doctor Strange Supreme", "Seize Infernal Power", 3, 2, u, Color.INSTINCT, "Guardians of the Multiverse", "FD", ev => {
+    soulbindEv(ev, Color.INSTINCT, c => addRecruitEvent(ev, c.vp));
+  }),
+// [Ranged] {SOULBIND} You get +Attack equal to that Villain's printed VP.
+  c2: makeHeroCard("Doctor Strange Supreme", "Summon Demon Minions", 4, u, 2, Color.RANGED, "Guardians of the Multiverse", "FD", ev => {
+    soulbindEv(ev, Color.RANGED, c => addAttackEvent(ev, c.vp));
+  }),
+// {WHAT IF} You get +2 Attack and you may KO a Wound from your hand or from any player's discard pile.
+  c3: makeHeroCard("Doctor Strange Supreme", "Wards of the Vishanti", 5, u, 3, Color.RANGED, "Guardians of the Multiverse", "D", ev => whatIfEv(ev, () => {
+    addAttackEvent(ev, 2);
+    selectCardOptEv(ev, "Choose a Wound to KO", [...playerState.hand.deck, ...gameState.players.flatMap(p => p.discard.deck)].limit(isWound), c => KOEv(ev, c));
+  })),
+// Draw a card.
+// [Instinct] {SOULBIND a Bystander or Villain} You get +2 Attack. If it's a Special Bystander, you may do its Rescue effect.
+  uc: makeHeroCard("Doctor Strange Supreme", "To Save Christine", 2, u, 0, Color.INSTINCT, "Guardians of the Multiverse", "D", [ ev => drawEv(ev), ev => {
+    soulbindEv(ev, Color.INSTINCT, c => {
+      addAttackEvent(ev, 2);
+      isBystander(c) && chooseMayEv(ev, "Do the Bystander's Rescue effect", () => pushEffects(ev, c, 'rescue', c.rescue, { who: playerState }));
+    }, c => isVillain(c) || isBystander(c));
+  } ]),
+// Reveal the top three cards of your deck. Draw one of them, KO one, and put one back.
+  u2: makeHeroCard("Doctor Strange Supreme", "Break the Absolute Point in Time", 6, u, u, Color.INSTINCT, "Guardians of the Multiverse", "F", ev => {
+    revealThreeEv(ev, 'DRAW', 'KO');
+  }),
+// [Instinct] {SOULBIND} Draw cards equal to that Villain's printed VP.
+  ra: makeHeroCard("Doctor Strange Supreme", "Stygian Communion", 8, u, 3, Color.INSTINCT, "Guardians of the Multiverse", "F", ev => {
+    soulbindEv(ev, Color.INSTINCT, c => drawEv(ev, c.vp));
+  }),
+},
+{
+  name: "Gamora, Destroyer of Thanos",
+  team: "Guardians of the Multiverse",
+// Draw a card.
+// {POWER Covert} You get +2 Recruit.
+  c1: makeHeroCard("Gamora, Destroyer of Thanos", "Assassin's Stealth", 2, 0, u, Color.COVERT, "Guardians of the Multiverse", "FD", [ ev => drawEv(ev), ev => superPower(Color.COVERT) && addRecruitEvent(ev, 2) ]),
+// Draw two cards. Then put a card from your hand on top of your deck.
+  c2: makeHeroCard("Gamora, Destroyer of Thanos", "Tactical Insight", 3, u, 1, Color.COVERT, "Guardians of the Multiverse", "F", [
+    ev => drawEv(ev, 2),
+    ev => selectCardEv(ev, "Choose a card to topdeck", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck, true)),
+  ]),
+// You get +1 Attack for each card you drew this turn.
+  c3: makeHeroCard("Gamora, Destroyer of Thanos", "Wield the Blade of Thanos", 4, u, 1, Color.INSTINCT, "Guardians of the Multiverse", "F", ev => {
+    addAttackEvent(ev, pastEvents('DRAW').count(e => e.who === playerState));
+  }),
+// {WHAT IF} Draw two cards.
+  uc: makeHeroCard("Gamora, Destroyer of Thanos", "Titanicide", 5, u, 2, Color.COVERT, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => drawEv(ev, 2))),
+// [Instinct] {SOULBIND} KO a card from your hand or discard pile.
+  u2: makeHeroCard("Gamora, Destroyer of Thanos", "Destroy an Infinity Stone", 6, u, 3, Color.INSTINCT, "Guardians of the Multiverse", "F", ev => {
+    soulbindEv(ev, Color.INSTINCT, c => selectCardEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c)));
+  }),
+// Guardians of the Galaxy {SOULBIND six Villains} You get <b>+&infin;</b> Attack, usable only for a single fight.
+  ra: makeHeroCard("Gamora, Destroyer of Thanos", "The Infinity Crusher", 8, u, 5, Color.TECH, "Guardians of the Multiverse", "F", ev => {
+    soulbindEv(ev, "Guardians of the Galaxy", () => addAttackSpecialEv(ev, () => true, Infinity), u, 6);
+  }),
+},
+{
+  name: "Killmonger, Spec Ops",
+  team: "Guardians of the Multiverse",
+// You get +1 Recruit for each different Villain Group in your Victory Pile.
+  c1: makeHeroCard("Killmonger, Spec Ops", "Hunt New Prey", 2, 1, u, Color.STRENGTH | Color.TECH, "Guardians of the Multiverse", "FD", ev => {
+    addRecruitEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup));
+  }),
+// {POWER Tech Strength} You get +3 Attack.
+  c2: makeHeroCard("Killmonger, Spec Ops", "No Matter the Price", 4, u, 2, Color.TECH, "Guardians of the Multiverse", "FD", ev => superPower(Color.TECH, Color.STRENGTH) && addAttackEvent(ev, 3)),
+// {POWER Strength} You get +1 Attack for each different Villain Group in your Victory Pile.
+  c3: makeHeroCard("Killmonger, Spec Ops", "Violence Leaves Scars", 5, u, 3, Color.STRENGTH, "Guardians of the Multiverse", "F", ev => {
+    superPower(Color.STRENGTH) && addAttackEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup));
+  }),
+// {WHAT IF} {LIBERATE 3}
+  uc: makeHeroCard("Killmonger, Spec Ops", "Hostage Rescue", 3, u, 2, Color.STRENGTH, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => liberateEv(ev, 3))),
+// Each Villain worth 3 VP or more captures a Bystander.
+// {POWER Tech} {LIBERATE 2}
+  u2: makeHeroCard("Killmonger, Spec Ops", "Plot a Betrayal", 6, u, 4, Color.TECH, "Guardians of the Multiverse", "FD", [ ev => {
+    villains().limit(c => c.vp >= 3).each(c => captureEv(ev, c));
+  }, ev => superPower(Color.TECH) && liberateEv(ev, 2) ]),
+// You get +1 Attack for each different Villain Group in your Victory Pile.
+// {POWER Strength} {LIBERATE 2} for each Mastermind Tactic in your Victory Pile.
+  ra: makeHeroCard("Killmonger, Spec Ops", "I'm the King, Baby!", 7, u, 4, Color.STRENGTH, "Guardians of the Multiverse", "D", [
+    ev => addAttackEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup)),
+    ev => superPower(Color.STRENGTH) && liberateEv(ev, 2 * playerState.victory.count(isTactic)) ]),
+},
+{
+  name: "Party Thor",
+  team: "Guardians of the Multiverse",
+// To play this, you must put another card from your hand on top of your deck.
+  c1: makeHeroCard("Party Thor", "Forecast Says Thunder", 2, 3, u, Color.RANGED, "Guardians of the Multiverse", "FD", [], { playCost: 1, playCostType: "TOPDECK" }),
+// Whenever you recruit a Hero that costs 5 or more this turn, you get +3 Attack.
+  c2: makeHeroCard("Party Thor", "Worthy Challenge", 3, u, 2, Color.STRENGTH, "Guardians of the Multiverse", "FD", ev => {
+    addTurnTrigger('RECRUIT', ev => isHero(ev.what) && ev.what.cost >= 5, () => addAttackEvent(ev, 3));
+  }),
+// Whenever you recruit a Hero that costs 5 or more this turn, reveal the top card of your deck and you may KO it.
+  c3: makeHeroCard("Party Thor", "Destructive Feast", 5, 3, u, Color.STRENGTH, "Guardians of the Multiverse", "", ev => {
+    addTurnTrigger('RECRUIT', ev => isHero(ev.what) && ev.what.cost >= 5, () => {
+      revealPlayerDeckEv(ev, 1, cards => {
+        selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c));
+      });
+    });
+  }),
+// {POWER Ranged} {XDRAMPAGE Party}. If any players gained a Wound this way, you get +3 Attack.
+  uc: makeHeroCard("Party Thor", "Asgardian Rager", 5, u, 3, Color.RANGED, "Guardians of the Multiverse", "", ev => {
+    let wounded = false;
+    superPower(Color.RANGED) && xdRampageEv(ev, "Party", () => wounded = true);
+    cont(ev, () => wounded && addAttackEvent(ev, 3));
+  }),
+// {WHAT IF} You get +Attack equal to the cost of the Hero you revealed this way.
+  u2: makeHeroCard("Party Thor", "Only Son", 6, u, 3, Color.STRENGTH, "Guardians of the Multiverse", "F", ev => whatIfEv(ev, c => addAttackEvent(ev, c.cost))),
+// Whenever you recruit a Hero that costs 5 or more this turn, you get +Attack equal to that Hero's cost.
+  ra: makeHeroCard("Party Thor", "Worthy of the Lightning", 7, 5, 0, Color.RANGED, "Guardians of the Multiverse", "", ev => {
+    addTurnTrigger('RECRUIT', ev => isHero(ev.what) && ev.what.cost >= 5, ev => addAttackEvent(ev, ev.parent.what.cost));
+  }),
+},
+{
+  name: "Star-Lord T’Challa",
+  team: "Guardians of the Multiverse",
+// Choose one: You get <b>Empowered</b> by [Strength], or you get <b>Empowered</b> by [Covert].
+// {POWER Strength Covert} Draw a card.
+// GUN: 1
+  c1: makeHeroCard("Star-Lord T’Challa", "Fight or Flight", 2, u, 0, Color.STRENGTH | Color.COVERT, "Guardians of the Multiverse", "GD", [ ev => {
+    chooseOneEv(ev, "Choose a class to get Empowered by", ["Strength", () => empowerEv(ev, Color.STRENGTH)], ["Covert", () => empowerEv(ev, Color.COVERT)]);
+  }, ev => superPower(Color.STRENGTH, Color.COVERT) && drawEv(ev) ]),
+// {WHAT IF} You get +3 Recruit.
+  c2: makeHeroCard("Star-Lord T’Challa", "Interstellar Adventures", 3, 2, u, Color.COVERT | Color.TECH, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => addRecruitEvent(ev, 3))),
+// Look at the top two cards of your deck. Discard any number of them and put the rest back in any order.
+// GUN: 1
+  c3: makeHeroCard("Star-Lord T’Challa", "Plan the Heist", 4, u, 2, Color.INSTINCT | Color.COVERT, "Guardians of the Multiverse", "GD", ev => {
+    revealPlayerDeckEv(ev, 2, cards => selectObjectsAnyEv(ev, "Choose cards to discard", cards, c => discardEv(ev, c)));
+  }),
+// {WHAT IF} You may KO a card from your hand or discard pile.
+  uc: makeHeroCard("Star-Lord T’Challa", "Unexpected Exit", 5, u, 3, Color.STRENGTH | Color.INSTINCT, "Guardians of the Multiverse", "F", ev => whatIfEv(ev, () => KOHandOrDiscardEv(ev, undefined))),
+// {WHAT IF} You get <b>Empowered</b> by the Hero Classes of the card you revealed this way.
+// GUN: 1
+  u2: makeHeroCard("Star-Lord T’Challa", "Cross the Multiverse", 6, u, 4, Color.STRENGTH | Color.RANGED, "Guardians of the Multiverse", "G", ev => whatIfEv(ev, c => empowerEv(ev, c.color))),
+// Choose any number of Heroes in the HQ. Put them on the bottom of the Hero Deck.
+// You get <b>Empowered</b> by multicolored cards.
+  ra: makeHeroCard("Star-Lord T’Challa", "Colliding Dreams", 7, u, 4, Color.TECH | Color.RANGED, "Guardians of the Multiverse", "", [ ev => {
+    selectObjectsAnyEv(ev, "Choose Heroes to put on the bottom of the Hero Deck", hqHeroes(), c => moveCardEv(ev, c, gameState.herodeck, true));
+  }, ev => empowerEv(ev, isMuliColor) ]),
+},
+{
+  name: "Uatu, The Watcher",
+  team: "Guardians of the Multiverse",
+// Draw a card. Then put a card from your hand on top of your deck.
+// {POWER Covert} You get +1 Recruit.
+  c1: makeHeroCard("Uatu, The Watcher", "Diverging Timestreams", 2, 1, u, Color.COVERT, "Guardians of the Multiverse", "FD", [
+    ev => drawEv(ev),
+    ev => selectCardEv(ev, "Choose a card to topdeck", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck)),
+    ev => superPower(Color.COVERT) && addRecruitEvent(ev, 1) ]),
+// {WHAT IF} You may KO a card from your hand or discard pile.
+  c2: makeHeroCard("Uatu, The Watcher", "Another Dimension Crumbles", 3, 2, u, Color.COVERT, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => KOHandOrDiscardEv(ev, undefined))),
+// {WHAT IF} You get +2 Attack.
+  c3: makeHeroCard("Uatu, The Watcher", "Break the Oath", 4, u, 2, Color.RANGED, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => addAttackEvent(ev, 2))),
+// {POWER Covert} Choose a Hero Name. You are <b>Empowered</b> by that Hero Name.
+  uc: makeHeroCard("Uatu, The Watcher", "Anoint a Champion", 5, u, 2, Color.COVERT, "Guardians of the Multiverse", "FD", ev => {
+    superPower(Color.COVERT) && chooseOptionEv(ev, "Choose a Hero Name", splitDivided(hqHeroes()).unique(c => c.heroName).map(v => ({l:v, v})), name => {
+      empowerEv(ev, c => splitDivided([c]).has(c => c.heroName === name)); // TODO divided abstract hero names
+    });
+  }),
+// [Ranged] {SOULBIND} You get +2 Attack and you may do that Villain's Fight effect.
+  u2: makeHeroCard("Uatu, The Watcher", "History Repeats", 6, u, 3, Color.RANGED, "Guardians of the Multiverse", "FD", ev => {
+    soulbindEv(ev, Color.RANGED, c => {
+      addAttackEvent(ev, 2);
+      chooseMayEv(ev, "Do the Villain's Fight effect", () => pushEffects(ev, c, 'fight', c.fight)); // TODO abstract push effect use
+    });
+  }),
+// {WHAT IF} Choose a Team. (e.g. Guardians of the Multiverse, X-Men, Avengers) You are <b>Empowered</b> by that Team.
+  ra: makeHeroCard("Uatu, The Watcher", "Convoke the Guardians", 7, u, 5, Color.RANGED, "Guardians of the Multiverse", "", ev => whatIfEv(ev, () => {
+    chooseOptionEv(ev, "Choose a Team", splitDivided(hqHeroes()).unique(c => c.team).map(v => ({l:v, v})), team => empowerEv(ev, team)); // TODO divided check both sides for team
+  })),
 },
 ]);

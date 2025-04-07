@@ -228,6 +228,7 @@ function selectCardOrderEv(ev: Ev, desc: string, cards: Card[], effect: (c: Card
 }
 // Ambush effect
 function raiseOfTheLivingDead(ev: Ev) {
+  if (ancestorEvents(ev).has(ev => ev.func === raiseOfTheLivingDead)) return; // What If...? no chain reaction change.
   const cards = gameState.players.map(p => p.victory.top).limit(c => c && c.ambush === raiseOfTheLivingDead && isVillain(c));
   selectCardOrderEv(ev, "Choose a card to return to the city", cards, c => villainDrawEv(ev, c));
 }
@@ -584,7 +585,7 @@ function addMastermindEv(ev: Ev, name?: string) {
   // TODO add mastermind with one tactic
 }
 // Ant Man
-function empowerEv(ev: Ev, color: number) {
+function empowerEv(ev: Ev, color: Filter<Card>) {
   addAttackEvent(ev, hqCards().count(color));
 }
 function empowerVarDefense(color: number | ((c: Card) => number), amount: number = 1) {
@@ -1136,6 +1137,7 @@ function exorciseCardActionEv(ev: Ev, c: Card) {
     where: c.location,
     cost: { attack: c.cost },
     func: ev => {
+      console.log("Exorcise", ev.what);
       selectCardOrEv(ev, "Choose a player to gain the Haunted Hero", gameState.players, p => {
         gainEv(ev, c, p);
       }, () => {
@@ -1143,5 +1145,49 @@ function exorciseCardActionEv(ev: Ev, c: Card) {
       });
       ev.where.attached('HAUNTED').each(c => returnFromHauntEv(ev, c));
     }
+  });
+}
+// EXPANSION: What If...?
+function whatIfEv(ev: Ev, effect: (c: Card) => void) {
+  const classOptions = [{l:'Strength', v:Color.STRENGTH},
+    {l:'Instinct', v:Color.INSTINCT},
+    {l:'Covert', v:Color.COVERT},
+    {l:'Tech', v:Color.TECH},
+    {l:'Ranged', v:Color.RANGED}].filter(({v}) => playerState.deck.has(v));
+  const nameOptions = splitDivided(playerState.deck.deck).unique(c => c.heroName).limit(n => !!n).sort().map(n => ({l:n, v:n}));
+  const options = [...classOptions, ...nameOptions];
+  chooseOptionEv<string | number>(ev, "What If...?", options, choice => {
+    let c: Card;
+    revealPlayerDeckEv(ev, 1, cards => {
+      selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c));
+      const passed = typeof choice === 'string' ? splitDivided(cards).has(c => c.heroName === choice) : cards.has(choice); // TODO: abstract divided heroName checks
+      if (passed) c = cards[0];
+    });
+    cont(ev, () => c && effect(c));
+  });
+}
+function liberateEv(ev: Ev, n: number) {
+ addAttackSpecialEv(ev, c => isMastermind(c) || c.captured.has(isBystander), n);
+}
+function soulbindEv(ev: Ev, cond: number | Affiliation, effect: (c: Card) => void, limit: Filter<Card> = isVillain, n: number = 1) {
+  let bound: Card;
+  if (!superPower(cond)) return;
+  if (n > 1) chooseMayEv(ev, "Use Soulbind", () => selectObjectsEv(ev, "Choose cards to Soulbind", 6, playerState.victory.limit(limit), c => {
+    bound = c;
+    attachCardEv(ev, c, playerState.victory, 'SOULBIND');
+  }));
+  else selectCardOptEv(ev, "Choose a card to Soulbind", playerState.victory.limit(limit), c => {
+    bound = c;
+    attachCardEv(ev, c, playerState.victory, 'SOULBIND');
+  });
+  cont(ev, () => bound && effect(bound));
+}
+function soulBindSelfCardAction(effect: (c: Card) => void) {
+  return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', ev => {
+    return new Ev(ev, 'EFFECT', {
+      what: ev.source,
+      cost: { attack: 1 },
+      func: ev => soulbindEv(ev, cond, effect, limit, n),
+    });
   });
 }

@@ -18,7 +18,7 @@ function imageName(path: string, card: Card, subname?: string): string {
   else if (subname !== undefined) name = subname + "_" + name;
   if (card.variant) name = name + "_" + card.variant;
   name = name.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "");
-  return "images/" + (card.set || 'Legendary') + '/' + path + "/" + name + ".jpg";
+  return "images/" + (encodeURIComponent(card.set || 'Legendary')) + '/' + path + "/" + name + ".jpg";
 }
 function cardImageTransform(card: Card): string {
   if (card.instance?.divided) {
