@@ -124,6 +124,7 @@ interface Card {
   commonTacticEffect?: Handler;
   heroAmbush?: Handler | Handler[];
   customRecruitAndAttack?: boolean;
+  riseOfTheLivingDead: boolean;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -151,6 +152,7 @@ interface VillainCardAbillities {
   cosmicThreat?: Filter<Card>;
   variant?: string;
   finishThePrey?: Handler
+  riseOfTheLivingDead?: boolean
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -1539,6 +1541,8 @@ function isFightable(c: Card): boolean {
       false;
   return getModifiedStat(c, 'isFightable', res);
 }
+function is<T>(a: T) { return (c: T) => c === a; }
+function isNot<T>(a: T) { return (c: T) => c !== a; }
 function limit(cards: Card[], cond: Filter<Card>): Card[] {
   if (cards instanceof Deck) throw new TypeError();
   if (cond === undefined) return cards;
@@ -2046,7 +2050,6 @@ function getActions(ev: Ev): Ev[] {
   p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
   return p;
 }
-
 function addAttackEvent(ev: Ev, c: number): void { pushEv(ev, "ADDATTACK", { func: ev => { turnState.attack += ev.amount; turnState.totalAttack += ev.amount; }, amount: c }); }
 function addRecruitEvent(ev: Ev, c: number): void { pushEv(ev, "ADDRECRUIT", { func: ev => { turnState.recruit += ev.amount; turnState.totalRecruit += ev.amount; }, amount: c }); }
 function addPierciengEvent(ev: Ev, c: number): void { pushEv(ev, "ADDPIERCING", { func: ev => turnState.piercing += ev.amount, amount: c }); }

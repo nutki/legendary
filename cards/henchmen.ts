@@ -71,7 +71,7 @@ addTemplates("HENCHMEN", "Secret Wars Volume 1", [
 // ATTACK: 3
 makeHenchmenCard("Ghost Racers", 3, {
   fight: ev => revealOrEv(ev, Color.COVERT, () => selectCardAndKOEv(ev, yourHeroes().limit(hasAttackIcon))),
-  ambush: raiseOfTheLivingDead,
+  ambush: riseOfTheLivingDead,
 }),
 // FIGHT: KO a Hero from your discard pile or the HQ. If that Hero has a Recruit icon, you get +1 Recruit.
 // ATTACK: 3

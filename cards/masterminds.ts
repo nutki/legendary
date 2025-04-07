@@ -625,28 +625,28 @@ makeMastermindCard("Wasteland Hulk", 7, 6, "Wasteland", ev => {
 // Zombie Green Goblin gets +1 Attack for each Hero in the KO pile that costs 7 or more.
 makeMastermindCard("Zombie Green Goblin", 11, 6, "The Deadlands", ev => {
 // Rise of the Living Dead. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
-  raiseOfTheLivingDead(ev);
+  riseOfTheLivingDead(ev);
   hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c));
   cont(ev, () => eachPlayer(p => selectObjectsEv(ev, "Choose cards to discard", gameState.ko.limit(isHero).count(c => c.cost >= 7), p.hand.deck, c => discardEv(ev, c), p)));
 }, [
   [ "Army of Cadavers", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "Rise of the Living Dead."
-    raiseOfTheLivingDead(ev);
-    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", cityVillains().count(c => c.ambush === raiseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
+    riseOfTheLivingDead(ev);
+    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", cityVillains().count(c => c.ambush === riseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
   } ],
   [ "The Hungry Dead", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "Rise of the Living Dead".
-    raiseOfTheLivingDead(ev);
-    cont(ev, () => cityVillains().has(c => c.ambush === raiseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
+    riseOfTheLivingDead(ev);
+    cont(ev, () => cityVillains().has(c => c.ambush === riseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
   } ],
   [ "Love To Have You For Dinner", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
-    raiseOfTheLivingDead(ev);
+    riseOfTheLivingDead(ev);
     revealHeroDeckEv(ev, 5, cards => cards.limit(c => c.cost >= 7).each(c => KOEv(ev, c)), true, true);
   } ],
   [ "Reign of Terror", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
-    raiseOfTheLivingDead(ev);
+    riseOfTheLivingDead(ev);
     cont(ev, () => hqHeroes().limit(c => c.cost <= 6).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
   } ],
 ], {
@@ -1770,7 +1770,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
     }, p));
   } ],
 ], {
-  varDefense: c => empowerVarDefense(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c, 0), c.epic ? 3 : 1)(c),
+  varDefense: c => empowerVarDefense(c1 => isColor(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c, 0))(c1), c.epic ? 3 : 1)(c),
 }),
 // <b>Chivalrous Duel</b>
 // EPICNAME: Morgan Le Fay
@@ -3178,7 +3178,7 @@ addTemplates("MASTERMINDS", "Black Panther", [
     });
   } ],
 ], {
-  varDefense: empowerVarDefense(c => c.attached('SONICFQ').sum(c => c.color), 2)
+  varDefense: c => empowerVarDefense(c1 => isColor(c.attached('SONICFQ').sum(c => c.color))(c1), 2)(c)
 }),
 ]);
 addTemplates("MASTERMINDS", "Black Widow", [

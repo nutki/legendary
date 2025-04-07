@@ -1077,7 +1077,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("The Deadlands", "Zombie Baron Zemo", 6, 4, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     fight: ev => rescueEv(ev, yourHeroes().count("Avengers")),
   })],
 // AMBUSH: {RISEOFTHELIVINGDEAD}
@@ -1085,7 +1085,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 8
 // VP: 6
   [ 1, makeVillainCard("The Deadlands", "Zombie Loki", 8, 6, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     escape: ascendToMastermind,
     strike: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
   })],
@@ -1094,7 +1094,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 4
 // VP: 2
   [ 1, makeVillainCard("The Deadlands", "Zombie Madame Hydra", 4, 2, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(isShieldOrHydra))
   })],
 // AMBUSH: {RISEOFTHELIVINGDEAD}
@@ -1102,7 +1102,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 7
 // VP: 5
   [ 1, makeVillainCard("The Deadlands", "Zombie Mr. Sinister", 7, 5, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     escape: ascendToMastermind,
     strike: [
       ev => captureEv(ev, ev.source),
@@ -1114,7 +1114,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("The Deadlands", "Zombie M.O.D.O.K.", 5, 3, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(hasRecruitIcon)),
   })],
 // AMBUSH: {RISEOFTHELIVINGDEAD}
@@ -1122,7 +1122,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 6
 // VP: 6
   [ 1, makeVillainCard("The Deadlands", "Zombie Mysterio", 6, 6, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     fight: ev => isMastermind(ev.parent.what) && drawEv(ev, 2),
     escape: ev => withMastermind(ev, m => shuffleIntoEv(ev, ev.source, m.attachedDeck('TACTICS')), true),
   })],
@@ -1131,7 +1131,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 9
 // VP: 6
   [ 1, makeVillainCard("The Deadlands", "Zombie Thanos", 9, 6, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     escape: ascendToMastermind,
     strike: ev => eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(isNonGrayHero)))
   })],
@@ -1141,7 +1141,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 5*
 // VP: 3
   [ 1, makeVillainCard("The Deadlands", "Zombie Venom", 5, 3, {
-    ambush: raiseOfTheLivingDead,
+    ambush: riseOfTheLivingDead,
     fightCond: () => yourHeroes().has(Color.COVERT),
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
   })],
@@ -5424,6 +5424,345 @@ addVillainTemplates("Midnight Sons", [
     },
     escape: ev => moonlightPower() && eachPlayer(p => gainWoundEv(ev, p)),
     varDefense: c => c.printedDefense + (moonlightPower() ? gameState.ko.count(isBystander) : 0),
+  })],
+]},
+]);
+addVillainTemplates("Marvel Studios What If...?", [
+{ name: "Black Order Guards", cards: [
+// <b>Empowered</b> by cards that cost 5 or more.
+// AMBUSH: For each Hero in the HQ that costs 5 or more, Corvus Glaive captures a Bystander.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Black Order Guards", "Corvus Glaive", 3, 3, {
+    ambush: ev => captureEv(ev, ev.source, hqHeroes().count(c => c.cost >= 5)),
+    varDefense: empowerVarDefense(c => c.cost >= 5),
+  })],
+// <b>Empowered</b> by cards that cost 5 or more.
+// FIGHT: For each Hero in the HQ that costs 5 or more, you get +1 Recruit.
+// ATTACK: 2+
+// VP: 2
+  [ 3, makeVillainCard("Black Order Guards", "Cull Obsidian", 2, 2, {
+    fight: ev => addRecruitEvent(ev, hqHeroes().count(c => c.cost >= 5)),
+    varDefense: empowerVarDefense(c => c.cost >= 5),
+  })],
+// <b>Empowered</b> by cards that cost 5 or more.
+// AMBUSH: Each player discards a card that costs 5 or more.
+// ESCAPE: Ebony Maw ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Repeat his Ambush effect."
+// ATTACK: 7+
+// VP: 6
+  [ 1, makeVillainCard("Black Order Guards", "Ebony Maw", 7, 6, {
+    ambush: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, c => c.cost >= 5)), // TODO: multiplayer reveal hand
+    strike: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, c => c.cost >= 5)),
+    escape: ascendToMastermind,
+    varDefense: empowerVarDefense(c => c.cost >= 5),
+  })],
+// <b>Empowered</b> by cards that cost 5 or more.
+// AMBUSH: Each player discards a card that costs 5 or more or gains a Wound.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Black Order Guards", "Proxima Midnight", 4, 4, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 5, () => gainWoundEv(ev, p), p)),
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    varDefense: empowerVarDefense(c => c.cost >= 5),
+  })],
+]},
+{ name: "Intergalactic Party Animals", cards: [
+// Captain Marvel gets +1 Attack for each other Intergalactic Party Animal in the city and/or Escape Pile.
+// AMBUSH: Each player reveals a [Strength] Hero or gains a Wound.
+// ESCAPE: Captain Marvel ascends to become a new Mastermind. She gains the ability "<b>Master Strike</b>: Repeat her Ambush effect."
+// ATTACK: 7+
+// VP: 5
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Captain Marvel, End of the Party", 7, 5, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    strike: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => gainWoundEv(ev, p), p)),
+    escape: ascendToMastermind,
+    varDefense: c => c.printedDefense + [...cityVillains(), ...gameState.escaped.deck].count(c1 => c1 !== c && isGroup(c.villainGroup)(c1)),
+  })],
+// During your turn, you may discard a card that costs 5 or more to "hide the party" and shuffle Frigga into the Villain Deck. If you do, you may KO one of your Heroes,
+// then you must play a card from the Villain Deck.
+// AMBUSH: Frigga ascends to become a new Mastermind. She gains the ability "<b>Master Strike</b>: If there are any Intergalactic Party Animals in the city, each player
+// discards a card."
+// ATTACK: 12
+// VP: 6
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Frigga, Mother of Thor", 12, 6, {
+    ambush: ev => {},
+    cardActions: [(c, ev) => {
+      return new Ev(ev, 'EFFECT', { desc: "Hide the party", cost: { cond: () => playerState.hand.has(c => c.cost >= 5) }, func: ev => {
+        selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => c.cost >= 5), c => {
+          discardEv(ev, c);
+          shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+          selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
+          playAnotherEv(ev);
+        });
+      }});
+    }]
+  })],
+// Party Korath gets +1 Attack for each Bystander held among all Intergalactic Party Animals.
+// AMBUSH: Each player may draw a card. Korath captures a Bystander for each card drawn this way.
+// ATTACK: 4+
+// VP: 2
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Party Korath", 4, 2, {
+    ambush: ev => eachPlayer(p => chooseMayEv(ev, "Draw a card?", () => (drawEv(ev, 1, p), captureEv(ev, ev.source)))),
+    varDefense: c => c.printedDefense + villains().limit(isGroup(c.villainGroup)).sum(c => c.captured.size),
+  })],
+// FIGHT: KO one of your Heroes.
+// ESCAPE: {XDRAMPAGE Party}
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Party Korg", 5, 3, {
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    escape: ev => xdRampageEv(ev, "Party"),
+  })],
+// FIGHT: You get +1 Recruit for each Intergalactic Party Animal in your Victory Pile <i>(including this one)</i>.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Party Kraglin", 4, 2, {
+    fight: ev => addRecruitEvent(ev, playerState.victory.count(isGroup(ev.source.villainGroup))),
+  })],
+// AMBUSH: If there are any other Intergalactic Party Animals in the city, each player discards a card.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Party Nebula", 5, 3, {
+    ambush: ev => cityVillains().has(c => c !== ev.source && isGroup(c.villainGroup)(c)) && eachPlayer(p => pickDiscardEv(ev, 1, p)),
+    escape: sameEffect,
+  })],
+// AMBUSH: Party Skrull captures the highest-cost Hero from all the HQ spaces under Intergalactic Party Animals. Party Skrull gets +Attack equal to that Hero's Cost.
+// FIGHT: Either KO that Hero or choose a player to gain it.
+// ATTACK: 2+
+// VP: 3
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Party Skrull", 2, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a hero for Party Skrull to capture", hqHeroes().limit(c => c.location.above?.has(isGroup(c.villainGroup))).highest(c => c.cost), c => {
+      attachCardEv(ev, c, ev.source, 'PARTY_SKRULL_CAPTURE');
+    }),
+    fight: ev => ev.source.attached('PARTY_SKRULL_CAPTURE').each(c => selectCardOptEv(ev, "Choose a player to gain the captured Hero", gameState.players,
+      p => gainEv(ev, c, p), () => KOEv(ev, c))),
+  })],
+// AMBUSH: {XDRAMPAGE Party}
+// FIGHT: You may KO a grey Hero from your discard pile.
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Intergalactic Party Animals", "Party Surtur", 6, 4, {
+    ambush: ev => xdRampageEv(ev, "Party"),
+    fight: ev => selectCardOptEv(ev, "Choose a grey Hero to KO", playerState.discard.deck.limit(isHero).limit(Color.GRAY), c => KOEv(ev, c)),
+  })],
+]},
+{ name: "Rival Overlords", cards: [
+// Arnim Zola gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// FIGHT: During one of your turns, you may <b>Soulbind Arnim Zola</b> to give a Mastermind -2 Attack for one fight.
+// ATTACK: 5*
+// VP: 2
+  [ 1, makeVillainCard("Rival Overlords", "Arnim Zola, Hydra Scientist", 5, 2, {
+    fight: ev => {},
+    cardActions: [soulBindSelfCardAction(ev => {
+        withMastermind(ev, c => {
+          const cond = is(c);
+          let once = false;
+          addTurnMod('defense', cond, () => -2);
+          addTurnTrigger('FIGHT', ev => cond(ev.what), () => once = true);
+        });
+      })],
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+  })],
+// Dormammu gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// ESCAPE: Dormammu ascends to become a new Mastermind. He gains the ability
+// "<b>Master Strike</b>: Each player reveals the top of their deck. If it costs 1 or more, that player gains a Wound."
+// ATTACK: 11*
+// VP: 6
+  [ 1, makeVillainCard("Rival Overlords", "Dormammu", 11, 6, {
+    escape: ascendToMastermind,
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+    strike: ev => eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => {
+      cards.has(c => c.cost >= 1) && gainWoundEv(ev, p);
+    }, p)),
+  })],
+// Ego gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// ESCAPE: Ego ascends to become a new Mastermind. He gains the ability
+// "<b>Master Strike</b>: Reveal the top card of the Villain Deck. If it's a Master Strike, play it."
+// ATTACK: 10*
+// VP: 5
+  [ 1, makeVillainCard("Rival Overlords", "Ego", 10, 5, {
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+    strike: ev => revealVillainDeckEv(ev, 1, cards => cards.has(isStrike) && villainDrawEv(ev)),
+    escape: ascendToMastermind,
+  })],
+// Loki gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// ESCAPE: Loki ascends to become a new Mastermind. He gains the ability
+// "<b>Master Strike</b>: Each player discards a [Ranged] Hero or KOs one of their non-grey Heroes."
+// ATTACK: 9*
+// VP: 5
+  [ 1, makeVillainCard("Rival Overlords", "Loki", 9, 5, {
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.RANGED), c => discardEv(ev, c),
+      () => selectCardEv(ev, "Choose a Hero to KO", p.hand.limit(isNonGrayHero), c => KOEv(ev, c), p))),
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+  })],
+// Red Skull gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// ESCAPE: Red Skull ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player reveals a [Covert] Hero or discards down to 4 cards."
+// ATTACK: 8*
+// VP: 4
+  [ 1, makeVillainCard("Rival Overlords", "Red Skull, Hydra Occultist", 8, 4, {
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => pickDiscardEv(ev, -4, p), p)),
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+  })],
+// Thanos gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// ESCAPE: Thanos ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player discards half of their cards <i>(round down the discards)</i>."
+// ATTACK: 12*
+// VP: 6
+  [ 1, makeVillainCard("Rival Overlords", "Thanos", 12, 6, {
+    escape: ascendToMastermind,
+    strike: ev => eachPlayer(p => pickDiscardEv(ev, Math.floor(p.hand.size / 2), p)),
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+  })],
+// Ulysses Klaue gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// AMBUSH: A Villain in the city with an "ascend" ability ascends to become a new Mastermind.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 6*
+// VP: 2
+  [ 1, makeVillainCard("Rival Overlords", "Ulysses Klaue", 6, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a Villain to ascend", cityVillains().filter(c => c.escape === ascendToMastermind), c => {
+      pushEffects(ev, c, 'escape', c.escape);
+    }),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+  })],
+// Yondu gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+// AMBUSH: Yondu captures a Bystander.
+// FIGHT: Each player KOs one of their Heroes.
+// ATTACK: 7*
+// VP: 3
+  [ 1, makeVillainCard("Rival Overlords", "Yondu", 7, 3, {
+    ambush: ev => captureEv(ev, ev.source),
+    fight: ev => eachPlayer(p => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(p), c => KOEv(ev, c), p)),
+    varDefense: c => c.printedDefense - 2 * fightableCards().count(c1 => c !== c1 && isGroup(c.villainGroup)(c1)),
+  })],
+]},
+{ name: "Strange’s Demons", cards: [
+// AMBUSH: {XDRAMPAGE Demon} Then each player must <b>Soulbind a Strange's Demon Villain</b>.
+// ESCAPE: Demon Champion of Hydra ascends to become a new Mastermind. It gains the ability "<b>Master Strike</b>: Repeat its Ambush effect."
+// ATTACK: 8
+// VP: 6
+  [ 1, makeVillainCard("Strange’s Demons", "Demon Champion of Hydra", 8, 6, {
+    ambush: ev => { xdRampageEv(ev, "Demon"); eachPlayer(p => forceSoulbindEv(ev, isGroup(ev.source.villainGroup), p)); },
+    strike: ev => { xdRampageEv(ev, "Demon"); eachPlayer(p => forceSoulbindEv(ev, isGroup(ev.source.villainGroup), p)); },
+    escape: ascendToMastermind,
+  })],
+// FIGHT: {SOULBIND another Villain} You get +Recruit equal to that Villain's VP.
+// ESCAPE: {XDRAMPAGE Demon}
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Strange’s Demons", "Demon Dragon", 6, 4, {
+    fight: ev => soulbindEv(ev, 0, c => addRecruitEvent(ev, c.vp), isNot(ev.source)),
+    escape: ev => xdRampageEv(ev, "Demon"),
+  })],
+// AMBUSH: Each player must <b>Soulbind a Strange's Demon Villain</b> or discard a card.
+// ESCAPE: Demonbound Doctor Strange ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Repeat his Ambush effect."
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Strange’s Demons", "Demonbound Doctor Strange", 7, 5, {
+    ambush: ev => eachPlayer(p => forceSoulbindEv(ev, isGroup(ev.source.villainGroup), p, () => pickDiscardEv(ev, 1, p))),
+    strike: ev => eachPlayer(p => forceSoulbindEv(ev, isGroup(ev.source.villainGroup), p, () => pickDiscardEv(ev, 1, p))),
+    escape: ascendToMastermind,
+  })],
+// FIGHT: {SOULBIND a Henchman} Draw two cards. You may do that Henchman's Fight effect.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("Strange’s Demons", "Moose Demon", 4, 2, {
+    fight: ev => soulbindEv(ev, 0, c => {
+      drawEv(ev, 2);
+      chooseMayEv(ev, "Do the Henchman's Fight effect?", () => pushEffects(ev, c, 'fight', c.fight));
+    }, isHenchman),
+  })],
+// FIGHT: {SOULBIND a Bystander} Draw two cards. Then if it's a Special Bystander, you may do its Rescue effect.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Strange’s Demons", "Skull Demon", 5, 3, {
+    fight: ev => soulbindEv(ev, 0, c => {
+      drawEv(ev, 2);
+      chooseMayEv(ev, "Do the Bystander's Rescue effect?", () => pushEffects(ev, c, 'rescue', c.rescue));
+    }, isBystander),
+  })],
+// FIGHT: {SOULBIND two other Villains} KO up to two cards from your discard pile.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Strange’s Demons", "Two-Headed Ram Demon", 5, 3, {
+    fight: ev => soulbindEv(ev, 0, () => {
+      selectObjectsEv(ev, "Choose cards to KO", 2, playerState.discard.deck, c => KOEv(ev, c));
+    }, c => isVillain(c) && isNot(ev.source)(c), 2)
+  })],
+// FIGHT: {SOULBIND another Villain} KO one of your Heroes.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Strange’s Demons", "Wolf Demon", 4, 2, {
+    fight: ev => soulbindEv(ev, 0, () => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)), isNot(ev.source)),
+  })],
+]},
+{ name: "Zombie Avengers", cards: [
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// Zombie Captain America gets -1 Attack for each Hero Class you have.
+// ESCAPE: Each player reveals three Hero Classes or gains a Wound.
+// ATTACK: 8*
+// VP: 4
+  [ 1, makeVillainCard("Zombie Avengers", "Zombie Captain America", 8, 4, {
+    ambush: riseOfTheLivingDead,
+    escape: ev => eachPlayer(p => numClasses(yourHeroes(p)) >= 3 || gainWoundEv(ev, p)),
+    varDefense: c => c.printedDefense - numClasses(),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// FIGHT: Look at the top three cards of your deck. Draw one of them, KO one, and put one back.
+// ESCAPE: {XDRAMPAGE Zombie}
+// ATTACK: 6
+// VP: 4
+  [ 1, makeVillainCard("Zombie Avengers", "Zombie Doctor Strange", 6, 4, {
+    ambush: riseOfTheLivingDead,
+    fight: ev => lookAtThreeEv(ev, 'DRAW', 'KO'),
+    escape: ev => xdRampageEv(ev, "Zombie"),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// FIGHT: Each player draws a card.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Zombie Avengers", "Zombie Hawkeye", 5, 3, {
+    ambush: riseOfTheLivingDead,
+    fight: ev => eachPlayer(p => drawEv(ev, 1, p)),
+  })],
+// AMBUSH: Each player reveals a [Tech] card or gains a Wound. Then {RISEOFTHELIVINGDEAD}.
+// ESCAPE: Zombie Iron Man ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Repeat his Ambush effect."
+// ATTACK: 7
+// VP: 5
+  [ 1, makeVillainCard("Zombie Avengers", "Zombie Iron Man", 7, 5, {
+    ambush: ev => {
+      eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p));
+      cont(ev, riseOfTheLivingDead);
+    },
+    riseOfTheLivingDead: true,
+    escape: ascendToMastermind,
+    strike: ev => {
+      eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p));
+      cont(ev, riseOfTheLivingDead);
+    },
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// While in the Sewers, Rooftops, or Bridge, Zombie Wasp is "giant size" and gets +2 Attack.
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Zombie Avengers", "Zombie Wasp", 4, 3, {
+    ambush: riseOfTheLivingDead,
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    varDefense: c => c.printedDefense + (villainIn('SEWERS', 'ROOFTOPS', 'BRIDGE').includes(c) ? 2 : 0),
+  })],
+// AMBUSH: {RISEOFTHELIVINGDEAD}
+// FIGHT: Look at the top two cards of your deck. Draw one of them and put the other back.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Zombie Avengers", "Zombie Wong", 4, 2, {
+    ambush: riseOfTheLivingDead,
+    fight: ev => revealPlayerDeckEv(ev, 2, cards => {
+      selectCardEv(ev, "Choose a card to draw", cards, c => drawEv(ev, 1, playerState));
+    }),
   })],
 ]},
 ]);

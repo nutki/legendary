@@ -227,9 +227,9 @@ function selectCardOrderEv(ev: Ev, desc: string, cards: Card[], effect: (c: Card
   f(cards);
 }
 // Ambush effect
-function raiseOfTheLivingDead(ev: Ev) {
-  if (ancestorEvents(ev).has(ev => ev.func === raiseOfTheLivingDead)) return; // What If...? no chain reaction change.
-  const cards = gameState.players.map(p => p.victory.top).limit(c => c && c.ambush === raiseOfTheLivingDead && isVillain(c));
+function riseOfTheLivingDead(ev: Ev) {
+  if (ancestorEvents(ev).has(ev => ev.func === riseOfTheLivingDead)) return; // What If...? no chain reaction change.
+  const cards = gameState.players.map(p => p.victory.top).limit(c => c && (c.ambush === riseOfTheLivingDead || c.riseOfTheLivingDead) && isVillain(c));
   selectCardOrderEv(ev, "Choose a card to return to the city", cards, c => villainDrawEv(ev, c));
 }
 
@@ -588,8 +588,8 @@ function addMastermindEv(ev: Ev, name?: string) {
 function empowerEv(ev: Ev, color: Filter<Card>) {
   addAttackEvent(ev, hqCards().count(color));
 }
-function empowerVarDefense(color: number | ((c: Card) => number), amount: number = 1) {
-  return (c: Card) => (c.printedDefense || 0) + hqCards().count(color instanceof Function ? color(c) : color) * amount;
+function empowerVarDefense(color: Filter<Card>, amount: number = 1) {
+  return (c: Card) => (c.printedDefense || 0) + hqCards().count(color) * amount;
 }
 function getSizeChanging(c: Card) {
   return getModifiedStat(c, 'sizeChanging', c.sizeChanging);
@@ -1182,12 +1182,20 @@ function soulbindEv(ev: Ev, cond: number | Affiliation, effect: (c: Card) => voi
   });
   cont(ev, () => bound && effect(bound));
 }
-function soulBindSelfCardAction(effect: (c: Card) => void) {
+function soulBindSelfCardAction(effect: (ev: Ev) => void) {
   return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', ev => {
     return new Ev(ev, 'EFFECT', {
-      what: ev.source,
-      cost: { attack: 1 },
-      func: ev => soulbindEv(ev, cond, effect, limit, n),
+      what: c,
+      cost: { cond: c => c.location === playerState.victory },
+      func: ev => {
+        attachCardEv(ev, c, playerState.victory, 'SOULBIND');
+        effect(ev);
+      },
     });
   });
+}
+function forceSoulbindEv(ev: Ev, cond: Filter<Card> = isVillain, p: Player = playerState, effect0?: () => void) {
+  selectCardOrEv(ev, "Choose a card to Soulbind", p.victory.limit(cond), c => {
+   attachCardEv(ev, c, playerState.victory, 'SOULBIND');
+  }, effect0, p);
 }
