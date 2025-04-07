@@ -316,3 +316,65 @@ makeHenchmenCard("Sentinel Squad O*N*E*", 2, {
   },
 }),
 ]);
+addHenchmenTemplates("Marvel Studios What If...?", [
+// AMBUSH: Each player discards the top three cards of their deck.
+// FIGHT: You may KO a grey Hero from your discard pile.
+// ATTACK: 3
+makeHenchmenCard("Giants of Jotunheim", 3, {
+  fight: ev => eachPlayer(p => revealPlayerDeckEv(ev, 3, cards => cards.each(c => discardEv(ev, c)), p)),
+  ambush: ev => selectCardOptEv(ev, "Choose a grey Hero to KO", playerState.discard.limit(Color.GRAY), c => KOEv(ev, c)),
+}),
+{name: "Ultron Sentries", cards:[
+// <b>Empowered</b> by [Covert]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+[2, makeHenchmenCard("Ultron Sentries", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: empowerVarDefense(Color.COVERT),
+  variant: 'COVERT',
+}, "Ultron Sentries")],
+// <b>Empowered</b> by [Instinct]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+[2, makeHenchmenCard("Ultron Sentries", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: empowerVarDefense(Color.INSTINCT),
+  variant: 'INSTINCT',
+}, "Ultron Sentries")],
+// <b>Empowered</b> by [Ranged]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+[2, makeHenchmenCard("Ultron Sentries", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: empowerVarDefense(Color.RANGED),
+  variant: 'RANGED',
+}, "Ultron Sentries")],
+// <b>Empowered</b> by [Strength]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+[2, makeHenchmenCard("Ultron Sentries", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: empowerVarDefense(Color.STRENGTH),
+  variant: 'STRENGTH',
+}, "Ultron Sentries")],
+// <b>Empowered</b> by [Tech]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+[2, makeHenchmenCard("Ultron Sentries", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  varDefense: empowerVarDefense(Color.TECH),
+  variant: 'TECH',
+}, "Ultron Sentries")],
+// AMBUSH: Another Villain captures a Bystander.
+// FIGHT: {LIBERATE 3}. The next time you rescue a Bystander this turn <i>(including from this Henchman)</i>, KO one of your Heroes.
+// ATTACK: 3
+]},
+makeHenchmenCard("Vibranium Liberator Drones", 3, {
+  fight: ev => {
+    liberateEv(ev, 3);
+    addTurnTrigger('RESCUE', ev => ev.what === ev.source && ev.who === playerState, ev => selectCardAndKOEv(ev, yourHeroes()));
+    // TODO allow ordering effects, so this can trigger if this henchman had a bystander
+  },
+  ambush: ev => selectCardEv(ev, "Choose a Villain", villains(), c => captureEv(ev, c)),
+}),
+]);
