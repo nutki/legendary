@@ -1,0 +1,246 @@
+
+#CARDNAME: Black Order Guards
+
+#SUBNAME: Corvus Glaive
+#COPIES: 2
+<b>Empowered</b> by cards that cost 5 or more.
+#AMBUSH: For each Hero in the HQ that costs 5 or more, Corvus Glaive captures a Bystander.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Cull Obsidian
+#COPIES: 3
+<b>Empowered</b> by cards that cost 5 or more.
+#FIGHT: For each Hero in the HQ that costs 5 or more, you get +1 Recruit.
+#ATTACK: 2+
+#VP: 2
+
+#SUBNAME: Ebony Maw
+#COPIES: 1
+<b>Empowered</b> by cards that cost 5 or more.
+#AMBUSH: Each player discards a card that costs 5 or more.
+#ESCAPE: Ebony Maw ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Repeat his Ambush effect."
+#ATTACK: 7+
+#VP: 6
+
+#SUBNAME: Proxima Midnight
+#COPIES: 2
+<b>Empowered</b> by cards that cost 5 or more.
+#AMBUSH: Each player discards a card that costs 5 or more or gains a Wound.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 4
+
+#CARDNAME: Intergalactic Party Animals
+
+#SUBNAME: Captain Marvel, End of the Party
+#COPIES: 1
+Captain Marvel gets +1 Attack for each other Intergalactic Party Animal in the city and/or Escape Pile.
+#AMBUSH: Each player reveals a [Strength] Hero or gains a Wound.
+#ESCAPE: Captain Marvel ascends to become a new Mastermind. She gains the ability "<b>Master Strike</b>: Repeat her Ambush effect."
+#ATTACK: 7+
+#VP: 5
+
+#SUBNAME: Frigga, Mother of Thor
+#COPIES: 1
+During your turn, you may discard a card that costs 5 or more to "hide the party" and shuffle Frigga into the Villain Deck. If you do, you may KO one of your Heroes, then you must play a card from the Villain Deck.
+#AMBUSH: Frigga ascends to become a new Mastermind. She gains the ability "<b>Master Strike</b>: If there are any Intergalactic Party Animals in the city, each player discards a card."
+#ATTACK: 12
+#VP: 6
+
+#SUBNAME: Party Korath
+#COPIES: 1
+Party Korath gets +1 Attack for each Bystander held among all Intergalactic Party Animals.
+#AMBUSH: Each player may draw a card. Korath captures a Bystander for each card drawn this way.
+#ATTACK: 4+
+#VP: 2
+
+#SUBNAME: Party Korg
+#COPIES: 1
+#FIGHT: KO one of your Heroes.
+#ESCAPE: {XDRAMPAGE Party}
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Party Kraglin
+#COPIES: 1
+#FIGHT: You get +1 Recruit for each Intergalactic Party Animal in your Victory Pile <i>(including this one)</i>.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Party Nebula
+#COPIES: 1
+#AMBUSH: If there are any other Intergalactic Party Animals in the city, each player discards a card.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Party Skrull
+#COPIES: 1
+#AMBUSH: Party Skrull captures the highest-cost Hero from all the HQ spaces under Intergalactic Party Animals. Party Skrull gets +Attack equal to that Hero's Cost.
+#FIGHT: Either KO that Hero or choose a player to gain it.
+#ATTACK: 2+
+#VP: 3
+
+#SUBNAME: Party Surtur
+#COPIES: 1
+#AMBUSH: {XDRAMPAGE Party}
+#FIGHT: You may KO a grey Hero from your discard pile.
+#ATTACK: 6
+#VP: 4
+
+#CARDNAME: Rival Overlords
+
+#SUBNAME: Arnim Zola, Hydra Scientist
+#COPIES: 1
+Arnim Zola gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#FIGHT: During one of your turns, you may <b>Soulbind Arnim Zola</b> to give a Mastermind -2 Attack for one fight.
+#ATTACK: 5*
+#VP: 2
+
+#SUBNAME: Dormammu
+#COPIES: 1
+Dormammu gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#ESCAPE: Dormammu ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player reveals the top of their deck. If it costs 1 or more, that player gains a Wound."
+#ATTACK: 11*
+#VP: 6
+
+#SUBNAME: Ego
+#COPIES: 1
+Ego gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#ESCAPE: Ego ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Reveal the top card of the Villain Deck. If it's a Master Strike, play it."
+#ATTACK: 10*
+#VP: 5
+
+#SUBNAME: Loki
+#COPIES: 1
+Loki gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#ESCAPE: Loki ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player discards a [Ranged] Hero or KOs one of their non-grey Heroes."
+#ATTACK: 9*
+#VP: 5
+
+#SUBNAME: Red Skull, Hydra Occultist
+#COPIES: 1
+Red Skull gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#ESCAPE: Red Skull ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player reveals a [Covert] Hero or discards down to 4 cards."
+#ATTACK: 8*
+#VP: 4
+
+#SUBNAME: Thanos
+#COPIES: 1
+Thanos gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#ESCAPE: Thanos ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Each player discards half of their cards <i>(round down the discards)</i>."
+#ATTACK: 12*
+#VP: 6
+
+#SUBNAME: Ulysses Klaue
+#COPIES: 1
+Ulysses Klaue gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#AMBUSH: A Villain in the city with an "ascend" ability ascends to become a new Mastermind.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 6*
+#VP: 2
+
+#SUBNAME: Yondu
+#COPIES: 1
+Yondu gets -2 Attack for each other Rival Overlord that's in the city or a Mastermind.
+#AMBUSH: Yondu captures a Bystander.
+#FIGHT: Each player KOs one of their Heroes.
+#ATTACK: 7*
+#VP: 3
+
+#CARDNAME: Strange’s Demons
+
+#SUBNAME: Demon Champion of Hydra
+#COPIES: 1
+#AMBUSH: {XDRAMPAGE Demon} Then each player must <b>Soulbind a Strange's Demon Villain</b>.
+#ESCAPE: Demon Champion of Hydra ascends to become a new Mastermind. It gains the ability "<b>Master Strike</b>: Repeat its Ambush effect."
+#ATTACK: 8
+#VP: 6
+
+#SUBNAME: Demon Dragon
+#COPIES: 1
+#FIGHT: {SOULBIND another Villain} You get +Recruit equal to that Villain's VP.
+#ESCAPE: {XDRAMPAGE Demon}
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Demonbound Doctor Strange
+#COPIES: 1
+#AMBUSH: Each player must <b>Soulbind a Strange's Demon Villain</b> or discard a card.
+#ESCAPE: Demonbound Doctor Strange ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Repeat his Ambush effect."
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Moose Demon
+#COPIES: 1
+#FIGHT: {SOULBIND a Henchman} Draw two cards. You may do that Henchman's Fight effect.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Skull Demon
+#COPIES: 1
+#FIGHT: {SOULBIND a Bystander} Draw two cards. Then if it's a Special Bystander, you may do its Rescue effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Two-Headed Ram Demon
+#COPIES: 1
+#FIGHT: {SOULBIND two other Villains} KO up to two cards from your discard pile.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Wolf Demon
+#COPIES: 2
+#FIGHT: {SOULBIND another Villain} KO one of your Heroes.
+#ATTACK: 4
+#VP: 2
+
+#CARDNAME: Zombie Avengers
+
+#SUBNAME: Zombie Captain America
+#COPIES: 1
+#AMBUSH: {RISEOFTHELIVINGDEAD}
+Zombie Captain America gets -1 Attack for each Hero Class you have.
+#ESCAPE: Each player reveals three Hero Classes or gains a Wound.
+#ATTACK: 8*
+#VP: 4
+
+#SUBNAME: Zombie Doctor Strange
+#COPIES: 1
+#AMBUSH: {RISEOFTHELIVINGDEAD}
+#FIGHT: Look at the top three cards of your deck. Draw one of them, KO one, and put one back.
+#ESCAPE: {XDRAMPAGE Zombie}
+#ATTACK: 6
+#VP: 4
+
+#SUBNAME: Zombie Hawkeye
+#COPIES: 2
+#AMBUSH: {RISEOFTHELIVINGDEAD}
+#FIGHT: Each player draws a card.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Zombie Iron Man
+#COPIES: 1
+#AMBUSH: Each player reveals a [Tech] card or gains a Wound. Then {RISEOFTHELIVINGDEAD}.
+#ESCAPE: Zombie Iron Man ascends to become a new Mastermind. He gains the ability "<b>Master Strike</b>: Repeat his Ambush effect."
+#ATTACK: 7
+#VP: 5
+
+#SUBNAME: Zombie Wasp
+#COPIES: 1
+#AMBUSH: {RISEOFTHELIVINGDEAD}
+While in the Sewers, Rooftops, or Bridge, Zombie Wasp is "giant size" and gets +2 Attack.
+#FIGHT: KO one of your Heroes.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Zombie Wong
+#COPIES: 2
+#AMBUSH: {RISEOFTHELIVINGDEAD}
+#FIGHT: Look at the top two cards of your deck. Draw one of them and put the other back.
+#ATTACK: 4
+#VP: 2
+
+

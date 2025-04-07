@@ -1,0 +1,26 @@
+
+#CARDNAME: Breach the Nexus of All Realities
+#SETUP: (1-2 players: Use 3 Villain Groups.) Stack each Villain Group separately face down as its own "Reality." Add 2 Twists to each Reality. Shuffle together all the Henchmen, Master Strikes, and Bystanders for your player count and randomly distribute them amongst all the Realities, as evenly as possible. Shuffle each Reality separately.
+#RULE: Each turn, you choose which Reality (Villain Deck) plays a card. They all play into the same city.
+#TWIST: Stack this Twist next to this Reality as a "Dimensional Breach." If this was the second Breach for that Reality, destroy that Reality, KO'ing all its cards.
+#EVILWINS: When all Realities have been destroyed.
+
+#CARDNAME: Collect an Interstellar Zoo
+#SETUP: 11 Twists.
+#TWIST: Each player reveals their hand. Starting with the current player, then clockwise, the first player to have one of this kind of Hero in their hand or discard pile stacks it next to this Scheme, "stolen for the Zoo."
+#TWISTNR: NR[1] [Strength] <b>T2</b>: [Instinct] <b>T3</b>: [Covert] <b>T4</b>: [Tech] <b>T5</b>: [Ranged] <b>T6</b>: 5-cost <b>T7</b>: 4-cost <b>T8</b>: 3-cost <b>T9</b>: 0-cost <b>T10</b>: Recruit icon. <b>T11</b>: Attack icon.
+#EVILWINS: When the Zoo has 5 Heroes.
+
+#CARDNAME: Marvel Zombies
+#SETUP: 4 Twists. Include exactly one Villain Group with "{RISEOFTHELIVINGDEAD}." Add 8 random cards from an extra Hero to the Villain Deck. 1-2 players; Add 3 extra Bystanders.
+#RULE: Hero cards from the Villain Deck are "Zombie" Villains with Attack equal to their cost +1, worth VP equal to their cost. They have "<b>Ambush</b>: {RISEOFTHELIVINGDEAD}. <b>Fight</b>: Play a copy of this card as a Hero, then put it into your Victory Pile as a Villain." <i>(It still has <b>Rise</b>.)</i>
+#TWIST: Each Villain in the city with "Rise of the Living Dead" escapes. Then play another card from the Villain Deck.
+#EVILWINS: When there are 3 Villains per player in the Escape pile or the Villain Deck runs out.
+
+#CARDNAME: Trash Earth with Hugest Party Ever
+#SETUP:  6 Twists. Always include the Party Thor Hero and Intergalactic Party Animals Villain Group.
+#TWIST: If Frigga, Mother of Thor, is in play, stack this Twist next to the Scheme as "Discovered Wreckage." Otherwise: Search the Villain Deck for Frigga and she does her Ambush ability. Then shuffle this Twist back into the Villain Deck.
+#RULE: You can't fight or defeat Frigga.
+#EVILWINS: When 5 Wreckages have been Discovered.
+
+

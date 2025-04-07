@@ -1,0 +1,7 @@
+
+#CARDNAME: S.H.I.E.L.D. Officer
+#COPIES: 8
+#TEAM: S.H.I.E.L.D.
+#RECRUIT: 2
+#COST: 3
+

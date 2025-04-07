@@ -1,0 +1,31 @@
+
+#CARDNAME: Bystander
+#COPIES: 25
+#VP: 1
+
+#CARDNAME: Happy Hogan
+#COPIES: 1
+#RESCUE: reveal the top card of the Villain Deck. If it's a Master Strike or Scheme Twist, you may shuffle that deck.
+#VP: 1
+
+#CARDNAME: Howard Stark
+#COPIES: 1
+#RESCUE: reveal the top four cards of your deck. Draw each [Tech] and [Ranged] Hero you revealed. Put the rest back in any order.
+#VP: 1
+
+#CARDNAME: Howard the Duck
+#COPIES: 1
+#RESCUE: reveal the top four cards of the Bystander Deck. You may rescue a Special Bystander from among them, then put the rest back on the bottom of that deck.
+#VP: 1
+
+#CARDNAME: Pepper Potts
+#COPIES: 1
+#RESCUE: you get +1 Recruit if the Bank is empty and +1 Recruit if the Rooftops are empty.
+#VP: 1
+
+#CARDNAME: Scott Lang's Head
+#COPIES: 1
+#RESCUE: whichever player is a head <i>(has the most VP or tied for most)</i> may KO one of their cards.
+#VP: 1
+
+

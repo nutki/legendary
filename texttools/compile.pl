@@ -55,6 +55,7 @@ sub autopower {
     s/^{OUTWIT}: *// and $wrap = "mayOutwitEv(ev, () => XXX)";
     s/^{DIGEST (\d)} *// and $wrap = "digestEv(ev, $1, () => XXX)";
     s/^{INDIGESTION} *// and $wrap = "() => XXX", $ind = 1;
+    s/^{WHAT IF} *// and $wrap = "whatIfEv(ev, () => XXX)";
 
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
     /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev$num{$1})";
@@ -87,6 +88,7 @@ sub autopower {
     s/^{HIGEST ABOMINATION}$// and $effect = "heroHighestAbominationEv(ev)";
     s/^{(\w+) ABOMINATION}$// and $effect = "heroAbominationEv(ev, '$1')";
     s/^{CLONE}$// and $effect = "cloneHeroEv(ev)";
+    s/^{LIBERATE (\d+)}$// and $effect = "liberateEv(ev, $1)";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;

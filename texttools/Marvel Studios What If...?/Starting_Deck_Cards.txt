@@ -1,0 +1,13 @@
+
+#CARDNAME: S.H.I.E.L.D. Agent
+#COPIES: 8
+#TEAM: S.H.I.E.L.D.
+#RECRUIT: 1
+#COST: 0
+
+#CARDNAME: S.H.I.E.L.D. Trooper
+#COPIES: 4
+#TEAM: S.H.I.E.L.D.
+#ATTACK: 1
+#COST: 0
+

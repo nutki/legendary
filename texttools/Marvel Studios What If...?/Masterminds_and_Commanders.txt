@@ -1,0 +1,111 @@
+
+#CARDNAME: Hank Pym, Yellowjacket
+Before each time you fight Hank Pym, you must "track him down" by discarding the top 6 cards of your deck, then paying 2 Attack for each card you discarded that costs 0. If you don't pay this total, gain a Wound and your turn ends.
+#LEADS: Any Villain Group
+#STRIKE: Each player puts three 0-cost cards from their discard pile on top of their deck.
+#ATTACK: 4*
+#VP: 6
+
+#EPICNAME: Hank Pym, Yellowjacket
+Before each time you fight Hank Pym, you must "track him down" by discarding the top 6 cards of your deck, then paying 3 Attack for each card you discarded that costs 0. If you don't pay this total, gain a Wound and your turn ends.
+#LEADS: Any Villain Group
+#STRIKE: Each player puts six 0-cost cards from their discard pile on top of their deck.
+#ATTACK: 6*
+#VP: 6
+
+#TACTIC: Microscopic Research
+#FIGHT: You may gain a Hero from the HQ that costs 2 or less.
+
+#TACTIC: Revenge for Ancient Grievance
+#FIGHT: The player with the most Villains in their Victory Pile <i>(and/or tied for most)</i> gains a Wound.
+
+#TACTIC: Save from Assassination
+#FIGHT: Choose a card from your discard pile that was discarded from your deck this turn. You may put that card into your hand.
+
+#TACTIC: Vengeful Sting
+#FIGHT: Each other player reveals the top three cards of their deck, discards all those cards that cost 1 or more, and puts the rest back in any order.
+
+#CARDNAME: Killmonger, the Betrayer
+<b>Always Include</b>: Killmonger as one of the Heroes
+#LEADS: Vibranium Liberator Drones
+#STRIKE: If there are any Killmonger cards in the city or HQ, each player gains a Wound. Choose a Killmonger Hero from your hand, any player's discard pile, or the HQ to enter the city as a Villain with Attack equal to its cost +3 and "<b>Fight</b>: KO this or choose a player to gain it."
+#ATTACK: 9
+#VP: 6
+
+#EPICNAME: Killmonger, the Betrayer
+<b>Always Include</b>: Killmonger as one of the Heroes
+#LEADS: Vibranium Liberator Drones
+#STRIKE: If there are any Killmonger cards in the city or HQ, each player gains a Wound. Each player chooses a Killmonger Hero from their hand, discard pile, or the HQ to enter the city as a Villain with Attack equal to its cost +4 and "<b>Fight</b>: KO this or choose a player to gain it."
+#ATTACK: 12
+#VP: 6
+
+#TACTIC: Change in Loyalties
+#FIGHT: Gain a Killmonger card from the city, HQ, or another player's discard pile.
+
+#TACTIC: Pulling the Strings
+#FIGHT: You get +1 Recruit for each different Villain Group in your Victory Pile.
+
+#TACTIC: See You on the Flip Side
+#FIGHT: Each other player reveals their hand and discards a Killmonger card.
+
+#TACTIC: Sunset Over Wakanda
+#FIGHT: From left to right, each Killmonger Hero in the HQ enters the city as a Villain as described on the Mastermind card. Then refill all the empty HQ spaces.
+
+#CARDNAME: Ultron Infinity
+Ultron Infinity has all the <b>Empowered</b> abilities of all Ultron Sentries in the city, the Escape Pile, and stacked next to him.
+#LEADS: Ultron Sentries <i>(even in solo mode)</i>
+#STRIKE: {XDRAMPAGE Ultron}. Then each player stacks an Ultron Sentry from their Victory Pile next to Ultron. Put this Strike next to Ultron as an "Infinity Stone." When Ultron has gained five Infinity Stones <i>(plus this card as the Mind stone)</i>, he gets <b>+&infin;</b> Attack. <i>(Solo mode: Also stack a random unused Ultron Sentry next to Ultron.)</i>
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Ultron Infinity
+Ultron Infinity has all the <b>Empowered</b> abilities of all Ultron Sentries in the city, the Escape Pile, and stacked next to him.
+#LEADS: Ultron Sentries <i>(even in solo mode)</i>
+#STRIKE: {XDRAMPAGE Ultron}. Then each player stacks two Ultron Sentries from their Victory Pile next to Ultron. Put this Strike next to Ultron as an "Infinity Stone." <i>(Solo mode: Also stack a random unused Ultron Sentry next to Ultron.)</i>
+<b>Ultron Wins</b>: When he has gained five Infinity Stones.
+#ATTACK: 12+
+#VP: 6
+
+#TACTIC: Infinity of Minions
+#FIGHT: Stack an Ultron Sentry from the city next to Ultron. Then each other player chooses an Ultron Sentry from their Victory Pile to enter the city.
+
+#TACTIC: Struggle for the Infinity Stones
+#FIGHT: Gain a Hero from the HQ that has one of the Hero Classes that is <b>Empowering</b> Ultron.
+
+#TACTIC: Transcend Mortality
+#FIGHT: Search the Villain Deck and stack the first Ultron Sentry you find next to Ultron. Shuffle the Villain Deck.
+
+#TACTIC: Unfettered Annihilation
+#FIGHT: For each Ultron Sentry in your Victory Pile, you may KO a Hero from your hand or discard pile.
+
+#CARDNAME: Zombie Scarlet Witch
+Zombie Scarlet Witch gets +1 Attack for each Hero with an odd-numbered cost you played this turn.
+#LEADS: Zombie Avengers <i>(In solo mode, if using another Villain Group, add "Zombie" to their card names and they all get <b>Ambush</b>: {RISEOFTHELIVINGDEAD}.</i>
+#STRIKE: {XDRAMPAGE Zombie}. Then {RISEOFTHELIVINGDEAD}.
+#ATTACK: 9+
+#VP: 6
+
+#EPICNAME: Zombie Scarlet Witch
+Zombie Scarlet Witch gets +1 Attack for each Hero with an odd-numbered cost you played this turn.
+#LEADS: Zombie Avengers <i>(In solo mode, if using another Villain Group, add "Zombie" to their card names and they all get <b>Ambush</b>: {RISEOFTHELIVINGDEAD}.)</i>
+#STRIKE: {XDRAMPAGE Zombie}. Then each player must <b>Soulbind</b> the topmost card of their Victory Pile that isn't a Villain with "Rise of the Living Dead." Then {RISEOFTHELIVINGDEAD}.
+#ATTACK: 13+
+#VP: 6
+
+#TACTIC: Chaos Hex
+#FIGHT: Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+Each other player discards a card with an odd-numbered cost or gains a Wound.
+
+#TACTIC: Even the Odds
+#FIGHT: Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+Each other player reveals the top six cards of their deck, discards all those cards that cost 2, 4, 6, or 8, and puts the rest back in any order.
+
+#TACTIC: Refuse to Accept Death
+#FIGHT: Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+You may gain a Hero from the KO pile.
+
+#TACTIC: Wistful Illusion
+#FIGHT: Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+Reveal the top card of the Hero Deck then put it on the bottom of the Hero Deck. You may play a copy of that card this turn.
+
+

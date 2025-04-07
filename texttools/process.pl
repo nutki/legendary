@@ -25,6 +25,7 @@ Warbound
 Venomverse
 X-Factor
 Heroes of Wakanda
+Guardians of the Multiverse
 END
 $aff = "(?:".(join'|',map s/[().]/\\$&/gr, @aff).")";
 $class = "(?:Instinct|Ranged|Tech|Covert|Strength)";
@@ -135,6 +136,9 @@ while (<A>) {
     s!<b>Sacrifice</b>!{SACRIFICE}!g;
     s!<b>Endgame</b>:?!{ENDGAME}!g;
     s!<b>Blood Frenzy</b>!{BLOOD FRENZY}!g;
+    s!<b>What If\.\.\.\?</b>:?!{WHAT IF}!g;
+    s!<b>Liberate (\d+)</b>!{LIBERATE $1}!g;
+    s!<b>Soulbind(.*?)</b>:!{SOULBIND$1}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;
@@ -144,7 +148,7 @@ while (<A>) {
       s!^((1/2|\d+( 1/2)?)\+?) Attack$!#ATTACK: $1! && next;
       s!^((1/2|\d+( 1/2)?)\+?) Recruit$!#RECRUIT: $1! && next;
       s!^<i>(.*?)</i> \((\d+) cop(ies|y)\)$!#SUBNAME: $1\n#COPIES: $2! && next;
-      s!^(\[$class\](, \[$class\])?)$!#CLASS: $1! && next;
+      s!^(\[$class\](,? \[$class\])?)$!#CLASS: $1! && next;
       s!^Class: (\[$class\](/\[$class\])?)$!#CLASS: $1! && next;
       s!^(?:Team: )?($aff)$!#TEAM: $1! && next;
       s!^(?:Team: )?($aff)/($aff)$!#TEAM: $1 | $2! && next;

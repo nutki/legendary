@@ -1,0 +1,51 @@
+
+#CARDNAME: Giants of Jotunheim
+#AMBUSH: Each player discards the top three cards of their deck.
+#FIGHT: You may KO a grey Hero from your discard pile.
+#ATTACK: 3
+#VP: 1
+
+#CARDNAME: Ultron Sentries
+
+#CARDNAME: Ultron Sentries
+#COPIES: 2
+<b>Empowered</b> by [Covert]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2+
+#VP: 1
+
+#CARDNAME: Ultron Sentries
+#COPIES: 2
+<b>Empowered</b> by [Instinct]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2+
+#VP: 1
+
+#CARDNAME: Ultron Sentries
+#COPIES: 2
+<b>Empowered</b> by [Ranged]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2+
+#VP: 1
+
+#CARDNAME: Ultron Sentries
+#COPIES: 2
+<b>Empowered</b> by [Strength]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2+
+#VP: 1
+
+#CARDNAME: Ultron Sentries
+#COPIES: 2
+<b>Empowered</b> by [Tech]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 2+
+#VP: 1
+
+#CARDNAME: Vibranium Liberator Drones
+#AMBUSH: Another Villain captures a Bystander.
+#FIGHT: {LIBERATE 3}. The next time you rescue a Bystander this turn <i>(including from this Henchman)</i>, KO one of your Heroes.
+#ATTACK: 3
+#VP: 1
+
+

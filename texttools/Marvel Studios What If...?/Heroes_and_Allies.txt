@@ -1,0 +1,417 @@
+
+#CARDNAME: Apocalyptic Black Widow
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Humanity's Final Hope
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 2+
+If you have at least 4 Bystanders in your Victory Pile, you get +2 Recruit.
+#COST: 3
+#FLAVOR: With so few humans left alive in this dimension, she was determined to save as many as she could.
+#GUN: 1
+
+#SUBNAME: Plant Hidden Asset
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 1
+Draw a card.
+You may have a Villain capture a Bystander.
+#COST: 4
+#FLAVOR: Short on allies, she needed them in the most crucial positions.
+#GUN: 1
+
+#SUBNAME: Precision Strike
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3+
+{POWER Tech} You get +2 Attack.
+#COST: 5
+#FLAVOR: After Hawkeye died, she used his bow for a final, desperate mission against Ultron.
+
+#SUBNAME: Relentless
+#COPIES: 2
+#CLASS: [Covert]
+#ATTACK: 0+
+Draw a card.
+{POWER Covert} {LIBERATE 3}
+#COST: 2
+#FLAVOR: When Hulk and Thor died at Ultron's hands, what kind of human could survive?
+#GUN: 1
+
+#SUBNAME: The Last Avenger
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 3+
+{WHAT IF} {LIBERATE 4}
+#COST: 6
+#FLAVOR: In a dimension where Ultron won, annihilating most of humanity, one hero still stood against him.
+
+#SUBNAME: Time to Save the Multiverse
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+<b>Liberate</b> equal to the number of Bystanders in your Victory Pile.
+#COST: 8
+#FLAVOR: "...again."
+#GUN: 1
+
+#CARDNAME: Captain Carter
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Super Soldier Serum
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 0+
+#ATTACK: 0+
+{WHAT IF} You get +2 Recruit and +2 Attack.
+#COST: 2
+#FLAVOR: Before the serum, Peggy Carter was a hero. Afterwards, she was unstoppable.
+
+#SUBNAME: Wartime Logistics
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 1+
+You get +1 Recruit for each different printed Recruit number among all your Heroes.
+<i>(1+ is the same printed number as 1.)</i>
+#COST: 3
+
+#SUBNAME: Coordinated Assault
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 1+
+You get +1 Attack for each different printed Attack number among all your Heroes.
+<i>(1+ is the same printed number as 1.)</i>
+#COST: 4
+
+#SUBNAME: The Shield of Britain
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 3
+Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack. If you do, the player whose turn it is gets {LIBERATE 3}.
+#COST: 5
+
+#SUBNAME: Give Them All We've Got
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 5
+To play this, you must put another card from your hand on top of your deck.
+#COST: 6
+#FLAVOR: Freedom never falls.
+
+#SUBNAME: Icon of Hope
+#COPIES: 1
+#CLASS: [Strength]
+#RECRUIT: 2+
+#ATTACK: 4+
+You get +1 Recruit for each different printed Recruit number among all your Heroes.
+You get +1 Attack for each different printed Attack number among all your Heroes.
+<i>(1+ is the same printed number as 1.)</i>
+#COST: 8
+
+#CARDNAME: Doctor Strange Supreme
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Seize Infernal Power
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 2+
+[Instinct] {SOULBIND} You get +Recruit equal to that Villain's printed VP.
+#COST: 3
+#FLAVOR: These demons do not bargain. Their power is not granted. It must be taken.
+
+#SUBNAME: Summon Demon Minions
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+[Ranged] {SOULBIND} You get +Attack equal to that Villain's printed VP.
+#COST: 4
+#FLAVOR: Why do your own fighting when you can have demon dragons do it for you?
+
+#SUBNAME: Wards of the Vishanti
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 3+
+{WHAT IF} You get +2 Attack and you may KO a Wound from your hand or from any player's discard pile.
+#COST: 5
+
+#SUBNAME: To Save Christine
+#COPIES: 2
+#CLASS: [Instinct]
+#ATTACK: 0+
+Draw a card.
+[Instinct] {SOULBIND a Bystander or Villain} You get +2 Attack. If it's a Special Bystander, you may do its Rescue effect.
+#COST: 2
+
+#SUBNAME: Break the Absolute Point in Time
+#COPIES: 2
+#CLASS: [Instinct]
+Reveal the top three cards of your deck. Draw one of them, KO one, and put one back.
+#COST: 6
+#FLAVOR: Yearning to save Christiine Palmer's life drove Strange to do the forbidden...and the unthinkable.
+
+#SUBNAME: Stygian Communion
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 3
+[Instinct] {SOULBIND} Draw cards equal to that Villain's printed VP.
+#COST: 8
+#FLAVOR: Was Strange stealing the demons' souls...or were they stealing his?
+
+#CARDNAME: Gamora, Destroyer of Thanos
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Assassin's Stealth
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 0+
+Draw a card.
+{POWER Covert} You get +2 Recruit.
+#COST: 2
+#FLAVOR: Death steps softly.
+
+#SUBNAME: Tactical Insight
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 1
+Draw two cards. Then put a card from your hand on top of your deck.
+#COST: 3
+#FLAVOR: Identify the weak point, then strike without mercy.
+
+#SUBNAME: Wield the Blade of Thanos
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 1+
+You get +1 Attack for each card you drew this turn.
+#COST: 4
+#FLAVOR: Time to cleave a new legacy.
+
+#SUBNAME: Titanicide
+#COPIES: 2
+#CLASS: [Covert]
+#ATTACK: 2
+{WHAT IF} Draw two cards.
+#COST: 5
+#FLAVOR: Killing Thanos is enough to earn a pretty badass reputation.
+
+#SUBNAME: Destroy an Infinity Stone
+#COPIES: 2
+#CLASS: [Instinct]
+#ATTACK: 3
+[Instinct] {SOULBIND} KO a card from your hand or discard pile.
+#COST: 6
+#FLAVOR: They said it couldn't be done, but Gamora found the way.
+
+#SUBNAME: The Infinity Crusher
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 5+
+Guardians of the Galaxy {SOULBIND six Villains} You get <b>+&infin;</b> Attack, usable only for a single fight.
+#COST: 8
+#FLAVOR: To infinity...and be gone.
+
+#CARDNAME: Killmonger, Spec Ops
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Hunt New Prey
+#COPIES: 3
+#CLASS: [Strength] [Tech]
+#RECRUIT: 1+
+You get +1 Recruit for each different Villain Group in your Victory Pile.
+#COST: 2
+#FLAVOR: Learning new patterns. Planning the attack. Pouncing for the kill.
+
+#SUBNAME: No Matter the Price
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 2+
+{POWER Tech Strength} You get +3 Attack.
+#COST: 4
+#FLAVOR: Set your goal. Do anything to get it.
+
+#SUBNAME: Violence Leaves Scars
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 3+
+{POWER Strength} You get +1 Attack for each different Villain Group in your Victory Pile.
+#COST: 5
+#FLAVOR: What kills them makes you stronger.
+
+#SUBNAME: Hostage Rescue
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 2+
+{WHAT IF} {LIBERATE 3}
+#COST: 3
+#FLAVOR: Saving Tony Stark from the Ten Rings sent N'Jadaka's Whole life in a new direction.
+
+#SUBNAME: Plot a Betrayal
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 4+
+Each Villain worth 3 VP or more captures a Bystander.
+{POWER Tech} {LIBERATE 2}
+#COST: 6
+#FLAVOR: Sure he's betraying us to help them...but it's just so he can betray them back to us...right?
+
+#SUBNAME: I'm the King, Baby!
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+You get +1 Attack for each different Villain Group in your Victory Pile.
+{POWER Strength} {LIBERATE 2} for each Mastermind Tactic in your Victory Pile.
+#COST: 7
+
+#CARDNAME: Party Thor
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Forecast Says Thunder
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 3
+To play this, you must put another card from your hand on top of your deck.
+#COST: 2
+#FLAVOR: Fair today, storms tomorrow.
+
+#SUBNAME: Worthy Challenge
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+Whenever you recruit a Hero that costs 5 or more this turn, you get +3 Attack.
+#COST: 3
+#FLAVOR: After a life of empty pleasures, is there still time for this Thor to prove his worth?
+
+#SUBNAME: Destructive Feast
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 3
+Whenever you recruit a Hero that costs 5 or more this turn, reveal the top card of your deck and you may KO it.
+#COST: 5
+
+#SUBNAME: Asgardian Rager
+#COPIES: 2
+#CLASS: [Ranged]
+#ATTACK: 3+
+{POWER Ranged} {XDRAMPAGE Party}. If any players gained a Wound this way, you get +3 Attack.
+#COST: 5
+
+#SUBNAME: Only Son
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 3+
+{WHAT IF} You get +Attack equal to the cost of the Hero you revealed this way.
+#COST: 6
+#FLAVOR: Growing up without Loki as a brother, this Thor never learned the pain of sacrifice.
+
+#SUBNAME: Worthy of the Lightning
+#COPIES: 1
+#CLASS: [Ranged]
+#RECRUIT: 5
+#ATTACK: 0+
+Whenever you recruit a Hero that costs 5 or more this turn, you get +Attack equal to that Hero's cost.
+#COST: 7
+
+#CARDNAME: Star-Lord T’Challa
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Fight or Flight
+#COPIES: 3
+#CLASS: [Strength] [Covert]
+#ATTACK: 0+
+Choose one: You get <b>Empowered</b> by [Strength], or you get <b>Empowered</b> by [Covert].
+{POWER Strength Covert} Draw a card.
+#COST: 2
+#GUN: 1
+
+#SUBNAME: Interstellar Adventures
+#COPIES: 3
+#CLASS: [Covert] [Tech]
+#RECRUIT: 2+
+{WHAT IF} You get +3 Recruit.
+#COST: 3
+#FLAVOR: On Earth, a noble king. In the stars, a charming scoundrel.
+
+#SUBNAME: Plan the Heist
+#COPIES: 3
+#CLASS: [Instinct] [Covert]
+#ATTACK: 2
+Look at the top two cards of your deck. Discard any number of them and put the rest back in any order.
+#COST: 4
+#GUN: 1
+
+#SUBNAME: Unexpected Exit
+#COPIES: 2
+#CLASS: [Strength] [Instinct]
+#ATTACK: 3
+{WHAT IF} You may KO a card from your hand or discard pile.
+#COST: 5
+#FLAVOR: Kidnapped by Yondu's Ravagers, one path of adventure replaced another.
+
+#SUBNAME: Cross the Multiverse
+#COPIES: 2
+#CLASS: [Strength] [Ranged]
+#ATTACK: 4+
+{WHAT IF} You get <b>Empowered</b> by the Hero Classes of the card you revealed this way.
+#COST: 6
+#GUN: 1
+
+#SUBNAME: Colliding Dreams
+#COPIES: 1
+#CLASS: [Tech] [Ranged]
+#ATTACK: 4+
+Choose any number of Heroes in the HQ. Put them on the bottom of the Hero Deck.
+You get <b>Empowered</b> by multicolored cards.
+#COST: 7
+
+#CARDNAME: Uatu, The Watcher
+#TEAM: Guardians of the Multiverse
+
+#SUBNAME: Diverging Timestreams
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 1+
+Draw a card. Then put a card from your hand on top of your deck.
+{POWER Covert} You get +1 Recruit.
+#COST: 2
+#FLAVOR: "A single choice can branch out into infinite realities, creating alternate worlds from the ones you know..."
+
+#SUBNAME: Another Dimension Crumbles
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 2
+{WHAT IF} You may KO a card from your hand or discard pile.
+#COST: 3
+#FLAVOR: Merely standing and watching as Ultron conquered so many dimensions soon became unbearable.
+
+#SUBNAME: Break the Oath
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+{WHAT IF} You get +2 Attack.
+#COST: 4
+#FLAVOR: The Watcher swore a sacred bond never to interfere, and only to observe. A bond he has kept... until now.
+
+#SUBNAME: Anoint a Champion
+#COPIES: 2
+#CLASS: [Covert]
+#ATTACK: 2+
+{POWER Covert} Choose a Hero Name. You are <b>Empowered</b> by that Hero Name.
+#COST: 5
+#FLAVOR: If Uatu could not intervene directly, perhaps he could sway a mortal to do what must be done...
+
+#SUBNAME: History Repeats
+#COPIES: 2
+#CLASS: [Ranged]
+#ATTACK: 3+
+[Ranged] {SOULBIND} You get +2 Attack and you may do that Villain's Fight effect.
+#COST: 6
+#FLAVOR: He watches mortals make the same decisions over and over, for good or for ill.
+
+#SUBNAME: Convoke the Guardians
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 5+
+{WHAT IF} Choose a Team. (e.g. Guardians of the Multiverse, X-Men, Avengers) You are <b>Empowered</b> by that Team.
+#COST: 7
+
+
