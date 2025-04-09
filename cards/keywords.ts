@@ -226,10 +226,13 @@ function selectCardOrderEv(ev: Ev, desc: string, cards: Card[], effect: (c: Card
   }, agent);
   f(cards);
 }
+function hasRiseOfTheLivingDead(c: Card) {
+  return getModifiedStat(c, 'riseOfTheLivingDead', c.riseOfTheLivingDead || c.ambush === riseOfTheLivingDead);
+}
 // Ambush effect
 function riseOfTheLivingDead(ev: Ev) {
   if (ancestorEvents(ev).has(ev => ev.func === riseOfTheLivingDead)) return; // What If...? no chain reaction change.
-  const cards = gameState.players.map(p => p.victory.top).limit(c => c && (c.ambush === riseOfTheLivingDead || c.riseOfTheLivingDead) && isVillain(c));
+  const cards = gameState.players.map(p => p.victory.top).limit(c => c && hasRiseOfTheLivingDead(c) && isVillain(c));
   selectCardOrderEv(ev, "Choose a card to return to the city", cards, c => villainDrawEv(ev, c));
 }
 
@@ -243,8 +246,8 @@ function isCharacterName(name: string) {
   return (c: Card) => names.has(n => c.cardName.includes(n) || c.heroName && c.heroName.includes(n));
 }
 // generic effect
-function xdRampageEv(ev: Ev, name: string, effect0?: (p: Player) => void) {
-  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${name} card`, [...revealable(p), ...p.victory.deck].limit(isCharacterName(name)), () => {}, () => {
+function xdRampageEv(ev: Ev, name: string | ((c: Card) => boolean), effect0?: (p: Player) => void) {
+  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${name} card`, [...revealable(p), ...p.victory.deck].limit(typeof(name) === "string" ? isCharacterName(name) : name), () => {}, () => {
     gainWoundEv(ev, p);
     effect0 && effect0(p);
   }, p))
@@ -1052,7 +1055,10 @@ const stableEmpowerVarDefense = new Map([
   Color.COVERT, Color.INSTINCT, Color.RANGED, Color.STRENGTH, Color.TECH
 ].map(c => [c, empowerVarDefense(c)]));
 function empoweringVillainGroup(g: string) {
-  return [...stableEmpowerVarDefense.entries()].filter(([, f]) => villains().limit(c => c.varDefense === f && c.villainGroup === g)).reduce((acc, [c]) => acc | c, 0);
+  return empoweringVillains(villains().limit(isGroup(g)))
+}
+function empoweringVillains(cards: Card[]) {
+  return [...stableEmpowerVarDefense.entries()].filter(([, f]) => cards.limit(c => c.varDefense === f)).reduce((acc, [c]) => acc | c, 0);
 }
 // EXPANSION: Black Widow
 function dodgeCardEv(ev: Ev, c: Card) {

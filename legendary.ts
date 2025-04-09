@@ -1724,6 +1724,7 @@ interface ModifiableStats {
   heroAmbush?: Handler | Handler[];
   isHenchman?: boolean;
   isEndgame?: boolean;
+  riseOfTheLivingDead?: boolean;
 }
 
 function safePlus(a: number, b: number) {

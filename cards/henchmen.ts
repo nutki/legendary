@@ -330,7 +330,7 @@ makeHenchmenCard("Giants of Jotunheim", 3, {
 // ATTACK: 2+
 [2, makeHenchmenCard("Ultron Sentries", 2, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-  varDefense: empowerVarDefense(Color.COVERT),
+  varDefense: stableEmpowerVarDefense.get(Color.COVERT),
   variant: 'COVERT',
 }, "Ultron Sentries")],
 // <b>Empowered</b> by [Instinct]
@@ -338,7 +338,7 @@ makeHenchmenCard("Giants of Jotunheim", 3, {
 // ATTACK: 2+
 [2, makeHenchmenCard("Ultron Sentries", 2, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-  varDefense: empowerVarDefense(Color.INSTINCT),
+  varDefense: stableEmpowerVarDefense.get(Color.INSTINCT),
   variant: 'INSTINCT',
 }, "Ultron Sentries")],
 // <b>Empowered</b> by [Ranged]
@@ -346,7 +346,7 @@ makeHenchmenCard("Giants of Jotunheim", 3, {
 // ATTACK: 2+
 [2, makeHenchmenCard("Ultron Sentries", 2, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-  varDefense: empowerVarDefense(Color.RANGED),
+  varDefense: stableEmpowerVarDefense.get(Color.RANGED),
   variant: 'RANGED',
 }, "Ultron Sentries")],
 // <b>Empowered</b> by [Strength]
@@ -354,7 +354,7 @@ makeHenchmenCard("Giants of Jotunheim", 3, {
 // ATTACK: 2+
 [2, makeHenchmenCard("Ultron Sentries", 2, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-  varDefense: empowerVarDefense(Color.STRENGTH),
+  varDefense: stableEmpowerVarDefense.get(Color.STRENGTH),
   variant: 'STRENGTH',
 }, "Ultron Sentries")],
 // <b>Empowered</b> by [Tech]
@@ -362,7 +362,7 @@ makeHenchmenCard("Giants of Jotunheim", 3, {
 // ATTACK: 2+
 [2, makeHenchmenCard("Ultron Sentries", 2, {
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-  varDefense: empowerVarDefense(Color.TECH),
+  varDefense: stableEmpowerVarDefense.get(Color.TECH),
   variant: 'TECH',
 }, "Ultron Sentries")],
 // AMBUSH: Another Villain captures a Bystander.

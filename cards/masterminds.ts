@@ -3486,3 +3486,204 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
   varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.ko.count(isBystander),
 }),
 ]);
+addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
+// Before each time you fight Hank Pym, you must "track him down" by discarding the top 6 cards of your deck, then paying [2, 3] Attack
+// for each card you discarded that costs 0. If you don't pay this total, gain a Wound and your turn ends.
+...makeEpicMastermindCard("Hank Pym, Yellowjacket", [ 4, 6 ], 6, "Any Villain Group", ev => {
+  // Each player puts [three, six] 0-cost cards from their discard pile on top of their deck.
+  eachPlayer(p => {
+    selectObjectsEv(ev, "Choose cards to put on top of your deck", ev.source.epic ? 6 : 3, p.discard.limit(c => c.cost === 0), c => {
+      moveCardEv(ev, c, p.deck);
+    }, p);
+  });
+}, [
+  [ "Microscopic Research", ev => {
+    // You may gain a Hero from the HQ that costs 2 or less.
+    selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.cost <= 2), c => gainEv(ev, c));
+  } ],
+  [ "Revenge for Ancient Grievance", ev => {
+    // The player with the most Villains in their Victory Pile <i>(and/or tied for most)</i> gains a Wound.
+    gameState.players.highest(p => p.victory.count(isVillain)).each(p => gainWoundEv(ev, p));
+  } ],
+  [ "Save from Assassination", ev => {
+    // Choose a card from your discard pile that was discarded from your deck this turn. You may put that card into your hand.
+    selectCardEv(ev, "Choose a card to return to hand", pastEvents('DISCARD').map(ev => ev.what).limit(c => c.location === playerState.discard), c => moveCardEv(ev, c, playerState.hand));
+  } ],
+  [ "Vengeful Sting", ev => {
+    // Each other player reveals the top three cards of their deck, discards all those cards that cost 1 or more, and puts the rest back in any order.
+    eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 3, cards => {
+      cards.limit(c => c.cost >= 1).each(c => discardEv(ev, c));
+      villainDefeat
+    }, p));
+  } ],
+], {
+  trigger: {
+    event: 'FIGHT',
+    match: (ev, source) => source === ev.what,
+    replace: ev => {
+      let v = 0;
+      repeat(6, () => cont(ev, () => playerState.discard.withTop(c => v += c.cost === 0 ? ev.source.epic ? 3 : 2 : 0)));
+      cont(ev, () => {
+        pushEv(ev, "EFFECT", { func: () => doReplacing(ev), cost: { attack: v }, failFunc: ev => {
+          turnState.endofturn = true;
+        } });
+      });
+    }
+  }
+}),
+// <b>Always Include</b>: Killmonger as one of the Heroes
+...makeEpicMastermindCard("Killmonger, the Betrayer", [ 9, 12 ], 6, "Vibranium Liberator Drones", ev => {
+// If there are any Killmonger cards in the city or HQ, each player gains a Wound.
+  const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+  hqHeroes().has(isKillmonger) && eachPlayer(p => gainWoundEv(ev, p));
+// Choose a Killmonger Hero from your hand, any player's discard pile, or the HQ to enter the city as a Villain with Attack equal to its cost +3 and
+// Each player chooses a Killmonger Hero from their hand, discard pile, or the HQ to enter the city as a Villain with Attack equal to its cost +4 and
+// "<b>Fight</b>: KO this or choose a player to gain it."
+  (ev.source.epic ? gameState.players : [playerState]).each(p => {
+    const options = [...p.hand.deck, ...p.discard.deck, ...hqHeroes()].filter(isKillmonger);
+    !ev.source.epic && options.push(...gameState.players.limit(p => p !== playerState).flatMap(p => p.discard.deck));
+    selectCardEv(ev, "Choose a Killmonger Hero to enter", options, c => {
+      villainify(u, is(c), c => c.cost + (ev.source.epic ? 4 : 3), ev => {
+        selectCardOptEv(ev, "Choose a player to gain Killmonger", gameState.players,
+          p => gainEv(ev, ev.what, p), () => KOEv(ev, ev.what));
+      });
+      enterCityEv(ev, c);
+    }, p);
+  });
+}, [
+  [ "Change in Loyalties", ev => {
+    // Gain a Killmonger card from the city, HQ, or another player's discard pile.
+    const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+    const options = [...gameState.players.limit(p => p !== playerState).flatMap(p => p.discard.deck), ...hqHeroes(), ...cityVillains()].filter(isKillmonger);
+    selectCardEv(ev, "Choose a Killmonger card to gain", options, c => gainEv(ev, c));
+  } ],
+  [ "Pulling the Strings", ev => {
+    // You get +1 Recruit for each different Villain Group in your Victory Pile.
+    addRecruitEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup));
+  } ],
+  [ "See You on the Flip Side", ev => {
+    // Each other player reveals their hand and discards a Killmonger card.
+    const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+    eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p, isKillmonger));
+  } ],
+  [ "Sunset Over Wakanda", ev => {
+    // From left to right, each Killmonger Hero in the HQ enters the city as a Villain as described on the Mastermind card. Then refill all the empty HQ spaces.
+    const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+    hqHeroes().limit(isKillmonger).each(c => {
+      villainify(u, is(c), c => c.cost + 3, ev => {
+        selectCardOptEv(ev, "Choose a player to gain Killmonger", gameState.players,
+          p => gainEv(ev, ev.what, p), () => KOEv(ev, ev.what));
+      });
+      enterCityEv(ev, c);
+    });
+  } ],
+], {
+  // TODO required: { heroes: "Killmonger" },
+  // TODO init: c => // add Kilmonger if not present
+}),
+// Ultron Infinity has all the <b>Empowered</b> abilities of all Ultron Sentries in the city, the Escape Pile, and stacked next to him.
+// Ultron Sentries <i>(even in solo mode)</i>
+...makeEpicMastermindCard("Ultron Infinity", [ 8, 12 ], 6, "Ultron Sentries", ev => {
+// {XDRAMPAGE Ultron}. Then each player stacks an Ultron Sentry from their Victory Pile next to Ultron.
+// {XDRAMPAGE Ultron}. Then each player stacks two Ultron Sentries from their Victory Pile next to Ultron.
+  xdRampageEv(ev, "Ultron");
+  cont(ev, () => eachPlayer(p => {
+    ev.source.epic ?
+      selectObjectsEv(ev, "Choose an Ultron Sentries", 2, p.victory.limit(isGroup(ev.source.leads)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'), p) :
+      selectCardEv(ev, "Choose an Ultron Sentry", p.victory.limit(isGroup(ev.source.leads)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'), p);
+  }));
+// Put this Strike next to Ultron as an "Infinity Stone."
+  attachCardEv(ev, ev.what, gameState.mastermind, 'STRIKE');
+// When Ultron has gained five Infinity Stones <i>(plus this card as the Mind stone)</i>, he gets <b>+&infin;</b> Attack. <i>
+// <b>Ultron Wins</b>: When he has gained five Infinity Stones.
+  cont(ev, () => {
+    if (gameState.mastermind.attached('STRIKE').size >= 5) {
+      ev.source.epic ? gameOverEv(ev, 'LOSS', ev.source) : addStatMod('defense', is(ev.source), Infinity);
+    }
+  });
+// (Solo mode: Also stack a random unused Ultron Sentry next to Ultron.)</i>
+  if (gameState.players.length === 1) gameState.outOfGame.limit(isGroup(ev.source.leads)).withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'));
+}, [
+  [ "Infinity of Minions", ev => {
+  // Stack an Ultron Sentry from the city next to Ultron. Then each other player chooses an Ultron Sentry from their Victory Pile to enter the city.
+    selectCardEv(ev, "Choose an Ultron Sentry to stack", cityVillains().limit(isGroup(ev.source.mastermind.leads)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'));
+    eachOtherPlayerVM(p => {
+      selectCardEv(ev, "Choose an Ultron Sentry to enter", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => enterCityEv(ev, c), p);
+    });
+  } ],
+  [ "Struggle for the Infinity Stones", ev => {
+  // Gain a Hero from the HQ that has one of the Hero Classes that is <b>Empowering</b> Ultron.
+    selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(empoweringVillains([...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')])), c => gainEv(ev, c));
+  } ],
+  [ "Transcend Mortality", ev => {
+  // Search the Villain Deck and stack the first Ultron Sentry you find next to Ultron. Shuffle the Villain Deck.
+    gameState.villaindeck.limit(isGroup(ev.source.mastermind.leads)).withFirst(c => {
+      attachCardEv(ev, c, gameState.mastermind, 'SENTRY');
+    });
+    cont(ev, () => gameState.villaindeck.shuffle());
+  } ],
+  [ "Unfettered Annihilation", ev => {
+  // For each Ultron Sentry in your Victory Pile, you may KO a Hero from your hand or discard pile.
+    selectObjectsEv(ev, "Choose cards to KO", playerState.victory.count(isGroup(ev.source.mastermind.leads)), handOrDiscard().limit(isHero), c => KOEv(ev, c));
+  } ],
+], {
+  varDefense: empowerVarDefense(c1 => isColor(empoweringVillains([...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')]))(c1)),
+}),
+// Zombie Scarlet Witch gets +1 Attack for each Hero with an odd-numbered cost you played this turn.
+//  <i>(In solo mode, if using another Villain Group, add "Zombie" to their card names and they all get <b>Ambush</b>: {RISEOFTHELIVINGDEAD}.</i>
+...makeEpicMastermindCard("Zombie Scarlet Witch", [ 9, 13 ], 6, "Zombie Avengers", ev => {
+// {XDRAMPAGE Zombie}. Then {RISEOFTHELIVINGDEAD}.
+// {XDRAMPAGE Zombie}. Then each player must <b>Soulbind</b> the topmost card of their Victory Pile that isn't a Villain with "Rise of the Living Dead." Then {RISEOFTHELIVINGDEAD}.
+  xdRampageEv(ev, c => isCharacterName('Zombie')(c) || isGroup(ev.source.leads)(c));
+  ev.source.epic && eachPlayer(p => {
+    const options = p.victory.limit(c => !isVillain(c) && !hasRiseOfTheLivingDead(c)).firstOnly();
+    forceSoulbindEv(ev, c => options.includes(c), p);
+  });
+  cont(ev, () => riseOfTheLivingDead(ev));
+}, [
+  [ "Chaos Hex", ev => {
+    // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+    ev.source.mastermind.commonTacticEffect(ev);
+    // Each other player discards a card with an odd-numbered cost or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a card to discard", p.hand.limit(isCostOdd), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Even the Odds", ev => {
+    // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+    ev.source.mastermind.commonTacticEffect(ev);
+    // Each other player reveals the top six cards of their deck, discards all those cards that cost 2, 4, 6, or 8, and puts the rest back in any order.
+    eachOtherPlayerVM(p => {
+      revealPlayerDeckEv(ev, 6, cards => {
+        cards.limit(c => [2, 4, 6, 8].includes(c.cost)).each(c => discardEv(ev, c));
+      }, p);
+    });
+  } ],
+  [ "Refuse to Accept Death", ev => {
+    // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+    ev.source.mastermind.commonTacticEffect(ev);
+    // You may gain a Hero from the KO pile.
+    selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero), c => gainEv(ev, c));
+  } ],
+  [ "Wistful Illusion", ev => {
+    // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
+    ev.source.mastermind.commonTacticEffect(ev);
+    // Reveal the top card of the Hero Deck then put it on the bottom of the Hero Deck. You may play a copy of that card this turn.
+    revealHeroDeckEv(ev, 1, each(c => {
+      addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { // TODO make this card visible
+        cond: is(c)
+      }, func: ev => {
+        playCopyEv(ev, ev.what);
+      } }))
+    }), false, true);
+  } ],
+], {
+  init: c => {
+    addStatSet('riseOfTheLivingDead', isGroup(c.leads), () => true);
+  },
+  commonTacticEffect: ev => {
+    attachCardEv(ev, ev.source, playerState.victory, 'WAITFORRISEOFTHELIVINGDEAD');
+    cont(ev, () => riseOfTheLivingDead(ev));
+    moveCardEv(ev, ev.source, playerState.victory);
+  },
+  varDefense: c => c.printedDefense + pastEvents('PLAY').count(ev => isCostOdd(ev.what)),
+}),
+]);
