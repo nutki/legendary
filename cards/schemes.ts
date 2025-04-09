@@ -2495,9 +2495,61 @@ makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 
 // Dimension and put it back on the top or bottom of that deck." If a Dimension ever has no cards left, even in the middle of a card ability,
 // it is destroyed. Mark it with a face up Wound.
 // EVILWINS: When at least half of the original Dimensions are destroyed.
-makeSchemeCard("Breach Parallel Dimensions", { twists: 6 }, ev => {
+makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach Parallel Dimensions", { twists: 6, vd_bystanders: [ 5, 8, 12, 12, 16] }, ev => {
   // Twist: Choose a Dimension and play two cards from it. <i>(It's ok if it only has 1.)</i>
-  // TODO: Implement Breach Parallel Dimensions from Annihilation
+  const state = ev.state;
+  gameState.villaindeck.each(c => moveCardEv(ev, c, state.current, true));
+  selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
+    d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+    state.current = d;
+  });
+  playAnotherEv(ev, 2);
+}, [{
+  event: 'TURNSTART',
+  after: ev => {
+    const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
+    gameState.villaindeck.each(c => moveCardEv(ev, c, state.current, true));
+    selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
+      d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+      state.current = d;
+    });
+  }
+}, {
+  event: 'MOVECARD',
+  match: (ev, source) => ev.from === gameState.villaindeck && ev.getSource() !== source,
+  after: ev => {
+    if (gameState.villaindeck.size === 0) {
+      const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
+      state.destroyed.push(state.current.id);
+      selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
+        d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+        state.current = d;
+      });
+    }
+  }
+}], s => {
+  gameState.specialActions = ev => {
+    return [focusActionEv(ev, { recruit: 1 }, () => {
+      const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
+      selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)).map(d => d === s.current ? gameState.villaindeck : d), d => {
+        revealDeckEv(ev, d, 1, cards => selectCardEv(ev, "Choose a card to put on the bottom", cards, c => moveCardEv(ev, c, d, true)));
+      });
+    })];
+  };
+  const dimensions: Deck[] = [new Deck("DIMENSION_0")];
+  gameState.villaindeck.deck.forEach(c => {
+    let last = dimensions[dimensions.length - 1];
+    if (last.size === dimensions.length) {
+      last = new Deck(`DIMENSION_${dimensions.length}`)
+      dimensions.push(last);
+    }
+    moveCard(c, last);
+  });
+  setSchemeTarget(dimensions.length);
+  s.dimensions = dimensions;
+  dimensions[0].each(c => moveCard(c, gameState.villaindeck));
+  s.current = dimensions[0];
+  s.destroyed = [];
 }),
 ]);
 addTemplates("SCHEMES", "Messiah Complex", [
@@ -3321,5 +3373,118 @@ makeSchemeCard("Wager at Blackjack For Heroes' Souls", { twists: 11, heroes: [5,
   // EVILWINS: When there are 4 Wagered Souls.
 }, [], () => {
   setSchemeTarget(4);
+}),
+]);
+addTemplates("SCHEMES", "Marvel Studios What If...?", [
+// SETUP: (1-2 players: Use 3 Villain Groups.) Stack each Villain Group separately face down as its own "Reality." Add 2 Twists to each Reality.
+// Shuffle together all the Henchmen, Master Strikes, and Bystanders for your player count and randomly distribute them amongst all the Realities,
+// as evenly as possible. Shuffle each Reality separately.
+// RULE: Each turn, you choose which Reality (Villain Deck) plays a card. They all play into the same city.
+// EVILWINS: When all Realities have been destroyed.
+makeSchemeCard<{realities: Deck[], current: Deck}>("Breach the Nexus of All Realities", { twists: [ 6, 6, 6, 6, 8 ], vd_villain: [ 3, 3, 3, 3, 4 ] }, ev => {
+  // Twist: Stack this Twist next to this Reality as a "Dimensional Breach." If this was the second Breach for that Reality, destroy that Reality, KO'ing all its cards.
+  attachCardEv(ev, ev.twist, gameState.villaindeck, 'DIMENSIONAL_BREACH');
+  cont(ev, () => { if(gameState.villaindeck.attached('DIMENSIONAL_BREACH').size > 1) {
+    gameState.villaindeck.each(c => KOEv(ev, c));
+    gameState.villaindeck.attached('DIMENSIONAL_BREACH').each(c => KOEv(ev, c));
+  }});
+  cont(ev, () => {
+    schemeProgressEv(ev, ev.state.realities.count(d => d.size === 0) - (gameState.villaindeck.size === 0 ? 0 : 1));
+    (gameState.villaindeck.size === 0) && selectCardEv(ev, "Choose a new Reality", ev.state.realities.limit(d => d.size > 0), d => {
+      d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+      d.attached('DIMENSIONAL_BREACH').each(c => attachCardEv(ev, c, gameState.villaindeck, 'DIMENSIONAL_BREACH'));
+      ev.state.current = d;
+    });
+  });
+}, [{
+  event: 'TURNSTART',
+  before: ev => {
+    const state: {realities: Deck[], current: Deck} = gameState.schemeState;
+    gameState.villaindeck.each(c => moveCardEv(ev, c, state.current, true));
+    gameState.villaindeck.attached('DIMENSIONAL_BREACH').each(c => attachCardEv(ev, c, state.current, 'DIMENSIONAL_BREACH'));
+    selectCardEv(ev, "Choose a Reality", state.realities.limit(d => d.size > 0), d => {
+      d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+      d.attached('DIMENSIONAL_BREACH').each(c => attachCardEv(ev, c, gameState.villaindeck, 'DIMENSIONAL_BREACH'));
+      state.current = d;
+    });
+  }
+}], s => {
+  const twists = gameState.villaindeck.limit(isTwist);
+  const groups = gameState.villaindeck.limit(c => !isHenchman(c) && !!c.villainGroup).unique(c => c.villainGroup);
+  const realities = groups.map((g, i) => {
+    const d = new Deck("REALITY_" + i, false)
+    gameState.villaindeck.limit(isGroup(g)).each(c => moveCard(c, d));
+    moveCard(twists[i*2], d);
+    moveCard(twists[i*2+1], d);
+    return d;
+  });
+  gameState.villaindeck.deck.forEach((c, i) => moveCard(c, realities[i % realities.length]));
+  realities.forEach(r => r.shuffle());
+  setSchemeTarget(realities.length);
+  s.realities = realities;
+  realities[0].each(c => moveCard(c, gameState.villaindeck));
+  s.current = realities[0];
+}),
+// SETUP: 11 Twists.
+// EVILWINS: When the Zoo has 5 Heroes.
+makeSchemeCard("Collect an Interstellar Zoo", { twists: 11 }, ev => {
+  // Twist: Each player reveals their hand. Starting with the current player, then clockwise, the first player to have one of this kind of Hero
+  // in their hand or discard pile stacks it next to this Scheme, "stolen for the Zoo."
+  if (ev.nr >= 1 && ev.nr <= 11) {
+    // Twist 1 [Strength] <b>T2</b>: [Instinct] <b>T3</b>: [Covert] <b>T4</b>: [Tech] <b>T5</b>: [Ranged]
+    // <b>T6</b>: 5-cost <b>T7</b>: 4-cost <b>T8</b>: 3-cost <b>T9</b>: 0-cost <b>T10</b>: Recruit icon. <b>T11</b>: Attack icon.
+    const f: Filter<Card>[] = [, Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED,
+      c => c.cost === 5, c => c.cost === 4, c => c.cost === 3, c => c.cost === 0, hasRecruitIcon, hasAttackIcon];
+    let done = false;
+    eachPlayer(p => cont(ev, () => {
+      !done && selectCardEv(ev, "Choose a Hero to steal", handOrDiscard(p).limit(f[ev.nr]), c => {
+        attachCardEv(ev, c, gameState.scheme, 'STOLEN');
+        done = true;
+      }, p)
+    }));
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('STOLEN').size));
+  }
+}),
+// SETUP: 4 Twists. Include exactly one Villain Group with "{RISEOFTHELIVINGDEAD}." Add 8 random cards from an extra Hero to the Villain Deck.
+// 1-2 players; Add 3 extra Bystanders.
+// RULE: Hero cards from the Villain Deck are "Zombie" Villains with Attack equal to their cost +1, worth VP equal to their cost. They have "<b>Ambush</b>: {RISEOFTHELIVINGDEAD}.
+// <b>Fight</b>: Play a copy of this card as a Hero, then put it into your Victory Pile as a Villain." <i>(It still has <b>Rise</b>.)</i>
+// EVILWINS: When there are 3 Villains per player in the Escape pile or the Villain Deck runs out.
+makeSchemeCard("Marvel Zombies", { twists: 4, heroes: [ 4, 6, 6, 6, 7 ], vd_bystanders: [ 4, 7, 8, 8, 12 ], required: { /* TODO one of villains: ["The Deadlands", "Zombie Avengers"] */} }, ev => { // TODO requried 1 riseof
+  // Twist: Each Villain in the city with "Rise of the Living Dead" escapes. Then play another card from the Villain Deck.
+  cityVillains().limit(hasRiseOfTheLivingDead).each(c => villainEscapeEv(ev, c));
+  playAnotherEv(ev);
+}, [
+  escapeProgressTrigger(isVillain),
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
+  const isZombie = (c: Card) => c.heroName === extraHeroName();
+  gameState.herodeck.deck.filter(isZombie).forEach((c, i) => {
+    moveCard(c, i < 8 ? gameState.villaindeck : gameState.outOfGame);
+  });
+  villainify("Zombie", isZombie, c => c.cost + 1, ev => playCopyEv(ev, ev.source));
+  addStatSet('vp', isZombie, c => c.cost);
+  addStatSet('ambush', isZombie, () => riseOfTheLivingDead);
+  gameState.villaindeck.shuffle();
+  setSchemeTarget(3, true);
+}),
+// SETUP:  6 Twists. Always include the Party Thor Hero and Intergalactic Party Animals Villain Group.
+// RULE: You can't fight or defeat Frigga.
+// EVILWINS: When 5 Wreckages have been Discovered.
+makeSchemeCard("Trash Earth with Hugest Party Ever", { twists: 8, required: { heroes: ["Party Thor"], villains: ["Intergalactic Party Animals"]} }, ev => {
+  if (gameState.mastermind.has(c => c.cardName == "Frigga, Mother of Thor")) {
+    // Twist: If Frigga, Mother of Thor, is in play, stack this Twist next to the Scheme as "Discovered Wreckage."
+    attachCardEv(ev, ev.twist, gameState.scheme, 'WRECKAGE');
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('WRECKAGE').size));
+  } else {
+    // Otherwise: Search the Villain Deck for Frigga and she does her Ambush ability. Then shuffle this Twist back into the Villain Deck.
+    gameState.villaindeck.limit(c => c.cardName == "Frigga, Mother of Thor").each(c => {
+      pushEffects(ev, c, 'ambush', c.ambush);
+    });
+    cont(ev, () => shuffleIntoEv(ev, ev.twist, gameState.villaindeck));
+  }
+}, [], () => {
+  setSchemeTarget(5);
+  forbidAction('FIGHT', c => c.cardName === "Frigga, Mother of Thor");
 }),
 ]);
