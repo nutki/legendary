@@ -46,6 +46,7 @@ sub autopower {
     s/^{MOONLIGHT} *// and $cond = "moonlightPower()";
     s/^{WHEN RECRUITED} *// and $wrap = "whenRecruited: ev => XXX";
     s/^{TACTICAL FORMATION (\d+)}:? *// and $cond = "tacticalFormation('$1')";
+    s/^{HEIST} *// and $wrap = "heist: ev => XXX";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -56,6 +57,8 @@ sub autopower {
     s/^{DIGEST (\d)} *// and $wrap = "digestEv(ev, $1, () => XXX)";
     s/^{INDIGESTION} *// and $wrap = "() => XXX", $ind = 1;
     s/^{WHAT IF} *// and $wrap = "whatIfEv(ev, () => XXX)";
+    s/^{EXPLORE} *// and $wrap = "exploreEv(ev, c => XXX)";
+    s/^{ANTICS} *// and $wrap = "anticsEv(ev, () => XXX)";
 
     /^You may KO a (card|Wound) from your hand or discard pile\.?/ and $effect = "KOHandOrDiscardEv(ev, $filt{$1})";
     /^Draw (a|another|two|three) cards?\.?$/ and $effect = "drawEv(ev$num{$1})";

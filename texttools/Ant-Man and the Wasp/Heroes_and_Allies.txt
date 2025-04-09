@@ -1,0 +1,432 @@
+
+#CARDNAME: Ant Army
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Antagonize
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 1+
+{SIZECHANGING INSTINCT}
+{ANTICS} You get +2 Attack.
+#COST: 2*
+#FLAVOR: Pym Particles transform ants from puny to terrifying.
+
+#SUBNAME: Anticipate
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 2
+{SIZECHANGING TECH}
+{ANTICS} Draw a card.
+#COST: 4*
+#FLAVOR: Ants are patient. Ants are kind.
+
+#SUBNAME: Up the Ante
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 1
+{HEIST} Draw a card.
+#COST: 1
+#FLAVOR: Flying on antback is quite a gamble.
+
+#SUBNAME: Anti-Tank Weapons
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 2+
+{USIZECHANGING TECH 3}
+{POWER Tech} You get +3 Attack.
+#COST: 6*
+#FLAVOR: A civilization can be judged by the quality of its giant mecha.
+
+#SUBNAME: Antiproton Experiments
+#COPIES: 2
+#CLASS: [Tech]
+#RECRUIT: 1+
+#ATTACK: 1+
+{USIZECHANGING TECH 3}
+{ANTICS} You get +2 Recruit and +2 Attack.
+#COST: 5*
+#FLAVOR: "They've lived thousands of years in a single day, expanding their knowledge, their science..."
+
+#SUBNAME: Revolutionary Anthem
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+{USIZECHANGING TECH 5}
+{ANTICS} You get +2 Attack.
+{HEIST} You get +2 Attack. If the card revealed from the Villain Deck is a Scheme Twist, you get another +2 Attack and you may shuffle that deck.
+#COST: 9*
+
+#CARDNAME: Ant-Man
+#TEAM: Avengers
+
+#SUBNAME: Hitch a Ride
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 1+
+{SIZECHANGING COVERT}
+{ANTICS} You get +2 Recruit.
+#COST: 2*
+#FLAVOR: "Ants—they can do a lot of things, but they still need a leader."
+
+#SUBNAME: Look Out for the Little Guy!
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 1
+{SIZECHANGING STRENGTH}
+Reveal the top card of your deck. If it's [Strength] or has <b>Size-Changing</b>, draw it.
+#COST: 3*
+
+#SUBNAME: Shrink Away
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2
+{SIZECHANGING COVERT}
+{POWER Covert} All Villains and the Mastermind get -1 Attack this turn.
+#COST: 4*
+#FLAVOR: Even in the microscopic Quantum Realm, something can always get smaller...
+
+#SUBNAME: Bug Swarm
+#COPIES: 2
+#CLASS: [Strength]
+#RECRUIT: 2
+{USIZECHANGING STRENGTH 3}
+{ANTICS} You may KO a card from your hand or discard pile.
+#COST: 5*
+#FLAVOR: Many minds, one purpose.
+
+#SUBNAME: Tiny Little Risk
+#COPIES: 2
+#CLASS: [Covert]
+#ATTACK: 2
+{USIZECHANGING COVERT 3}
+{HEIST} Draw two cards.
+#COST: 6*
+#FLAVOR: He's a micrometer tall—what could go wrong??
+
+#SUBNAME: Giant-Man
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 6+
+{USIZECHANGING STRENGTH 5}
+You get +1 Attack for each card you played this turn that's [Strength] and/or has <b>Size-Changing</b>.
+#COST: 9*
+
+#CARDNAME: Cassie Lang
+#TEAM: Avengers
+
+#SUBNAME: Colossal Stomp
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2
+{SIZECHANGING STRENGTH}
+{POWER Strength} You may defeat a Villain worth 2 VP or less.
+#COST: 5*
+#FLAVOR: The strong bully the weak... until she gets a whole lot stronger.
+
+#SUBNAME: Giant Hug
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 2
+{SIZECHANGING STRENGTH}
+Choose a player. If that player reveals a card that costs 5 or more, that player draws a card.
+#COST: 4*
+
+#SUBNAME: Start Small
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 2
+{SIZECHANGING TECH}
+To play this, you must discard a card. Then, if you have a Villain in your Victory Pile worth 2 VP or less, draw a card.
+#COST: 2*
+
+#SUBNAME: Learn from the Past
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 3
+{USIZECHANGING STRENGTH 3}
+{POWER Strength} You may do the Fight effect of a Villain in your Victory Pile worth 2 VP or less.
+#COST: 6*
+
+#SUBNAME: Quantum Beacon
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 3
+{USIZECHANGING TECH 3}
+{POWER Tech} Reveal the top card of the Villain Deck. If it's a Bystander, rescue it. If it's a Villain worth 2 VP or less, you may fight it this turn. If you rescue or defeat that card, don't play a card from the Villain Deck next turn.
+#COST: 5*
+
+#SUBNAME: Inspire Revolution
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 5+
+{USIZECHANGING STRENGTH 5}
+You get +1 Attack for each Villain worth 2 VP or less in your Victory Pile.
+#COST: 9*
+
+#CARDNAME: Freedom Fighters
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Mystics
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 1
+When you draw a new hand this turn, draw an extra card.
+#COST: 3
+#FLAVOR: Captured from other worlds, they became trapped in the Quantum Realm.
+
+#SUBNAME: Steel Warrior
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 1+
+{STREETS CONQUEROR 1}
+Draw a card.
+#COST: 4
+#FLAVOR: As cute as they are deadly.
+
+#SUBNAME: Xolum
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+{BRIDGE CONQUEROR 1}
+{POWER Ranged} You get +2 Attack.
+#COST: 5
+#FLAVOR: Kang blasted many dissidents in the face. This face blasted back.
+
+#SUBNAME: Quaz
+#COPIES: 2
+#CLASS: [Ranged]
+#RECRUIT: 2+
+#ATTACK: 2+
+{POWER Ranged} Choose Recruit or Attack. Then {EXPLORE} You get the printed value of the icon you chose on the Found Hero.
+#COST: 6
+
+#SUBNAME: Veb
+#COPIES: 2
+#CLASS: [Instinct]
+#ATTACK: 1
+Reveal the top card of your deck. If that card has any "holes" printed inside any of its icons <b>(0, 4, 6, 8, or 9)</b>, draw it.
+{POWER Instinct} You may KO the card you drew this way.
+#COST: 2
+
+#SUBNAME: Freedom Forever
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+{EXPLORE}
+{POWER Instinct} You may choose a player to gain the Found Hero.
+#COST: 7
+
+#CARDNAME: Janet Van Dyne
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Prepare for War
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+{POWER Ranged} {EXPLORE} You get +Attack equal to the Found Hero's printed Attack.
+#COST: 4
+#FLAVOR: ...until Kang's answers proved more than she bargained for.
+
+#SUBNAME: Search for Peace
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 2+
+{POWER Covert}  {EXPLORE} You get +Recruit equal to the Found Hero's printed Recruit.
+#COST: 3
+#FLAVOR: She spent years searching the Quantum Realm for answers...
+
+#SUBNAME: Wasp of Another Generation
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 2+
+{SIZECHANGING COVERT}
+{POWER Covert} {EXPLORE} Then you get +1 Attack for each time you explored this turn.
+#COST: 5*
+#FLAVOR: Years before the Avengers, Hank Pym and Janet were Ant-Man and the Wasp.
+
+#SUBNAME: Quantum Contradiction
+#COPIES: 2
+#CLASS: [Ranged]
+#RECRUIT: 4
+#ATTACK: 4
+When you play this, put it on top of the Hero Deck or KO it.
+#COST: 6
+#FLAVOR: Could quantum entanglement work across dimensions as well as across space and time?
+
+#SUBNAME: Subatomic Size
+#COPIES: 2
+#CLASS: [Covert]
+#ATTACK: 0+
+{USIZECHANGING COVERT 2}
+Draw a card.
+{POWER Covert Covert} You get +2 Attack.
+#COST: 2*
+
+#SUBNAME: Finally Found You
+#COPIES: 1
+#CLASS: [Covert]
+#RECRUIT: 4+
+#ATTACK: 4+
+{EXPLORE}
+{POWER Covert} You get +Recruit equal to the Found Hero's printed Recruit and +Attack equal to its printed Attack.
+#COST: 8
+
+#CARDNAME: Jentorra
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Hit and Run
+#COPIES: 3
+#CLASS: [Instinct]
+#RECRUIT: 2
+#ATTACK: 0+
+You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+{POWER Instinct} You get +2 Attack.
+#COST: 3
+
+#SUBNAME: Take the High Ground
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 1
+{BRIDGE CONQUEROR 1}
+If there are no Villains on the Rooftops, draw a card.
+#COST: 2
+
+#SUBNAME: Unite the Oppressed
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+{POWER Strength} {SEWERS CONQUEROR 2}
+#COST: 4
+#FLAVOR: Kang smashed down the inhabitants of the Quantum Realm. Jentorra lifted them up.
+
+#SUBNAME: Find Your Courage
+#COPIES: 2
+#CLASS: [Instinct]
+#RECRUIT: 3+
+{POWER Instinct} {EXPLORE} If the Found Hero is [Instinct] or has no team icon, you get +2 Recruit.
+#COST: 5
+#FLAVOR: The journey through worlds. The journey within.
+
+#SUBNAME: Lead Powerful Allies
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 2+
+{POWER Strength} {EXPLORE} You get +Attack equal to the Found Hero's cost.
+#COST: 6
+#FLAVOR: Allying with Scott, Cassie, and the ants finally gave Jentorra's army the punch it needed.
+
+#SUBNAME: Conquer the Conqueror
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5+
+{BRIDGE CONQUEROR 1}
+You get +1 Attack for each Villain worth 4 VP or more and each Mastermind Tactic in your Victory Pile.
+#COST: 7
+
+#CARDNAME: Scott Lang, Cat Burglar
+#TEAM: Crime Syndicate
+
+#SUBNAME: Petty Larceny
+#COPIES: 3
+#CLASS: [Covert]
+#RECRUIT: 1+
+{HEIST} You get +2 Recruit.
+#COST: 1
+#FLAVOR: Scott reluctantly agreed to do one final heist... only to find a strange suit that would change his destiny.
+
+#SUBNAME: Shocking Support
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+{HEIST} You get +2 Attack.
+#COST: 4
+#FLAVOR: Kurt excels in hacking security systems... and electrifying guards.
+
+#SUBNAME: X-Con Security Van
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 2
+{HEIST} You may move a Villain to an empty city space. If you do, KO one of your Heroes.
+#COST: 5
+
+#SUBNAME: Anything for Cassie
+#COPIES: 2
+#CLASS: [Instinct]
+#RECRUIT: 1
+#ATTACK: 1
+Whenever you gain a Wound this turn, return that Wound to the Wound Deck.
+{HEIST} Rescue a Bystander.
+#COST: 2
+
+#SUBNAME: Putting a Crew Together
+#COPIES: 2
+#CLASS: [Strength]
+#ATTACK: 3+
+{HEIST} You get +1 Attack for each different cost of card you have.
+#COST: 6
+#FLAVOR: Sometimes a band of quirky misfits is exactly what you need.
+
+#SUBNAME: The Big Score
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 4+
+{HEIST} You get +4 Attack. If the card revealed from the Villain Deck is a Master Strike, KO it and put a card from the Bystander Deck on top of the Villain Deck.
+#COST: 8
+
+#CARDNAME: Wasp
+#TEAM: Avengers
+
+#SUBNAME: Flitting Sting
+#COPIES: 3
+#CLASS: [Ranged]
+#RECRUIT: 1+
+#ATTACK: 1+
+{SIZECHANGING RANGED}
+{POWER Ranged} You get +1 Recruit and +1 Attack.
+#COST: 3*
+#FLAVOR: Hope Van Dyne's suit is a lot like Scott's... except that hers can fly and has blasters.
+
+#SUBNAME: Master Physicist
+#COPIES: 3
+#CLASS: [Tech]
+#RECRUIT: 2+
+{SIZECHANGING TECH}
+You get +1 Recruit for each other card you have with a "+" symbol in its Recruit icon.
+#COST: 4*
+
+#SUBNAME: Positive Ions
+#COPIES: 3
+#CLASS: [Ranged]
+#ATTACK: 2+
+{SIZECHANGING RANGED}
+You get +1 Attack for each other card you have with a "+" symbol in its Attack icon.
+#COST: 5*
+
+#SUBNAME: Follow My Lead
+#COPIES: 2
+#CLASS: [Ranged]
+#ATTACK: 1+
+{SIZECHANGING RANGED}
+If this is the first card you played this turn, you get +1 Attack.
+#COST: 2*
+
+#SUBNAME: Infiltrate
+#COPIES: 2
+#CLASS: [Tech]
+#ATTACK: 1+
+{USIZECHANGING TECH 3}
+When you draw a new hand this turn, draw an extra card.
+{HEIST} You get +3 Attack.
+#COST: 6*
+
+#SUBNAME: Hope Returns
+#COPIES: 1
+#CLASS: [Ranged]
+#RECRUIT: 4+
+#ATTACK: 4+
+{USIZECHANGING RANGED 2}  [Ranged][Ranged] [Ranged]
+You get +1 Recruit for each other card you have with a "+" symbol in its Recruit icon.
+You get +1 Attack for each other card you have with a "+" symbol in its Attack icon.
+#COST: 9*
+
+

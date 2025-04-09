@@ -1,0 +1,223 @@
+
+#CARDNAME: Armada of Kang
+
+#SUBNAME: Build a Conquering Army
+#COPIES: 1
+#AMBUSH: If the Bridge is empty, move a Villain to the Bridge. Choose an unused Henchman Group and stack Henchmen from it next to this Scheme equal to the number of players.
+<b>Special Rules</b>: Players may fight Henchmen stacked here. While here, those Henchmen also have "{BRIDGE CONQUEROR 1}." If you defeat the last Henchman here, defeat this Scheme.
+<b>Twist</b>: Stack another of those Henchmen next to this Scheme <i>(from a Victory Pile if necessary)</i>. Then, if there are two more Henchmen here than the number of players: Each player gains a Wound, 3 of those Henchmen enter the city, and you KO this Scheme and the rest of those Henchmen.
+#VP: 4
+
+#SUBNAME: City Defense System
+#COPIES: 1
+{STREETS CONQUEROR 2}
+#AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 4+
+#VP: 3
+
+#SUBNAME: Energy Shield
+#COPIES: 1
+{STREETS CONQUEROR 2}
+#AMBUSH: Put this Energy Shield above the Mastermind space. While it's there, you can't fight the Mastermind. <i>(You can still fight the Energy Shield.)</i>
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Lord Krylar's Yacht
+#COPIES: 1
+#AMBUSH: You may say "<i>I'm sure we can trust Lord Krylar...</i>" If you do: Draw a card, reveal it, and if it has an odd-numbered cost, Lord Krylar {DOUBLE-CROSSES} each player.
+#FIGHT: Same effect.
+#ESCAPE: Same effect.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: M.O.D.O.K.
+#COPIES: 1
+{USIZECHANGING RANGED 1}[Ranged][Ranged][Ranged]
+#AMBUSH: M.O.D.O.K. {DOUBLE-CROSSES} each player.
+#FIGHT: Each player KOs one of their Heroes.
+#ATTACK: 8*
+#VP: 5
+#FLAVOR: Mechanized Organism Designed Only for KOing.
+
+#SUBNAME: Pursuit Craft
+#COPIES: 1
+{ROOFTOPS CONQUEROR 2}
+#AMBUSH: <i>(After this enters the city)</i> If other Villains or the Mastermind have Conqueror abilities naming any empty city spaces, Pursuit Craft moves to one of those city spaces.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Quantumnaut Elite
+#COPIES: 1
+{ROOFTOPS CONQUEROR 2}
+{STREETS CONQUEROR 2}
+#FIGHT: KO two of your Heroes.
+#ATTACK: 4+
+#VP: 4
+#FLAVOR: No emotion displayed. No mercy granted.
+
+#SUBNAME: Troop Ships of Kang
+#COPIES: 1
+{ROOFTOPS CONQUEROR 2}
+#AMBUSH: A Villain worth 2 VP or 3 VP from any player's Victory Pile enters the city.
+#ATTACK: 4+
+#VP: 3
+
+#CARDNAME: Cross Technologies
+
+#SUBNAME: Cross' Security Detail
+#COPIES: 2
+While the back side of a Mastermind card is face up, this Villain gets +2 Attack and "<b>Escape</b>: Each player discards a card."
+#FIGHT: KO one of your Heroes.
+#ATTACK: 5+
+#VP: 4
+
+#SUBNAME: Hydra Arms Dealer
+#COPIES: 2
+#FIGHT: You get +2 Recruit, usable only to recruit Heroes with an Attack icon.
+#ATTACK: 4
+#VP: 2
+#FLAVOR: Just imagine what Hydra could do with shrinking technology...
+
+#SUBNAME: Shrinksperiments
+#COPIES: 2
+{SIZECHANGING TECH}
+#FIGHT: A Hero in the HQ loses all <b>Size-Changing</b> abilities, then gains {SIZECHANGING TECH} this turn.
+#ATTACK: 6*
+#VP: 3
+
+#SUBNAME: Take Over Pym Technologies
+#COPIES: 1
+#AMBUSH: This Scheme captures Bystanders equal to the number of players plus 1, as "Pym Tech Scientists."
+<b>Special Rules</b>: Once per turn, you may pay 3 Recruit or discard a card with <b>Size-Changing</b>. If you do, rescue a Pym Tech Scientist and draw a card. If you rescue the last Scientist, defeat this Scheme.
+<b>Twist</b>: This captures another Pym Tech Scientist. Then, if it has 3 or more Scientists, each player discards a card.
+#VP: 2
+
+#SUBNAME: Yellowjacket Prototype
+#COPIES: 1
+{USIZECHANGING INSTINCT 1}[Instinct][Instinct][Instinct]
+#AMBUSH: Each player reveals a [Instinct] Hero or gains a Wound.
+#ESCAPE: Same effect.
+#ATTACK: 9*
+#VP: 5
+
+#CARDNAME: Ghost Chasers
+
+#SUBNAME: Anitolov
+#COPIES: 1
+#FIGHT: {HEIST} You may KO up to two of your Heroes.
+#ATTACK: 5
+#VP: 3
+#FLAVOR: "We traffic in stolen technology." — Uzman
+"And we have killed many, many people." — Anitolov<i></span></i>
+
+#SUBNAME: Corrupted Government Agents
+#COPIES: 1
+#AMBUSH: Corrupted Government Agents <b>Double-Cross</b> each player.
+#FIGHT: You may look at the top three cards of any deck and put them back in any order.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Dr. Bill Foster
+#COPIES: 1
+To fight Dr. Bill Foster, you must solve a math equation: Discard three cards such that the costs of two of them add up to the cost of the third. They can't all cost 0.
+#ESCAPE: Each player discards a card that costs 0.
+#ATTACK: 0*
+#VP: 4
+
+#SUBNAME: Goliath
+#COPIES: 1
+{SIZECHANGING STRENGTH}
+#AMBUSH: Goliath {DOUBLE-CROSSES} each player.
+#FIGHT: Goliath topples over, crushing another Villain: You may defeat a Villain that has 4 Attack or less in an adjacent city space.
+#ATTACK: 8*
+#VP: 5
+
+#SUBNAME: High-Speed Car Chase
+#COPIES: 1
+#AMBUSH: Stack 2 cards from the Wound Deck next to this Scheme as "Dangerous Stunts."
+<b>Twist</b>: If there is a Villain in the Streets: Add 2 Dangerous Stunts. Then if there are at least 5 Stunts, there is a "car crash": Each player gains one of the Stunts as a Wound. KO the rest of the Stunts and this Scheme.
+Otherwise: Return a Dangerous Stunt to the Wound Deck. If there are still Stunts here, move a Villain to the Streets. If there aren't any Stunts, defeat this Scheme.
+#VP: 3
+
+#SUBNAME: Sonny Burch
+#COPIES: 1
+#AMBUSH: Sonny Burch {DOUBLE-CROSSES} each player.
+#FIGHT: {HEIST} You may choose a player to gain a [Tech] or [Ranged] Hero from the HQ.
+#ATTACK: 6
+#VP: 4
+#FLAVOR: "Quantum energy is the future. It's the next gold rush."
+
+#SUBNAME: Sonny Burch's Goons
+#COPIES: 1
+#FIGHT: {HEIST} You get +2 Recruit.
+#ATTACK: 4
+#VP: 2
+#FLAVOR: Whether expensive goons or cheap goons, you get what you pay for.
+
+#SUBNAME: Uzman, With Truth Serum
+#COPIES: 1
+#FIGHT: Look at the top card of the Hero Deck and claim a Hero Class it has. Choose another player to guess "Truth" or "Lie." If they guessed right, they either KO that Hero or choose a player to gain it. If they guessed wrong, you decide what to do with that Hero instead. <i>(In solo, you just decide.)</i>
+#ATTACK: 5
+#VP: 3
+
+#CARDNAME: Quantum Realm
+
+#SUBNAME: Axian Bartender
+#COPIES: 1
+#AMBUSH: Any number of times this turn, you may pay 2 Recruit to "buy a refreshment" and KO a Wound from your hand or from any player's discard pile.
+#FIGHT: Same effect.
+#ATTACK: 4
+#VP: 2
+
+#SUBNAME: Axian Maitre d'
+#COPIES: 1
+#FIGHT: {EXPLORE} The Found Hero costs 2 less to recruit this turn.
+#ATTACK: 4
+#VP: 2
+#FLAVOR: No detail escapes those eyes.
+
+#SUBNAME: Hungering Energy
+#COPIES: 1
+{USIZECHANGING TECH 1}[Tech][Tech][Tech]
+#FIGHT: KO one of your Heroes.
+#ATTACK: 7*
+#VP: 4
+#FLAVOR: In the Quantum Realm, nutrients eat you!
+
+#SUBNAME: Lord Krylar's Appetizer
+#COPIES: 1
+{USIZECHANGING COVERT 1}[Covert][Covert][Covert]
+#FIGHT: Choose a player to "eat the appetizer" and KO a card of their choice from their discard pile.
+#ATTACK: 6*
+#VP: 3
+
+#SUBNAME: Lord Krylar's Valet
+#COPIES: 1
+#FIGHT: {EXPLORE} You get + Recruit equal to the Found Hero's printed Recruit.
+#ATTACK: 5
+#VP: 3
+#FLAVOR: Lord Krylar's network of informants could find anyone in the Quantum Realm.
+
+#SUBNAME: Quantumania
+#COPIES: 1
+#AMBUSH: Each player puts a non-grey Hero from their hand or discard pile next to this Scheme as a "Quantum Duplicate." Then do the Twist effect below.
+<b>Twist</b>: The top card of the Hero Deck becomes another Quantum Duplicate. Each player reveals their hand and discards all cards that have the same name as any Quantum Duplicate.
+<b>Special Rules</b>: Players may spend Attack equal to a Quantum Duplicate's printed cost to KO that Hero or choose a player to gain it. When there are no more Quantum Duplicates, defeat this Scheme.
+#VP: 2
+
+#SUBNAME: Quantumoeba
+#COPIES: 1
+{USIZECHANGING TECH 1}[Tech][Tech][Tech]
+#AMBUSH: Quantumoeba "eats" a Henchman from any player's Victory Pile, capturing it and gaining its printed Attack.
+#FIGHT: Put the eaten Henchman in your Victory Pile and do its Fight effect.
+#ATTACK: 8*
+#VP: 5
+
+#SUBNAME: Sky Manta
+#COPIES: 1
+#FIGHT: {EXPLORE} If you recruit the Found Hero this turn, set it aside. When you draw a new hand this turn, add that card to your hand.
+#ATTACK: 5
+#VP: 3
+
+

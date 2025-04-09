@@ -1,0 +1,21 @@
+
+#CARDNAME: Agent Jimmy Woo
+#COPIES: 2
+<b>Rescue</b>: Do some "close-up magic": Reveal the top two cards of your deck. The player on your left says one of those card names. <i>(In solo mode, say one yourself.)</i> Mix them up, reveal one, and say <i>"Is this your card?"</i> If it is, draw it. Put the rest back in any order.
+#VP: 1
+
+#CARDNAME: Maggie Lang
+#COPIES: 2
+<b>Rescue</b>: You may return a card that costs 2 or less from your discard pile to your hand.
+#VP: 1
+
+#CARDNAME: Officer Jim Paxton
+#COPIES: 1
+<b>Rescue</b>: You may defeat a Henchman.
+#VP: 1
+
+#CARDNAME: Young Cassie Lang
+#COPIES: 2
+<b>Rescue</b>: You get +2 Recruit, usable only to recruit a Hero that costs 2 or less or a Hero with <b>Size-Changing</b>.
+#VP: 1
+

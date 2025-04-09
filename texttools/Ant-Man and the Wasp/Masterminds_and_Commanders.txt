@@ -1,0 +1,99 @@
+
+#CARDNAME: Darren Cross
+{BANK CONQUEROR 6}
+#LEADS: Cross Technologies
+#STRIKE: Darren Cross {DOUBLE-CROSSES} each player. Then he {TRANSFORM}.
+#ATTACK: 8+
+#VP: 6
+
+Mastermind Transformed
+
+#CARDNAME: Yellowjacket
+{USIZECHANGING TECH 1}[Tech]
+#STRIKE: Each player discards a [Instinct] Hero or Size-Changing Hero or gains a Wound. Yellowjacket {TRANSFORM}.
+#ATTACK: 12*
+#VP: 6
+
+#TACTIC: Corporate Raider
+#FIGHT: KO one of your Heroes with a Recruit icon. If the Bank is empty, move a Villain to the Bank.
+This Mastermind {TRANSFORM}.
+
+#TACTIC: Protect My Investments
+#FIGHT: If the Bank is empty, each other player chooses a Villain worth 2 VP or more from their Victory Pile. You choose one of those Villains to enter the Bank.
+This Mastermind {TRANSFORM}.
+
+#TACTIC: Shrinking Research Budget
+#FIGHT: Each Hero currently in the HQ that has no <b>Size-Changing</b> abilities gains <b>Size-Changing</b> for one of its Hero Classes.
+This Mastermind {TRANSFORM}.
+
+#TACTIC: Steal Pym Particles
+#FIGHT: Each other player shuffles a [Covert], [Tech], or <b>Size-Changing</b> card from their hand or discard pile into the Hero Deck.
+This Mastermind {TRANSFORM}.
+
+#CARDNAME: Ghost, Master Thief
+Ghost gets +1 Attack for each different cost among her "Kidnapped Victims." While this side is face up, you may recruit cards from her Kidnapped Victims <i>(in any order)</i>, spending 2 Recruit extra for each.
+#LEADS: Ghost Chasers
+#STRIKE: Each player reveals a [Instinct] Hero or discards two cards with Recruit icons. Ghost {TRANSFORM}.
+#ATTACK: 8+
+#VP: 6
+
+Mastermind Transformed
+
+#CARDNAME: Ghost, Intangible
+You can't fight Ghost unless you made at least 6 Recruit this turn.
+#STRIKE: Each player discards a [Covert] Hero or puts a non-grey Hero from their hand or discard pile next to Ghost as a "Kidnapped Victim." Ghost {TRANSFORM}.
+#ATTACK: 6*
+#VP: 6
+
+#TACTIC: Draining Quantum Energy Chamber
+#FIGHT: Each other player reveals their hand and KOs one of their cards that shares a Hero Class with any of Ghost's Kidnapped Victims.
+Ghost {TRANSFORM}.
+
+#TACTIC: Elaborate Rescue Plan
+#FIGHT: You may choose a player to gain one of Ghost's Kidnapped Victims.
+Ghost {TRANSFORM}.
+
+#TACTIC: Nightmarish Wraith
+#FIGHT: Each other player puts a non-grey Hero from their discard pile next to Ghost as a Kidnapped Victim.
+Ghost {TRANSFORM}.
+
+#TACTIC: Shadowy Abduction
+#FIGHT: Put the highest-cost Hero from the HQ next to Ghost as a Kidnapped Victim.
+Ghost {TRANSFORM}.
+
+#CARDNAME: Kang, Quantum Conqueror
+{ROOFTOPS CONQUEROR 3}, {STREETS CONQUEROR 3}, {BRIDGE CONQUEROR 3}
+#LEADS: Armada of Kang. Set aside the Villains from an extra Villain Group as "Timeline Variants."
+#STRIKE: Each player discards a [Strength] Hero or gains a Wound. Put a random Timeline Variant Villain face up in the "Multiverse" space.
+Kang {TRANSFORM}.
+#ATTACK: 11+
+#VP: 6
+
+Mastermind Transformed
+
+#CARDNAME: Kang, Multiverse Conqueror
+{MULTIVERSE CONQUEROR 8}
+While either side of Kang is face up, the "Multiverse" is a space to his left that can hold multiple Villains. You can fight them (in any order) only while this side is face up.
+#STRIKE: If there are any Villains in the Multiverse, each player gains a Wound. Then a Villain from the Multiverse enters an empty space among the Rooftops, Streets, or Bridge. Kang {TRANSFORM}.
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Conqueror's Wrath
+#FIGHT: If there are any Villains in the Rooftops, Streets and/or Bridge, each player gains a Wound. If there are any Villains in the Multiverse, each player gains a Wound.
+Kang {TRANSFORM}.
+
+#TACTIC: Kang's Defiance
+#FIGHT: If any of the Rooftops, Streets, or Bridge are empty, reveal the top card of the Villain Deck. If it's a Villain, it enters one of those spaces.
+Put a random Timeline Variant Villain face up in the "Multiverse" space.
+Kang {TRANSFORM}.
+
+#TACTIC: Multiversal Engine Core
+#FIGHT: Kang {DOUBLE-CROSSES} each other player.
+Put a random Timeline Variant Villain face up in the "Multiverse" space.
+Kang {TRANSFORM}.
+
+#TACTIC: The Time Sphere
+#FIGHT: Each other player puts two cards from their hand on the bottom of their deck. You draw two cards.
+Kang {TRANSFORM}.
+
+

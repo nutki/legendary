@@ -1,0 +1,25 @@
+
+#CARDNAME: Auction Shrink Tech to Highest Bidder
+#SETUP: 11 Twists. Set aside all 14 cards of a random extra Hero that has any Size-Changing cards as "Shrink Tech."
+#TWIST: Stack this Twist next to the Scheme as a "Hostile Bid." Reveal a random Hero from the Shrink Tech. This turn you may recruit that Hero, but it costs 1 Recruit more for each Hostile Bid. If you recruit it, either KO that Hero or choose any player to gain it. If you don't recruit it by the end of this turn, stack it next to the Scheme as "Controlled by Arms Dealers."
+#EVILWINS: When 8 Shrink Tech cards are Controlled by Arms Dealers.
+
+#CARDNAME: Escape an Imprisoning Dimension
+#SETUP: 5 Twists.
+#RULE: During your turn, any number of times, you may spend 1 Attack to "Seal" an unsealed city space or unsealed Mastermind space by putting a card above it from the Wound Stack.
+#TWIST: If any city space with a Villain in it or the Mastermind space is not "sealed", stack this Twist next to the Mastermind as a "Discovered Escape Route." Otherwise, return 3 Seals from above spaces to the Wound Deck, shuffle this Twist into the Villain Deck, and play another card from the Villain Deck.
+#EVILWINS: When 3 Escape Routes have been discovered.
+
+#CARDNAME: Safeguard Dark Secrets
+#SETUP: 5 Twists.
+#TWIST: Stack this Twist next to the Mastermind as a "Secret," then play another card from the Villain Deck.
+#RULE: You have the ability "{HEIST} You get +1 Recruit. Shuffle a Secret from next to the Mastermind into the Villain Deck."
+#EVILWINS: When the Mastermind has 5 Secrets.
+
+#CARDNAME: Siphon Energy from the Quantum Realm
+#SETUP: 9 Twists. Set aside the "Quantum Realm" Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.
+#TWIST: Stack this Twist next to the Mastermind as a "Quantum Siphon." Put a random set aside Quantum Realm Villain on the Siphons. Do its Ambush effect. If there was already a Quantum Realm Villain on the Siphons, KO it.
+#RULE: You may fight Villains on the Quantum Siphons. They get +1 Attack for each two Siphons.
+#EVILWINS: When 4 Quantum Realm Villains have been KO'd or there are 9 Quantum Siphons.
+
+

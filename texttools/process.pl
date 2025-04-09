@@ -139,6 +139,10 @@ while (<A>) {
     s!<b>What If\.\.\.\?</b>:?!{WHAT IF}!g;
     s!<b>Liberate (\d+)</b>!{LIBERATE $1}!g;
     s!<b>Soulbind(.*?)</b>:!{SOULBIND$1}!g;
+    s!<b>Heist</b>:?!{HEIST}!g;
+    s!<b>Antics</b>:?!{ANTICS}!g;
+    s!<b>Double-Crosses</b>!{DOUBLE-CROSSES}!g;
+    s!<b>Explore</b>[:.]?!{EXPLORE}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;
