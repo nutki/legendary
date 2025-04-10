@@ -2617,7 +2617,7 @@ function playTwist(ev: Ev): void {
   confirmEv(ev, 'Scheme Twist!', gameState.scheme.top);
   pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
   isSoloGame() && cont(ev, () => {
-    if (!(gameState.advancedSolo === "WHATIF" && pastEvents("TWIST").size)) {
+    if (!(gameState.advancedSolo === "WHATIF" && pastEvents("TWIST").has(isNot(ev)))) {
       if (gameState.advancedSolo) selectCardEv(ev, "Choose a card to put on the bottom of the Hero deck", hqHeroes().limit(c => c.cost <= 6), sel => moveCardEv(ev, sel, gameState.herodeck, true));
       else selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
     }
