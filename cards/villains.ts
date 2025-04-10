@@ -4145,7 +4145,7 @@ addVillainTemplates("Into the Cosmos", [
 // VP: 6
   [ 1, makeVillainCard("From Beyond", "Kosmos", 13, 6, {
     fight: ev => {
-      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && gameState.reversePlayerOrder);
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
       gameState.reversePlayerOrder = true;
       gameState.extraTurn = true;
     },
