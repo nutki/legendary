@@ -1833,14 +1833,21 @@ interface ActionCost {
   recruitBonus?: number;
   attackBonus?: number;
 }
-function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
+function baseCost(c: Card): number {
   let recruit = c.cost;
   if (isSizeChanged(c)) recruit = Math.max(0, recruit - 2);
   // TODO fix double size changing from champions
   recruit -= uSizeChangingAmount(c);
+  return recruit;
+}
+function getRecruitCost(c: Card, cond?: (c: Card) => boolean): ActionCost {
+  let recruit = baseCost(c);
   const recruitBonus = Math.max(-recruit, 0);
   recruit = Math.max(recruit, 0);
   return getModifiedStat(c, 'recruitCost', { recruit, cond, recruitBonus });
+}
+function effectiveCost(c: Card): number {
+  return recruitableCards().includes(c) ? baseCost(c) : c.cost;
 }
 function defaultFightCost(c: Card, attack: number): ActionCost {
   const attackBonus = Math.max(-attack, 0);

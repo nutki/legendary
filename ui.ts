@@ -102,6 +102,8 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true):
     d.appendChild(div("count", {}, text(getSchemeCountdown())))
   if (faceUp && c.defense !== c.printedDefense)
     d.appendChild(div("attackHint", {}, text(c.defense)));
+  if (faceUp && c.printedCost !== undefined && effectiveCost(c) !== c.printedCost)
+    d.appendChild(div("attackHint", {}, text(effectiveCost(c))));
   if (c.captured.size > 0) d.appendChild(div("capturedHint", {}, text(c.captured.size)));
   d.appendChild(div("frame"));
   return d;
