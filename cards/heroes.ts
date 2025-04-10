@@ -6941,7 +6941,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // You get +1 Attack for each other [Ranged] and/or [Strength] card you played this turn.
 // {ENDGAME} Instead, you get +2 Attack for each.
   ra: makeHeroCard("Captain Marvel", "Time to End It", 8, u, 5, Color.RANGED, "Avengers", "D",
-    ev => addAttackEvent(ev, pastEvents('PLAY').count(ev => isColor(Color.RANGED | Color.STRENGTH)(ev.what)) * (isEndgame(ev.source) ? 2 : 1))
+    ev => addAttackEvent(ev, pastEvents('PLAY').count(ev2 => ev.source !== ev2.what && isColor(Color.RANGED | Color.STRENGTH)(ev2.what)) * (isEndgame(ev.source) ? 2 : 1))
   ),
 },
 ]);
@@ -7333,5 +7333,252 @@ addHeroTemplates("Marvel Studios What If...?", [
   ra: makeHeroCard("Uatu, The Watcher", "Convoke the Guardians", 7, u, 5, Color.RANGED, "Guardians of the Multiverse", "", ev => whatIfEv(ev, () => {
     chooseOptionEv(ev, "Choose a Team", splitDivided(hqHeroes()).unique(c => c.team).map(v => ({l:v, v})), team => empowerEv(ev, team)); // TODO divided check both sides for team
   })),
+},
+]);
+addHeroTemplates("Ant-Man and the Wasp", [
+{
+  name: "Ant Army",
+  team: "(Unaffiliated)",
+// {SIZECHANGING INSTINCT}
+// {ANTICS} You get +2 Attack.
+  c1: makeHeroCard("Ant Army", "Antagonize", 2, u, 1, Color.INSTINCT, u, "FD", ev => anticsEv(ev, () => addAttackEvent(ev, 2)), { sizeChanging: Color.INSTINCT }),
+// {SIZECHANGING TECH}
+// {ANTICS} Draw a card.
+  c2: makeHeroCard("Ant Army", "Anticipate", 4, 2, u, Color.TECH, u, "FD", ev => anticsEv(ev, () => drawEv(ev)), { sizeChanging: Color.TECH }),
+// {HEIST} Draw a card.
+  c3: makeHeroCard("Ant Army", "Up the Ante", 1, u, 1, Color.INSTINCT, u, "F", [], { heist: ev => drawEv(ev) }),
+// {USIZECHANGING TECH 3}
+// {POWER Tech} You get +3 Attack.
+  uc: makeHeroCard("Ant Army", "Anti-Tank Weapons", 6, u, 2, Color.TECH, u, "FD", ev => superPower(Color.TECH) && addAttackEvent(ev, 3), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
+// {USIZECHANGING TECH 3}
+// {ANTICS} You get +2 Recruit and +2 Attack.
+  u2: makeHeroCard("Ant Army", "Antiproton Experiments", 5, 1, 1, Color.TECH, u, "FD", ev => anticsEv(ev, () => {
+    addRecruitEvent(ev, 2);
+    addAttackEvent(ev, 2);
+  }), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
+// {USIZECHANGING TECH 5}
+// {ANTICS} You get +2 Attack.
+// {HEIST} You get +2 Attack. If the card revealed from the Villain Deck is a Scheme Twist, you get another +2 Attack and you may shuffle that deck.
+  ra: makeHeroCard("Ant Army", "Revolutionary Anthem", 9, u, 4, Color.TECH, u, "D", ev => anticsEv(ev, () => addAttackEvent(ev, 2)), { uSizeChanging: { color: Color.TECH, amount: 5 }, heist: ev => {
+    addAttackEvent(ev, 2);
+    if (isTwist(ev.what)) {
+      addAttackEvent(ev, 2);
+      chooseMayEv(ev, "Shuffle the Villain Deck", () => gameState.villaindeck.shuffle());
+    }
+  }}),
+},
+{
+  name: "Ant-Man",
+  team: "Avengers",
+// {SIZECHANGING COVERT}
+// {ANTICS} You get +2 Recruit.
+  c1: makeHeroCard("Ant-Man", "Hitch a Ride", 2, 1, u, Color.COVERT, "Avengers", "FD", ev => anticsEv(ev, () => addRecruitEvent(ev, 2)), { sizeChanging: Color.COVERT }),
+// {SIZECHANGING STRENGTH}
+// Reveal the top card of your deck. If it's [Strength] or has <b>Size-Changing</b>, draw it.
+  c2: makeHeroCard("Ant-Man", "Look Out for the Little Guy!", 3, u, 1, Color.STRENGTH, "Avengers", "", ev => drawIfEv(ev, c => isColor(Color.STRENGTH)(c) || !!c.sizeChanging || !!c.uSizeChanging), { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING COVERT}
+// {POWER Covert} All Villains and the Mastermind get -1 Attack this turn.
+  c3: makeHeroCard("Ant-Man", "Shrink Away", 4, u, 2, Color.COVERT, "Avengers", "FD", ev => superPower(Color.COVERT) && addStatMod('defense', isEnemy, -1), { sizeChanging: Color.COVERT }),
+// {USIZECHANGING STRENGTH 3}
+// {ANTICS} You may KO a card from your hand or discard pile.
+  uc: makeHeroCard("Ant-Man", "Bug Swarm", 5, 2, u, Color.STRENGTH, "Avengers", "FD", ev => anticsEv(ev, () => KOHandOrDiscardEv(ev, undefined)), { uSizeChanging: { color: Color.STRENGTH, amount: 3 } }),
+// {USIZECHANGING COVERT 3}
+// {HEIST} Draw two cards.
+  u2: makeHeroCard("Ant-Man", "Tiny Little Risk", 6, u, 2, Color.COVERT, "Avengers", "FD", [], { uSizeChanging: { color: Color.COVERT, amount: 3 }, heist: ev => drawEv(ev, 2) }),
+// {USIZECHANGING STRENGTH 5}
+// You get +1 Attack for each card you played this turn that's [Strength] and/or has <b>Size-Changing</b>.
+  ra: makeHeroCard("Ant-Man", "Giant-Man", 9, u, 6, Color.STRENGTH, "Avengers", "", ev => {
+    addAttackEvent(ev, pastEvents('PLAY').count(ev => isColor(Color.STRENGTH)(ev.what) || !!ev.what.sizeChanging || !!ev.what.uSizeChanging)); // TODO -1 for self?
+  }, { uSizeChanging: { color: Color.STRENGTH, amount: 5 } }),
+},
+{
+  name: "Cassie Lang",
+  team: "Avengers",
+// {SIZECHANGING STRENGTH}
+// {POWER Strength} You may defeat a Villain worth 2 VP or less.
+  c1: makeHeroCard("Cassie Lang", "Colossal Stomp", 5, u, 2, Color.STRENGTH, "Avengers", "FD", ev => superPower(Color.STRENGTH) && selectCardOptEv(ev, 
+    "Choose a Villain to defeat", villains().limit(c => c.vp <= 2), c => defeatEv(ev, c)
+  ), { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING STRENGTH}
+// Choose a player. If that player reveals a card that costs 5 or more, that player draws a card.
+  c2: makeHeroCard("Cassie Lang", "Giant Hug", 4, 2, u, Color.STRENGTH, "Avengers", "D", ev => {
+    choosePlayerEv(ev, p => revealAndEv(ev, c => c.cost >= 5, () => drawEv(ev, 1, p), p));
+  }, { sizeChanging: Color.STRENGTH }),
+// {SIZECHANGING TECH}
+// To play this, you must discard a card. Then, if you have a Villain in your Victory Pile worth 2 VP or less, draw a card.
+  c3: makeHeroCard("Cassie Lang", "Start Small", 2, 2, u, Color.TECH, "Avengers", "D", ev => {
+    playerState.victory.has(c => c.vp <= 2) && drawEv(ev);
+  }, { sizeChanging: Color.TECH, playCost: 1, playCostType: "DISCARD" }),
+// {USIZECHANGING STRENGTH 3}
+// {POWER Strength} You may do the Fight effect of a Villain in your Victory Pile worth 2 VP or less.
+  uc: makeHeroCard("Cassie Lang", "Learn from the Past", 6, u, 3, Color.STRENGTH, "Avengers", "D", ev => superPower(Color.STRENGTH) && selectCardOptEv(ev,
+    "Choose a Villain to do the Fight effect", playerState.victory.limit(c => c.vp <= 2), c => pushEffects(ev, c, 'fight', c.fight)
+  ), { uSizeChanging: { color: Color.STRENGTH, amount: 3 } }),
+// {USIZECHANGING TECH 3}
+// {POWER Tech} Reveal the top card of the Villain Deck. If it's a Bystander, rescue it. If it's a Villain worth 2 VP or less, you may fight it this turn. If you rescue or defeat that card, don't play a card from the Villain Deck next turn.
+  u2: makeHeroCard("Cassie Lang", "Quantum Beacon", 5, u, 3, Color.TECH, "Avengers", "D", ev => superPower(Color.TECH) && revealVillainDeckEv(ev, 1, cards => cards.each(c => {
+    if (isBystander(c)) {
+      rescueEv(ev, c);
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--); // TODO check if this refers to the current player next turn
+    } else if (isVillain(c) && c.vp <= 2) {
+      addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+      addTurnTrigger('FIGHT', ev => ev.what === c, ev => gameState.bystanders.withTop(b => moveCardEv(ev, b, gameState.villaindeck)) );
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
+    }
+  })), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
+// {USIZECHANGING STRENGTH 5}
+// You get +1 Attack for each Villain worth 2 VP or less in your Victory Pile.
+  ra: makeHeroCard("Cassie Lang", "Inspire Revolution", 9, u, 5, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev,
+    playerState.victory.count(c => c.vp <= 2)
+  ), { uSizeChanging: { color: Color.STRENGTH, amount: 5 } }),
+},
+{
+  name: "Freedom Fighters",
+  team: "(Unaffiliated)",
+// When you draw a new hand this turn, draw an extra card.
+  c1: makeHeroCard("Freedom Fighters", "Mystics", 3, 1, u, Color.RANGED, u, "F", ev => addEndDrawMod(1)),
+// {STREETS CONQUEROR 1}
+// Draw a card.
+  c2: makeHeroCard("Freedom Fighters", "Steel Warrior", 4, u, 1, Color.INSTINCT, u, "F", [ ev => heroConquerorEv(ev, 'STREETS', 1), ev => drawEv(ev) ]),
+// {BRIDGE CONQUEROR 1}
+// {POWER Ranged} You get +2 Attack.
+  c3: makeHeroCard("Freedom Fighters", "Xolum", 5, u, 2, Color.RANGED, u, "FD", [ ev => heroConquerorEv(ev, 'BRIDGE', 1), ev => superPower(Color.RANGED) && addAttackEvent(ev, 2) ]),
+// {POWER Ranged} Choose Recruit or Attack. Then {EXPLORE} You get the printed value of the icon you chose on the Found Hero.
+  uc: makeHeroCard("Freedom Fighters", "Quaz", 6, 2, 2, Color.RANGED, u, "D", ev => superPower(Color.RANGED) &&
+    chooseOptionEv(ev, "Choose an icon", [{l:"Recruit",v:hasRecruitIcon},{l:"Attack",v:hasAttackIcon}], f =>
+      exploreEv(ev, c => f(c) && (f === hasRecruitIcon ? addRecruitEvent(ev, c.printedRecruit) : addAttackEvent(ev, c.printedAttack))))),
+// Reveal the top card of your deck. If that card has any "holes" printed inside any of its icons <b>(0, 4, 6, 8, or 9)</b>, draw it.
+// {POWER Instinct} You may KO the card you drew this way.
+  u2: makeHeroCard("Freedom Fighters", "Veb", 2, u, 1, Color.INSTINCT, u, "D", ev => {
+    drawIfEv(ev, c => [0, 4, 6, 8, 9].has(v => [c.printedAttack, c.printedRecruit, c.printedDefense].has(v)), c => {
+      superPower(Color.INSTINCT) && selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c));
+    });
+  }),
+// {EXPLORE}
+// {POWER Instinct} You may choose a player to gain the Found Hero.
+  ra: makeHeroCard("Freedom Fighters", "Freedom Forever", 7, u, 5, Color.INSTINCT, u, "", ev => exploreEv(ev, c => {
+    superPower(Color.INSTINCT) && selectCardOptEv(ev, "Choose a player to gain the Hero", gameState.players, p => gainEv(ev, c, p));
+  })),
+},
+{
+  name: "Janet Van Dyne",
+  team: "(Unaffiliated)",
+// {POWER Ranged} {EXPLORE} You get +Attack equal to the Found Hero's printed Attack.
+  c1: makeHeroCard("Janet Van Dyne", "Prepare for War", 4, u, 2, Color.RANGED, u, "FD", ev => superPower(Color.RANGED) && exploreEv(ev, c => exploreEv(ev, c => c.printedAttack && addAttackEvent(ev, c.printedAttack)))),
+// {POWER Covert}  {EXPLORE} You get +Recruit equal to the Found Hero's printed Recruit.
+  c2: makeHeroCard("Janet Van Dyne", "Search for Peace", 3, 2, u, Color.COVERT, u, "FD", ev => superPower(Color.COVERT) && exploreEv(ev, c => exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit)))),
+// {SIZECHANGING COVERT}
+// {POWER Covert} {EXPLORE} Then you get +1 Attack for each time you explored this turn.
+  c3: makeHeroCard("Janet Van Dyne", "Wasp of Another Generation", 5, u, 2, Color.COVERT, u, "FD", ev => superPower(Color.COVERT) && exploreEv(ev, () => {
+    addAttackEvent(ev, pastEvents('EXPLORE').size)
+  }), { sizeChanging: Color.COVERT }),
+// When you play this, put it on top of the Hero Deck or KO it.
+  uc: makeHeroCard("Janet Van Dyne", "Quantum Contradiction", 6, 4, 4, Color.RANGED, u, "F", ev => {
+    chooseOneEv(ev, "Choose one", ["KO", () => KOEv(ev, ev.source)], ["Put on top of the Hero Deck", () => isCopy(ev.source) || moveCardEv(ev, ev.source, gameState.herodeck)]);
+  }),
+// {USIZECHANGING COVERT 2}
+// Draw a card.
+// {POWER Covert Covert} You get +2 Attack.
+  u2: makeHeroCard("Janet Van Dyne", "Subatomic Size", 2, u, 0, Color.COVERT, u, "D", [ ev => drawEv(ev), ev => superPower(Color.COVERT, Color.COVERT) && addAttackEvent(ev, 2) ], { uSizeChanging: { color: Color.COVERT, amount: 2 } }),
+// {EXPLORE}
+// {POWER Covert} You get +Recruit equal to the Found Hero's printed Recruit and +Attack equal to its printed Attack.
+  ra: makeHeroCard("Janet Van Dyne", "Finally Found You", 8, 4, 4, Color.COVERT, u, "", ev => superPower(Color.COVERT) && exploreEv(ev, c => {
+    c.printedRecruit && addRecruitEvent(ev, c.printedRecruit);
+    c.printedAttack && addAttackEvent(ev, c.printedAttack);
+  })),
+},
+{
+  name: "Jentorra",
+  team: "(Unaffiliated)",
+// You may move a Villain to an adjacent city space. If another Villain is already there, swap them.
+// {POWER Instinct} You get +2 Attack.
+  c1: makeHeroCard("Jentorra", "Hit and Run", 3, 2, 0, Color.INSTINCT, u, "D", [ ev => {
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    });
+  }, ev => superPower(Color.INSTINCT) && addAttackEvent(ev, 2) ]),
+// {BRIDGE CONQUEROR 1}
+// If there are no Villains on the Rooftops, draw a card.
+  c2: makeHeroCard("Jentorra", "Take the High Ground", 2, u, 1, Color.STRENGTH, u, "D", [ ev => heroConquerorEv(ev, 'BRIDGE', 1), ev => {
+    withCity('ROOFTOPS', d => isCityEmpty(d) && drawEv(ev));
+  } ]),
+// {POWER Strength} {SEWERS CONQUEROR 2}
+  c3: makeHeroCard("Jentorra", "Unite the Oppressed", 4, u, 2, Color.STRENGTH, u, "FD", ev => superPower(Color.STRENGTH) && heroConquerorEv(ev, 'SEWERS', 2)),
+// {POWER Instinct} {EXPLORE} If the Found Hero is [Instinct] or has no team icon, you get +2 Recruit.
+  uc: makeHeroCard("Jentorra", "Find Your Courage", 5, 3, u, Color.INSTINCT, u, "FD", ev => superPower(Color.INSTINCT) && exploreEv(ev, c => {
+    (isColor(Color.INSTINCT)(c) || !c.team) && addRecruitEvent(ev, 2);
+  })),
+// {POWER Strength} {EXPLORE} You get +Attack equal to the Found Hero's cost.
+  u2: makeHeroCard("Jentorra", "Lead Powerful Allies", 6, u, 2, Color.STRENGTH, u, "FD", ev => superPower(Color.STRENGTH) && exploreEv(ev, c => {
+    c.cost && addAttackEvent(ev, c.cost);
+  })),
+// {BRIDGE CONQUEROR 1}
+// You get +1 Attack for each Villain worth 4 VP or more and each Mastermind Tactic in your Victory Pile.
+  ra: makeHeroCard("Jentorra", "Conquer the Conqueror", 7, u, 5, Color.INSTINCT, u, "", [ ev => heroConquerorEv(ev, 'BRIDGE', 1), ev => {
+    addAttackEvent(ev, playerState.victory.count(c => c.vp >= 4) + playerState.victory.count(isTactic));
+  } ]),
+},
+{
+  name: "Scott Lang, Cat Burglar",
+  team: "Crime Syndicate",
+// {HEIST} You get +2 Recruit.
+  c1: makeHeroCard("Scott Lang, Cat Burglar", "Petty Larceny", 1, 1, u, Color.COVERT, "Crime Syndicate", "FD", [], { heist: ev => addRecruitEvent(ev, 2) }),
+// {HEIST} You get +2 Attack.
+  c2: makeHeroCard("Scott Lang, Cat Burglar", "Shocking Support", 4, u, 2, Color.RANGED, "Crime Syndicate", "FD", [], { heist: ev => addAttackEvent(ev, 2) }),
+// {HEIST} You may move a Villain to an empty city space. If you do, KO one of your Heroes.
+  c3: makeHeroCard("Scott Lang, Cat Burglar", "X-Con Security Van", 5, u, 2, Color.TECH, "Crime Syndicate", "D", [], { heist: ev => {
+    villains().size && selectCardOptEv(ev, "Select empty city space", gameState.city.filter(isCityEmpty), dest => {
+      selectCardOptEv(ev, "Choose a Villain to move", villains(), v => {
+        swapCardsEv(ev, v, dest);
+        selectCardEv(ev, "Choose a Hero to KO", playerState.hand.deck, c => KOEv(ev, c));
+      });
+    });
+  } }),
+// Whenever you gain a Wound this turn, return that Wound to the Wound Deck.
+// {HEIST} Rescue a Bystander.
+  uc: makeHeroCard("Scott Lang, Cat Burglar", "Anything for Cassie", 2, 1, 1, Color.INSTINCT, "Crime Syndicate", "D", ev => {
+    addTurnTrigger('GAIN', ev => isWound(ev.what) && playerState === ev.who, () => {
+      returnToStackEv(ev, gameState.wounds, ev.parent.what);
+    })
+  }, { heist: ev => rescueEv(ev) }),
+// {HEIST} You get +1 Attack for each different cost of card you have.
+  u2: makeHeroCard("Scott Lang, Cat Burglar", "Putting a Crew Together", 6, u, 3, Color.STRENGTH, "Crime Syndicate", "F", [], { heist: ev => {
+    addAttackEvent(ev, revealable().uniqueCount(c => c.cost));
+  } }),
+// {HEIST} You get +4 Attack. If the card revealed from the Villain Deck is a Master Strike, KO it and put a card from the Bystander Deck on top of the Villain Deck.
+  ra: makeHeroCard("Scott Lang, Cat Burglar", "The Big Score", 8, u, 4, Color.COVERT, "Crime Syndicate", "", [], { heist: ev => {
+    addAttackEvent(ev, 4);
+    isStrike(ev.what) && gameState.bystanders.withTop(c => {
+      KOEv(ev, ev.what);
+      moveCardEv(ev, c, gameState.villaindeck);
+    });
+  } }),
+},
+{
+  name: "Wasp",
+  team: "Avengers",
+// {SIZECHANGING RANGED}
+// {POWER Ranged} You get +1 Recruit and +1 Attack.
+  c1: makeHeroCard("Wasp", "Flitting Sting", 3, 1, 1, Color.RANGED, "Avengers", "F", ev => superPower(Color.RANGED) && (addRecruitEvent(ev, 1), addAttackEvent(ev, 1)), { sizeChanging: Color.RANGED }),
+// {SIZECHANGING TECH}
+// You get +1 Recruit for each other card you have with a "+" symbol in its Recruit icon.
+  c2: makeHeroCard("Wasp", "Master Physicist", 4, 2, u, Color.TECH, "Avengers", "D", ev => addRecruitEvent(ev, revealable().limit(isNot(ev.source)).count(hasFlag("R"))), { sizeChanging: Color.TECH }),
+// {SIZECHANGING RANGED}
+// You get +1 Attack for each other card you have with a "+" symbol in its Attack icon.
+  c3: makeHeroCard("Wasp", "Positive Ions", 5, u, 2, Color.RANGED, "Avengers", "D", ev => addAttackEvent(ev, revealable().limit(isNot(ev.source)).count(hasFlag("A"))), { sizeChanging: Color.RANGED }),
+// {SIZECHANGING RANGED}
+// If this is the first card you played this turn, you get +1 Attack.
+  uc: makeHeroCard("Wasp", "Follow My Lead", 2, u, 1, Color.RANGED, "Avengers", "D", ev => turnState.cardsPlayed.size === 0 && addAttackEvent(ev, 1), { sizeChanging: Color.RANGED }),
+// {USIZECHANGING TECH 3}
+// When you draw a new hand this turn, draw an extra card.
+// {HEIST} You get +3 Attack.
+  u2: makeHeroCard("Wasp", "Infiltrate", 6, u, 1, Color.TECH, "Avengers", "", ev => addEndDrawMod(1), { uSizeChanging: { color: Color.TECH, amount: 3 }, heist: ev => addAttackEvent(ev, 3) }),
+// {USIZECHANGING RANGED 5}
+// You get +1 Recruit for each other card you have with a "+" symbol in its Recruit icon.
+// You get +1 Attack for each other card you have with a "+" symbol in its Attack icon.
+  ra: makeHeroCard("Wasp", "Hope Returns", 9, 4, 4, Color.RANGED, "Avengers", "D", [ 
+    ev => addRecruitEvent(ev, revealable().limit(isNot(ev.source)).count(hasFlag("R"))),
+    ev => addAttackEvent(ev, revealable().limit(isNot(ev.source)).count(hasFlag("A"))),
+   ], { uSizeChanging: { color: Color.RANGED, amount: 5 }}),
 },
 ]);

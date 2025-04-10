@@ -1205,3 +1205,41 @@ function forceSoulbindEv(ev: Ev, cond: Filter<Card> = isVillain, p: Player = pla
    attachCardEv(ev, c, playerState.victory, 'SOULBIND');
   }, effect0, p);
 }
+// EXPANSION: Ant-Man and the Wasp
+function anticsEv(ev: Ev, effect: Handler) {
+  if (revealable().count(c => c.cost === 1 || c.cost === 2 || !!c.uSizeChanging || !!c.sizeChanging) >= 3) {
+    effect(ev);
+  }
+}
+function exploreEv(ev: Ev, effect: (c: Card) => void) {
+  pushEv(ev, 'EXPLORE', ev => selectCardEv(ev, "Choose a Hero to put on the bottom of the Hero Deck", hqHeroes(), c1 => {
+    revealHeroDeckEv(ev, 2, cards => {
+      selectCardEv(ev, "Choose a Hero to put in the HQ", cards, c2 => {
+        swapCardsEv(ev, c1, c2);
+        moveCardEv(ev, c1, gameState.herodeck, true);
+        effect(c2);
+      });
+    });
+  }));
+}
+function haistAction(ev: Ev) {
+  return new Ev(ev, 'EFFECT', {
+    func: ev => {
+      revealVillainDeckEv(ev, 1, cards => cards.each(c => {
+        const ourValue = yourHeroes().uniqueCount(c => c.cost);
+        const theirValue = c.printedVP || 0;
+        if (theirValue > ourValue) {
+          gainWoundEv(ev);
+        } else if (theirValue < ourValue) {
+          const cards = turnState.pastEvents.limit(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist).map(ev => ev.what);
+          selectCardOrderEv(ev, "Choose Heist order", cards, c1 => {
+            pushEv(ev, 'EFFECT', { source: c1, what: c, func: c1.heist });
+          });
+        }
+      }));
+    }
+  });
+}
+function canHaist() {
+  return turnState.pastEvents.has(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist);
+}

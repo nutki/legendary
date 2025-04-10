@@ -125,6 +125,7 @@ interface Card {
   heroAmbush?: Handler | Handler[];
   customRecruitAndAttack?: boolean;
   riseOfTheLivingDead: boolean;
+  heist?: Handler;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -205,6 +206,7 @@ interface HeroCardAbillities {
   excessiveKindness?: Handler;
   heroAmbush?: Handler
   customRecruitAndAttack?: boolean
+  heist?: Handler
 }
 class Card {
   constructor (t: string, n: string) {
@@ -244,6 +246,7 @@ class Card {
   isGroup(t: string) { return this.villainGroup === t; }
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
   hasWallCrawl() { return getModifiedStat(this, "wallcrawl", this.wallcrawl); }
+  hasChivalrousDuel() { return getModifiedStat(this, "chivalrousDuel", this.chivalrousDuel); }
   get nthCircle() { return getModifiedStat(this, "nthCircle", this.printedNthCircle || 0); }
   attachedDeck(name: string) { return attachedDeck(name, this); }
   attached(name: string) { return attachedCards(name, this); }
@@ -659,6 +662,7 @@ type EvType =
 'OUTWIT' |
 'TRANSFORM' |
 'DANGERSENSE' |
+'EXPLORE' |
 // Special
 'STATE' |
 'TURN' |
@@ -1525,7 +1529,7 @@ function isBindings(c: Card): boolean { return c.cardType === "BINDINGS"; }
 function isArtifact(c: Card): boolean { return getModifiedStat(c, 'isArtifact', c.isArtifact); }
 function hasRecruitIcon(c: Card) { return c.printedRecruit !== undefined; }
 function hasAttackIcon(c: Card) { return c.printedAttack !== undefined; }
-function hasFlag(flag: 'N' | 'D' | 'G' | 'F' | 'T') { return (c: Card) => c.flags && c.flags.includes(flag); }
+function hasFlag(flag: 'N' | 'D' | 'G' | 'F' | 'T' | 'R' | 'A') { return (c: Card) => c.flags && c.flags.includes(flag); }
 function isShieldOrHydra(c: Card) { return isTeam("S.H.I.E.L.D.")(c) || isTeam("HYDRA")(c); }
 function isCostOdd(c: Card) { return c.cost % 2 === 1; }
 function isTrap(c: Card) { return c.cardType === "TRAP"; }
@@ -1863,7 +1867,7 @@ function canPayCost(action: Ev) {
     usableRecruit += turnState.recruitSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
   if (action.type === 'FIGHT')
     usableAttack += turnState.attackSpecial.limit(a => a.cond(action.what)).sum(a => a.amount);
-  if (action.type === 'FIGHT' && action.what.chivalrousDuel) {
+  if (action.type === 'FIGHT' && action.what.hasChivalrousDuel()) {
     usableAttack = Math.min(usableAttack, chivalrousMaxAttack());
   }
   if (cost.piercing) { // simplified calculation assumes cost.attack and cost.recruit is zero
@@ -1908,7 +1912,7 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
   let eitherToPay = cost.either || 0;
   if (turnState.attackWithRecruit) { eitherToPay += attackToPay;  attackToPay = 0; }
   if (turnState.recruitWithAttack) { eitherToPay += recruitToPay; recruitToPay = 0; }
-  if (attackToPay && action.type === 'FIGHT' && action.what.chivalrousDuel) {
+  if (attackToPay && action.type === 'FIGHT' && action.what.hasChivalrousDuel()) {
     chivalrousSpendEv(action, attackToPay);
   }
   if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
@@ -2038,6 +2042,8 @@ function getActions(ev: Ev): Ev[] {
   });
   // Midnight Sons haunted heroes
   hqHeroes().map(c => c.location.attached("HAUNTED").size && p.push(exorciseCardActionEv(ev, c)));
+  // Ant-Man and the Wasp haist
+  canHaist() && p.push(haistAction(ev));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   fightableCards().each(c => getCardActions(c).each(a => p.push(a(c, ev))));

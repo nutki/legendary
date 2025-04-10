@@ -143,6 +143,8 @@ sub makehero {
   $flags .= 'G' if $hasgun || $_{GUN};
   $flags .= 'F' if $_{FLAVOR};
   $flags .= 'D' if /2/ || $heroname =~ /2/;
+  $flags .= 'R' if $_{RECRUIT} =~ /\+/;
+  $flags .= 'A' if $_{ATTACK} =~ /\+/;
   # SW1 Black Bolt flag (no rules text)
   $flags .= 'N' if !/^[^#]/m;
   return "makeHeroCard(\"$heroname2\", \"$cardname\", $cost, $recruit, $attack, $class, $pteam2, \"$flags\"$autopower)";
