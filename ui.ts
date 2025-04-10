@@ -54,7 +54,7 @@ function makeDisplayCard(c: Card): string {
 }
 function setSourceImg(name: string) {
   const r = div("card", { id: "source2" }, img(name, "cardface"), div("frame"));
-  positionCard(r, {size: 'large', x:7, y:0});
+  positionCard(r, {size: 'large', x:7.5, y:0});
   document.getElementById("card-container").appendChild(r);
 }
 function clearSourceImg() {
@@ -123,7 +123,7 @@ const mainDecks = [
   { id: 'ROOFTOPS', x: 3, y: 0 },
   { id: 'BANK', x: 4, y: 0 },
   { id: 'SEWERS', x: 5, y: 0 },
-  { id: 'SCHEME', x: 6, y: 0 },
+  { id: 'SCHEME', x: 6.5, y: 0 },
   { id: 'HQ1', x: 1, y: 1 },
   { id: 'HQ2', x: 2, y: 1 },
   { id: 'HQ3', x: 3, y: 1 },
@@ -133,10 +133,13 @@ const mainDecks = [
   { id: 'SIDEKICK', x: .5, y: 1, size: 'small', count: 'SIDEKICK' },
   { id: 'MADAME', x: 0, y: 1.5, size: 'small' },
   { id: 'NEWRECRUIT', x: .5, y: 1.5, size: 'small' },
-  { id: 'VILLAIN', x: 6, y: 1, size: 'small', count: 'VILLAIN' },
+  { id: 'VILLAIN', x: 6, y: .5, size: 'small', count: 'VILLAIN' },
   { id: 'ESCAPED', x: 6.5, y: 1, size: 'small', count: 'ESCAPED', popupid: 'popescaped' },
-  { id: 'KO', x: 6, y: 1.5, size: 'small', count: 'KO', popupid: 'popko' },
+  { id: 'KO', x: 6, y: 0, size: 'small', count: 'KO', popupid: 'popko' },
   { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS' },
+  { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS' },
+  { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTANDERS' },
+  { id: 'HERO', x: 6, y: 1, size: 'small', count: 'HERO', popupid: 'popheroes' },
   { id: 'PLAYAREA0', x: 0, y: 2, w: 9 },
   { id: 'HAND0', x: 1, y: 3, w: 8, fan: true },
   { id: 'DECK0', x: 0, y: 3, size: 'small', count: 'DECK', popupid: 'popdeck'},
@@ -149,6 +152,7 @@ const popupDecks = [
   { id: 'VICTORY0', container: 'popvictory' },
   { id: 'KO', container: 'popko' },
   { id: 'ESCAPED', container: 'popescaped' },
+  { id: 'HERO', container: 'popheroes' },
 ];
 function displayDecks(ev: Ev): void {
   let list = Deck.deckList;
@@ -206,7 +210,7 @@ function displayDecks(ev: Ev): void {
   const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
   if (s instanceof Card) {
     const sDiv = makeDisplayCardImg(s, false, false);
-    positionCard(sDiv, { size: 'large', x: 7, y: 0 });
+    positionCard(sDiv, { size: 'large', x: 7.5, y: 0 });
     cardsContainer.appendChild(sDiv);
   }
   let divs = document.getElementsByClassName("text-deck");
