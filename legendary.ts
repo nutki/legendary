@@ -654,6 +654,7 @@ type EvType =
 'USESHARD' |
 'USEARTIFACT' |
 'THROWARTIFACT' |
+'HEIST' |
 // Expansion effects
 'ADDPIERCING' |
 'URUENCHANTEDREVEAL' |
@@ -2042,8 +2043,8 @@ function getActions(ev: Ev): Ev[] {
   });
   // Midnight Sons haunted heroes
   hqHeroes().map(c => c.location.attached("HAUNTED").size && p.push(exorciseCardActionEv(ev, c)));
-  // Ant-Man and the Wasp haist
-  canHaist() && p.push(haistAction(ev));
+  // Ant-Man and the Wasp heist
+  canHeist() && p.push(heistAction(ev));
   if (gameState.specialActions) p = p.concat(gameState.specialActions(ev));
   if (turnState.turnActions) p = p.concat(turnState.turnActions);
   fightableCards().each(c => getCardActions(c).each(a => p.push(a(c, ev))));

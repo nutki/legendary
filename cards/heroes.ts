@@ -7378,7 +7378,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
   c2: makeHeroCard("Ant-Man", "Look Out for the Little Guy!", 3, u, 1, Color.STRENGTH, "Avengers", "", ev => drawIfEv(ev, c => isColor(Color.STRENGTH)(c) || !!c.sizeChanging || !!c.uSizeChanging), { sizeChanging: Color.STRENGTH }),
 // {SIZECHANGING COVERT}
 // {POWER Covert} All Villains and the Mastermind get -1 Attack this turn.
-  c3: makeHeroCard("Ant-Man", "Shrink Away", 4, u, 2, Color.COVERT, "Avengers", "FD", ev => superPower(Color.COVERT) && addStatMod('defense', isEnemy, -1), { sizeChanging: Color.COVERT }),
+  c3: makeHeroCard("Ant-Man", "Shrink Away", 4, u, 2, Color.COVERT, "Avengers", "FD", ev => superPower(Color.COVERT) && addTurnMod('defense', isEnemy, -1), { sizeChanging: Color.COVERT }),
 // {USIZECHANGING STRENGTH 3}
 // {ANTICS} You may KO a card from your hand or discard pile.
   uc: makeHeroCard("Ant-Man", "Bug Swarm", 5, 2, u, Color.STRENGTH, "Avengers", "FD", ev => anticsEv(ev, () => KOHandOrDiscardEv(ev, undefined)), { uSizeChanging: { color: Color.STRENGTH, amount: 3 } }),
@@ -7466,7 +7466,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // {POWER Ranged} {EXPLORE} You get +Attack equal to the Found Hero's printed Attack.
   c1: makeHeroCard("Janet Van Dyne", "Prepare for War", 4, u, 2, Color.RANGED, u, "FD", ev => superPower(Color.RANGED) && exploreEv(ev, c => exploreEv(ev, c => c.printedAttack && addAttackEvent(ev, c.printedAttack)))),
 // {POWER Covert}  {EXPLORE} You get +Recruit equal to the Found Hero's printed Recruit.
-  c2: makeHeroCard("Janet Van Dyne", "Search for Peace", 3, 2, u, Color.COVERT, u, "FD", ev => superPower(Color.COVERT) && exploreEv(ev, c => exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit)))),
+  c2: makeHeroCard("Janet Van Dyne", "Search for Peace", 3, 2, u, Color.COVERT, u, "FD", ev => superPower(Color.COVERT) && exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit))),
 // {SIZECHANGING COVERT}
 // {POWER Covert} {EXPLORE} Then you get +1 Attack for each time you explored this turn.
   c3: makeHeroCard("Janet Van Dyne", "Wasp of Another Generation", 5, u, 2, Color.COVERT, u, "FD", ev => superPower(Color.COVERT) && exploreEv(ev, () => {

@@ -1216,18 +1216,20 @@ function exploreEv(ev: Ev, effect: (c: Card) => void) {
     revealHeroDeckEv(ev, 2, cards => {
       selectCardEv(ev, "Choose a Hero to put in the HQ", cards, c2 => {
         swapCardsEv(ev, c1, c2);
-        moveCardEv(ev, c1, gameState.herodeck, true);
-        effect(c2);
+        cont(ev, () => moveCardEv(ev, c1, gameState.herodeck, true));
+        cont(ev, () => effect(c2));
       });
-    });
+    }, false, true);
   }));
 }
-function haistAction(ev: Ev) {
-  return new Ev(ev, 'EFFECT', {
+function heistAction(ev: Ev) {
+  return new Ev(ev, 'HEIST', {
+    desc: 'Attempt a Heist',
     func: ev => {
       revealVillainDeckEv(ev, 1, cards => cards.each(c => {
         const ourValue = yourHeroes().uniqueCount(c => c.cost);
         const theirValue = c.printedVP || 0;
+        textLog.log(`Heist: Us ${ourValue} vs Them ${theirValue}`);
         if (theirValue > ourValue) {
           gainWoundEv(ev);
         } else if (theirValue < ourValue) {
@@ -1240,6 +1242,7 @@ function haistAction(ev: Ev) {
     }
   });
 }
-function canHaist() {
-  return turnState.pastEvents.has(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist);
+function canHeist() {
+  return turnState.pastEvents.has(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist) &&
+    !turnState.pastEvents.has(ev => ev.type === 'HEIST');
 }
