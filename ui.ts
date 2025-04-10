@@ -135,12 +135,12 @@ const mainDecks = [
   { id: 'SIDEKICK', x: .5, y: 1, size: 'small', count: 'SIDEKICK' },
   { id: 'MADAME', x: 0, y: 1.5, size: 'small' },
   { id: 'NEWRECRUIT', x: .5, y: 1.5, size: 'small' },
-  { id: 'VILLAIN', x: 6, y: .5, size: 'small', count: 'VILLAIN' },
+  { id: 'VILLAIN', x: 6, y: .5, size: 'small', count: 'VILLAIN', popupid: 'popvillains' },
   { id: 'ESCAPED', x: 6.5, y: 1, size: 'small', count: 'ESCAPED', popupid: 'popescaped' },
   { id: 'KO', x: 6, y: 0, size: 'small', count: 'KO', popupid: 'popko' },
   { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS' },
   { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS' },
-  { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTANDERS' },
+  { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTANDERS', popupid: 'popbystanders' },
   { id: 'HERO', x: 6, y: 1, size: 'small', count: 'HERO', popupid: 'popheroes' },
   { id: 'PLAYAREA0', x: 0, y: 2, w: 9 },
   { id: 'HAND0', x: 1, y: 3, w: 8, fan: true },
@@ -155,6 +155,8 @@ const popupDecks = [
   { id: 'KO', container: 'popko' },
   { id: 'ESCAPED', container: 'popescaped' },
   { id: 'HERO', container: 'popheroes' },
+  { id: 'VILLAIN', container: 'popvillains' },
+  { id: 'BYSTANDERS', container: 'popbystanders' },
 ];
 function displayDecks(ev: Ev): void {
   let list = Deck.deckList;
