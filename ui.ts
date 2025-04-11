@@ -87,7 +87,18 @@ function span(className: string, options?: {[key: string]: string}, ...children:
 }
 function br() { return document.createElement('br'); }
 function text(value: string | number) { return document.createTextNode(value.toString()); }
-function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true): HTMLDivElement {
+function getCountHints(deck: Deck): [number, number] {
+  const result: [number, number] = [0, 0];
+  const c = deck.top;
+  if (isMastermind(c)) result[0] = c.attached("TACTICS").size;
+  let cnt = deck.size > 1 ? deck.size : 0;
+  if (c._attached) for (let i in c._attached) cnt += c._attached[i].deck.size;
+  if (deck._attached) for (let i in c._attached) cnt += c._attached[i].deck.size;
+  if (cnt > 0) result[1] = cnt - result[0];
+  if (isScheme(c)) result[0] = getSchemeCountdown();
+  return result
+}
+function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, countHint: [number, number] = [0, 0]): HTMLDivElement {
   const faceUp = isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
   const transform = faceUp ? cardImageTransform(c) : undefined;
@@ -97,14 +108,12 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true):
   };
   if (id) options.id = c.id;
   const d = div(gone ? "card gone" : "card", options, img(src, "cardface", transform));
-  if (isMastermind(c)) d.appendChild(div("count", {}, text(c.attached("TACTICS").size)))
-  if (isScheme(c) && getSchemeCountdown() !== undefined)
-    d.appendChild(div("count", {}, text(getSchemeCountdown())))
+  if (countHint[0]) d.appendChild(div("count", {}, text(countHint[0])));
+  if (countHint[1]) d.appendChild(div("capturedHint", {}, text(countHint[1])));
   if (faceUp && c.defense !== c.printedDefense)
     d.appendChild(div("attackHint", {}, text(c.defense)));
   if (faceUp && c.printedCost !== undefined && effectiveCost(c) !== c.printedCost)
     d.appendChild(div("attackHint", {}, text(effectiveCost(c))));
-  if (c.captured.size > 0) d.appendChild(div("capturedHint", {}, text(c.captured.size)));
   d.appendChild(div("frame"));
   return d;
 }
@@ -119,7 +128,7 @@ function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x
   if (size) card.classList.add(size);
 }
 const mainDecks = [
-  { id: 'MASTERMIND', x: 0, y: 0 },
+  { id: 'MASTERMIND', x: 0, y: 0, popupid2: 'popmastermind' },
   { id: 'BRIDGE', x: 1, y: 0 },
   { id: 'STREETS', x: 2, y: 0 },
   { id: 'ROOFTOPS', x: 3, y: 0 },
@@ -140,7 +149,7 @@ const mainDecks = [
   { id: 'KO', x: 6, y: 0, size: 'small', count: 'KO', popupid: 'popko' },
   { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS' },
   { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS' },
-  { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTANDERS', popupid: 'popbystanders' },
+  { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTDR', popupid: 'popbystanders' },
   { id: 'HERO', x: 6, y: 1, size: 'small', count: 'HERO', popupid: 'popheroes' },
   { id: 'PLAYAREA0', x: 0, y: 2, w: 9 },
   { id: 'HAND0', x: 1, y: 3, w: 8, fan: true },
@@ -157,6 +166,7 @@ const popupDecks = [
   { id: 'HERO', container: 'popheroes' },
   { id: 'VILLAIN', container: 'popvillains' },
   { id: 'BYSTANDERS', container: 'popbystanders' },
+  { id: 'MASTERMIND', container: 'popmastermind' },
 ];
 function displayDecks(ev: Ev): void {
   let list = Deck.deckList;
@@ -181,7 +191,7 @@ function displayDecks(ev: Ev): void {
       ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
       ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
     ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-    deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid) ] : [];
+    deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
     const n = cardDivs.size;
     const spread = deckPos.w > 1 && cardDivs.size ? Math.min(1, (deckPos.w - 1) / (n - 1)) : 0;
     cardDivs.forEach((cardDiv, i) => {
@@ -191,6 +201,9 @@ function displayDecks(ev: Ev): void {
       topDiv = cardDiv;
     });
     if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid).classList.toggle("hidden"));
+    topDiv.querySelectorAll('.count, .capturedHint').forEach(e => {
+      deckPos.popupid2 && e.addEventListener("click", () => document.getElementById(deckPos.popupid2).classList.toggle("hidden"))
+    });
     const d1 = div('deck-overlay', { 'data-deck-id': deck.id });
     positionCard(d1, deckPos);
     cardsContainer.appendChild(d1);
@@ -202,13 +215,23 @@ function displayDecks(ev: Ev): void {
     }
   }
   for (const popupDeck of popupDecks) {
-    const container = document.getElementById(popupDeck.container);
+    const container = document.getElementById(popupDeck.container).querySelector('.cards');
     container.innerHTML = '';
     const deck = deckById[popupDeck.id];
-    deck.deck.forEach((card, i) => {
+    let dist = 0;
+    let total = 0;
+    const flat = flattenDeck(deck);
+    for (let i = 0; i < flat.size - 1; i++) {
+      total += (flat[i][1] !== flat[i+1][1]) || isFaceUp(flat[i][0]) ? 1 : .1;
+    }
+    flat.forEach(([card, name], i) => {
       const cardDiv = makeDisplayCardImg(card);
+      const shouldShowName = i < flat.length - 1 && name !== flat[i+1][1] && name;
+      if (shouldShowName)
+        cardDiv.appendChild(div('deckname', {}, text(name)));
       container.appendChild(cardDiv);
-      positionCard(cardDiv, { x: 0, y: 0 }, deck.deck.size - 1 - i);
+      positionCard(cardDiv, { x: 0, y: 0 }, total - dist);
+      dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
     });
   }
   const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
@@ -223,6 +246,13 @@ function displayDecks(ev: Ev): void {
     div.innerHTML = deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ');
   }
 }
+function flattenCard(card: Card, name?: string): [Card, string | undefined][] {
+  return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => flattenDeck(c, n)) : []), [card, name]];
+}
+function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
+  return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];
+}
+
 function displayGame(ev: Ev): void {
   const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard } = getDisplayInfo();
   displayDecks(ev);
@@ -235,7 +265,8 @@ function displayGame(ev: Ev): void {
 }
 function setMessage(msg: string, gameOverMsg: string): void {
   document.getElementById("message").innerHTML = msg;
-  document.getElementById("game-over-message").innerHTML = gameOverMsg;
+  document.getElementById("game-over-message").innerHTML = gameOverMsg || '';
+  console.log(msg, gameOverMsg);
 }
 
 // Game setup selection screen
@@ -372,6 +403,10 @@ function getPopups() {
   const popups: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("popup"), 0);
   return popups;
 }
+function getPopupCards() {
+  const popups: HTMLElement[] = Array.prototype.slice.call(document.querySelectorAll(".popup .cards"), 0);
+  return popups;
+}
 function getDecks() {
   const decks: HTMLElement[] = Array.prototype.slice.call(document.getElementsByClassName("deck"), 0);
   return decks;
@@ -384,8 +419,11 @@ function autoOpenPopupDecks() {
 }
 function initUI() {
   window.onclick = clickCard;
-  getPopups().forEach(e => e.addEventListener("wheel", function(e) {
-    this.scrollLeft += (e.deltaY * 10);
+  getPopupCards().each(d => d.addEventListener("click", function(e) {
+    if (e.target === this) this.parentElement.classList.add("hidden");
+  }));
+  getPopupCards().forEach(e => e.addEventListener("wheel", function(e) {
+    this.scrollBy({ left: e.deltaY * 5, behavior: 'smooth' });
     e.preventDefault();
   }));
   getDecks().forEach(div => {
