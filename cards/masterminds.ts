@@ -2294,7 +2294,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
     }, playerState.right);
   } ],
 ], epic => ({
-  varDefense: epic ? conquerorVarDefese(6, 'STREETS', 'BRIDGE', 'ROOFTOPS') : conquerorVarDefese(5, 'STREETS', 'BRIDGE'),
+  ...(epic ? conquerorAbility(6, 'STREETS', 'BRIDGE', 'ROOFTOPS') : conquerorAbility(5, 'STREETS', 'BRIDGE')),
 })),
 ]);
 addTemplates("MASTERMINDS", "New Mutants", [
@@ -2715,6 +2715,8 @@ addTemplates("MASTERMINDS", "Annihilation", [
       gameState.extraTurn = true;
     }
   } ],
+  // TODO this should be using conqueror ability but can use city spaces that cannot normally by named in the ability (because of potential scheme changes to the city)
+  // so it may be ignored by Armada of Kang: Pursuit Craft
 ], { varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * gameState.city.count(d => d.has(isVillain) && d.attached('TIMEINCURSION').size > 0) }),
 ]);
 addTemplates("MASTERMINDS", "Messiah Complex", [

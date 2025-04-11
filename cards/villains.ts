@@ -3730,7 +3730,7 @@ addVillainTemplates("Heroes of Asgard", [
 // FLAVOR: After a lifetime of evil, he redeemed himself with a final stand at the Bridge of Gjallerbru.
   [ 2, makeVillainCard("Omens of Ragnarok", "Skurge, the Executioner", 4, 2, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-    varDefense: conquerorVarDefese(3, 'BRIDGE'),
+    ...conquerorAbility(3, 'BRIDGE'),
   })],
 // {STREETS CONQUEROR 2}
 // AMBUSH: The Fenris Wolf moves forward to the Rooftops, pushing other Villains forward as normal.
@@ -3744,7 +3744,7 @@ addVillainTemplates("Heroes of Asgard", [
         move();
       })
     },
-    varDefense: conquerorVarDefese(2, 'STREETS')
+    ...conquerorAbility(2, 'STREETS')
   })],
 // {SEWERS CONQUEROR 1}
 // {BANK CONQUEROR 1}
@@ -3759,7 +3759,7 @@ addVillainTemplates("Heroes of Asgard", [
       const cards = hqHeroes();
       addTurnMod('cost', c => cards.includes(c), -1);
     },
-    varDefense: conquerorVarDefese(1, 'SEWERS', 'BANK', 'ROOFTOPS', 'STREETS', 'BRIDGE'),
+    ...conquerorAbility(1, 'SEWERS', 'BANK', 'ROOFTOPS', 'STREETS', 'BRIDGE'),
   })],
 // FIGHT: Put this into your discard pile as a "Surtur's Crown" Artifact.
 // ESCAPE: If Surtur was holding The Eternal Flame, say "Ragnarok has come," KO each Heroes of Asgard Hero from the HQ, and each player gains two Wounds.
@@ -4364,7 +4364,7 @@ addVillainTemplates("Annihilation", [
       eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p));
       shuffleIntoEv(ev, ev.source, gameState.villaindeck);
     },
-    varDefense: conquerorVarDefese(3, 'STREETS'),
+    ...conquerorAbility(3, 'STREETS'),
   })],
 // {BRIDGE CONQUEROR 3}
 // AMBUSH: If the Bridge is empty, move a Villain to the Bridge.
@@ -4378,7 +4378,7 @@ addVillainTemplates("Annihilation", [
     fight: ev => {
       selectCardEv(ev, "Choose an out of time hero", playerState.playArea.limit(isHero).limit(Color.STRENGTH | Color.RANGED), c => outOfTimeEv(ev, c));
     },
-    varDefense: conquerorVarDefese(3, 'BRIDGE'),
+    ...conquerorAbility(3, 'BRIDGE'),
   })],
 // {BANK CONQUEROR 2}
 // AMBUSH: Reveal your hand and send your highest-cost Hero as a <b>Man or Woman Out of Time</b>.
@@ -4388,7 +4388,7 @@ addVillainTemplates("Annihilation", [
   [ 2, makeVillainCard("Timelines of Kang", "Scarlet Centurion", 4, 3, {
     ambush: ev => selectCardEv(ev, "Choose a hero", playerState.hand.limit(isHero).highest(c => c.cost), c => outOfTimeEv(ev, c)),
     fight: ev => superPower(Color.COVERT) && selectCardAndKOEv(ev, yourHeroes()),
-    varDefense: conquerorVarDefese(2, 'BANK'),
+    ...conquerorAbility(2, 'BANK'),
   })],
 // FIGHT: The player of your choice gains this as a Hero.
 // ATTACK: 4
@@ -5762,6 +5762,316 @@ addVillainTemplates("Marvel Studios What If...?", [
     ambush: riseOfTheLivingDead,
     fight: ev => revealPlayerDeckEv(ev, 2, cards => {
       selectCardEv(ev, "Choose a card to draw", cards, c => drawEv(ev, 1, playerState));
+    }),
+  })],
+]},
+]);
+addVillainTemplates("Ant-Man and the Wasp", [
+{ name: "Armada of Kang", cards: [
+// AMBUSH: If the Bridge is empty, move a Villain to the Bridge. Choose an unused Henchman Group and stack Henchmen from it next to this Scheme equal to the number of players.
+// <b>Special Rules</b>: Players may fight Henchmen stacked here. While here, those Henchmen also have "{BRIDGE CONQUEROR 1}." If you defeat the last Henchman here, defeat this Scheme.
+// <b>Twist</b>: Stack another of those Henchmen next to this Scheme <i>(from a Victory Pile if necessary)</i>. Then, if there are two more Henchmen here than the number of players: Each player gains a Wound, 3 of those Henchmen enter the city, and you KO this Scheme and the rest of those Henchmen.
+// VP: 4
+  [ 1, makeVillainCard("Armada of Kang", "Build a Conquering Army", u, 4, {
+    ambush: ev => {},
+  })],
+// {STREETS CONQUEROR 2}
+// AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Armada of Kang", "City Defense System", 4, 3, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
+    ...conquerorAbility(2, 'STREETS'),
+  })],
+// {STREETS CONQUEROR 2}
+// AMBUSH: Put this Energy Shield above the Mastermind space. While it's there, you can't fight the Mastermind. <i>(You can still fight the Energy Shield.)</i>
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Armada of Kang", "Energy Shield", 5, 4, {
+    ambush: ev => {
+      attachCardEv(ev, ev.source, gameState.mastermind, 'ENERGY_SHIELD');
+      addStatSet('fightCost', c => c.location === gameState.mastermind && gameState.mastermind.attached('ENERGY_SHIELD').size > 0, (c, v) => ({cond: () => false, ...v}));
+    },
+    ...conquerorAbility(2, 'STREETS'),
+  })],
+// AMBUSH: You may say "<i>I'm sure we can trust Lord Krylar...</i>" If you do: Draw a card, reveal it, and if it has an odd-numbered cost,
+// Lord Krylar {DOUBLE-CROSSES} each player.
+// FIGHT: Same effect.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Armada of Kang", "Lord Krylar's Yacht", 5, 3, {
+    ambush: ev => chooseMayEv(ev, "Say 'I'm sure we can trust Lord Krylar...'", () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+      drawCardEv(ev, c);
+      isCostOdd(c) && eachPlayer(p => doubleCrossEv(ev, p));
+    }))),
+    fight: sameEffect,
+    escape: sameEffect,
+  })],
+// {USIZECHANGING RANGED 1}[Ranged][Ranged][Ranged]
+// AMBUSH: M.O.D.O.K. {DOUBLE-CROSSES} each player.
+// FIGHT: Each player KOs one of their Heroes.
+// ATTACK: 8*
+// VP: 5
+// FLAVOR: Mechanized Organism Designed Only for KOing.
+  [ 1, makeVillainCard("Armada of Kang", "M.O.D.O.K.", 8, 5, {
+    ambush: ev => {},
+    fight: ev => {},
+    uSizeChanging: { color: Color.RANGED, amount: 4 },
+  })],
+// {ROOFTOPS CONQUEROR 2}
+// AMBUSH: <i>(After this enters the city)</i> If other Villains or the Mastermind have Conqueror abilities naming any empty city spaces,
+// Pursuit Craft moves to one of those city spaces.
+// ATTACK: 5+
+// VP: 4
+  [ 1, makeVillainCard("Armada of Kang", "Pursuit Craft", 5, 4, {
+    ambush: ev => selectCardEv(ev, "Choose a city space", gameState.city.limit(d => isCityEmpty(d) && fightableCards().has(c => c.getConqueror()?.locations?.has(l => isLocation(d, l)))), d => {
+      moveCardEv(ev, ev.source, d);
+    }),
+    ...conquerorAbility(2, 'ROOFTOPS'),
+  })],
+// {ROOFTOPS CONQUEROR 2}
+// {STREETS CONQUEROR 2}
+// FIGHT: KO two of your Heroes.
+// ATTACK: 4+
+// VP: 4
+// FLAVOR: No emotion displayed. No mercy granted.
+  [ 1, makeVillainCard("Armada of Kang", "Quantumnaut Elite", 4, 4, {
+    fight: ev => selectObjectsEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c)),
+    ...conquerorAbility(2, 'ROOFTOPS', 'STREETS'),
+  })],
+// {ROOFTOPS CONQUEROR 2}
+// AMBUSH: A Villain worth 2 VP or 3 VP from any player's Victory Pile enters the city.
+// ATTACK: 4+
+// VP: 3
+  [ 1, makeVillainCard("Armada of Kang", "Troop Ships of Kang", 4, 3, {
+    ambush: ev => selectCardEv(ev, "Choose a Villain to enter the city", gameState.players.flatMap(p => p.victory.limit(c => c.vp === 2 || c.vp === 3)), c => enterCityEv(ev, c)),
+    ...conquerorAbility(2, 'ROOFTOPS'),
+  })],
+]},
+{ name: "Cross Technologies", cards: [
+// While the back side of a Mastermind card is face up, this Villain gets +2 Attack and "<b>Escape</b>: Each player discards a card."
+// FIGHT: KO one of your Heroes.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Cross Technologies", "Cross' Security Detail", 5, 4, {
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    escape: ev => gameState.mastermind.has(c => c.isTransformed || c.epic) && eachPlayer(p => pickDiscardEv(ev, 1, p)),
+    varDefense: c => c.printedDefense + (gameState.mastermind.has(c => c.isTransformed || c.epic) ? 2 : 0),
+  })],
+// FIGHT: You get +2 Recruit, usable only to recruit Heroes with an Attack icon.
+// ATTACK: 4
+// VP: 2
+// FLAVOR: Just imagine what Hydra could do with shrinking technology...
+  [ 2, makeVillainCard("Cross Technologies", "Hydra Arms Dealer", 4, 2, {
+    fight: ev => addRecruitSpecialEv(ev, c => hasAttackIcon(c) && isHero(c), 2),
+  })],
+// {SIZECHANGING TECH}
+// FIGHT: A Hero in the HQ loses all <b>Size-Changing</b> abilities, then gains {SIZECHANGING TECH} this turn.
+// ATTACK: 6*
+// VP: 3
+  [ 2, makeVillainCard("Cross Technologies", "Shrinksperiments", 6, 3, {
+    fight: ev => selectCardEv(ev, "Choose a Hero to gain Size-Changing Tech", hqHeroes(), c => {
+      addTurnSet('sizeChanging', is(c), () => Color.TECH);
+      addTurnSet('uSizeChanging', is(c), (() => undefined) as () => undefined);
+    }),
+    sizeChanging: Color.TECH,
+  })],
+// AMBUSH: This Scheme captures Bystanders equal to the number of players plus 1, as "Pym Tech Scientists."
+// <b>Special Rules</b>: Once per turn, you may pay 3 Recruit or discard a card with <b>Size-Changing</b>. If you do, rescue a Pym Tech Scientist and draw a card. If you rescue the last Scientist, defeat this Scheme.
+// <b>Twist</b>: This captures another Pym Tech Scientist. Then, if it has 3 or more Scientists, each player discards a card.
+// VP: 2
+  [ 1, makeVillainCard("Cross Technologies", "Take Over Pym Technologies", u , 2, {
+    ambush: ev => {},
+  })],
+// {USIZECHANGING INSTINCT 1}[Instinct][Instinct][Instinct]
+// AMBUSH: Each player reveals a [Instinct] Hero or gains a Wound.
+// ESCAPE: Same effect.
+// ATTACK: 9*
+// VP: 5
+  [ 1, makeVillainCard("Cross Technologies", "Yellowjacket Prototype", 9, 5, {
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p)),
+    escape: sameEffect,
+    uSizeChanging: { color: Color.INSTINCT, amount: 4 },
+  })],
+]},
+{ name: "Ghost Chasers", cards: [
+// FIGHT: {HEIST} You may KO up to two of your Heroes.
+// ATTACK: 5
+// VP: 3
+// FLAVOR: "We traffic in stolen technology." — Uzman
+// "And we have killed many, many people." — Anitolov<i></span></i>
+  [ 1, makeVillainCard("Ghost Chasers", "Anitolov", 5, 3, {
+    fight: ev => {/* Heist */},
+    heist: ev => selectObjectsUpToEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c)),
+  })],
+// AMBUSH: Corrupted Government Agents <b>Double-Cross</b> each player.
+// FIGHT: You may look at the top three cards of any deck and put them back in any order.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Ghost Chasers", "Corrupted Government Agents", 5, 3, {
+    ambush: ev => eachPlayer(p => doubleCrossEv(ev, p)),
+    fight: ev => selectCardEv(ev, "Choose a deck to look at", anyDeck(), d => {
+      if (gameState.players.has(p => p.deck === d)) revealPlayerDeckEv(ev, 3, () => {}, d.owner, playerState);
+      else revealDeckEv(ev, d, 3, () => {}, false, false);
+    }),
+  })],
+// To fight Dr. Bill Foster, you must solve a math equation: Discard three cards such that the costs of two of them add up to the cost of the third. They can't all cost 0.
+// ESCAPE: Each player discards a card that costs 0.
+// ATTACK: 0*
+// VP: 4
+  [ 1, makeVillainCard("Ghost Chasers", "Dr. Bill Foster", 0, 4, {
+    escape: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, c => c.cost === 0)),
+    fightCond: () => drBillFosterOptions().length > 0,
+    fightCost: ev => {
+      const costs = drBillFosterOptions();
+      selectCardEv(ev, "Choose a card to discard (sum)", playerState.hand.limit(c => costs.has(v => c.cost === v[0])), c1 => {
+        const costs2 = costs.filter(v => c1.cost === v[0]);
+        selectCardEv(ev, "Choose second card to discard", playerState.hand.limit(c => costs2.has(v => c.cost === v[1] || c.cost === v[2])), c2 => {
+          selectCardEv(ev, "Choose third card to discard", playerState.hand.limit(c => c.cost === c1.cost - c2.cost), c3 => {
+            discardEv(ev, c1);
+            discardEv(ev, c2);
+            discardEv(ev, c3);
+          });
+        });
+      });
+    },
+  })],
+// {SIZECHANGING STRENGTH}
+// AMBUSH: Goliath {DOUBLE-CROSSES} each player.
+// FIGHT: Goliath topples over, crushing another Villain: You may defeat a Villain that has 4 Attack or less in an adjacent city space.
+// ATTACK: 8*
+// VP: 5
+  [ 1, makeVillainCard("Ghost Chasers", "Goliath", 8, 5, {
+    ambush: ev => eachPlayer(p => doubleCrossEv(ev, p)),
+    fight: ev => selectCardEv(ev, "Choose a villain to crush", cityAdjacent(ev.source.location).flatMap(d => d.limit(isVillain)), c => defeatEv(ev, c)),
+    sizeChanging: Color.STRENGTH,
+  })],
+// AMBUSH: Stack 2 cards from the Wound Deck next to this Scheme as "Dangerous Stunts."
+// <b>Twist</b>: If there is a Villain in the Streets: Add 2 Dangerous Stunts. Then if there are at least 5 Stunts, there is a "car crash": Each player gains one of the Stunts as a Wound. KO the rest of the Stunts and this Scheme.
+// Otherwise: Return a Dangerous Stunt to the Wound Deck. If there are still Stunts here, move a Villain to the Streets. If there aren't any Stunts, defeat this Scheme.
+// VP: 3
+  [ 1, makeVillainCard("Ghost Chasers", "High-Speed Car Chase",u , 3, {
+    ambush: ev => {},
+  })],
+// AMBUSH: Sonny Burch {DOUBLE-CROSSES} each player.
+// FIGHT: {HEIST} You may choose a player to gain a [Tech] or [Ranged] Hero from the HQ.
+// ATTACK: 6
+// VP: 4
+// FLAVOR: "Quantum energy is the future. It's the next gold rush."
+  [ 1, makeVillainCard("Ghost Chasers", "Sonny Burch", 6, 4, {
+    ambush: ev => eachPlayer(p => doubleCrossEv(ev, p)),
+    fight: ev => {/* Heist */},
+    heist: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(Color.TECH | Color.RANGED), c => {
+      choosePlayerEv(ev, p => gainEv(ev, c, p));
+    }),
+  })],
+// FIGHT: {HEIST} You get +2 Recruit.
+// ATTACK: 4
+// VP: 2
+// FLAVOR: Whether expensive goons or cheap goons, you get what you pay for.
+  [ 1, makeVillainCard("Ghost Chasers", "Sonny Burch's Goons", 4, 2, {
+    fight: ev => {/* Heist */},
+    heist: ev => addRecruitEvent(ev, 2),
+  })],
+// FIGHT: Look at the top card of the Hero Deck and claim a Hero Class it has. Choose another player to guess "Truth" or "Lie."
+// If they guessed right, they either KO that Hero or choose a player to gain it. If they guessed wrong, you decide what to do with that Hero instead.
+// <i>(In solo, you just decide.)</i>
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Ghost Chasers", "Uzman, With Truth Serum", 5, 3, {
+    fight: ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+      if (gameState.players.length === 1) selectCardOptEv(ev, "Choose who to give the Hero to", gameState.players, p2 => gainEv(ev, c, p2), () => KOEv(ev, c));
+      else chooseClassEv(ev, color => {
+        chooseOtherPlayerEv(ev, p => {
+          chooseOptionEv(ev, "Truth or Lie?", [{l:"Truth", v:true}, {l:"Lie",v:false}], v => {
+            const decider = isColor(color)(c) === v ? p : playerState;
+            selectCardOptEv(ev, "Choose who to give the Hero to", gameState.players, p2 => gainEv(ev, c, p2), () => KOEv(ev, c), decider);
+          });
+        });
+      })
+    })),
+  })],
+]},
+{ name: "Quantum Realm", cards: [
+// AMBUSH: Any number of times this turn, you may pay 2 Recruit to "buy a refreshment" and KO a Wound from your hand or from any player's discard pile.
+// FIGHT: Same effect.
+// ATTACK: 4
+// VP: 2
+  [ 1, makeVillainCard("Quantum Realm", "Axian Bartender", 4, 2, {
+    ambush: ev => {
+      addTurnAction(new Ev(ev, 'EFFECT', { desc: "Buy a refreshment", cost: { recruit: 2 }, func: () => {
+        selectCardEv(ev, "Choose a Wound to KO", [...gameState.players.flatMap(p => p.discard.limit(isWound)),...playerState.hand.limit(isWound)], c => KOEv(ev, c));
+      }}));
+    },
+    fight: sameEffect,
+  })],
+// FIGHT: {EXPLORE} The Found Hero costs 2 less to recruit this turn.
+// ATTACK: 4
+// VP: 2
+// FLAVOR: No detail escapes those eyes.
+  [ 1, makeVillainCard("Quantum Realm", "Axian Maitre d'", 4, 2, {
+    fight: ev => exploreEv(ev, c => addTurnMod('cost', is(c), () => -2)),
+  })],
+// {USIZECHANGING TECH 1}[Tech][Tech][Tech]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 7*
+// VP: 4
+// FLAVOR: In the Quantum Realm, nutrients eat you!
+  [ 1, makeVillainCard("Quantum Realm", "Hungering Energy", 7, 4, {
+    fight: ev => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)),
+    uSizeChanging: { color: Color.TECH, amount: 4 },
+  })],
+// {USIZECHANGING COVERT 1}[Covert][Covert][Covert]
+// FIGHT: Choose a player to "eat the appetizer" and KO a card of their choice from their discard pile.
+// ATTACK: 6*
+// VP: 3
+  [ 1, makeVillainCard("Quantum Realm", "Lord Krylar's Appetizer", 6, 3, {
+    fight: ev => choosePlayerEv(ev, p => {
+      selectCardEv(ev, "Choose a card to KO", p.discard.deck, c => KOEv(ev, c), p);
+    }),
+    uSizeChanging: { color: Color.COVERT, amount: 4 },
+  })],
+// FIGHT: {EXPLORE} You get + Recruit equal to the Found Hero's printed Recruit.
+// ATTACK: 5
+// VP: 3
+// FLAVOR: Lord Krylar's network of informants could find anyone in the Quantum Realm.
+  [ 1, makeVillainCard("Quantum Realm", "Lord Krylar's Valet", 5, 3, {
+    fight: ev => exploreEv(ev, c => addRecruitEvent(ev, c.printedRecruit)),
+  })],
+// AMBUSH: Each player puts a non-grey Hero from their hand or discard pile next to this Scheme as a "Quantum Duplicate." Then do the Twist effect below.
+// <b>Twist</b>: The top card of the Hero Deck becomes another Quantum Duplicate. Each player reveals their hand and discards all cards that have the same name as any Quantum Duplicate.
+// <b>Special Rules</b>: Players may spend Attack equal to a Quantum Duplicate's printed cost to KO that Hero or choose a player to gain it. When there are no more Quantum Duplicates, defeat this Scheme.
+// VP: 2
+  [ 1, makeVillainCard("Quantum Realm", "Quantumania",u , 2, {
+    ambush: ev => {},
+  })],
+// {USIZECHANGING TECH 1}[Tech][Tech][Tech]
+// AMBUSH: Quantumoeba "eats" a Henchman from any player's Victory Pile, capturing it and gaining its printed Attack.
+// FIGHT: Put the eaten Henchman in your Victory Pile and do its Fight effect.
+// ATTACK: 8*
+// VP: 5
+  [ 1, makeVillainCard("Quantum Realm", "Quantumoeba", 8, 5, {
+    ambush: ev => selectCardEv(ev, "Choose a Henchman to eat", gameState.players.flatMap(p => p.victory.limit(isHenchman)), c => {
+      attachCardEv(ev, c, ev.source, 'EATEN');
+      addStatMod('defense', is(ev.source), () => c.printedAttack);
+    }),
+    fight: ev => {
+      ev.source.attached('EATEN').each(c => {
+        moveCardEv(ev, c, playerState.victory);
+        pushEffects(ev, c, 'fight', c.fight);
+      });
+    },
+    uSizeChanging: { color: Color.TECH, amount: 4 },
+  })],
+// FIGHT: {EXPLORE} If you recruit the Found Hero this turn, set it aside. When you draw a new hand this turn, add that card to your hand.
+// ATTACK: 5
+// VP: 3
+  [ 1, makeVillainCard("Quantum Realm", "Sky Manta", 5, 3, {
+    fight: ev => exploreEv(ev, c => {
+      addTurnSet('soaring', is(c), () => true); // TODO technically this is not "soaring", but same effect and currently no card effect cares about soaring
     }),
   })],
 ]},

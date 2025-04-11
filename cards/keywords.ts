@@ -597,16 +597,20 @@ function empowerVarDefense(color: Filter<Card>, amount: number = 1) {
 function getSizeChanging(c: Card) {
   return getModifiedStat(c, 'sizeChanging', c.sizeChanging);
 }
+function getUSizeChanging(c: Card) {
+  return getModifiedStat(c, 'uSizeChanging', c.uSizeChanging);
+}
 function isSizeChanged(c: Card) {
   const color = getSizeChanging(c);
   return color && (superPower(color) > 0);
 }
 function hasNoSizeChanging(c: Card) {
-  return !getSizeChanging(c) && !c.uSizeChanging
+  return !getSizeChanging(c) && !getUSizeChanging(c);
 }
 function uSizeChangingAmount(c: Card): number {
-  if (!c.uSizeChanging) return 0;
-  return Math.min(superPower(c.uSizeChanging.color), c.uSizeChanging.amount) * 2;
+  const v = getUSizeChanging(c);
+  if (!v) return 0;
+  return Math.min(superPower(v.color), v.amount) * 2;
 }
 function chivalrousDuelSources() {
   const amounts = new Map<string, number>();
@@ -754,17 +758,20 @@ const hydraLevelPower = (n: number) => hydraLevel() >= n;
 function worthyPower(p: Player = playerState) {
   return yourHeroes(p).has(c => c.cost >= 5);
 }
-function hasConqueror(...locations: CityLocation[]) {
+function isConquering(...locations: CityLocation[]) {
   return locations.count(l => gameState.city.limit(d => d.id === l).has(c => c.has(isVillain)));
 }
-function hadDestroyedConqueror(location: CityLocation) {
+function isDestroyedConqueror(location: CityLocation) {
   return turnState.destroyedConqueror && gameState.destroyedCitySpaces.has(d => d.id === location);
 }
 function heroConquerorEv(ev: Ev, l: CityLocation, amount: number) {
-  (hasConqueror(l) || hadDestroyedConqueror(l)) && addAttackEvent(ev, amount);
+  (isConquering(l) || isDestroyedConqueror(l)) && addAttackEvent(ev, amount);
 }
 function conquerorVarDefese(amount: number, ...l: CityLocation[]) {
-  return (c: Card) => c.printedDefense + (hasConqueror(...l) * amount);
+  return (c: Card) => c.printedDefense + (isConquering(...l) * amount);
+}
+function conquerorAbility(amount: number, ...l: CityLocation[]) {
+  return ({ conqueror: { amount, locations: l }});
 }
 const weaponsInTheCity = () => cityVillains().map(c => c.attached('WEAPONS')).merge();
 const weaponsPlayersOwn = () => gameState.players.map(p => [...p.discard.limit(isVillainousWeapon), ...p.artifact.limit(isVillainousWeapon)]).merge();
@@ -1207,7 +1214,7 @@ function forceSoulbindEv(ev: Ev, cond: Filter<Card> = isVillain, p: Player = pla
 }
 // EXPANSION: Ant-Man and the Wasp
 function anticsEv(ev: Ev, effect: Handler) {
-  if (revealable().count(c => c.cost === 1 || c.cost === 2 || !!c.uSizeChanging || !!c.sizeChanging) >= 3) {
+  if (revealable().count(c => c.cost === 1 || c.cost === 2 || !!getSizeChanging(c) || !!getUSizeChanging(c)) >= 3) {
     effect(ev);
   }
 }
@@ -1245,4 +1252,35 @@ function heistAction(ev: Ev) {
 function canHeist() {
   return turnState.pastEvents.has(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist) &&
     !turnState.pastEvents.has(ev => ev.type === 'HEIST');
+}
+function doubleCrossEv(ev: Ev, p: Player = playerState) {
+  // TODO: multiplayer reveal
+  const highestDoubles = p.hand.limit(c => p.hand.has(c1 => c !== c1 && c1.cost === c.cost)).highest(c => c.cost);
+  pickDiscardEv(ev, 1, p, c => highestDoubles.includes(c));
+}
+function anyDeck() {
+  // TODO this is not all decks
+  return [...gameState.players.map(p => p.deck),
+    gameState.villaindeck, gameState.herodeck, gameState.bystanders, gameState.sidekick, gameState.wounds, gameState.officer];
+}
+// Dr. Bill Foster riddle
+function drBillFosterOptions(costs: number[] = playerState.hand.deck.map(c => c.cost)) {
+  const options: [number, number, number][] = [];
+  costs.sort((a, b) => b - a);
+  console.log(costs);
+  for (let i = 0; i < costs.length;) {
+    if (costs[i] === 0) break;
+    for (let j = i + 1; j < costs.length;) {
+      for (let k = j + 1; k < costs.length;) {
+        if (costs[i] === costs[j] + costs[k]) options.push([costs[i], costs[j], costs[k]]);
+        k++;
+        while(k < costs.length && costs[k] === costs[k - 1]) k++;
+      }
+      j++;
+      while(j < costs.length && costs[j] === costs[j - 1]) j++;
+    }
+    i++;
+    while(i < costs.length && costs[i] === costs[i - 1]) i++;
+  }
+  return options;
 }

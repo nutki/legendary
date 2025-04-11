@@ -126,6 +126,7 @@ interface Card {
   customRecruitAndAttack?: boolean;
   riseOfTheLivingDead: boolean;
   heist?: Handler;
+  conqueror?: { locations: CityLocation[], amount: number };
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -154,6 +155,8 @@ interface VillainCardAbillities {
   variant?: string;
   finishThePrey?: Handler
   riseOfTheLivingDead?: boolean
+  heist?: Handler
+  conqueror?: { locations: CityLocation[], amount: number };
 }
 interface MastermindCardAbillities {
   varDefense?: (c: Card) => number  
@@ -172,6 +175,7 @@ interface MastermindCardAbillities {
   cosmicThreat?: Filter<Card>;
   finishThePrey?: Handler
   commonTacticEffect?: Handler
+  conqueror?: { locations: CityLocation[], amount: number };
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -223,6 +227,8 @@ class Card {
   }
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
+    const conqueror = this.getConqueror();
+    if (this.conqueror) value += conqueror.amount * isConquering(...conqueror.locations);
     if (value === undefined) return value;
     value += this.attached('SHARD').size;
     if (this.nthCircle) value += nthCircleDefense(this);
@@ -247,6 +253,8 @@ class Card {
   hasTeleport() { return getModifiedStat(this, "teleport", this.teleport); }
   hasWallCrawl() { return getModifiedStat(this, "wallcrawl", this.wallcrawl); }
   hasChivalrousDuel() { return getModifiedStat(this, "chivalrousDuel", this.chivalrousDuel); }
+  hasSoaring() { return getModifiedStat(this, "soaring", this.soaring); }
+  getConqueror() { return getModifiedStat(this, "conqueror", this.conqueror); }
   get nthCircle() { return getModifiedStat(this, "nthCircle", this.printedNthCircle || 0); }
   attachedDeck(name: string) { return attachedDeck(name, this); }
   attached(name: string) { return attachedCards(name, this); }
@@ -1591,6 +1599,7 @@ function hqCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !=
 function hqHeroes() { return hqCards().limit(isHero); }
 function CityCards(): Card[] { return gameState.city.map(e => e.top).limit(e => e !== undefined); }
 function cityAdjacent(l: Deck): Deck[] {
+  if (!l) return [];
   return [l.adjacentLeft, l.adjacentRight].limit(d => d && d.isCity);
 }
 function makeCityAdjacent(city: Deck[], s: number = 0, e: number = city.length) {
@@ -1730,6 +1739,9 @@ interface ModifiableStats {
   isHenchman?: boolean;
   isEndgame?: boolean;
   riseOfTheLivingDead?: boolean;
+  uSizeChanging?: { color: number, amount: number };
+  soaring?: boolean;
+  conqueror?: { locations: CityLocation[], amount: number };
 }
 
 function safePlus(a: number, b: number) {
@@ -2548,7 +2560,7 @@ function buyCard(ev: Ev): void {
   // TODO let player choose where to put the card if multiple options available
   if (where === "HAND") gainToHandEv(ev, ev.what);
   else if (where === "DECK") gainToDeckEv(ev, ev.what);
-  else if (where === "SOARING" || ev.what.soaring) gainSoaringEv(ev, ev.what);
+  else if (where === "SOARING" || ev.what.hasSoaring()) gainSoaringEv(ev, ev.what);
   else if (ev.what.hasWallCrawl()) gainToDeckEv(ev, ev.what);
   else gainEv(ev, ev.what);
   ev.what.whenRecruited && pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.whenRecruited });

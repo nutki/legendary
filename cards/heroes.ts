@@ -4737,7 +4737,7 @@ addHeroTemplates("Revelations", [
 // Reveal the top card of any deck. If it's not a Scheme Twist, you may put it on the bottom of that deck.
 // {POWER Instinct} Choose one - Draw a card or you get +1 Recruit.
   c2: makeHeroCard("Hellcat", "Part-Time PI", 3, 2, u, Color.INSTINCT, "Avengers", "D", [ ev => {
-    selectCardEv(ev, "Choose a deck", [...gameState.players.map(p => p.deck), gameState.villaindeck, gameState.herodeck, gameState.bystanders], d => {
+    selectCardEv(ev, "Choose a deck", anyDeck(), d => {
       const f = (c: Card[]) => selectCardOptEv(ev, "Put on the bottom of the deck", c.limit(c => !isScheme(c)), c => {
         moveCardEv(ev, c, c.location, true);
       });
