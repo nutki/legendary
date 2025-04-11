@@ -7464,7 +7464,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
   name: "Janet Van Dyne",
   team: "(Unaffiliated)",
 // {POWER Ranged} {EXPLORE} You get +Attack equal to the Found Hero's printed Attack.
-  c1: makeHeroCard("Janet Van Dyne", "Prepare for War", 4, u, 2, Color.RANGED, u, "FD", ev => superPower(Color.RANGED) && exploreEv(ev, c => exploreEv(ev, c => c.printedAttack && addAttackEvent(ev, c.printedAttack)))),
+  c1: makeHeroCard("Janet Van Dyne", "Prepare for War", 4, u, 2, Color.RANGED, u, "FD", ev => superPower(Color.RANGED) && exploreEv(ev, c => c.printedAttack && addAttackEvent(ev, c.printedAttack))),
 // {POWER Covert}  {EXPLORE} You get +Recruit equal to the Found Hero's printed Recruit.
   c2: makeHeroCard("Janet Van Dyne", "Search for Peace", 3, 2, u, Color.COVERT, u, "FD", ev => superPower(Color.COVERT) && exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit))),
 // {SIZECHANGING COVERT}

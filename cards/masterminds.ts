@@ -1743,6 +1743,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
 // Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Empowered</b> by each color in his Threat Analysis pile.
 // Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
   const threat = ev.source.attachedDeck('THREAT');
+  threat.faceup = true;
   eachPlayer(p => revealOrEv(ev, Color.TECH, () => {
     selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => moveCardEv(ev, c, threat));
   }, p));
@@ -1770,7 +1771,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
     }, p));
   } ],
 ], {
-  varDefense: c => empowerVarDefense(c1 => isColor(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c, 0))(c1), c.epic ? 3 : 1)(c),
+  varDefense: c => empowerVarDefense(isColor(c.attached('THREAT').map(c => c.color).reduce((p, c) => p | c, 0)), c.epic ? 3 : 1)(c),
 }),
 // <b>Chivalrous Duel</b>
 // EPICNAME: Morgan Le Fay
