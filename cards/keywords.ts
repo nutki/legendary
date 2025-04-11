@@ -1267,7 +1267,6 @@ function anyDeck() {
 function drBillFosterOptions(costs: number[] = playerState.hand.deck.map(c => c.cost)) {
   const options: [number, number, number][] = [];
   costs.sort((a, b) => b - a);
-  console.log(costs);
   for (let i = 0; i < costs.length;) {
     if (costs[i] === 0) break;
     for (let j = i + 1; j < costs.length;) {
