@@ -3690,3 +3690,164 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   varDefense: c => c.printedDefense + pastEvents('PLAY').count(ev => isCostOdd(ev.what)),
 }),
 ]);
+addTemplates("MASTERMINDS", "Ant-Man and the Wasp", [
+// {BANK CONQUEROR 6}
+makeTransformingMastermindCard(makeMastermindCard("Darren Cross", 8, 6, "Cross Technologies", ev => {
+// Darren Cross {DOUBLE-CROSSES} each player. Then he {TRANSFORM}.
+  eachPlayer(p => doubleCrossEv(ev, p));
+  transformMastermindEv(ev);
+}, [
+// This Mastermind {TRANSFORM}.
+  [ "Corporate Raider", ev => {
+  // KO one of your Heroes with a Recruit icon. If the Bank is empty, move a Villain to the Bank.
+    selectCardEv(ev, "Choose a Hero to KO", yourHeroes().limit(hasRecruitIcon), c => KOEv(ev, c));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Protect My Investments", ev => {
+  // If the Bank is empty, each other player chooses a Villain worth 2 VP or more from their Victory Pile. You choose one of those Villains to enter the Bank.
+    withCity('BANK', bank => {
+      if (isCityEmpty(bank)) {
+        const options: Card[] = [];
+        eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(c => c.vp >= 2), c => options.push(c), p));
+        selectCardEv(ev, "Choose a Villain to enter", options, c => enterCityEv(ev, c, bank));
+      }
+    });
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Shrinking Research Budget", ev => {
+  // Each Hero currently in the HQ that has no <b>Size-Changing</b> abilities gains <b>Size-Changing</b> for one of its Hero Classes.
+    hqHeroes().limit(hasNoSizeChanging).each(c => addStatSet('sizeChanging', is(c), c => c.color));
+    transformMastermindEv(ev);
+  } ],
+// This Mastermind {TRANSFORM}.
+  [ "Steal Pym Particles", ev => {
+  // Each other player shuffles a [Covert], [Tech], or <b>Size-Changing</b> card from their hand or discard pile into the Hero Deck.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to shuffle", handOrDiscard(p).limit(c => isColor(Color.COVERT | Color.TECH)(c) || !hasNoSizeChanging(c)), c => {
+      shuffleIntoEv(ev, c, gameState.herodeck);
+    }, p));
+    transformMastermindEv(ev);
+  } ],
+], conquerorAbility(6, 'BANK')),
+// {USIZECHANGING TECH 1}[Tech]
+"Yellowjacket", 12, ev => {
+// Each player discards a [Instinct] Hero or Size-Changing Hero or gains a Wound. Yellowjacket {TRANSFORM}.
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c => isColor(Color.INSTINCT)(c) || !hasNoSizeChanging(c)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  transformMastermindEv(ev);
+}),
+// Ghost gets +1 Attack for each different cost among her "Kidnapped Victims." While this side is face up, you may recruit cards from her Kidnapped Victims
+// <i>(in any order)</i>, spending 2 Recruit extra for each.
+makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "Ghost Chasers", ev => {
+// Each player reveals a [Instinct] Hero or discards two cards with Recruit icons. Ghost {TRANSFORM}.
+  eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 2, p, hasRecruitIcon), p));
+  transformMastermindEv(ev);
+}, [
+// Ghost {TRANSFORM}.
+  [ "Draining Quantum Energy Chamber", ev => {
+  // Each other player reveals their hand and KOs one of their cards that shares a Hero Class with any of Ghost's Kidnapped Victims.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to KO", p.hand.limit(gameState.mastermind.attached('KIDNAPPED VICTIM').reduce((a, c) => c.color | a, 0)), c => KOEv(ev, c), p));
+    transformMastermindEv(ev);
+  } ],
+// Ghost {TRANSFORM}.
+  [ "Elaborate Rescue Plan", ev => {
+  // You may choose a player to gain one of Ghost's Kidnapped Victims.
+  // If you do, that player may KO one of their Heroes.
+    selectCardOptEv(ev, "Choose a Kidnapped Victim to gain", gameState.mastermind.attached('KIDNAPPED VICTIM'), c => {
+      choosePlayerEv(ev, p => {
+        gainEv(ev, c, p);
+        selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(p), c => KOEv(ev, c), () => {}, p);
+      });
+    });
+    transformMastermindEv(ev);
+  } ],
+// Ghost {TRANSFORM}.
+  [ "Nightmarish Wraith", ev => {
+  // Each other player puts a non-grey Hero from their discard pile next to Ghost as a Kidnapped Victim.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to put next to Ghost", p.discard.limit(isNonGrayHero), c => attachCardEv(ev, c, gameState.mastermind, 'KIDNAPPED VICTIM'), p));
+    transformMastermindEv(ev);
+  } ],
+// Ghost {TRANSFORM}.
+  [ "Shadowy Abduction", ev => {
+  // Put the highest-cost Hero from the HQ next to Ghost as a Kidnapped Victim.
+    selectCardEv(ev, "Choose a Hero to put next to Ghost", hqHeroes().highest(c => c.cost), c => attachCardEv(ev, c, gameState.mastermind, 'KIDNAPPED VICTIM'));
+    transformMastermindEv(ev);
+  } ],
+], {
+  init: source => {
+    addStatMod('cost', c => c.location === source.attachedDeck('KIDNAPPED VICTIM'), 2);
+    addStatSet('cardActions', is(source), () => source.attached('KIDNAPPED VICTIM').map(c => (source, ev) => recruitCardActionEv(ev, c)));
+  },
+}),
+// You can't fight Ghost unless you made at least 6 Recruit this turn.
+"Ghost, Intangible", 6, ev => {
+// Each player discards a [Covert] Hero or puts a non-grey Hero from their hand or discard pile next to Ghost as a "Kidnapped Victim." Ghost {TRANSFORM}.
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c),
+  () => selectCardEv(ev, "Choose a Hero to put next to Ghost", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, gameState.mastermind, 'KIDNAPPED VICTIM'), p)));
+  transformMastermindEv(ev);
+}, {
+  fightCond: ev => turnState.totalRecruit >= 6,
+}),
+// {ROOFTOPS CONQUEROR 3}, {STREETS CONQUEROR 3}, {BRIDGE CONQUEROR 3}
+// . Set aside the Villains from an extra Villain Group as "Timeline Variants."
+// Kang {TRANSFORM}.
+makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11, 6, "Armada of Kang", ev => {
+// Each player discards a [Strength] Hero or gains a Wound. Put a random Timeline Variant Villain face up in the "Multiverse" space.
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  gameState.outOfGame.attachedDeck('TIMELINE VARIANTS').withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'MULTIVERSE'));
+  // TODO mutliverse fightable
+  transformMastermindEv(ev);
+}, [
+// Kang {TRANSFORM}.
+  [ "Conqueror's Wrath", ev => {
+  // If there are any Villains in the Rooftops, Streets and/or Bridge, each player gains a Wound. If there are any Villains in the Multiverse, each player gains a Wound.
+    cityVillains().has(c => isLocation(c.location, 'ROOFTOPS', 'STREETS', 'BRIDGE')) && eachPlayer(p => gainWoundEv(ev, p));
+    gameState.mastermind.attached('MULTIVERSE').size > 0 && eachPlayer(p => gainWoundEv(ev, p));
+    transformMastermindEv(ev);
+  } ],
+  [ "Kang's Defiance", ev => {
+    // If any of the Rooftops, Streets, or Bridge are empty, reveal the top card of the Villain Deck. If it's a Villain, it enters one of those spaces.
+    // Put a random Timeline Variant Villain face up in the "Multiverse" space.
+    gameState.outOfGame.attachedDeck('TIMELINE VARIANTS').withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'MULTIVERSE'));
+    // Kang {TRANSFORM}.
+    transformMastermindEv(ev);
+  } ],
+  [ "Multiversal Engine Core", ev => {
+    // Kang {DOUBLE-CROSSES} each other player.
+    eachOtherPlayerVM(p => doubleCrossEv(ev, p));
+    // Put a random Timeline Variant Villain face up in the "Multiverse" space.
+    gameState.outOfGame.attachedDeck('TIMELINE VARIANTS').withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'MULTIVERSE'));
+    // Kang {TRANSFORM}.
+    transformMastermindEv(ev);
+  } ],
+  [ "The Time Sphere", ev => {
+    // Each other player puts two cards from their hand on the bottom of their deck. You draw two cards.
+    eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to put on the bottom of your deck", 2, p.hand.deck, c => moveCardEv(ev, c, p.deck, true), p));
+    drawEv(ev, 2);
+    // Kang {TRANSFORM}.
+    transformMastermindEv(ev);
+  } ],
+], {
+  ...conquerorAbility(3, 'ROOFTOPS', 'STREETS', 'BRIDGE'),
+  init: source => {
+    const variants = gameState.outOfGame.attachedDeck('TIMELINE VARIANTS');
+    availiableVillainTemplates().withRandom(v => v.cards.each(([n, c]) => variants.addNewCard(c, n)));
+    variants.deck.limit(c => !isVillain(c)).each(c => moveCard(c, gameState.outOfGame));
+  },
+}),
+// {MULTIVERSE CONQUEROR 8}
+// While either side of Kang is face up, the "Multiverse" is a space to his left that can hold multiple Villains. You can fight them (in any order) only while this side is face up.
+"Kang, Multiverse Conqueror", 10, ev => {
+// If there are any Villains in the Multiverse, each player gains a Wound. Then a Villain from the Multiverse enters an empty space among the Rooftops, Streets, or Bridge. Kang {TRANSFORM}.
+  gameState.mastermind.attached('MULTIVERSE').size > 0 && eachPlayer(p => gainWoundEv(ev, p));
+  selectCardEv(ev, "Choose a villain to enter", gameState.mastermind.attached('MULTIVERSE'), c => {
+    selectCardEv(ev, "Choose a space to enter", gameState.city.limit(d => isLocation(d, 'ROOFTOPS', 'STREETS', 'BRIDGE')).limit(isCityEmpty), d => {
+      enterCityEv(ev, c, d);
+    });
+  });
+  transformMastermindEv(ev);
+}, {
+  ...conquerorAbility(8), // Empty conqueror ability, to potentially trigger other effects the multiverse bonus conted below
+  varDefense: c => c.printedDefense + (gameState.mastermind.attached('MULTIVERSE').has(isVillain) ? c.conqueror.amount : 0),
+}),
+]);
