@@ -180,6 +180,13 @@ interface MastermindCardAbillities {
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
 }
+
+interface AmbushSchemeCardAbillities {
+  ambush?: Handler | Handler[];
+  twist?: Handler | Handler[];
+  triggers?: Trigger[];
+  cardActions?: ((c: Card, ev: Ev) => Ev)[];
+}
 interface TacticsCardAbillities {
   fight?: Handler | Handler[];
   trigger?: Trigger;
@@ -341,6 +348,13 @@ function makeVillainCard(group: string, name: string, defense: number, vp: numbe
 function makeLocationCard(group: string, name: string, defense: number, vp: number, abilities: VillainCardAbillities) {
   let c = new Card("LOCATION", name);
   c.printedDefense = defense;
+  c.printedVP = vp;
+  c.printedVillainGroup = group;
+  if (abilities) Object.assign(c, abilities);
+  return c;
+}
+function makeAmbushSchemeCard(name: string, group: string, vp: number, abilities: AmbushSchemeCardAbillities) {
+  let c = new Card("AMBUSH SCHEME", name);
   c.printedVP = vp;
   c.printedVillainGroup = group;
   if (abilities) Object.assign(c, abilities);
@@ -1051,6 +1065,7 @@ interface Game {
   thronesFavorHolder: Player | Card | undefined;
   astralPlane: Deck;
   finalBlow: boolean;
+  ambushScheme: Deck
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1233,6 +1248,9 @@ function availiableHeroTemplates() {
 }
 function availiableVillainTemplates() {
   return cardTemplates.VILLAINS.filter(t => gameState.gameSetup.villains.includes(t.templateId));
+}
+function availiableHenchmenTemplates() {
+  return cardTemplates.HENCHMEN.filter(t => gameState.gameSetup.henchmen.includes(t.templateId));
 }
 function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_counts'>, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
@@ -1417,6 +1435,7 @@ gameState = {
   ],
   thronesFavorHolder: undefined,
   astralPlane: new Deck('ASTRALPLANE', true),
+  ambushScheme: new Deck('AMBUSHSCHEME', true),
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -2635,7 +2654,11 @@ function playTwistEv(ev: Ev, what: Card) { pushEv(ev, "TWIST", { func: playTwist
 function playTwist(ev: Ev): void {
   moveCardEv(ev, ev.what, gameState.ko);
   confirmEv(ev, 'Scheme Twist!', gameState.scheme.top);
-  pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState });
+  const params = { nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState }
+  if (gameState.ambushScheme.size)
+    selectCardOrderEv(ev, "Choose Scheme Twist order", [gameState.ambushScheme.top, gameState.scheme.top], (c: Card) => pushEv(ev, "EFFECT", { source: c, func: c.twist, ...params }));
+  else
+    pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, ...params });
   isSoloGame() && cont(ev, () => {
     if (!(gameState.advancedSolo === "WHATIF" && pastEvents("TWIST").has(isNot(ev)))) {
       if (gameState.advancedSolo) selectCardEv(ev, "Choose a card to put on the bottom of the Hero deck", hqHeroes().limit(c => c.cost <= 6), sel => moveCardEv(ev, sel, gameState.herodeck, true));
@@ -2680,6 +2703,17 @@ function playVillainousWeapon(ev: Ev, what: Card) {
     putIntoCity();
   }
 }
+function playAmbushScheme(ev: Ev) {
+  if (gameState.ambushScheme.size) {
+    KOEv(ev, ev.what);
+    playAnotherEv(ev);
+  } else {
+    textLog.log(`Ambush scheme played: ${ev.what.cardName}`);
+    moveCardEv(ev, ev.what, gameState.ambushScheme);
+    pushEffects(ev, ev.what, 'ambush', ev.what.ambush);
+  }
+}
+function playAmbushSchemeEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: playAmbushScheme }); }
 function adaptMastermind(mastermind: Card) {
   const tactics = mastermind.attachedDeck("TACTICS");
   const mastermindLocation = mastermind.location;
@@ -2713,6 +2747,8 @@ function villainDraw(ev: Ev): void {
     playLocationEv(ev, c);
   } else if (isVillainousWeapon(c)) {
     playVillainousWeapon(ev, c)
+  } else if (c.cardType === "AMBUSHSCHEME") {
+    playAmbushSchemeEv(ev, c);
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
   } else if (c.cardType === "SCHEME TWIST") {

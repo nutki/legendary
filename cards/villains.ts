@@ -5770,10 +5770,46 @@ addVillainTemplates("Ant-Man and the Wasp", [
 { name: "Armada of Kang", cards: [
 // AMBUSH: If the Bridge is empty, move a Villain to the Bridge. Choose an unused Henchman Group and stack Henchmen from it next to this Scheme equal to the number of players.
 // <b>Special Rules</b>: Players may fight Henchmen stacked here. While here, those Henchmen also have "{BRIDGE CONQUEROR 1}." If you defeat the last Henchman here, defeat this Scheme.
-// <b>Twist</b>: Stack another of those Henchmen next to this Scheme <i>(from a Victory Pile if necessary)</i>. Then, if there are two more Henchmen here than the number of players: Each player gains a Wound, 3 of those Henchmen enter the city, and you KO this Scheme and the rest of those Henchmen.
+// <b>Twist</b>: Stack another of those Henchmen next to this Scheme <i>(from a Victory Pile if necessary)</i>. Then, if there are two more Henchmen here than the number
+// of players: Each player gains a Wound, 3 of those Henchmen enter the city, and you KO this Scheme and the rest of those Henchmen.
 // VP: 4
-  [ 1, makeVillainCard("Armada of Kang", "Build a Conquering Army", u, 4, {
-    ambush: ev => {},
+  [ 1, makeAmbushSchemeCard("Armada of Kang", "Build a Conquering Army", 4, {
+    ambush: ev => {
+      withCity('BRIDGE', d => isCityEmpty(d) && selectCardEv(ev, "Choose a Villain to move to the Bridge", villains(), c => moveCardEv(ev, c, d)));
+      const extraHenchmen = gameState.outOfGame.attachedDeck('CONQUERING_ARMY_HENCHMEN');
+      const henchmen = ev.source.attachedDeck('HENCHMEN');
+      availiableHenchmenTemplates().withRandom(h => { // TODO - not random
+        h instanceof Card ? extraHenchmen.addNewCard(h, 10) : h.cards.each(([n, c]) => extraHenchmen.addNewCard(c, n));
+      })
+      extraHenchmen.shuffle();
+      extraHenchmen.deck.forEach((c, i) => i < gameState.players.length && moveCard(c, henchmen));
+      addStatSet('conqueror', c => c.location === henchmen, (c, v) => ({ amount: 1, locations: [...v.locations, 'BRIDGE'] })); // TODO this works as currently there are no Henchmen with conqueror != 1
+    },
+    triggers: [{
+      event: 'DEFEAT',
+      match: (ev, source) => ev.where === source.attachedDeck('HENCHMEN') && source.attachedDeck('HENCHMEN').size === 0,
+      after: ev => defeatEv(ev, ev.source),
+    }],
+    twist: ev => {
+      const henchmen = ev.source.attachedDeck('HENCHMEN');
+      const extraHenchmen = gameState.outOfGame.attachedDeck('CONQUERING_ARMY_HENCHMEN');
+      extraHenchmen.size ? extraHenchmen.withTop(c => moveCardEv(ev, c, henchmen)) :
+      selectCardEv(ev, "Choose a Henchman to stack", gameState.players.flatMap(p => p.victory.limit(c => henchmen.has(isGroup(c.villainGroup)))) , c => {
+        moveCardEv(ev, c, henchmen);
+      });
+      cont(ev, () => {
+        if (ev.source.attached('HENCHMEN').size >= gameState.players.length + 2) {
+          eachPlayer(p => gainWoundEv(ev, p));
+          selectObjectsEv(ev, "Choose Henchmen to enter the city", 3, ev.source.attached('HENCHMEN'), c => {
+            enterCityEv(ev, c);
+          });
+          cont(ev, () => {
+            ev.source.attached('HENCHMEN').each(c => KOEv(ev, c));
+            KOEv(ev, ev.source);
+          });
+        }
+      });
+    }
   })],
 // {STREETS CONQUEROR 2}
 // AMBUSH: Each player reveals a [Ranged] Hero or gains a Wound.
@@ -5880,11 +5916,31 @@ addVillainTemplates("Ant-Man and the Wasp", [
     sizeChanging: Color.TECH,
   })],
 // AMBUSH: This Scheme captures Bystanders equal to the number of players plus 1, as "Pym Tech Scientists."
-// <b>Special Rules</b>: Once per turn, you may pay 3 Recruit or discard a card with <b>Size-Changing</b>. If you do, rescue a Pym Tech Scientist and draw a card. If you rescue the last Scientist, defeat this Scheme.
+// <b>Special Rules</b>: Once per turn, you may pay 3 Recruit or discard a card with <b>Size-Changing</b>. If you do, rescue a Pym Tech Scientist and draw a card.
+// If you rescue the last Scientist, defeat this Scheme.
 // <b>Twist</b>: This captures another Pym Tech Scientist. Then, if it has 3 or more Scientists, each player discards a card.
 // VP: 2
-  [ 1, makeVillainCard("Cross Technologies", "Take Over Pym Technologies", u , 2, {
-    ambush: ev => {},
+  [ 1, makeAmbushSchemeCard("Cross Technologies", "Take Over Pym Technologies", 2, {
+    ambush: ev => {
+      captureEv(ev, ev.source, gameState.players.length + 1);
+    },
+    cardActions: [
+      (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', { cost: { recruit: 3 }, desc: "Rescue Scientist with 3 Recruit", func: ev => {
+        selectCardEv(ev, "Choose a Scientist to rescue", c.captured, c => rescueEv(ev, c));
+        drawEv(ev);
+        cont(ev, () => c.captured.size === 0 && defeatEv(ev, c));
+      }}),
+      (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', { cost: { cond: () => playerState.hand.has(c => !hasNoSizeChanging(c))}, desc: "Rescue scientist with discard", func: ev => {
+        selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => !hasNoSizeChanging(c)), c => discardEv(ev, c));
+        selectCardEv(ev, "Choose a Scientist to rescue", c.captured, c => rescueEv(ev, c));
+        drawEv(ev);
+        cont(ev, () => c.captured.size === 0 && defeatEv(ev, c));
+      }})
+    ],
+    twist: ev => {
+      captureEv(ev, ev.source);
+      cont(ev, () => ev.source.captured.size >= 3 && eachPlayer(p => pickDiscardEv(ev, 1, p)));
+    }
   })],
 // {USIZECHANGING INSTINCT 1}[Instinct][Instinct][Instinct]
 // AMBUSH: Each player reveals a [Instinct] Hero or gains a Wound.
@@ -5950,11 +6006,34 @@ addVillainTemplates("Ant-Man and the Wasp", [
     sizeChanging: Color.STRENGTH,
   })],
 // AMBUSH: Stack 2 cards from the Wound Deck next to this Scheme as "Dangerous Stunts."
-// <b>Twist</b>: If there is a Villain in the Streets: Add 2 Dangerous Stunts. Then if there are at least 5 Stunts, there is a "car crash": Each player gains one of the Stunts as a Wound. KO the rest of the Stunts and this Scheme.
+// <b>Twist</b>: If there is a Villain in the Streets: Add 2 Dangerous Stunts. Then if there are at least 5 Stunts, there is a "car crash": Each player gains one of
+// the Stunts as a Wound. KO the rest of the Stunts and this Scheme.
 // Otherwise: Return a Dangerous Stunt to the Wound Deck. If there are still Stunts here, move a Villain to the Streets. If there aren't any Stunts, defeat this Scheme.
 // VP: 3
-  [ 1, makeVillainCard("Ghost Chasers", "High-Speed Car Chase",u , 3, {
-    ambush: ev => {},
+  [ 1, makeAmbushSchemeCard("Ghost Chasers", "High-Speed Car Chase", 3, {
+    ambush: ev => {
+      repeat(2, () => cont(ev, () => gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source, 'DANGEROUS_STUNT'))));
+    },
+    twist: ev => {
+      withCity('STREETS', d => { isCityEmpty(d) ?
+        repeat(2, () => cont(ev, () => gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source, 'DANGEROUS_STUNT')))) : (
+          ev.source.attachedDeck('DANGEROUS_STUNTS').withTop(c => returnToStackEv(ev, gameState.wounds, c))
+        )});
+      cont(ev, () => {
+        const stunts = ev.source.attachedDeck('DANGEROUS_STUNTS');
+        if (stunts.size >= 5) {
+          eachPlayer(p => cont(ev, () => stunts.withTop(c => gainEv(ev, c, p))));
+          cont(ev, () => {
+            stunts.each(c => KOEv(ev, c));
+            KOEv(ev, ev.source);
+          });
+        } else if (stunts.size === 0) {
+          defeatEv(ev, ev.source);
+        } else {
+          withCity('STREETS', d => isCityEmpty(d) && selectCardEv(ev, "Choose a Villain to move to the Streets", villains(), c => moveCardEv(ev, c, d)));
+        }
+      });
+    },
   })],
 // AMBUSH: Sonny Burch {DOUBLE-CROSSES} each player.
 // FIGHT: {HEIST} You may choose a player to gain a [Tech] or [Ranged] Hero from the HQ.
@@ -6042,11 +6121,33 @@ addVillainTemplates("Ant-Man and the Wasp", [
     fight: ev => exploreEv(ev, c => addRecruitEvent(ev, c.printedRecruit)),
   })],
 // AMBUSH: Each player puts a non-grey Hero from their hand or discard pile next to this Scheme as a "Quantum Duplicate." Then do the Twist effect below.
-// <b>Twist</b>: The top card of the Hero Deck becomes another Quantum Duplicate. Each player reveals their hand and discards all cards that have the same name as any Quantum Duplicate.
-// <b>Special Rules</b>: Players may spend Attack equal to a Quantum Duplicate's printed cost to KO that Hero or choose a player to gain it. When there are no more Quantum Duplicates, defeat this Scheme.
+// <b>Twist</b>: The top card of the Hero Deck becomes another Quantum Duplicate. Each player reveals their hand and discards all cards that have the same name
+// as any Quantum Duplicate.
+// <b>Special Rules</b>: Players may spend Attack equal to a Quantum Duplicate's printed cost to KO that Hero or choose a player to gain it.
+// When there are no more Quantum Duplicates, defeat this Scheme.
 // VP: 2
-  [ 1, makeVillainCard("Quantum Realm", "Quantumania",u , 2, {
-    ambush: ev => {},
+  [ 1, makeAmbushSchemeCard("Quantum Realm", "Quantumania", 2, {
+    ambush: ev => {
+      eachPlayer(p => selectCardEv(ev, "Choose a Hero to make a Quantum Duplicate", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'QUANTUM_DUPLICATE')));
+      addStatSet('cardActions', is(ev.source), () => ev.source.attachedDeck('QUANTUM_DUPLICATES').deck.map(c => (source, ev) => new Ev(ev, 'EFFECT', {
+        what: c,
+        cost: { attack: c.printedCost },
+        func: ev => {
+          selectCardOptEv(ev, "Choose a player to gain the Hero", gameState.players, p => gainEv(ev, c, p), () => KOEv(ev, c));
+          cont(ev, () => source.attachedDeck('QUANTUM_DUPLICATES').size === 0 && defeatEv(ev, source));
+        },
+      })));
+      gameState.herodeck.withTop(c => attachCardEv(ev, c, ev.source, 'QUANTUM_DUPLICATE'));
+      cont(ev, () => eachPlayer(p => {
+        p.hand.limit(c => ev.source.attached('QUANTUM_DUPLICATES').has(c2 => c.cardName === c2.cardName)).each(c => discardEv(ev, c));
+      }));
+    },
+    twist: ev => {
+      gameState.herodeck.withTop(c => attachCardEv(ev, c, ev.source, 'QUANTUM_DUPLICATE'));
+      cont(ev, () => eachPlayer(p => {
+        p.hand.limit(c => ev.source.attached('QUANTUM_DUPLICATES').has(c2 => c.cardName === c2.cardName)).each(c => discardEv(ev, c));
+      }));
+    }
   })],
 // {USIZECHANGING TECH 1}[Tech][Tech][Tech]
 // AMBUSH: Quantumoeba "eats" a Henchman from any player's Victory Pile, capturing it and gaining its printed Attack.
