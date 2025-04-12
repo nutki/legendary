@@ -378,3 +378,62 @@ makeHenchmenCard("Vibranium Liberator Drones", 3, {
   ambush: ev => selectCardEv(ev, "Choose a Villain", villains(), c => captureEv(ev, c)),
 }),
 ]);
+addHenchmenTemplates("Ant-Man and the Wasp", [
+// FIGHT: Choose Recruit or Attack. Then {EXPLORE} If the Found Hero has the icon you chose, KO one of your Heroes.
+// ATTACK: 3
+makeHenchmenCard("Quantum Hound", 3, {
+  fight: ev => chooseOptionEv(ev, "Choose an icon", [
+    {l:"Recruit",v:hasRecruitIcon},
+    {l:"Attack",v:hasAttackIcon}],v => exploreEv(ev, c => v(c) && selectCardAndKOEv(ev, yourHeroes()))),
+}),
+// {ROOFTOPS CONQUEROR 1}
+// {STREETS CONQUEROR 1}
+// FIGHT: KO one of your Heroes.
+// ATTACK: 2+
+makeHenchmenCard("Quantumnauts", 2, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  ...conquerorAbility(1, 'ROOFTOPS', 'STREETS'),
+}),
+{name: "Tardigrade", cards:[
+// {USIZECHANGING COVERT 1}[Covert][Covert]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4*
+[2, makeHenchmenCard("Tardigrade", 4, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  uSizeChanging: { amount: 3, color: Color.COVERT },
+  variant: 'COVERT',
+}, "Tardigrade")],
+// {USIZECHANGING INSTINCT 1}[Instinct][Instinct]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4*
+[2, makeHenchmenCard("Tardigrade", 4, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  uSizeChanging: { amount: 3, color: Color.INSTINCT },
+  variant: 'INSTINCT',
+}, "Tardigrade")],
+// {USIZECHANGING RANGED 1}[Ranged][Ranged]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4*
+[2, makeHenchmenCard("Tardigrade", 4, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  uSizeChanging: { amount: 3, color: Color.RANGED },
+  variant: 'RANGED',
+}, "Tardigrade")],
+// {USIZECHANGING STRENGTH 1}[Strength][Strength]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4*
+[2, makeHenchmenCard("Tardigrade", 4, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  uSizeChanging: { amount: 3, color: Color.STRENGTH },
+  variant: 'STRENGTH',
+}, "Tardigrade")],
+// {USIZECHANGING TECH 1}[Tech][Tech]
+// FIGHT: KO one of your Heroes.
+// ATTACK: 4*
+[2, makeHenchmenCard("Tardigrade", 4, {
+  fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+  uSizeChanging: { amount: 3, color: Color.TECH },
+  variant: 'TECH',
+}, "Tardigrade")],
+]}
+]);
