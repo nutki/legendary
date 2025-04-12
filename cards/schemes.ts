@@ -2269,8 +2269,6 @@ makeSchemeCard("Annihilation: Conquest", { twists: 11, heroes: [ 4, 6, 6, 6, 7 ]
 }),
 ]);
 addTemplates("SCHEMES", "Realm of Kings", [
-]);
-addTemplates("SCHEMES", "Realm of Kings", [
 // SETUP: 11 Twists. Set aside two extra Heroes to get married. Prepare each Wedding Hero into a seperate 14-card stack, ordered by cost with the lowest cost on top.
 // EVILWINS: When either Wedding Hero Stack is KO'd.
 makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8 ] }, ev => {
@@ -3486,5 +3484,94 @@ makeSchemeCard("Trash Earth with Hugest Party Ever", { twists: 8, required: { he
 }, [], () => {
   setSchemeTarget(5);
   forbidAction('FIGHT', c => c.cardName === "Frigga, Mother of Thor");
+}),
+]);
+addTemplates("SCHEMES", "Ant-Man and the Wasp", [
+// SETUP: 11 Twists. Set aside all 14 cards of a random extra Hero that has any Size-Changing cards as "Shrink Tech."
+// EVILWINS: When 8 Shrink Tech cards are Controlled by Arms Dealers.
+makeSchemeCard("Auction Shrink Tech to Highest Bidder", { twists: 11, heroes: [ 4, 5, 5, 5, 6 ] }, ev => {
+  // Twist: Stack this Twist next to the Scheme as a "Hostile Bid."
+  attachCardEv(ev, ev.twist, gameState.scheme, 'HOSTILE BID');
+  // Reveal a random Hero from the Shrink Tech. This turn you may recruit that Hero, but it costs 1 Recruit more for each Hostile Bid.
+  gameState.scheme.attachedDeck('SHRINKTECH').withRandom(c => {
+    // If you recruit it, either KO that Hero or choose any player to gain it.
+    attachCardEv(ev, c, gameState.scheme, 'RECRUITABLE');
+    addTurnAction(new Ev(ev, 'RECRUIT', { cost: getRecruitCost(c), what: c}));
+    // If you don't recruit it by the end of this turn, stack it next to the Scheme as "Controlled by Arms Dealers."
+    addTurnTrigger('CLEANUP', () => true, () => {
+      if (c.location.attachedTo === gameState.scheme) {
+        attachCardEv(ev, c, gameState.scheme, 'ARMS DEALERS');
+        cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('ARMS DEALERS').size));
+      }
+    });
+  });
+}, [], () => {
+  setSchemeTarget(8);
+  // TODO not selectable but random with restriction
+  const isShrinkTech = (c: Card) => c.heroName === extraHeroName();
+  gameState.herodeck.deck.filter(isShrinkTech).forEach((c, i) => {
+    moveCard(c, gameState.scheme.attachedDeck('SHRINKTECH'));
+  });
+}),
+// SETUP: 5 Twists.
+// RULE: During your turn, any number of times, you may spend 1 Attack to "Seal" an unsealed city space or unsealed Mastermind space by putting a card above it from the Wound Stack.
+// EVILWINS: When 3 Escape Routes have been discovered.
+makeSchemeCard("Escape an Imprisoning Dimension", { twists: 5 }, ev => {
+  // Twist: If any city space with a Villain in it or the Mastermind space is not "sealed", stack this Twist next to the Mastermind as a "Discovered Escape Route."
+  if ([...gameState.city.limit(d => d.has(isVillain)), gameState.mastermind].has(d => d.attached('SEAL').size === 0)) {
+    attachCardEv(ev, ev.twist, gameState.mastermind, 'ESCAPE_ROUTE');
+    cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('ESCAPE_ROUTE').size));
+  } else {
+    // Otherwise, return 3 Seals from above spaces to the Wound Deck, shuffle this Twist into the Villain Deck, and play another card from the Villain Deck.
+    selectObjectsEv(ev, "Choose 3 Seals to return", 3, [...gameState.city, gameState.mastermind].limit(d => d.attached('SEAL').size > 0), d => {
+      d.attached('SEAL').each(c => returnToStackEv(ev, gameState.wounds, c));
+    });
+    shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+    playAnotherEv(ev);
+  }
+}, [], () => {
+  gameState.specialActions = ev => [...gameState.city, gameState.mastermind].map(d => new Ev(ev, 'EFFECT', {
+    cost: { attack: 1, cond: () => d.attached('SEAL').size === 0 },
+    desc: 'Seal',
+    func: () => gameState.wounds.withTop(c => attachCardEv(ev, c, d, 'SEAL')),
+  }));
+  setSchemeTarget(3);
+}),
+// SETUP: 5 Twists.
+// RULE: You have the ability "{HEIST} You get +1 Recruit. Shuffle a Secret from next to the Mastermind into the Villain Deck."
+// EVILWINS: When the Mastermind has 5 Secrets.
+makeSchemeCard("Safeguard Dark Secrets", { twists: 5 }, ev => {
+  // Twist: Stack this Twist next to the Mastermind as a "Secret," then play another card from the Villain Deck.
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'SECRET');
+  cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('SECRET').size));
+  playAnotherEv(ev);
+}, [], () => {
+  setSchemeTarget(5);
+  gameState.scheme.top.heist = ev => {
+    addRecruitEvent(ev, 1);
+    gameState.mastermind.attached('SECRET').withFirst(c => shuffleIntoEv(ev, c, gameState.villaindeck));
+  };
+}),
+// SETUP: 9 Twists. Set aside the "Quantum Realm" Villain Group as an extra group. Shuffle its Ambush Scheme into the Villain Deck.
+// RULE: You may fight Villains on the Quantum Siphons. They get +1 Attack for each two Siphons.
+// EVILWINS: When 4 Quantum Realm Villains have been KO'd or there are 9 Quantum Siphons.
+makeSchemeCard("Siphon Energy from the Quantum Realm", { twists: 9, vd_villain: [ 2, 3, 4, 4, 5], required: { villains: ["Quantum Realm"]} }, ev => {
+  // Twist: Stack this Twist next to the Mastermind as a "Quantum Siphon."
+  attachCardEv(ev, ev.twist, gameState.mastermind, 'QUANTUM_SIPHON');
+  cont(ev, () => gameState.mastermind.attached('QUANTUM_SIPHON').size >= 9 && evilWinsEv(ev));
+  // Put a random set aside Quantum Realm Villain on the Siphons. Do its Ambush effect.
+  // If there was already a Quantum Realm Villain on the Siphons, KO it.
+  gameState.mastermind.attached('QUANTUM_REALM').each(c => KOEv(ev, c));
+  gameState.outOfGame.attachedDeck('QUANTUM_REALM').withRandom(c => {
+    attachCardEv(ev, c, gameState.mastermind, 'QUANTUM_REALM');
+    pushEffects(ev, c, 'ambush', c.ambush);
+  });
+}, [
+  koProgressTrigger(isGroup(extraVillainName())),
+], () => {
+  const isQuantum = (c: Card) => c.villainGroup === extraVillainName();
+  gameState.villaindeck.limit(isQuantum).each(c => c.cardType === 'AMBUSH SCHEME' || moveCard(c, gameState.outOfGame.attachedDeck('QUANTUM_REALM')));
+  addStatMod('defense', isQuantum, c => Math.floor(gameState.mastermind.attached('QUANTUM_SIPHON').size / 2));
+  setSchemeTarget(4);
 }),
 ]);

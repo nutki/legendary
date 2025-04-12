@@ -1240,6 +1240,10 @@ function extraHenchmenName(n: number = 1) {
   const h = gameState.gameSetup.henchmen;
   return h[h.length - n];
 }
+function extraVillainName(n: number = 1) {
+  const h = gameState.gameSetup.villains;
+  return h[h.length - n];
+}
 function setupMastermindName() {
   return gameState.gameSetup.mastermind[0];
 }
