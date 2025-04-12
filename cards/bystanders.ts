@@ -211,7 +211,7 @@ addBystanderTemplates("Messiah Complex", [
   });
 }) ],
 ]);
-addBystanderTemplates("Marvel Studios What If...?/", [
+addBystanderTemplates("Marvel Studios What If...?", [
 [ 25, makeBystanderCard("Bystander") ],
 // RESCUE: reveal the top card of the Villain Deck. If it's a Master Strike or Scheme Twist, you may shuffle that deck.
 [ 1, makeBystanderCard("Happy Hogan", ev => {
@@ -243,5 +243,33 @@ addBystanderTemplates("Marvel Studios What If...?/", [
 // RESCUE: whichever player is a head <i>(has the most VP or tied for most)</i> may KO one of their cards.
 [ 1, makeBystanderCard("Scott Lang's Head", ev => {
   gameState.players.highest(currentVP).each(p => selectCardOptEv(ev, "KO a card", revealable(p), c => KOEv(ev, c), undefined, p));
+}) ],
+]);
+addBystanderTemplates("Ant-Man and the Wasp", [
+// <b>Rescue</b>: Do some "close-up magic": Reveal the top two cards of your deck. The player on your left says one of those card names.
+// <i>(In solo mode, say one yourself.)</i> Mix them up, reveal one, and say <i>"Is this your card?"</i> If it is, draw it. Put the rest back in any order.
+[ 2, makeBystanderCard("Agent Jimmy Woo", ev => {
+  revealPlayerDeckEv(ev, 2, cards => {
+    const names = cards.map(c => c.cardName).map(n => ({l:n, v:n}));
+    chooseOptionEv(ev, "Choose a card name", names, n => {
+      cards.shuffled().firstOnly().filter(c => c.cardName === n).each(c => {
+        drawCardEv(ev, c, ev.who);
+      });
+    }, ev.who.left);
+  }, ev.who);
+}) ],
+// <b>Rescue</b>: You may return a card that costs 2 or less from your discard pile to your hand.
+[ 2, makeBystanderCard("Maggie Lang", ev => {
+  selectCardOptEv(ev, "Choose a card to return", ev.who.discard.limit(c => c.cost <= 2), c => moveCardEv(ev, c, ev.who.hand), () => {}, ev.who);
+}) ],
+// <b>Rescue</b>: You may defeat a Henchman.
+[ 1, makeBystanderCard("Officer Jim Paxton", ev => {
+  playerState === ev.who && selectCardEv(ev, "Choose a Henchman", fightableCards().limit(isHenchman), c => {
+    defeatEv(ev, c);
+  }, ev.who);
+}) ],
+// <b>Rescue</b>: You get +2 Recruit, usable only to recruit a Hero that costs 2 or less or a Hero with <b>Size-Changing</b>.
+[ 2, makeBystanderCard("Young Cassie Lang", ev => {
+  playerState === ev.who && addRecruitSpecialEv(ev, c => c.cost <= 2 || !hasNoSizeChanging(c), 2);
 }) ],
 ]);
