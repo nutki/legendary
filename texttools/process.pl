@@ -143,6 +143,8 @@ while (<A>) {
     s!<b>Antics</b>:?!{ANTICS}!g;
     s!<b>Double-Crosses</b>!{DOUBLE-CROSSES}!g;
     s!<b>Explore</b>[:.]?!{EXPLORE}!g;
+    s!<b>Cyber-Mod</b>:? ((\[($class)\])+)!'{CYBER-MOD '.(uc$1)=~s/[^a-z ]//gir.'}'!ge;
+    s!<b>Fated Future</b>!{FATED FUTURE}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;

@@ -1,0 +1,31 @@
+
+#CARDNAME: Become President of the United States
+#SETUP: 11 Twists
+#RULE: Once per turn, you may stack one of your non-grey Heroes next to this Scheme to earn "Ten Million Votes" for that Hero Name. If you do, you may also send one of your grey Heroes {UNDERCOVER} as "Secret Service."
+#TWIST: If there's a Villain in the Bank or Streets, the Mastermind "vows to crush crime," and you stack this Twist next to the Mastermind as "Ten Million Votes." Otherwise, you may discard two cards to "counter negative advertising," shuffle this Twist back into the Villain Deck, and play another card from that deck. If you don't discard, stack this Twist next to the Mastermind as "Ten Million Votes."
+#EVILWINS: When the Mastermind is elected President by having Forty Million more Votes than the highest-voted Hero Name.
+
+#CARDNAME: Befoul Earth into a Polluted Wasteland
+#SETUP: Add an extra Hero. 8 Twists, representing "Toxic Sludge."
+#TWIST: Put this Toxic Sludge under an HQ space. No space can have two Sludges unless all spaces already have one.
+#RULE: To recruit a Hero, you must also pay 2 Recruit for each Toxic Sludge under it. During your turn, if there is any Sludge under the HQ, you may "flush the Toxic Sludge into the river." If you do, then KO all the Sludge and the Heroes in those HQ spaces, and each player gains a Wound.
+#EVILWINS: When the Hero Deck runs out or there are 8 Toxic Sludges under the HQ and/or in the river <i>(KO pile)</i>.
+
+#CARDNAME: Pull Reality into Cyberspace
+#SETUP: 7 Twists, representing "Cyberspace."
+#RULE: Enemies under any Cyberspace get +1 Attack for each Cyberspace on the board, and they can be fought with any combination of Recruit and Attack.
+#TWISTNR: NR[1-5] Put this Cyberspace above the rightmost city space that isn't yet under Cyberspace.
+#TWISTNR: NR[6] Put this Cyberspace above the Mastermind.
+#TWISTNR: NR[7] Evil Wins!
+
+#CARDNAME: Subjugate Earth with Mega-Corporations
+#SETUP: Add an extra Hero. 11 Twists.
+#TWIST: Put the Hero from the HQ space under the Bank into a "Mega-Corp Domination" Stack matching its Hero Class <i>(off of the board)</i>. Do the listed effect for that Mega-Corp.
+{POWER Strength} <b>Green Globe</b>: Each player discards a card with a Recruit icon.
+{POWER Instinct} <b>Alchemax</b>: Each player discards a [Instinct] Hero or gains a Wound.
+{POWER Covert} <b>Public Eye</b>: Each player discards two cards, then draws a card.
+{POWER Tech} <b>D/MONIX</b>: Each player discards a card with an Attack icon.
+{POWER Ranged} <b>Stark-Fujikawa</b>: A Villain from your Victory Pile reenters the city.
+#EVILWINS: When a single Mega-Corp has 3 Dominations.
+
+

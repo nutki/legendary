@@ -1,0 +1,72 @@
+
+#CARDNAME: Alchemax Enforcers
+
+#SUBNAME: Cyber-Nostra
+#COPIES: 3
+{CYBER-MOD TECH}: Cyber-Nostra gets +1 Attack for each [Tech] card in the Escape Pile.
+#AMBUSH: Put the top card of the Hero Deck into the Escape Pile.
+#FIGHT: {CYBER-MOD TECH}: KO one of your Heroes.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Jigsaw 2099
+#COPIES: 1
+Jigsaw 2099 gets +1 Attack for each Bystander he has.
+#AMBUSH: Put the top card of the Hero Deck into the Escape Pile.
+#FIGHT: KO one of your Heroes. {CYBER-MOD STRENGTH}: If Jigsaw 2099 had no Bystanders, he reenters the city and captures a Bystander for each [Strength] card in the Escape Pile.
+#ESCAPE: {CYBER-MOD STRENGTH}: Each player gains a Wound.
+#ATTACK: 6+
+#VP: 5
+
+#SUBNAME: Venture
+#COPIES: 2
+#AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Venture captures a Bystander. {CYBER-MOD RANGED}: Venture also captures a non-grey Hero from your discard pile.
+#FIGHT: Either KO that captured Hero or choose a player to gain it.
+#ATTACK: 5
+#VP: 3
+
+#SUBNAME: Whackoid
+#COPIES: 2
+{CYBER-MOD INSTINCT}: Whackoid gets +1 Attack.
+{CYBER-MOD COVERTCOVERTCOVERT}: Whackoid gets +3 Attack.
+#AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Whackoid captures all Bystanders from other Villains in the city. If he captures any Bystanders this way, each player gains a Wound.
+#ATTACK: 4+
+#VP: 3
+
+#CARDNAME: False Aesir of Alchemax
+
+#SUBNAME: Heimdall 2099
+#COPIES: 2
+<b>Uru-Enchanted Weapon</b>
+#AMBUSH: Heimdall 2099 captures a Bystander.
+<b>Fight or Fail</b>: If the <i>(Rainbow)</i> Bridge is empty and Heimdall's <b>Uru-Enchanted Weapon</b> revealed a Villain, that Villain enters the Bridge. When a Villain enters this way, shuffle a card from the Bystander Deck into the Villain Deck.
+#ATTACK: 3+
+#VP: 2
+
+#SUBNAME: Hela 2099
+#COPIES: 2
+<b>2 Uru-Enchanted Weapons</b>
+<b>Fight or Fail</b>: A Henchman Villain from any player's Victory Pile enters the city.
+#ESCAPE: Each player KOs two Henchmen from their Victory Pile or gains a Wound.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Loki 2099
+#COPIES: 2
+<b>2 Uru-Enchanted Weapons</b>
+#AMBUSH: Shuffle a Master Strike from the KO pile back into the Villain Deck.
+<b>Fight or Fail</b>: If his <b>Uru-Enchanted Weapon</b> revealed any Master Strikes, play one of them.
+#ESCAPE: Search the Villain Deck for a Master Strike, shuffle the Villain Deck, and play that Master Strike.
+#ATTACK: 3+
+#VP: 3
+
+#SUBNAME: Thor 2099
+#COPIES: 2
+<b>Uru-Enchanted Weapon</b>
+#AMBUSH: Each player discards a card that costs 5 or more or gains a Wound.
+<b>Fight or Fail</b>: Put a card that costs 5 or more from your discard pile on the bottom of your deck.
+#ESCAPE: Repeat the Ambush effect.
+#ATTACK: 5+
+#VP: 4
+
+

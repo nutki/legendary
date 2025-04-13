@@ -1,0 +1,150 @@
+
+#CARDNAME: Alchemax Executives
+
+#TACTIC: Avatarr, CEO of Alchemax
+#LEADS: Alchemax Enforcers
+<b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>.
+#STRIKE: Put the two highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED}: Each player gains a Wound. <b>Adapt</b>.
+#FIGHT: Each other player puts a non-grey Hero from their hand or discard pile into the Escape Pile. <b>Adapt</b>.
+#ATTACK: 10
+#VP: 6
+
+#TACTIC: Epic Avatarr
+#LEADS: Alchemax Enforcers
+<b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>.
+#STRIKE: Put the three highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED}: Each player gains a Wound to the top of their deck. <b>Adapt</b>.
+#FIGHT: Each other player puts a non-grey Hero from their hand or discard pile into the Escape Pile. <b>Adapt</b>.
+#ATTACK: 13
+#VP: 6
+
+#TACTIC: Fearmaster, VP of the Public Eye
+Fearmaster gets +1 Attack for each grey Hero you have.
+#STRIKE: Put the two lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT}: Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws a card for each card they discarded this way. <b>Adapt</b>.
+#FIGHT: Each other player discards 2 grey Heroes. <b>Adapt</b>.
+#ATTACK: 7+
+#VP: 6
+
+#TACTIC: Epic Fearmaster
+Fearmaster gets +2 Attack for each grey Hero you have.
+#STRIKE: Put the three lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT}: Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws two cards. <b>Adapt</b>.
+#FIGHT: Each other player discards 3 grey Heroes. <b>Adapt</b>.
+#ATTACK: 8+
+#VP: 6
+
+#TACTIC: John Herod, Executive VP
+{CYBER-MOD COVERTCOVERT}: John Herod gets +5 Attack.
+#STRIKE: Put the two rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT}: You may pay 5 Attack this turn to "expose Fake Captain America." If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
+#FIGHT: KO two of your Heroes. <b>Adapt</b>.
+#ATTACK: 8+
+#VP: 6
+
+#TACTIC: Epic John Herod
+{CYBER-MOD COVERTCOVERT}: John Herod gets +7 Attack.
+#STRIKE: Put the three rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT}: You may pay 7 Attack this turn to "expose Fake Captain America." If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
+#FIGHT: KO one of your Heroes. <b>Adapt</b>.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Tiger Wylde, General of Alchemax Elite
+{CYBER-MOD STRENGTH}: Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
+#STRIKE: Put the two leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH}: Each player reveals a [Tech] card or discards a card. <b>Adapt</b>.
+#FIGHT: Send a Hero from the Escape Pile {UNDERCOVER}. Then <b>Adapt</b>.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Epic Tiger Wylde
+{CYBER-MOD STRENGTH}: Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
+#STRIKE: Put the three leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH}: Each player discards a card at random. <b>Adapt</b>.
+#FIGHT: Send a Hero from the Escape Pile {UNDERCOVER}. Then <b>Adapt</b>.
+#ATTACK: 11+
+#VP: 6
+
+#CARDNAME: Sinister Six 2099
+
+#TACTIC: Electro 2099
+#LEADS: Any "Alchemax" or "Sinister" Villain Group
+<b>Setup</b>: <b>Adapt</b>.
+#STRIKE: Each player discards three cards then draws a card. <b>Adapt</b>.
+#FIGHT: You may discard any number of cards, then draw that many cards. <b>Adapt</b>.
+#ATTACK: 9
+#VP: 6
+
+#TACTIC: Epic Electro 2099
+#LEADS: Any "Alchemax" or "Sinister" Villain Group
+<b>Setup</b>: <b>Adapt</b>.
+#STRIKE: Each player discards four cards then draws a card. <b>Adapt</b>.
+#FIGHT: You may discard a card. If you do, draw a card. <b>Adapt</b>.
+#ATTACK: 12
+#VP: 6
+
+#TACTIC: Doctor Octopus 2099
+Doctor Octopus 2099 gets +4 Attack unless you played at least 8 cards or a Hero that costs 8 this turn.
+#STRIKE: Each player discards cards whose total cost is at least 8 <i>(for that player)</i> or gains a Wound. <b>Adapt</b>.
+#FIGHT: You may gain a Hero from the HQ whose cost is at least 8. <b>Adapt</b>.
+#ATTACK: 8+
+#VP: 6
+
+#TACTIC: Epic Doctor Octopus 2099
+Doctor Octopus 2099 gets +8 Attack unless you played at least 8 cards or a Hero that costs 8 this turn.
+#STRIKE: Each player discards cards whose total cost is exactly 8 <i>(for that player)</i> or gains a Wound. <b>Adapt</b>.
+#FIGHT: You get +4 Recruit, usable only to recruit a Hero that costs at least 8. <b>Adapt</b>.
+#ATTACK: 8+
+#VP: 6
+
+#TACTIC: Goblin 2099
+Goblin 2099 gets -1 Attack for each Bystander in your Victory Pile.
+#STRIKE: Each player puts a Bystander from their Victory Pile into the Escape Pile or gains a Wound. <b>Adapt</b>.
+#FIGHT: Each Villain in the city captures a Bystander. <b>Adapt</b>.
+#ATTACK: 11*
+#VP: 6
+
+#TACTIC: Epic Goblin 2099
+Goblin 2099 gets -1 Attack for each Bystander in your Victory Pile.
+#STRIKE: Each player puts two Bystanders from their Victory Pile into the Escape Pile or gains a Wound. <b>Adapt</b>.
+#FIGHT: Each Villain in the city captures a Bystander. <b>Adapt</b>.
+#ATTACK: 14*
+#VP: 6
+
+#TACTIC: Sandwoman 2099
+Sandwoman 2099 gets +2 Attack for each Villain in the city.
+#STRIKE: You may either recruit or attack this turn, but not both. <b>Adapt</b>.
+#FIGHT: The next player may either recruit or attack in their next turn, but not both. <b>Adapt</b>.
+#ATTACK: 6+
+#VP: 6
+
+#TACTIC: Epic Sandwoman 2099
+Sandwoman 2099 gets +3 Attack for each Villain in the city.
+#STRIKE: You may either recruit or attack this turn, but not both. <b>Adapt</b>.
+#FIGHT: The next player may either recruit or attack in their next turn, but not both. <b>Adapt</b>.
+#ATTACK: 7+
+#VP: 6
+
+#TACTIC: Venom 2099
+Venom 2099 gets -1 Attack for each card you have that costs 2.
+#STRIKE: Each player KOs a card that costs 2 from their hand or discard pile or gains a Wound. <b>Adapt</b>.
+#FIGHT: You may gain a Hero that costs 2 from the HQ or KO pile. <b>Adapt</b>.
+#ATTACK: 10*
+#VP: 6
+
+#TACTIC: Epic Venom 2099
+Venom 2099 gets -1 Attack for each card you have that costs 2.
+#STRIKE: Each player KOs a card that costs 2 from their hand or gains a Wound. <b>Adapt</b>.
+#FIGHT: You may gain a Hero that costs 2 from the HQ or KO pile. <b>Adapt</b>.
+#ATTACK: 13*
+#VP: 6
+
+#TACTIC: Vulture 2099
+Vulture 2099 gets + Attack equal to the highest VP value of any Villain in the Escape Pile, Rooftops, or Bridge.
+#STRIKE: If there are any Villains on the Rooftops or Bridge, one of them escapes and each player gains a Wound. <b>Adapt</b>.
+#FIGHT: You may move a Villain to another city space. If another Villain is already there, swap them. <b>Adapt</b>.
+#ATTACK: 7+
+#VP: 6
+
+#TACTIC: Epic Vulture 2099
+Vulture 2099 gets + Attack equal to the highest two VP values among Villains in the Escape Pile, Rooftops, or Bridge.
+#STRIKE: If there are any Villains on the Rooftops or Bridge, one of them escapes and each player gains a Wound. <b>Adapt</b>.
+#FIGHT: You may move a Villain to another city space. If another Villain is already there, swap them. <b>Adapt</b>.
+#ATTACK: 9+
+#VP: 6
+
+

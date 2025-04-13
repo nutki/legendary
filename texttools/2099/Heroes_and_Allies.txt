@@ -1,0 +1,183 @@
+
+#CARDNAME: Doctor Doom 2099
+#TEAM: (Unaffiliated)
+
+#SUBNAME: Doomblast
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{CYBER-MOD RANGED}: You get +1 Attack.
+{CYBER-MOD RANGEDRANGEDRANGED}: Instead you +3 Attack.
+#COST: 3
+#FLAVOR: The key ingredients are cutting edge cyber-tech, ancient sorcery, arrogance, and contempt.
+
+#SUBNAME: Subvert This New Future
+#COPIES: 5
+#CLASS: [Ranged]
+#RECRUIT: 2+
+You may send this and a card from your hand or discard pile {UNDERCOVER}. If you do, you get +1 Recruit.
+#COST: 3
+#FLAVOR: "In a world full of desperate need, what people need most is to be ruled."
+
+#SUBNAME: Flesh-Grafted Doombots
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 3
+{POWER Tech} You may look at the top three cards of your deck. If you do, send one of them {UNDERCOVER} and put the rest back in any order.
+#COST: 6
+
+#SUBNAME: Tear Through Time Itself
+#COPIES: 1
+#CLASS: [Ranged]
+#ATTACK: 6
+You may send a card from your hand or discard pile {UNDERCOVER}.
+{FATED FUTURE}
+{CYBER-MOD RANGEDRANGED}: If you haven't taken any extra turns this game, you may take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+#COST: 8
+
+#CARDNAME: Ghost Rider 2099
+#TEAM: Marvel Knights
+
+#SUBNAME: Cyber-Specter
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 2+
+{CYBER-MOD TECH}: You get +1 Recruit.
+{CYBER-MOD TECHTECH}: Draw a card.
+#COST: 3
+#FLAVOR: Fatally poisoned by the D/Monix Mega-Corp, Kenshiro Cochrane uploaded his dying brain. Now he stalks the wicked through a terrifying cybernetic body.
+
+#SUBNAME: Hell Ride
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+You may send this and a card from the HQ {UNDERCOVER}. If you do, you get +2 Attack.
+{CYBER-MOD TECHTECHTECH}: You get +2 Attack.
+#COST: 4
+#FLAVOR: He's open to hitchhikers.
+
+#SUBNAME: Death Beyond Death
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 3+
+{TEAMPOWER Marvel Knights} You may KO a Henchman from your Victory Pile. If you do, you get +2 Attack and you may do that Henchman's Fight effect.
+#COST: 5
+
+#SUBNAME: Infernal Chainsaw
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 4+
+You may send a card from the HQ {UNDERCOVER}.
+{CYBER-MOD TECH}: {FATED FUTURE} and you get +1 Attack for each [Tech] card in your Victory Pile.
+#COST: 7
+
+#CARDNAME: Hulk 2099
+#TEAM: Marvel Knights
+
+#SUBNAME: Rage Incarnate
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+<b>Cyber-Mod Wound</b>: You get +1 Attack.
+<b>Cyber-Mod 4 Wounds</b>: Instead you get +2 Attack.
+#COST: 3
+#FLAVOR: Cyber-tech gamma bombs made John Eisenhart a monster. His pain made him strong. His rage made him unstoppable.
+
+#SUBNAME: Push Pain Under the Surface
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 2
+You may send a Wound from your hand or discard pile {UNDERCOVER}.
+{POWER Strength} You may send a Hero from your hand or discard pile {UNDERCOVER} instead.
+#COST: 4
+
+#SUBNAME: Massive Gamma Detonation
+#COPIES: 3
+#CLASS: [Tech]
+#ATTACK: 5
+To play this, you must discard two cards or gain a Wound.
+{POWER Tech} {FATED FUTURE}
+#COST: 6
+#FLAVOR: Sometimes fate bursts through a single explosive moment.
+
+#SUBNAME: Cataclysmic Frenzy
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+For each player, either send a Wound from that player's discard pile {UNDERCOVER} into your own Victory Pile, or that player gains a Wound.
+<b>Cyber-Mod Wound</b>: You get +1 Attack for each Wound in your Victory Pile.
+#COST: 8
+
+#CARDNAME: Ravage 2099
+#TEAM: Marvel Knights
+
+#SUBNAME: Down in the Dregs
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 2
+{POWER Instinct} Draw a card from the bottom of your deck.
+#COST: 3
+#FLAVOR: As an ECO Central executive, Paul-Philip Ravage believed in the Mega-Corps — right up until they mutated him with biohazards and framed him for murder.
+
+#SUBNAME: Toxic Mutations
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+{POWER Strength} You get +2 Attack and {FATED FUTURE}.
+#COST: 5
+#FLAVOR: The millions killed by Mega-Corp pollutants can't fight back. Now Ravage is out to get revenge for every single one of them.
+
+#SUBNAME: Detect Vibrations
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 4
+Reveal the top two cards of the Villain Deck and put them back in any order. {FATED FUTURE}
+#COST: 6
+#FLAVOR: A dark destiny approaches... but for whom?
+
+#SUBNAME: Overhorns and Underhorns
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 3+
+Reveal the top card of your deck. You get + Attack equal to that card's cost. Discard it or put it back.
+{TEAMPOWER Marvel Knights} Then do the same thing with the bottom card of your deck.
+#COST: 8
+
+#CARDNAME: Spider-Man 2099
+#TEAM: Spider Friends
+
+#SUBNAME: Retractable Talons
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 1
+You may send this {UNDERCOVER}.
+{CYBER-MOD COVERT}: Draw a card.
+#COST: 2
+#FLAVOR: As a geneticist working for Alchemax, Miguel O'Hara oversaw many strange DNA experiments. He never imagined he would become one of them.
+
+#SUBNAME: Venomous Fangs
+#COPIES: 5
+#CLASS: [Covert]
+#ATTACK: 2
+{CYBER-MOD COVERTCOVERT}: Draw a card.
+#COST: 3
+#FLAVOR: Bad Mega-Corp managers spread rumors behind your back. Worse Mega-Corp managers splice your DNA with a spider.
+
+#SUBNAME: Spider-Silk Webbing
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 3
+The next Hero you recruit this turn goes on top of your deck.
+{POWER Strength} {FATED FUTURE}
+#COST: 5
+#FLAVOR: 2099 may not be a Friendly Neighborhood, but it still needs a Spider-Man.
+
+#SUBNAME: Spider-Sense Telepathy
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 5
+Reveal the top three cards of the Hero Deck. You may send one of them {UNDERCOVER}. Put the rest back in any order.
+{TEAMPOWER Spider Friends} You may play a copy of the card you sent {UNDERCOVER} this way.
+#COST: 7
+
+
