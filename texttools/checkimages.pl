@@ -7,8 +7,9 @@
   MASTERMINDS => "Masterminds_and_Commanders.txt",
   SCHEMES => "Schemes_and_Plots.txt",
   SIDEKICKS => "Sidekicks_and_New_Recruits.txt",
+  WOUNDS => "Wounds_and_Bindings.txt",
 );
-@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS SIDEKICKS);
+@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS SIDEKICKS WOUNDS);
 my ($exp) = @ARGV;
 for $type (@inputkeys) {
   my $file = $input{$type};
@@ -77,6 +78,9 @@ for $type (@inputkeys) {
     } elsif ($type eq "SIDEKICKS") {
       parse();
       checkimage("sidekicks", $_{CARDNAME});
+    } elsif ($type eq "WOUNDS") {
+      parse();
+      checkimage("wounds", $_{CARDNAME});
     }
   }
 }
