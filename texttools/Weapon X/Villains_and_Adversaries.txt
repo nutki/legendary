@@ -1,0 +1,91 @@
+
+#CARDNAME: Berserkers
+
+<i>Cyber</i> (? copies)
+{BERSERK}, {BERSERK}
+#FIGHT: KO one your Heroes. If any of the cards you Berserked were [Instinct] or [Tech], shuffle Cyber into the Villain Deck, then play another card from the Villain Deck.
+#FAIL: Each player discards a [Instinct] or [Tech] Hero or gains a Wound.
+#ESCAPE: Do the Fail effect.
+#ATTACK: 5+
+#VP: 5
+
+<i>Feral</i> (? copies)
+{BERSERK}, {BERSERK}
+#FIGHT: Choose a player to gain this as a Hero.
+#FAIL: KO a non-grey Hero from your discard pile.
+#ESCAPE: Each player discards a non-grey Hero.
+#ATTACK: 3+
+#GAINABLE
+#TEAM: X-Force
+#CLASS: [Instinct]
+{POWER Instinct} {BERSERK}, {BERSERK}
+#ATTACKG: 2+
+
+<i>Thornn</i> (? copies)
+{BERSERK}
+#AMBUSH: Choose a card named "Feral" from any player's discard pile to enter the city as a Villain.
+#FIGHT: Draw the card you Berserked.
+#FAIL: When you draw a new hand at the end of this turn, discard a card.
+#ATTACK: 3+
+#VP: 2
+
+<i>Wild Child</i> (? copies)
+{BERSERK}, {BERSERK}, {BERSERK}
+#FIGHT: KO one of the cards you Berserked this way that costs 0.
+#FAIL: KO a card discarded by Wild Child's Berserking that costs 1 or more. <i>(You can't KO cards you shuffled into your deck during the Berserking.)</i>
+#ATTACK: 3+
+#VP: 4
+
+#CARDNAME: Weapon Plus
+
+<i>Daken</i> (? copies)
+{WEAPON X SEQUENCE}
+{BERSERK}
+#FIGHT: KO one of your Heroes.
+#FAIL: You gain a Wound.
+#ATTACK: 3+
+#VP: 4
+
+<i>Huntsman (Weapon XII)</i> (? copies)
+{WEAPON X SEQUENCE}
+#AMBUSH: Reveal the top 3 cards of the Hero Deck. Huntsman captures each that costs 4 or less. Put the rest on the bottom of the Hero Deck.
+#FIGHT: If Huntsman has any captured Heroes, choose a player to gain one of them and return Huntsman to his city space with the rest of them <i>(Ignore his Ambush.)</i>
+#ATTACK: 2+
+#VP: 2
+
+<i>Nuke (Weapon VII)</i> (? copies)
+{WEAPON X SEQUENCE}
+#FIGHT: Reveal the top card of the Hero Deck as "Nuke's Adrenaline Pill":
+{POWER Covert} "Rage" — Each other player gains a Wound.
+{POWER Instinct} "Balance" — Draw a card.
+{POWER Ranged} "Relax" — You get +2 Recruit.
+#ESCAPE: Each player gains a Wound.
+#ATTACK: 2+
+#VP: 2
+
+<i>Skinless Man (Weapon III)</i> (? copies)
+{WEAPON X SEQUENCE}
+#AMBUSH: Skinless Man captures a Bystander of your choice from your Victory Pile. If you don't have one, gain a Wound and he captures one from the Bystander Deck.
+#ATTACK: 3+
+#VP: 3
+
+<i>Typhoid Mary (Weapon IX)</i> (? copies)
+{WEAPON X SEQUENCE}
+#FIGHT: Reveal the top card of the Hero Deck as her "Personality":
+{POWER Strength} "Typhoid" — Put a card from your discard pile on top of the deck of the player to your left.
+{POWER Instinct} "Mary" — Rescue a Bystander.
+{POWER Covert} "Bloody Mary" — Each other player gains a Wound.
+{POWER Tech} "Mutant Zero" — KO one of your cards that costs 0.
+{POWER Ranged} "Walker" — Put a card you played this turn on top of your deck.
+#ATTACK: 3+
+#VP: 3
+
+<i>Ultimaton (Weapon XV)</i> (? copies)
+<b>Doubled Weapon X Sequence</b>
+#AMBUSH: Each player discards a non-grey Hero.
+#FIGHT: Each player KOs one of their grey Heroes.
+#ESCAPE: Each player KOs one of their non-grey Heroes.
+#ATTACK: 4+
+#VP: 6
+
+

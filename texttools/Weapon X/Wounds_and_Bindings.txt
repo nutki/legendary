@@ -1,0 +1,46 @@
+
+#CARDNAME: Blazing Vengeance
+#ATTACK: 2
+#HEAL: When you defeat a Mastermind Tactic this turn, you may KO this Wound.
+
+#CARDNAME: Broken Bones
+#ATTACK: 3
+To play this, you must put another card from your hand on top of your deck.
+#HEAL: When you draw a card this turn <i>(including drawing this card but not including drawing a new hand at the end of your turn)</i>, you may KO this Wound.
+
+#CARDNAME: Concussion
+#ATTACK: 2
+#HEAL: When you play two cards of the same Hero Class this turn, you may KO this Wound.
+
+#CARDNAME: Erratic Powers
+#ATTACK: 3
+To play this, you must discard three cards, then draw a card.
+#HEAL: When you use a Superpower Ability this turn, you may KO this Wound. <i>(e.g. "[Strength]: You get +1 Attack.")</i>
+
+#CARDNAME: Insults and Injuries
+#ATTACK: 2
+#HEAL: When you defeat a Villain worth at least 2 VP this turn, you may KO this Wound.
+
+#CARDNAME: Last Breath
+#ATTACK: 4
+To play this, you must gain a Wound to the top of your deck.
+#HEAL: When you KO another Wound this turn, you may KO this Wound.
+
+#CARDNAME: Massive Blood Loss
+#ATTACK: 3
+To play this, you must discard a card.
+#HEAL: When you discard a card this turn <i>(not including discarding to play this card or discarding at the end of your turn)</i> you may KO this Wound.
+
+#CARDNAME: Shell Shock
+#RECRUIT: 1
+#ATTACK: 1
+#HEAL: When you recruit two Heroes this turn, you may KO this Wound.
+
+#CARDNAME: Sudden Terror
+#RECRUIT: 2
+#HEAL: When you recruit a Hero that costs 7 or more this turn, you may KO this Wound.
+
+#CARDNAME: Wild Rage
+#ATTACK: 2
+#HEAL: When you defeat a Henchman this turn, you may KO this Wound.
+

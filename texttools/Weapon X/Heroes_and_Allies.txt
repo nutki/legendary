@@ -1,0 +1,154 @@
+
+#CARDNAME: Fantomex
+#TEAM: X-Force
+
+#SUBNAME: Sentient Bullets
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 0+
+{WEAPON X SEQUENCE}
+#COST: 1
+#FLAVOR: Sharpshooters often debate which bullets are the most accurate. The answer, of course, is bullets coated with sentient skin.
+
+#SUBNAME: Three Brains
+#COPIES: 5
+#CLASS: [Tech]
+#RECRUIT: 0+
+{WEAPON X SEQUENCE}, getting Recruit instead of Attack.
+If you got at least 3 Recruit this way, draw a card.
+#COST: 2
+#FLAVOR: One brain specializes in analyzing people. Another in killing them. But E.V.A. is the only brain that can detach from his body.
+
+#SUBNAME: Misdirection
+#COPIES: 3
+#CLASS: [Covert]
+#ATTACK: 0+
+{WEAPON X SEQUENCE}
+When you draw a new hand this turn, draw an extra card, then put a card from your hand on top of your deck.
+#COST: 3
+
+#SUBNAME: Weapon XIII
+#COPIES: 1
+#CLASS: [Tech]
+#ATTACK: 1+
+{WEAPON X SEQUENCE}
+{POWER Tech} You may KO one of your cards that has the same cost as any of your other cards.
+#COST: 4
+
+#CARDNAME: Marrow
+#TEAM: X-Force
+
+#SUBNAME: Bone Shards
+#COPIES: 5
+#CLASS: [Ranged]
+#ATTACK: 2+
+{TEAMPOWER X-Force} {BERSERK}
+#COST: 3
+#FLAVOR: Sticks and stones grow from her bones, and both of them can hurt you.
+
+#SUBNAME: Hyper-Adaptive Skeleton
+#COPIES: 5
+#CLASS: [Strength]
+#RECRUIT: 1+
+#ATTACK: 1+
+For all of your Heroes' {BERSERK} abilities this turn, you get the Berserked cards' printed Recruit just like you get their printed Attack.
+{POWER Strength} {BERSERK}
+#COST: 2
+
+#SUBNAME: Osteogenesis
+#COPIES: 3
+#CLASS: [Strength]
+#RECRUIT: 1
+#ATTACK: 2
+Draw two cards. Then put a card from your hand on top of your deck.
+#COST: 6
+#FLAVOR: She's got a bone to pick with racist mutant-hunters.
+
+#SUBNAME: Metabolic Overdrive
+#COPIES: 1
+#CLASS: [Covert]
+#ATTACK: 3+
+{WEAPON X SEQUENCE}
+Reveal the top six cards of your deck. Discard all the ones that cost 0 and put the rest back in any order.
+#COST: 7
+
+#CARDNAME: Weapon H
+#TEAM: Avengers
+
+#SUBNAME: Evolving Abilities
+#COPIES: 5
+#CLASS: [Instinct]
+#RECRUIT: 0+
+#ATTACK: 2+
+You may have this card make all Recruit instead of Attack <i>(including the ability below)</i>.
+{POWER Instinct} You get +1 Attack.
+#COST: 4
+
+#SUBNAME: The Future of Warfare
+#COPIES: 5
+#CLASS: [Strength]
+#ATTACK: 2+
+Look at the top card of your deck.
+Discard it or put it back.
+{POWER Strength} {BERSERK}
+#COST: 3
+#FLAVOR: Step 1: Combine powers of Hulk & Wolverine.
+Step 2: Auction to highest bidder.
+Step 3: Buy health insurance.<i></span></i>
+
+#SUBNAME: Slice and Smash
+#COPIES: 3
+#CLASS: [Strength]
+#ATTACK: 2+
+{BERSERK}
+{POWER Strength} You may KO the card you Berserked.
+#COST: 5
+#FLAVOR: If you didn't enjoy getting punched by Hulk strength, you definitely won't enjoy when they add claws.
+
+#SUBNAME: Ultimate Killing Machine
+#COPIES: 1
+#CLASS: [Strength]
+#ATTACK: 4+
+{WEAPON X SEQUENCE}
+{POWER Strength} Using the Wound Deck, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, putting those discarded Wounds on the bottom of the Wound Deck.
+#COST: 8
+
+#CARDNAME: Weapon X (Wolverine)
+#TEAM: Marvel Knights
+
+#SUBNAME: Infuse Skeleton with Adamantium
+#COPIES: 5
+#CLASS: [Tech]
+#ATTACK: 2+
+To play this, you must put another card from your hand on top of your deck.
+{WEAPON X SEQUENCE}
+#COST: 5
+#FLAVOR: "Now this may sting a bit..."
+
+#SUBNAME: Raging Regeneration
+#COPIES: 5
+#CLASS: [Instinct]
+#ATTACK: 2+
+{BERSERK}
+{POWER Instinct} You may KO a Wound from your hand or discard pile. If you do, {BERSERK} again.
+#COST: 4
+#FLAVOR: They could hurt Logan. They could chain him. But they couldn't break him.
+
+#SUBNAME: Violent Conditioning
+#COPIES: 3
+#CLASS: [Instinct]
+#ATTACK: 2+
+You may gain a Wound. If you do, {BERSERK}, {BERSERK}.
+#COST: 3
+#FLAVOR: The Weapon Plus scientists who tortured Logan would come to regret their choices... but not for very long.
+
+#SUBNAME: Escape the Weapon X Lab
+#COPIES: 1
+#CLASS: [Instinct]
+#ATTACK: 3+
+{WEAPON X SEQUENCE}
+{POWER Instinct} You may reveal cards from the Wound Deck until you reveal an Enraging Wound. Gain that Enraging Wound to your hand. Put the other revealed cards back on the bottom.
+If you gain a Wound this way, {BERSERK}.
+#COST: 6
+
+

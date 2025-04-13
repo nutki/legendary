@@ -1,0 +1,88 @@
+
+#CARDNAME: Omega Red
+Omega Red gets +2 Attack while you have any Wounds and +2 Attack while there are any Wounds in your discard pile.
+When you KO any Wounds for the first time in a turn, put them on the bottom of the Wound Deck and gain a Wound to the bottom of your deck.
+#LEADS: Any Villain Group
+#STRIKE: Each player discards one of their [Covert] Heroes or gains a Wound.
+#ATTACK: 10+
+#VP: 6
+
+#EPICNAME: Omega Red
+Omega Red gets +3 Attack while you have any Wounds and +3 Attack while there are any Wounds in your discard pile.
+Whenever you KO any Wounds, put them on the bottom of the Wound Deck and gain a Wound to the bottom of your deck.
+#LEADS: Any Villain Group
+#STRIKE: Each player KOs one of their [Covert] Heroes or gains a Wound.
+#ATTACK: 12+
+#VP: 6
+
+#TACTIC: Carbonadium Tentacles
+#FIGHT: After you draw a new hand of cards at the end of this turn, each player discards down to three cards or gains a Wound.
+
+#TACTIC: The Carbonadium Synthesizer
+#FIGHT: You may return a Wound from your hand or any player's discard pile to the bottom of the Wound Deck. If you do, draw a card.
+
+#TACTIC: Death Pheremones
+#FIGHT: Each other player discards a [Tech] Hero or gains a Wound.
+#FLAVOR: Just as Wolverine has a Healing Factor, Omega Red brings a Death Factor.
+
+#TACTIC: Drain Life Force
+#FIGHT: If this is not the final Tactic, and if you have at least two Wounds in your hand and/or discard pile, return all of them to the bottom of the Wound Deck and shuffle this Tactic back into Omega Red's other Tactics.
+
+#CARDNAME: Romulus
+{WEAPON X SEQUENCE}
+#LEADS: Weapon Plus
+#STRIKE: Each player reveals that they have a greater {WEAPON X SEQUENCE} than Romulus or gains a Wound. Then if this is the fifth Strike this game, this Strike becomes a Scheme Twist that takes effect immediately. <i>(Once per game)</i>
+#ATTACK: 9+
+#VP: 6
+
+#EPICNAME: Romulus
+<b>Doubled Weapon X Sequence</b>
+#LEADS: Weapon Plus
+#STRIKE: Each player reveals that they have a greater {WEAPON X SEQUENCE} than Romulus <i>(don't double his Sequence for this)</i> or gains a Wound to the top of their deck. Then if this is the third Strike this game, this Strike becomes a Scheme Twist that takes effect immediately. <i>(Once per game)</i>
+#ATTACK: 10+
+#VP: 6
+
+#TACTIC: Anoint an Heir to Take My Place
+#FIGHT: If this is not the last Tactic, a Hero from the HQ that costs 6 or more Ascends to become an additional Mastermind with Attack equal to its printed cost and only these abilities: "<b>Fight</b>: Choose a player to gain this as a Hero.
+#STRIKE: Each player discards a card of this Hero Class or gains a Wound."
+
+#TACTIC: Bite of the Muramasa Blade
+#FIGHT: Each other player reveals three cards with different, adjacent costs <i>(e.g. 2,3,4)</i> or gains a Wound.
+
+#TACTIC: Master of Schemes
+#FIGHT: If this is not the last Tactic, reveal the top 2 cards of the Villain Deck. Play a Master Strike or Scheme Twist from among them, putting the rest back in any order.
+
+#TACTIC: Take Over the Weapon X Program
+#FIGHT: You get + Recruit equal to the Attack Romulus is gaining from {WEAPON X SEQUENCE}.
+#FLAVOR: Romulus pushed the program to new depths of ruthless cruelty.
+
+#CARDNAME: Sabretooth
+Sabretooth <b>Berserks</b> once for each Savagery stacked here.
+#LEADS: Berserkers
+#STRIKE: Stack this Strike next to Sabretooth as a "Savagery." Each player KOs one of their Heroes that costs more than the number of Savageries. Any player that cannot do so gains a Wound instead.
+<b>Fail</b>: KO a non-grey Hero discarded by Sabretooth's Berserking.
+#ATTACK: 8+
+#VP: 6
+
+#EPICNAME: Sabretooth
+Sabretooth <b>Berserks</b> once for each Savagery stacked here, plus two more times.
+#LEADS: Berserkers
+#STRIKE: Stack this Strike next to Sabretooth as a "Savagery." Each player KOs one of their Heroes that costs at least 2 more than the number of Savageries. Any player that cannot do so gains a Wound instead.
+<b>Fail</b>: KO a non-grey Hero discarded by Sabretooth's Berserking.
+#ATTACK: 9+
+#VP: 6
+
+#TACTIC: Adamantium-Laced Claws
+#FIGHT: Each other player reveals a [Instinct] Hero or gains a Wound.
+#FLAVOR: With similar powers and similar savagery, Logan and Victor Creed have hunted each other across decades and continents.
+
+#TACTIC: Lethal Fangs
+#FIGHT: KO a grey Hero discarded by Sabretooth's Berserking. <i>(You can't KO cards you shuffled into your deck during the Berserking.)</i>
+
+#TACTIC: Salivating Prowl
+#FIGHT: Reveal the top three cards of your deck. Draw one of them, discard one, and put the other back on top of your deck.
+
+#TACTIC: Sudden Savagery
+#FIGHT: Stack a card from the Wound Deck next to Sabretooth as a "Savagery."
+#FLAVOR: Sabretooth's languid words toy with his prey like a sadistic cat, interrupted by an explosion of violence.
+

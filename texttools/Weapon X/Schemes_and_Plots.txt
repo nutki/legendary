@@ -1,0 +1,20 @@
+
+#CARDNAME: Condition Logan into Weapon X
+#SETUP: 8 Twists. Include exactly 1 Hero with Wolverine or Logan in its name.
+<b>Twist 1,3,5</b>: <i>"Induce Violent Rage"</i>: If you don't defeat an Enemy worth 2 VP or more this turn, then after you draw a new hand at the end of this turn, each player discards down to four cards.
+<b>Twist 2,4,6</b>: <i>"Test the Subject's Healing Factor"</i>: Each player discards a [Strength] or [Instinct] Hero or gains a Wound.
+#TWISTNR: NR[7] <i>"Unleash Weapon X"</i>: For each Wolverine and/or Logan Hero in the HQ, each player gains a Wound.
+#TWISTNR: NR[8] Evil Wins!
+
+#CARDNAME: Go After Heroes' Loved Ones
+#SETUP: Add an extra Hero. Don't use multiple Heroes that have the same Hero Name. 1 player: 8 Twists. 2-4 players: 10 Twists. 5 players: 11 Twists. Set aside a lowest-cost card for each Hero Name, face up, with 2 face up Bystanders under it as "Loved Ones."
+#TWISTNR: NR[1-6] KO the Hero in the rightmost HQ space. KO one of that Hero Name's Loved Ones. Each player discards a card of that Hero Name. If you discard a card this way during your turn, you {BERSERK}. If that Hero Name has no more Loved Ones, that Hero is "Lost in Grief": KO all of that Hero Name from the HQ and Hero Deck, then shuffle it.
+#TWISTNR: NR[7-11] Do that Twist effect twice.
+#EVILWINS: When the Hero Deck runs out.
+
+#CARDNAME: Wipe Heroes' Memories
+#SETUP:  Twists equal to the number of players plus 4.
+#TWIST: You "forget your past": If you have any face up Villains or Tactics in your Victory Pile, put one of them on the bottom of your Victory Pile face down, then shuffle this Twist back into the Villain Deck, then play a card from the Villain Deck. If you didn't have any face up Villains or Tactics, then instead stack this Twist next to the Scheme as a "Total Memory Wipe."
+#RULE: Face down cards in your Victory Pile count as not being there at all until you count their VP at game end.
+#EVILWINS: When there are 4 Total Memory Wipes.
+

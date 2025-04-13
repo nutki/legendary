@@ -145,6 +145,7 @@ while (<A>) {
     s!<b>Explore</b>[:.]?!{EXPLORE}!g;
     s!<b>Cyber-Mod</b>:? ((\[($class)\])+):?!'{CYBER-MOD '.(join" ",split/\]\[/,uc$1)=~s/[^a-z ]//gir.'}'!ge;
     s!<b>Fated Future</b>!{FATED FUTURE}!g;
+    s!<b>Weapon X Sequence</b>!{WEAPON X SEQUENCE}!g;
     my @lines = split m!<br />\n?|<p>\n?|</p>\n?|(?<=</h\d>)|</div>!;
     for (@lines) {
       s!^\s+!!;
@@ -204,7 +205,7 @@ while (<A>) {
       s!^---$!#GAINABLE!mg;
       s!^<i>Teleport</i>$!{TELEPORT}!m; #FIX
       s!^Burrow$!{BURROW}!;
-      s!^<b>(VP|Attack|Fight|Escape|Ambush):?</b>:? ?(.*)!"#" . uc($1) . ": $2"!gme;
+      s!^<b>(VP|Attack|Fight|Escape|Ambush|Fail):?</b>:? ?(.*)!"#" . uc($1) . ": $2"!gme;
       s:^<b>Trap!</b>:#TRAP:gm;
       s!^<b>By (the )?End of (the )?Turn</b>:!#TRAPCOND:!gm;
       s!^<b>Or Suffer</b>:!#TRAPEFFECT:!gm;
