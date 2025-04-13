@@ -1343,11 +1343,11 @@ function isEnragingWound(c: Card) {
   return isWound(c);// TODO && c.enragingWound;
 }
 // based on Uru Enchanted Weapons
-const enemyBerserkTrigger: (amount: number) => Trigger = amount => ({
+const enemyBerserkTrigger: (amount: number | ((c: Card) => number)) => Trigger = amount => ({
   event: 'FIGHT',
   match: (ev, source) => ev.what === source,
   before: ev => {
-    const n = amount;
+    const n = typeof amount === "function" ? amount(ev.parent.what) : amount;
     let sum = 0;
     let cards: Card[] = [];
     addTurnMod('defense', c => c === ev.parent.what, () => sum);

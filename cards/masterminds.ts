@@ -4026,3 +4026,125 @@ addTemplates("MASTERMINDS", "2099", [
   }),
 ]),
 ]);
+addTemplates("MASTERMINDS", "Weapon X", [
+// Omega Red gets +2 Attack while you have any Wounds and +2 Attack while there are any Wounds in your discard pile.
+// Omega Red gets +3 Attack while you have any Wounds and +3 Attack while there are any Wounds in your discard pile.
+// When you KO any Wounds for the first time in a turn, put them on the bottom of the Wound Deck and gain a Wound to the bottom of your deck.
+// Whenever you KO any Wounds, put them on the bottom of the Wound Deck and gain a Wound to the bottom of your deck.
+...makeEpicMastermindCard("Omega Red", [ 10, 12 ], 6, "Any Villain Group", ev => {
+// Each player discards one of their [Covert] Heroes or gains a Wound.
+// Each player KOs one of their [Covert] Heroes or gains a Wound.
+  selectCardOptEv(ev, "Choose a Hero to discard", yourHeroes().limit(Color.COVERT), c => ev.source.epic ? KOEv(ev, c) : discardEv(ev, c), () => gainWoundEv(ev, playerState));
+}, [
+  [ "Carbonadium Tentacles", ev => {
+  // After you draw a new hand of cards at the end of this turn, each player discards down to three cards or gains a Wound.
+    addTurnTrigger('CLEANUP', () => true, () => {
+      eachPlayer(p => chooseOptionEv(ev, "Choose one", [{l:"Gain a Wound", v: () => gainWoundEv(ev, p)}, {l:"Discard down to three cards", v: () => pickDiscardEv(ev, -3, p)}], v => v(), p));
+    });
+  } ],
+  [ "The Carbonadium Synthesizer", ev => {
+  // You may return a Wound from your hand or any player's discard pile to the bottom of the Wound Deck. If you do, draw a card.
+    selectCardOptEv(ev, "Choose a Wound to return", gameState.players.flatMap(p => handOrDiscard(p)), c => {
+      returnToStackEv(ev, gameState.wounds, c);
+      drawEv(ev);
+    });
+  } ],
+// FLAVOR: Just as Wolverine has a Healing Factor, Omega Red brings a Death Factor.
+  [ "Death Pheremones", ev => {
+  // Each other player discards a [Tech] Hero or gains a Wound.
+    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Drain Life Force", ev => {
+  // If this is not the final Tactic, and if you have at least two Wounds in your hand and/or discard pile, return all of them to the bottom of
+  // the Wound Deck and shuffle this Tactic back into Omega Red's other Tactics.
+    if (!finalTactic(ev.source) && handOrDiscard().count(isWound) >= 2) {
+      handOrDiscard().limit(isWound).each(c => returnToStackEv(ev, gameState.wounds, c));
+      shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS"));
+    }
+  } ],
+], {
+  trigger: {
+    event: 'KO',
+    match: ev => isWound(ev.what) && playerState === ev.who,
+    replace: ev => {
+      !ev.source.epic && incPerTurn("KOWOUND", ev.source) ? doReplacing(ev) : (moveCardEv(ev, ev.what, gameState.wounds, true), gainWoundEv(ev));
+    },
+  },
+  varDefense: c => c.printedDefense + (playerState.hand.has(isWound) ? c.epic ? 3 : 2 : 0) + (playerState.discard.has(isWound) ? c.epic ? 3 : 2 : 0),
+}),
+// {WEAPON X SEQUENCE}
+// <b>Doubled Weapon X Sequence</b>
+...makeEpicMastermindCard("Romulus", [ 9, 10 ], 6, "Weapon Plus", ev => {
+// Each player reveals that they have a greater {WEAPON X SEQUENCE} than Romulus or gains a Wound.
+// Each player reveals that they have a greater {WEAPON X SEQUENCE} than Romulus <i>(don't double his Sequence for this)</i> or gains a Wound to the top of their deck.
+  eachPlayer(p => weaponXSequenceAmount(revealable(p)) > weaponXSequenceAmount(hqCards()) || (ev.source.epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p)));
+// Then if this is the fifth Strike this game, this Strike becomes a Scheme Twist that takes effect immediately. <i>(Once per game)</i>
+// Then if this is the third Strike this game, this Strike becomes a Scheme Twist that takes effect immediately. <i>(Once per game)</i>
+  gameState.ko.count(isStrike) === (ev.source.epic ? 5 : 3) && playTwistEv(ev, ev.what);
+}, [
+  [ "Anoint an Heir to Take My Place", ev => {
+  // If this is not the last Tactic, a Hero from the HQ that costs 6 or more Ascends to become an additional Mastermind with Attack equal to its printed cost and only these abilities: "<b>Fight</b>: Choose a player to gain this as a Hero.
+  // STRIKE: Each player discards a card of this Hero Class or gains a Wound."
+    if(!finalTactic(ev.source.mastermind)) selectCardEv(ev, "Choose a Hero to ascend", hqHeroes().limit(c => c.cost >= 6), c => {
+      addStatSet('strike', is(c), c => ev => {
+        eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c.color), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+      });
+      addStatSet('fight', is(c), c => ev => choosePlayerEv(ev, p => gainEv(ev, c, p)));
+      addStatSet('defense', is(c), c => c.printedCost);
+      moveCardEv(ev, c, gameState.mastermind);
+    });
+  } ],
+  [ "Bite of the Muramasa Blade", ev => {
+  // Each other player reveals three cards with different, adjacent costs <i>(e.g. 2,3,4)</i> or gains a Wound.
+    eachOtherPlayerVM(p => weaponXSequenceAmount(revealable(p)) >= 3 || gainWoundEv(ev, p));
+  } ],
+  [ "Master of Schemes", ev => {
+  // If this is not the last Tactic, reveal the top 2 cards of the Villain Deck. Play a Master Strike or Scheme Twist from among them,
+  // putting the rest back in any order.
+    finalTactic(ev.source.mastermind) || revealVillainDeckEv(ev, 2, cards => selectCardEv(ev, "Choose a card to play", cards.limit(c => isStrike(c) || isTwist(c)), c => {
+      villainDrawEv(ev, c);
+    }), false);
+  } ],
+  [ "Take Over the Weapon X Program", ev => {
+  // You get + Recruit equal to the Attack Romulus is gaining from {WEAPON X SEQUENCE}.
+    addRecruitEvent(ev, (ev.source.mastermind.epic ? 2 : 1) * weaponXSequenceAmount(hqHeroes()));
+  } ],
+], epic => ({
+  varDefense: weaponXSequenceVarDefense(epic ? 2 : 1),
+})),
+// Sabretooth <b>Berserks</b> once for each Savagery stacked here.
+// Sabretooth <b>Berserks</b> once for each Savagery stacked here, plus two more times.
+// <b>Fail</b>: KO a non-grey Hero discarded by Sabretooth's Berserking.
+...makeEpicMastermindCard("Sabretooth", [ 8, 9 ], 6, "Berserkers", ev => {
+// Stack this Strike next to Sabretooth as a "Savagery."
+  attachCardEv(ev, ev.what, ev.source, 'SAVAGERIES');
+// Each player KOs one of their Heroes that costs more than the number of Savageries. Any player that cannot do so gains a Wound instead.
+// Each player KOs one of their Heroes that costs at least 2 more than the number of Savageries. Any player that cannot do so gains a Wound instead.
+  cont(ev, () => {
+    const amount = ev.source.attached('SAVAGERIES').size + (ev.source.epic ? 2 : 0);
+    eachPlayer(p => {
+      selectCardOrEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(c => c.cost > amount), c => KOEv(ev, c), () => gainWoundEv(ev, p), p);
+    });
+  });
+}, [
+  [ "Adamantium-Laced Claws", ev => {
+  // Each other player reveals a [Instinct] Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.INSTINCT, () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Lethal Fangs", ev => {
+  // KO a grey Hero discarded by Sabretooth's Berserking. <i>(You can't KO cards you shuffled into your deck during the Berserking.)</i>
+    selectCardEv(ev, "Choose a Hero to KO", enemyBerserkCards(ev).limit(isHero).limit(Color.GRAY), c => KOEv(ev, c));
+  } ],
+  [ "Salivating Prowl", ev => {
+  // Reveal the top three cards of your deck. Draw one of them, discard one, and put the other back on top of your deck.
+    revealThreeEv(ev, 'DRAW', 'DISCARD');
+  } ],
+  [ "Sudden Savagery", ev => {
+  // Stack a card from the Wound Deck next to Sabretooth as a "Savagery."
+    gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source.mastermind, 'SAVAGERIES'));
+  } ],
+], {
+  trigger: enemyBerserkTrigger(c => c.attachedDeck('SAVAGERY').size + (c.epic ? 2 : 0)),
+  fightFail: ev => selectCardAndKOEv(ev, enemyBerserkCards(ev).limit(isNonGrayHero)),
+}),
+]);
