@@ -3701,3 +3701,90 @@ makeSchemeCard("Subjugate Earth with Mega-Corporations", { twists: 8, heroes: [4
   }));
 }),
 ]);
+addTemplates("SCHEMES", "Weapon X", [
+// SETUP: 8 Twists. Include exactly 1 Hero with Wolverine or Logan in its name.
+makeSchemeCard("Condition Logan into Weapon X", { twists: 8, required: { /* TODO hero require exactly one Wolverine/Logan */} }, ev => {
+  if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5) {
+    // <b>Twist 1,3,5</b>: <i>"Induce Violent Rage"</i>: If you don't defeat an Enemy worth 2 VP or more this turn, then after you draw a new hand at
+    // the end of this turn, each player discards down to four cards.
+    addTurnTrigger('CLEANUP', () => true, () => {
+      pastEvents('DEFEAT').has(ev => ev.what.vp >= 2) || eachPlayer(p => pickDiscardEv(ev, -4, p));
+    });
+  } else if (ev.nr === 2 || ev.nr === 4 || ev.nr === 6) {
+    // <b>Twist 2,4,6</b>: <i>"Test the Subject's Healing Factor"</i>: Each player discards a [Strength] or [Instinct] Hero or gains a Wound.
+    eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH | Color.INSTINCT), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
+  } else if (ev.nr === 7) {
+    // Twist 7 <i>"Unleash Weapon X"</i>: For each Wolverine and/or Logan Hero in the HQ, each player gains a Wound.
+    const count = hqHeroes().limit(c => c.heroName.includes("Wolverine") || c.heroName.includes("Logan")).size;
+    count && eachPlayer(p => repeat(count, () => gainWoundEv(ev, p)));
+  } else if (ev.nr === 8) {
+    // Twist 8 Evil Wins!
+  }
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  setSchemeTarget(8);
+}),
+// SETUP: Add an extra Hero. Don't use multiple Heroes that have the same Hero Name. 1 player: 8 Twists. 2-4 players: 10 Twists. 5 players: 11 Twists.
+// Set aside a lowest-cost card for each Hero Name, face up, with 2 face up Bystanders under it as "Loved Ones."
+// EVILWINS: When the Hero Deck runs out.
+makeSchemeCard("Go After Heroes' Loved Ones", { twists: [ 8, 10, 10, 10, 11 ], heroes: [ 4, 6, 6, 6, 7] }, ev => {
+  const effect = () => {
+    hqHeroes().withFirst(c => {
+      KOEv(ev, c);
+      gameState.scheme.attached('HEROES').limit(c => c.heroName === c.heroName).map(c => c.attachedDeck('LOVED_ONES')).withFirst(lovedOnes => {
+        lovedOnes.withFirst(c => KOEv(ev, c));
+        eachPlayer(p => pickDiscardEv(ev, 1, p, c1 => c1.heroName === c.heroName));
+        playerState.hand.has(c1 => c1.heroName === c.heroName) && berserkEv(ev, 1);
+        cont(ev, () => {
+          if (lovedOnes.size === 0) {
+            gameState.herodeck.shuffle();
+            gameState.herodeck.limit(c => c.heroName === c.heroName).each(c => KOEv(ev, c));
+            hqHeroes().limit(c => c.heroName === c.heroName).each(c => KOEv(ev, c));
+          }
+        });
+      });
+    });
+  }
+  if (ev.nr <= 6) {
+    // Twist 1-6 KO the Hero in the rightmost HQ space. KO one of that Hero Name's Loved Ones.
+    // Each player discards a card of that Hero Name. If you discard a card this way during your turn, you {BERSERK}.
+    // If that Hero Name has no more Loved Ones, that Hero is "Lost in Grief": KO all of that Hero Name from the HQ and Hero Deck, then shuffle it.
+    cont(ev, effect);
+  } else if (ev.nr >= 7 && ev.nr <= 11) {
+    // Twist 7-11 Do that Twist effect twice.
+    cont(ev, effect);
+    cont(ev, effect);
+  }
+}, [
+  runOutProgressTrigger('HERO', false),
+], () => {
+  setSchemeTarget(gameState.herodeck.size);
+  const heroNames = gameState.herodeck.limit(isHero).unique(c => c.heroName);
+  heroNames.forEach(h => {
+    const c = gameState.herodeck.limit(c => c.heroName === h).highest(c => -c.cost)[0];
+    moveCard(gameState.bystanders.top, c.attachedDeck('LOVED_ONES'));
+    moveCard(gameState.bystanders.top, c.attachedDeck('LOVED_ONES'));
+    moveCard(c, gameState.scheme.attachedDeck('HEREOS'));
+  });
+  gameState.herodeck.shuffle();
+}),
+// SETUP:  Twists equal to the number of players plus 4.
+// RULE: Face down cards in your Victory Pile count as not being there at all until you count their VP at game end.
+// EVILWINS: When there are 4 Total Memory Wipes.
+makeSchemeCard("Wipe Heroes' Memories", { twists: [ 5, 6, 7, 8, 9 ] }, ev => {
+  selectCardOrEv(ev, "Choose a Villain or Tactic to forget", playerState.victory.limit(c => isTactic(c) || isVillain(c)), c => {
+    // Twist: You "forget your past": If you have any face up Villains or Tactics in your Victory Pile,
+    // put one of them on the bottom of your Victory Pile face down, then shuffle this Twist back into the Villain Deck,
+    // then play a card from the Villain Deck.
+    attachCardEv(ev, c, playerState.victory, 'FORGOTTEN');
+    shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+    playAnotherEv(ev);
+  }, () => {
+    // If you didn't have any face up Villains or Tactics, then instead stack this Twist next to the Scheme as a "Total Memory Wipe."
+    attachCardEv(ev, ev.twist, gameState.scheme, 'MEMORY_WIPE');
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('MEMORY_WIPE').size));
+  });
+}, [], () => {
+  setSchemeTarget(4);
+}),
+]);
