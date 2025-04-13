@@ -94,6 +94,7 @@ sub autopower {
     s/^{CLONE}$// and $effect = "cloneHeroEv(ev)";
     s/^{LIBERATE (\d+)}$// and $effect = "liberateEv(ev, $1)";
     s/^{FATED FUTURE}$// and $effect = "fatedFutureEv(ev)";
+    s/^{WEAPON X SEQUENCE}$// and $effect = "weaponXSequenceEv(ev)";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;

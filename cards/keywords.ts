@@ -1313,3 +1313,32 @@ function fatedFutureEv(ev: Ev) {
     moveCardEv(ev, ev.source, playerState.deck, true);
   })
 }
+// EXPANSION: Weapon X
+// {WEAPON X SEQUENCE}: The lethal success of the Weapon Plus program comes from their relentless iteration on the science of death. From Weapon XII to Weapon XIII to Weapon XV, each of their sequence of killers is more deadly than the last.
+// * On a Hero, "Weapon X Sequence" means <b>"you get + Attack equal to the longest sequence of different printed cost numbers on your cards."</b>
+// * "Your cards" includes both cards you've played this turn and cards in your hand, so you can count both.
+// * For example, say your cards have the costs 0,4,2,7,3,3. Then each time you played a card with the Weapon X Sequence ability, you would get +3 Attack, since your longest sequence of different cost numbers is 2-3-4.
+// * Each number in the sequence must be one higher than the previous number. Your sequence can start with any number, including 0. You can't skip any number in the sequence. Having duplicates of the same cost doesn't help. If your costs are 0,0,0,4,4,6, then your longest sequence is 1 and you would get +1 Attack.
+// * After you play a Weapon X Sequence card, if you draw more cards later in the turn that would have extended your sequence, it's too late to go back and get more Attack from the Weapon X Sequence you already played.
+// * "Doubled Weapon X Sequence" means double the bonus.
+// * Build your deck carefully to get long sequences!
+function weaponXSequenceAmount(cards: Card[] = revealable()) {
+  const costs = cards.unique(c => c.cost).sort((a, b) => a - b);
+  let maxRun = 0, currentRun = 1;
+  for (let i = 1; i < costs.length; i++) {
+    if (costs[i] === costs[i - 1] + 1) currentRun++; else currentRun = 1;
+    maxRun = Math.max(maxRun, currentRun);
+  }
+  return maxRun;
+}
+function weaponXSequenceEv(ev: Ev) {
+  addAttackEvent(ev, weaponXSequenceAmount());
+}
+function berserkWoundsEv(ev: Ev, n: number) {
+  repeat(n, () => {
+    gameState.wounds.withTop(c => { addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, gameState.wounds, true); });
+  });
+}
+function isEnragingWound(c: Card) {
+  return isWound(c);// TODO && c.enragingWound;
+}

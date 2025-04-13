@@ -7722,3 +7722,113 @@ addHeroTemplates("2099", [
   }),
 },
 ]);
+addHeroTemplates("Weapon X", [
+{
+  name: "Fantomex",
+  team: "X-Force",
+// {WEAPON X SEQUENCE}
+  c1: makeHeroCard("Fantomex", "Sentient Bullets", 1, u, 0, Color.RANGED, "X-Force", "FA", ev => weaponXSequenceEv(ev)),
+// {WEAPON X SEQUENCE}, getting Recruit instead of Attack.
+// If you got at least 3 Recruit this way, draw a card.
+  c2: makeHeroCard("Fantomex", "Three Brains", 2, 0, u, Color.TECH, "X-Force", "FDR", ev => {
+    const n = weaponXSequenceAmount();
+    addRecruitEvent(ev, n);
+    n >= 3 && drawEv(ev);
+  }),
+// {WEAPON X SEQUENCE}
+// When you draw a new hand this turn, draw an extra card, then put a card from your hand on top of your deck.
+  uc: makeHeroCard("Fantomex", "Misdirection", 3, u, 0, Color.COVERT, "X-Force", "A", [ ev => weaponXSequenceEv(ev), ev => {
+    addEndDrawMod(1);
+    addTurnTrigger('CLEANUP', () => true, () => {
+      selectCardEv(ev, "Choose a card to put on top of your deck", playerState.hand.deck, c => {
+        moveCardEv(ev, c, playerState.deck);
+      });
+    });
+  }]),
+// {WEAPON X SEQUENCE}
+// {POWER Tech} You may KO one of your cards that has the same cost as any of your other cards.
+  ra: makeHeroCard("Fantomex", "Weapon XIII", 4, u, 1, Color.TECH, "X-Force", "A", [ ev => weaponXSequenceEv(ev), ev => {
+    superPower(Color.TECH) && selectCardOptEv(ev, "Choose a card to KO", revealable().limit(c => revealable().has(c2 => c2 !== c && c2.cost === c.cost)), c => {
+      KOEv(ev, c);
+    });
+  }]),
+},
+{
+  name: "Marrow",
+  team: "X-Force",
+// {TEAMPOWER X-Force} {BERSERK}
+  c1: makeHeroCard("Marrow", "Bone Shards", 3, u, 2, Color.RANGED, "X-Force", "FDA", ev => superPower("X-Force") && berserkEv(ev, 1)),
+// For all of your Heroes' {BERSERK} abilities this turn, you get the Berserked cards' printed Recruit just like you get their printed Attack.
+// {POWER Strength} {BERSERK}
+  c2: makeHeroCard("Marrow", "Hyper-Adaptive Skeleton", 2, 1, 1, Color.STRENGTH, "X-Force", "DRA", [ ev => 0/* TODO */, ev => superPower(Color.STRENGTH) && berserkEv(ev, 1) ]),
+// Draw two cards. Then put a card from your hand on top of your deck.
+  uc: makeHeroCard("Marrow", "Osteogenesis", 6, 1, 2, Color.STRENGTH, "X-Force", "FD", ev => 0/* TODO */),
+// {WEAPON X SEQUENCE}
+// Reveal the top six cards of your deck. Discard all the ones that cost 0 and put the rest back in any order.
+  ra: makeHeroCard("Marrow", "Metabolic Overdrive", 7, u, 3, Color.COVERT, "X-Force", "A", [ ev => weaponXSequenceEv(ev), ev => 0/* TODO */ ]),
+},
+{
+  name: "Weapon H",
+  team: "Avengers",
+// You may have this card make all Recruit instead of Attack <i>(including the ability below)</i>.
+// {POWER Instinct} You get +1 Attack.
+  c1: makeHeroCard("Weapon H", "Evolving Abilities", 4, 0, 2, Color.INSTINCT, "Avengers", "DRA", ev => {
+    chooseOneEv(ev, "Make", ["Recruit", () => {
+      addRecruitEvent(ev, ev.source.printedAttack);
+      superPower(Color.INSTINCT) && addRecruitEvent(ev, 1);
+    }], ["Attack", () => {
+      addAttackEvent(ev, ev.source.printedAttack);
+      superPower(Color.INSTINCT) && addAttackEvent(ev, 1);
+    }]);
+  }, { customRecruitAndAttack: true }),
+// Look at the top card of your deck.
+// Discard it or put it back.
+// {POWER Strength} {BERSERK}
+  c2: makeHeroCard("Weapon H", "The Future of Warfare", 3, u, 2, Color.STRENGTH, "Avengers", "FDA", [ ev => {
+    revealPlayerDeckEv(ev, 1, cards => {
+      selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c));
+    });
+  }, ev => superPower(Color.STRENGTH) && berserkEv(ev, 1) ]),
+// {BERSERK}
+// {POWER Strength} You may KO the card you Berserked.
+  uc: makeHeroCard("Weapon H", "Slice and Smash", 5, u, 2, Color.STRENGTH, "Avengers", "FDA", ev => berserkEv(ev, 1, c => {
+    superPower(Color.STRENGTH) ? selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c)) : discardEv(ev, c);
+  })),
+// {WEAPON X SEQUENCE}
+// {POWER Strength} Using the Wound Deck, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, putting those discarded Wounds on the bottom of the Wound Deck.
+  ra: makeHeroCard("Weapon H", "Ultimate Killing Machine", 8, u, 4, Color.STRENGTH, "Avengers", "A", [
+    ev => weaponXSequenceEv(ev),
+    ev => superPower(Color.STRENGTH) && berserkWoundsEv(ev, 6)
+  ]),
+},
+{
+  name: "Weapon X (Wolverine)",
+  team: "Marvel Knights",
+// To play this, you must put another card from your hand on top of your deck.
+// {WEAPON X SEQUENCE}
+  c1: makeHeroCard("Weapon X (Wolverine)", "Infuse Skeleton with Adamantium", 5, u, 2, Color.TECH, "Marvel Knights", "FDA", ev => weaponXSequenceEv(ev), { playCost: 1, playCostType: 'TOPDECK' }),
+// {BERSERK}
+// {POWER Instinct} You may KO a Wound from your hand or discard pile. If you do, {BERSERK} again.
+  c2: makeHeroCard("Weapon X (Wolverine)", "Raging Regeneration", 4, u, 2, Color.INSTINCT, "Marvel Knights", "FDA", [ ev => berserkEv(ev, 1),
+    ev => superPower(Color.INSTINCT) && KOHandOrDiscardEv(ev, isWound, () => berserkEv(ev, 1)) ]),
+// You may gain a Wound. If you do, {BERSERK}, {BERSERK}.
+  uc: makeHeroCard("Weapon X (Wolverine)", "Violent Conditioning", 3, u, 2, Color.INSTINCT, "Marvel Knights", "FDA", ev => {
+    chooseMayEv(ev, "Gain a Wound", () => {
+      gainWoundEv(ev);
+      berserkEv(ev, 2);
+    });
+  }),
+// {WEAPON X SEQUENCE}
+// {POWER Instinct} You may reveal cards from the Wound Deck until you reveal an Enraging Wound. Gain that Enraging Wound to your hand. Put the other revealed cards back on the bottom.
+// If you gain a Wound this way, {BERSERK}.
+  ra: makeHeroCard("Weapon X (Wolverine)", "Escape the Weapon X Lab", 6, u, 3, Color.INSTINCT, "Marvel Knights", "A", [
+    ev => weaponXSequenceEv(ev),
+    ev => superPower(Color.INSTINCT) && revealDeckEv(ev, gameState.wounds, cards => cards.has(isEnragingWound), cards => {
+      cards.limit(isEnragingWound).each(c => {
+        gainEv(ev, c);
+        berserkEv(ev, 1);
+      });
+    }, false, true),
+  ]),
+},
+]);
