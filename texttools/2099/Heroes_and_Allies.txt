@@ -6,8 +6,8 @@
 #COPIES: 5
 #CLASS: [Ranged]
 #ATTACK: 2+
-{CYBER-MOD RANGED}: You get +1 Attack.
-{CYBER-MOD RANGEDRANGEDRANGED}: Instead you +3 Attack.
+{CYBER-MOD RANGED} You get +1 Attack.
+{CYBER-MOD RANGED RANGED RANGED} Instead you +3 Attack.
 #COST: 3
 #FLAVOR: The key ingredients are cutting edge cyber-tech, ancient sorcery, arrogance, and contempt.
 
@@ -32,7 +32,7 @@ You may send this and a card from your hand or discard pile {UNDERCOVER}. If you
 #ATTACK: 6
 You may send a card from your hand or discard pile {UNDERCOVER}.
 {FATED FUTURE}
-{CYBER-MOD RANGEDRANGED}: If you haven't taken any extra turns this game, you may take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+{CYBER-MOD RANGED RANGED} If you haven't taken any extra turns this game, you may take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
 #COST: 8
 
 #CARDNAME: Ghost Rider 2099
@@ -42,8 +42,8 @@ You may send a card from your hand or discard pile {UNDERCOVER}.
 #COPIES: 5
 #CLASS: [Tech]
 #RECRUIT: 2+
-{CYBER-MOD TECH}: You get +1 Recruit.
-{CYBER-MOD TECHTECH}: Draw a card.
+{CYBER-MOD TECH} You get +1 Recruit.
+{CYBER-MOD TECH TECH} Draw a card.
 #COST: 3
 #FLAVOR: Fatally poisoned by the D/Monix Mega-Corp, Kenshiro Cochrane uploaded his dying brain. Now he stalks the wicked through a terrifying cybernetic body.
 
@@ -52,7 +52,7 @@ You may send a card from your hand or discard pile {UNDERCOVER}.
 #CLASS: [Tech]
 #ATTACK: 2+
 You may send this and a card from the HQ {UNDERCOVER}. If you do, you get +2 Attack.
-{CYBER-MOD TECHTECHTECH}: You get +2 Attack.
+{CYBER-MOD TECH TECH TECH} You get +2 Attack.
 #COST: 4
 #FLAVOR: He's open to hitchhikers.
 
@@ -68,7 +68,7 @@ You may send this and a card from the HQ {UNDERCOVER}. If you do, you get +2 Att
 #CLASS: [Tech]
 #ATTACK: 4+
 You may send a card from the HQ {UNDERCOVER}.
-{CYBER-MOD TECH}: {FATED FUTURE} and you get +1 Attack for each [Tech] card in your Victory Pile.
+{CYBER-MOD TECH} {FATED FUTURE} and you get +1 Attack for each [Tech] card in your Victory Pile.
 #COST: 7
 
 #CARDNAME: Hulk 2099
@@ -151,7 +151,7 @@ Reveal the top card of your deck. You get + Attack equal to that card's cost. Di
 #CLASS: [Covert]
 #ATTACK: 1
 You may send this {UNDERCOVER}.
-{CYBER-MOD COVERT}: Draw a card.
+{CYBER-MOD COVERT} Draw a card.
 #COST: 2
 #FLAVOR: As a geneticist working for Alchemax, Miguel O'Hara oversaw many strange DNA experiments. He never imagined he would become one of them.
 
@@ -159,7 +159,7 @@ You may send this {UNDERCOVER}.
 #COPIES: 5
 #CLASS: [Covert]
 #ATTACK: 2
-{CYBER-MOD COVERTCOVERT}: Draw a card.
+{CYBER-MOD COVERT COVERT} Draw a card.
 #COST: 3
 #FLAVOR: Bad Mega-Corp managers spread rumors behind your back. Worse Mega-Corp managers splice your DNA with a spider.
 

@@ -3,9 +3,9 @@
 
 #SUBNAME: Cyber-Nostra
 #COPIES: 3
-{CYBER-MOD TECH}: Cyber-Nostra gets +1 Attack for each [Tech] card in the Escape Pile.
+{CYBER-MOD TECH} Cyber-Nostra gets +1 Attack for each [Tech] card in the Escape Pile.
 #AMBUSH: Put the top card of the Hero Deck into the Escape Pile.
-#FIGHT: {CYBER-MOD TECH}: KO one of your Heroes.
+#FIGHT: {CYBER-MOD TECH} KO one of your Heroes.
 #ATTACK: 3+
 #VP: 2
 
@@ -13,22 +13,22 @@
 #COPIES: 1
 Jigsaw 2099 gets +1 Attack for each Bystander he has.
 #AMBUSH: Put the top card of the Hero Deck into the Escape Pile.
-#FIGHT: KO one of your Heroes. {CYBER-MOD STRENGTH}: If Jigsaw 2099 had no Bystanders, he reenters the city and captures a Bystander for each [Strength] card in the Escape Pile.
-#ESCAPE: {CYBER-MOD STRENGTH}: Each player gains a Wound.
+#FIGHT: KO one of your Heroes. {CYBER-MOD STRENGTH} If Jigsaw 2099 had no Bystanders, he reenters the city and captures a Bystander for each [Strength] card in the Escape Pile.
+#ESCAPE: {CYBER-MOD STRENGTH} Each player gains a Wound.
 #ATTACK: 6+
 #VP: 5
 
 #SUBNAME: Venture
 #COPIES: 2
-#AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Venture captures a Bystander. {CYBER-MOD RANGED}: Venture also captures a non-grey Hero from your discard pile.
+#AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Venture captures a Bystander. {CYBER-MOD RANGED} Venture also captures a non-grey Hero from your discard pile.
 #FIGHT: Either KO that captured Hero or choose a player to gain it.
 #ATTACK: 5
 #VP: 3
 
 #SUBNAME: Whackoid
 #COPIES: 2
-{CYBER-MOD INSTINCT}: Whackoid gets +1 Attack.
-{CYBER-MOD COVERTCOVERTCOVERT}: Whackoid gets +3 Attack.
+{CYBER-MOD INSTINCT} Whackoid gets +1 Attack.
+{CYBER-MOD COVERT COVERT COVERT} Whackoid gets +3 Attack.
 #AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Whackoid captures all Bystanders from other Villains in the city. If he captures any Bystanders this way, each player gains a Wound.
 #ATTACK: 4+
 #VP: 3

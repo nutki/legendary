@@ -7582,3 +7582,143 @@ addHeroTemplates("Ant-Man and the Wasp", [
    ], { uSizeChanging: { color: Color.RANGED, amount: 5 }}),
 },
 ]);
+addHeroTemplates("2099", [
+{
+  name: "Doctor Doom 2099",
+  team: "(Unaffiliated)",
+// {CYBER-MOD RANGED} You get +1 Attack.
+// {CYBER-MOD RANGED RANGED RANGED} Instead you +3 Attack.
+  c1: makeHeroCard("Doctor Doom 2099", "Doomblast", 3, u, 2, Color.RANGED, u, "FDA", ev => cyberModEv(ev, Color.RANGED, 1, n => addAttackEvent(ev, n >= 3 ? 3 : 1))),
+// You may send this and a card from your hand or discard pile {UNDERCOVER}. If you do, you get +1 Recruit.
+  c2: makeHeroCard("Doctor Doom 2099", "Subvert This New Future", 3, 2, u, Color.RANGED, u, "FDR", ev => {
+    selectCardOptEv(ev, "Choose a card to send Undercover", handOrDiscard(), c => {
+      sendUndercoverEv(ev, c);
+      sendUndercoverEv(ev);
+      addRecruitEvent(ev, 1);
+    });
+  }),
+// {POWER Tech} You may look at the top three cards of your deck. If you do, send one of them {UNDERCOVER} and put the rest back in any order.
+  uc: makeHeroCard("Doctor Doom 2099", "Flesh-Grafted Doombots", 6, u, 3, Color.TECH, u, "D", ev => superPower(Color.TECH) && revealPlayerDeckEv(ev, 3, cards => {
+    selectCardOptEv(ev, "Choose a card to send Undercover", cards, c => sendUndercoverEv(ev, c));
+  })),
+// You may send a card from your hand or discard pile {UNDERCOVER}.
+// {FATED FUTURE}
+// {CYBER-MOD RANGED RANGED} If you haven't taken any extra turns this game, you may take another turn after this one. Don't play a card from the Villain Deck at the start of that turn.
+  ra: makeHeroCard("Doctor Doom 2099", "Tear Through Time Itself", 8, u, 6, Color.RANGED, u, "D", [
+    ev => selectCardOptEv(ev, "Choose a card to send Undercover", handOrDiscard(), c => sendUndercoverEv(ev, c)),
+    ev => fatedFutureEv(ev), ev => cyberModEv(ev, Color.RANGED, 2, () => {
+      gameState.extraTurn = true; // TODO once per game
+      incPerGame('extraTurn', ev.source) || addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
+    }) ]),
+},
+{
+  name: "Ghost Rider 2099",
+  team: "Marvel Knights",
+// {CYBER-MOD TECH} You get +1 Recruit.
+// {CYBER-MOD TECH TECH} Draw a card.
+  c1: makeHeroCard("Ghost Rider 2099", "Cyber-Specter", 3, 2, u, Color.TECH, "Marvel Knights", "FDR", [ ev => cyberModEv(ev, Color.TECH, 1, () => addRecruitEvent(ev, 1)), ev => cyberModEv(ev, Color.TECH, 2, () => drawEv(ev)) ]),
+// You may send this and a card from the HQ {UNDERCOVER}. If you do, you get +2 Attack.
+// {CYBER-MOD TECH TECH TECH} You get +2 Attack.
+  c2: makeHeroCard("Ghost Rider 2099", "Hell Ride", 4, u, 2, Color.TECH, "Marvel Knights", "FDA", [ ev => {
+    selectCardOptEv(ev, "Choose a card to send Undercover", hqHeroes(), c => {
+      sendUndercoverEv(ev, c);
+      sendUndercoverEv(ev);
+      addAttackEvent(ev, 2);
+    });
+  }, ev => cyberModEv(ev, Color.TECH, 3, () => addAttackEvent(ev, 2)) ]),
+// {TEAMPOWER Marvel Knights} You may KO a Henchman from your Victory Pile. If you do, you get +2 Attack and you may do that Henchman's Fight effect.
+  uc: makeHeroCard("Ghost Rider 2099", "Death Beyond Death", 5, u, 3, Color.COVERT, "Marvel Knights", "DA", ev => superPower("Marvel Knights") && selectCardOptEv(ev, "Choose a Henchman to KO", playerState.victory.limit(isHenchman), c => {
+    KOEv(ev, c);
+    addAttackEvent(ev, 2);
+    pushEffects(ev, c, 'fight', c.fight);
+  })),
+// You may send a card from the HQ {UNDERCOVER}.
+// {CYBER-MOD TECH} {FATED FUTURE} and you get +1 Attack for each [Tech] card in your Victory Pile.
+  ra: makeHeroCard("Ghost Rider 2099", "Infernal Chainsaw", 7, u, 4, Color.TECH, "Marvel Knights", "DA", [ ev => {
+    selectCardOptEv(ev, "Choose a card to send Undercover", hqHeroes(), c => sendUndercoverEv(ev, c));
+  }, ev => cyberModEv(ev, Color.TECH, 1, () => {
+    fatedFutureEv(ev);
+    addAttackEvent(ev, playerState.victory.count(Color.TECH));
+  }) ]),
+},
+{
+  name: "Hulk 2099",
+  team: "Marvel Knights",
+// <b>Cyber-Mod Wound</b>: You get +1 Attack.
+// <b>Cyber-Mod 4 Wounds</b>: Instead you get +2 Attack.
+  c1: makeHeroCard("Hulk 2099", "Rage Incarnate", 3, u, 2, Color.INSTINCT, "Marvel Knights", "FDA", ev => {
+    cyberModEv(ev, isWound, 1, n => addAttackEvent(ev, n >= 4 ? 2 : 1));
+  }),
+// You may send a Wound from your hand or discard pile {UNDERCOVER}.
+// {POWER Strength} You may send a Hero from your hand or discard pile {UNDERCOVER} instead.
+  c2: makeHeroCard("Hulk 2099", "Push Pain Under the Surface", 4, 2, u, Color.STRENGTH, "Marvel Knights", "D", [ ev => {
+    const options: Filter<Card> = superPower(Color.STRENGTH) ? c => isWound(c) || isHero(c): isWound;
+    selectCardOptEv(ev, "Choose a Wound to send Undercover", handOrDiscard().limit(options), c => sendUndercoverEv(ev, c));
+  }, ev => superPower(Color.STRENGTH) && 0/* TODO */ ]),
+// To play this, you must discard two cards or gain a Wound.
+// {POWER Tech} {FATED FUTURE}
+  uc: makeHeroCard("Hulk 2099", "Massive Gamma Detonation", 6, u, 5, Color.TECH, "Marvel Knights", "FD", [ ev => {
+    // TODO: this should be pay cost, what if no wounds left and no cards in hand
+    gameState.wounds.size == 0 ? pickDiscardEv(ev, 2) :
+    playerState.hand.size < 2 ? gainWoundEv(ev) : chooseOneEv(ev, "Choose one", ["Gain a Wound", () => gainWoundEv(ev)], ["Discard two cards", () => pickDiscardEv(ev, 2)]);
+  }, ev => superPower(Color.TECH) && fatedFutureEv(ev) ]),
+// For each player, either send a Wound from that player's discard pile {UNDERCOVER} into your own Victory Pile, or that player gains a Wound.
+// <b>Cyber-Mod Wound</b>: You get +1 Attack for each Wound in your Victory Pile.
+  ra: makeHeroCard("Hulk 2099", "Cataclysmic Frenzy", 8, u, 4, Color.STRENGTH, "Marvel Knights", "DA", [ ev => {
+    eachPlayer(p => selectCardOptEv(ev, "Choose a Wound to send Undercover", p.discard.limit(isWound), c => {
+      sendUndercoverEv(ev, c, playerState);
+    }, () => gainWoundEv(ev, p)));
+  }, ev => cyberModEv(ev, isWound, 1, n => addAttackEvent(ev, n)) ]),
+},
+{
+  name: "Ravage 2099",
+  team: "Marvel Knights",
+// {POWER Instinct} Draw a card from the bottom of your deck.
+  c1: makeHeroCard("Ravage 2099", "Down in the Dregs", 3, 2, u, Color.INSTINCT, "Marvel Knights", "FD", ev => superPower(Color.INSTINCT) && drawBottomEv(ev, 2)),
+// {POWER Strength} You get +2 Attack and {FATED FUTURE}.
+  c2: makeHeroCard("Ravage 2099", "Toxic Mutations", 5, u, 2, Color.STRENGTH, "Marvel Knights", "FDA", ev => {
+    if (superPower(Color.STRENGTH)) { addAttackEvent(ev, 2); fatedFutureEv(ev); }
+  }),
+// Reveal the top two cards of the Villain Deck and put them back in any order. {FATED FUTURE}
+  uc: makeHeroCard("Ravage 2099", "Detect Vibrations", 6, u, 4, Color.COVERT, "Marvel Knights", "FD", ev => {
+    revealVillainDeckEv(ev, 2, () => {}, false);
+  }),
+// Reveal the top card of your deck. You get + Attack equal to that card's cost. Discard it or put it back.
+// {TEAMPOWER Marvel Knights} Then do the same thing with the bottom card of your deck.
+  ra: makeHeroCard("Ravage 2099", "Overhorns and Underhorns", 8, u, 3, Color.INSTINCT, "Marvel Knights", "DA", [ ev => {
+    revealPlayerDeckEv(ev, 1, cards => {
+      addAttackEvent(ev, cards.sum(c => c.cost));
+      selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c));
+    });
+  }, ev => superPower("Marvel Knights") && revealPlayerDeckBottomEv(ev, 1, cards => {
+    addAttackEvent(ev, cards.sum(c => c.cost));
+    selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c));
+  }) ]),
+},
+{
+  name: "Spider-Man 2099",
+  team: "Spider Friends",
+// You may send this {UNDERCOVER}.
+// {CYBER-MOD COVERT} Draw a card.
+  c1: makeHeroCard("Spider-Man 2099", "Retractable Talons", 2, u, 1, Color.COVERT, "Spider Friends", "FD", [ ev => {
+    chooseMayEv(ev, "Choose a card to send Undercover", c => sendUndercoverEv(ev));
+  }, ev => cyberModEv(ev, Color.COVERT, 1, () => drawEv(ev)) ]),
+// {CYBER-MOD COVERT COVERT} Draw a card.
+  c2: makeHeroCard("Spider-Man 2099", "Venomous Fangs", 3, u, 2, Color.COVERT, "Spider Friends", "FD", ev => cyberModEv(ev, Color.COVERT, 2, () => drawEv(ev))),
+// The next Hero you recruit this turn goes on top of your deck.
+// {POWER Strength} {FATED FUTURE}
+  uc: makeHeroCard("Spider-Man 2099", "Spider-Silk Webbing", 5, 3, u, Color.STRENGTH, "Spider Friends", "FD", [ ev => {
+    turnState.nextHeroRecruit = 'DECK';
+  }, ev => superPower(Color.STRENGTH) && fatedFutureEv(ev) ]),
+// Reveal the top three cards of the Hero Deck. You may send one of them {UNDERCOVER}. Put the rest back in any order.
+// {TEAMPOWER Spider Friends} You may play a copy of the card you sent {UNDERCOVER} this way.
+  ra: makeHeroCard("Spider-Man 2099", "Spider-Sense Telepathy", 7, u, 5, Color.INSTINCT, "Spider Friends", "D", ev => {
+    revealHeroDeckEv(ev, 3, cards => {
+      selectCardOptEv(ev, "Choose a card to send Undercover", cards, c => {
+        sendUndercoverEv(ev, c);
+        superPower("Spider Friends") && playCopyEv(ev, c);
+      });
+    });
+  }),
+},
+]);

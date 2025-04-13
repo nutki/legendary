@@ -4,7 +4,7 @@
 #TACTIC: Avatarr, CEO of Alchemax
 #LEADS: Alchemax Enforcers
 <b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>.
-#STRIKE: Put the two highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED}: Each player gains a Wound. <b>Adapt</b>.
+#STRIKE: Put the two highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED} Each player gains a Wound. <b>Adapt</b>.
 #FIGHT: Each other player puts a non-grey Hero from their hand or discard pile into the Escape Pile. <b>Adapt</b>.
 #ATTACK: 10
 #VP: 6
@@ -12,49 +12,49 @@
 #TACTIC: Epic Avatarr
 #LEADS: Alchemax Enforcers
 <b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>.
-#STRIKE: Put the three highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED}: Each player gains a Wound to the top of their deck. <b>Adapt</b>.
+#STRIKE: Put the three highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED} Each player gains a Wound to the top of their deck. <b>Adapt</b>.
 #FIGHT: Each other player puts a non-grey Hero from their hand or discard pile into the Escape Pile. <b>Adapt</b>.
 #ATTACK: 13
 #VP: 6
 
 #TACTIC: Fearmaster, VP of the Public Eye
 Fearmaster gets +1 Attack for each grey Hero you have.
-#STRIKE: Put the two lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT}: Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws a card for each card they discarded this way. <b>Adapt</b>.
+#STRIKE: Put the two lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT} Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws a card for each card they discarded this way. <b>Adapt</b>.
 #FIGHT: Each other player discards 2 grey Heroes. <b>Adapt</b>.
 #ATTACK: 7+
 #VP: 6
 
 #TACTIC: Epic Fearmaster
 Fearmaster gets +2 Attack for each grey Hero you have.
-#STRIKE: Put the three lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT}: Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws two cards. <b>Adapt</b>.
+#STRIKE: Put the three lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT} Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws two cards. <b>Adapt</b>.
 #FIGHT: Each other player discards 3 grey Heroes. <b>Adapt</b>.
 #ATTACK: 8+
 #VP: 6
 
 #TACTIC: John Herod, Executive VP
-{CYBER-MOD COVERTCOVERT}: John Herod gets +5 Attack.
-#STRIKE: Put the two rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT}: You may pay 5 Attack this turn to "expose Fake Captain America." If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
+{CYBER-MOD COVERT COVERT} John Herod gets +5 Attack.
+#STRIKE: Put the two rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT} You may pay 5 Attack this turn to "expose Fake Captain America." If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
 #FIGHT: KO two of your Heroes. <b>Adapt</b>.
 #ATTACK: 8+
 #VP: 6
 
 #TACTIC: Epic John Herod
-{CYBER-MOD COVERTCOVERT}: John Herod gets +7 Attack.
-#STRIKE: Put the three rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT}: You may pay 7 Attack this turn to "expose Fake Captain America." If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
+{CYBER-MOD COVERT COVERT} John Herod gets +7 Attack.
+#STRIKE: Put the three rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT} You may pay 7 Attack this turn to "expose Fake Captain America." If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
 #FIGHT: KO one of your Heroes. <b>Adapt</b>.
 #ATTACK: 9+
 #VP: 6
 
 #TACTIC: Tiger Wylde, General of Alchemax Elite
-{CYBER-MOD STRENGTH}: Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
-#STRIKE: Put the two leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH}: Each player reveals a [Tech] card or discards a card. <b>Adapt</b>.
+{CYBER-MOD STRENGTH} Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
+#STRIKE: Put the two leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH} Each player reveals a [Tech] card or discards a card. <b>Adapt</b>.
 #FIGHT: Send a Hero from the Escape Pile {UNDERCOVER}. Then <b>Adapt</b>.
 #ATTACK: 9+
 #VP: 6
 
 #TACTIC: Epic Tiger Wylde
-{CYBER-MOD STRENGTH}: Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
-#STRIKE: Put the three leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH}: Each player discards a card at random. <b>Adapt</b>.
+{CYBER-MOD STRENGTH} Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
+#STRIKE: Put the three leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH} Each player discards a card at random. <b>Adapt</b>.
 #FIGHT: Send a Hero from the Escape Pile {UNDERCOVER}. Then <b>Adapt</b>.
 #ATTACK: 11+
 #VP: 6

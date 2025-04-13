@@ -47,6 +47,7 @@ sub autopower {
     s/^{WHEN RECRUITED} *// and $wrap = "whenRecruited: ev => XXX";
     s/^{TACTICAL FORMATION (\d+)}:? *// and $cond = "tacticalFormation('$1')";
     s/^{HEIST} *// and $wrap = "heist: ev => XXX";
+    s/^{CYBER-MOD (\w+?)( \1)*} *// and $wrap = "cyberModEv(ev, Color.$1, ".(1+($2=~y/ / /)).", () => XXX)";
 
     s/^You may KO a (card|Wound) from your hand or discard pile\. If you do, (.)/uc$2/e and $wrap = "KOHandOrDiscardEv(ev, $filt{$1}, () => XXX)";
     s/^{PATROL (Sewers|Bank|Streets|Rooftops|Bridge)}: If it's empty, (.)/uc$2/ei and $wrap = "patrolCity('".(uc$1)."', () => XXX)";
@@ -92,6 +93,7 @@ sub autopower {
     s/^{(\w+) ABOMINATION}$// and $effect = "heroAbominationEv(ev, '$1')";
     s/^{CLONE}$// and $effect = "cloneHeroEv(ev)";
     s/^{LIBERATE (\d+)}$// and $effect = "liberateEv(ev, $1)";
+    s/^{FATED FUTURE}$// and $effect = "fatedFutureEv(ev)";
 
     $effect ||= "0/* TODO */" if $_;
     $effect = $wrap =~ s/XXX/$effect/r if $wrap && $effect;
