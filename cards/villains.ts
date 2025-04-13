@@ -6177,3 +6177,140 @@ addVillainTemplates("Ant-Man and the Wasp", [
   })],
 ]},
 ]);
+addVillainTemplates("2099", [
+{ name: "Alchemax Enforcers", cards: [
+// {CYBER-MOD TECH} Cyber-Nostra gets +1 Attack for each [Tech] card in the Escape Pile.
+// AMBUSH: Put the top card of the Hero Deck into the Escape Pile.
+// FIGHT: {CYBER-MOD TECH} KO one of your Heroes.
+// ATTACK: 3+
+// VP: 2
+  [ 3, makeVillainCard("Alchemax Enforcers", "Cyber-Nostra", 3, 2, {
+    ambush: ev => gameState.herodeck.withTop(c => moveCardEv(ev, c, gameState.escaped)),
+    fight: ev => cyberModEnemyEv(ev, Color.TECH, 1, () => selectCardAndKOEv(ev, yourHeroes())),
+    varDefense: c => c.printedDefense + cyberModEnemyAmount(Color.TECH),
+  })],
+// Jigsaw 2099 gets +1 Attack for each Bystander he has.
+// AMBUSH: Put the top card of the Hero Deck into the Escape Pile.
+// FIGHT: KO one of your Heroes. {CYBER-MOD STRENGTH} If Jigsaw 2099 had no Bystanders, he reenters the city and captures a Bystander for each [Strength] card in the Escape Pile.
+// ESCAPE: {CYBER-MOD STRENGTH} Each player gains a Wound.
+// ATTACK: 6+
+// VP: 5
+  [ 1, makeVillainCard("Alchemax Enforcers", "Jigsaw 2099", 6, 5, {
+    ambush: ev => gameState.herodeck.withTop(c => moveCardEv(ev, c, gameState.escaped)),
+    fight: ev => {
+      selectCardAndKOEv(ev, yourHeroes());
+      cyberModEnemyEv(ev, Color.STRENGTH, 1, n => {
+        if (!ev.source.captured.has(isBystander)) {
+          enterCityEv(ev, ev.source);
+          captureEv(ev, ev.source, n);
+        }
+      });
+    },
+    escape: ev => cyberModEnemyEv(ev, Color.STRENGTH, 1, () => eachPlayer(p => gainWoundEv(ev, p))),
+    varDefense: c => c.printedDefense + c.captured.count(isBystander),
+  })],
+// AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Venture captures a Bystander. {CYBER-MOD RANGED} Venture also captures a non-grey Hero from your discard pile.
+// FIGHT: Either KO that captured Hero or choose a player to gain it.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Alchemax Enforcers", "Venture", 5, 3, {
+    ambush: ev => {
+      gameState.herodeck.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      captureEv(ev, ev.source);
+      selectCardEv(ev, "Choose a Hero to capture", yourHeroes().limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'VENTURE_CAPTURED'));
+    },
+    fight: ev => {
+      ev.source.attached('VENTURE_CAPTURED').each(c => {
+        selectCardOptEv(ev, "Choose a player to gain the Hero", gameState.players, p => gainEv(ev, c, p), () => KOEv(ev, c));
+      });
+    },
+  })],
+// {CYBER-MOD INSTINCT} Whackoid gets +1 Attack.
+// {CYBER-MOD COVERT COVERT COVERT} Whackoid gets +3 Attack.
+// AMBUSH: Put the top card of the Hero Deck into the Escape Pile. Whackoid captures all Bystanders from other Villains in the city.
+// If he captures any Bystanders this way, each player gains a Wound.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Alchemax Enforcers", "Whackoid", 4, 3, {
+    ambush: ev => {
+      gameState.herodeck.withTop(c => moveCardEv(ev, c, gameState.escaped));
+      const toCapture = cityVillains().flatMap(c => c.captured.limit(isBystander));
+      toCapture.each(c => captureEv(ev, ev.source, c));
+      toCapture.size > 0 && eachPlayer(p => gainWoundEv(ev, p));
+    },
+    varDefense: c => c.printedDefense + (cyberModEnemyAmount(Color.INSTINCT) ? 1 : 0) + (cyberModEnemyAmount(Color.COVERT) >= 3 ? 3 : 0),
+  })],
+]},
+{ name: "False Aesir of Alchemax", cards: [
+// <b>Uru-Enchanted Weapon</b>
+// AMBUSH: Heimdall 2099 captures a Bystander.
+// <b>Fight or Fail</b>: If the <i>(Rainbow)</i> Bridge is empty and Heimdall's <b>Uru-Enchanted Weapon</b> revealed a Villain, that Villain enters the Bridge.
+// When a Villain enters this way, shuffle a card from the Bystander Deck into the Villain Deck.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("False Aesir of Alchemax", "Heimdall 2099", 3, 2, {
+    ambush: ev => captureEv(ev, ev.source),
+    trigger: uruEnchantedTrigger(1),
+    fightFail: uruEnchantedFail,
+    fight: ev => {
+      withCity('BRIDGE', rainbowBridge => {
+        isCityEmpty(rainbowBridge) && uruEnchantedCards(ev).limit(isVillain).each(c => {
+          enterCityEv(ev, c);
+          gameState.bystanders.withTop(b => shuffleIntoEv(ev, b, gameState.villaindeck));
+        });
+      });
+    }
+  })],
+// <b>2 Uru-Enchanted Weapons</b>
+// <b>Fight or Fail</b>: A Henchman Villain from any player's Victory Pile enters the city.
+// ESCAPE: Each player KOs two Henchmen from their Victory Pile or gains a Wound.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("False Aesir of Alchemax", "Hela 2099", 3, 3, {
+    escape: ev => {
+      eachPlayer(p => {
+        const options = p.victory.limit(isHenchman);
+        if (options.size <= 2) gainWoundEv(ev, p);
+        else chooseOneEv(ev, "", ["Gain a Wound", () => gainWoundEv(ev, p)], ["KO 2 Henchmen", () =>
+          selectObjectsEv(ev, "Choose Henchmen to KO", 2, options, c => KOEv(ev, c))]);
+      });
+    },
+    trigger: uruEnchantedTrigger(2),
+    fightFail: uruEnchantedFail,
+    fight: ev => {
+      selectCardEv(ev, "Choose a Henchman to enter the city", gameState.players.flatMap(p => p.victory.limit(isHenchman)), c => enterCityEv(ev, c));
+    },
+  })],
+// <b>2 Uru-Enchanted Weapons</b>
+// AMBUSH: Shuffle a Master Strike from the KO pile back into the Villain Deck.
+// <b>Fight or Fail</b>: If his <b>Uru-Enchanted Weapon</b> revealed any Master Strikes, play one of them.
+// ESCAPE: Search the Villain Deck for a Master Strike, shuffle the Villain Deck, and play that Master Strike.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("False Aesir of Alchemax", "Loki 2099", 3, 3, {
+    ambush: ev => gameState.ko.limit(isStrike).withFirst(c => shuffleIntoEv(ev, c, gameState.villaindeck)),
+    escape: ev => {
+      gameState.villaindeck.limit(isStrike).withFirst(c => playStrikeEv(ev, c));
+      gameState.villaindeck.shuffle();
+    },
+    trigger: uruEnchantedTrigger(2),
+    fightFail: uruEnchantedFail,
+    fight: ev => uruEnchantedCards(ev).limit(isStrike).withFirst(c => playStrikeEv(ev, c)),
+  })],
+// <b>Uru-Enchanted Weapon</b>
+// AMBUSH: Each player discards a card that costs 5 or more or gains a Wound.
+// <b>Fight or Fail</b>: Put a card that costs 5 or more from your discard pile on the bottom of your deck.
+// ESCAPE: Repeat the Ambush effect.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("False Aesir of Alchemax", "Thor 2099", 5, 4, {
+    ambush: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a card to discard", p.hand.limit(c => c.cost >= 5), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
+    fight: ev => {
+      selectCardEv(ev, "Choose a card to put on the bottom of your deck", playerState.discard.limit(c => c.cost >= 5), c => moveCardEv(ev, c, playerState.deck, true));
+    },
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a card to discard", p.hand.limit(c => c.cost >= 5), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
+    trigger: uruEnchantedTrigger(1),
+    fightFail: uruEnchantedFail,
+  })],
+]},
+]);

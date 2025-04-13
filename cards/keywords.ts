@@ -1292,21 +1292,22 @@ function drBillFosterOptions(costs: number[] = playerState.hand.deck.map(c => c.
 // * The cyber-tech that infused Hulk 2099 with gamma rays lets him push his pain under the surface, channeling it into ever more strength and rage. Accordingly, Hulk 2099 can send <i>Wounds</i> Undercover and use "Cyber-Mod Wound" abilities in the same way.
 function cyberModEv(ev: Ev, limit: Filter<Card>, min: number, effect: (n: number) => void) {
   const amount = playerState.victory.count(limit);
-  playerState.victory.count(limit) >= min && effect(amount);
+  amount >= min && effect(amount);
 }
 
 // <b>Cyber-Mods for Enemies</b>: The corporations, bounty hunters, and enforcers of 2099 also enhance their abilities with deadly cybernetic tech, often scavenged from captured victims. Some enemies say things like "{CYBER-MOD COVERT COVERT COVERT} This gets +3 Attack.
 // * <b>Villains and Masterminds use their Cyber-Mod abilities only while there are cards of the listed Hero Classes in the Escape Pile.</b>
 // * Likewise, if a Villain says "<b>Fight — Cyber-Mod</b> [Tech]: KO one of your Heroes", use that ability only if there is a [Tech] card in the Escape Pile.
-// * If a Villain escapes the city with a captured Hero, that Hero card stays in the Escape Pile and can help activate all enemies' Cyber-Mods.
-// * Cyber-Mod Enemies also have ways to put Hero cards directly into the Escape Pile, helping activate Cyber-Mods.
-
+function cyberModEnemyAmount(limit: Filter<Card>) {
+  return gameState.escaped.count(limit);
+}
+function cyberModEnemyEv(ev: Ev, limit: Filter<Card>, min: number, effect: (n: number) => void) {
+  const amount = cyberModEnemyAmount(limit);
+  amount >= min && effect(amount);
+}
 // {FATED FUTURE}: Marvel 2099 shows a chilling vision of what could come to pass if the characters of the Marvel Universe don't change Earth's fate.
 // Sometimes fate can seem inevitable... until someone finds the courage to turn the future in a new direction. This is represented by the new Fated Future keyword.
 // * <b>When you play a card with Fated Future, you may put it on the bottom of your deck.</b>
-// * This helps you draw the card again more quickly than if you discarded it, waited for your discard pile to shuffle into a new deck, then waited to draw the card.
-// * You can "predict the future" of when you’ll see it again.
-// * You can also increase the chance that you will draw multiple Fated Future cards in the same powerful hand once you get to the bottom of your deck.
 function fatedFutureEv(ev: Ev) {
   chooseMayEv(ev, "Put this card on the bottom of your deck", () => {
     moveCardEv(ev, ev.source, playerState.deck, true);
