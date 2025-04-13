@@ -3575,3 +3575,129 @@ makeSchemeCard("Siphon Energy from the Quantum Realm", { twists: 9, vd_villain: 
   setSchemeTarget(4);
 }),
 ]);
+addTemplates("SCHEMES", "2099", [
+// SETUP: 11 Twists
+// RULE: Once per turn, you may stack one of your non-grey Heroes next to this Scheme to earn "Ten Million Votes" for that Hero Name.
+// If you do, you may also send one of your grey Heroes {UNDERCOVER} as "Secret Service."
+// EVILWINS: When the Mastermind is elected President by having Forty Million more Votes than the highest-voted Hero Name.
+makeSchemeCard("Become President of the United States", { twists: 11 }, ev => {
+  // Twist: If there's a Villain in the Bank or Streets, the Mastermind "vows to crush crime," and you stack this Twist next to the Mastermind as "Ten Million Votes."
+  if (cityVillains().has(c => isLocation(c.location, 'BANK', 'STREETS'))) {
+    attachCardEv(ev, ev.twist, gameState.mastermind, 'TEN_MILLION_VOTES');
+  } else {
+  // Otherwise, you may discard two cards to "counter negative advertising," shuffle this Twist back into the Villain Deck, and play another card from that deck.
+  // If you don't discard, stack this Twist next to the Mastermind as "Ten Million Votes."
+    if (playerState.hand.size >= 2) {
+      chooseOneEv(ev, "", ["Discard 2 cards", () => {
+        selectObjectsEv(ev, "Choose 2 cards to discard", 2, playerState.hand.deck, c => discardEv(ev, c));
+        shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+        playAnotherEv(ev);
+      }], ["Don't discard", () => attachCardEv(ev, ev.twist, gameState.mastermind, 'TEN_MILLION_VOTES')]);
+    } else attachCardEv(ev, ev.twist, gameState.mastermind, 'TEN_MILLION_VOTES');
+  }
+}, [], () => {
+  setSchemeTarget(4);
+  gameState.specialActions = ev => [new Ev(ev, 'EFFECT', {
+    cost: { cond: () => yourHeroes().has(isNonGrayHero) && !countPerTurn('VOTE') },
+    desc: 'Stack a Hero for Ten Million Votes',
+    func: () => {
+      incPerTurn('VOTE');
+      selectCardEv(ev, "Choose a Hero to stack", yourHeroes().limit(isNonGrayHero), c => attachCardEv(ev, c, gameState.scheme, 'TEN_MILLION_VOTES'));
+      selectCardOptEv(ev, "Choose a Hero to send undercover", yourHeroes().limit(Color.GRAY), c => sendUndercoverEv(ev, c));
+      cont(ev, () => {
+        const ourVotes = gameState.scheme.attached('TEN_MILLION_VOTES');
+        const theirVotes = gameState.mastermind.attached('TEN_MILLION_VOTES');
+        const candidates = gameState.scheme.attached('TEN_MILLION_VOTES').unique(c => c.heroName);
+        const bestCandidate = candidates.max(c => ourVotes.limit(c => c.heroName === c.heroName).size)
+        schemeProgressEv(ev, (theirVotes.size - bestCandidate));
+      });
+    }
+  })]
+}),
+// SETUP: Add an extra Hero. 8 Twists, representing "Toxic Sludge."
+// RULE: To recruit a Hero, you must also pay 2 Recruit for each Toxic Sludge under it. During your turn, if there is any Sludge under the HQ, you may
+// "flush the Toxic Sludge into the river." If you do, then KO all the Sludge and the Heroes in those HQ spaces, and each player gains a Wound.
+// EVILWINS: When the Hero Deck runs out or there are 8 Toxic Sludges under the HQ and/or in the river <i>(KO pile)</i>.
+makeSchemeCard("Befoul Earth into a Polluted Wasteland", { twists: 8, heroes: [4, 6, 6, 6, 7] }, ev => {
+  // Twist: Put this Toxic Sludge under an HQ space. No space can have two Sludges unless all spaces already have one.
+  selectCardEv(ev, "Choose a Hero to put Sludge under", gameState.hq.limit(d => d.attached('SLUDGE').size === -gameState.hq.max(c => -c.attached('SLUDGE').size)), c => {
+    attachCardEv(ev, ev.twist, c, 'SLUDGE');
+  });
+  cont(ev, () => schemeProgressEv(ev, gameState.hq.sum(d => d.attached('SLUDGE').size + gameState.ko.count(isTwist))));
+}, [
+  runOutProgressTrigger('HERO', false),
+], () => {
+  setSchemeTarget(8);
+  gameState.specialActions = ev => [new Ev(ev, 'EFFECT', {
+    cost: { cond: () => gameState.hq.has(d => d.attached('SLUDGE').size > 0) },
+    desc: 'Flush the Toxic Sludge',
+    func: ev => {
+      gameState.hq.each(d => {
+        d.attached('SLUDGE').size && d.limit(isHero).each(c => KOEv(ev, c));
+        d.attached('SLUDGE').each(c => KOEv(ev, c));
+      });
+      eachPlayer(p => gainWoundEv(ev, p));
+    },
+  })];
+  addStatSet('recruitCost', c => c.attached('SLUDGE').size > 0, (c, v) => ({ recruit: (v.recruit || 0) + c.location.attached('SLUDGE').size * 2, ...v}));
+}),
+// SETUP: 7 Twists, representing "Cyberspace."
+// RULE: Enemies under any Cyberspace get +1 Attack for each Cyberspace on the board, and they can be fought with any combination of Recruit and Attack.
+makeSchemeCard("Pull Reality into Cyberspace", { twists: 7 }, ev => {
+  if (ev.nr <= 5) {
+    // Twist 1-5 Put this Cyberspace above the rightmost city space that isn't yet under Cyberspace.
+    gameState.city.limit(d => d.attached('CYBERSPACE').size === 0).withLast(d => {
+      attachCardEv(ev, ev.twist, d, 'CYBERSPACE');
+    });
+  } else if (ev.nr === 6) {
+    // Twist 6 Put this Cyberspace above the Mastermind.
+    attachCardEv(ev, ev.twist, gameState.mastermind, 'CYBERSPACE');
+  } else if (ev.nr === 7) {
+    // Twist 7 Evil Wins!
+  }
+  schemeProgressEv(ev, ev.nr);
+}, [], () => {
+  setSchemeTarget(7);
+  addStatMod('defense', c => c.attached('CYBERSPACE').size > 0, () => [gameState.mastermind, ...gameState.city].count(d => d.attached('CYBERSPACE').size > 0));
+  addStatSet('fightCost', c => c.attached('CYBERSPACE').size > 0, (c, v) => ({
+    either: (v.recruit || 0) + (v.attack || 0), recruit: 0, attack: 0, ...v
+  }));
+}),
+// SETUP: Add an extra Hero. 11 Twists.
+// {POWER Strength} <b>Green Globe</b>: Each player discards a card with a Recruit icon.
+// {POWER Instinct} <b>Alchemax</b>: Each player discards a [Instinct] Hero or gains a Wound.
+// {POWER Covert} <b>Public Eye</b>: Each player discards two cards, then draws a card.
+// {POWER Tech} <b>D/MONIX</b>: Each player discards a card with an Attack icon.
+// {POWER Ranged} <b>Stark-Fujikawa</b>: A Villain from your Victory Pile reenters the city.
+// EVILWINS: When a single Mega-Corp has 3 Dominations.
+makeSchemeCard("Subjugate Earth with Mega-Corporations", { twists: 8, heroes: [4, 6, 6, 6, 7] }, ev => {
+  // Twist: Put the Hero from the HQ space under the Bank into a "Mega-Corp Domination" Stack matching its Hero Class <i>(off of the board)</i>.
+  // Do the listed effect for that Mega-Corp.
+  withCity('BANK', bank => bank.above.each(c => {
+    const megaCorp = (corp: number) => {
+      let corpNames = new Map([
+        [Color.STRENGTH, "Green Globe"],
+        [Color.INSTINCT, "Alchemax"],
+        [Color.COVERT, "Public Eye"],
+        [Color.TECH, "D/MONIX"],
+        [Color.RANGED, "Stark-Fujikawa"],
+      ]);
+      attachCardEv(ev, c, gameState.scheme, corpNames.get(corp));
+      cont(ev, () => schemeProgressEv(ev, [...corpNames.values()].max(n => gameState.scheme.attachedDeck(n).size)));
+      if (corp == Color.STRENGTH) {
+        eachPlayer(p => pickDiscardEv(ev, 1, p, hasRecruitIcon));
+      } else if (corp == Color.INSTINCT) {
+        eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", handOrDiscard(p).limit(Color.INSTINCT), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
+      } else if (corp == Color.COVERT) {
+        eachPlayer(p => pickDiscardEv(ev, 2, p));
+        eachPlayer(p => drawEv(ev, 1, p));
+      } else if (corp == Color.TECH) {
+        eachPlayer(p => pickDiscardEv(ev, 1, p, hasAttackIcon));
+      } else if (corp == Color.RANGED) {
+        selectCardEv(ev, "Choose a Villain to reenter the city", playerState.victory.limit(isVillain), c => enterCityEv(ev, c));
+      }
+    };
+    isMuliColor(c) ? chooseClassEv(ev, megaCorp, c1 => (c1 & c.color) !== 0) : megaCorp(c.color);
+  }));
+}),
+]);
