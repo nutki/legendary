@@ -3851,3 +3851,178 @@ makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11,
   varDefense: c => c.printedDefense + (gameState.mastermind.attached('MULTIVERSE').has(isVillain) ? c.conqueror.amount : 0),
 }),
 ]);
+addTemplates("MASTERMINDS", "2099", [
+// <b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>. // TODO
+// LEADS: Alchemax Enforcers
+...makeEpicAdaptingMastermindCard("Alchemax Executives", 6, "Alchemax Enforcers", 
+[
+  makeEpicAdaptingTacticsCard(["Avatarr, CEO of Alchemax", "Epic Avatarr"], [10, 13], ev => {
+    // Put the two highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED} Each player gains a Wound. <b>Adapt</b>.
+    // Put the three highest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD RANGED} Each player gains a Wound to the top of their deck. <b>Adapt</b>.
+    repeat(ev.source.epic ? 3 : 2, () => cont(ev, () => {
+      selectCardEv(ev, "Choose a Hero to put into the Escape Pile", hqHeroes().highest(c => c.cost), c => moveCardEv(ev, c, gameState.escaped));
+    }));
+    cont(ev, () => cyberModEnemyEv(ev, Color.RANGED, 1, () => {
+      eachPlayer(p => ev.source.epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p))
+    }));
+  }, ev => {
+    // Each other player puts a non-grey Hero from their hand or discard pile into the Escape Pile. <b>Adapt</b>.
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to put into the Escape Pile", handOrDiscard(p).limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.escaped)));
+  }),
+// Fearmaster gets +1 Attack for each grey Hero you have.
+// Fearmaster gets +2 Attack for each grey Hero you have.
+  makeEpicAdaptingTacticsCard(["Fearmaster, VP of the Public Eye", "Epic Fearmaster"], [7, 8], ev => {
+    // STRIKE: Put the two lowest-cost Heroes from the HQ into the Escape Pile.   Then {CYBER-MOD INSTINCT} Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws a card for each card they discarded this way. <b>Adapt</b>.
+    // STRIKE: Put the three lowest-cost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD INSTINCT} Count the number of [Instinct] cards in the Escape Pile. Each player discards that many non-grey Heroes, then draws two cards. <b>Adapt</b>.
+    repeat(ev.source.epic ? 3 : 2, () => cont(ev, () => {
+      selectCardEv(ev, "Choose a Hero to put into the Escape Pile", hqHeroes().highest(c => -c.cost), c => moveCardEv(ev, c, gameState.escaped));
+    }));
+    cont(ev, () => cyberModEnemyEv(ev, Color.INSTINCT, 1, n => eachPlayer(p => {
+      pickDiscardEv(ev, n, p, isNonGrayHero);
+    })));
+    cont(ev, () => eachPlayer(p => {
+      drawEv(ev, ev.source.epic ? 2 : pastEvents('DISCARD').count(e => e.parent === ev));
+    }));
+  }, ev => {
+    // Each other player discards 2 grey Heroes. <b>Adapt</b>.
+    // Each other player discards 3 grey Heroes. <b>Adapt</b>.
+    eachOtherPlayerVM(p => pickDiscardEv(ev, ev.source.epic ? 3 : 2, p, Color.GRAY));
+  }, {
+    varDefense: c => c.printedDefense + yourHeroes().limit(Color.GRAY).size * (c.epic ? 2 : 1),
+  }),
+// {CYBER-MOD COVERT COVERT} John Herod gets +5 Attack.
+// {CYBER-MOD COVERT COVERT} John Herod gets +7 Attack.
+  makeEpicAdaptingTacticsCard(["John Herod, Executive VP", "Epic John Herod"], [8, 9], ev => {
+    // STRIKE: Put the two rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT} You may pay 5 Attack this turn to "expose Fake Captain America."
+    // If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
+    // STRIKE: Put the three rightmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD COVERT} You may pay 7 Attack this turn to "expose Fake Captain America."
+    // If you do, KO one of your Heroes. If you don't by the end of this turn, each player gains a Wound <i>(after you draw your new hand)</i>. <b>Adapt</b>.
+    hqHeroes().slice(ev.source.epic ? -3 : -2).each(c => moveCardEv(ev, c, gameState.escaped));
+    cont(ev, () => cyberModEnemyEv(ev, Color.COVERT, 1, () => {
+      let done = false;
+      addTurnAction(new Ev(ev, 'EFFECT', {
+        cost: { attack: ev.source.epic ? 7 : 5, cond: () => !done },
+        desc: "Expose Fake Captain America",
+        func: ev => {
+          selectCardAndKOEv(ev, yourHeroes());
+          done = true;
+        },
+      }));
+      addTurnTrigger('CLEANUP', () => true, () => !done && eachPlayer(p => gainWoundEv(ev, p)));
+    }));
+  }, ev => {
+    // KO one of your Heroes. <b>Adapt</b>.
+    selectCardAndKOEv(ev, yourHeroes());
+  }, {
+    varDefense: c => c.printedDefense + (cyberModEnemyAmount(Color.COVERT) >= 2 ? c.epic ? 7 : 5 : 0),
+  }),
+// {CYBER-MOD STRENGTH} Tiger Wylde gets +1 Attack for each [Strength] card in the Escape Pile.
+  makeEpicAdaptingTacticsCard(["Tiger Wylde, General of Alchemax Elite", "Epic Tiger Wylde"], [9, 11], ev => {
+    // STRIKE: Put the two leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH} Each player reveals a [Tech] card or discards a card. <b>Adapt</b>.
+    // STRIKE: Put the three leftmost Heroes from the HQ into the Escape Pile. Then {CYBER-MOD TECH} Each player discards a card at random. <b>Adapt</b>.
+    hqHeroes().slice(0, ev.source.epic ? 3 : 2).each(c => moveCardEv(ev, c, gameState.escaped));
+    cont(ev, () => cyberModEnemyEv(ev, Color.TECH, 1, () => eachPlayer(p => {
+      ev.source.epic ? p.hand.withRandom(c => discardEv(ev, c)) : revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, 1, p), p);
+    })));
+  }, ev => {
+    // Send a Hero from the Escape Pile {UNDERCOVER}. Then <b>Adapt</b>.
+    selectCardEv(ev, "Choose a Hero to send Undercover", gameState.escaped.limit(isHero), c => sendUndercoverEv(ev, c));
+  }, {
+    varDefense: c => c.printedDefense + cyberModEnemyAmount(Color.STRENGTH),
+  }),
+]),
+// LEADS: Any "Alchemax" or "Sinister" Villain Group TODO
+...makeEpicAdaptingMastermindCard("Sinister Six 2099", 6, u, [
+  makeEpicAdaptingTacticsCard("Electro 2099", [9, 12], ev => {
+    // Each player discards three cards then draws a card. <b>Adapt</b>.
+    // Each player discards four cards then draws a card. <b>Adapt</b>.
+    eachPlayer(p => pickDiscardEv(ev, ev.source.epic ? 4 : 3, p));
+    eachPlayer(p => drawEv(ev, 1, p));
+  }, ev => {
+    // You may discard a card. If you do, draw a card. <b>Adapt</b>.
+    // You may discard any number of cards, then draw that many cards. <b>Adapt</b>.
+    ev.source.epic ?
+      selectObjectsAnyEv(ev, "Choose cards to discard", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); }) :
+      selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
+  }),
+// Doctor Octopus 2099 gets +4 Attack unless you played at least 8 cards or a Hero that costs 8 this turn.
+// Doctor Octopus 2099 gets +8 Attack unless you played at least 8 cards or a Hero that costs 8 this turn.
+  makeEpicAdaptingTacticsCard("Doctor Octopus 2099", [8, 8], ev => {
+    // STRIKE: Each player discards cards whose total cost is at least 8 <i>(for that player)</i> or gains a Wound. <b>Adapt</b>.
+    // STRIKE: Each player discards cards whose total cost is exactly 8 <i>(for that player)</i> or gains a Wound. <b>Adapt</b>.
+    eachPlayer(p => {
+      const cards: Card[] = []
+      selectObjectsAnyEv(ev, "Choose cards to discard", p.hand.deck, c => cards.push(c), p);
+      cont(ev, () => (ev.source.epic ? cards.sum(c => c.cost) !== 8 : cards.sum(c => c.cost) < 8) ? gainWoundEv(ev, p) : cards.each(c => discardEv(ev, c)));
+    });
+  }, ev => {
+    // You may gain a Hero from the HQ whose cost is at least 8. <b>Adapt</b>.
+    // You get +4 Recruit, usable only to recruit a Hero that costs at least 8. <b>Adapt</b>.
+    ev.source.epic ? addRecruitSpecialEv(ev, c => isHero(c) && c.cost >= 8, 4) : selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.cost >= 8), c => gainEv(ev, c));
+  }, {
+    printedVP: 8,
+    varDefense: c => c.printedDefense + (pastEvents('PLAY').size >= 8 ? 0 : (c.epic ? 8 : 4)),
+  }),
+// Goblin 2099 gets -1 Attack for each Bystander in your Victory Pile.
+  makeEpicAdaptingTacticsCard("Goblin 2099", [11, 14], ev => {
+    // STRIKE: Each player puts a Bystander from their Victory Pile into the Escape Pile or gains a Wound. <b>Adapt</b>.
+    // STRIKE: Each player puts two Bystanders from their Victory Pile into the Escape Pile or gains a Wound. <b>Adapt</b>.
+    eachPlayer(p => {
+      if (ev.source.epic) {
+        const count = p.victory.count(isBystander);
+        count < 2 ? gainWoundEv(ev, p) : chooseOptionEv(ev, "", [{l:"Gain a Wound", v:() => gainWoundEv(ev, p)}, {l:"Put 2 Bystanders into the Escape Pile", v:() => {
+          selectObjectsEv(ev, "Choose Bystanders to put into the Escape Pile", 2, p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped), p);
+        }}], v => v(), p);
+      } else selectCardOrEv(ev, "Choose a Bystander to put into the Escape Pile", p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped), () => gainWoundEv(ev, p), p);  
+    });
+  }, ev => {
+    // Each Villain in the city captures a Bystander. <b>Adapt</b>.
+    cityVillains().each(c => captureEv(ev, c));
+  }, {
+    varDefense: c => c.printedDefense - playerState.victory.count(isBystander),
+  }),
+// Sandwoman 2099 gets +2 Attack for each Villain in the city.
+// Sandwoman 2099 gets +3 Attack for each Villain in the city.
+  makeEpicAdaptingTacticsCard("Sandwoman 2099", [6, 7], ev => {
+    // STRIKE: You may either recruit or attack this turn, but not both. <b>Adapt</b>.
+    addTurnTrigger('RECRUIT', () => true, () => forbidAction('FIGHT'));
+    addTurnTrigger('FIGHT', () => true, () => forbidAction('RECRUIT'));
+  }, ev => {
+    // The next player may either recruit or attack in their next turn, but not both. <b>Adapt</b>.
+    addFutureTrigger(ev => {
+      addTurnTrigger('RECRUIT', () => true, () => forbidAction('FIGHT'));
+      addTurnTrigger('FIGHT', () => true, () => forbidAction('RECRUIT'));  
+    });
+  }, {
+    varDefense: c => c.printedDefense + (cityVillains().size * (c.epic ? 3 : 2)),
+  }),
+// Venom 2099 gets -1 Attack for each card you have that costs 2.
+  makeEpicAdaptingTacticsCard("Venom 2099", [10, 13], ev => {
+    // STRIKE: Each player KOs a card that costs 2 from their hand or discard pile or gains a Wound. <b>Adapt</b>.
+    // STRIKE: Each player KOs a card that costs 2 from their hand or gains a Wound. <b>Adapt</b>.
+    eachPlayer(p => selectCardOrEv(ev, "Choose a card to KO", (ev.source.epic ? p.hand.deck : handOrDiscard(p)).limit(c => c.cost === 2), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  }, ev => {
+    // You may gain a Hero that costs 2 from the HQ or KO pile. <b>Adapt</b>.
+    selectCardOptEv(ev, "Choose a Hero to gain", [...hqHeroes(), ...gameState.ko.limit(isHero)].limit(c => c.cost === 2), c => gainEv(ev, c));
+  }, {
+    varDefense: c => c.printedDefense - revealable().count(c => c.cost === 2),
+  }),
+// Vulture 2099 gets + Attack equal to the highest VP value of any Villain in the Escape Pile, Rooftops, or Bridge.
+// Vulture 2099 gets + Attack equal to the highest two VP values among Villains in the Escape Pile, Rooftops, or Bridge.
+  makeEpicAdaptingTacticsCard("Vulture 2099", [7, 9], ev => {
+    // STRIKE: If there are any Villains on the Rooftops or Bridge, one of them escapes and each player gains a Wound. <b>Adapt</b>.
+    selectCardEv(ev, "Choose a Villain to escape", cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'BRIDGE')), c => {
+      villainEscapeEv(ev, c);
+      eachPlayer(p => gainWoundEv(ev, p));
+    });
+  }, ev => {
+    // You may move a Villain to another city space. If another Villain is already there, swap them. <b>Adapt</b>.
+    selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
+      selectCardEv(ev, "Choose a new city space", cityAdjacent(v.location), dest => swapCardsEv(ev, v.location, dest));
+    });
+  }, {
+    varDefense: c => c.printedDefense + [...gameState.escaped.limit(isVillain), ...cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'BRIDGE'))]
+      .sort((a, b) => b.vp - a.vp).slice(0, c.epic ? 2 : 1).sum(c => c.vp),
+  }),
+]),
+]);

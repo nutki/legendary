@@ -176,6 +176,7 @@ interface MastermindCardAbillities {
   finishThePrey?: Handler
   commonTacticEffect?: Handler
   conqueror?: { locations: CityLocation[], amount: number };
+  printedVP?: number // For adapting tactics with custom VP
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -406,7 +407,7 @@ function makeAdaptingMastermindCard(name: string, vp: number, leads: string, tac
   c.isAdaptingMastermind = true;
   tactics.each(c => {
     c.mastermindName = name;
-    c.printedVP = vp;
+    if (c.printedVP === undefined) c.printedVP = vp;
     c.leads = leads;
     c.isAdaptingMastermind = true;
   });
@@ -420,6 +421,17 @@ function makeAdaptingTacticsCard(name: string, defense: number, strike: Handler,
   c.fight = fight;
   abilities && Object.assign(c, abilities);
   return c;
+}
+function makeEpicAdaptingMastermindCard(name: string, vp: number, leads: string, tactics: [Card, Card][] ) {
+  const m1 = makeAdaptingMastermindCard(name, vp, leads, tactics.map(t => t[0]));
+  const m2 = makeAdaptingMastermindCard("Epic " + name, vp, leads, tactics.map(t => t[1]));
+  return [m1, m2];
+}
+function makeEpicAdaptingTacticsCard(name: string | [string, string], defense: [number, number], strike: Handler, fight: Handler, abilities?: MastermindCardAbillities): [Card, Card] {
+  const t1 = makeAdaptingTacticsCard(typeof(name) === "string" ? name : name[0], defense[0], strike, fight, abilities);
+  const t2 = makeAdaptingTacticsCard(typeof(name) === "string" ? "Epic " + name : name[1], defense[1], strike, fight, abilities);
+  t2.epic = true;
+  return [t1, t2];
 }
 function makeBystanderCard(name: string, rescue?: (ev: Ev) => void, vp?: (c: Card) => number) {
   let c = new Card("BYSTANDER", name);
