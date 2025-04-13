@@ -6314,3 +6314,154 @@ addVillainTemplates("2099", [
   })],
 ]},
 ]);
+addVillainTemplates("Weapon X", [
+{ name: "Berserkers", cards: [
+// {BERSERK}, {BERSERK}
+// FIGHT: KO one your Heroes. If any of the cards you Berserked were [Instinct] or [Tech], shuffle Cyber into the Villain Deck, then play another card from the Villain Deck.
+// FAIL: Each player discards a [Instinct] or [Tech] Hero or gains a Wound.
+// ESCAPE: Do the Fail effect.
+// ATTACK: 5+
+// VP: 5
+  [ 1, makeVillainCard("Berserkers", "Cyber", 5, 5, {
+    fight: ev => {
+      selectCardAndKOEv(ev, yourHeroes());
+      if (enemyBerserkCards(ev).has(Color.INSTINCT | Color.TECH)) {
+        shuffleIntoEv(ev, ev.source, gameState.villaindeck);
+        playAnotherEv(ev);
+      }
+    },
+    fightFail: enemyBerserkFail(ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p)))),
+    escape: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
+    trigger: enemyBerserkTrigger(2),
+  })],
+// {BERSERK}, {BERSERK}
+// FIGHT: Choose a player to gain this as a Hero.
+// FAIL: KO a non-grey Hero from your discard pile.
+// ESCAPE: Each player discards a non-grey Hero.
+// ATTACK: 3+
+// GAINABLE
+// TEAM: X-Force
+// CLASS: [Instinct]
+// {POWER Instinct} {BERSERK}, {BERSERK}
+// ATTACKG: 2+
+  [ 3, makeGainableCard(makeVillainCard("Berserkers", "Feral", 3, u, {
+    fight: ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)),
+    fightFail: ev => selectCardEv(ev, "Choose a Hero to KO", playerState.discard.limit(isNonGrayHero), c => KOEv(ev, c)),
+    escape: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, isNonGrayHero)),
+    trigger: enemyBerserkTrigger(2),
+  }), u, 2, Color.INSTINCT, "X-Force", "D", ev => superPower(Color.INSTINCT) && berserkEv(ev, 2))],
+// {BERSERK}
+// AMBUSH: Choose a card named "Feral" from any player's discard pile to enter the city as a Villain.
+// FIGHT: Draw the card you Berserked.
+// FAIL: When you draw a new hand at the end of this turn, discard a card.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Berserkers", "Thornn", 3, 2, {
+    ambush: ev => selectCardEv(ev, "Choose a card to enter the city", gameState.players.flatMap(p => p.discard.limit(c => c.cardName === "Feral")), c => enterCityEv(ev, c)),
+    fight: ev => enemyBerserkCards(ev).each(c => drawCardEv(ev, c)),
+    fightFail: enemyBerserkFail(ev => addTurnTrigger('CLEANUP', () => true, () => pickDiscardEv(ev, 1))),
+    trigger: enemyBerserkTrigger(1),
+  })],
+// {BERSERK}, {BERSERK}, {BERSERK}
+// FIGHT: KO one of the cards you Berserked this way that costs 0.
+// FAIL: KO a card discarded by Wild Child's Berserking that costs 1 or more. <i>(You can't KO cards you shuffled into your deck during the Berserking.)</i>
+// ATTACK: 3+
+// VP: 4
+  [ 2, makeVillainCard("Berserkers", "Wild Child", 3, 4, {
+    fight: ev => selectCardEv(ev, "Choose a card to KO", enemyBerserkCards(ev).limit(c => c.cost === 0), c => KOEv(ev, c)),
+    fightFail: ev => selectCardEv(ev, "Choose a card to KO", enemyBerserkCards(ev).limit(c => c.cost > 0), c => KOEv(ev, c)),
+    trigger: enemyBerserkTrigger(3),
+  })],
+]},
+{ name: "Weapon Plus", cards: [
+// {WEAPON X SEQUENCE}
+// {BERSERK}
+// FIGHT: KO one of your Heroes.
+// FAIL: You gain a Wound.
+// ATTACK: 3+
+// VP: 4
+  [ 1, makeVillainCard("Weapon Plus", "Daken", 3, 4, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    fightFail: ev => gainWoundEv(ev, playerState),
+    trigger: enemyBerserkTrigger(1),
+    varDefense: weaponXSequenceVarDefense(1),
+  })],
+// {WEAPON X SEQUENCE}
+// AMBUSH: Reveal the top 3 cards of the Hero Deck. Huntsman captures each that costs 4 or less. Put the rest on the bottom of the Hero Deck.
+// FIGHT: If Huntsman has any captured Heroes, choose a player to gain one of them and return Huntsman to his city space with the rest of them <i>(Ignore his Ambush.)</i>
+// ATTACK: 2+
+// VP: 2
+  [ 1, makeVillainCard("Weapon Plus", "Huntsman (Weapon XII)", 2, 2, {
+    ambush: ev => revealHeroDeckEv(ev, 3, cards => {
+      cards.limit(c => c.cost <= 4).each(c => attachCardEv(ev, c, ev.source, 'HUNTSMAN_CAPTURED'));
+    }),
+    fight: ev => {
+      selectCardOrEv(ev, "Choose a Hero to gain", ev.source.attached('HUNTSMAN_CAPTURED'), c => {
+        choosePlayerEv(ev, p => gainEv(ev, c, p));
+      }, () => {
+        enterCityEv(ev, ev.source, u, u, true);
+      });
+    },
+    varDefense: weaponXSequenceVarDefense(1),
+  })],
+// {WEAPON X SEQUENCE}
+// FIGHT: Reveal the top card of the Hero Deck as "Nuke's Adrenaline Pill":
+// {POWER Covert} "Rage" — Each other player gains a Wound.
+// {POWER Instinct} "Balance" — Draw a card.
+// {POWER Ranged} "Relax" — You get +2 Recruit.
+// ESCAPE: Each player gains a Wound.
+// ATTACK: 2+
+// VP: 2
+  [ 2, makeVillainCard("Weapon Plus", "Nuke (Weapon VII)", 2, 2, {
+    fight: ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+      isColor(Color.COVERT)(c) && eachOtherPlayerVM(p => gainWoundEv(ev, p));
+      isColor(Color.INSTINCT)(c) && drawEv(ev);
+      isColor(Color.RANGED)(c) && addRecruitEvent(ev, 2);
+    })),
+    escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    varDefense: weaponXSequenceVarDefense(1),
+  })],
+// {WEAPON X SEQUENCE}
+// AMBUSH: Skinless Man captures a Bystander of your choice from your Victory Pile. If you don't have one, gain a Wound and he captures one from the Bystander Deck.
+// ATTACK: 3+
+// VP: 3
+  [ 1, makeVillainCard("Weapon Plus", "Skinless Man (Weapon III)", 3, 3, {
+    ambush: ev => selectCardOptEv(ev, "Choose a Bystander to capture", playerState.victory.limit(isBystander), c => captureEv(ev, ev.source, c), () => {
+      gainWoundEv(ev, playerState);
+      captureEv(ev, ev.source);
+    }),
+    varDefense: weaponXSequenceVarDefense(1),
+  })],
+// {WEAPON X SEQUENCE}
+// FIGHT: Reveal the top card of the Hero Deck as her "Personality":
+// {POWER Strength} "Typhoid" — Put a card from your discard pile on top of the deck of the player to your left.
+// {POWER Instinct} "Mary" — Rescue a Bystander.
+// {POWER Covert} "Bloody Mary" — Each other player gains a Wound.
+// {POWER Tech} "Mutant Zero" — KO one of your cards that costs 0.
+// {POWER Ranged} "Walker" — Put a card you played this turn on top of your deck.
+// ATTACK: 3+
+// VP: 3
+  [ 2, makeVillainCard("Weapon Plus", "Typhoid Mary (Weapon IX)", 3, 3, {
+    fight: ev => revealHeroDeckEv(ev, 1, cards => cards.each(c => {
+      isColor(Color.STRENGTH)(c) && selectCardEv(ev, "Choose a card to put on top of the deck", playerState.discard.deck, c2 => moveCardEv(ev, c2, playerState.left.deck));
+      isColor(Color.INSTINCT)(c) && rescueEv(ev);
+      isColor(Color.COVERT)(c) && eachOtherPlayerVM(p => gainWoundEv(ev, p));
+      isColor(Color.TECH)(c) && selectCardAndKOEv(ev, revealable().limit(c => c.cost === 0));
+      isColor(Color.RANGED)(c) && selectCardEv(ev, "Choose a card to put on top of your deck", playerState.playArea.deck, c2 => moveCardEv(ev, c2, playerState.deck));
+    })),
+    varDefense: weaponXSequenceVarDefense(1),
+  })],
+// <b>Doubled Weapon X Sequence</b>
+// AMBUSH: Each player discards a non-grey Hero.
+// FIGHT: Each player KOs one of their grey Heroes.
+// ESCAPE: Each player KOs one of their non-grey Heroes.
+// ATTACK: 4+
+// VP: 6
+  [ 1, makeVillainCard("Weapon Plus", "Ultimaton (Weapon XV)", 4, 6, {
+    ambush: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, isNonGrayHero)),
+    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, p.discard.limit(Color.GRAY), p)),
+    escape: ev => eachPlayer(p => selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p)),
+    varDefense: weaponXSequenceVarDefense(2),
+  })],
+]},
+]);

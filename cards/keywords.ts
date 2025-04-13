@@ -1342,3 +1342,34 @@ function berserkWoundsEv(ev: Ev, n: number) {
 function isEnragingWound(c: Card) {
   return isWound(c);// TODO && c.enragingWound;
 }
+// based on Uru Enchanted Weapons
+const enemyBerserkTrigger: (amount: number) => Trigger = amount => ({
+  event: 'FIGHT',
+  match: (ev, source) => ev.what === source,
+  before: ev => {
+    const n = amount;
+    let sum = 0;
+    let cards: Card[] = [];
+    addTurnMod('defense', c => c === ev.parent.what, () => sum);
+    repeat(n, () => {
+      withPlayerDeckTopEv(ev, c => {
+        cards.push(c);
+        discardEv(ev, c);
+        sum += c.printedAttack || 0;
+      });
+    });
+    cont(ev, () => {
+      cards.each(c => pushEv(ev, 'URUENCHANTEDREVEAL', { what: c, func: () => {}}));
+    })
+    cont(ev, () => ev.parent.cost = getFightCost(ev.parent.what));
+    cont(ev, () => sum = 0);
+  },
+});
+function enemyBerserkCards(ev: Ev) {
+  return turnState.pastEvents.filter(e => e.type === 'URUENCHANTEDREVEAL' && getFightEvent(e) === getFightEvent(ev)).map(e => e.what).limit(c => c.location === playerState.discard);
+}
+const enemyBerserkFail = (effect?: Handler) => (ev: Ev) => {
+  forbidAction('FIGHT');
+  effect?.(ev);
+};
+const weaponXSequenceVarDefense = (n: number = 1) => (c: Card) => c.printedDefense + n * weaponXSequenceAmount(hqHeroes());
