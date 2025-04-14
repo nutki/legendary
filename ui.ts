@@ -351,7 +351,7 @@ function setupChange(): void {
   tmp.withOfficers = (<HTMLInputElement>document.getElementById('withOfficers')).checked;
   tmp.sidekicks = getBystanderSelects("setup_sidekicks");
   tmp.withSpecialOfficers = (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked;
-  tmp.withWounds = true;
+  tmp.wounds = getBystanderSelects("setup_wounds");
   tmp.withBindings = true;
   tmp.withMadame = (<HTMLInputElement>document.getElementById('withMadame')).checked;
   tmp.withNewRecruits = (<HTMLInputElement>document.getElementById('withNewRecruits')).checked;
@@ -363,6 +363,7 @@ function setupChange(): void {
 function setupInit(): void {
   makeBystanderSelects("setup_bystanders");
   makeBystanderSelects("setup_sidekicks", 'SIDEKICKS');
+  makeBystanderSelects("setup_wounds", 'WOUNDS');
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
   makeSelects("setup_mastermind", "MASTERMINDS", "Extra Mastermind", [ undefined ]);
@@ -397,6 +398,7 @@ function setupSet(s: Setup): void {
   (<HTMLSelectElement>document.getElementById('cityType')).value = s.cityType;
   setBysternderSelects("setup_bystanders", s.bystanders);
   setBysternderSelects("setup_sidekicks", s.sidekicks);
+  setBysternderSelects("setup_wounds", s.wounds);
   globalFormSetup = s;
 }
 function getPopups() {

@@ -5,13 +5,14 @@ const shieldTrooperTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Trooper', 0, u,
 const officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"DN");
 const twistTemplate = new Card("SCHEME TWIST", "Scheme Twist");
 const strikeTemplate = new Card("MASTER STRIKE", "Master Strike");
-const woundTemplate = makeWoundCard("Wound", function () {
+addTemplatesWithCounts("WOUNDS", "Legendary", [[ 30,
+makeWoundCard("Wound", function () {
   return !turnState.pastEvents.has(e => e.type === "FIGHT" || e.type === "RECRUIT");
 }, function (ev) {
   playerState.hand.limit(isWound).forEach(function (w) { KOEv(ev, w); });
   forbidAction('FIGHT');
   forbidAction('RECRUIT');
-});
+}) ]]);
 
 // EXPANSION Villains
 
@@ -150,7 +151,7 @@ makeAmbitionCard("Rack and Ruin", 10, ev => { playStrikeEv(ev, ev.source); playT
 
 // EXPANSION Civil War
 
-const civilWarWounds: [number, Card][] =  [
+addTemplatesWithCounts("WOUNDS", "Civil War", [
 // HEAL: You may discard a card and have each other player discard a card. If you do, KO this Wound.
 [ 2, makeWoundCard("Blinding Flash", c => playerState.hand.count(i => i !== c) >= 2, ev => { eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(i => i !== ev.source), c => discardEv(ev, c), p)); KOEv(ev, ev.source); }) ],
 // HEAL: You may spend 5 Attack. If you do, KO this Wound.
@@ -165,8 +166,7 @@ const civilWarWounds: [number, Card][] =  [
 [ 3, makeWoundCard("Spreading Nanovirus", () => true, ev => gainEv(ev, ev.source, playerState.left)) ],
 // HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
 [ 2, makeWoundCard("Subdermal Tracker", () => true, ev => { villainDrawEv(ev); KOEv(ev, ev.source); }) ],
-];
-civilWarWounds.forEach(([n, c]) => c.set = "Civil War");
+]);
 
 addTemplatesWithCounts("SIDEKICKS", "Civil War", [
 // Draw a card.
@@ -352,4 +352,52 @@ addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
   ev => investigateEv(ev, c => c.cost === 0, playerState.deck, c => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c))),
   ev => returnToStackEv(ev, gameState.sidekick)
 ]) ],
+]);
+
+type EnragingWoundAbillities = Pick<Card, 'playCost' | 'playCostType' | 'playCostLimit'>;
+const enragingWoundHeal = (ev: Ev) => KOEv(ev, ev.source);
+function makeEnragingWoundCard(name: string, recruit: number, attack: number, event: TriggerableEvType, match: (ev: Ev, source: Card) => boolean, effect?: Handler, params?: EnragingWoundAbillities) {
+  const c = makeWoundCard(name, () => false, enragingWoundHeal);
+  c.printedRecruit = recruit;
+  c.printedAttack = attack;
+  c.trigger = { event, match, after: ev => pushEv(ev, 'EFFECT', { what: ev.source, source: ev.source, func: healCard }) };
+  if (effect) c.effects = [effect];
+  return c;
+}
+addTemplatesWithCounts("WOUNDS", "Weapon X", [
+// ATTACK: 2
+// HEAL: When you defeat a Mastermind Tactic this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Blazing Vengeance", u, 2, 'DEFEAT', ev => ev.what.attached("TACTICS").size > 0) ],
+// ATTACK: 3
+// To play this, you must put another card from your hand on top of your deck.
+// HEAL: When you draw a card this turn <i>(including drawing this card but not including drawing a new hand at the end of your turn)</i>, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Broken Bones", u, 3, 'DRAW', (ev, c) => ev.who === owner(c) && ev.parent.type !== 'CLEANUP', u, { playCost: 1, playCostType: 'TOPDECK' }) ],
+// ATTACK: 2
+// HEAL: When you play two cards of the same Hero Class this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Concussion", u, 2, 'PLAY', ev => pastEvents('PLAY').has(ev.what.color)) ],
+// ATTACK: 3
+// To play this, you must discard three cards, then draw a card.
+// HEAL: When you use a Superpower Ability this turn, you may KO this Wound. <i>(e.g. "[Strength]: You get +1 Attack.")</i>
+[ 1, makeEnragingWoundCard("Erratic Powers", u, 3, 'CLEANUP', ev => false, ev => drawEv(ev), { playCost: 3, playCostType: 'DISCARD' }) ], // TODO superpower trigger
+// ATTACK: 2
+// HEAL: When you defeat a Villain worth at least 2 VP this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Insults and Injuries", u, 2, 'DEFEAT', ev => isVillain(ev.what) && ev.what.vp >= 2) ],
+// ATTACK: 4
+// To play this, you must gain a Wound to the top of your deck.
+// HEAL: When you KO another Wound this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Last Breath", u, 4, 'KO', (ev, c) => isWound(ev.what) && owner(ev.what) === owner(c), ev => gainWoundToDeckEv(ev)) ],
+// ATTACK: 3
+// To play this, you must discard a card.
+// HEAL: When you discard a card this turn <i>(not including discarding to play this card or discarding at the end of your turn)</i> you may KO this Wound.
+[ 1, makeEnragingWoundCard("Massive Blood Loss", u, 3, 'DISCARD', (ev, c) => ev.who === owner(c) && ev.parent.type !== 'CLEANUP', u, { playCost: 1, playCostType: 'DISCARD' })],
+// RECRUIT: 1
+// ATTACK: 1
+// HEAL: When you recruit two Heroes this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Shell Shock", 1, 1, 'RECRUIT', ev => isHero(ev.what) && pastEvents('RECRUIT').has(ev => isHero(ev.what))) ],
+// RECRUIT: 2
+// HEAL: When you recruit a Hero that costs 7 or more this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Sudden Terror", 2, u, 'RECRUIT', ev => ev.what.cost >= 7) ],
+// ATTACK: 2
+// HEAL: When you defeat a Henchman this turn, you may KO this Wound.
+[ 1, makeEnragingWoundCard("Wild Rage", u, 2, 'DEFEAT', ev => isHenchman(ev.what)) ],
 ]);

@@ -1340,7 +1340,7 @@ function berserkWoundsEv(ev: Ev, n: number) {
   });
 }
 function isEnragingWound(c: Card) {
-  return isWound(c);// TODO && c.enragingWound;
+  return isWound(c) && c.heal === enragingWoundHeal;
 }
 // based on Uru Enchanted Weapons
 const enemyBerserkTrigger: (amount: number | ((c: Card) => number)) => Trigger = amount => ({

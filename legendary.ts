@@ -864,6 +864,11 @@ interface Templates {
     templateId?: string
     cards: [number, Card][]
   }[]
+  WOUNDS: {
+    set?: string
+    templateId?: string
+    cards: [number, Card][]
+  }[]
 }
 // Card definitions
 let cardTemplates: Templates = {
@@ -875,6 +880,7 @@ let cardTemplates: Templates = {
   BYSTANDERS: [],
   AMBITIONS: [],
   SIDEKICKS: [],
+  WOUNDS: [],
 };
 function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS', set: string, templates: Card[]) {
   templates.forEach(t => {
@@ -906,7 +912,7 @@ function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
     cardTemplates.VILLAINS.push(t);
   });
 }
-function addTemplatesWithCounts(type: 'BYSTANDERS' | 'SIDEKICKS', set: string, cards: [number, Card][]) {
+function addTemplatesWithCounts(type: 'BYSTANDERS' | 'SIDEKICKS' | 'WOUNDS', set: string, cards: [number, Card][]) {
   cards.forEach(c => c[1].set = set);
   cardTemplates[type].push({
     templateId: set,
@@ -941,6 +947,7 @@ function findMastermindTemplate(name: string): Card { return cardTemplates.MASTE
 function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.filter(t => t.templateId === name)[0]; }
 function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.templateId === name)[0]; }
 function findSidekickTemplate(name: string) { return cardTemplates.SIDEKICKS.filter(t => t.templateId === name)[0]; }
+function findWoundTemplate(name: string) { return cardTemplates.WOUNDS.filter(t => t.templateId === name)[0]; }
 const u: undefined = undefined;
 
 function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
@@ -1171,7 +1178,7 @@ const exampleGameSetup: Setup = {
   withOfficers: true,
   withSpecialOfficers: true,
   sidekicks: ["Secret Wars Valume 1", "Civil War", "Messiah Complex"],
-  withWounds: true,
+  wounds: ["Legendary"],
   withMadame: true,
   withNewRecruits: true,
   withBindings: true,
@@ -1236,7 +1243,7 @@ interface Setup {
   withOfficers: boolean
   sidekicks: string[]
   withSpecialOfficers: boolean;
-  withWounds: boolean
+  wounds: string[]
   withNewRecruits: boolean
   withMadame: boolean
   withBindings: boolean
@@ -1274,7 +1281,7 @@ function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_cou
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
     vd_henchmen: [ 1, 1, 1, 2, 2 ],
     heroes: [ 3, 5, 5, 5, 6 ],
-    wounds: 30,
+    wounds: undefined,
     bindings: 30,
     shards: 60,
     extra_masterminds: 0,
@@ -1296,7 +1303,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     withOfficers: undefined,
     withSpecialOfficers: undefined,
     sidekicks: undefined,
-    withWounds: undefined,
+    wounds: [],
     withNewRecruits: undefined,
     withMadame: undefined,
     withBindings: undefined,
@@ -1500,7 +1507,12 @@ if (gameState.sidekick.deck.uniqueCount(c => c.cardName) > 1) {
   gameState.sidekick.faceup = false;
   gameState.sidekick.shuffle();
 }
-if (gameSetup.withWounds) gameState.wounds.addNewCard(woundTemplate, getParam('wounds'));
+gameSetup.wounds.map(findWoundTemplate).forEach(t => t.cards.forEach(c => gameState.wounds.addNewCard(c[1], c[0])));
+if (gameState.wounds.deck.uniqueCount(c => c.cardName) > 1) {
+  gameState.wounds.faceup = false;
+  gameState.wounds.shuffle();
+}
+if (getParam('wounds') !== undefined) gameState.wounds.deck.splice(getParam('wounds'));
 if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
 if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTemplate, 15);
 if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
@@ -1540,9 +1552,12 @@ gameSetup.mastermind.forEach((m, i) => {
 if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
 if (gameState.mastermind.top.isAdaptingMastermind) adaptMastermind(gameState.mastermind.top);
 if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
-if (gameState.advancedSolo === 'WHATIF') for (let i = 0; i < 2; i++) {
-  const c = gameState.villaindeck.deck.find(c => c.printedVillainGroup === gameState.gameSetup.henchmen[0]);
-  c && moveCard(c, gameState.villaindeck.attachedDeck('WHATIF_SOLO_HENCHMEN'));
+if (gameState.advancedSolo === 'WHATIF') {
+  for (let i = 0; i < 2; i++) {
+    const c = gameState.villaindeck.deck.find(c => c.printedVillainGroup === gameState.gameSetup.henchmen[0]);
+    c && moveCard(c, gameState.villaindeck.attachedDeck('WHATIF_SOLO_HENCHMEN'));
+  }
+  gameState.villaindeck.shuffle();
 }
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
