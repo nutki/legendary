@@ -2098,7 +2098,7 @@ function recruitableCards(): Card[] {
   return [...hqHeroes(), gameState.officer.top, gameState.sidekick.top, gameState.madame.top, gameState.newRecruit.top].filter(c => c);
 }
 function getActions(ev: Ev): Ev[] {
-  let p = playerState.hand.limit(c => (isHero(c) || isArtifact(c)) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
+  let p = playerState.hand.limit(c => (isHero(c) || isArtifact(c) || isEnragingWound(c)) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
   p = p.concat(playerState.hand.limit(canHeal).map(e => (new Ev(ev, "HEAL", { func: healCard, what: e }))));
   // TODO any deck with recruitable
