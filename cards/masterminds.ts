@@ -1737,6 +1737,41 @@ makeTransformingMastermindCard(makeMastermindCard("The Sentry", 10, 6, "Aspects 
   varDefense: woundedFuryVarDefense,
 }),
 ]);
+addTemplates("MASTERMINDS", "Marvel Studios Phase 1", [
+// {BANK CONQUEROR 4}
+makeMastermindCard("Iron Monger", 9, 5, "Iron Foes", ev => {
+// If there is a Villain in the Bank, each player gains a Wound. Otherwise, put this Master Strike into the Bank as a 6 Attack “StaneTech Weaponry” Villain worth 4VP.
+  withCity('BANK', c => {
+    if (c.has(isVillain)) eachPlayer(p => gainWoundEv(ev, p));
+    else {
+      villainify("StaneTech Weaponry", is(ev.what), 6, 4);
+      enterCityEv(ev, ev.what, c);
+    }
+  });
+}, [
+  [ "Hostile Takeover", ev => {
+  // If there are no Villains in the bank, reveal the top card of the Villain Deck. If it’s a Villain, it enters the Bank.
+    withCity('BANK', bank => bank.has(isVillain) || revealVillainDeckEv(ev, 1, cards => cards.each(c => enterCityEv(ev, c, bank))));
+  } ],
+  [ "Overloaded Arsenal ", ev => {
+  // Each other player reveals a [Tech] Hero or gains a Wound. Then each other player reveals a [Ranged] Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p));
+  } ],
+  [ "Sonic Stunner", ev => {
+  // Each other player reveals a [Tech] Hero or discards down to 4 cards.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, -4, p), p));
+  } ],
+  [ "Unexpected Betrayal ", ev => {
+  // If the Bank is empty, the player on your right chooses a Villain from their Victory Pile. That Villain enters the Bank.
+    withCity('BANK', bank => isCityEmpty(bank) &&
+      selectCardEv(ev, "Choose a Villain to enter", playerState.right.victory.limit(isVillain), c => enterCityEv(ev, c, bank), playerState.right)
+    );
+  } ],
+], conquerorAbility(4, 'BANK')),
+copyMastermindTemplate("Loki"),
+copyMastermindTemplate("Red Skull"),
+]);
 addTemplates("MASTERMINDS", "Ant-Man", [
 // EPICNAME: Ultron
 ...makeEpicMastermindCard("Ultron", [ 9, 10 ], 6, "Ultron's Legacy", ev => {

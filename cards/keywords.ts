@@ -587,6 +587,40 @@ function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' 
 function addMastermindEv(ev: Ev, name?: string) {
   // TODO add mastermind with one tactic
 }
+// EXPANSION: Marvel Studios Phase 1
+function copyVillainTemplate(group: string, name: string, newName?: string) {
+  const card = new Card('VILLAIN', name);
+  Object.assign(card, findVillainTemplate(group).cards.find(([n, c]) => c.cardName === name)[1]);
+  if (newName) card.cardName = newName;
+  return card;
+}
+function copyHenchmenTemplate(name: string, newName: string) {
+  const card = new Card('HENCHMEN', name);
+  Object.assign(card, findHenchmanTemplate(name));
+  card.cardName = newName;
+  return card;
+}
+function copyHeroTemplate(name: string) {
+  const t = {...findHeroTemplate(name)};
+  for (const k of ['c1', 'c2', 'c3', 'uc', 'u2', 'ra'] as const) if (t[k]) {
+    const card = t[k];
+    const newCard = new Card('HERO', card.cardName);
+    Object.assign(newCard, card);
+    t[k] = newCard;
+  }
+  return t;
+}
+function copyMastermindTemplate(name: string) {
+  const t = findMastermindTemplate(name);
+  const newCard = new Card('MASTERMIND', t.cardName);
+  Object.assign(newCard, t);
+  newCard.tacticsTemplates = newCard.tacticsTemplates.map(t => {
+    const newTactic = new Card('TACTIC', t.cardName);
+    Object.assign(newTactic, t);
+    return newTactic;
+  });
+  return newCard;
+}
 // Ant Man
 function empowerEv(ev: Ev, color: Filter<Card>) {
   addAttackEvent(ev, hqCards().count(color));

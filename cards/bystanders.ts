@@ -136,6 +136,17 @@ addBystanderTemplates("World War Hulk", [
 // RESCUE: look at the top three cards of your deck. KO one, discard one, and put one back.
 [ 1, makeBystanderCard("Triage Nurse", ev => lookAtThreeEv(ev, 'KO', 'DISCARD', undefined, ev.who)) ],
 ]);
+addBystanderTemplates("Marvel Studios Phase 1", [
+[ 30, makeBystanderCard("Bystander") ],
+// RESCUE: you may KO a Wound from your hand or from any player's discard pile. "Dark City"/"Paramedic"
+[ 3, makeBystanderCard("Happy Hogan", ev => selectCardOptEv(ev, "KO a Wound", ev.who.hand.deck.concat(gameState.players.map(p => p.discard.deck).merge()).limit(isWound), c => KOEv(ev, c), undefined, ev.who)) ],
+// RESCUE: you may KO one of your Heroes or a Hero from your discard pile. "Dark City"/"Radiation Scientist"
+[ 3, makeBystanderCard("Jane Foster", ev => selectCardOptEv(ev, "KO your Hero", yourHeroes(ev.who).concat(ev.who.discard.deck).limit(isHero), c => KOEv(ev, c), undefined, ev.who)) ],
+// RESCUE: draw a card. "Dark City"/"News Reporter"
+[ 3, makeBystanderCard("Peggy Carter", ev => drawEv(ev, 1, ev.who)) ],
+// RESCUE: you get +2 Recruit, usable only to recruit Heroes in the HQ space under the Bank. "Secret Wars Volume 1"/"Banker"
+[ 3, makeBystanderCard("Pepper Potts", ev => playerState === ev.who && addRecruitSpecialEv(ev, c => isLocation(c.location.below, 'BANK'), 2)) ],
+]);
 addBystanderTemplates("Dimensions", [
 // RESCUE: you may move a Villain to an adjacent city space. If another Villain is already there, swap them.
 [ 1, makeBystanderCard("Bulldozer Driver", ev => {

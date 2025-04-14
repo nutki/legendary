@@ -4359,6 +4359,15 @@ addHeroTemplates("World War Hulk", [
   } ]),
 },
 ]);
+addHeroTemplates("Marvel Studios Phase 1", [
+copyHeroTemplate("Black Widow"),
+copyHeroTemplate("Captain America"),
+copyHeroTemplate("Hawkeye"),
+copyHeroTemplate("Hulk"),
+copyHeroTemplate("Iron Man"),
+copyHeroTemplate("Nick Fury"),
+copyHeroTemplate("Thor"),
+]);
 addHeroTemplates("Ant-Man", [
 {
   name: "Ant-Man",

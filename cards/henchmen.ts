@@ -176,6 +176,12 @@ makeHenchmenCard("Sakaaran Hivelings", 3, {
   ]
 }),
 ]);
+addHenchmenTemplates("Marvel Studios Phase 1", [
+copyHenchmenTemplate("Doombot Legion", "Hammer Drone Army"),
+copyHenchmenTemplate("Hand Ninjas", "HYDRA Pilots"),
+copyHenchmenTemplate("Savage Land Mutates", "HYDRA Spies"),
+copyHenchmenTemplate("Sentinel", "Ten Rings Fanatics"),
+]);
 addTemplates("HENCHMEN", "Dimensions", [
 // FIGHT: Reveal the top card of your deck. If it costs 0 Cost, KO it. Otherwise, draw it.
 // ATTACK: 3

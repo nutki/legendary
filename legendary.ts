@@ -887,6 +887,7 @@ function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS'
     t.set = set;
     t.templateId = t.cardName;
     if (t.tacticsTemplates) t.tacticsTemplates.forEach(tt => tt.set = set);
+    if (cardTemplates[type].has(t2 => t2.templateId === t.templateId)) t.templateId += '@' + set;
     cardTemplates[type].push(t);
   });
 }
@@ -909,6 +910,7 @@ function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
     t.set = set;
     t.templateId = t.name;
     t.cards.forEach(c => c[1].set = set);
+    if (findVillainTemplate(t.templateId)) t.templateId += '@' + set;
     cardTemplates.VILLAINS.push(t);
   });
 }

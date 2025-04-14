@@ -3002,6 +3002,127 @@ addVillainTemplates("World War Hulk", [
   )],
 ]},
 ]);
+addVillainTemplates("Marvel Studios Phase 1", [
+{ name: "Chitauri", cards: [
+// {ROOFTOPS CONQUEROR 2}
+// AMBUSH: Chitauri Soldier captures a Bystander.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Chitauri", "Chitauri Soldier", 3, 2, {
+    ambush: ev => captureEv(ev, ev.source),
+    ...conquerorAbility(2, 'ROOFTOPS'),
+  })],
+// {ROOFTOPS CONQUEROR 2}
+// AMBUSH: (After this enters the city) If the rooftops are empty, reveal the top card of the villain deck.  If it's a villain, that villain enters the rooftops.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Chitauri", "Chitauri Commander", 3, 2, {
+    ambush: ev => withCity('ROOFTOPS', rooftops => isCityEmpty(rooftops) && revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => {
+      enterCityEv(ev, c);
+    }))),
+    ...conquerorAbility(2, 'ROOFTOPS'),
+  })],
+// {ROOFTOPS CONQUEROR 2}
+// FIGHT: Each player with no Bystanders in their Victory Pile gains a wound.
+// ESCAPE: Same effect.
+// ATTACK: 5+
+// VP: 4
+  [ 2, makeVillainCard("Chitauri", "Chitauri Leviathan", 5, 4, {
+    fight: ev => eachPlayer(p => p.victory.has(isBystander) || gainWoundEv(ev, p)),
+    escape: sameEffect,
+    ...conquerorAbility(2, 'ROOFTOPS'),
+  })],
+// {ROOFTOPS CONQUEROR 2}
+// AMBUSH: (After this enters the city) If the rooftops are empty, move this Villain there.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Chitauri", "Chitauri Chariot", 4, 3, {
+    ambush: ev => withCity('ROOFTOPS', rooftops => isCityEmpty(rooftops) && moveCardEv(ev, ev.source, rooftops)),
+    ...conquerorAbility(2, 'ROOFTOPS'),
+  })],
+]},
+{ name: "Enemies of Asgard", cards: [
+  [ 1, copyVillainTemplate("Enemies of Asgard", "Destroyer") ],
+  [ 2, copyVillainTemplate("Enemies of Asgard", "Enchantress", "Enslaved Hawkeye") ],
+  [ 3, copyVillainTemplate("Enemies of Asgard", "Frost Giant") ],
+  [ 2, copyVillainTemplate("Enemies of Asgard", "Ymir, Frost Giant King", "Laufey, Frost Giant King")],
+]},
+{ name: "Gamma Hunters", cards: [
+// AMBUSH: Each Player discards two cards, then draws a card.
+// ESCAPE: Same Effect
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Gamma Hunters", "Sonic Cannon", 4, 2, {
+    ambush: ev => eachPlayer(p => { pickDiscardEv(ev, 2, p); drawEv(ev); }),
+    escape: sameEffect,
+  })],
+// AMBUSH: Each Player reveals their hand. Each player with any [Strength] cards must discard one of them or gain a wound.
+// ESCAPE: Same effect.
+// ATTACK: 5
+// VP: 3
+  [ 2, makeVillainCard("Gamma Hunters", "Lt. Gen “Thunderbolt” Ross", 5, 3, {
+    ambush: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, Color.STRENGTH)),
+    escape: sameEffect,
+  })],
+// {STREETS CONQUEROR 3}
+// AMBUSH: (After this enters the city.) If the streets are empty, move another villain from any city space to the streets.
+// ATTACK: 4+
+// VP: 4
+  [ 2, makeVillainCard("Gamma Hunters", "Abomination, Raging Monster", 4, 4, {
+    ambush: ev => withCity('STREETS', streets => isCityEmpty(streets) && selectCardEv(ev, "Choose a Villain to move", cityVillains().limit(isNot(ev.source)), c => moveCardEv(ev, c, streets))),
+    ...conquerorAbility(3, 'STREETS'),
+  })],
+// {STREETS CONQUEROR 2}
+// FIGHT: KO one of your heroes.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Gamma Hunters", "Fighter Jet", 3, 2, {
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
+    ...conquerorAbility(2, 'STREETS'),
+  })],
+]},
+{ name: "HYDRA", cards: [
+  [ 3, copyVillainTemplate("HYDRA", "Endless Armies of HYDRA")],
+  [ 3, copyVillainTemplate("HYDRA", "HYDRA Kidnappers", "HYDRA Motorcycle Squad")],
+  [ 1, copyVillainTemplate("HYDRA", "Supreme HYDRA", "Arnim Zola")],
+  [ 1, copyVillainTemplate("HYDRA", "Viper", "HYDRA Tank")],
+]},
+{ name: "Iron Foes", cards: [
+// FIGHT: Look at the top three cards of your deck. KO one of them and put the rest back in any order.
+// ATTACK: 4
+// VP: 2
+  [ 2, makeVillainCard("Iron Foes", "Hammer Drone Marine", 4, 2, {
+    fight: ev => revealPlayerDeckEv(ev, 3, cards => selectCardAndKOEv(ev, cards)),
+  })],
+// Raza gets +1 Attack for each Bystander he has.
+// AMBUSH: Raza captures a Bystander from the Bystander stack and a random Bystander from each player’s Victory Pile.
+// ATTACK: 4+
+// VP: 3
+  [ 2, makeVillainCard("Iron Foes", "Raza, Ten Rings Leader", 4, 3, {
+    ambush: ev => {
+      captureEv(ev, ev.source);
+      eachPlayer(p => p.victory.limit(isBystander).withRandom(c => captureEv(ev, ev.source, c)));
+    },
+    varDefense: c => c.printedDefense + c.captured.count(isBystander),
+  })],
+// FIGHT: Each player reveals a [Tech] hero or gains a wound.
+// ESCAPE:  Same effect.
+// ATTACK: 6
+// VP: 4
+  [ 2, makeVillainCard("Iron Foes", "Whiplash", 6, 4, {
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p))),
+    escape: sameEffect,
+  })],
+// {BANK CONQUEROR 2}
+// FIGHT: You get +2 Recruit usable only to recruit heroes in the HQ space under the bank.
+// ATTACK: 3+
+// VP: 2
+  [ 2, makeVillainCard("Iron Foes", "Justin Hammer", 3, 2, {
+    fight: ev => addRecruitSpecialEv(ev, c => isLocation(c.location.below, 'BANK'), 2),
+    ...conquerorAbility(2, 'BANK'),
+  })],
+]},
+]);
 addVillainTemplates("Ant-Man", [
 { name: "Ultron's Legacy", cards: [
 // {USIZECHANGING TECH 3}
