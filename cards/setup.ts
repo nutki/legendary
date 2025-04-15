@@ -355,7 +355,7 @@ addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
 ]);
 
 type EnragingWoundAbillities = Pick<Card, 'playCost' | 'playCostType' | 'playCostLimit'>;
-const enragingWoundHeal = (ev: Ev) => KOEv(ev, ev.source);
+const enragingWoundHeal = (ev: Ev) => chooseMayEv(ev, `KO ${ev.source.cardName}`, () => KOEv(ev, ev.source));
 function makeEnragingWoundCard(name: string, recruit: number, attack: number, event: TriggerableEvType, match: (ev: Ev, source: Card) => boolean, effect?: Handler, params?: EnragingWoundAbillities) {
   const c = makeWoundCard(name, () => false, enragingWoundHeal);
   c.printedRecruit = recruit;
