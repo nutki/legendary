@@ -3,6 +3,7 @@ const uiConfig = {
   usesShieldLevel: false,
   usesHydraLevel: false,
 }
+let currenPlayer = 0;
 function setUiConfig(setup: Setup) {
   uiConfig.usesShieldLevel =
     setup.heroes.some(h => ['Agent Phil Coulson', 'Quake', 'Deathlok', 'Mockingbird'].includes(h));
@@ -38,6 +39,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermindName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
   if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
+  if (card.cardType === "WOUND" && card.cardName !== "Wound") return imageName("wounds", card);
   return imageName("", card);
 }
 function makeDisplayAttached(c: Deck | Card) {
@@ -168,7 +170,7 @@ const popupDecks = [
   { id: 'BYSTANDERS', container: 'popbystanders' },
   { id: 'MASTERMIND', container: 'popmastermind' },
 ];
-function displayDecks(ev: Ev): void {
+function displayDecks(ev?: Ev): void {
   let list = Deck.deckList;
   let deckById:{[id: string]:Deck} = {};
   for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
@@ -181,12 +183,12 @@ function displayDecks(ev: Ev): void {
   cityBg.style.height = '285px';
   cardsContainer.appendChild(cityBg);
   for (const deckPos of mainDecks) {
-    const deck = deckById[deckPos.id];
+    const deck = deckById[deckPos.id.replace(/0/, playerState.nr.toString())];
     const d = div('deck', { id: deck.id });
     let topDiv = d;
     positionCard(d, deckPos);
     cardsContainer.appendChild(d);
-    const cardDivs = deck.id === "PLAYAREA0" ? [
+    const cardDivs = deck.id.startsWith('PLAYAREA') ? [
       ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
       ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
       ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
@@ -217,7 +219,7 @@ function displayDecks(ev: Ev): void {
   for (const popupDeck of popupDecks) {
     const container = document.getElementById(popupDeck.container).querySelector('.cards');
     container.innerHTML = '';
-    const deck = deckById[popupDeck.id];
+    const deck = deckById[popupDeck.id.replace(/0/, playerState.nr.toString())];
     let dist = 0;
     let total = 0;
     const flat = flattenDeck(deck);
@@ -234,7 +236,7 @@ function displayDecks(ev: Ev): void {
       dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
     });
   }
-  const s = ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource();
+  const s = ev ? ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource() : undefined;
   if (s instanceof Card) {
     const sDiv = makeDisplayCardImg(s, false, false);
     positionCard(sDiv, { size: 'large', x: 7.5, y: 0 });
@@ -243,7 +245,7 @@ function displayDecks(ev: Ev): void {
   let divs = document.getElementsByClassName("text-deck");
   for (const div of divs) {
     let deck = deckById[div.getAttribute("data-id")];
-    div.innerHTML = deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ');
+    div.innerHTML = deck ? deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ') : 'Not found';
   }
 }
 function flattenCard(card: Card, name?: string): [Card, string | undefined][] {
@@ -439,6 +441,14 @@ function initUI() {
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
   document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
+  document.getElementById("nextPlayer").onclick = () => {
+    currenPlayer = (currenPlayer + 1) % gameState.players.length;
+    displayDecks();
+  };
+  document.getElementById("prevPlayer").onclick = () => {
+    currenPlayer = (currenPlayer - 1 + gameState.players.length) % gameState.players.length;
+    displayDecks();
+  };
   const updateSize = () => {
     const viewportHeight = document.documentElement.clientHeight;
     const viewportWidth = document.documentElement.clientWidth;

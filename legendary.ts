@@ -1346,18 +1346,20 @@ textLog.text = "";
 eventQueue = [];
 eventQueueNew = [];
 turnState = undefined;
+const players: Player[] = [];
+for (let nr = 0; nr < gameSetup.numPlayers; nr++) {
 playerState = {
-  nr: 0,
-  name: "Player 1",
-  deck: new Deck('DECK0'),
-  discard: new Deck('DISCARD0', true),
-  hand: new Deck('HAND0', true),
-  victory: new Deck('VICTORY0', true),
-  playArea: new Deck('PLAYAREA0', true),
-  teleported: new Deck('TELEPORT0', true),
-  artifact: new Deck('ARTIFACT0', true),
-  shard: new Deck('SHARD0', true),
-  outOfTime: new Deck('OUTOFTIME0', true),
+  nr,
+  name: "Player " + (nr + 1),
+  deck: new Deck('DECK' + nr),
+  discard: new Deck('DISCARD' + nr, true),
+  hand: new Deck('HAND' + nr, true),
+  victory: new Deck('VICTORY' + nr, true),
+  playArea: new Deck('PLAYAREA' + nr, true),
+  teleported: new Deck('TELEPORT' + nr, true),
+  artifact: new Deck('ARTIFACT' + nr, true),
+  shard: new Deck('SHARD' + nr, true),
+  outOfTime: new Deck('OUTOFTIME' + nr, true),
   left: undefined,
   right: undefined,
 };
@@ -1365,7 +1367,12 @@ playerState.deck.owner = playerState.discard.owner = playerState.hand.owner = pl
 playerState.playArea.owner = playerState;
 playerState.artifact.owner = playerState.shard.owner = playerState.teleported.owner = playerState;
 playerState.outOfTime.owner = playerState;
-playerState.left = playerState.right = playerState;
+players.push(playerState);
+}
+players.forEach((p, i) => {
+  p.left = players[(i + players.length - 1) % players.length];
+  p.right = players[(i + 1) % players.length];
+});
 gameState = {
   nextId: 0,
   twistCount: 0,
@@ -1444,7 +1451,7 @@ gameState = {
   ],
   endDrawAmount: 6,
   modifiers: {},
-  players: [ playerState ],
+  players,
   advancedSolo: 'WHATIF',
   finalBlow: false,
   villainsEscaped: 0,
@@ -1862,6 +1869,14 @@ function joinQueue(): void {
   eventQueue = eventQueueNew.concat(eventQueue);
   eventQueueNew = [];
 }
+function getNextPlayer(): Player {
+  if (gameState.extraTurn) {
+    gameState.extraTurn = false;
+    return playerState;
+  }
+  if (gameState.reversePlayerOrder) return playerState.right;
+  return playerState.left;
+}
 function popEvent(): Ev {
   joinQueue();
   return eventQueue.shift() || new Ev(undefined, "TURN", <EvParams>{
@@ -1880,6 +1895,7 @@ function popEvent(): Ev {
     modifiers: {},
     triggers: [],
     actionFilters: [],
+    who: getNextPlayer(),
     func: playTurn
   });
 }
@@ -2928,6 +2944,7 @@ function doReplacing(ev: Ev) {
 }
 function playTurn(ev: Turn) {
   gameState.turnNum++;
+  playerState = ev.who;
   textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
   turnState.villainCardsToPlay = 1;
