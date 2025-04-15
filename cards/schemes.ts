@@ -1710,6 +1710,16 @@ makeSchemeCard("World War Hulk", { twists: 9, extra_masterminds: 3 }, ev => {
   });
 }),
 ]);
+addTemplates("SCHEMES", "Marvel Studios Phase 1", [
+copySchemeTemplate("Negative Zone Prison Breakout", "Asgard Under Siege"),
+copySchemeTemplate("Midtown Bank Robbery", "Destroy the Cities of Earth!"),
+copySchemeTemplate("Secret Invasion of the Skrull Shapeshifters", "Enslave Minds with the Chitauri Scepter", { params: { twists: 8, heroes: 6, required: { villains: "Chitauri" } } }),
+copySchemeTemplate("Portals to the Dark Dimension", "Invade Asgard"),
+copySchemeTemplate("The Legacy Virus", "Radioactive Palladium Poisoning"),
+copySchemeTemplate("Replace Earth's Leaders with Killbots", "Replace Earth's Leaders with HYDRA"),
+copySchemeTemplate("Super Hero Civil War"),
+copySchemeTemplate("Unleash the Power of the Cosmic Cube"),
+]);
 addTemplates("SCHEMES", "Ant-Man", [
 // SETUP: 11 Twists. 4-5 Players: Add another Hero.
 // RULE: Evolved Ultrons have 4 Attack and are <b>Empowered</b> by each color in the Evolution pile. They're worth 6VP.

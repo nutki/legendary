@@ -621,6 +621,13 @@ function copyMastermindTemplate(name: string) {
   });
   return newCard;
 }
+function copySchemeTemplate(name: string, newName?: string, params?: Pick<Card, 'params'>) {
+  const card = new Card('SCHEME', name);
+  Object.assign(card, findSchemeTemplate(name));
+  if (newName) card.cardName = newName;
+  if (params) Object.assign(card, params);
+  return card;
+}
 // Ant Man
 function empowerEv(ev: Ev, color: Filter<Card>) {
   addAttackEvent(ev, hqCards().count(color));
