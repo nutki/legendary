@@ -360,8 +360,10 @@ function makeEnragingWoundCard(name: string, recruit: number, attack: number, ev
   const c = makeWoundCard(name, () => false, enragingWoundHeal);
   c.printedRecruit = recruit;
   c.printedAttack = attack;
-  c.trigger = { event, match, after: ev => pushEv(ev, 'EFFECT', { what: ev.source, source: ev.source, func: healCard }) };
+  c.trigger = { event, match: (ev, source) => (source.location === playerState.hand || source.location === playerState.playArea) && match(ev, source),
+    after: ev => pushEv(ev, 'EFFECT', { what: ev.source, source: ev.source, func: healCard }) };
   if (effect) c.effects = [effect];
+  if (params) Object.assign(c, params);
   return c;
 }
 addTemplatesWithCounts("WOUNDS", "Weapon X", [
@@ -374,7 +376,7 @@ addTemplatesWithCounts("WOUNDS", "Weapon X", [
 [ 1, makeEnragingWoundCard("Broken Bones", u, 3, 'DRAW', (ev, c) => ev.who === owner(c) && ev.parent.type !== 'CLEANUP', u, { playCost: 1, playCostType: 'TOPDECK' }) ],
 // ATTACK: 2
 // HEAL: When you play two cards of the same Hero Class this turn, you may KO this Wound.
-[ 1, makeEnragingWoundCard("Concussion", u, 2, 'PLAY', ev => pastEvents('PLAY').has(ev.what.color)) ],
+[ 1, makeEnragingWoundCard("Concussion", u, 2, 'PLAY', ({what}) => pastEvents('PLAY').has(ev => (what.color & ~Color.GRAY) && isColor(what.color)(ev.what))) ],
 // ATTACK: 3
 // To play this, you must discard three cards, then draw a card.
 // HEAL: When you use a Superpower Ability this turn, you may KO this Wound. <i>(e.g. "[Strength]: You get +1 Attack.")</i>
