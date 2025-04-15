@@ -1394,6 +1394,7 @@ const enemyBerserkTrigger: (amount: number | ((c: Card) => number)) => Trigger =
     addTurnMod('defense', c => c === ev.parent.what, () => sum);
     repeat(n, () => {
       withPlayerDeckTopEv(ev, c => {
+        textLog.log(`Berserk: ${c.cardName}, +${c.printedAttack || 0} attack`);
         cards.push(c);
         discardEv(ev, c);
         sum += c.printedAttack || 0;
