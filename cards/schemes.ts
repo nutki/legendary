@@ -1747,7 +1747,7 @@ makeSchemeCard("Pull Earth into Medieval Times", { twists: 9 }, ev => {
     addFutureTrigger(() => enabled = false, playerState);
   } else if (ev.nr >= 7 && ev.nr <= 9) {
     // Twist 7-9 Each player puts a Villains from the Victory Pile into the Escape Pile.
-    eachPlayer(p => selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => moveCardEv(ev, c, gameState.escaped), p));
+    eachPlayer(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain), c => moveCardEv(ev, c, gameState.escaped), p));
   }
 }, escapeProgressTrigger(isVillain), () => {
   setSchemeTarget(3, true);
