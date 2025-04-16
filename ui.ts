@@ -120,11 +120,12 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
   return d;
 }
 function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
+  const spread = w > 1 && t ? Math.min(1, (w - 1) / (t - 1)) : 1;
   card.style.position = "absolute";
   card.style.top = y * 288 + (y >= 2 ? 60 : 0) + "px";
-  card.style.left = (fan ? (x - 1 + ((w||1))/2) * 212: (x + i) * 212) + "px";
+  card.style.left = (fan ? (x - 1 + ((w||1))/2) * 212: (x + i * spread) * 212) + "px";
   if (fan) {
-    card.style.transform = `rotate(${(i - ((t||w||1) - 1)/2) * 3.5}deg)`;
+    card.style.transform = `rotate(${(i - ((t||w||1) - 1)/2) * 3.5 * spread}deg)`;
     card.style.transformOrigin = "center 3000px";
   }
   if (size) card.classList.add(size);
@@ -192,12 +193,11 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
   deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
   const n = cardDivs.size;
-  const spread = deckPos.w > 1 && cardDivs.size ? Math.min(1, (deckPos.w - 1) / (n - 1)) : 0;
   cardDivs.forEach((cardDiv, i) => {
     cardsContainer.appendChild(cardDiv);
     cardDiv.setAttribute('data-deck-id', deck.id);
     if (deckPos.playerDeck) cardDiv.setAttribute('data-player-id', "1");
-    positionCard(cardDiv, deckPos, i * spread, n);
+    positionCard(cardDiv, deckPos, i, n);
     topDiv = cardDiv;
   });
   if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid + playerNr).classList.toggle("hidden"));
