@@ -50,10 +50,11 @@ img.icon {
 .action { font-family: TitleFont; font-size: 30px; border: 2px solid black; background: yellow; padding: 0px 20px; border-radius: 10px; margin: 20px; }
 .action.noconfirm { background: green; }
 #undo.action { display: block; position: absolute; left: 1990px; top: 500px; width: 130px; text-align: center; }
-#restart.action { display: block; position: absolute; left: 1990px; top: 400px; width: 130px; text-align: center; }
-#newGame.action { display: block; position: absolute; left: 1990px; top: 350px; width: 130px; text-align: center; }
+#restart.action { display: block; position: absolute; left: 1990px; top: 110px; width: 130px; text-align: center; }
+#newGame.action { display: block; position: absolute; left: 1990px; top: 60px; width: 130px; text-align: center; }
 #prevPlayer.action { display: block; position: absolute; left: 1990px; top: 450px; width: 75px; text-align: center; padding: 0; }
 #nextPlayer.action { display: block; position: absolute; left: 2085px; top: 450px; width: 75px; text-align: center; padding: 0; }
+#setup.action { display: block; position: absolute; left: 1990px; top: 10px; width: 130px; text-align: center; }
 .card.gone { opacity: .5; }
 .deck-overlay.select { background-color: rgb(255,255,0,.5); }
 span.card.select { border: 2px solid yellow; border-radius: 15px; }
@@ -221,7 +222,7 @@ img.vpcount {
   transform: translate(-50%,-50%);
   width: 80px;
 }
-.hidden { visibility: hidden; }
+.hidden { display: none; }
 #recruit { background-image: url('icons/recruit.svg'); }
 #attack { background-image: url('icons/attack.svg'); }
 #vp { background-image: url('icons/VP.png'); }
@@ -239,10 +240,12 @@ img.vpcount {
 </style>
 </head>
 <body>
+<div id="boardPage">
 <div id="scalable-container" style="width: 100%; overflow: hidden;">
 <div id="scalable-contents" style="transform-origin: top left; transform: scale(0.5); width: 2200px; height: 1250px; overflow: hidden;">
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
 <span class="action" id="prevPlayer">&lt; P</span><span class="action" id="nextPlayer">P &gt;</span>
+<span class="action" id="setup">To setup</span>
 <div id="card-container" style="position: absolute;"></div>
 <div id="card-container2" style="position: absolute;"></div>
 <div id="game-over-message"></div>
@@ -305,6 +308,8 @@ img.vpcount {
 <hr>
 <span class="text-deck" data-id="PLAYAREA1"></span>
 <hr>
+</div>
+<div id="setupPage" style="position: absolute;top:0;">
 Players: <select id="setup_players"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
 Scheme: <select id="setup_scheme"></select>
 <div id="setup_mastermind"></div>
@@ -320,7 +325,8 @@ City: <select id="cityType"><option value="HERO">Base</option><option value="VIL
 <div>Bystanders: <span id="setup_bystanders"></span></div>
 <div>Sidekicks: <span id="setup_sidekicks"></span></div>
 <div>Wounds: <span id="setup_wounds"></span></div>
-<div><span class="action" id="start">Start</span></div>
+<div><span class="action" id="start">Start</span><span class="action" id="board">Back</span></div>
+</div>
 <svg width="0" height="0">
   <filter id="blackOutline3px">
     <feMorphology in="SourceAlpha" result="DILATED" operator="dilate" radius="3"></feMorphology>

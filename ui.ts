@@ -464,7 +464,11 @@ function initUI() {
   document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
-  document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
+  document.getElementById("start").onclick = () => { if (globalFormSetup) {
+    undoLog.init(globalFormSetup); startGame();
+    document.getElementById("setupPage").classList.add("hidden");
+    document.getElementById("boardPage").classList.remove("hidden");
+  } };
   document.getElementById("nextPlayer").onclick = () => {
     if (currenPlayer < gameState.players.length - 1) {
       updatePlayerDecks(-10);
@@ -476,6 +480,15 @@ function initUI() {
       updatePlayerDecks(10);
       currenPlayer--;
     }
+  };
+  document.getElementById("setupPage").classList.add("hidden");
+  document.getElementById("setup").onclick = () => {
+    document.getElementById("setupPage").classList.remove("hidden");
+    document.getElementById("boardPage").classList.add("hidden");
+  };
+  document.getElementById("board").onclick = () => {
+    document.getElementById("setupPage").classList.add("hidden");
+    document.getElementById("boardPage").classList.remove("hidden");
   };
   const updateSize = () => {
     const viewportHeight = document.documentElement.clientHeight;
