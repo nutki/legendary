@@ -2945,6 +2945,7 @@ function doReplacing(ev: Ev) {
 function playTurn(ev: Turn) {
   gameState.turnNum++;
   playerState = ev.who;
+  if (!undoLog.replaying) setCurrentPlayer(ev.who.nr);
   textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
   turnState.villainCardsToPlay = 1;

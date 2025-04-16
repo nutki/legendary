@@ -87,7 +87,10 @@ div.card {
     border-radius: 10px;
     width: 200px;
     height: 280px;
-    transition: left 1s linear, top 1s linear, transform 1s linear;
+    transition: left .5s ease-out, top .5s ease-out, transform 1s ease-out;
+}
+div.deck-overlay {
+    transition: left .5s ease-out, top .5s ease-out, transform 1s ease-out;
 }
 div.card div.count {
     font-family: NumberFont;
@@ -219,9 +222,6 @@ img.vpcount {
   width: 80px;
 }
 .hidden { visibility: hidden; }
-#popvictory { top: 20px;}
-#popdiscard { top: 330px;}
-#popdeck { top: 330px;}
 #recruit { background-image: url('icons/recruit.svg'); }
 #attack { background-image: url('icons/attack.svg'); }
 #vp { background-image: url('icons/VP.png'); }
@@ -240,7 +240,7 @@ img.vpcount {
 </head>
 <body>
 <div id="scalable-container" style="width: 100%; overflow: hidden;">
-<div id="scalable-contents" style="transform-origin: top left; transform: scale(0.5); width: 2200px;">
+<div id="scalable-contents" style="transform-origin: top left; transform: scale(0.5); width: 2200px; height: 1250px; overflow: hidden;">
 <span class="action" id="undo">Undo</span> <span class="action" id="restart">Restart</span> <span class="action" id="newGame">New Game</span>
 <span class="action" id="prevPlayer">&lt; P</span><span class="action" id="nextPlayer">P &gt;</span>
 <div id="card-container" style="position: absolute;"></div>
@@ -255,10 +255,22 @@ img.vpcount {
   <span id="message" style="margin-left: 15px"></span>
   <span id="extraActions"></span>
 </div>
-<div id="logContainer" style="overflow: auto; position: absolute; left: 1900px; top: 576px; width: 300px; height: 674px;"></div>
-<div class="popup hidden" id="popdiscard"><div class="cards"></div><div class="popupname">Discard</div></div>
-<div class="popup hidden" id="popdeck"><div class="cards"></div><div class="popupname">Deck</div></div>
-<div class="popup hidden" id="popvictory"><div class="cards"></div><div class="popupname">Victory</div></div>
+<div id="logContainer" style="overflow: auto; position: absolute; left: 1900px; top: 566px; width: 290px; height: 674px;background-color: #777;padding: 5px; font-family: Arial, Helvetica, sans-serif;"></div>
+<div class="popup hidden" id="popdiscard0"><div class="cards"></div><div class="popupname">P1: Discard</div></div>
+<div class="popup hidden" id="popdeck0"><div class="cards"></div><div class="popupname">P1: Deck</div></div>
+<div class="popup hidden" id="popvictory0"><div class="cards"></div><div class="popupname">P1: Victory</div></div>
+<div class="popup hidden" id="popdiscard1"><div class="cards"></div><div class="popupname">P2: Discard</div></div>
+<div class="popup hidden" id="popdeck1"><div class="cards"></div><div class="popupname">P2: Deck</div></div>
+<div class="popup hidden" id="popvictory1"><div class="cards"></div><div class="popupname">P2: Victory</div></div>
+<div class="popup hidden" id="popdiscard2"><div class="cards"></div><div class="popupname">P3: Discard</div></div>
+<div class="popup hidden" id="popdeck2"><div class="cards"></div><div class="popupname">P3: Deck</div></div>
+<div class="popup hidden" id="popvictory2"><div class="cards"></div><div class="popupname">P3: Victory</div></div>
+<div class="popup hidden" id="popdiscard3"><div class="cards"></div><div class="popupname">P4: Discard</div></div>
+<div class="popup hidden" id="popdeck3"><div class="cards"></div><div class="popupname">P4: Deck</div></div>
+<div class="popup hidden" id="popvictory3"><div class="cards"></div><div class="popupname">P4: Victory</div></div>
+<div class="popup hidden" id="popdiscard4"><div class="cards"></div><div class="popupname">P5: Discard</div></div>
+<div class="popup hidden" id="popdeck4"><div class="cards"></div><div class="popupname">P5: Deck</div></div>
+<div class="popup hidden" id="popvictory4"><div class="cards"></div><div class="popupname">P5: Victory</div></div>
 <div class="popup hidden" id="popko"><div class="cards"></div><div class="popupname">KO</div></div>
 <div class="popup hidden" id="popescaped"><div class="cards"></div><div class="popupname">Escaped</div></div>
 <div class="popup hidden" id="popheroes"><div class="cards"></div><div class="popupname">Hero Deck</div></div>

@@ -122,7 +122,7 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
 function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
   card.style.position = "absolute";
   card.style.top = y * 288 + (y >= 2 ? 60 : 0) + "px";
-  card.style.left = (fan ? ((w||1))/2 * 212: (x + i) * 212) + "px";
+  card.style.left = (fan ? (x - 1 + ((w||1))/2) * 212: (x + i) * 212) + "px";
   if (fan) {
     card.style.transform = `rotate(${(i - ((t||w||1) - 1)/2) * 3.5}deg)`;
     card.style.transformOrigin = "center 3000px";
@@ -153,11 +153,11 @@ const mainDecks = [
   { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS' },
   { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTDR', popupid: 'popbystanders' },
   { id: 'HERO', x: 6, y: 1, size: 'small', count: 'HERO', popupid: 'popheroes' },
-  { id: 'PLAYAREA0', x: 0, y: 2, w: 9 },
-  { id: 'HAND0', x: 1, y: 3, w: 8, fan: true },
-  { id: 'DECK0', x: 0, y: 3, size: 'small', count: 'DECK', popupid: 'popdeck'},
-  { id: 'DISCARD0', x: .5, y: 3, size: 'small', count: 'DISCARD', popupid: 'popdiscard'},
-  { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory'},
+  { id: 'PLAYAREA0', x: 0, y: 2, w: 9, playerDeck: true },
+  { id: 'HAND0', x: 1, y: 3, w: 8, fan: true, playerDeck: true },
+  { id: 'DECK0', x: 0, y: 3, size: 'small', count: 'DECK', popupid: 'popdeck', playerDeck: true },
+  { id: 'DISCARD0', x: .5, y: 3, size: 'small', count: 'DISCARD', popupid: 'popdiscard', playerDeck: true },
+  { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory', playerDeck: true },
 ];
 const popupDecks = [
   { id: 'DISCARD0', container: 'popdiscard' },
@@ -170,6 +170,68 @@ const popupDecks = [
   { id: 'BYSTANDERS', container: 'popbystanders' },
   { id: 'MASTERMIND', container: 'popmastermind' },
 ];
+function updatePlayerDecks(n: number): void {
+  document.querySelectorAll<HTMLElement>(`div[data-player-id="1"]`).forEach(d => {
+    d.style.left = (parseFloat(d.style.left) + n * 212) + "px";
+  });
+}
+
+function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: HTMLElement): void {
+  const d = div('deck', { id: deck.id, 'data-player-id': deckPos.playerDeck ? "1" : undefined });
+  const playerNr = deckPos.playerDeck ? deck.id.slice(-1) : '';
+  let topDiv = d;
+  positionCard(d, deckPos);
+  cardsContainer.appendChild(d);
+  const cardDivs = deck.id.startsWith('PLAYAREA') ? playerState.nr !== parseInt(deck.id.slice(-1)) ? [
+    ...gameState.players[parseInt(deck.id.slice(-1))].artifact.deck.map(c => makeDisplayCardImg(c)),
+    ...deck.deck.map(c => makeDisplayCardImg(c)),
+  ] : [
+    ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
+    ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
+    ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
+  ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
+  deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
+  const n = cardDivs.size;
+  const spread = deckPos.w > 1 && cardDivs.size ? Math.min(1, (deckPos.w - 1) / (n - 1)) : 0;
+  cardDivs.forEach((cardDiv, i) => {
+    cardsContainer.appendChild(cardDiv);
+    cardDiv.setAttribute('data-deck-id', deck.id);
+    if (deckPos.playerDeck) cardDiv.setAttribute('data-player-id', "1");
+    positionCard(cardDiv, deckPos, i * spread, n);
+    topDiv = cardDiv;
+  });
+  if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid + playerNr).classList.toggle("hidden"));
+  topDiv.querySelectorAll('.count, .capturedHint').forEach(e => {
+    deckPos.popupid2 && e.addEventListener("click", () => document.getElementById(deckPos.popupid2).classList.toggle("hidden"))
+  });
+  const d1 = div('deck-overlay', { 'data-deck-id': deck.id, 'data-player-id': deckPos.playerDeck ? "1" : undefined });
+  positionCard(d1, deckPos);
+  cardsContainer.appendChild(d1);
+  if (deckPos.count) {
+    if (deckPos.count === 'VP') {
+      d1.appendChild(img("icons/VP.png", "vpcount"));
+      d1.appendChild(div("deckcount vpcount", {}, text(currentVP(playerState))));
+    } else if(deckPos.count) d1.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
+  }
+}
+function displayPopupDeck(deck: Deck, container: HTMLElement): void {
+  container.innerHTML = '';
+  let dist = 0;
+  let total = 0;
+  const flat = flattenDeck(deck);
+  for (let i = 0; i < flat.size - 1; i++) {
+    total += (flat[i][1] !== flat[i+1][1]) || isFaceUp(flat[i][0]) ? 1 : .1;
+  }
+  flat.forEach(([card, name], i) => {
+    const cardDiv = makeDisplayCardImg(card);
+    const shouldShowName = i < flat.length - 1 && name !== flat[i+1][1] && name;
+    if (shouldShowName)
+      cardDiv.appendChild(div('deckname', {}, text(name)));
+    container.appendChild(cardDiv);
+    positionCard(cardDiv, { x: 0, y: 0 }, total - dist);
+    dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
+  });
+}
 function displayDecks(ev?: Ev): void {
   let list = Deck.deckList;
   let deckById:{[id: string]:Deck} = {};
@@ -183,58 +245,20 @@ function displayDecks(ev?: Ev): void {
   cityBg.style.height = '285px';
   cardsContainer.appendChild(cityBg);
   for (const deckPos of mainDecks) {
-    const deck = deckById[deckPos.id.replace(/0/, playerState.nr.toString())];
-    const d = div('deck', { id: deck.id });
-    let topDiv = d;
-    positionCard(d, deckPos);
-    cardsContainer.appendChild(d);
-    const cardDivs = deck.id.startsWith('PLAYAREA') ? [
-      ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
-      ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
-      ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
-    ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-    deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
-    const n = cardDivs.size;
-    const spread = deckPos.w > 1 && cardDivs.size ? Math.min(1, (deckPos.w - 1) / (n - 1)) : 0;
-    cardDivs.forEach((cardDiv, i) => {
-      cardsContainer.appendChild(cardDiv);
-      cardDiv.setAttribute('data-deck-id', deck.id);
-      positionCard(cardDiv, deckPos, i * spread, n);
-      topDiv = cardDiv;
-    });
-    if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid).classList.toggle("hidden"));
-    topDiv.querySelectorAll('.count, .capturedHint').forEach(e => {
-      deckPos.popupid2 && e.addEventListener("click", () => document.getElementById(deckPos.popupid2).classList.toggle("hidden"))
-    });
-    const d1 = div('deck-overlay', { 'data-deck-id': deck.id });
-    positionCard(d1, deckPos);
-    cardsContainer.appendChild(d1);
-    if (deckPos.count) {
-      if (deckPos.count === 'VP') {
-        d1.appendChild(img("icons/VP.png", "vpcount"));
-        d1.appendChild(div("deckcount vpcount", {}, text(currentVP(playerState))));
-      } else if(deckPos.count) d1.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
-    }
+    if (deckPos.playerDeck) for (let i = 0; i < gameState.players.length; i++) {
+      const deck = deckById[deckPos.id.replace(/0/, i.toString())];
+      if (deck) displayDeck(deck, { ...deckPos, x: deckPos.x + (i - currenPlayer) * 10 }, cardsContainer);
+    } else displayDeck(deckById[deckPos.id], deckPos, cardsContainer);
   }
   for (const popupDeck of popupDecks) {
-    const container = document.getElementById(popupDeck.container).querySelector('.cards');
-    container.innerHTML = '';
-    const deck = deckById[popupDeck.id.replace(/0/, playerState.nr.toString())];
-    let dist = 0;
-    let total = 0;
-    const flat = flattenDeck(deck);
-    for (let i = 0; i < flat.size - 1; i++) {
-      total += (flat[i][1] !== flat[i+1][1]) || isFaceUp(flat[i][0]) ? 1 : .1;
+    if (popupDeck.id.endsWith('0')) for (let i = 0; i < gameState.players.length; i++) {
+      const container = document.getElementById(popupDeck.container + i).querySelector<HTMLElement>('.cards');
+      const deck = deckById[popupDeck.id.replace(/0/, i.toString())];
+      displayPopupDeck(deck, container);
+    } else {
+      const container = document.getElementById(popupDeck.container).querySelector<HTMLElement>('.cards');
+      displayPopupDeck(deckById[popupDeck.id], container);
     }
-    flat.forEach(([card, name], i) => {
-      const cardDiv = makeDisplayCardImg(card);
-      const shouldShowName = i < flat.length - 1 && name !== flat[i+1][1] && name;
-      if (shouldShowName)
-        cardDiv.appendChild(div('deckname', {}, text(name)));
-      container.appendChild(cardDiv);
-      positionCard(cardDiv, { x: 0, y: 0 }, total - dist);
-      dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
-    });
   }
   const s = ev ? ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource() : undefined;
   if (s instanceof Card) {
@@ -442,12 +466,16 @@ function initUI() {
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
   document.getElementById("start").onclick = () => { if (globalFormSetup) { undoLog.init(globalFormSetup); startGame(); } };
   document.getElementById("nextPlayer").onclick = () => {
-    currenPlayer = (currenPlayer + 1) % gameState.players.length;
-    displayDecks();
+    if (currenPlayer < gameState.players.length - 1) {
+      updatePlayerDecks(-10);
+      currenPlayer++;
+    }
   };
   document.getElementById("prevPlayer").onclick = () => {
-    currenPlayer = (currenPlayer - 1 + gameState.players.length) % gameState.players.length;
-    displayDecks();
+    if (currenPlayer > 0) {
+      updatePlayerDecks(10);
+      currenPlayer--;
+    }
   };
   const updateSize = () => {
     const viewportHeight = document.documentElement.clientHeight;
@@ -458,4 +486,11 @@ function initUI() {
   }
   window.addEventListener("resize", updateSize);
   updateSize();
+}
+function setCurrentPlayer(n: number) {
+  console.log("setCurrentPlayer", n, currenPlayer);
+  if (n !== currenPlayer) setTimeout(() => {
+    updatePlayerDecks(10 * (currenPlayer - n));
+    currenPlayer = n;
+  }, 0);
 }
