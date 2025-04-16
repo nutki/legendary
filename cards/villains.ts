@@ -518,7 +518,7 @@ addVillainTemplates("Paint the Town Red", [
 // ATTACK: 6
 // VP: 2
   [ 1, makeVillainCard("Sinister Six", "Chameleon", 6, 2, {
-    fight: ev => heroBelow(ev.source).withFirst(c => playCardEffects(ev, c)),
+    fight: ev => heroBelow(ev.where).withFirst(c => playCardEffects(ev, c)),
   })],
 // AMBUSH: Each Sinister Six Villain captures a Bystander.
 // ATTACK: 5

@@ -1651,8 +1651,11 @@ function fightableCards(): Card[] {
     ...gameState.players.map(p => attachedCards('PREYING', p.playArea)).merge(), ...gameState.astralPlane.deck
   ];
 }
-function heroBelow(c: Card) {
-  return c.location && c.location.above ? c.location.above.limit(isHero) : [];
+function heroBelow(c: Card | Deck) {
+  const where = c instanceof Card ? c.location : c;
+  const x = where && where.above ? where.above.limit(isHero) : [];
+  console.log(x, where, where.above, where.below);
+  return x;
 }
 function hqCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
 function hqHeroes() { return hqCards().limit(isHero); }
