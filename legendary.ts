@@ -1452,7 +1452,7 @@ gameState = {
   endDrawAmount: 6,
   modifiers: {},
   players,
-  advancedSolo: 'WHATIF',
+  advancedSolo: players.length === 1 ? 'WHATIF' : false,
   finalBlow: false,
   villainsEscaped: 0,
   bystandersCarried: 0,
@@ -1534,7 +1534,7 @@ if (gameState.bystanders.deck.uniqueCount(b => b.cardName) > 1) {
 // Init villain deck
 function getHenchmenTemplates(template: Card | { cards: [number, Card][]}, groupNr: number): Card[] {
   const count = isSoloGame() && gameState.scheme.top.params.solo_henchmen?.[groupNr] ||
-    (groupNr > 0 ? 10 : (gameState.advancedSolo === 'WHATIF' ? 4 : 3));
+    (groupNr > 0 || gameState.players.length > 1 ? 10 : (gameState.advancedSolo === 'WHATIF' ? 4 : 3));
   if (template instanceof Card) return Array(count).fill(template);
   const cards = template.cards.map(([n, c]) => Array(n).fill(c)).merge();
   if (count === cards.length) return cards;
