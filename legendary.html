@@ -239,6 +239,25 @@ img.vpcount {
   -webkit-text-stroke: 3px;
   -webkit-text-stroke-color: #000;
 }
+#setupform {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  padding: 10px;
+}
+#setupform span {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+}
+#setupform span > div:first-child {
+  width: 10%;
+  text-align: right;
+}
+#setupform span > div:nth-child(2) {
+  padding-right: 10px;
+}
 </style>
 </head>
 <body>
@@ -286,21 +305,25 @@ img.vpcount {
 </div>
 </div>
 <div id="setupPage" style="position: absolute;top:0;">
-Players: <select id="setup_players"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
-Scheme: <select id="setup_scheme"></select>
+<div id="setupform">
+<span><div>Players</div><div><select id="setup_players"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div></span>
+<span><div>Scheme</div><div><select id="setup_scheme"></select></div></span>
 <div id="setup_mastermind"></div>
 <div id="setup_villains"></div>
 <div id="setup_henchmen"></div>
 <div id="setup_heroes"></div>
-Hand: <select id="handType"><option value="HYDRA">HYDRA</option><option value="SHIELD">S.H.I.E.L.D.</option></select>
-City: <select id="cityType"><option value="HERO">Base</option><option value="VILLAIN">Villains</option></select>
+<span><div>Hand</div><div><select id="handType"><option value="HYDRA">HYDRA</option><option value="SHIELD">S.H.I.E.L.D.</option></select></div></span>
+<span><div>City</div><div><select id="cityType"><option value="HERO">Base</option><option value="VILLAIN">Villains</option></select></div></span>
+<span><div></div><div>
 <input type="checkbox" id="withOfficers"> S.H.I.E.L.D. Officers
 <input type="checkbox" id="withSpecialOfficers"> Special S.H.I.E.L.D. Officers
 <input type="checkbox" id="withMadame"> Madame HYDRA
 <input type="checkbox" id="withNewRecruits"> New Recruits
-<div>Bystanders: <span id="setup_bystanders"></span></div>
-<div>Sidekicks: <span id="setup_sidekicks"></span></div>
-<div>Wounds: <span id="setup_wounds"></span></div>
+</div></span>
+<span><div>Bystanders</div><div id="setup_bystanders"></div></span>
+<span><div>Sidekicks</div><div id="setup_sidekicks"></div></span>
+<span><div>Wounds</div><div id="setup_wounds"></div></span>
+</div>
 <div><span class="action" id="start">Start</span><span class="action" id="board">Back</span></div>
 </div>
 <svg width="0" height="0">

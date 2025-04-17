@@ -323,7 +323,7 @@ function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN
     if (!e) return undefined;
     return (<HTMLSelectElement>e).value;
   });
-  document.getElementById(id).innerHTML = values.map((heroName, i) => `${name} ${i + 1}: <select id="${id}${i}"></select>`).join(' ');
+  document.getElementById(id).innerHTML = values.map((heroName, i) => `<span><div>${name} ${i + 1}</div><div><select id="${id}${i}"></select></div></span>`).join('');
   values.forEach((name, i) => {
     makeOptions(id + i, templateType, selected[i], n => name === undefined || n.templateId === name);
   });
