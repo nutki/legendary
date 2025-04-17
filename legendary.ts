@@ -127,6 +127,7 @@ interface Card {
   riseOfTheLivingDead: boolean;
   heist?: Handler;
   conqueror?: { locations: CityLocation[], amount: number };
+  isSidekick?: boolean;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -278,6 +279,10 @@ let Color = {
 };
 function makeHeroCard(hero: string, name: string, cost: number, recruit: number, attack: number, color: number, team: Affiliation, flags?: string, effects?: ((ev: Ev) => void) | (((ev: Ev) => void)[]), abilities?: HeroCardAbillities) {
   let c = new Card("HERO", name);
+  if (hero === "Special Sidekick" || name === "Sidekick") {
+    c.isSidekick = true;
+    hero = undefined;
+  }
   c.printedCost = cost;
   c.printedRecruit = recruit;
   c.printedAttack = attack;

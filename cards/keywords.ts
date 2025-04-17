@@ -253,7 +253,7 @@ function xdRampageEv(ev: Ev, name: string | ((c: Card) => boolean), effect0?: (p
   }, p))
 }
 
-function isSidekick(c: Card) { return c.cardName === 'Sidekick' || c.heroName === 'Special Sidekick'; }
+function isSidekick(c: Card) { return c.isSidekick === true; }
 function gainSidekickEv(ev: Ev, where: 'DECK' = undefined, p: Player = playerState) { cont(ev, () => gameState.sidekick.withTop(c => where === 'DECK' ? gainToDeckEv(ev, c, p) : gainEv(ev, c, p))); }
 function recruitSidekickActionEv(ev: Ev, what: Card) {
   const cost = getRecruitCost(what, () => limitPerTurn(e => e.type === 'RECRUIT' && isSidekick(e.what)));

@@ -1,8 +1,8 @@
 // Base
 
-const shieldAgentTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "GN");
-const shieldTrooperTemplate = makeHeroCard('Hero', 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.", "GN");
-const officerTemplate = makeHeroCard('Maria Hill', 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"DN");
+const shieldAgentTemplate = makeHeroCard(u, 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "GN");
+const shieldTrooperTemplate = makeHeroCard(u, 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.", "GN");
+const officerTemplate = makeHeroCard(u /*'Maria Hill'*/, 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"DN");
 const twistTemplate = new Card("SCHEME TWIST", "Scheme Twist");
 const strikeTemplate = new Card("MASTER STRIKE", "Master Strike");
 addTemplatesWithCounts("WOUNDS", "Legendary", [[ 30,
@@ -16,10 +16,10 @@ makeWoundCard("Wound", function () {
 
 // EXPANSION Villains
 
-const madameHydraTemplate = makeHeroCard("Viper", "Madame HYDRA", 3, 2, u, Color.GRAY, "HYDRA", "D", [], { playCost: 1, playCostType: 'DISCARD', cardActions: [ dodge ] });
-const hydraOperativeTemplate = makeHeroCard("Ally", "HYDRA Operative", 0, 1, u, Color.GRAY, "HYDRA", "GN");
-const hydraSoldierTemplate = makeHeroCard("Ally", "HYDRA Soldier", 0, u, 1, Color.GRAY, "HYDRA", "GN");
-const newRecruitsTemplate = makeHeroCard("Ally", "New Recruits", 2, u, 1, Color.GRAY, u, "D", [
+const madameHydraTemplate = makeHeroCard(u/*"Viper"*/, "Madame HYDRA", 3, 2, u, Color.GRAY, "HYDRA", "D", [], { playCost: 1, playCostType: 'DISCARD', cardActions: [ dodge ] });
+const hydraOperativeTemplate = makeHeroCard(u, "HYDRA Operative", 0, 1, u, Color.GRAY, "HYDRA", "GN");
+const hydraSoldierTemplate = makeHeroCard(u, "HYDRA Soldier", 0, u, 1, Color.GRAY, "HYDRA", "GN");
+const newRecruitsTemplate = makeHeroCard(u, "New Recruits", 2, u, 1, Color.GRAY, u, "D", [
   ev => returnToStackEv(ev, gameState.newRecruit),
   ev => drawEv(ev),
 ]);
@@ -47,7 +47,7 @@ const shardTemplate = makeShardToken();
 // EXPANSION Secret Wars Volume 1
 
 addTemplatesWithCounts("SIDEKICKS", "Secret Wars Volume 1", [
-[15, makeHeroCard("Hero", "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
+[15, makeHeroCard(u, "Sidekick", 2, u, u, Color.GRAY, u, "D", ev => {
   chooseMayEv(ev, "Return to Sidekick stack", () => returnToStackEv(ev, gameState.sidekick) && drawEv(ev, 2));
 })]]);
 

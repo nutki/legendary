@@ -31,14 +31,14 @@ function cardImageTransform(card: Card): string {
 }
 function cardImageName(card: Card): string {
   if (card.instance) card = card.instance;
-  if (card.cardType === "HERO" && card.heroName === "Special Sidekick") return imageName("sidekicks", card);
+  if (card.cardType === "HERO" && card.isSidekick) return imageName("sidekicks", card);
   if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
   if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
   if (card.cardType === "VILLAIN" || card.cardType === "VILLAINOUSWEAPON") return imageName("villains", card, card.printedVillainGroup);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermindName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
-  if (card.cardType === "BYSTANDER" && card.set !== "Legendary") return imageName("bystanders", card); 
+  if (card.cardType === "BYSTANDER" && card.cardName !== "Bystander") return imageName("bystanders", card);
   if (card.cardType === "WOUND" && card.cardName !== "Wound") return imageName("wounds", card);
   return imageName("", card);
 }
