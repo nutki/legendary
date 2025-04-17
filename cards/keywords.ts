@@ -1237,15 +1237,13 @@ function soulbindEv(ev: Ev, cond: number | Affiliation, effect: (c: Card) => voi
   cont(ev, () => bound && effect(bound));
 }
 function soulBindSelfCardAction(effect: (ev: Ev) => void) {
-  return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', ev => {
-    return new Ev(ev, 'EFFECT', {
-      what: c,
-      cost: { cond: c => c.location === playerState.victory },
-      func: ev => {
-        attachCardEv(ev, c, playerState.victory, 'SOULBIND');
-        effect(ev);
-      },
-    });
+  return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', {
+    what: c,
+    cost: { cond: c => c.location === playerState.victory },
+    func: ev => {
+      attachCardEv(ev, c, playerState.victory, 'SOULBIND');
+      effect(ev);
+    },
   });
 }
 function forceSoulbindEv(ev: Ev, cond: Filter<Card> = isVillain, p: Player = playerState, effect0?: () => void) {
