@@ -3410,11 +3410,11 @@ makeSchemeCard<{realities: Deck[], current: Deck}>("Breach the Nexus of All Real
     const state: {realities: Deck[], current: Deck} = gameState.schemeState;
     gameState.villaindeck.each(c => moveCardEv(ev, c, state.current, true));
     gameState.villaindeck.attached('DIMENSIONAL_BREACH').each(c => attachCardEv(ev, c, state.current, 'DIMENSIONAL_BREACH'));
-    selectCardEv(ev, "Choose a Reality", state.realities.limit(d => d.size > 0), d => {
+    cont(ev, () => selectCardEv(ev, "Choose a Reality", state.realities.limit(d => d.size > 0), d => {
       d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
       d.attached('DIMENSIONAL_BREACH').each(c => attachCardEv(ev, c, gameState.villaindeck, 'DIMENSIONAL_BREACH'));
       state.current = d;
-    });
+    }));
   }
 }], s => {
   const twists = gameState.villaindeck.limit(isTwist);
