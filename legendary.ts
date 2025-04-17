@@ -3084,6 +3084,13 @@ function mainLoop(): void {
       extraActions.push({ name: "OK", func: () => mainLoop() });
     },
   })[ev.type])(ev);
+  Object.keys(clickActions).map(v => {
+    const e = document.getElementById(v)
+    if (!e) {
+      console.warn("Missing element for action: ", v);
+      extraActions.push({ name: "Pick " + v, func: clickActions[v] });
+    }
+  })
   setMessage(ev.desc || "", ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
