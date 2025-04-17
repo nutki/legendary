@@ -3572,7 +3572,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 // <b>Always Include</b>: Killmonger as one of the Heroes
 ...makeEpicMastermindCard("Killmonger, the Betrayer", [ 9, 12 ], 6, "Vibranium Liberator Drones", ev => {
 // If there are any Killmonger cards in the city or HQ, each player gains a Wound.
-  const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+  const isKillmonger = (c: Card) => c.heroName?.includes("Killmonger");
   hqHeroes().has(isKillmonger) && eachPlayer(p => gainWoundEv(ev, p));
 // Choose a Killmonger Hero from your hand, any player's discard pile, or the HQ to enter the city as a Villain with Attack equal to its cost +3 and
 // Each player chooses a Killmonger Hero from their hand, discard pile, or the HQ to enter the city as a Villain with Attack equal to its cost +4 and
@@ -3591,7 +3591,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 }, [
   [ "Change in Loyalties", ev => {
     // Gain a Killmonger card from the city, HQ, or another player's discard pile.
-    const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+    const isKillmonger = (c: Card) => c.heroName?.includes("Killmonger");
     const options = [...gameState.players.limit(p => p !== playerState).flatMap(p => p.discard.deck), ...hqHeroes(), ...cityVillains()].filter(isKillmonger);
     selectCardEv(ev, "Choose a Killmonger card to gain", options, c => gainEv(ev, c));
   } ],
@@ -3601,12 +3601,12 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   } ],
   [ "See You on the Flip Side", ev => {
     // Each other player reveals their hand and discards a Killmonger card.
-    const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+    const isKillmonger = (c: Card) => c.heroName?.includes("Killmonger");
     eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p, isKillmonger));
   } ],
   [ "Sunset Over Wakanda", ev => {
     // From left to right, each Killmonger Hero in the HQ enters the city as a Villain as described on the Mastermind card. Then refill all the empty HQ spaces.
-    const isKillmonger = (c: Card) => c.heroName === extraHeroName();
+    const isKillmonger = (c: Card) => c.heroName?.includes("Killmonger");
     hqHeroes().limit(isKillmonger).each(c => {
       villainify(u, is(c), c => c.cost + 3, ev => {
         selectCardOptEv(ev, "Choose a player to gain Killmonger", gameState.players,
