@@ -1179,7 +1179,7 @@ const exampleGameSetup: Setup = {
   bystanders: ["Legendary"],
   withOfficers: true,
   withSpecialOfficers: true,
-  sidekicks: ["Secret Wars Valume 1", "Civil War", "Messiah Complex"],
+  sidekicks: ["Secret Wars Volume 1", "Civil War", "Messiah Complex"],
   wounds: ["Legendary"],
   withMadame: true,
   withNewRecruits: true,
