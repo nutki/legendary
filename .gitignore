@@ -1,3 +1,8 @@
 **/*.js
 **/*.js.map
-nbproject
+!tools/*.js
+images/**/*.jpg
+images/**/*.png
+fonts/**/*.ttf
+fonts/**/*.otf
+node_modules
