@@ -977,6 +977,7 @@ function makeTransformingSchemeCard<T = void>(name: string, transName: string, c
 
 interface Player {
   nr: number
+  id: string
   name: string
   deck: Deck
   discard: Deck
@@ -1357,6 +1358,7 @@ for (let nr = 0; nr < gameSetup.numPlayers; nr++) {
 playerState = {
   nr,
   name: "Player " + (nr + 1),
+  id: "Player " + (nr + 1),
   deck: new Deck('DECK' + nr),
   discard: new Deck('DISCARD' + nr, true),
   hand: new Deck('HAND' + nr, true),
