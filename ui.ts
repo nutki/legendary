@@ -378,7 +378,7 @@ function setupChange(): void {
   tmp.sidekicks = getBystanderSelects("setup_sidekicks");
   tmp.withSpecialOfficers = (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked;
   tmp.wounds = getBystanderSelects("setup_wounds");
-  tmp.withBindings = true;
+  tmp.withBindings = (<HTMLInputElement>document.getElementById('withBindings')).checked;
   tmp.withMadame = (<HTMLInputElement>document.getElementById('withMadame')).checked;
   tmp.withNewRecruits = (<HTMLInputElement>document.getElementById('withNewRecruits')).checked;
   tmp.handType = (<HTMLInputElement>document.getElementById('handType')).value === 'HYDRA' ? 'HYDRA' : 'SHIELD';
@@ -416,6 +416,7 @@ function setupSet(s: Setup): void {
   chooseSelects("setup_villains", s.villains);
   chooseSelects("setup_henchmen", s.henchmen);
   chooseSelects("setup_mastermind", s.mastermind);
+  (<HTMLInputElement>document.getElementById('withBindings')).checked = s.withBindings;
   (<HTMLInputElement>document.getElementById('withMadame')).checked = s.withMadame;
   (<HTMLInputElement>document.getElementById('withNewRecruits')).checked = s.withNewRecruits;
   (<HTMLInputElement>document.getElementById('withOfficers')).checked = s.withOfficers;
