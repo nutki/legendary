@@ -898,15 +898,16 @@ function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS'
 }
 function addHeroTemplates(set: string, templates: Templates['HEROES']) {
   templates.forEach(t => {
+    t.templateId = t.name;
+    if (findHeroTemplate(t.templateId)) t.templateId += '@' + set;
     t.set = set;
-    for (const c of [t.c1, t.c2, t.c3, t.uc, t.u2, t.ra]) if (c) c.set = set;
     for (const c of [t.c1, t.c2, t.c3, t.uc, t.u2, t.ra]) if (c) {
+      c.set = set;
+      c.templateId = t.templateId;
       if (t.name !== c.heroName) {
         console.error("Hero name mismatch " + t.name + " >> ", c.divided.left.heroName, "///", c.divided.right.heroName);
       }
     }
-    t.templateId = t.name;
-    if (findHeroTemplate(t.templateId)) t.templateId += '@' + set;
     cardTemplates.HEROES.push(t);
   });
 }

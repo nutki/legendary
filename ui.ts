@@ -32,7 +32,7 @@ function cardImageTransform(card: Card): string {
 function cardImageName(card: Card): string {
   if (card.instance) card = card.instance;
   if (card.cardType === "HERO" && card.isSidekick) return imageName("sidekicks", card);
-  if (card.cardType === "HERO") return imageName("heroes", card, card.heroName);
+  if (card.cardType === "HERO") return imageName("heroes", card, card.templateId?.replace(/@.*/, ""));
   if (card.cardType === "VILLAIN" && card.isHenchman) return imageName("henchmen", card);
   if (card.cardType === "VILLAIN" || card.cardType === "VILLAINOUSWEAPON") return imageName("villains", card, card.printedVillainGroup);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
