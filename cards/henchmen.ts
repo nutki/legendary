@@ -327,7 +327,7 @@ addHenchmenTemplates("Marvel Studios What If...?", [
 // FIGHT: You may KO a grey Hero from your discard pile.
 // ATTACK: 3
 makeHenchmenCard("Giants of Jotunheim", 3, {
-  ambush: ev => eachPlayer(p => repeat(3, () => withPlayerDeckTopEv(ev, c => discardEv(ev, c)), p)),
+  ambush: ev => eachPlayer(p => repeat(3, () => withPlayerDeckTopEv(ev, c => discardEv(ev, c), p))),
   fight: ev => selectCardOptEv(ev, "Choose a grey Hero to KO", playerState.discard.limit(Color.GRAY), c => KOEv(ev, c)),
 }),
 {name: "Ultron Sentries", cards:[
