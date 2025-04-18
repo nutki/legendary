@@ -10,12 +10,12 @@ npm install
 ## Download Graphical Assets
 To download graphical assets, use the following commands:
 ```bash
-npm download Other
-npm download Legendary
+npm run download Other
+npm run download Legendary
 ```
-For expansion cards:
+For expansion cards
 ```bash
-npm download <expansion name>
+npm run download <expansion name>
 ```
 
 ## Build the Project
