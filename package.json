@@ -2,10 +2,12 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "start": "http-server"
+    "start": "http-server",
+    "download": "node tools/download.js"
   },
   "dependencies": {
     "http-server": "^14.1.1",
+    "sharp": "^0.34.1",
     "typescript": "^5.8.3"
   }
 }
