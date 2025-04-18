@@ -3583,7 +3583,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     selectCardEv(ev, "Choose a Killmonger Hero to enter", options, c => {
       villainify(u, is(c), c => c.cost + (ev.source.epic ? 4 : 3), ev => {
         selectCardOptEv(ev, "Choose a player to gain Killmonger", gameState.players,
-          p => gainEv(ev, ev.what, p), () => KOEv(ev, ev.what));
+          p => gainEv(ev, ev.source, p), () => KOEv(ev, ev.source));
       });
       enterCityEv(ev, c);
     }, p);
