@@ -258,9 +258,51 @@ img.vpcount {
 #setupform span > div:nth-child(2) {
   padding-right: 10px;
 }
+#errorModalOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+#errorModal {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #999;
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+#errorModal .action {
+  font-size: 20px;
+  text-align: center;
+  margin: 10px;
+  display: inline-block
+}
+#errorModal h2 {
+  margin: 5px 0;
+  text-align: center;
+  color: #000;
+}
 </style>
 </head>
 <body>
+<div id="errorModalOverlay">
+  <div id="errorModal">
+    <h2>Legendary Crash</h2>
+    <p id="errorMessage">This is fine</p>
+    <div class="action" id="errorUndo">Undo</div>
+    <div class="action" id="errorReset">Reset game</div>
+    <div class="action" id="errorClearSetup">Reset setup</div>
+  </div>
+</div>
 <div id="boardPage">
 <div id="scalable-container" style="width: 100%; overflow: hidden;">
 <div id="scalable-contents" style="transform-origin: top left; transform: scale(0.5); width: 2200px; height: 1250px; overflow: hidden;">

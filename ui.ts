@@ -494,6 +494,9 @@ function initUI() {
     document.getElementById("setupPage").classList.add("hidden");
     document.getElementById("boardPage").classList.remove("hidden");
   };
+  document.getElementById("errorUndo").onclick = () => { undoLog.undo(); startGame(); closeError(); };
+  document.getElementById("errorReset").onclick = () => { undoLog.restart(); startGame(); closeError(); };
+  document.getElementById("errorClearSetup").onclick = () => { undoLog.init(exampleGameSetup); startGame(); closeError(); };
   const updateSize = () => {
     const viewportHeight = document.documentElement.clientHeight;
     const viewportWidth = document.documentElement.clientWidth;
@@ -503,6 +506,15 @@ function initUI() {
   }
   window.addEventListener("resize", updateSize);
   updateSize();
+}
+function closeError() {
+  document.getElementById("errorModalOverlay").style.display = "none";
+}
+window.onerror = (msg) => {
+  document.getElementById("errorModalOverlay").style.display = "block";
+  document.getElementById("errorMessage").innerHTML = msg.toString();
+  console.log(undoLog.toString());
+  console.log(JSON.stringify(undoLog.gameSetup));
 }
 function setCurrentPlayer(n: number) {
   console.log("setCurrentPlayer", n, currenPlayer);
