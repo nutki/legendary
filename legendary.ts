@@ -1564,9 +1564,6 @@ gameSetup.mastermind.forEach((m, i) => {
       !gameSetup.villains.includes(mastermind.leads) &&
       !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
 });
-if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
-if (gameState.mastermind.top.isAdaptingMastermind) adaptMastermind(gameState.mastermind.top);
-if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 if (gameState.advancedSolo === 'WHATIF') {
   for (let i = 0; i < 2; i++) {
     const c = gameState.villaindeck.deck.find(c => c.printedVillainGroup === gameState.gameSetup.henchmen[0]);
@@ -1574,6 +1571,9 @@ if (gameState.advancedSolo === 'WHATIF') {
   }
   gameState.villaindeck.shuffle();
 }
+if (gameState.mastermind.top.init) gameState.mastermind.top.init(gameState.mastermind.top);
+if (gameState.mastermind.top.isAdaptingMastermind) adaptMastermind(gameState.mastermind.top);
+if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 // Populate HQ
@@ -3091,7 +3091,7 @@ function mainLoop(): void {
     },
   })[ev.type])(ev);
   Object.keys(clickActions).map(v => {
-    const e = document.getElementById(v)
+    const e = document.getElementById(v) || document.querySelector(`.topCard[data-deck-id="${v}"]`);
     if (!e) {
       console.warn("Missing element for action: ", v);
       extraActions.push({ name: "Pick " + v, func: clickActions[v] });
@@ -3112,7 +3112,7 @@ function mainLoop(): void {
       if ((/\bdefeat\b/i).test(ev.desc)) e.classList.add("selectdefeat");
     }
   });
-  for (const deckDiv of document.getElementsByClassName('deck-overlay')) {
+  for (const deckDiv of document.querySelectorAll('.deck-overlay, .popup .topCard')) {
     const id = deckDiv.getAttribute('data-deck-id');
     if (clickActions[id]) deckDiv.classList.add("select");
   }

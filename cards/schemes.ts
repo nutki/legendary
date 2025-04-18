@@ -3420,13 +3420,13 @@ makeSchemeCard<{realities: Deck[], current: Deck}>("Breach the Nexus of All Real
   const twists = gameState.villaindeck.limit(isTwist);
   const groups = gameState.villaindeck.limit(c => !isHenchman(c) && !!c.villainGroup).unique(c => c.villainGroup);
   const realities = groups.map((g, i) => {
-    const d = new Deck("REALITY_" + i, false)
+    const d = gameState.villaindeck.attachedDeck("REALITY_" + i);
     gameState.villaindeck.limit(isGroup(g)).each(c => moveCard(c, d));
     moveCard(twists[i*2], d);
     moveCard(twists[i*2+1], d);
     return d;
   });
-  gameState.villaindeck.deck.forEach((c, i) => moveCard(c, realities[i % realities.length]));
+  [...gameState.villaindeck.deck].forEach((c, i) => moveCard(c, realities[i % realities.length]));
   realities.forEach(r => r.shuffle());
   setSchemeTarget(realities.length);
   s.realities = realities;

@@ -224,9 +224,12 @@ function displayPopupDeck(deck: Deck, container: HTMLElement): void {
   }
   flat.forEach(([card, name], i) => {
     const cardDiv = makeDisplayCardImg(card);
-    const shouldShowName = i < flat.length - 1 && name !== flat[i+1][1] && name;
-    if (shouldShowName)
+    cardDiv.setAttribute('data-deck-id', card.location.id);
+    const shouldShowName = name && (i < flat.length - 1 ? name !== flat[i+1][1] && name : true);
+    if (shouldShowName) {
       cardDiv.appendChild(div('deckname', {}, text(name)));
+      cardDiv.classList.add('topCard');
+    }
     container.appendChild(cardDiv);
     positionCard(cardDiv, { x: 0, y: 0 }, total - dist);
     dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
