@@ -1643,7 +1643,7 @@ function owned(p: Player = playerState): Card[] {
     ...p.discard.deck,
     ...p.deck.deck,
     ...p.victory.deck,
-    ...Object.values(p.victory._attached).flatMap(c => c.deck),
+    ...(p.victory._attached ? Object.values(p.victory._attached).flatMap(c => c.deck) : []),
     ...p.teleported.deck,
     ...p.playArea.deck,
   ];
