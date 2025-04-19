@@ -1192,7 +1192,7 @@ const exampleGameSetup: Setup = {
   withNewRecruits: false,
   withBindings: false,
   handType: 'SHIELD',
-  cityType: 'VILLAIN',
+  cityType: 'HERO',
   withShards: true,
   numPlayers: 1,
 };
