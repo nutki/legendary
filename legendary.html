@@ -22,8 +22,23 @@
   font-family: NumberFont;
   src: url(fonts/MatrixBoldSmallCaps.ttf);
 }
+/* Legacy scrollbar CSS for electron */
+html ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #000;
+}
+html ::-webkit-scrollbar-thumb {
+  background-color: red;
+  border-radius: 10px;
+}
+html ::-webkit-scrollbar-thumb:active {
+  background-color: orange;
+  border-radius: 10px;
+}
 body { background: #555; user-select: none; padding: 0; margin: 0; cursor: url('icons/cursor.png') 5 5, auto;
   font-family: TitleFont, Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 .number {
   display: inline-block;
