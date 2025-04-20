@@ -154,7 +154,8 @@ function checkAssets(baseDirOverride, progressCallback) {
     const manifestPath = path.join(imagesDir, group, "image_manifest.txt");
     const manifestContests = fs.readFileSync(manifestPath, "utf8");
     const manifestLines = manifestContests.trim().split("\n");
-    missingAssets[group] = 0;
+    const name = manifestLines.shift()
+    missingAssets[group] = { name, missing: 0, total: manifestLines.length };
     for (const line of manifestLines) {
       const [uuid, filename] = line.split(" ");
       if (!uuid || !filename) {
@@ -163,7 +164,7 @@ function checkAssets(baseDirOverride, progressCallback) {
       }
       const filepath = path.join(imagesDir, group, filename);
       if (!fs.existsSync(filepath)) {
-        missingAssets[group]++;
+        missingAssets[group].missing++;
       }
     }
     progressCallback?.(++count, assetGroups.length);
@@ -172,10 +173,19 @@ function checkAssets(baseDirOverride, progressCallback) {
 }
 if (require.main === module) {
   if (process.argv.length < 3) {
-    console.error("Usage: node downloadimages.js <expansion name>");
+    console.error("Usage: node downloadimages.js [list|<expansion name>]");
     process.exit(1);
   }
   const name = process.argv[2];
+  if (name === "list") {
+    const assetGroups = checkAssets();
+    console.log("Available asset groups:");
+    for (const group of Object.keys(assetGroups)) {
+      const g = assetGroups[group];
+      console.log(`- ${group}` + (g.missing ? g.missing < g.total ? " (partial)" : "" : " (complete)"));
+    }
+    process.exit(0);
+  }
   main(name);
 } else {
   module.exports = {
