@@ -1404,12 +1404,12 @@ addVillainTemplates("Secret Wars Volume 2", [
     fight: ev => patrolCity('BANK', () => drawEv(ev), () => selectCardAndKOEv(ev, yourHeroes())),
   })],
 ]},
-{ name: "K'un-lun", cards: [
+{ name: "K'un-Lun", cards: [
 // {NTHCIRCLE 5}
 // ESCAPE: Each player reveals a Hero that costs 5 or more, or they discard a card.
 // ATTACK: 5+
 // VP: 5
-  [ 2, makeVillainCard("K'un-lun", "Laughing Skull", 5, 5, {
+  [ 2, makeVillainCard("K'un-Lun", "Laughing Skull", 5, 5, {
     ...nthCircleParams(5),
     escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => pickDiscardEv(ev, 1, p), p)),
   })],
@@ -1417,7 +1417,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ESCAPE: Each player reveals a Hero that costs 6 or more, or they gain a wound.
 // ATTACK: 6+
 // VP: 6
-  [ 2, makeVillainCard("K'un-lun", "Rand K'ai", 6, 6, {
+  [ 2, makeVillainCard("K'un-Lun", "Rand K'ai", 6, 6, {
     ...nthCircleParams(6),
     escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => gainWoundEv(ev, p), p)),
   })],
@@ -1425,7 +1425,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // FIGHT: For each of your Heroes that costs 3, KO one of your Heroes.
 // ATTACK: 3+
 // VP: 3
-  [ 2, makeVillainCard("K'un-lun", "Razor Fist", 3, 3, {
+  [ 2, makeVillainCard("K'un-Lun", "Razor Fist", 3, 3, {
     ...nthCircleParams(3),
     fight: ev => repeat(yourHeroes().count(c => c.cost === 3), () => selectCardAndKOEv(ev, yourHeroes())),
   })],
@@ -1433,7 +1433,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // FIGHT: Draw a card for each of your Heroes that costs 4.
 // ATTACK: 4+
 // VP: 4
-  [ 2, makeVillainCard("K'un-lun", "Red Sai", 4, 4, {
+  [ 2, makeVillainCard("K'un-Lun", "Red Sai", 4, 4, {
     ...nthCircleParams(4),
     fight: ev => drawEv(ev, yourHeroes().count(c => c.cost === 4)),
   })],

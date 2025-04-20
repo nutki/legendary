@@ -502,7 +502,7 @@ makeMastermindCard("Thanos", 24, 7, "Infinity Gems", ev => {
 }),
 ]);
 addTemplates("MASTERMINDS", "Fear Itself", [
-makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty.", ev => {
+makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty", ev => {
 // Demolish each player. Then stack this Strike next to Iron Man. Uru-Enchanted Iron Man has an Uru-Enchanted Weapon for each Strike stacked here.
   demolishEv(ev);
   attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
@@ -891,7 +891,7 @@ makeMastermindCard("Baron Helmut Zemo", 16, 6, "Thunderbolts", ev => {
   varDefense: c => c.printedDefense - playerState.victory.count(isVillain),
 }),
 // Double S.H.I.E.L.D. Clearance. You can't fight Maria Hill while there are any S.H.I.E.L.D. Elite or Officers in the city.
-makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. Elite.", ev => {
+makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. Elite", ev => {
 // Two S.H.I.E.L.D. Officers enter the city as 3 Attack Villains. When you fight them, gain them as Heroes.
   villainifyOfficers(ev, 2);
 }, [
@@ -1155,7 +1155,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 // Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
 // EPICNAME: Deathbird
 // Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
-...makeEpicMastermindCard("Deathbird", [ 8, 10 ], 6, "Shi'ar Imperial Guard and a Shi'ar Henchmen Group.", ev => { // TODO double leads
+...makeEpicMastermindCard("Deathbird", [ 8, 10 ], 6, "Shi'ar Imperial Guard", ev => { // TODO double leads (and a Shi'ar Henchmen Group.)
 // If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
 // If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
   cityVillains().has(isGroup(ev.source.leads)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
@@ -1912,7 +1912,7 @@ addTemplates("MASTERMINDS", "Dimensions", [
 // EPICNAME: J. Jonah Jameson
 // START: Put 3 S.H.I.E.L.D. Officers per player into a face down "Angry Mobs" stack.
 // <b>Special Rules</b>: You can spend 5 Attack to reveal a random Angry Mob and put it into any player's discard pile. You can't fight J. Jonah Jameson while he has Angry Mobs.
-...makeEpicMastermindCard("J. Jonah Jameson", [ 4, 5 ], 5, "Spider-Slayers", ev => {
+...makeEpicMastermindCard("J. Jonah Jameson", [ 4, 5 ], 5, "Spider-Slayer", ev => {
 // Each player <b>Investigates</b> their deck for a card and puts it into the Angry Mobs stack.
 // Each player <b>Investigates</b> their deck for a card and puts it into the Angry Mobs stack. If that card cost 0, that player gains a Wound.
   eachPlayer(p => investigateEv(ev, () => true, p.deck, c => {
@@ -2162,7 +2162,7 @@ makeAdaptingMastermindCard("Hydra High Council", 6, "Hydra Elite", [
     varDefense: c => c.printedDefense - playerState.victory.count(isVillain),
   }),
 ]),
-makeAdaptingMastermindCard("Hydra Super-Adaptoid", 6, "A.I.M. Hydra Offshoot", [
+makeAdaptingMastermindCard("Hydra Super-Adaptoid", 6, "A.I.M., Hydra Offshoot", [
 // #STRIKE: Each player KOs two Bystanders from their Victory Pile or gains a Wound. <b>Adapt</b>.
 // #FIGHT: For each of your [Covert] Heroes, rescue a Bystander. <b>Adapt</b>.
   makeAdaptingTacticsCard("Black Widow's Bite", 8, ev => {
@@ -2651,7 +2651,7 @@ addTemplates("MASTERMINDS", "Annihilation", [
 // EPICNAME: Annihilus
 //  Add an extra Villain Group <i>(even for 1 player.)</i>
 // {MASSMOMENTUM 4}
-// TODO: extra Villain Group
+// TODO: extra Henchmen / Villain Group
 ...makeEpicMastermindCard("Annihilus", [ 10, 12 ], 6, "Annihilation Wave", ev => {
   if (!ev.source.epic) {
 // Reveal the top card of the Villain Deck. If it's a Bystander, Annihilus captures it. If it's a Villain, it enters the city, captures a Bystander, and moves forward an extra space <i>(before doing any Ambush ability)</i>.
@@ -3425,7 +3425,7 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
 }),
 ]);
 addTemplates("MASTERMINDS", "Midnight Sons", [
-...makeEpicMastermindCard("Zarathos", [ 7, 9 ], 6, "The Fallen", ev => {
+...makeEpicMastermindCard("Zarathos", [ 7, 9 ], 6, "Fallen", ev => {
 // If any Heroes in the HQ are haunted, each player gains a Wound.
   hqHeroes().has(c => c.location.attached('HAUNTED').size > 0) && eachPlayer(p => gainWoundEv(ev, p));
 // Then if Zarathos is not already haunting, he <b>Haunts</b> the highest-cost unhaunted Hero in the HQ.
@@ -3527,7 +3527,7 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
 addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 // Before each time you fight Hank Pym, you must "track him down" by discarding the top 6 cards of your deck, then paying [2, 3] Attack
 // for each card you discarded that costs 0. If you don't pay this total, gain a Wound and your turn ends.
-...makeEpicMastermindCard("Hank Pym, Yellowjacket", [ 4, 6 ], 6, "Any Villain Group", ev => {
+...makeEpicMastermindCard("Hank Pym, Yellowjacket", [ 4, 6 ], 6, u, ev => {
   // Each player puts [three, six] 0-cost cards from their discard pile on top of their deck.
   eachPlayer(p => {
     selectObjectsEv(ev, "Choose cards to put on top of your deck", ev.source.epic ? 6 : 3, p.discard.limit(c => c.cost === 0), c => {
@@ -3620,7 +3620,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   // TODO init: c => // add Kilmonger if not present
 }),
 // Ultron Infinity has all the <b>Empowered</b> abilities of all Ultron Sentries in the city, the Escape Pile, and stacked next to him.
-// Ultron Sentries <i>(even in solo mode)</i>
+// Ultron Sentries <i>(even in solo mode)</i> TODO forced
 ...makeEpicMastermindCard("Ultron Infinity", [ 8, 12 ], 6, "Ultron Sentries", ev => {
 // {XDRAMPAGE Ultron}. Then each player stacks an Ultron Sentry from their Victory Pile next to Ultron.
 // {XDRAMPAGE Ultron}. Then each player stacks two Ultron Sentries from their Victory Pile next to Ultron.
@@ -4066,7 +4066,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
 // Omega Red gets +3 Attack while you have any Wounds and +3 Attack while there are any Wounds in your discard pile.
 // When you KO any Wounds for the first time in a turn, put them on the bottom of the Wound Deck and gain a Wound to the bottom of your deck.
 // Whenever you KO any Wounds, put them on the bottom of the Wound Deck and gain a Wound to the bottom of your deck.
-...makeEpicMastermindCard("Omega Red", [ 10, 12 ], 6, "Any Villain Group", ev => {
+...makeEpicMastermindCard("Omega Red", [ 10, 12 ], 6, u, ev => {
 // Each player discards one of their [Covert] Heroes or gains a Wound.
 // Each player KOs one of their [Covert] Heroes or gains a Wound.
   selectCardOptEv(ev, "Choose a Hero to discard", yourHeroes().limit(Color.COVERT), c => ev.source.epic ? KOEv(ev, c) : discardEv(ev, c), () => gainWoundEv(ev, playerState));

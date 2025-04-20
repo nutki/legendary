@@ -1941,7 +1941,7 @@ makeTransformingSchemeCard("The Korvac Saga", "Korvac Revealed", { twists: 8 }, 
 }),
 ]);
 addTemplates("SCHEMES", "S.H.I.E.L.D.", [
-// SETUP: 7 Twists. Include either the "Hydra Elite" or "A.I.M., Hydra Offshoot" Villain Group, but not both.
+// SETUP: 7 Twists. Include either the "Hydra Elite" or "A.I.M., Hydra Offshoot" Villain Group, but not both. TODO required villain
 // EVILWINS: When the <b>Hydra Level</b> is 11.
 makeSchemeCard("S.H.I.E.L.D. vs. HYDRA War", { twists: 7 }, ev => {
   // Twist: Each player puts a card from the S.H.I.E.L.D. Officer Stack face up next to the Scheme as a 3 Attack "Double Agent" Villain. If any Double Agents were already there, put one into the Escape Pile and put the rest on the bottom of the S.H.I.E.L.D. Officer Stack. You can fight any Double Agent next to the Scheme to gain it or send it {UNDERCOVER}.
@@ -2906,7 +2906,7 @@ makeSchemeCard("Provoke the Sovereign War Fleet", { twists: 11, vd_villain: [ 2,
 // SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups,
 // but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
 // EVILWINS: When there are 32 non-grey Heroes in the KO pile.
-makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, vd_villain: [ 2, 4, 6, 6, 8 ], solo_henchmen: [4, 4], vd_henchmen: [2, 2, 2, 4, 4] }, ev => {
+makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, heroes: 7, vd_villain: [ 2, 4, 6, 6, 8 ], solo_henchmen: [4, 4], vd_henchmen: [2, 2, 2, 4, 4] }, ev => {
   // Twist: KO all Heroes from HQ. Villains in the Sewers and Bridge swap spaces. Likewise Villains in the Bank and Streets.
   hqHeroes().each(c => KOEv(ev, c));
   withCity('SEWERS', sewers => withCity('BRIDGE', bridge => swapCardsEv(ev, sewers, bridge)));
