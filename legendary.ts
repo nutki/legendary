@@ -1094,6 +1094,7 @@ interface Game {
   astralPlane: Deck;
   finalBlow: boolean;
   ambushScheme: Deck
+  gameOver: boolean
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1476,6 +1477,7 @@ gameState = {
   thronesFavorHolder: undefined,
   astralPlane: new Deck('ASTRALPLANE', true),
   ambushScheme: new Deck('AMBUSHSCHEME', true),
+  gameOver: false,
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -3088,6 +3090,7 @@ function mainLoop(): void {
       }});
     },
     "GAMEOVER": function () {
+      gameState.gameOver = true;
     },
     "CONFIRM": function () {
       extraActions.push({ name: "OK", func: () => mainLoop() });
@@ -3140,6 +3143,7 @@ function startApp(): void {
   undoLog.init();
   initUI();
   startGame();
+  if (undoLog.pos <= 1 || gameState.gameOver) showSetup();
 }
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*

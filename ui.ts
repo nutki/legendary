@@ -508,6 +508,10 @@ function initUI() {
   window.addEventListener("resize", updateSize);
   updateSize();
 }
+function showSetup() {
+  document.getElementById("setupPage").classList.remove("hidden");
+  document.getElementById("boardPage").classList.add("hidden");
+}
 function closeError() {
   document.getElementById("errorModalOverlay").style.display = "none";
 }
