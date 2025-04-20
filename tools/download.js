@@ -113,6 +113,7 @@ async function main(name, baseDirOverride, progressCallback) {
   const manifestLines = manifestContests.trim().split("\n");
   progressCallback?.(0, manifestLines.length);
   let count = 0;
+  manifestLines.shift();
   for (const line of manifestLines) {
     const [uuid, filename] = line.split(" ");
     if (!uuid || !filename) {
