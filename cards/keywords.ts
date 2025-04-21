@@ -1048,9 +1048,10 @@ function canRecruitWithKindness(c: Card) {
 }
 function playKindnessEv(ev: Ev) {
   const cards = turnState.cardsPlayed.limit(c => c.excessiveKindness !== undefined);
-  if (ev.what.excessiveKindness) cards.push(ev.what);
+  // TODO: it is not super clear but I guess kidness of the card just recruited should not trigger
+  // if (ev.what.excessiveKindness) cards.push(ev.what);
   selectCardOrderEv(ev, "Choose Excessive Kindness order", cards, c => {
-    pushEv(ev, 'EFFECT', { source: c, func: c.excessiveKindness });
+    pushEv(ev, 'EFFECT', { source: c, what: ev.what, func: c.excessiveKindness });
   });
 }
 function triggeredArifact(event: TriggerableEvType, cond: (ev: Ev, source: Card) => boolean, selfTrigger: boolean = false): HeroCardAbillities {
