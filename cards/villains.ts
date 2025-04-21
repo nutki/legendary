@@ -5775,7 +5775,7 @@ addVillainTemplates("Marvel Studios What If...?", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("Strange’s Demons", "Demon Dragon", 6, 4, {
-    fight: ev => soulbindEv(ev, 0, c => addRecruitEvent(ev, c.vp), isNot(ev.source)),
+    fight: ev => soulbindEv(ev, 0, c => addRecruitEvent(ev, c.vp), c => isNot(ev.source)(c) && isVillain(c)),
     escape: ev => xdRampageEv(ev, "Demon"),
   })],
 // AMBUSH: Each player must <b>Soulbind a Strange's Demon Villain</b> or discard a card.
@@ -5817,7 +5817,7 @@ addVillainTemplates("Marvel Studios What If...?", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Strange’s Demons", "Wolf Demon", 4, 2, {
-    fight: ev => soulbindEv(ev, 0, () => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)), isNot(ev.source)),
+    fight: ev => soulbindEv(ev, 0, () => selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c)), c => isNot(ev.source)(c) && isVillain(c)),
   })],
 ]},
 { name: "Zombie Avengers", cards: [
