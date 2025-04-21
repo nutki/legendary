@@ -444,7 +444,7 @@ function playViolenceEv(ev: Ev) {
 // * Revenge is player specific. It will change based on the damage each player has caused to a Villain group. If you've KO'd 2 members of the Deadpool's 'Friends' Villain group then every other member of that group, that enters or is already in the city, will get +2 Attack during your turns. If another player has yet to KO'd a member of that group then the group doesn't gain any Attack. The more damage YOU do, the more that group hates YOU.
 // * Revenge is not limited to just Villains either. Masterminds can also hold a grudge. Big surprise there.
 function revengeVarDefense(c: Card) {
-  return c.printedDefense + playerState.victory.limit(isVillain).count(isGroup(c.leads || c.villainGroup));
+  return c.printedDefense + playerState.victory.limit(isVillain).count(c.leads ? leadBy(c) : isGroup(c.villainGroup));
 }
 function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
   // TODO hidden witness

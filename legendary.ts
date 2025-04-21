@@ -37,6 +37,31 @@ function shuffleArray<T>(a: T[], r: RNG): void {
     }
 };
 
+function leadBy(c: Card): (c: Card) => boolean {
+  if (!c.leads) {
+    console.warn("leadBy called on card without leads", c);
+    return () => false;
+  }
+  if (typeof c.leads === "string") return isGroup(c.leads);
+  if (c.leads.henchmen && c.leads.villains) {
+    const v = c.leads.villains;
+    const h = c.leads.henchmen;
+    return c2 => isGroup(v)(c2) || isGroup(h)(c2);
+  }
+  if (c.leads.henchmen) return isGroup(c.leads.henchmen);
+  if (c.leads.villains) return isGroup(c.leads.villains);
+  console.warn("leadBy called on card with unknown leads", c);
+  return () => false;
+}
+const leadVillains = (c: Card) => c.leads && (typeof c.leads === "string" ? c.leads : c.leads.villains);
+const leadHenchmen = (c: Card) => c.leads && (typeof c.leads === "string" ? undefined : c.leads.henchmen);
+function updateLeads(c: Card, villain: string, henchman: string) {
+  if (!c.leads || (typeof c.leads === "string")) c.leads = villain
+  else {
+    c.leads = { henchmen: c.leads.henchmen && henchman, villains: c.leads.villains && villain };
+  }
+}
+type MastermindLeads = string | { henchmen?: string, villains?: string }
 // Game primitives: Cards
 interface Card {
   id: string
@@ -81,7 +106,7 @@ interface Card {
   copyPasteLimit?: Filter<Card>
   heroName?: string
   printedVillainGroup?: string
-  leads?: string
+  leads?: MastermindLeads
   cardName?: string
   mastermind?: Card
   isHenchman?: boolean
@@ -378,7 +403,7 @@ function makeTacticsCard(name: string, abilities: TacticsCardAbillities = {}) {
   if (abilities) Object.assign(t, abilities);
   return t;
 }
-function makeEpicMastermindCard(name: string | [string, string], defense: [number, number], vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities | ((epic: boolean) => MastermindCardAbillities)) {
+function makeEpicMastermindCard(name: string | [string, string], defense: [number, number], vp: number, leads: MastermindLeads, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities | ((epic: boolean) => MastermindCardAbillities)) {
   const m1 = makeMastermindCard(typeof name === "string" ? name : name[0],
     defense[0], vp, leads, strike, tactics, abilities instanceof Function ? abilities(false) : abilities);
   const m2 = makeMastermindCard(typeof name === "string" ? "Epic " + name : name[1],
@@ -388,7 +413,7 @@ function makeEpicMastermindCard(name: string | [string, string], defense: [numbe
   m2.tacticsTemplates = m1.tacticsTemplates;
   return [m1, m2];
 }
-function makeMastermindCard(name: string, defense: number, vp: number, leads: string, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
+function makeMastermindCard(name: string, defense: number, vp: number, leads: MastermindLeads, strike: (ev: Ev) => void, tactics: ([string, (ev: Ev) => void]| Card)[], abilities?: MastermindCardAbillities) {
   let c = new Card("MASTERMIND", name);
   c.printedDefense = defense;
   c.printedVP = vp;
@@ -1335,9 +1360,10 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
   setup.mastermind = Array(1 + getParam('extra_masterminds', scheme, numPlayers)).fill(undefined);
   if (numPlayers > 1) {
-    const leads = mastermind.leads;
-    if (findVillainTemplate(leads)) setRequired('villains', leads);
-    if (findHenchmanTemplate(leads)) setRequired('henchmen', leads);
+    const leadsV = leadVillains(mastermind);
+    const leadsH = leadHenchmen(mastermind);
+    leadsV && setRequired('villains', leadsV);
+    leadsH && setRequired('henchmen', leadsH);
   }
   const schemeReq = scheme.params.required;
   if (schemeReq) {
@@ -1564,9 +1590,7 @@ gameSetup.mastermind.forEach((m, i) => {
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
   tactics.each(t => t.mastermind = mastermind);
-    if (i === 0 && gameState.players.size === 1 &&
-      !gameSetup.villains.includes(mastermind.leads) &&
-      !gameSetup.henchmen.includes(mastermind.leads)) mastermind.leads = gameSetup.villains[0];
+  if (i === 0) updateLeads(mastermind, gameSetup.villains[0], gameSetup.henchmen[0]);
 });
 if (gameState.advancedSolo === 'WHATIF') {
   for (let i = 0; i < 2; i++) {
@@ -3137,6 +3161,7 @@ function startGame(): void {
   mainLoop();
 }
 function startApp(): void {
+  runChecks();
   const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup')) || exampleGameSetup;
   setupInit();
   setupSet(lastSetup);
@@ -3144,6 +3169,20 @@ function startApp(): void {
   initUI();
   startGame();
   if (undoLog.pos <= 1 || gameState.gameOver) showSetup();
+}
+function runChecks() {
+  cardTemplates["MASTERMINDS"].forEach(t => {
+    const lv = leadVillains(t);
+    const lh = leadHenchmen(t);
+    if (lv) for (const v of lv.split("|")) {
+      const vv = findVillainTemplate(v);
+      if (!vv) console.error("Lead Villain missing: ", t.cardName, "Leads", v);
+    }
+    if (lh) for (const h of lh.split("|")) {
+      const hh = findHenchmanTemplate(h);
+      if (!hh) console.error("Lead Henchman missing: ", t.cardName, "Leads", h);
+    }
+  });
 }
 document.addEventListener('DOMContentLoaded', startApp, false);
 /*

@@ -1,6 +1,6 @@
 "use strict";
 addTemplates("MASTERMINDS", "Legendary", [
-makeMastermindCard("Dr. Doom", 9, 5, "Doombot Legion", ev => {
+makeMastermindCard("Dr. Doom", 9, 5, { henchmen: "Doombot Legion" }, ev => {
   // Each player with exactly 6 cards in hand reveals a [Tech] Hero or puts 2 cards from their hand on top of their deck.
   eachPlayer(p => { if (p.hand.size === 6) revealOrEv(ev, Color.TECH, () => { pickTopDeckEv(ev, 2, p); }, p); });
 }, [
@@ -61,7 +61,7 @@ makeMastermindCard("Red Skull", 7, 5, "HYDRA", ev => {
   // You get +4 Recruit.
   [ "Endless Resources", ev => addRecruitEvent(ev, 4) ],
   // Draw two cards. Then draw another card for each HYDRA Villain in your Victory Pile.
-  [ "HYDRA Conspiracy", ev => drawEv(ev, 2 + playerState.victory.count(isGroup(ev.source.mastermind.leads))) ],
+  [ "HYDRA Conspiracy", ev => drawEv(ev, 2 + playerState.victory.count(leadBy(ev.source.mastermind))) ],
   // You get +3 Attack.
   [ "Negablast Grenades", ev => addAttackEvent(ev, 3) ],
   // Look at the top three cards of your deck. KO one, discard one and put one back on top of your deck.
@@ -90,7 +90,7 @@ makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
   [ "Horsemen Are Drawing Nearer", ev => {
   // Each other player plays a Four Horsemen Villain from their Victory Pile as if playing it from the Villain Deck.
     // TODO multiplayer order?
-    eachOtherPlayerVM(p => selectCardEv(ev, "Play a Villain", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => villainDrawEv(ev, c), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Play a Villain", p.victory.limit(leadBy(ev.source.mastermind)), c => villainDrawEv(ev, c), p));
   } ],
   [ "Immortal and Undefeated", ev => {
   // If this is not the final Tactic, rescue six Bystanders and shuffle this Tactic back into the other Tactics.
@@ -255,7 +255,7 @@ makeMastermindCard("Galactus", 20, 7, "Heralds of Galactus", ev => {
 // Mole Man gets +1 Attack for each Subterranea Villain that has escaped.
 makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
 // All Subterranea Villains in the city escape. If any Villains escaped this way, each player gains a Wound.
-  const villains = cityVillains().limit(isGroup(ev.source.leads));
+  const villains = cityVillains().limit(leadBy(ev.source));
   villains.each(c => villainEscapeEv(ev, c));
   villains.size && eachPlayer(p => gainWoundEv(ev, p));
 }, [
@@ -265,7 +265,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
   } ],
   [ "Master of Monsters", ev => {
   // If this is not the final Tactic, reveal the top six cards of the Villain Deck. Play all the Subterranea Villains you revealed. Put the rest on the bottom of the Villain Deck in random order.
-    finalTactic(ev.source) || revealVillainDeckEv(ev, 6, r => r.limit(isGroup(ev.source.mastermind.leads)).each(c => villainDrawEv(ev, c)), true, true)
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 6, r => r.limit(leadBy(ev.source.mastermind)).each(c => villainDrawEv(ev, c)), true, true)
   } ],
   [ "Secret Tunnel", ev => {
   // You get +6 Attack usable only against Villains in the Streets.
@@ -390,7 +390,7 @@ makeMastermindCard("Nick Fury", 9, 6, "Avengers", ev => {
   } ],
 ]),
 // Odin gets +1 Attack for each Asgardian Warrior in the city and in the Overrun Pile.
-makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
+makeMastermindCard("Odin", 10, 6, { henchmen: "Asgardian Warriors" }, ev => {
 // Each player puts an Asgardian Warrior from their Victory Pile into an empty city space. Any player who cannot do so gains a Bindings.
   eachPlayer(p => selectCardOrEv(ev, "Select an Asgardian Warrior", p.victory.limit(c => gameState.city.has(d => !d.size) && c.villainGroup === ev.source.leads), c => {
     selectCardEv(ev, "Select an empty city space", gameState.city.limit(d => !d.size), d => moveCardEv(ev, c, d), p);
@@ -402,18 +402,18 @@ makeMastermindCard("Odin", 10, 6, "Asgardian Warriors", ev => {
   } ],
   [ "Might of Valhalla", ev => {
   // Draw a card for each Asgardian Warrior in your Victory Pile.
-    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    drawEv(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
   } ],
   [ "Riches of Asgard", ev => {
   // You get +1 Recruit for each Asgardian Warrior in your Victory Pile.
-    addRecruitEvent(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    addRecruitEvent(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
   } ],
   [ "Ride of the Valkyries", ev => {
   // Each other player reveals a Foes of Asgard Ally or discards a card for each Asgardian Warrior in the Overrun Pile.
-    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => pickDiscardEv(ev, gameState.escaped.count(isGroup(ev.source.mastermind.leads)), p), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, "Foes of Asgard", () => pickDiscardEv(ev, gameState.escaped.count(leadBy(ev.source.mastermind)), p), p));
   } ],
 ], {
-  varDefense: c => c.printedDefense + cityVillains().count(isGroup(c.leads)) + gameState.escaped.count(isGroup(c.leads)),
+  varDefense: c => c.printedDefense + cityVillains().count(leadBy(c)) + gameState.escaped.count(leadBy(c)),
 }),
 makeMastermindCard("Professor X", 8, 6, "X-Men First Class", ev => {
 // Choose the two highest-cost Allies in the Lair. Stack them next to Professor X as "Telepathic Pawns." Professor X gets +1 Attack for each Ally stacked next to him. Players can recrut the top Ally in the stack next to Professor X.
@@ -457,7 +457,7 @@ makeMastermindCard("Supreme Intelligence of the Kree", 9, 6, "Kree Starforce", e
 }, [
   [ "Combined Knowledge of All Kree", ev => {
   // The Supreme Intelligence gains a Shard for each Kree Villain in the city and/or the Escape Pile.
-    attachShardEv(ev, ev.source.mastermind, cityVillains().count(isGroup(ev.source.mastermind.leads)) + gameState.escaped.count(isGroup(ev.source.mastermind.leads)));
+    attachShardEv(ev, ev.source.mastermind, cityVillains().count(leadBy(ev.source.mastermind)) + gameState.escaped.count(leadBy(ev.source.mastermind)));
   } ],
   [ "Cosmic Omniscience", ev => {
   // The Supreme Intelligence gains a Shard for each Master Strike in the KO pile.
@@ -470,7 +470,7 @@ makeMastermindCard("Supreme Intelligence of the Kree", 9, 6, "Kree Starforce", e
   [ "Guide Kree Evolution", ev => {
   // The Supreme Intelligence and Kree Villains in the city each gain a Shard.
     attachShardEv(ev, ev.source.mastermind);
-    cityVillains().limit(isGroup(ev.source.mastermind.leads)).each(c => attachShardEv(ev, c));
+    cityVillains().limit(leadBy(ev.source.mastermind)).each(c => attachShardEv(ev, c));
   } ],
 ]),
 // Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any player.
@@ -498,7 +498,7 @@ makeMastermindCard("Thanos", 24, 7, "Infinity Gems", ev => {
     eachOtherPlayerVM(p => p.hand.limit(c => names.includes(c.cardName)).each(c => discardEv(ev, c)));
   } ],
 ], {
-  varDefense: c => c.printedDefense - 2 * (gameState.players.sum(p => p.artifact.count(isGroup("Infinity Gems"))) + playerState.victory.count(isGroup(c.leads)))
+  varDefense: c => c.printedDefense - 2 * (gameState.players.sum(p => p.artifact.count(isGroup("Infinity Gems"))) + playerState.victory.count(leadBy(c)))
 }),
 ]);
 addTemplates("MASTERMINDS", "Fear Itself", [
@@ -550,7 +550,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
   } ],
   [ "Gather the Harvest", ev => {
   // For each Limbo Villain in the city and/or Escape Pile, Madelyne captures a Bystander.
-    captureEv(ev, ev.source.mastermind, [...cityVillains(), ...gameState.escaped.deck].count(isGroup(ev.source.mastermind.leads)));
+    captureEv(ev, ev.source.mastermind, [...cityVillains(), ...gameState.escaped.deck].count(leadBy(ev.source.mastermind)));
   } ],
 ], {
   fightCond: c => !c.captured.has(isBystander),
@@ -743,9 +743,9 @@ makeMastermindCard("Shiklah, the Demon Bride", 9, 6, "Monster Metropolis", ev =>
   } ],
 ]),
 // Spider-Queen gets +1 Attack for each Bystander in the Escape pile.
-makeMastermindCard("Spider-Queen", 8, 6, "Spider-Infected", ev => {
+makeMastermindCard("Spider-Queen", 8, 6, { henchmen: "Spider-Infected" }, ev => {
 // Each player puts a Spider-Infected from their Victory Pile into an empty city space. Any player who cannot do so gains a Wound.
-  eachPlayer(p => selectCardOrEv(ev, "Select a Villain to put in the city", p.victory.limit(isGroup(ev.source.leads)), c => {
+  eachPlayer(p => selectCardOrEv(ev, "Select a Villain to put in the city", p.victory.limit(leadBy(ev.source)), c => {
     selectCardOrEv(ev, "Select an empty city space", gameState.city.limit(d => !d.size), d => {
       moveCardEv(ev, c, d);
     }, () => gainWoundEv(ev, p), p);
@@ -758,7 +758,7 @@ makeMastermindCard("Spider-Queen", 8, 6, "Spider-Infected", ev => {
   [ "Infect the Entire City", ev => {
   // Put a Bystander from the Bystander Deck into the Escape Pile. Then, each Spider-Infected in the city captures a Bystander.
     gameState.bystanders.withTop(c => moveCardEv(ev, c, gameState.escaped));
-    cont(ev, () => cityVillains().limit(isGroup(ev.source.mastermind.leads)).each(c => captureEv(ev, c)));
+    cont(ev, () => cityVillains().limit(leadBy(ev.source.mastermind)).each(c => captureEv(ev, c)));
   } ],
   [ "Control Arachnid Genes", ev => {
   // You may gain a Spider-Friend Hero from the HQ.
@@ -791,7 +791,7 @@ makeMastermindCard("Arnim Zola", 6, 6, "Zola's Creations", ev => {
   } ],
   [ "Pet Projects", ev => {
   // Each other player reveals a Zola's Creations Villain from their Victory Pile or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOptEv(ev, "Select a card", p.victory.limit(isGroup(ev.source.mastermind.leads)), () => {}, () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Select a card", p.victory.limit(leadBy(ev.source.mastermind)), () => {}, () => gainWoundEv(ev, p), p));
   } ],
   [ "Crush Pacifist Resistance", ev => {
   // KO up to two of your Heroes that have less than 2 printed Attack.
@@ -913,7 +913,7 @@ makeMastermindCard("Maria Hill, Director of S.H.I.E.L.D.", 7, 6, "S.H.I.E.L.D. E
     villainifyOfficers(ev, 2);
   } ],
 ], {
-  fightCond: c => shieldClearanceCond(2)() && !cityVillains().has(isGroup(c.leads)) && !cityVillains().has(isShieldOfficer),
+  fightCond: c => shieldClearanceCond(2)() && !cityVillains().has(leadBy(c)) && !cityVillains().has(isShieldOfficer),
   fightCost: shieldClearanceCost(2),
 }),
 // {BRIBE}
@@ -987,8 +987,8 @@ makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
   } ],
   [ "Of Course it's Corpse", ev => {
   // The other player with the fewest Evil Deadpool Corpse Villains in their Victory Pile (or tied for fewest) gains a Wound.
-    const lowest = -gameState.players.max(p => -p.victory.count(isGroup(ev.source.mastermind.leads)));
-    eachOtherPlayerVM(p => p.victory.count(isGroup(ev.source.mastermind.leads)) === lowest && gainWoundEv(ev, p));
+    const lowest = -gameState.players.max(p => -p.victory.count(leadBy(ev.source.mastermind)));
+    eachOtherPlayerVM(p => p.victory.count(leadBy(ev.source.mastermind)) === lowest && gainWoundEv(ev, p));
   } ],
   [ "Stitched from Dead (Pool) Parts", ev => {
   // Each other player discards the top card of their deck. Whoever discards the lowest-costing card (or tied for lowest) gains a Wound.
@@ -1066,15 +1066,15 @@ makeMastermindCard("The Goblin, Underworld Boss", 10, 6, "Goblin's Freak Show", 
   } ],
   [ "Blackmail the Judges", ev => {
   // For each Goblin's Freak Show Villain in the city, The Goblin captures 2 <b>Hidden Witnesses</b>.
-    captureWitnessEv(ev, ev.source.mastermind, 2 * cityVillains().count(isGroup(ev.source.mastermind.leads)));
+    captureWitnessEv(ev, ev.source.mastermind, 2 * cityVillains().count(leadBy(ev.source.mastermind)));
   } ],
   [ "Carnival of Carnage", ev => {
   // For each Goblin's Freak Show Villain in the city, each other player discards a card.
-    eachOtherPlayerVM(p => pickDiscardEv(ev, cityVillains().count(isGroup(ev.source.mastermind.leads)), p));
+    eachOtherPlayerVM(p => pickDiscardEv(ev, cityVillains().count(leadBy(ev.source.mastermind)), p));
   } ],
   [ "Blind Loyalty", ev => {
   // <b>Investigate</b> the Villain Deck for a Goblin's Freak Show Villain and put it into your Victory Pile.
-    investigateEv(ev, isGroup(ev.source.mastermind.leads), gameState.villaindeck, c => moveCardEv(ev, c, playerState.victory));
+    investigateEv(ev, leadBy(ev.source.mastermind), gameState.villaindeck, c => moveCardEv(ev, c, playerState.victory));
   } ],
 ], {
   init: c => repeat(2, () => gameState.bystanders.size && moveCard(gameState.bystanders.top, c.attachedDeck('WITNESS')))
@@ -1110,7 +1110,7 @@ addTemplates("MASTERMINDS", "X-Men", [
   [ "Welcome to my Theme Park!", ev => {
   // Arcade and each Murderworld Villain in the city capture two <b>Human Shields</b>.
     captureShieldEv(ev, ev.source.mastermind, 2);
-    cityVillains().limit(isGroup(ev.source.mastermind.leads)).each(c => captureShieldEv(ev, c));
+    cityVillains().limit(leadBy(ev.source.mastermind)).each(c => captureShieldEv(ev, c));
   } ],
 ], {
   init: c => addFutureTrigger(ev => {
@@ -1128,7 +1128,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     gameState.herodeck.limit(sharesColor(c)).each(c => KOEv(ev, c));
   });
   ev.source.epic && cont(ev, () => {
-    eachPlayer(p => selectCardEv(ev, "Choose a Villain to play", p.victory.limit(isGroup(ev.source.leads)), c => villainDrawEv(ev, c), p));
+    eachPlayer(p => selectCardEv(ev, "Choose a Villain to play", p.victory.limit(leadBy(ev.source)), c => villainDrawEv(ev, c), p));
     playHorrorEv(ev);
   });
 }, [
@@ -1155,10 +1155,10 @@ addTemplates("MASTERMINDS", "X-Men", [
 // Deathbird gets +1 Attack for each Shi'ar Villain in the city and Escape Pile.
 // EPICNAME: Deathbird
 // Deathbird gets +2 Attack for each Shi'ar Villain in the city and Escape Pile.
-...makeEpicMastermindCard("Deathbird", [ 8, 10 ], 6, "Shi'ar Imperial Guard", ev => { // TODO double leads (and a Shi'ar Henchmen Group.)
+...makeEpicMastermindCard("Deathbird", [ 8, 10 ], 6, { villains: "Shi'ar Imperial Guard", henchmen: "Shi'ar Death Commandos|Shi'ar Patrol Craft" }, ev => {
 // If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
 // If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
-  cityVillains().has(isGroup(ev.source.leads)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
+  cityVillains().has(c => leadBy(ev.source)(c) || isStrike(c)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
   villainify("Shi'ar Battle Cruiser", ev.what, ev.source.epic ? 9 : 7, ev.source.epic ? 6 : 5);
   enterCityEv(ev, ev.what);
 }, [
@@ -1191,7 +1191,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     enterCityEv(ev, ev.source);
   } ],
 ], {
-  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.escaped.count(isGroup(c.leads))
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.escaped.count(leadBy(c))
 }),
 // START: Mojo captures 3 <b>Human Shields</b>. All Bystanders in Victory Piles are worth 3 VP.
 // EPICNAME: Mojo
@@ -1200,7 +1200,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 // Mojo captures a <b>Human Shield</b>. Each player reveals a [Tech] Hero or discards a card at random.
 // Mojo and each Mojoverse Villain capture a <b>Human Shield</b>. Each player reveals a [Tech] Hero or discards down to 4 cards each.
   captureShieldEv(ev, ev.source);
-  ev.source.epic && cityVillains().limit(isGroup(ev.source.leads)).each(c => captureShieldEv(ev, c));
+  ev.source.epic && cityVillains().limit(leadBy(ev.source)).each(c => captureShieldEv(ev, c));
   eachPlayer(p => revealOrEv(ev, Color.TECH, ev.source.epic ? () => pickDiscardEv(ev, -4, p) : () => p.hand.deck.withRandom(c => discardEv(ev, c)), p));
 }, [
   [ "Billions of TV Viewers", ev => {
@@ -1218,7 +1218,7 @@ addTemplates("MASTERMINDS", "X-Men", [
   } ],
   [ "Mojo Branding Opportunity", ev => {
   // Draw a card for each Mojoverse Villain in your Victory Pile. Mojo captures a <b>Human Shield</b>.
-    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    drawEv(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
     captureShieldEv(ev, ev.source.mastermind);
   } ],
 ], {
@@ -1376,7 +1376,7 @@ addTemplates("MASTERMINDS", "Champions", [
 ...makeEpicMastermindCard("Fin Fang Foom", [ 20, 24 ], 7, "Monsters Unleashed", ev => {
 // <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile.
 // <b>Demolish</b> each player, then do it again for each Monsters Unleashed Villain in the city and Escape Pile. KO all the Heroes <b>Demolished</b> this way.
-  repeat(1 + [...cityVillains(), ...gameState.escaped.deck].count(isGroup(ev.source.leads)), () => demolishEv(ev));
+  repeat(1 + [...cityVillains(), ...gameState.escaped.deck].count(leadBy(ev.source)), () => demolishEv(ev));
   ev.source.epic && cont(ev, () => turnState.pastEvents.limit(e => e.type === 'DISCARD' && e.parent === ev).each(e => KOEv(ev, e.what)));
 }, [
   [ "Alien Dragon Technology", ev => {
@@ -1423,7 +1423,7 @@ addTemplates("MASTERMINDS", "Champions", [
   [ "Insane Clown Has a Posse", ev => {
   // Each other player may KO a Wrecking Crew Villain from their Victory Pile. <b>Demolish</b> each of those players who does not.
     const players = new Set<Player>();
-    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => KOEv(ev, c), () => players.add(p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(leadBy(ev.source.mastermind)), c => KOEv(ev, c), () => players.add(p), p));
     cont(ev, () => demolishEv(ev, p => players.has(p)));
   } ],
   [ "Jester of a Twisted Opera", ev => {
@@ -1559,7 +1559,7 @@ makeTransformingMastermindCard(makeMastermindCard("Illuminati, Secret Society", 
 // {WOUNDED FURY}
 makeTransformingMastermindCard(makeMastermindCard("King Hulk, Sakaarson", 9, 6, "Warbound", ev => {
 // Each player KO's a Warbound Villain from their Victory Pile or gains a Wound. King Hulk {TRANSFORM}.
-  eachPlayer(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(isGroup(ev.source.leads)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(leadBy(ev.source)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   transformMastermindEv(ev);
 }, [
 // King Hulk {TRANSFORM}.
@@ -1587,7 +1587,7 @@ makeTransformingMastermindCard(makeMastermindCard("King Hulk, Sakaarson", 9, 6, 
     transformMastermindEv(ev);
   } ],
 ], {
-  varDefense: c => c.printedDefense + cityVillains().count(isGroup(c.leads)) + gameState.escaped.count(isGroup(c.leads)),
+  varDefense: c => c.printedDefense + cityVillains().count(leadBy(c)) + gameState.escaped.count(leadBy(c)),
 }), "King Hulk, Worldbreaker", 10, ev => {
 // Each player reveals their hand, then KO's a card from their hand or discard pile that has the same card name as a card in the HQ. King Hulk {TRANSFORM}.
   const names = hqCards().map(c => c.cardName);
@@ -1619,7 +1619,7 @@ makeTransformingMastermindCard(makeMastermindCard("M.O.D.O.K.", 9, 6, "Intellige
 // M.O.D.O.K. {TRANSFORM}.
   [ "Don't Get a Big head About It", ev => {
   // Draw a card for each Intelligencia Villain in your Victory Pile.
-    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    drawEv(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
     transformMastermindEv(ev);
   } ],
 // M.O.D.O.K. {TRANSFORM}.
@@ -1662,16 +1662,16 @@ makeTransformingMastermindCard(makeMastermindCard("The Red King", 7, 6, "Sakaar 
 // The Red King {TRANSFORM}.
   [ "Royal Bodyguard", ev => {
   // Reveal cards from the Villain Deck until you reveal a Sakaar Imperial Guard. If you find one, play it. Either way, shuffle all the other revealed cards back into the Villain Deck.
-    revealVillainDeckEv(ev, cards => !cards.has(isGroup(ev.source.mastermind.leads)), cards => {
-      cards.limit(c => !isGroup(ev.source.mastermind.leads)(c)).each(c => shuffleIntoEv(ev, c, gameState.villaindeck)); 
-      cards.limit(isGroup(ev.source.mastermind.leads)).each(c => villainDrawEv(ev, c));
+    revealVillainDeckEv(ev, cards => !cards.has(leadBy(ev.source.mastermind)), cards => {
+      cards.limit(c => !leadBy(ev.source.mastermind)(c)).each(c => shuffleIntoEv(ev, c, gameState.villaindeck));
+      cards.limit(leadBy(ev.source.mastermind)).each(c => villainDrawEv(ev, c));
     });
     transformMastermindEv(ev);
   } ],
 // The Red King {TRANSFORM}.
   [ "Treasury of Sakaar", ev => {
   // You get +1 Recruit for each Sakaar Imperial Guard and Red King Tactic in your Victory Pile, including this one.
-    addRecruitEvent(ev, playerState.victory.count(c => isGroup(ev.source.mastermind.leads)(c) || isTactic(c) && c.mastermind === ev.source.mastermind));
+    addRecruitEvent(ev, playerState.victory.count(c => leadBy(ev.source.mastermind)(c) || isTactic(c) && c.mastermind === ev.source.mastermind));
     transformMastermindEv(ev);
   } ],
 // The Red King {TRANSFORM}.
@@ -1718,7 +1718,7 @@ makeTransformingMastermindCard(makeMastermindCard("The Sentry", 10, 6, "Aspects 
 // This Mastermind {TRANSFORM}.
   [ "Repressed Darkness", ev => {
   // Each other player reveals a [Ranged] Hero or plays an Aspects of the Void Villain from their Victory Pile as if playing it from the Villain Deck.
-    eachOtherPlayerVM(p => revealOrEv(ev, Color.RANGED, () => selectCardEv(ev, "Choose a Villain", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => enterCityEv(ev, c)), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.RANGED, () => selectCardEv(ev, "Choose a Villain", p.victory.limit(leadBy(ev.source.mastermind)), c => enterCityEv(ev, c)), p));
     transformMastermindEv(ev);
   } ],
 // TRANSNAME: The Void
@@ -1800,7 +1800,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
   [ "Self-Repairing Legions", ev => {
   // Each other player in turn reveals a [Tech] Hero or puts an Ultron's Legacy Villain from the Victory Pile into an empty city space.
     eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => {
-      gameState.city.has(isCityEmpty) && selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain).limit(isGroup(ev.source.mastermind.leads)), c => {
+      gameState.city.has(isCityEmpty) && selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain).limit(leadBy(ev.source.mastermind)), c => {
         selectCardEv(ev, "Choose a city space", gameState.city.limit(isCityEmpty), d => enterCityEv(ev, c, d), p);
       }, p);
     }, p));
@@ -1862,7 +1862,7 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Life Foundation Research", ev => {
   // You get +1 Recruit for each Life Foundation Villain in your Victory Pile.
-    addRecruitEvent(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    addRecruitEvent(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
   } ],
   [ "Symbiotic Call", ev => {
   // If this is not the final Tactic, reveal the top four cards of the Villain Deck. A Henchman Villain you revealed <b>Symbiote Bonds</b> with Hybrid. Put the rest back in any order.
@@ -1892,11 +1892,11 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Poisoned Loyalties", ev => {
   // Each other player puts a Poisons card from their discard pile into Poison Thanos' "Poisoned Souls" pile.
-    eachOtherPlayerVM(p => selectCardEv(ev, 'Choose a card', p.discard.limit(isGroup(ev.source.mastermind.leads)), c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, 'Choose a card', p.discard.limit(leadBy(ev.source.mastermind)), c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
   } ],
   [ "Searing Poisons", ev => {
   // Each other player discards a Poisons card from their hand or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOptEv(ev, 'Choose a card', p.hand.limit(isGroup(ev.source.mastermind.leads)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, 'Choose a card', p.hand.limit(leadBy(ev.source.mastermind)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Soul Seize", ev => {
   // Put all Heroes that cost 5 or more from the HQ into Poison Thanos' "Poisoned Souls" pile.
@@ -1912,7 +1912,7 @@ addTemplates("MASTERMINDS", "Dimensions", [
 // EPICNAME: J. Jonah Jameson
 // START: Put 3 S.H.I.E.L.D. Officers per player into a face down "Angry Mobs" stack.
 // <b>Special Rules</b>: You can spend 5 Attack to reveal a random Angry Mob and put it into any player's discard pile. You can't fight J. Jonah Jameson while he has Angry Mobs.
-...makeEpicMastermindCard("J. Jonah Jameson", [ 4, 5 ], 5, "Spider-Slayer", ev => {
+...makeEpicMastermindCard("J. Jonah Jameson", [ 4, 5 ], 5, { henchmen: "Spider-Slayer" }, ev => {
 // Each player <b>Investigates</b> their deck for a card and puts it into the Angry Mobs stack.
 // Each player <b>Investigates</b> their deck for a card and puts it into the Angry Mobs stack. If that card cost 0, that player gains a Wound.
   eachPlayer(p => investigateEv(ev, () => true, p.deck, c => {
@@ -1927,7 +1927,7 @@ addTemplates("MASTERMINDS", "Dimensions", [
   } ],
   [ "Promote Spider-Slayer Security", ev => {
   // Each other player puts a Spider-Slayer from their Victory Pile into the Angry Mobs stack. When a Spider-Slayer is revealed from the Angry Mobs, it enters the city.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => {
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(leadBy(ev.source.mastermind)), c => {
       attachCardEv(ev, c, ev.source.mastermind, 'MOBS');
     }, p));
   } ],
@@ -1955,7 +1955,7 @@ addTemplates("MASTERMINDS", "Dimensions", [
     cost: { recruit: c.epic ? 5 : 4, cond: c => c.attached('MOBS').size > 0 },
     desc: "Reveal Angry Mobs",
     func: ev => c.attached('MOBS').withRandom(c => {
-      isVillain(c) && isGroup(c.leads) ? enterCityEv(ev, c) : choosePlayerEv(ev, p => moveCardEv(ev, c, p.discard));
+      isVillain(c) && leadBy(c) ? enterCityEv(ev, c) : choosePlayerEv(ev, p => moveCardEv(ev, c, p.discard));
     }),
   }) ],
   fightCond: c => c.attached('MOBS').size === 0,
@@ -2028,10 +2028,10 @@ addTemplates("MASTERMINDS", "Revelations", [
 // EPICNAME: Mandarin
 // All Mandarin's Rings get +2 Attack. 
 // Mandarin gets -2 Attack for each Mandarin's Ring among all players' Victory Piles. (-6 Attack for each in solo.)
-...makeEpicMastermindCard("Mandarin", [ 16, 26 ], 6, "Mandarin's Rings", ev => {
+...makeEpicMastermindCard("Mandarin", [ 16, 26 ], 6, { henchmen: "Mandarin's Rings" }, ev => {
 // Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound instead.
 // Each player chooses a Mandarin's Ring from their Victory Pile to enter the city. Any player who didn't have a Ring gains a Wound to the top of their deck instead.
-  eachPlayer(p => selectCardOrEv(ev, "Choose a Ring to enter the city", p.victory.limit(isGroup(ev.source.leads)), c => {
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Ring to enter the city", p.victory.limit(leadBy(ev.source)), c => {
     enterCityEv(ev, c); // TODO enterCityEv card can be a location (HYDRA base)
   }, () => {
     ev.source.epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p);
@@ -2039,7 +2039,7 @@ addTemplates("MASTERMINDS", "Revelations", [
 }, [
   [ "Circles Unbroken", ev => {
   // Draw a card for each Mandarin's Ring in your Victory Pile.
-    drawEv(ev, playerState.victory.count(isGroup(ev.source.mastermind.leads)));
+    drawEv(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
   } ],
   makeTacticsCard("Dragon of Heaven Spaceship", { fight: ev => {
   // If this was not already a <b>Location</b>, KO up to two of your Heroes, and this card enters the city as a Location with this ability:|KO up to two of your Heroes.
@@ -2054,18 +2054,18 @@ addTemplates("MASTERMINDS", "Revelations", [
   })}),
   [ "Intertwining Powers", ev => {
   // Each other player without at least two Mandarin's Rings in their Victory Pile gains a Wound.
-    eachOtherPlayerVM(p => p.victory.count(isGroup(ev.source.mastermind.leads)) >= 2 || gainWoundEv(ev, p));
+    eachOtherPlayerVM(p => p.victory.count(leadBy(ev.source.mastermind)) >= 2 || gainWoundEv(ev, p));
   } ],
   [ "Rings Seek Their True Hand", ev => {
   // Each other player reveals a [Tech] Hero or puts a Mandarin's Ring from their Victory Pile into the Escape Pile.
     eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => {
-      selectCardEv(ev, "Choose a Ring to put into the Escape Pile", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => moveCardEv(ev, c, gameState.escaped));
+      selectCardEv(ev, "Choose a Ring to put into the Escape Pile", p.victory.limit(leadBy(ev.source.mastermind)), c => moveCardEv(ev, c, gameState.escaped));
     }, p))
   } ],
 ], {
-  varDefense: c => c.printedDefense - gameState.players.sum(p => p.victory.count(isGroup(c.leads)) * (gameState.players.length === 1 ? 3 : 1)),
+  varDefense: c => c.printedDefense - gameState.players.sum(p => p.victory.count(leadBy(c)) * (gameState.players.length === 1 ? 3 : 1)),
   init: c => {
-    addStatMod('defense', isGroup(c.leads), c.epic ? 2 : 1);
+    addStatMod('defense', leadBy(c), c.epic ? 2 : 1);
   }
 }),
 // {DARK MEMORIES}
@@ -2420,7 +2420,7 @@ addTemplates("MASTERMINDS", "New Mutants", [
 addTemplates("MASTERMINDS", "Into the Cosmos", [
 // Magus gets +1 Attack for each Villain in the city that has any Shards.
 // Magus gets +2 Attack for each Villain in the city that has any Shards.
-...makeEpicMastermindCard("Magus", [ 9, 11 ], 6, "Universal Church of Truth", ev => {
+...makeEpicMastermindCard("Magus", [ 9, 11 ], 6, { henchmen: "Universal Church of Truth" }, ev => {
   const epic = ev.source.epic;
 // If there are already any Villains with Shards in the city, each player gains a Wound.
 // If there are already any Villains with Shards in the city, each player gains a Wound to the top of their deck.
@@ -2690,7 +2690,7 @@ addTemplates("MASTERMINDS", "Annihilation", [
   } ],
   [ "Surging Annihilation", ev => {
   // Check all Annihilation Wave villains from each other player's victory pile. The one worth the most VP enters the city, and that player rescues bystanders equal to that villain's VP.
-    const options = eachPlayer(p => p.victory.limit(isGroup(ev.source.mastermind.leads))).merge().highest(c => c.vp);
+    const options = eachPlayer(p => p.victory.limit(leadBy(ev.source.mastermind))).merge().highest(c => c.vp);
     selectCardEv(ev, "Choose a Villain", options, c => {
       enterCityEv(ev, c);
       rescueByEv(ev, c.location.owner, c.vp);
@@ -2807,7 +2807,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
 }),
 // All Sentinel Masterminds get +1 Attack for each Master Strike in the KO pile, even after Bastion is defeated.
 // EPICNAME: Bastion, Fused Sentinel
-...makeEpicMastermindCard("Bastion, Fused Sentinel", [ 4, 6 ], 6, "Purifiers" /* and any Sentinel Henchmen Group. TODO */, ev => {
+...makeEpicMastermindCard("Bastion, Fused Sentinel", [ 4, 6 ], 6, { villains: "Purifiers", henchmen: "Sentinel|Sentinel Squad O*N*E*" }, ev => {
 // A card from the Bystander Stack ascends to become a 3 Attack "Prime Sentinel" Mastermind with "<b>Fight</b>: Rescue this. <b>Master Strike</b>: Each player reveals the top card of their deck and discards it if it costs 1 or more."
 // A card from the Bystander Stack ascends to become a 4 Attack "Prime Sentinel" Mastermind with "<b>Fight</b>: Rescue this. <b>Master Strike</b>: Each player reveals the top card of their deck and KOs it if it costs 1 or more."
   const epic = ev.source.epic;
@@ -3277,7 +3277,7 @@ addTemplates("MASTERMINDS", "Black Widow", [
 // Shuffle an Elite Assassin from your Victory Pile into the Villain Deck. If you can't, each player gains a Wound.
 // Each player shuffles an Elite Assassin from their Victory Pile into the Villain Deck. Each player that can't gains a Wound.
   const f: ((p: Player) => void) = p => {
-    selectCardOrEv(ev, "Choose a card to shuffle in", p.victory.limit(isGroup(ev.source.leads)), c => {
+    selectCardOrEv(ev, "Choose a card to shuffle in", p.victory.limit(leadBy(ev.source)), c => {
       shuffleIntoEv(ev, c, gameState.villaindeck);
     }, () => gainWoundEv(ev, p), p);
   };
@@ -3321,9 +3321,9 @@ addTemplates("MASTERMINDS", "Black Widow", [
 ],
 {
   commonTacticEffect: ev => finalTactic(ev.source) || playAnotherEv(ev, 2),
-  fightCond: c => playerState.victory.count(isGroup(c.leads)) >= (c.epic ? 3 : 2),
+  fightCond: c => playerState.victory.count(leadBy(c)) >= (c.epic ? 3 : 2),
   fightCost: ev => {
-    selectObjectsEv(ev, "Choose cards to shuffle", ev.source.epic ? 3 : 2, playerState.victory.limit(isGroup(ev.source.leads)), c => {
+    selectObjectsEv(ev, "Choose cards to shuffle", ev.source.epic ? 3 : 2, playerState.victory.limit(leadBy(ev.source)), c => {
       shuffleIntoEv(ev, c, gameState.villaindeck);
     });
   },
@@ -3376,14 +3376,14 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
 // Thanos gets +2 Attack for each Infinity Stone in the city and/or Escape Pile.
 // <b>Thanos Wins</b>: When 6 Infinity Stones escape.
 ...makeEpicMastermindCard("Thanos", [11, 13], 7, "Infinity Stones", ev => {
-  const cityStones = cityVillains().limit(isGroup(ev.source.leads));
+  const cityStones = cityVillains().limit(leadBy(ev.source));
 // The leftmost Infinity Stone in the city escapes.
 // The lowest Attack Infinity Stone in the city escapes.
   ev.source.epic ? selectCardEv(ev, "Choose a card to escape", cityStones.highest(c => -c.defense), c => villainEscapeEv(ev, c)) : cityStones.withFirst(c => villainEscapeEv(ev, c));
 // Then an Infinity Stone worth 4VP or more enters the city from your Victory Pile.
 // If you don't have any, each player gains a Wound. (Epic: Each player that didn't have any gains a Wound.)
   cont(ev, () => {
-    const options: (p: Player) => Card[] = p => p.victory.limit(c => isGroup(c.leads) && c.vp >= 4);
+    const options: (p: Player) => Card[] = p => p.victory.limit(c => leadBy(c) && c.vp >= 4);
     selectCardOrEv(ev, "Choose an Infinity Stone to enter the city", options(playerState), c => {
       enterCityEv(ev, c);
       ev.source.epic && eachPlayer(p => p !== playerState && options(p).size === 0 && gainWoundEv(ev, p));
@@ -3399,7 +3399,7 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
   } ],
   [ "Price To Pay", ev => {
   // Each other player discards cards equal to the number of Infinity Stones in the city and/or Escape Pile or gains a Wound.
-    const num = cityVillains().count(isGroup(ev.source.leads)) + gameState.escaped.count(isGroup(ev.source.leads));
+    const num = cityVillains().count(leadBy(ev.source)) + gameState.escaped.count(leadBy(ev.source));
     num && eachOtherPlayerVM(p => {
       p.hand.size >= num ?
         chooseOptionEv(ev, "Choose", [{l:"Discard", v: () => pickDiscardEv(ev, num, p)},{l:"Gain a Wound", v: () => gainWoundEv(ev, p)}], v => v(), p) :
@@ -3418,9 +3418,9 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
     gameState.finalBlow = true;
   } ],
 ], {
-  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * [...cityVillains(), ...gameState.escaped.deck].count(isGroup(c.leads)),
-  trigger: {event: 'ESCAPE', match: (ev, source) => isGroup(source.leads)(ev.what), after: ev => {
-    gameState.escaped.deck.count(isGroup(ev.source.leads)) >= 6 && gameOverEv(ev, 'LOSS', ev.source);
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * [...cityVillains(), ...gameState.escaped.deck].count(leadBy(c)),
+  trigger: {event: 'ESCAPE', match: (ev, source) => leadBy(source)(ev.what), after: ev => {
+    gameState.escaped.deck.count(leadBy(ev.source)) >= 6 && gameOverEv(ev, 'LOSS', ev.source);
   }}
 }),
 ]);
@@ -3514,7 +3514,7 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
     // Then Lilith <b>Hunts for Victims</b>.
     huntForVictimsEv(ev, ev.source.mastermind);
     // [Don't do any Escape or Ambush effects until after you've done all the other effects on this card.]
-    const options = gameState.players.flatMap(p => p.victory.limit(isGroup(ev.source.leads))).highest(c => c.vp);
+    const options = gameState.players.flatMap(p => p.victory.limit(leadBy(ev.source))).highest(c => c.vp);
     selectCardEv(ev, "Choose a Villain to enter", options, c => {
       enterCityEv(ev, c);
       rescueByEv(ev, c.location.owner, 3);
@@ -3570,7 +3570,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   }
 }),
 // <b>Always Include</b>: Killmonger as one of the Heroes
-...makeEpicMastermindCard("Killmonger, the Betrayer", [ 9, 12 ], 6, "Vibranium Liberator Drones", ev => {
+...makeEpicMastermindCard("Killmonger, the Betrayer", [ 9, 12 ], 6, { henchmen: "Vibranium Liberator Drones" }, ev => {
 // If there are any Killmonger cards in the city or HQ, each player gains a Wound.
   const isKillmonger = (c: Card) => c.heroName?.includes("Killmonger");
   hqHeroes().has(isKillmonger) && eachPlayer(p => gainWoundEv(ev, p));
@@ -3621,14 +3621,14 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 }),
 // Ultron Infinity has all the <b>Empowered</b> abilities of all Ultron Sentries in the city, the Escape Pile, and stacked next to him.
 // Ultron Sentries <i>(even in solo mode)</i> TODO forced
-...makeEpicMastermindCard("Ultron Infinity", [ 8, 12 ], 6, "Ultron Sentries", ev => {
+...makeEpicMastermindCard("Ultron Infinity", [ 8, 12 ], 6, { henchmen: "Ultron Sentries" }, ev => {
 // {XDRAMPAGE Ultron}. Then each player stacks an Ultron Sentry from their Victory Pile next to Ultron.
 // {XDRAMPAGE Ultron}. Then each player stacks two Ultron Sentries from their Victory Pile next to Ultron.
   xdRampageEv(ev, "Ultron");
   cont(ev, () => eachPlayer(p => {
     ev.source.epic ?
-      selectObjectsEv(ev, "Choose an Ultron Sentries", 2, p.victory.limit(isGroup(ev.source.leads)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'), p) :
-      selectCardEv(ev, "Choose an Ultron Sentry", p.victory.limit(isGroup(ev.source.leads)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'), p);
+      selectObjectsEv(ev, "Choose an Ultron Sentries", 2, p.victory.limit(leadBy(ev.source)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'), p) :
+      selectCardEv(ev, "Choose an Ultron Sentry", p.victory.limit(leadBy(ev.source)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'), p);
   }));
 // Put this Strike next to Ultron as an "Infinity Stone."
   attachCardEv(ev, ev.what, gameState.mastermind, 'STRIKE');
@@ -3640,13 +3640,13 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     }
   });
 // (Solo mode: Also stack a random unused Ultron Sentry next to Ultron.)</i>
-  if (gameState.players.length === 1) gameState.outOfGame.limit(isGroup(ev.source.leads)).withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'));
+  if (gameState.players.length === 1) gameState.outOfGame.limit(leadBy(ev.source)).withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'));
 }, [
   [ "Infinity of Minions", ev => {
   // Stack an Ultron Sentry from the city next to Ultron. Then each other player chooses an Ultron Sentry from their Victory Pile to enter the city.
-    selectCardEv(ev, "Choose an Ultron Sentry to stack", cityVillains().limit(isGroup(ev.source.mastermind.leads)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'));
+    selectCardEv(ev, "Choose an Ultron Sentry to stack", cityVillains().limit(leadBy(ev.source.mastermind)), c => attachCardEv(ev, c, gameState.mastermind, 'SENTRY'));
     eachOtherPlayerVM(p => {
-      selectCardEv(ev, "Choose an Ultron Sentry to enter", p.victory.limit(isGroup(ev.source.mastermind.leads)), c => enterCityEv(ev, c), p);
+      selectCardEv(ev, "Choose an Ultron Sentry to enter", p.victory.limit(leadBy(ev.source.mastermind)), c => enterCityEv(ev, c), p);
     });
   } ],
   [ "Struggle for the Infinity Stones", ev => {
@@ -3655,14 +3655,14 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   } ],
   [ "Transcend Mortality", ev => {
   // Search the Villain Deck and stack the first Ultron Sentry you find next to Ultron. Shuffle the Villain Deck.
-    gameState.villaindeck.limit(isGroup(ev.source.mastermind.leads)).withFirst(c => {
+    gameState.villaindeck.limit(leadBy(ev.source.mastermind)).withFirst(c => {
       attachCardEv(ev, c, gameState.mastermind, 'SENTRY');
     });
     cont(ev, () => gameState.villaindeck.shuffle());
   } ],
   [ "Unfettered Annihilation", ev => {
   // For each Ultron Sentry in your Victory Pile, you may KO a Hero from your hand or discard pile.
-    selectObjectsEv(ev, "Choose cards to KO", playerState.victory.count(isGroup(ev.source.mastermind.leads)), handOrDiscard().limit(isHero), c => KOEv(ev, c));
+    selectObjectsEv(ev, "Choose cards to KO", playerState.victory.count(leadBy(ev.source.mastermind)), handOrDiscard().limit(isHero), c => KOEv(ev, c));
   } ],
 ], {
   varDefense: empowerVarDefense(c1 => isColor(empoweringVillains([...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')]))(c1)),
@@ -3672,7 +3672,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 ...makeEpicMastermindCard("Zombie Scarlet Witch", [ 9, 13 ], 6, "Zombie Avengers", ev => {
 // {XDRAMPAGE Zombie}. Then {RISEOFTHELIVINGDEAD}.
 // {XDRAMPAGE Zombie}. Then each player must <b>Soulbind</b> the topmost card of their Victory Pile that isn't a Villain with "Rise of the Living Dead." Then {RISEOFTHELIVINGDEAD}.
-  xdRampageEv(ev, c => isCharacterName('Zombie')(c) || isGroup(ev.source.leads)(c));
+  xdRampageEv(ev, c => isCharacterName('Zombie')(c) || leadBy(ev.source)(c));
   ev.source.epic && eachPlayer(p => {
     const options = p.victory.limit(c => !isVillain(c) && !hasRiseOfTheLivingDead(c)).firstOnly();
     forceSoulbindEv(ev, c => options.includes(c), p);
@@ -3715,7 +3715,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   } ],
 ], {
   init: c => {
-    addStatSet('riseOfTheLivingDead', isGroup(c.leads), () => true);
+    addStatSet('riseOfTheLivingDead', leadBy(c), () => true);
   },
   commonTacticEffect: ev => {
     attachCardEv(ev, ev.source, playerState.victory, 'WAITFORRISEOFTHELIVINGDEAD');
@@ -3967,7 +3967,7 @@ addTemplates("MASTERMINDS", "2099", [
   }),
 ]),
 // LEADS: Any "Alchemax" or "Sinister" Villain Group TODO
-...makeEpicAdaptingMastermindCard("Sinister Six 2099", 6, u, [
+...makeEpicAdaptingMastermindCard("Sinister Six 2099", 6, 'Alchemax Enforcers|False Aesir of Alchemax|Sinister Six', [
   makeEpicAdaptingTacticsCard("Electro 2099", [9, 12], ev => {
     // Each player discards three cards then draws a card. <b>Adapt</b>.
     // Each player discards four cards then draws a card. <b>Adapt</b>.

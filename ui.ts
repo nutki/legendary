@@ -329,7 +329,7 @@ function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN
   });
   document.getElementById(id).innerHTML = values.map((heroName, i) => `<span><div>${name} ${i + 1}</div><div><select id="${id}${i}"></select></div></span>`).join('');
   values.forEach((name, i) => {
-    makeOptions(id + i, templateType, selected[i], n => name === undefined || n.templateId === name);
+    makeOptions(id + i, templateType, selected[i], n => name === undefined || name.split('|').includes(n.templateId));
   });
 }
 function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTANDERS') {
@@ -522,7 +522,6 @@ window.onerror = (msg) => {
   console.log(JSON.stringify(undoLog.gameSetup));
 }
 function setCurrentPlayer(n: number) {
-  console.log("setCurrentPlayer", n, currenPlayer);
   if (n !== currenPlayer) setTimeout(() => {
     updatePlayerDecks(10 * (currenPlayer - n));
     currenPlayer = n;
