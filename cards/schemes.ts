@@ -3719,6 +3719,8 @@ makeSchemeCard("Subjugate Earth with Mega-Corporations", { twists: 8, heroes: [4
     };
     isMuliColor(c) ? chooseClassEv(ev, megaCorp, c1 => (c1 & c.color) !== 0) : megaCorp(c.color);
   }));
+}, [], () => {
+  setSchemeTarget(3);
 }),
 ]);
 addTemplates("SCHEMES", "Weapon X", [
