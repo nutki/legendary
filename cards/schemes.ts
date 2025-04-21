@@ -2075,7 +2075,7 @@ makeSchemeCard("Ragnarok, Twilight of the Gods", { twists: 11 }, ev => {
 // EVILWINS: When there are 5 Frost Giant Invaders in the city and/or Escape Pile.
 makeSchemeCard("War of the Frost Giants", { twists: 9 }, ev => {
   // Twist 1-7 This Twist enters the city as a "Frost Giant Invader" Villain worth 6VP with 6 Attack and the ability "If you are not {WORTHY}, this gets +4 Attack."
-  villainify("Frost Giant Invader", ev.twist, 6, 6);
+  villainify("Frost Giant Invader", ev.twist, () => worthyPower() ? 6 : 10, 6);
   enterCityEv(ev, ev.twist);
   if (ev.nr >= 8 && ev.nr <= 9) {
     // Twist 8-9 Same effect, then a Frost Giant Invader from each player's Victory Pile enters the city.
