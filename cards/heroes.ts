@@ -6178,7 +6178,7 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
   team: "(Unaffiliated)",
 // You may have a Villain from the city enter the <b>Astral Plane</b>.
   c1: makeHeroCard("The Ancient One", "Astral Confrontation", 3, 2, u, Color.COVERT, u, "FD", ev => {
-    selectCardEv(ev, "Choose a Villain to enter the Astral Plane", cityVillains(), c => moveCardEv(ev, c, gameState.astralPlane));
+    selectCardOptEv(ev, "Choose a Villain to enter the Astral Plane", cityVillains(), c => moveCardEv(ev, c, gameState.astralPlane));
   }),
 // Draw two cards.
   c2: makeHeroCard("The Ancient One", "Teachings of Kamar-Taj", 5, u, u, Color.INSTINCT, u, "F", ev => drawEv(ev, 2)),
