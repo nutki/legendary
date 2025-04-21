@@ -832,7 +832,7 @@ addHeroTemplates("Dark City", [
 // COST: 5
   c2: makeHeroCard("Punisher", "Hail of Bullets", 5, u, 2, Color.TECH, "Marvel Knights", "GD", ev => {
     revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => {
-      addAttackEvent(ev, c.printedVP);
+      c.printedVP && addAttackEvent(ev, c.printedVP);
       if (superPower(Color.TECH, Color.TECH)) chooseMayEv(ev, "Defeat the revealed villain", () => defeatEv(ev, c));
      }));
   }),
