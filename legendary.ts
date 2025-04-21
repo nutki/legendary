@@ -153,6 +153,7 @@ interface Card {
   heist?: Handler;
   conqueror?: { locations: CityLocation[], amount: number };
   isSidekick?: boolean;
+  setupParamMod?: SetupParamModFunction;
 }
 interface VillainCardAbillities {
   ambush?: Handler | Handler[]
@@ -203,6 +204,7 @@ interface MastermindCardAbillities {
   commonTacticEffect?: Handler
   conqueror?: { locations: CityLocation[], amount: number };
   printedVP?: number // For adapting tactics with custom VP
+  setupParamMod?: SetupParamModFunction;
 }
 interface VillainousWeaponCardAbillities {
   ambush?: Handler | Handler[];
@@ -430,11 +432,12 @@ function makeMastermindCard(name: string, defense: number, vp: number, leads: Ma
   if (abilities) Object.assign(c, abilities);
   return c;
 }
-function makeAdaptingMastermindCard(name: string, vp: number, leads: string, tactics: Card[]) {
+function makeAdaptingMastermindCard(name: string, vp: number, leads: string, tactics: Card[], setupParams?: SetupParamModFunction) {
   let c = new Card("MASTERMIND", name);
   c.printedVP = vp;
   c.leads = leads;
   c.isAdaptingMastermind = true;
+  if (setupParams) c.setupParamMod = setupParams;
   tactics.each(c => {
     c.mastermindName = name;
     if (c.printedVP === undefined) c.printedVP = vp;
@@ -452,9 +455,9 @@ function makeAdaptingTacticsCard(name: string, defense: number, strike: Handler,
   abilities && Object.assign(c, abilities);
   return c;
 }
-function makeEpicAdaptingMastermindCard(name: string, vp: number, leads: string, tactics: [Card, Card][] ) {
-  const m1 = makeAdaptingMastermindCard(name, vp, leads, tactics.map(t => t[0]));
-  const m2 = makeAdaptingMastermindCard("Epic " + name, vp, leads, tactics.map(t => t[1]));
+function makeEpicAdaptingMastermindCard(name: string, vp: number, leads: string, tactics: [Card, Card][], setupParams?: SetupParamModFunction) {
+  const m1 = makeAdaptingMastermindCard(name, vp, leads, tactics.map(t => t[0]), setupParams);
+  const m2 = makeAdaptingMastermindCard("Epic " + name, vp, leads, tactics.map(t => t[1]), setupParams);
   return [m1, m2];
 }
 function makeEpicAdaptingTacticsCard(name: string | [string, string], defense: [number, number], strike: Handler, fight: Handler, abilities?: MastermindCardAbillities): [Card, Card] {
@@ -983,8 +986,12 @@ function findSidekickTemplate(name: string) { return cardTemplates.SIDEKICKS.fil
 function findWoundTemplate(name: string) { return cardTemplates.WOUNDS.filter(t => t.templateId === name)[0]; }
 const u: undefined = undefined;
 
-function makeSchemeCard<T = void>(name: string, counts: SetupParams, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
+function makeSchemeCard<T = void>(name: string, counts: SetupParams | SetupParamModFunction, effect: (ev: Ev<T>) => void, triggers?: Trigger[] | Trigger, initfunc?: (state?: T) => void) {
   let c = new Card('SCHEME', name);
+  if (typeof counts === "function") {
+    c.setupParamMod = counts;
+    counts = {};
+  }
   c.params = counts;
   c.twist = effect;
   if (triggers) c.triggers = triggers instanceof Array ? triggers : [ triggers ];
@@ -1310,7 +1317,10 @@ function availiableVillainTemplates() {
 function availiableHenchmenTemplates() {
   return cardTemplates.HENCHMEN.filter(t => gameState.gameSetup.henchmen.includes(t.templateId));
 }
-function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_counts'>, s: Card = gameState.scheme.top, numPlayers: number = gameState.players.length): number {
+type SetupParamModFunction = (p: keyof SetupParams, v: number, playerCount: number) => number;
+const extraVillainMod: SetupParamModFunction = (p, v) => p === 'vd_villain' ? v + 1 : v;
+const extraHeroMod: SetupParamModFunction = (p, v) => p === 'heroes' ? v + 1 : v;
+function getParam(name: Exclude<keyof SetupParams, 'required'>, s: Card = gameState.scheme.top, m: Card = undefined, numPlayers: number = gameState.players.length): number {
   let defaults: SetupParams = {
     vd_villain: [ 1, 2, 3, 3, 4 ],
     vd_bystanders: [ 1, 2, 8, 8, 12 ],
@@ -1320,9 +1330,13 @@ function getParam(name: Exclude<keyof SetupParams, 'required' | 'vd_henchmen_cou
     bindings: 30,
     shards: 60,
     extra_masterminds: 0,
+    solo_henchmen: [ gameState ? gameState.advancedSolo === 'WHATIF' ? 4 : 3 : 0 ], // HACK: for solo_henchmen the number of player indicates the group index
   };
   let r = name in s.params ? s.params[name] : defaults[name];
-  return r instanceof Array ? r[numPlayers - 1] : r;
+  r = r instanceof Array ? r[numPlayers - 1] : r;
+  if (m?.setupParamMod) r = m.setupParamMod(name, r, numPlayers);
+  if (s.setupParamMod) r = s.setupParamMod(name, r, numPlayers);
+  return r;
 }
 function getGameSetup(schemeName: string, mastermindName: string, numPlayers: number = 1): Setup {
   let scheme = findSchemeTemplate(schemeName);
@@ -1355,10 +1369,10 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
       }
     }
   }
-  setup.heroes = Array(getParam('heroes', scheme, numPlayers)).fill(undefined);
-  setup.villains = Array(getParam('vd_villain', scheme, numPlayers)).fill(undefined);
-  setup.henchmen = Array(getParam('vd_henchmen', scheme, numPlayers)).fill(undefined);
-  setup.mastermind = Array(1 + getParam('extra_masterminds', scheme, numPlayers)).fill(undefined);
+  setup.heroes = Array(getParam('heroes', scheme, mastermind, numPlayers)).fill(undefined);
+  setup.villains = Array(getParam('vd_villain', scheme, mastermind, numPlayers)).fill(undefined);
+  setup.henchmen = Array(getParam('vd_henchmen', scheme, mastermind, numPlayers)).fill(undefined);
+  setup.mastermind = Array(1 + getParam('extra_masterminds', scheme, mastermind, numPlayers)).fill(undefined);
   if (numPlayers > 1) {
     const leadsV = leadVillains(mastermind);
     const leadsH = leadHenchmen(mastermind);
@@ -1569,8 +1583,7 @@ if (gameState.bystanders.deck.uniqueCount(b => b.cardName) > 1) {
 }
 // Init villain deck
 function getHenchmenTemplates(template: Card | { cards: [number, Card][]}, groupNr: number): Card[] {
-  const count = isSoloGame() && gameState.scheme.top.params.solo_henchmen?.[groupNr] ||
-    (groupNr > 0 || gameState.players.length > 1 ? 10 : (gameState.advancedSolo === 'WHATIF' ? 4 : 3));
+  const count = !isSoloGame() ? 10 : getParam('solo_henchmen', u, u, groupNr) || 10;
   if (template instanceof Card) return Array(count).fill(template);
   const cards = template.cards.map(([n, c]) => Array(n).fill(c)).merge();
   if (count === cards.length) return cards;

@@ -2701,7 +2701,10 @@ addTemplates("MASTERMINDS", "Annihilation", [
   // The cost of each hero currently in the HQ gets -2 this turn.
     addTurnSet('recruitCost', c => isHero(c) && c.location.isHQ, (c, v) => ({ ...v, recruit: v.recruit - 2 }));
   } ],
-], { varDefense: c => massMomentumVarDefense(c.epic ? 4 : 2)(c) }),
+], epic => ({
+  setupParamMod: epic ? extraVillainMod : ((p, v) => p === 'solo_henchmen' ? Math.max(6, v) : v),
+  varDefense: massMomentumVarDefense(epic ? 4 : 2)
+})),
 // Kang has <b>Conqueror 2</b> for each city space under a Time Incursion. <i>(He benefits from Villains there.)</i> Villains under a Time Incursion get +2 Attack.
 // EPICNAME: Kang the Conqueror
 // Kang has <b>Conqueror 3</b> for each city space under a Time Incursion. <i>(He benefits from Villains there.)</i> Villains under a Time Incursion get +3 Attack.
@@ -3103,6 +3106,7 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
   } ],
 ], {
   varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.city.size,
+  setupParamMod: extraVillainMod,
   commonTacticEffect: ev => {
     withLeftmostCitySpace(ev, space => {
       destroyCity(space);
@@ -3887,7 +3891,7 @@ makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11,
 }),
 ]);
 addTemplates("MASTERMINDS", "2099", [
-// <b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>. // TODO
+// <b>Setup</b>: Add an Extra Hero to the Hero Deck. <b>Adapt</b>.
 // LEADS: Alchemax Enforcers
 ...makeEpicAdaptingMastermindCard("Alchemax Executives", 6, "Alchemax Enforcers", 
 [
@@ -3965,7 +3969,7 @@ addTemplates("MASTERMINDS", "2099", [
   }, {
     varDefense: c => c.printedDefense + cyberModEnemyAmount(Color.STRENGTH),
   }),
-]),
+], extraHeroMod),
 // LEADS: Any "Alchemax" or "Sinister" Villain Group TODO
 ...makeEpicAdaptingMastermindCard("Sinister Six 2099", 6, 'Alchemax Enforcers|False Aesir of Alchemax|Sinister Six', [
   makeEpicAdaptingTacticsCard("Electro 2099", [9, 12], ev => {

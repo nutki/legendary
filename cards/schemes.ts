@@ -2906,7 +2906,7 @@ makeSchemeCard("Provoke the Sovereign War Fleet", { twists: 11, vd_villain: [ 2,
 // SETUP: 7 Twists. Use 7 Heroes including at least one Guardians of the Galaxy Hero. Use double the normal number of Villain and Henchman Groups,
 // but use only half the cards from each of those groups, randomly & secretly. <i>(1 player: 2 Henchmen per group)</i>
 // EVILWINS: When there are 32 non-grey Heroes in the KO pile.
-makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, heroes: 7, vd_villain: [ 2, 4, 6, 6, 8 ], solo_henchmen: [4, 4], vd_henchmen: [2, 2, 2, 4, 4] }, ev => {
+makeSchemeCard("Star-Lord's Awesome Mix Tape", (p, v) => p === 'twists' || p === 'heroes' ? 7 : p === 'vd_henchmen' || p === 'vd_villain' ? v * 2 : p === 'solo_henchmen' ? 4 : v, ev => {
   // Twist: KO all Heroes from HQ. Villains in the Sewers and Bridge swap spaces. Likewise Villains in the Bank and Streets.
   hqHeroes().each(c => KOEv(ev, c));
   withCity('SEWERS', sewers => withCity('BRIDGE', bridge => swapCardsEv(ev, sewers, bridge)));
@@ -2915,12 +2915,22 @@ makeSchemeCard("Star-Lord's Awesome Mix Tape", { twists: 7, heroes: 7, vd_villai
   koProgressTrigger(isNonGrayHero),
 ], () => {
   setSchemeTarget(32);
-  const groups = gameState.villaindeck.limit(c => c.printedVillainGroup !== undefined).unique(c => c.printedVillainGroup);
+  gameState.villaindeck.attached('WHATIF_SOLO_HENCHMEN').each(console.log);
+  [...gameState.villaindeck.attached('WHATIF_SOLO_HENCHMEN')].each(c => moveCard(c, gameState.villaindeck));
+  const groups = gameState.villaindeck.limit(c => c.printedVillainGroup !== undefined).unique(c => c.printedVillainGroup)
+  console.log(groups);
   groups.each(g => {
     const cards = gameState.villaindeck.limit(isGroup(g));
     const half = cards.slice(0, cards.length/2);
     half.each(c => moveCard(c, gameState.outOfGame));
   });
+  if (gameState.advancedSolo === 'WHATIF') {
+    gameState.villaindeck.shuffle();
+    for (let i = 0; i < 2; i++) {
+      const c = gameState.villaindeck.deck.find(isHenchman);
+      c && moveCard(c, gameState.villaindeck.attachedDeck('WHATIF_SOLO_HENCHMEN'));
+    }
+  }
   gameState.villaindeck.shuffle();
 }),
 // SETUP: 9 Twists.
