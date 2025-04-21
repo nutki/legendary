@@ -48,6 +48,7 @@ function burrowEv(ev: Ev) {
 // Galactus' Cosmic Threat means "Once per turn, choose Strength, Instinct, Covert, Tech or Ranged. For each card of that color you reveal, this Enemy gets -3 Attack for one fight this turn." If you try to fight Galactus a second time in the same turn, he will return to his full attack and you cannot use his Cosmic Threat ability a second time that turn.
 // villain cardAction
 const cosmicThreatAction = (what: Card, ev: Ev) => {
+  if (!isFightable(what)) return noOpActionEv(ev);
   const color = getModifiedStat(what, 'cosmicThreat', 0) || what.cosmicThreat;
   if (!color) return noOpActionEv(ev);
   function doReveal(ev: Ev, color: Filter<Card>) {
