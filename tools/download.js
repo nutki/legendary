@@ -71,7 +71,7 @@ async function downloadOthers(progressCallback) {
   const file = [
     { name: "images/back.jpg", func: downloadBack },
     { name: "images/cityscape.png", func: downloadCity },
-    { name: "images/Secret Wars Volume 1/sidekicks/sidekick.jpg", func: downloadSidekick },
+    { name: "images/secret_wars_volume_1/sidekicks/sidekick.jpg", func: downloadSidekick },
     { name: "fonts/MatrixBoldSmallCaps.ttf", func: downloadMatrixFont },
     { name: "fonts/percolatorexpert.ttf", func: downloadParcolatorFont },
   ];
