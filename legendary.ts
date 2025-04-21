@@ -986,7 +986,7 @@ function findSidekickTemplate(name: string) { return cardTemplates.SIDEKICKS.fil
 function findWoundTemplate(name: string) { return cardTemplates.WOUNDS.filter(t => t.templateId === name)[0]; }
 const u: undefined = undefined;
 
-function makeSchemeCard<T = void>(name: string, counts: SetupParams | SetupParamModFunction, effect: (ev: Ev<T>) => void, triggers: Trigger[] | Trigger, initfunc: (state?: T) => void) {
+function makeSchemeCard<T = void>(name: string, counts: SetupParams | SetupParamModFunction, effect: (ev: Ev<T>) => void, triggers: Trigger[] | Trigger = [], initfunc?: (state?: T) => void) {
   let c = new Card('SCHEME', name);
   if (typeof counts === "function") {
     c.setupParamMod = counts;
