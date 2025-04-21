@@ -1696,7 +1696,7 @@ function currentVP(p?: Player): number {
 function fightableCards(): Card[] {
   return [
     ...[...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c)),
-    ...gameState.players.map(p => attachedCards('PREYING', p.playArea)).merge(), ...gameState.astralPlane.deck
+    ...gameState.players.map(p => attachedCards('PREYING', p.playArea)).merge(), ...gameState.astralPlane.deck, ...gameState.city.flatMap(d => d.attached('LOCATION')),
   ];
 }
 function heroBelow(c: Card | Deck) {
@@ -2781,10 +2781,15 @@ function playStrike(ev: Ev) {
   if (gameState.advancedSolo === true) playAnotherEv(ev);
 }
 function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: ev => {
-  // TODO Locations
-  // check if space in the city
-  // if not ko the cheapest
-  // attach
+  const availableCitySpaces = gameState.city.limit(c => c.attached('LOCATION').size === 0);
+  if (availableCitySpaces.size === 0) {
+    selectCardEv(ev, "Choose a location to KO", [ev.what, ...gameState.city.flatMap(d => d.attached('LOCATION'))].highest(c => -c.vp), c => {
+      KOEv(ev, c);
+      attachCardEv(ev, what, c.location, 'LOCATION');
+    });
+  } else {
+    availableCitySpaces.withLast(d => attachCardEv(ev, what, d, 'LOCATION'));
+  }
   // * add locations to fightable
 } }); }
 
