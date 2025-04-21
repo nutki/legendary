@@ -221,7 +221,7 @@ const thrownArtifact = { isArtifact: true, cardActions: [ throwArtifactAction ]}
 // (Mastermind Tactics never return this way.)
 // If you put a Villain with Bystanders into your Victory Pile, you choose the order.
 function selectCardOrderEv(ev: Ev, desc: string, cards: Card[], effect: (c: Card) => void, agent: Player = playerState) {
-  const f: (rest: Card[]) => void = rest => rest.size && selectCardEv(ev, "Select order", rest, c => {
+  const f: (rest: Card[]) => void = rest => rest.size && selectCardEv(ev, desc || "Select order", rest, c => {
     effect(c);
     f(rest.limit(v => v !== c));
   }, agent);
