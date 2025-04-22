@@ -4083,7 +4083,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
   } ],
   [ "The Carbonadium Synthesizer", ev => {
   // You may return a Wound from your hand or any player's discard pile to the bottom of the Wound Deck. If you do, draw a card.
-    selectCardOptEv(ev, "Choose a Wound to return", gameState.players.flatMap(p => handOrDiscard(p)), c => {
+    selectCardOptEv(ev, "Choose a Wound to return", [...playerState.hand.deck, ...gameState.players.flatMap(p => p.discard.deck)].limit(isWound), c => {
       returnToStackEv(ev, gameState.wounds, c);
       drawEv(ev);
     });
