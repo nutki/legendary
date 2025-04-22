@@ -2340,7 +2340,7 @@ makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
 }, s => {
   setSchemeTarget(6);
   gameState.specialActions = ev => {
-    const recruit = gameState.mastermind.attached("TWIST").size;
+    const recruit = gameState.scheme.attached("TWIST").size;
     return s.toPay.length ? [new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit }, desc: `Supply the war (${recruit} recruit)`, func: ev => {
       thronesFavorGainEv(ev);
       selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c));
