@@ -93,12 +93,12 @@ function text(value: string | number) { return document.createTextNode(value.toS
 function getCountHints(deck: Deck): [number, number] {
   const result: [number, number] = [0, 0];
   const c = deck.top;
-  if (isMastermind(c)) result[0] = c.attached("TACTICS").size;
-  let cnt = deck.size > 1 ? deck.size : 0;
-  if (c._attached) for (let i in c._attached) cnt += c._attached[i].deck.size;
-  if (deck._attached) for (let i in c._attached) cnt += c._attached[i].deck.size;
-  if (cnt > 0) result[1] = cnt - result[0];
-  if (isScheme(c)) result[0] = getSchemeCountdown();
+  if (c && isMastermind(c)) result[0] = c.attached("TACTICS").size;
+  let cnt = deck.size;
+  if (c && c._attached) for (let i in c._attached) cnt += c._attached[i].deck.size;
+  if (deck._attached) for (let i in deck._attached) cnt += deck._attached[i].deck.size;
+  if (cnt > 0) result[1] = cnt - result[0] - (c ? 1 : 0);
+  if (c && isScheme(c)) result[0] = getSchemeCountdown();
   return result
 }
 function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, countHint: [number, number] = [0, 0]): HTMLDivElement {
@@ -133,17 +133,17 @@ function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x
 }
 const mainDecks = [
   { id: 'MASTERMIND', x: 0, y: 0, popupid2: 'popmastermind' },
-  { id: 'BRIDGE', x: 1, y: 0 },
-  { id: 'STREETS', x: 2, y: 0 },
-  { id: 'ROOFTOPS', x: 3, y: 0 },
-  { id: 'BANK', x: 4, y: 0 },
-  { id: 'SEWERS', x: 5, y: 0 },
-  { id: 'SCHEME', x: 6.5, y: 0 },
-  { id: 'HQ1', x: 1, y: 1 },
-  { id: 'HQ2', x: 2, y: 1 },
-  { id: 'HQ3', x: 3, y: 1 },
-  { id: 'HQ4', x: 4, y: 1 },
-  { id: 'HQ5', x: 5, y: 1 },
+  { id: 'BRIDGE', x: 1, y: 0, popupid2: 'popbridge' },
+  { id: 'STREETS', x: 2, y: 0, popupid2: 'popstreets' },
+  { id: 'ROOFTOPS', x: 3, y: 0, popupid2: 'poprooftops' },
+  { id: 'BANK', x: 4, y: 0, popupid2: 'popbank' },
+  { id: 'SEWERS', x: 5, y: 0, popupid2: 'popsewers' },
+  { id: 'SCHEME', x: 6.5, y: 0, popupid2: 'popscheme' },
+  { id: 'HQ1', x: 1, y: 1, popupid2: 'pophq1' },
+  { id: 'HQ2', x: 2, y: 1, popupid2: 'pophq2' },
+  { id: 'HQ3', x: 3, y: 1, popupid2: 'pophq3' },
+  { id: 'HQ4', x: 4, y: 1, popupid2: 'pophq4' },
+  { id: 'HQ5', x: 5, y: 1, popupid2: 'pophq5' },
   { id: 'SHIELDOFFICER', x: 0, y: 1, size: 'small', count: 'OFFICER' },
   { id: 'SIDEKICK', x: .5, y: 1, size: 'small', count: 'SIDEKICK' },
   { id: 'MADAME', x: 0, y: 1.5, size: 'small' },
@@ -171,11 +171,28 @@ const popupDecks = [
   { id: 'VILLAIN', container: 'popvillains' },
   { id: 'BYSTANDERS', container: 'popbystanders' },
   { id: 'MASTERMIND', container: 'popmastermind' },
+  { id: 'BRIDGE', container: 'popbridge' },
+  { id: 'STREETS', container: 'popstreets' },
+  { id: 'ROOFTOPS', container: 'poprooftops' },
+  { id: 'BANK', container: 'popbank' },
+  { id: 'SEWERS', container: 'popsewers' },
+  { id: 'HQ1', container: 'pophq1' },
+  { id: 'HQ2', container: 'pophq2' },
+  { id: 'HQ3', container: 'pophq3' },
+  { id: 'HQ4', container: 'pophq4' },
+  { id: 'HQ5', container: 'pophq5' },
+  { id: 'SCHEME', container: 'popscheme' },
 ];
 function updatePlayerDecks(n: number): void {
   document.querySelectorAll<HTMLElement>(`div[data-player-id="1"]`).forEach(d => {
     d.style.left = (parseFloat(d.style.left) + n * 212) + "px";
   });
+}
+
+function frontCard(deck: Deck): Card | undefined {
+  if (deck.top) return deck.top;
+  if (deck._attached) for (let i in deck._attached) if (deck._attached[i].deck.size) return deck._attached[i].deck[0];
+  return undefined;
 }
 
 function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: HTMLElement): void {
@@ -192,7 +209,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
     ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-  deck.size ? [ makeDisplayCardImg(deck.top, false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
+  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
   const n = cardDivs.size;
   cardDivs.forEach((cardDiv, i) => {
     cardsContainer.appendChild(cardDiv);
@@ -280,7 +297,7 @@ function flattenCard(card: Card, name?: string): [Card, string | undefined][] {
   return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => flattenDeck(c, n)) : []), [card, name]];
 }
 function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
-  return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];
+  return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...[...deck.deck].reverse().flatMap((c, i) => flattenCard(c, name))];
 }
 
 function displayGame(ev: Ev): void {
