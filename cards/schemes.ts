@@ -657,6 +657,7 @@ makeSchemeCard("Corrupt the Next Generation of Heroes", { twists: 8 }, ev => {
   addStatSet('isVillain', isSidekick, c => !owner(c));
   addStatSet('fight', isSidekick, () => (ev: Ev) => gainToDeckEv(ev, ev.source));
   repeat(10, () => gameState.sidekick.withTop(c => moveCard(c, gameState.villaindeck)));
+  gameState.villaindeck.shuffle();
 }),
 // SETUP: 5 Twists. If playing solo, add an extra Villain Group.
 // EVILWINS: When 8 Master Strikes have taken effect.
