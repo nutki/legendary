@@ -3576,7 +3576,13 @@ addVillainTemplates("Revelations", [
 // VP: 2
   [ 1, makeVillainCard("Hood's Gang", "The Brothers Grimm", 2, 2, {
     fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
-    fightCond: () => playerState.hand.has(c1 => playerState.hand.has(c2 => c1 !== c2 && c1.instance === c2.instance))
+    fightCond: () => playerState.hand.has(c1 => playerState.hand.has(c2 => c1 !== c2 && c1.instance === c2.instance)),
+    fightCost: ev => selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c1 => playerState.hand.has(c2 => c1 !== c2 && c1.instance === c2.instance)), c1 => {
+      selectCardEv(ev, "Choose an identical card to discard", playerState.hand.limit(c => c.instance === c1.instance && c !== c1), c2 => {
+        discardEv(ev, c1);
+        discardEv(ev, c2);
+      });
+    }),
   })],
 // <b>Location</b>
 // Villains here get {DARK MEMORIES}. (Villains who already have it get the bonus again.)
