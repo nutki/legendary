@@ -1491,7 +1491,7 @@ gameState = {
     },
     { // Hero ambush
       event: "MOVECARD",
-      match: ev => ev.to.isCity && isHero(ev.what) && !!getModifiedStat(ev.what, 'heroAmbush', ev.what.heroAmbush),
+      match: ev => ev.to.isHQ && isHero(ev.what) && !!getModifiedStat(ev.what, 'heroAmbush', ev.what.heroAmbush),
       after: ev => {
         const what = ev.parent.what;
         pushEffects(ev, what, 'heroAmbush', what.heroAmbush, { where: ev.parent.to });
