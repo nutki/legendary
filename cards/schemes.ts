@@ -2284,29 +2284,29 @@ addTemplates("SCHEMES", "Realm of Kings", [
 // EVILWINS: When either Wedding Hero Stack is KO'd.
 makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8 ] }, ev => {
   const isle = [gameState.scheme, gameState.mastermind, ...gameState.city];
-  const groomIdx = isle.findIndex(d => d.attached('GROOM').size > 0) || 0;
-  const brideIdx = isle.findIndex(d => d.attached('BRIDE').size > 0) || 0;
-  const groom = isle[groomIdx].attachedDeck('GROOM');
-  const bride = isle[brideIdx].attachedDeck('BRIDE');
+  const groomIdx = () => isle.findIndex(d => d.attached('GROOM').size > 0) || 0;
+  const brideIdx = () => isle.findIndex(d => d.attached('BRIDE').size > 0) || 0;
+  const groom = () => isle[groomIdx()].attachedDeck('GROOM');
+  const bride = () => isle[brideIdx()].attachedDeck('BRIDE');
   if (ev.nr == 1) {
     // Twist 1 Put one Wedding Hero Stack above the rightmost city space "at the altar." Gain its top card.
-    groom.withFirst(c => gainEv(ev, c));
-    cont(ev, () => groom.each(c => attachCardEv(ev, c, isle[6], 'GROOM')));
+    groom().withFirst(c => gainEv(ev, c));
+    cont(ev, () => groom().each(c => attachCardEv(ev, c, isle[6], 'GROOM')));
   } else if (ev.nr == 2) {
     // Twist 2 Put the other Wedding Hero Stack above the Mastermind space "at the door." Gain its top card.
-    bride.withFirst(c => gainEv(ev, c));
-    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[1], 'BRIDE')));
+    bride().withFirst(c => gainEv(ev, c));
+    cont(ev, () => bride().each(c => attachCardEv(ev, c, isle[1], 'BRIDE')));
   } else if (ev.nr >= 3 && ev.nr <= 7) {
     // Twist 3-7 Gain the top card of either Wedding Hero Stack. Then KO two cards from the top of each Wedding Hero Stack that has a Villain or Mastermind in the space immediately below it. Then the leftmost Hero Stack "walks down the aisle," moving one space to the right.
-    chooseOptionEv(ev, "Choose side", [{l:"Groom", v:groom}, {l:"Bride", v:bride}], d => d.withFirst(c => gainEv(ev, c)));
-    [bride, bride, groom, groom].each(d => d.attachedTo instanceof Deck && d.attachedTo.has(isEnemy) &&
+    chooseOptionEv(ev, "Choose side", [{l:"Groom", v:groom}, {l:"Bride", v:bride}], d => d().withFirst(c => gainEv(ev, c)));
+    [bride(), bride(), groom(), groom()].each(d => d.attachedTo instanceof Deck && d.attachedTo.has(isEnemy) &&
       cont(ev, () => d.withFirst(c => KOEv(ev, c))));
-    cont(ev, () => bride.each(c => attachCardEv(ev, c, isle[brideIdx + 1], 'BRIDE')));
+    cont(ev, () => bride().each(c => attachCardEv(ev, c, isle[brideIdx() + 1], 'BRIDE')));
   } else if (ev.nr >= 8 && ev.nr <= 11) {
     // Twist 8-11 KO two cards from the top of each Wedding Hero Stack.
-    [bride, bride, groom, groom].each(d => cont(ev, () => d.withFirst(c => KOEv(ev, c))));
+    [bride(), bride(), groom(), groom()].each(d => cont(ev, () => d.withFirst(c => KOEv(ev, c))));
   }
-  cont(ev, () => schemeProgressEv(ev, Math.min(groom.size, bride.size)));
+  cont(ev, () => schemeProgressEv(ev, 14 - Math.min(groom().size, bride().size)));
 }, [], () => {
   const bride = gameState.scheme.attachedDeck('BRIDE');
   const groom = gameState.scheme.attachedDeck('GROOM');
@@ -2314,7 +2314,7 @@ makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8
   gameState.herodeck.limit(c => c.heroName === extraHeroName(2)).each(c => moveCard(c, groom));
   bride.deck.sort((a, b) => a.cost - b.cost);
   groom.deck.sort((a, b) => a.cost - b.cost);
-  gameState.schemeProgress = 14;
+  setSchemeTarget(14);
 }),
 // SETUP: 11 Twists.
 //  <b>If you pay</b>: You gain the {THRONES FAVOR}. You may KO one of your cards.
