@@ -325,7 +325,7 @@ function fatefulResurrectionAndEv(effect?: (ev: Ev) => void) {
 }
 const fatefulResurrectionEv = fatefulResurrectionAndEv();
 function fatefulResurrectionTacticEv(ev: Ev, effect: () => void) {
-  revealVillainDeckEv(ev, 1, cards => (cards.has(isTwist) || cards.has(isStrike)) && (shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck('TACTICS')), cont(ev, () => effect())));
+  revealVillainDeckEv(ev, 1, cards => (cards.has(isTwist) || cards.has(isStrike)) && (shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedFaceDownDeck('TACTICS')), cont(ev, () => effect())));
 }
 
 // <b>Charge</b>: "Ambush: Charge one space" means "(After this Villain enters the Sewers,) it charges forward an extra space, pushing other Villains forward."

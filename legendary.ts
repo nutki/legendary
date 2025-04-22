@@ -292,7 +292,8 @@ class Card {
   hasSoaring() { return getModifiedStat(this, "soaring", this.soaring); }
   getConqueror() { return getModifiedStat(this, "conqueror", this.conqueror); }
   get nthCircle() { return getModifiedStat(this, "nthCircle", this.printedNthCircle || 0); }
-  attachedDeck(name: string) { return attachedDeck(name, this); }
+  attachedDeck(name: string) { return attachedDeck(name, this, true); }
+  attachedFaceDownDeck(name: string) { return attachedDeck(name, this, false); }
   attached(name: string) { return attachedCards(name, this); }
   get captured() { return this.attached('CAPTURED'); }
 };
@@ -623,7 +624,8 @@ class Deck {
   withFirst(f: (c: Card) => void) { if (this.size !== 0) f(this.first); }
   withLast(f: (c: Card) => void) { if (this.size !== 0) f(this.last); }
   withRandom(f: (c: Card) => void) {if (this.size !== 0) f(this.deck[gameState.gameRand.nextRange(0, this.size)]); }
-  attachedDeck(name: string): Deck { return attachedDeck(name, this); }
+  attachedDeck(name: string): Deck { return attachedDeck(name, this, true); }
+  attachedFaceDownDeck(name: string): Deck { return attachedDeck(name, this, false); }
   attached(name: string): Card[] { return attachedCards(name, this); }
   registerRevealed(cards: Card[]) {
     textLog.log('Revealed ' + cards.map(c => c.cardName).join(', ') + ' from ' + this.id);
@@ -1599,7 +1601,7 @@ gameState.villaindeck.shuffle();
 // Init Mastermind
 gameSetup.mastermind.forEach((m, i) => {
   let mastermind = gameState.mastermind.addNewCard(findMastermindTemplate(m));
-  let tactics = mastermind.attachedDeck('TACTICS');
+  let tactics = mastermind.attachedFaceDownDeck('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
   tactics.each(t => t.mastermind = mastermind);
@@ -1608,7 +1610,7 @@ gameSetup.mastermind.forEach((m, i) => {
 if (gameState.advancedSolo === 'WHATIF') {
   for (let i = 0; i < 2; i++) {
     const c = gameState.villaindeck.deck.find(c => c.printedVillainGroup === gameState.gameSetup.henchmen[0]);
-    c && moveCard(c, gameState.villaindeck.attachedDeck('WHATIF_SOLO_HENCHMEN'));
+    c && moveCard(c, gameState.villaindeck.attachedFaceDownDeck('WHATIF_SOLO_HENCHMEN'));
   }
   gameState.villaindeck.shuffle();
 }
@@ -1656,7 +1658,7 @@ function isFightable(c: Card): boolean {
   const res = c.location == gameState.astralPlane ? true : isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
     isMastermind(c) ?
-      c.location === gameState.mastermind && (c.attachedDeck('TACTICS').size > 0 || gameState.finalBlow) :
+      c.location === gameState.mastermind && (c.attachedFaceDownDeck('TACTICS').size > 0 || gameState.finalBlow) :
       false;
   return getModifiedStat(c, 'isFightable', res);
 }
@@ -1901,10 +1903,10 @@ function forbidAction(action: 'FIGHT' | 'RECRUIT' | 'PLAY', limit?: (c: Card) =>
   (forever ? gameState : turnState).actionFilters.push(ev => !(ev.type === action && (!limit || limit(ev.what))));
 }
 // Game engine functions
-function attachedDeck(name: string, where: Deck | Card) {
+function attachedDeck(name: string, where: Deck | Card, faceUp: boolean): Deck {
   if (!where._attached) where._attached = {};
   if (!where._attached[name])
-    where._attached[name] = new Deck(where.id + '/' + name);
+    where._attached[name] = new Deck(where.id + '/' + name, faceUp);
   where._attached[name].attachedTo = where;
   return where._attached[name];
 }
@@ -2823,7 +2825,7 @@ function playAmbushScheme(ev: Ev) {
 }
 function playAmbushSchemeEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: playAmbushScheme }); }
 function adaptMastermind(mastermind: Card) {
-  const tactics = mastermind.attachedDeck("TACTICS");
+  const tactics = mastermind.attachedFaceDownDeck("TACTICS");
   const mastermindLocation = mastermind.location;
   if (!tactics.size) {
     mastermind.location.remove(mastermind);
