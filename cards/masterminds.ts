@@ -4073,7 +4073,10 @@ addTemplates("MASTERMINDS", "Weapon X", [
 ...makeEpicMastermindCard("Omega Red", [ 10, 12 ], 6, u, ev => {
 // Each player discards one of their [Covert] Heroes or gains a Wound.
 // Each player KOs one of their [Covert] Heroes or gains a Wound.
-  selectCardOptEv(ev, "Choose a Hero to discard", yourHeroes().limit(Color.COVERT), c => ev.source.epic ? KOEv(ev, c) : discardEv(ev, c), () => gainWoundEv(ev, playerState));
+  eachPlayer(p => {
+    ev.source.epic ? selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(Color.COVERT), c => KOEv(ev, c), () => gainWoundEv(ev, p), p) :
+    selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c), () => gainWoundEv(ev, p), p);
+  });
 }, [
   [ "Carbonadium Tentacles", ev => {
   // After you draw a new hand of cards at the end of this turn, each player discards down to three cards or gains a Wound.
