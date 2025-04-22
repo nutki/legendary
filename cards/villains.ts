@@ -1569,7 +1569,7 @@ addVillainTemplates("Captain America 75th Anniversary", [
 // ATTACK: 4+
 // VP: 3
   [ 2, makeVillainCard("Zola's Creations", "Doughboy", 4, 3, {
-    fight: ev => selectCardAndKOEv(ev, playerState.hand.deck),
+    fight: ev => selectCardAndKOEv(ev, yourHeroes()),
     varDefense: abominationVarDefense,
   })],
 // Abomination
