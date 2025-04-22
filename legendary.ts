@@ -1673,7 +1673,7 @@ function count(cards: Card[], cond: Filter<Card>): number { return limit(cards, 
 
 function handOrDiscard(p?: Player): Card[] {
   p = p || playerState;
-  return p.hand.deck.concat(playerState.discard.deck);
+  return p.hand.deck.concat(p.discard.deck);
 }
 function owner(c: Card): Player {
   return c.location.owner;
