@@ -2164,7 +2164,8 @@ function addTurnAction(action: Ev) {
   turnState.turnActions.push(action);
 }
 function recruitableCards(): Card[] {
-  return [...hqHeroes(), gameState.officer.top, gameState.sidekick.top, gameState.madame.top, gameState.newRecruit.top].filter(c => c);
+  const sidekicks = gameState.sidekick.deck.lastOnly().filter(c => !pastEvents('RECRUIT').has(ev => ev.what.isSidekick));
+  return [...hqHeroes(), gameState.officer.top, ...sidekicks, gameState.madame.top, gameState.newRecruit.top].filter(c => c);
 }
 function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => (isHero(c) || isArtifact(c) || isEnragingWound(c)) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
