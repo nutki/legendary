@@ -105,8 +105,8 @@ makeHenchmenCard("Magma Men", 3, {
 // FIGHT: The next Hero you gain this turn has Wall-Crawl.
 // ATTACK: 3
 makeHenchmenCard("Spider-Infected", 3, {
-  fight: ev => captureEv(ev, ev.source),
-  ambush: ev => turnState.nextHeroRecruit = 'DECK',
+  ambush: ev => captureEv(ev, ev.source),
+  fight: ev => turnState.nextHeroRecruit = 'DECK',
 }),
 ]);
 addTemplates("HENCHMEN", "Civil War", [
