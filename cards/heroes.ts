@@ -2044,7 +2044,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // When any player defeats a Villain or Mastermind with a "Fight" effect, you may discard this card to cancel that fight effect. If you do, draw three cards.
   ra: makeHeroCard("Apocalyptic Kitty Pryde", "Untouchable", 7, 5, u, Color.COVERT, "X-Men", "", [], { trigger: {
     event: 'CARDEFFECT',
-    match: ev => ev.effectName === 'fight',
+    match: (ev, source) => ev.effectName === 'fight' && owner(source) && source.location === owner(source).hand,
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 3, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
 },
