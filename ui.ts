@@ -297,7 +297,7 @@ function flattenCard(card: Card, name?: string): [Card, string | undefined][] {
   return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => flattenDeck(c, n)) : []), [card, name]];
 }
 function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
-  return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...[...deck.deck].reverse().flatMap((c, i) => flattenCard(c, name))];
+  return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];
 }
 
 function displayGame(ev: Ev): void {
