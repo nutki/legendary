@@ -1658,7 +1658,7 @@ addHeroTemplates("Villains", [
 // Each Adversary with a 4 Attack or more guards a Bystander.
 // COST: 6
   uc: makeHeroCard("Venom", "Horrify the Populace", 6, u, 4, Color.STRENGTH, "Sinister Six", "", ev => {
-    cityVillains().limit(c => c.attack >= 4).each(c => captureEv(ev, c));
+    cityVillains().limit(c => c.defense >= 4).each(c => captureEv(ev, c));
   }),
 // RECRUIT: 0+
 // ATTACK: 5
