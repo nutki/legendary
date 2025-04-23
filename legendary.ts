@@ -3170,7 +3170,7 @@ function mainLoop(): void {
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   document.getElementById("logContainer").innerHTML = textLog.text;
   closePopupDecks();
-  autoOpenPopupDecks();
+  if (ev.type !== 'SELECTEVENT') autoOpenPopupDecks();
   setTimeout(() => {
     const log = document.getElementById("logContainer");
     log.scrollTop = log.scrollHeight;
