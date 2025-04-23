@@ -3057,6 +3057,7 @@ function getEventName(ev: Ev): string {
 let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev: MouseEvent): void {
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
+    if (node.classList?.contains("count") || node.classList?.contains("capturedHint")) return;
     const id = node.id || (node.getAttribute && node.getAttribute('data-id'));
     const deckId = node.getAttribute && node.getAttribute('data-deck-id');
     if (id && clickActions[id]) {

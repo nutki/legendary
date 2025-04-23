@@ -111,13 +111,13 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
   };
   if (id) options.id = c.id;
   const d = div(gone ? "card gone" : "card", options, img(src, "cardface", transform));
-  if (countHint[0]) d.appendChild(div("count", {}, text(countHint[0])));
-  if (countHint[1]) d.appendChild(div("capturedHint", {}, text(countHint[1])));
   if (faceUp && c.defense !== c.printedDefense)
     d.appendChild(div("attackHint", {}, text(c.defense)));
   if (faceUp && c.printedCost !== undefined && effectiveCost(c) !== c.printedCost)
     d.appendChild(div("attackHint", {}, text(effectiveCost(c))));
   d.appendChild(div("frame"));
+  if (countHint[0]) d.appendChild(div("count", {}, text(countHint[0])));
+  if (countHint[1]) d.appendChild(div("capturedHint", {}, text(countHint[1])));
   return d;
 }
 function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
