@@ -185,7 +185,7 @@ makeMastermindCard("Mr. Sinister", 8, 6, "Marauders", ev => {
 makeMastermindCard("Stryfe", 7, 6, "MLF", ev => {
 // Stack this Master Strike next to Stryfe.
   attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
-  eachPlayer(p => revealOrEv(ev, "X-Force", () => p.deck.withRandom(c => discardEv(ev, c)), p));
+  eachPlayer(p => revealOrEv(ev, "X-Force", () => p.hand.withRandom(c => discardEv(ev, c)), p));
 }, [
   [ "Furious Wrath", ev => {
   // Reveal the top six cards of the Villain Deck. Play all the Master Strikes you revealed. Put the rest back in random order.
