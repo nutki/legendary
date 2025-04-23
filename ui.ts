@@ -218,9 +218,9 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     positionCard(cardDiv, deckPos, i, n);
     topDiv = cardDiv;
   });
-  if (deckPos.popupid) topDiv.addEventListener("click", () => document.getElementById(deckPos.popupid + playerNr).classList.toggle("hidden"));
+  if (deckPos.popupid) topDiv.addEventListener("click", () => togglePopup(deckPos.popupid + playerNr));
   topDiv.querySelectorAll('.count, .capturedHint').forEach(e => {
-    deckPos.popupid2 && e.addEventListener("click", () => document.getElementById(deckPos.popupid2).classList.toggle("hidden"))
+    deckPos.popupid2 && e.addEventListener("click", () => togglePopup(deckPos.popupid2));
   });
   const d1 = div('deck-overlay', { 'data-deck-id': deck.id, 'data-player-id': deckPos.playerDeck ? "1" : undefined });
   positionCard(d1, deckPos);
@@ -465,7 +465,34 @@ function closePopupDecks() {
   getPopups().each(d => d.classList.add("hidden"));
 }
 function autoOpenPopupDecks() {
-  getPopups().each(d => d.getElementsByClassName("select").length && d.classList.remove("hidden"));
+  getPopups().each(d => d.getElementsByClassName("select").length && togglePopup(d.id));
+}
+function togglePopup(id: string) {
+  const popup = document.getElementById(id);
+  let openPopups = [...document.querySelectorAll<HTMLElement>(".popup:not(.hidden)")].map(e => {
+    const style = window.getComputedStyle(e);
+    return ({ element: e, zIndex: parseInt(style.zIndex || "0", 10), top: parseInt(style.top || "0", 10) });
+  });
+  openPopups.sort((a, b) => a.zIndex - b.zIndex);
+  const open = openPopups.some(e => e.element === popup);
+  if (open) {
+    const top = openPopups.findIndex(e => e.element === popup) == openPopups.length - 1;;
+    openPopups = openPopups.filter(e => e.element !== popup);
+    if (!top) {
+      openPopups.push({ element: popup, zIndex: 0, top: 0 });
+    } else popup.classList.add("hidden");
+  } else {
+    openPopups.push({ element: popup, zIndex: 0, top: 0 });
+    popup.classList.remove("hidden");
+    if (openPopups.length > 5) {
+      openPopups[0].element.classList.add("hidden");
+      openPopups.shift();
+    }
+  }
+  openPopups.forEach((e, i) => {
+    e.element.style.zIndex = (i + 1).toString();
+    e.element.style.top = 40 + (i * 40) + "px";
+  });
 }
 function initUI() {
   window.onclick = clickCard;
@@ -476,13 +503,6 @@ function initUI() {
     this.scrollBy({ left: e.deltaY * 5, behavior: 'smooth' });
     e.preventDefault();
   }));
-  getDecks().forEach(div => {
-    let popup = div.getAttribute("data-popupid");
-    if (popup) {
-      let e = document.getElementById(popup);
-      div.addEventListener("click", ev => e.classList.toggle("hidden"));
-    }
-  });
   document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
