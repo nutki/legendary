@@ -405,6 +405,7 @@ function setupChange(): void {
   tmp.handType = (<HTMLInputElement>document.getElementById('handType')).value === 'HYDRA' ? 'HYDRA' : 'SHIELD';
   tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
   tmp.withShards = true;
+  tmp.withFinalBlow = (<HTMLInputElement>document.getElementById('withFinalBlow')).checked;
   globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
 }
 function setupInit(): void {
@@ -444,6 +445,7 @@ function setupSet(s: Setup): void {
   (<HTMLInputElement>document.getElementById('withSpecialOfficers')).checked = s.withSpecialOfficers;
   (<HTMLSelectElement>document.getElementById('handType')).value = s.handType;
   (<HTMLSelectElement>document.getElementById('cityType')).value = s.cityType;
+  (<HTMLInputElement>document.getElementById('withFinalBlow')).checked = s.withFinalBlow;
   setBysternderSelects("setup_bystanders", s.bystanders);
   setBysternderSelects("setup_sidekicks", s.sidekicks);
   setBysternderSelects("setup_wounds", s.wounds);

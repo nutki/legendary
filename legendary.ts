@@ -1230,6 +1230,7 @@ const exampleGameSetup: Setup = {
   cityType: 'HERO',
   withShards: true,
   numPlayers: 1,
+  withFinalBlow: false,
 };
 const undoLog: UndoLog = {
   actions: [],
@@ -1294,6 +1295,7 @@ interface Setup {
   handType: 'SHIELD' | 'HYDRA'
   cityType: 'VILLAIN' | 'HERO'
   withShards: boolean
+  withFinalBlow?: boolean
 }
 function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
@@ -1361,6 +1363,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     withShards: undefined,
     handType: 'SHIELD',
     cityType: 'VILLAIN',
+    withFinalBlow: undefined,
   };
   function setRequired(t: "henchmen" | "villains" | "heroes", names: string | string[]) {
     const a = setup[t];
@@ -1504,7 +1507,7 @@ gameState = {
   modifiers: {},
   players,
   advancedSolo: players.length === 1 ? 'WHATIF' : false,
-  finalBlow: false,
+  finalBlow: gameSetup.withFinalBlow === true,
   villainsEscaped: 0,
   bystandersCarried: 0,
   schemeState: {},
