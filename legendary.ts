@@ -3004,7 +3004,6 @@ function doReplacing(ev: Ev) {
 function playTurn(ev: Turn) {
   gameState.turnNum++;
   playerState = ev.who;
-  if (!undoLog.replaying) setCurrentPlayer(ev.who.nr);
   textLog.log(`>>>> Turn ${gameState.turnNum}`);
   turnState = ev;
   turnState.villainCardsToPlay = 1;
@@ -3027,7 +3026,7 @@ function playTurn(ev: Turn) {
         turnState.villainCardsToPlay--;
         villainDrawEv(ev);
       } else
-        pushEv(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), ui: true });
+        pushEv(ev, "SELECTEVENT", { desc: "Play card or action", options: getActions(ev), agent: playerState, ui: true });
       pushEvents(ev);
     } else {
       pushEv(ev, "CLEANUP", cleanUp);
@@ -3149,7 +3148,8 @@ function mainLoop(): void {
       extraActions.push({ name: "Pick " + v, func: clickActions[v] });
     }
   })
-  setMessage(ev.desc || "", ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
+  const desc = ((gameState.players.length > 1) && ev.agent) ? `P${ev.agent.nr + 1}: ${ev.desc || ""}` : ev.desc || "";
+  setMessage(desc, ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
@@ -3172,6 +3172,7 @@ function mainLoop(): void {
   document.getElementById("logContainer").innerHTML = textLog.text;
   closePopupDecks();
   if (ev.type !== 'SELECTEVENT') autoOpenPopupDecks();
+  if (ev.agent) setCurrentPlayer(ev.agent.nr);
   setTimeout(() => {
     const log = document.getElementById("logContainer");
     log.scrollTop = log.scrollHeight;
