@@ -3547,7 +3547,7 @@ addVillainTemplates("Revelations", [
       minCost.length && selectCardEv(ev, "Choose a card you played", playerState.playArea.deck.limit(c => c.cost >= minCost[0].cost), c1 => {
         selectCardEv(ev, "Choose a card to exchange", hqCards().limit(c => c.cost <= c1.cost), c2 => {
           swapCardsEv(ev, c1, c2);
-          moveCardEv(ev, c2, playerState.discard);
+          cont(ev, () => moveCardEv(ev, c2, playerState.discard));
         })
       });
     },
@@ -3565,7 +3565,7 @@ addVillainTemplates("Revelations", [
         { l: "Bystander", v: isBystander },
         { l: "Strike", v: isStrike },
         { l: "Twist", v: isTwist },
-      ], f => revealVillainDeckEv(ev, 1, cards => cards.limit(f).each(c => villainDrawEv(ev, c))));
+      ], f => revealVillainDeckEv(ev, 1, cards => cards.limit(c => !f(c)).each(c => villainDrawEv(ev, c))));
     },
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
     varDefense: darkMemoriesVarDefense(),
