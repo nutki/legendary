@@ -1896,12 +1896,16 @@ makeTransformingSchemeCard("Secret HYDRA Corruption", "Open HYDRA Revolution", {
   repeat(gameState.ko.count(isTwist), () => cont(ev, () => {
     gameState.officer.top ? attachCardEv(ev, gameState.officer.top, gameState.scheme, "HYDRA") : evilWinsEv(ev);
   }))
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached("HYDRA").size));
   transformSchemeEv(ev);
-}, [], () => {
+}, [
+  runOutProgressTrigger("SHIELDOFFICER", false),
+], () => {
   setSchemeTarget(15);
-  villainify("Hydra Traitor", c => c.location.id === "HYDRA" && gameState.scheme.top.isTransformed, 3, ev => {
+  villainify("Hydra Traitor", c => c.location.id === "SCHEME/HYDRA" && gameState.scheme.top.isTransformed, 3, ev => {
     selectCardAndKOEv(ev, yourHeroes())
     returnToStackEv(ev, gameState.officer);
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached("HYDRA").size));
   });
   gameState.specialActions = ev => {
     const stack = gameState.scheme.attached("HYDRA");
@@ -1910,7 +1914,11 @@ makeTransformingSchemeCard("Secret HYDRA Corruption", "Open HYDRA Revolution", {
     } else {
       return stack.map(c => new Ev(ev, "EFFECT", {
         cost: { recruit: 3 },
-        func: ev => choosePlayerEv(ev, p => gainEv(ev, c, p)),
+        what: c,
+        func: ev => {
+          choosePlayerEv(ev, p => gainEv(ev, c, p));
+          cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached("HYDRA").size));
+        },
       }))
     }
   }
