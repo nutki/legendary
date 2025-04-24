@@ -6699,7 +6699,7 @@ addHeroTemplates("Black Widow", [
     revealPlayerDeckEv(ev, 2, cards => {
       selectCardOptEv(ev, "Choose a card to draw", cards.limit(c => c.cost === 0), c => {
         drawCardEv(ev, c);
-        cards.each(c => c !== ev.source && discardEv(ev, c));
+        cards.limit(isNot(c)).each(c => discardEv(ev, c));
       }, () => cards.each(c => discardEv(ev, c)));
     });
   }),
