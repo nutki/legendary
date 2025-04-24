@@ -35,3 +35,11 @@ ed3bfa2b-4d94-446a-beaf-6952a614360f schemes/shield_vs_hydra_war.jpg
 d39f9019-8d27-4e35-878d-7d982102c073 schemes/hail_hydra.jpg
 e56a4b41-a597-4867-858d-ec063c1f0e7c schemes/hydra_helicarriers_hunt_heroes.jpg
 8d19f544-e93d-405e-ab87-2dc1010d67b7 schemes/secret_empire_of_betrayal.jpg
+89de4115-f491-4a1e-bb61-9e0750e0f420 heroes/dum_dum_dugan.jpg
+b958587b-e9e0-4989-a0a9-3b345dabe88a heroes/gw_bridge.jpg
+886d956d-503b-4292-ae39-f789dc7a2878 heroes/grant_ward.jpg
+b6c8c942-3606-4965-9d32-905ffbe6f212 heroes/leo_fitz__jemma_simmons.jpg
+e81d96d5-da17-4cd5-85c1-1382882535c8 heroes/melinda_may.jpg
+f286ae46-418d-4708-943a-54b6e4fd6d73 heroes/sharon_carter.jpg
+93951ab6-55cc-461b-97cc-c2c78da34f89 heroes/victoria_hand.jpg
+bd93f22d-62d0-4be3-b0ea-86e5b441f8f5 heroes/yoyo_rodriguez.jpg
