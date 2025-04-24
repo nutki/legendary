@@ -923,6 +923,10 @@ function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS'
     t.templateId = t.cardName;
     if (t.tacticsTemplates) t.tacticsTemplates.forEach(tt => tt.set = set);
     if (cardTemplates[type].has(t2 => t2.templateId === t.templateId)) t.templateId += '@' + set;
+    if (t.backSide) {
+      t.backSide.set = t.set;
+      t.backSide.templateId = t.templateId;
+    }
     cardTemplates[type].push(t);
   });
 }
@@ -1077,6 +1081,7 @@ interface SetupParams {
   required?: { heroes?: string | string[], villains?: string | string[], henchmen?:string | string[] },
   extra_masterminds?: number[] | number,
   solo_henchmen?: number[],
+  officers?: number[] | number,
 }
 interface Game {
   gameRand: RNG
@@ -1332,6 +1337,7 @@ function getParam(name: Exclude<keyof SetupParams, 'required'>, s: Card = gameSt
     heroes: [ 3, 5, 5, 5, 6 ],
     wounds: undefined,
     bindings: 30,
+    officers: 30,
     shards: 60,
     extra_masterminds: 0,
     solo_henchmen: [ gameState ? gameState.advancedSolo === 'WHATIF' ? 4 : 3 : 0 ], // HACK: for solo_henchmen the number of player indicates the group index
@@ -1566,6 +1572,7 @@ if (gameSetup.withSpecialOfficers) {
   gameState.officer.faceup = false;
   gameState.officer.shuffle();
 }
+gameState.officer.deck.splice(getParam('officers'));
 gameSetup.sidekicks.map(findSidekickTemplate).forEach(t => t.cards.forEach(c => gameState.sidekick.addNewCard(c[1], c[0])));
 if (gameState.sidekick.deck.uniqueCount(c => c.cardName) > 1) {
   gameState.sidekick.faceup = false;
@@ -2319,7 +2326,7 @@ function escapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, tru
 function koProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, false, true); }
 function koOrEscapeProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, true); }
 function escapeOrCityProgressTrigger(f: Filter<Card>) { return _ProgressTrigger(f, true, false, true); }
-function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS", useProgress: boolean = true): Trigger {
+function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS" | "SHIELDOFFICER", useProgress: boolean = true): Trigger {
   return ({
     event: "MOVECARD",
     match: ev => ev.from.id === d || ev.to.id === d,
@@ -2796,7 +2803,6 @@ function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func:
   } else {
     availableCitySpaces.withLast(d => attachCardEv(ev, what, d, 'LOCATION'));
   }
-  // * add locations to fightable
 } }); }
 
 function playVillainousWeapon(ev: Ev, what: Card) {
@@ -2968,6 +2974,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
   turnState.triggers.forEach(checkTrigger());
   gameState.mastermind.each(checkCardTrigger);
   CityCards().each(checkCardTrigger);
+  gameState.city.each(d => d.attached('LOCATION').each(checkCardTrigger));
   hqCards().each(checkCardTrigger);
   // TODO check other active locations (villain/hero deck top for example)
   gameState.players.each(p => {

@@ -551,7 +551,7 @@ function transformMastermindEv(ev: Ev, c?: Card) {
 function transformSchemeEv(ev: Ev, c?: Card) {
   const s = c || ev.source;
   cont(ev, () => {
-    Object.setPrototypeOf(s, Object.getPrototypeOf(s.backSide));
+    Object.setPrototypeOf(s, s.backSide);
   });
 }
 function smashEv(ev: Ev, n: number, effect1?: (c: Card) => void) {
