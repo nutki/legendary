@@ -90,8 +90,8 @@ function span(className: string, options?: {[key: string]: string}, ...children:
 }
 function br() { return document.createElement('br'); }
 function text(value: string | number) { return document.createTextNode(value.toString()); }
-function getCountHints(deck: Deck): [number, number] {
-  const result: [number, number] = [0, 0];
+function getCountHints(deck: Deck): [number, number, string] {
+  const result: [number, number, string] = [0, 0, deck.id];
   const c = deck.top;
   if (c && isMastermind(c)) result[0] = c.attached("TACTICS").size;
   let cnt = deck.size;
@@ -101,7 +101,7 @@ function getCountHints(deck: Deck): [number, number] {
   if (c && isScheme(c)) result[0] = getSchemeCountdown();
   return result
 }
-function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, countHint: [number, number] = [0, 0]): HTMLDivElement {
+function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, countHint: [number, number, string] = [0, 0, '']): HTMLDivElement {
   const faceUp = isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
   const transform = faceUp ? cardImageTransform(c) : undefined;
@@ -117,7 +117,7 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
     d.appendChild(div("attackHint", {}, text(effectiveCost(c))));
   d.appendChild(div("frame"));
   if (countHint[0]) d.appendChild(div("count", {}, text(countHint[0])));
-  if (countHint[1]) d.appendChild(div("capturedHint", {}, text(countHint[1])));
+  if (countHint[1]) d.appendChild(div("capturedHint", { 'data-popup-id': countHint[2] }, text(countHint[1])));
   return d;
 }
 function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
@@ -209,7 +209,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
     ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, !deckPos.popupid, deckPos.size === "small" ? [0, 0] : getCountHints(deck)) ] : [];
+  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, !deckPos.popupid, deckPos.size === "small" ? [0, 0, ''] : getCountHints(deck)) ] : [];
   const n = cardDivs.size;
   cardDivs.forEach((cardDiv, i) => {
     cardsContainer.appendChild(cardDiv);
@@ -232,8 +232,17 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     } else if(deckPos.count) d1.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
   }
 }
-function displayPopupDeck(deck: Deck, container: HTMLElement): void {
-  container.innerHTML = '';
+function displayPopupDeck(deck: Deck, name: string, cardsContainer: HTMLElement): void {
+  const container = div('cards');
+  const closeButton = div('popupclose', {}, text('X'));
+  closeButton.addEventListener("click", function(e) {
+    this.parentElement.classList.add("hidden");
+  });
+  container.addEventListener("wheel", function(e) {
+    this.scrollBy({ left: e.deltaY * 5, behavior: 'smooth' });
+    e.preventDefault();
+  });
+  cardsContainer.appendChild(div('popup hidden', { id: name, 'data-popup-id': deck.id }, container, div('popupname', {}, text(deck.id)), closeButton));
   let dist = 0;
   let total = 0;
   const flat = flattenDeck(deck);
@@ -273,12 +282,10 @@ function displayDecks(ev?: Ev): void {
   }
   for (const popupDeck of popupDecks) {
     if (popupDeck.id.endsWith('0')) for (let i = 0; i < gameState.players.length; i++) {
-      const container = document.getElementById(popupDeck.container + i).querySelector<HTMLElement>('.cards');
       const deck = deckById[popupDeck.id.replace(/0/, i.toString())];
-      displayPopupDeck(deck, container);
+      displayPopupDeck(deck, popupDeck.container + i, cardsContainer);
     } else {
-      const container = document.getElementById(popupDeck.container).querySelector<HTMLElement>('.cards');
-      displayPopupDeck(deckById[popupDeck.id], container);
+      displayPopupDeck(deckById[popupDeck.id], popupDeck.container, cardsContainer);
     }
   }
   const s = ev ? ev.type === 'CONFIRM' && ev.what ? ev.what : ev.getSource() : undefined;
@@ -498,13 +505,6 @@ function togglePopup(id: string) {
 }
 function initUI() {
   window.onclick = clickCard;
-  getPopupCards().each(d => d.addEventListener("click", function(e) {
-    if (e.target === this) this.parentElement.classList.add("hidden");
-  }));
-  getPopupCards().forEach(e => e.addEventListener("wheel", function(e) {
-    this.scrollBy({ left: e.deltaY * 5, behavior: 'smooth' });
-    e.preventDefault();
-  }));
   document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
   document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
   document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };

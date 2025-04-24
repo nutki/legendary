@@ -3167,6 +3167,10 @@ function mainLoop(): void {
   }).join('');
   Object.keys(clickActions).map(v => document.getElementById(v)).filter(e => e).forEach(e => {
     e.classList.add("select");
+    if (e.closest('.popup')) {
+      const popupId = e.closest('.popup').getAttribute('data-popup-id');
+      popupId && document.querySelectorAll(`.capturedHint[data-popup-id="${popupId}"]`).forEach(h => h.classList.add("select"));
+    }
     if (ev.desc) {
       if (/\bKO\b/.test(ev.desc)) e.classList.add("selectko");
       if ((/\bdiscard\b/i).test(ev.desc) && !(/\bfrom discard\b/i).test(ev.desc)) e.classList.add("selectdiscard");
