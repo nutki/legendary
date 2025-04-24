@@ -427,7 +427,7 @@ addHeroTemplates("Dark City", [
     revealPlayerDeckEv(ev, 4, cards => {
       addAttackEvent(ev, cards.sum(c => c.printedAttack || 0));
       cards.each(c => discardEv(ev, c));
-      if (superPower("X-Men")) selectObjectsAnyEv(ev, "KO cards", cards, c => KOEv(ev, c));
+      if (superPower("X-Men")) selectObjectsAnyEv(ev, "KO cards", [...cards], c => KOEv(ev, c));
     });
   }),
 },
