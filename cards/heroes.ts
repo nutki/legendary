@@ -920,7 +920,7 @@ addHeroTemplates("Fantastic Four", [
 // COST: 7
   ra: makeHeroCard("Invisible Woman", "Invisible Barrier", 7, u, 5, Color.COVERT, "Fantastic Four", "", [], { trigger: {
     event: 'CARDEFFECT',
-    match: ev => ev.effectName == 'ambush',
+    match: (ev, source) => ev.effectName == 'ambush' && owner(source) && revealable(owner(source)).includes(source),
     replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
   }}),
 },
