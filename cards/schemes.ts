@@ -3609,7 +3609,7 @@ addTemplates("SCHEMES", "2099", [
 // RULE: Once per turn, you may stack one of your non-grey Heroes next to this Scheme to earn "Ten Million Votes" for that Hero Name.
 // If you do, you may also send one of your grey Heroes {UNDERCOVER} as "Secret Service."
 // EVILWINS: When the Mastermind is elected President by having Forty Million more Votes than the highest-voted Hero Name.
-makeSchemeCard("Become President of the United States", { twists: 11 }, ev => {
+makeSchemeCard<{ourVotes: number}>("Become President of the United States", { twists: 11 }, ev => {
   // Twist: If there's a Villain in the Bank or Streets, the Mastermind "vows to crush crime," and you stack this Twist next to the Mastermind as "Ten Million Votes."
   if (cityVillains().has(c => isLocation(c.location, 'BANK', 'STREETS'))) {
     attachCardEv(ev, ev.twist, gameState.mastermind, 'TEN_MILLION_VOTES');
@@ -3624,7 +3624,8 @@ makeSchemeCard("Become President of the United States", { twists: 11 }, ev => {
       }], ["Don't discard", () => attachCardEv(ev, ev.twist, gameState.mastermind, 'TEN_MILLION_VOTES')]);
     } else attachCardEv(ev, ev.twist, gameState.mastermind, 'TEN_MILLION_VOTES');
   }
-}, [], () => {
+  cont(ev, () => schemeProgressEv(ev, (gameState.mastermind.attached('TEN_MILLION_VOTES').size - ev.state.ourVotes)));
+}, [], (s) => {
   setSchemeTarget(4);
   gameState.specialActions = ev => [new Ev(ev, 'EFFECT', {
     cost: { cond: () => yourHeroes().has(isNonGrayHero) && !countPerTurn('VOTE') },
@@ -3635,10 +3636,10 @@ makeSchemeCard("Become President of the United States", { twists: 11 }, ev => {
       selectCardOptEv(ev, "Choose a Hero to send undercover", yourHeroes().limit(Color.GRAY), c => sendUndercoverEv(ev, c));
       cont(ev, () => {
         const ourVotes = gameState.scheme.attached('TEN_MILLION_VOTES');
-        const theirVotes = gameState.mastermind.attached('TEN_MILLION_VOTES');
         const candidates = gameState.scheme.attached('TEN_MILLION_VOTES').unique(c => c.heroName);
-        const bestCandidate = candidates.max(c => ourVotes.limit(c => c.heroName === c.heroName).size)
-        schemeProgressEv(ev, (theirVotes.size - bestCandidate));
+        const bestCandidate = candidates.max(name => ourVotes.limit(c => c.heroName === name).size)
+        s.ourVotes = bestCandidate;
+        schemeProgressEv(ev, (gameState.mastermind.attached('TEN_MILLION_VOTES').size - s.ourVotes));
       });
     }
   })]
