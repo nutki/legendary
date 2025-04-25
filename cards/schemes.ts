@@ -2954,6 +2954,7 @@ makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
         gainEv(ev, c, p);
       }));
     });
+    addStatSet('vp', is(ev.twist), () => 4);
     attachCardEv(ev, ev.twist, gameState.scheme, 'TENTACLE');
     selectCardEv(ev, "Choose a non-grey Hero to capture", playerState.discard.limit(isNonGrayHero), c => {
       attachCardEv(ev, c, ev.twist, 'TENTACLECAPTURE');
@@ -2976,10 +2977,15 @@ makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
         }, p);
       }));
     }
-    schemeProgressEv(ev, gameState.scheme.attached('TENTACLE').size);
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TENTACLE').size));
   }
-}, [], () => {
+}, [{
+  event: 'MOVECARD',
+  match: ev => ev.from.id === 'SCHEME/TENTACLE',
+  after: ev => schemeProgressEv(ev, gameState.scheme.attached('TENTACLE').size),
+}], () => {
   setSchemeTarget(5);
+  gameState.specialActions = ev => gameState.scheme.attached('TENTACLE').map(c => fightActionEv(ev, c));
 }),
 ]);
 addTemplates("SCHEMES", "Black Panther", [
