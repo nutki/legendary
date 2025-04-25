@@ -1343,7 +1343,7 @@ function getParam(name: Exclude<keyof SetupParams, 'required'>, s: Card = gameSt
     solo_henchmen: [ gameState ? gameState.advancedSolo === 'WHATIF' ? 4 : 3 : 0 ], // HACK: for solo_henchmen the number of player indicates the group index
   };
   let r = name in s.params ? s.params[name] : defaults[name];
-  r = r instanceof Array ? r[numPlayers - 1] : r;
+  r = r instanceof Array ? r[numPlayers - (name === 'solo_henchmen' ? 0 : 1)] : r;
   if (m?.setupParamMod) r = m.setupParamMod(name, r, numPlayers);
   if (s.setupParamMod) r = s.setupParamMod(name, r, numPlayers);
   return r;
