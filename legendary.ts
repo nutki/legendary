@@ -3051,8 +3051,9 @@ function getDisplayInfo() {
     attackSpecial: turnState.attackSpecial.sum(c => c.amount),
     recruit: turnState.recruit,
     recruitSpecial: turnState.recruitSpecial.sum(c => c.amount),
+    piercing: turnState.piercing,
     shard: playerState.shard.size,
-    soloVP: soloVP(),
+    soloVP: gameState.players.length === 1 ? soloVP() : undefined,
   });
 }
 

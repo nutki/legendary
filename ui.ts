@@ -314,14 +314,24 @@ function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
 }
 
 function displayGame(ev: Ev): void {
-  const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard } = getDisplayInfo();
+  const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard, piercing } = getDisplayInfo();
   displayDecks(ev);
   document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
   document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
-  document.getElementById("shards").innerHTML = shard ? `${shard}` : '';
+  if (shard) {
+    document.getElementById("shards").innerHTML = `${shard}`;
+    document.getElementById("shards").style.display = 'inline-block';
+  } else document.getElementById("shards").style.display = 'none';
   if (uiConfig.usesShieldLevel) document.getElementById("shield-level").innerHTML = shieldLevel().toString();
   if (uiConfig.usesHydraLevel) document.getElementById("hydra-level").innerHTML = hydraLevel().toString();
-  document.getElementById("vp").innerHTML = `${soloVP}`;
+  if (piercing) {
+    document.getElementById("piercing").innerHTML = `${piercing}`;
+    document.getElementById("piercing").style.display = 'inline-block';
+  } else document.getElementById("piercing").style.display = 'none';
+  if (soloVP !== undefined) {
+    document.getElementById("vp").style.display = 'inline-block';
+    document.getElementById("vp").innerHTML = `${soloVP}`;
+  } else document.getElementById("vp").style.display = 'none';
 }
 function setMessage(msg: string, gameOverMsg: string): void {
   document.getElementById("message").innerHTML = msg;
