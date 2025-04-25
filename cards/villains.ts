@@ -1285,9 +1285,9 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACK: 7
 // VP: 5
   [ 2, makeVillainCard("Sentinel Territories", "Wolverine of Future Past", 7, 5, {
-    fight: ev => addFutureTrigger(ev => {
-      drawEv(ev, 1, owner(ev.source));
-      drawEv(ev);
+    fight: ev => addFutureTrigger(ev2 => {
+      drawEv(ev2, 1, owner(ev.source));
+      drawEv(ev2);
     }),
     escape: ev => xdRampageEv(ev, 'Wolverine'),
   })],
