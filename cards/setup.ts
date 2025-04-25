@@ -300,7 +300,7 @@ addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
 // Choose a team. {INVESTIGATE} for a card of that team.
 // Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Layla Miller", 2, u, 1, Color.TECH, "X-Factor", "D", [ ev => {
-  const teams = [...playerState.deck.deck, ...playerState.discard.deck].unique(c => c.team).map(v => ({l:v, v}));
+  const teams = owned().unique(c => c.team).filter(Boolean).map(v => ({l:v, v}));
   chooseOptionEv(ev, "Choose a team", teams, t => investigateEv(ev, t));
 }, ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
