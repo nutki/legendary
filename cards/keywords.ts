@@ -307,7 +307,7 @@ const nthCircleRevealAction = (what: Card, ev: Ev) => {
   return new Ev(ev, 'NTHCIRCLEREVEAL', {
     what,
     amount: what.nthCircle,
-    cost: { cond: c => revealable().has(c => c.cost >= ev.what.nthCircle) },
+    cost: { cond: c => revealable().has(c => c.cost >= what.nthCircle) },
     func: ev => selectCardEv(ev, "Reveal a card", revealable().limit(c => c.cost >= ev.what.nthCircle), () => {}),
   })
 }
