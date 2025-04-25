@@ -1475,7 +1475,7 @@ makeTransformingMastermindCard(makeMastermindCard("General \"Thunderbolt\" Ross"
   [ "Urban Warfare", ev => {
   // Put a random Bystander next to the Mastermind as a "Helicopter" from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
     const cards = new Array<Card>();
-    [ gameState.bystanders.deck, gameState.escaped.deck, ...gameState.players.map(p => p.victory.deck) ].each(d => d.withRandom(c => cards.push(c)));
+    [ gameState.bystanders.deck, gameState.escaped.deck, ...gameState.players.map(p => p.victory.deck) ].each(d => d.limit(isBystander).withRandom(c => cards.push(c)));
     // TODO bystanders in city
     cont(ev, () => cards.each(c => {
       villainify("Helicopter", c, 2, "RESCUE");

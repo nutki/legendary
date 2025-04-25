@@ -545,7 +545,7 @@ function makeTransformingMastermindCard(c1: Card, name: string, defense: number,
 function transformMastermindEv(ev: Ev, c?: Card) {
   const m = c || (isTactic(ev.source) ? ev.source.mastermind : ev.source);
   cont(ev, () => {
-    Object.setPrototypeOf(m, Object.getPrototypeOf(m.backSide));
+    Object.setPrototypeOf(m, m.backSide);
   });
 }
 function transformSchemeEv(ev: Ev, c?: Card) {
