@@ -2146,7 +2146,7 @@ function pastEvents(t: EvType) {
 }
 function ancestorEvents(ev: Ev) {
   const r: Ev[] = [];
-  for(let e = ev.parent; e; e = e.parent) r.push(ev);
+  for(let e = ev.parent; e; e = e.parent) r.push(e);
   return r;
 }
 function pastEvWhat(t: EvType) {
