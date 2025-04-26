@@ -1236,7 +1236,7 @@ addHeroTemplates("Villains", [
 // Discard cards from the top of your deck until your deck runs out or you have discarded 8 cards (don't shuffle). Then you get +1 Attack for each card you discarded this turn.
 // COST: 8
   ra: makeHeroCard("Dr. Octopus", "Octo-Pulverize", 8, u, 0, Color.TECH, "Sinister Six", "", ev => {
-    repeat(8, () => playerState.deck.withTop(c => discardEv(ev, c)));
+    repeat(8, () => cont(ev, () => playerState.deck.withTop(c => discardEv(ev, c))));
     cont(ev, () => addAttackEvent(ev, turnState.cardsDiscarded.size));
   }),
 },
