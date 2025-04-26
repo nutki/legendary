@@ -129,7 +129,7 @@ interface Card {
   divided?: { left: Card, right: Card }
   excessiveViolence?: Handler
   lightShow?: Handler
-  trapCond?: (ev: Ev) => boolean
+  trapCond?: (c: Card) => boolean
   trapPenalty?: Handler
   epic?: boolean
   coordinate?: boolean
@@ -489,7 +489,7 @@ function makeHenchmenLocationCard(name: string, defense: number, abilities: Vill
   abilities.isHenchman = true;
   return makeLocationCard(group, name, defense, 1, abilities);
 }
-function makeTrapCard(group: string, name: string, vp: number, ambush: Handler, cond: (ev: Ev) => boolean, penalty: Handler) {
+function makeTrapCard(group: string, name: string, vp: number, ambush: Handler, cond: (c: unknown) => boolean, penalty: Handler) {
   let c = new Card("TRAP", name);
   c.printedVillainGroup = group;
   c.ambush = ambush;
@@ -2800,6 +2800,20 @@ function playStrike(ev: Ev) {
   });
   if (gameState.advancedSolo === true) playAnotherEv(ev);
 }
+function playTrap(ev: Ev) {
+  attachCardEv(ev, ev.what, gameState.scheme, 'TRAP');
+  pushEffects(ev, ev.what, 'ambush', ev.what.ambush);
+  addTurnAction(new Ev(ev, "EFFECT", { source: ev.what, what: ev.what, cost: { cond: ev.what.trapCond }, func: () => {
+    moveCardEv(ev, ev.what, playerState.victory);
+  }}));
+  addTurnTrigger("CLEANUP", () => true, ev2 => {
+    if (ev.what.location.attachedTo === gameState.scheme) {
+      KOEv(ev2, ev.what);
+      ev.what.trapPenalty(ev2);
+    }
+  });
+}
+function playTrapEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { func: playTrap, what }); }
 function playLocationEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: ev => {
   const availableCitySpaces = gameState.city.limit(c => c.attached('LOCATION').size === 0);
   if (availableCitySpaces.size === 0) {
@@ -2876,6 +2890,8 @@ function villainDraw(ev: Ev): void {
     playVillainousWeapon(ev, c)
   } else if (c.cardType === "AMBUSH SCHEME") {
     playAmbushSchemeEv(ev, c);
+  } else if (isTrap(c)) {
+    playTrapEv(ev, c);
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);
   } else if (c.cardType === "SCHEME TWIST") {
