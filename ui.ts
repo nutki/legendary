@@ -215,7 +215,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
     ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, !deckPos.popupid, deckPos.size === "small" ? [0, 0, ''] : getCountHints(deck)) ] : [];
+  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, true, deckPos.size === "small" ? [0, 0, ''] : getCountHints(deck)) ] : [];
   const n = cardDivs.size;
   cardDivs.forEach((cardDiv, i) => {
     cardsContainer.appendChild(cardDiv);
