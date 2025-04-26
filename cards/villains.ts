@@ -626,6 +626,8 @@ addVillainTemplates("Villains", [
 // VP: 2
 // To fight Iron Fist, you must also reveal three Allies with different costs.
   [ 2, makeVillainCard("Defenders", "Iron Fist", 3, 2, {
+    fightCond: () => yourHeroes().uniqueCount(c => c.cost) >= 3,
+    // fightCost: TODO multiplayer reveal
   })],
 // ATTACK: 6
 // VP: 4
