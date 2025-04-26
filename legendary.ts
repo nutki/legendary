@@ -2874,7 +2874,7 @@ function villainDraw(ev: Ev): void {
     playLocationEv(ev, c);
   } else if (isVillainousWeapon(c)) {
     playVillainousWeapon(ev, c)
-  } else if (c.cardType === "AMBUSHSCHEME") {
+  } else if (c.cardType === "AMBUSH SCHEME") {
     playAmbushSchemeEv(ev, c);
   } else if (c.cardType === "MASTER STRIKE") {
     playStrikeEv(ev, c);

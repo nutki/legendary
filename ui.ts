@@ -35,7 +35,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "HERO" && card.isSidekick) return imageName("sidekicks", card);
   if (card.cardType === "HERO") return imageName("heroes", card, card.templateId?.replace(/@.*/, ""));
   if ((card.cardType === "VILLAIN" || card.cardType === "LOCATION") && card.isHenchman) return imageName("henchmen", card);
-  if (card.cardType === "VILLAIN" || card.cardType === "VILLAINOUSWEAPON" || card.cardType === "LOCATION") return imageName("villains", card, card.printedVillainGroup);
+  if (card.cardType === "VILLAIN" || card.cardType === "VILLAINOUSWEAPON" || card.cardType === "LOCATION" || card.cardType === "AMBUSH SCHEME") return imageName("villains", card, card.printedVillainGroup);
   if (card.cardType === "MASTERMIND") return imageName("masterminds", card);
   if (card.cardType === "TACTICS") return imageName("masterminds", card, card.mastermindName);
   if (card.cardType === "SCHEME") return imageName("schemes", card);
