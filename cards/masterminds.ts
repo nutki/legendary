@@ -306,9 +306,9 @@ makeMastermindCard("Carnage", 9, 6, "Maximum Carnage", ev => {
 ]),
 makeMastermindCard("Mysterio", 8, 6, "Sinister Six", ev => {
 // Shuffle this Master Strike into Mysterio's face down Mastermind Tactics. That card becomes a Mastermind Tactic worth 6 VP.
-  addStatSet('vp', c => c === ev.source, () => 6);
-  addStatSet('isTactic', c => c === ev.source, () => true);
-  shuffleIntoEv(ev, ev.source, ev.source.attachedDeck("TACTICS"));
+  addStatSet('vp', is(ev.what), () => 6);
+  addStatSet('isTactic', is(ev.what), () => true);
+  shuffleIntoEv(ev, ev.what, ev.source.attachedDeck("TACTICS"));
 }, [
   [ "Blurring Images", ev => {
   // You get +1 Recruit for each Mastermind Tactic Mysterio has left after this one.
