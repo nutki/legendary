@@ -938,6 +938,10 @@ function addHeroTemplates(set: string, templates: Templates['HEROES']) {
     for (const c of [t.c1, t.c2, t.c3, t.uc, t.u2, t.ra]) if (c) {
       c.set = set;
       c.templateId = t.templateId;
+      if (c.transformed) {
+        c.transformed.set = set;
+        c.transformed.templateId = t.templateId;
+      }
       if (t.name !== c.heroName) {
         console.error("Hero name mismatch " + t.name + " >> ", c.divided.left.heroName, "///", c.divided.right.heroName);
       }
@@ -1562,7 +1566,10 @@ gameState.players.forEach(p => {
 });
 // Init hero deck and populate initial HQ
 gameSetup.heroes.map(findHeroTemplate).forEach(h => {
-  for (const [c, n] of heroToCardTamplates(h)) gameState.herodeck.addNewCard(c, n);
+  for (const [c, n] of heroToCardTamplates(h)) {
+    gameState.herodeck.addNewCard(c, n);
+    c.transformed && gameState.transformed.addNewCard(c.transformed, n);
+  }
 });
 gameState.herodeck.shuffle();
 // Init auxiliary decks
