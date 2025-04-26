@@ -341,11 +341,11 @@ makeMastermindCard("Dr. Strange", 8, 6, "Defenders", ev => {
 }, [
   [ "Book of the Vishanti", ev => {
   // Each other player reveals a [Covert] Ally or discards all the cards in their hand, then draws as many cards as they discarded.
-    eachPlayer(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, p.hand.size, p); }, p));
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => { discardHandEv(ev, p); drawEv(ev, p.hand.size, p); }, p));
   } ],
   [ "Crimson Bands of Cyttorak", ev => {
   // Each other player reveals their hand, then gains a Bindings for each non-grey Ally that player has.
-    eachPlayer(p => repeat(yourHeroes(p).count(isNonGrayHero), () => gainBindingsEv(ev, p)));
+    eachOtherPlayerVM(p => repeat(yourHeroes(p).count(isNonGrayHero), () => gainBindingsEv(ev, p)));
   } ],
   [ "Eye of Agamotto", ev => {
   // Reveal cards from the Ally Deck equal to the number of players. Put one of those cards into each player's discard pile.
