@@ -2539,7 +2539,7 @@ function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolea
     src.registerRevealed(cards);
   }});
   cont(ev, () => action(cards));
-  if (random) cont(ev, () => cards.shuffled().each(c => moveCard(c, src)));
+  if (random) cont(ev, () => cards.shuffled().each(c => moveCard(c, src, bottom)));
   else cont(ev, () => cleanupRevealed(ev, cards, src, bottom, agent));
   cont(ev, () => src.clearRevealed(cards));
 }
