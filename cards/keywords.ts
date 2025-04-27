@@ -1108,7 +1108,7 @@ function empoweringVillainGroup(g: string) {
   return empoweringVillains(villains().limit(isGroup(g)))
 }
 function empoweringVillains(cards: Card[]) {
-  return [...stableEmpowerVarDefense.entries()].filter(([, f]) => cards.limit(c => c.varDefense === f)).reduce((acc, [c]) => acc | c, 0);
+  return [...stableEmpowerVarDefense.entries()].filter(([, f]) => cards.has(c => c.varDefense === f)).reduce((acc, [c]) => acc | c, 0);
 }
 // EXPANSION: Black Widow
 function dodgeCardEv(ev: Ev, c: Card) {
