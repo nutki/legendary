@@ -367,7 +367,7 @@ addHeroTemplates("Legendary", [
 // Draw three cards.
 // {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
 // COST: 8
-  ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", [ ev => drawEv(ev, 3), ev => addAttackEvent(ev, turnState.cardsDrawn) ]),
+  ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", [ ev => drawEv(ev, 3), ev => superPower(Color.INSTINCT) && addAttackEvent(ev, turnState.cardsDrawn) ]),
 },
 ]);
 addHeroTemplates("Dark City", [
