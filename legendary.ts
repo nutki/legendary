@@ -387,7 +387,7 @@ function makeLocationCard(group: string, name: string, defense: number, vp: numb
   if (abilities) Object.assign(c, abilities);
   return c;
 }
-function makeAmbushSchemeCard(name: string, group: string, vp: number, abilities: AmbushSchemeCardAbillities) {
+function makeAmbushSchemeCard(group: string, name: string, vp: number, abilities: AmbushSchemeCardAbillities) {
   let c = new Card("AMBUSH SCHEME", name);
   c.printedVP = vp;
   c.printedVillainGroup = group;
@@ -1136,7 +1136,6 @@ interface Game {
   thronesFavorHolder: Player | Card | undefined;
   astralPlane: Deck;
   finalBlow: boolean;
-  ambushScheme: Deck
   gameOver: boolean
 }
 let eventQueue: Ev[] = [];
@@ -1531,7 +1530,6 @@ gameState = {
   ],
   thronesFavorHolder: undefined,
   astralPlane: new Deck('ASTRALPLANE', true),
-  ambushScheme: new Deck('AMBUSHSCHEME', true),
   gameOver: false,
 };
 if (undoLog.replaying) {
@@ -2210,6 +2208,7 @@ function getActions(ev: Ev): Ev[] {
   playerState.artifact.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   playerState.hand.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   playerState.victory.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
+  gameState.scheme.attached('AMBUSHSCHEME').each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);
@@ -2778,8 +2777,8 @@ function playTwist(ev: Ev): void {
   moveCardEv(ev, ev.what, gameState.ko);
   confirmEv(ev, 'Scheme Twist!', gameState.scheme.top);
   const params = { nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState }
-  if (gameState.ambushScheme.size)
-    selectCardOrderEv(ev, "Choose Scheme Twist order", [gameState.ambushScheme.top, gameState.scheme.top], (c: Card) => pushEv(ev, "EFFECT", { source: c, func: c.twist, ...params }));
+  if (gameState.scheme.attached('AMBUSHSCHEME').size)
+    selectCardOrderEv(ev, "Choose Scheme Twist order", [gameState.scheme.attached('AMBUSHSCHEME')[0], gameState.scheme.top], (c: Card) => pushEv(ev, "EFFECT", { source: c, func: c.twist, ...params }));
   else
     pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, ...params });
   isSoloGame() && cont(ev, () => {
@@ -2845,12 +2844,12 @@ function playVillainousWeapon(ev: Ev, what: Card) {
   }
 }
 function playAmbushScheme(ev: Ev) {
-  if (gameState.ambushScheme.size) {
+  if (gameState.scheme.attached('AMBUSHSCHEME').size) {
     KOEv(ev, ev.what);
     playAnotherEv(ev);
   } else {
     textLog.log(`Ambush scheme played: ${ev.what.cardName}`);
-    moveCardEv(ev, ev.what, gameState.ambushScheme);
+    moveCardEv(ev, ev.what, gameState.scheme.attachedDeck('AMBUSHSCHEME'));
     pushEffects(ev, ev.what, 'ambush', ev.what.ambush);
   }
 }
