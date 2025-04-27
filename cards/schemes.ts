@@ -3607,6 +3607,7 @@ makeSchemeCard("Siphon Energy from the Quantum Realm", { twists: 9, vd_villain: 
   const isQuantum = (c: Card) => c.villainGroup === extraVillainName();
   gameState.villaindeck.limit(isQuantum).each(c => c.cardType === 'AMBUSH SCHEME' || moveCard(c, gameState.outOfGame.attachedDeck('QUANTUM_REALM')));
   addStatMod('defense', isQuantum, c => Math.floor(gameState.mastermind.attached('QUANTUM_SIPHON').size / 2));
+  gameState.specialActions = ev => gameState.mastermind.attached('QUANTUM_REALM').map(c => fightActionEv(ev, c));
   setSchemeTarget(4);
 }),
 ]);
