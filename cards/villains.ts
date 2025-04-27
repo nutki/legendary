@@ -6258,23 +6258,23 @@ addVillainTemplates("Ant-Man and the Wasp", [
   [ 1, makeAmbushSchemeCard("Quantum Realm", "Quantumania", 2, {
     ambush: ev => {
       eachPlayer(p => selectCardEv(ev, "Choose a Hero to make a Quantum Duplicate", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'QUANTUM_DUPLICATE')));
-      addStatSet('cardActions', is(ev.source), () => ev.source.attachedDeck('QUANTUM_DUPLICATES').deck.map(c => (source, ev) => new Ev(ev, 'EFFECT', {
+      addStatSet('cardActions', is(ev.source), () => ev.source.attachedDeck('QUANTUM_DUPLICATE').deck.map(c => (source, ev) => new Ev(ev, 'EFFECT', {
         what: c,
         cost: { attack: c.printedCost },
         func: ev => {
           selectCardOptEv(ev, "Choose a player to gain the Hero", gameState.players, p => gainEv(ev, c, p), () => KOEv(ev, c));
-          cont(ev, () => source.attachedDeck('QUANTUM_DUPLICATES').size === 0 && defeatEv(ev, source));
+          cont(ev, () => source.attachedDeck('QUANTUM_DUPLICATE').size === 0 && defeatEv(ev, source));
         },
       })));
       gameState.herodeck.withTop(c => attachCardEv(ev, c, ev.source, 'QUANTUM_DUPLICATE'));
       cont(ev, () => eachPlayer(p => {
-        p.hand.limit(c => ev.source.attached('QUANTUM_DUPLICATES').has(c2 => c.cardName === c2.cardName)).each(c => discardEv(ev, c));
+        p.hand.limit(c => ev.source.attached('QUANTUM_DUPLICATE').has(c2 => c.cardName === c2.cardName)).each(c => discardEv(ev, c));
       }));
     },
     twist: ev => {
       gameState.herodeck.withTop(c => attachCardEv(ev, c, ev.source, 'QUANTUM_DUPLICATE'));
       cont(ev, () => eachPlayer(p => {
-        p.hand.limit(c => ev.source.attached('QUANTUM_DUPLICATES').has(c2 => c.cardName === c2.cardName)).each(c => discardEv(ev, c));
+        p.hand.limit(c => ev.source.attached('QUANTUM_DUPLICATE').has(c2 => c.cardName === c2.cardName)).each(c => discardEv(ev, c));
       }));
     }
   })],
