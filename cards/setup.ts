@@ -188,7 +188,7 @@ addTemplatesWithCounts("SIDEKICKS", "Civil War", [
 // Once this turn, if you made at least 6 Recruit, you get +2 Attack. Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Throg", 2, 2, 0, Color.STRENGTH, "Avengers", "FD", [ ev => {
   addTurnAction(new Ev(ev, 'EFFECT', {
-    cost: { cond: () => !countPerTurn('Throg', ev.what) && turnState.totalRecruit >= 6 },
+    cost: { cond: () => !countPerTurn('Throg', ev.source) && turnState.totalRecruit >= 6 },
     func: ev => { incPerTurn('Throg', ev.what); addAttackEvent(ev, 2); },
     what: ev.source,
   }));
