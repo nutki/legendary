@@ -102,14 +102,14 @@ function getCountHints(deck: Deck): [number, number, string] {
   return result
 }
 function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, countHint: [number, number, string] = [0, 0, '']): HTMLDivElement {
-  const faceUp = isFaceUp(c);
+  const faceUp = gone || isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
   const transform = faceUp ? cardImageTransform(c) : undefined;
   const options: {[key: string]: string} = {
     onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}')`,
     onmouseleave: "clearSourceImg()",
   };
-  if (id) options.id = c.id;
+  if (id) options['data-card-id'] = c.id;
   const d = div(gone ? "card gone" : "card", options, img(src, "cardface", transform));
   if (faceUp && c.defense !== c.printedDefense)
     d.appendChild(div("attackHint", {}, text(c.defense)));
@@ -493,7 +493,11 @@ function closePopupDecks() {
   getPopups().each(d => d.classList.add("hidden"));
 }
 function autoOpenPopupDecks() {
-  getPopups().each(d => d.getElementsByClassName("select").length && togglePopup(d.id));
+  const topLevelSelects = [...document.querySelectorAll<HTMLSelectElement>(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
+  getPopups().each(d => {
+    const localSelects = [...d.getElementsByClassName("select")].map(e => e.getAttribute("data-card-id"));
+    localSelects.some(e => !topLevelSelects.includes(e)) && togglePopup(d.id);
+  });
 }
 function togglePopup(id: string) {
   const popup = document.getElementById(id);

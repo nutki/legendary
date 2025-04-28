@@ -3090,7 +3090,7 @@ let clickActions: {[id: string]:(() => void)} = {};
 function clickCard(ev: MouseEvent): void {
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     if (node.classList?.contains("count") || node.classList?.contains("capturedHint")) return;
-    const id = node.id || (node.getAttribute && node.getAttribute('data-id'));
+    const id = node.id || (node.getAttribute && node.getAttribute('data-card-id'));
     const deckId = node.getAttribute && node.getAttribute('data-deck-id');
     if (id && clickActions[id]) {
       clickActions[id]();
@@ -3155,8 +3155,9 @@ function mainLoop(): void {
       let options = <Card[]>ev.options;
       options.map((option, i) => clickActions[option.id] = () => {
         selected[i] = !selected[i];
-        let cl = document.getElementById(option.id).classList;
-        if (selected[i]) cl.add('selected'); else cl.remove('selected');
+        for (const e of document.querySelectorAll(`[data-card-id="${option.id}"]`)) {
+          if (selected[i]) e.classList.add('selected'); else e.classList.remove('selected');
+        }
       });
       extraActions.push({name: "Confirm", func: () => {
         let num = selected.count(s => s);
@@ -3175,7 +3176,7 @@ function mainLoop(): void {
     },
   })[ev.type])(ev);
   Object.keys(clickActions).map(v => {
-    const e = document.getElementById(v) || document.querySelector(`.topCard[data-deck-id="${v}"]`);
+    const e = document.querySelector(`.topCard[data-deck-id="${v}"], [data-card-id="${v}"]`);
     if (!e) {
       console.warn("Missing element for action: ", v);
       extraActions.push({ name: "Pick " + v, func: clickActions[v] });
@@ -3188,7 +3189,7 @@ function mainLoop(): void {
     clickActions[id] = action.func;
     return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
   }).join('');
-  Object.keys(clickActions).map(v => document.getElementById(v)).filter(e => e).forEach(e => {
+  Object.keys(clickActions).flatMap(v => [...document.querySelectorAll(`[data-card-id="${v}"]`)]).forEach(e => {
     e.classList.add("select");
     if (e.closest('.popup')) {
       const popupId = e.closest('.popup').getAttribute('data-popup-id');
