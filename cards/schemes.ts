@@ -296,11 +296,10 @@ makeSchemeCard("The Clone Saga", { twists: 8 }, ev => {
 makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen: [2, 2, 2, 3, 3] }, ev => {
   // Twist: KO a Hero from the HQ. Put the highest-Attack Villain from the city into that HQ space.
   let space: Deck;
-  addTurnTrigger('MOVECARD', ev => space && ev.to === space && ev.from === gameState.herodeck, { replace: ev => {
-    selectCardEv(ev, "Choose a highest cost Villain", cityVillains().highest(c => c.defense), c => moveCardEv(ev, c, space));
+  addTurnTrigger('MOVECARD', ev2 => ev2.to === space && ev2.from === gameState.herodeck && ancestorEvents(ev2).includes(ev), { replace: ev => {
+    selectCardOrEv(ev, "Choose a highest cost Villain", cityVillains().highest(c => c.defense), c => moveCardEv(ev, c, space), () => doReplacing(ev));
   }});
   selectCardEv(ev, "Select a Hero to KO", hqHeroes(), c => { KOEv(ev, c); space = c.location; });  
-  cont(ev, () => space = undefined);
 }, {
   event: 'MOVECARD',
   match: ev => ev.to.isHQ,
