@@ -3,7 +3,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "http-server",
-    "download": "node tools/download.js"
+    "download": "node tools/download.js",
+    "version": "node tools/makeversion.js"
   },
   "dependencies": {
     "http-server": "^14.1.1",

@@ -567,8 +567,13 @@ function initUI() {
     document.getElementById("scalable-contents").style.transform = `scale(${scale})`;
     document.getElementById("scalable-container").style.height = `${scale * 1250}px`;
   }
+  document.getElementById("errorReport").onclick = document.getElementById("issueReport").onclick = () => window.open(reportUrl(), '_blank');
   window.addEventListener("resize", updateSize);
   updateSize();
+}
+function reportUrl() {
+  const body = ["<Describe issue details here>", "", "Please keep the debug information below:", "Version: " + (window as any).legendaryVersion, undoLog.toString(), JSON.stringify(undoLog.gameSetup)].join("\n");
+  return 'https://github.com/nutki/legendary/issues/new?body=' + encodeURIComponent(body);
 }
 function showSetup() {
   document.getElementById("setupPage").classList.remove("hidden");
