@@ -1282,7 +1282,7 @@ addVillainTemplates("Secret Wars Volume 1", [
 // VP: 4
   [ 2, makeVillainCard("Sentinel Territories", "Rachel Summers of Future Past", 6, 4, {
     fight: ev => addFutureTrigger(ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1)),
-    escape: ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), -1),
+    escape: ev => addTurnMod('defense', c => isVillain(c) || isMastermind(c), 1),
   })],
 // FIGHT: <i>Wolverine alters the future:</i> At the start of the next player's turn, you draw a card, and that player draws a card.
 // ESCAPE: {XDRAMPAGE Wolverine}
