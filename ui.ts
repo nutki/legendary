@@ -237,7 +237,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
   if (deckPos.count) {
     if (deckPos.count === 'VP') {
       d1.appendChild(img("icons/VP.png", "vpcount"));
-      d1.appendChild(div("deckcount vpcount", {}, text(currentVP(playerState))));
+      d1.appendChild(div("deckcount vpcount", {}, text(currentVP(gameState.players[parseInt(deck.id.slice(-1))]))));
     } else if(deckPos.count) d1.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
   }
 }
