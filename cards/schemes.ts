@@ -281,7 +281,8 @@ addTemplates("SCHEMES", "Paint the Town Red", [
 // EVILWINS: When 2 Villains with the same card name have escaped or the Villain Deck runs out.
 makeSchemeCard("The Clone Saga", { twists: 8 }, ev => {
   // Twist: Each player reveals two non-grey Heroes with the same card name or discards down to 3 cards.
-  eachPlayer(p => revealOrEv(ev, c => p.hand.deck.count(cc => cc.cardName === c.cardName) >= 2, () => pickDiscardEv(ev, -3, p), p));
+  // TODO: multiplayer reveal
+  eachPlayer(p => revealOrEv(ev, c => revealable(p).limit(isNonGrayHero).count(cc => cc.cardName === c.cardName) >= 2, () => pickDiscardEv(ev, -3, p), p));
 }, [
   {
     event: 'ESCAPE',
