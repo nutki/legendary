@@ -256,6 +256,40 @@ img.vpcount {
 #piercing { background-image: url('icons/piercing.png'); }
 #shield-level { background-image: url('icons/shield.svg'); }
 #hydra-level { background-image: url('icons/hydra.svg'); }
+#shards, div.card div.shardHint {
+  display: inline-block;
+  background: black;
+  border-radius: 50%;
+  border: 2px solid white;
+  scale: 0.8;
+  color: #000;
+  box-shadow: 0px 0px 5px white;
+  text-shadow:
+   -1.5px -1.5px 0 yellow,
+    1.5px -1.5px 0 yellow,
+   -1.5px  1.5px 0 yellow,
+    1.5px  1.5px 0 yellow,
+   -1.5px    0px 0 yellow,
+    1.5px    0px 0 yellow,
+      0px  1.5px 0 yellow,
+      0px -1.5px 0 yellow;
+}
+div.card div.shardHint {
+  font-family: NumberFont;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  display: inline-block;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  line-height: 40px;
+  text-align: center;
+  font-family: NumberFont;
+  font-size: 50px;
+  opacity: 0.75;
+}
 #game-over-message {
   position: absolute;
   width: 1050px; height: 285px;

@@ -95,7 +95,7 @@ function getCountHints(deck: Deck): [number, number, string] {
   const c = deck.top;
   if (c && isMastermind(c)) result[0] = c.attached("TACTICS").size;
   let cnt = deck.size;
-  if (c && c._attached) for (let i in c._attached) cnt += c._attached[i].deck.size;
+  if (c && c._attached) for (let i in c._attached) if (i !== 'SHARD') cnt += c._attached[i].deck.size;
   if (deck._attached) for (let i in deck._attached) cnt += deck._attached[i].deck.size;
   if (cnt > 0) result[1] = cnt - result[0] - (c ? 1 : 0);
   if (c && isScheme(c)) result[0] = getSchemeCountdown();
@@ -118,6 +118,9 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
   d.appendChild(div("frame"));
   if (countHint[0]) d.appendChild(div("count", {}, text(countHint[0])));
   if (countHint[1]) d.appendChild(div("capturedHint", { 'data-popup-id': countHint[2] }, text(countHint[1])));
+  if (c.attached("SHARD").size) {
+    d.appendChild(div("shardHint", {}, text(c.attached("SHARD").size)));
+  }
   return d;
 }
 function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
@@ -307,7 +310,7 @@ function displayDecks(ev?: Ev): void {
   }
 }
 function flattenCard(card: Card, name?: string): [Card, string | undefined][] {
-  return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => flattenDeck(c, n)) : []), [card, name]];
+  return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => n === "SHARD" ? [] : flattenDeck(c, n)) : []), [card, name]];
 }
 function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
   return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];
