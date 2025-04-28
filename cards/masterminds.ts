@@ -4127,7 +4127,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
   [ "Anoint an Heir to Take My Place", ev => {
   // If this is not the last Tactic, a Hero from the HQ that costs 6 or more Ascends to become an additional Mastermind with Attack equal to its printed cost and only these abilities: "<b>Fight</b>: Choose a player to gain this as a Hero.
   // STRIKE: Each player discards a card of this Hero Class or gains a Wound."
-    if(!finalTactic(ev.source.mastermind)) selectCardEv(ev, "Choose a Hero to ascend", hqHeroes().limit(c => c.cost >= 6), c => {
+    if(!finalTactic(ev.source)) selectCardEv(ev, "Choose a Hero to ascend", hqHeroes().limit(c => c.cost >= 6), c => {
       addStatSet('strike', is(c), c => ev => {
         eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c.color), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
       });
@@ -4143,7 +4143,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
   [ "Master of Schemes", ev => {
   // If this is not the last Tactic, reveal the top 2 cards of the Villain Deck. Play a Master Strike or Scheme Twist from among them,
   // putting the rest back in any order.
-    finalTactic(ev.source.mastermind) || revealVillainDeckEv(ev, 2, cards => selectCardEv(ev, "Choose a card to play", cards.limit(c => isStrike(c) || isTwist(c)), c => {
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 2, cards => selectCardEv(ev, "Choose a card to play", cards.limit(c => isStrike(c) || isTwist(c)), c => {
       villainDrawEv(ev, c);
     }), false);
   } ],
