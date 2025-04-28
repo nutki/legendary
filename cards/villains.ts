@@ -6286,7 +6286,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
   [ 1, makeVillainCard("Quantum Realm", "Quantumoeba", 8, 5, {
     ambush: ev => selectCardEv(ev, "Choose a Henchman to eat", gameState.players.flatMap(p => p.victory.limit(isHenchman)), c => {
       attachCardEv(ev, c, ev.source, 'EATEN');
-      addStatMod('defense', is(ev.source), () => c.printedAttack);
+      addStatMod('defense', is(ev.source), () => c.printedDefense || 0);
     }),
     fight: ev => {
       ev.source.attached('EATEN').each(c => {
