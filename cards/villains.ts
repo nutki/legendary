@@ -6247,7 +6247,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
 // VP: 3
 // FLAVOR: Lord Krylar's network of informants could find anyone in the Quantum Realm.
   [ 1, makeVillainCard("Quantum Realm", "Lord Krylar's Valet", 5, 3, {
-    fight: ev => exploreEv(ev, c => addRecruitEvent(ev, c.printedRecruit)),
+    fight: ev => exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit)),
   })],
 // AMBUSH: Each player puts a non-grey Hero from their hand or discard pile next to this Scheme as a "Quantum Duplicate." Then do the Twist effect below.
 // <b>Twist</b>: The top card of the Hero Deck becomes another Quantum Duplicate. Each player reveals their hand and discards all cards that have the same name
