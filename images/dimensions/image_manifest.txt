@@ -31,4 +31,5 @@ cbfb1efe-c233-4fa5-8715-50ec6a9f9720 bystanders/bulldozer_driver.jpg
 a61affef-85fc-41bb-a388-974c8e60e4b1 bystanders/double_agent_of_shield.jpg
 8df0723c-cc42-4e82-8878-879232a5edfb bystanders/forklift_driver.jpg
 a0097313-66d0-4041-833f-f295410dcd79 bystanders/fortune_teller.jpg
-82a53812-1c56-470d-9789-b9cbacd38193 photographer.jpg
+82a53812-1c56-470d-9789-b9cbacd38193 bystanders/photographer.jpg
+a616b1a8-daf9-4f03-9f9d-c5eb3663b4a3 bystanders/stan_lee.jpg
