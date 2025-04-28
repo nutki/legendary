@@ -6278,7 +6278,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
       }));
     }
   })],
-// {USIZECHANGING TECH 1}[Tech][Tech][Tech]
+// {USIZECHANGING STRENGTH 1}
 // AMBUSH: Quantumoeba "eats" a Henchman from any player's Victory Pile, capturing it and gaining its printed Attack.
 // FIGHT: Put the eaten Henchman in your Victory Pile and do its Fight effect.
 // ATTACK: 8*
@@ -6294,7 +6294,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
         pushEffects(ev, c, 'fight', c.fight);
       });
     },
-    uSizeChanging: { color: Color.TECH, amount: 4 },
+    uSizeChanging: { color: Color.STRENGTH, amount: 4 },
   })],
 // FIGHT: {EXPLORE} If you recruit the Found Hero this turn, set it aside. When you draw a new hand this turn, add that card to your hand.
 // ATTACK: 5
