@@ -864,7 +864,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Kree Starforce", "Dr. Minerva", 5, 3, {
-    ambush: ev => cityVillains().each(c => attachShardEv(ev, c)),
+    ambush: ev => cityVillains().limit(isGroup("Kree Starforce")).each(c => attachShardEv(ev, c)),
   })],
 // AMBUSH: Each player may draw a card. Korath gains a Shard for each card drawn this way.
 // ESCAPE: If Korath had any Shards, each player gains a Wound.
