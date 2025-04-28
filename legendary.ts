@@ -1673,7 +1673,7 @@ function isFightable(c: Card): boolean {
   const res = c.location == gameState.astralPlane ? true : isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
     isMastermind(c) ?
-      c.location === gameState.mastermind && (c.attachedFaceDownDeck('TACTICS').size > 0 || gameState.finalBlow) :
+      c.location === gameState.mastermind && (!c.tacticsTemplates || c.attachedFaceDownDeck('TACTICS').size > 0 || gameState.finalBlow) :
       false;
   return getModifiedStat(c, 'isFightable', res);
 }
