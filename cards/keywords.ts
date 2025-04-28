@@ -1364,7 +1364,7 @@ function fatedFutureEv(ev: Ev) {
 // * "Doubled Weapon X Sequence" means double the bonus.
 // * Build your deck carefully to get long sequences!
 function weaponXSequenceAmount(cards: Card[] = revealable()) {
-  const costs = cards.unique(c => c.cost).sort((a, b) => a - b);
+  const costs = cards.limit(c => c.printedCost !== undefined).unique(c => c.printedCost).sort((a, b) => a - b);
   let maxRun = 0, currentRun = 1;
   for (let i = 1; i < costs.length; i++) {
     if (costs[i] === costs[i - 1] + 1) currentRun++; else currentRun = 1;
