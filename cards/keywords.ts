@@ -169,12 +169,12 @@ function spendShardEv(ev: Ev, p: Player = playerState) {
 }
 const extraShatteraxTriggers: Trigger[] = [{
   event: 'RECRUIT',
-  match: ev => ev.what.location.attached('SHARD').size > 0,
-  before: ev => ev.parent.what.location.attached('SHARD').each(c => gainShardEv(ev, c)),
+  match: ev => ev.what.attached('SHARD').size > 0,
+  before: ev => ev.parent.what.attached('SHARD').each(c => gainShardEv(ev, c)),
 }, {
   event: 'MOVECARD',
-  match: ev => ev.what.location.attached('SHARD').size > 0,
-  after: ev => ev.parent.what.location.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
+  match: ev => ev.what.attached('SHARD').size > 0,
+  after: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
 }];
 
 // EXPANSION Fear Itself
