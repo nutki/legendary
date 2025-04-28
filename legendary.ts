@@ -628,7 +628,7 @@ class Deck {
   attachedFaceDownDeck(name: string): Deck { return attachedDeck(name, this, false); }
   attached(name: string): Card[] { return attachedCards(name, this); }
   registerRevealed(cards: Card[]) {
-    textLog.log('Revealed ' + cards.map(c => c.cardName).join(', ') + ' from ' + this.id);
+    textLog.log('Revealed ', ...cards, ' from ' + this.id);
     this.revealedCards = this.revealedCards || [];
     this.revealedCards.push(cards);
   }
@@ -1281,8 +1281,8 @@ const undoLog: UndoLog = {
   },
 };
 const textLog = {
-  text: "",
-  log: function(s: string): void { this.text += s + '<br>'; },
+  contents: [] as (string | Card)[],
+  log: function(...s: (string | Card)[]): void { this.contents.push(...s, '\n'); },
 };
 
 interface Setup {
@@ -1404,7 +1404,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
 // State init
 function initGameState(gameSetup: Setup) {
 Deck.deckList = [];
-textLog.text = "";
+textLog.contents = [];
 eventQueue = [];
 eventQueueNew = [];
 turnState = undefined;
@@ -2692,7 +2692,7 @@ function playCard(ev: Ev): void {
   }
 }
 function buyCard(ev: Ev): void {
-  textLog.log(`Recruited ${ev.what.cardName || ev.what.id}`);
+  textLog.log("Recruited ", ev.what);
   let where = turnState.nextHeroRecruit;
   turnState.nextHeroRecruit = undefined;
   // TODO let player choose where to put the card if multiple options available
@@ -2848,7 +2848,7 @@ function playAmbushScheme(ev: Ev) {
     KOEv(ev, ev.what);
     playAnotherEv(ev);
   } else {
-    textLog.log(`Ambush scheme played: ${ev.what.cardName}`);
+    textLog.log("Ambush scheme played: ", ev.what);
     moveCardEv(ev, ev.what, gameState.scheme.attachedDeck('AMBUSHSCHEME'));
     pushEffects(ev, ev.what, 'ambush', ev.what.ambush);
   }
@@ -2877,7 +2877,7 @@ function villainDrawEv(ev: Ev, what?: Card): void { pushEv(ev, "VILLAINDRAW", { 
 function villainDraw(ev: Ev): void {
   let c = ev.what || gameState.villaindeck.top;
   if (!c) return; // Villain decks runs out
-  textLog.log(ev.what ? `Playing villain card: ${c.cardName || c.id}` : `Drawn from villain deck: ${c.cardName || c.id}`);
+  textLog.log(ev.what ? "Playing villain card: " : "Drawn from villain deck: ", c);
   ev.what = c;
   if (!c) {
   } else if (isVillain(c)) {
@@ -2936,7 +2936,7 @@ function villainEscape(ev: Ev): void {
 }
 function villainFight(ev: Ev): void {
   const c = ev.what;
-  textLog.log(`Fought ${c.cardName || c.id}`);
+  textLog.log(`Fought `, c);
   if (c.fightCost) cont(ev, c.fightCost);
   defeatEv(ev, c);
   if (ev.withViolence) playViolenceEv(ev);
@@ -3207,7 +3207,7 @@ function mainLoop(): void {
     if (clickActions[id]) deckDiv.classList.add("select");
   }
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
-  document.getElementById("logContainer").innerHTML = textLog.text;
+  renderTextLog(textLog.contents);
   closePopupDecks();
   if (ev.type !== 'SELECTEVENT') autoOpenPopupDecks();
   if (ev.agent) setCurrentPlayer(ev.agent.nr);

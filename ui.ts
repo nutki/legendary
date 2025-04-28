@@ -589,3 +589,10 @@ function setCurrentPlayer(n: number) {
     currenPlayer = n;
   }, 0);
 }
+function renderTextLog(contents: (string|Card)[]): void {
+  const container = document.getElementById("logContainer");
+  document.getElementById("logContainer").innerHTML = '';
+  contents.forEach(c => container.appendChild(c instanceof Card ? div("logcard", {
+    onmouseover: `setSourceImg('${cardImageName(c).replace(/'/g, "\\'")}')`,
+  }, text(c.cardName)) : c === '\n' ? document.createElement('br') : text(c)));
+}
