@@ -264,15 +264,15 @@ makeSchemeCard<{neg: boolean}>("Pull Reality Into the Negative Zone", { twists: 
 }, [], s => {
   setSchemeTarget(7);
   s.neg = false;
-  addStatSet('fightCost', undefined, (c, base) => s.neg ? {
+  addStatSet('fightCost', () => true, (c, base) => s.neg ? {
     ...base,
     attack: base.recruit,
-    rectuit: base.attack,
+    recruit: base.attack,
   } : base);
-  addStatSet('recruitCost', undefined, (c, base) => s.neg ? {
+  addStatSet('recruitCost', () => true, (c, base) => s.neg ? {
     ...base,
     attack: base.recruit,
-    rectuit: base.attack,
+    recruit: base.attack,
   } : base);
 }),
 ]);
