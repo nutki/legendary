@@ -4122,7 +4122,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
   eachPlayer(p => weaponXSequenceAmount(revealable(p)) > weaponXSequenceAmount(hqCards()) || (ev.source.epic ? gainWoundToDeckEv(ev, p) : gainWoundEv(ev, p)));
 // Then if this is the fifth Strike this game, this Strike becomes a Scheme Twist that takes effect immediately. <i>(Once per game)</i>
 // Then if this is the third Strike this game, this Strike becomes a Scheme Twist that takes effect immediately. <i>(Once per game)</i>
-  gameState.ko.count(isStrike) === (ev.source.epic ? 5 : 3) && playTwistEv(ev, ev.what);
+  gameState.ko.count(isStrike) === (ev.source.epic ? 3 : 5) && playTwistEv(ev, ev.what);
 }, [
   [ "Anoint an Heir to Take My Place", ev => {
   // If this is not the last Tactic, a Hero from the HQ that costs 6 or more Ascends to become an additional Mastermind with Attack equal to its printed cost and only these abilities: "<b>Fight</b>: Choose a player to gain this as a Hero.
