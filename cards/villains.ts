@@ -872,8 +872,8 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 3
   [ 1, makeVillainCard("Kree Starforce", "Korath the Pursuer", 5, 3, {
     ambush: ev => {
-      eachPlayer(p => chooseMayEv(ev, "Draw a card", () => drawEv(ev, 1, p)));
-      cont(ev, () => attachShardEv(ev, ev.source, turnState.pastEvents.count(e => e.type === "DRAW" && e.parent === ev)));
+      eachPlayer(p => chooseMayEv(ev, "Draw a card", () => drawEv(ev, 1, p), p));
+      cont(ev, () => attachShardEv(ev, ev.source, pastEvents('DRAW').count(e => ancestorEvents(e).includes(ev))));
     },
     escape: ev => turnState.pastEvents.has(e => e.type === "MOVECARD" && e.to === gameState.shard && ev.parent === e.parent) && eachPlayer(p => gainWoundEv(ev, p)),
   })],
