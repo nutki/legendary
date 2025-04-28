@@ -936,7 +936,7 @@ addVillainTemplates("Guardians of the Galaxy", [
     ambush: ev => attachShardEv(ev, ev.source, cityVillains().count(isGroup("Infinity Gems")) + gameState.escaped.count(isGroup("Infinity Gems"))),
   }), u, u, 0, u, "", [], { isArtifact: true, trigger: {
     event: "VILLAINDRAW",
-    match: (ev, source) => owner(source) === playerState && isControlledArtifact(source),
+    match: (ev, source) => owner(source) === playerState && isControlledArtifact(source) && (!ev.what || ev.what.location === gameState.villaindeck),
     before: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(c => !isTwist(c)).each(c => chooseMayEv(ev, "Put on the bottom of the Villain Deck", () => { moveCardEv(ev, c, gameState.villaindeck, true); gainShardEv(ev); }))),
   } }) ],
 // AMBUSH: Soul Gem gains a Shard for each Villain in the city.
