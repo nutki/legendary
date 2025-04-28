@@ -3182,9 +3182,9 @@ makeSchemeCard("Frame Heroes For Murder", { twists: 7, heroes: [6, 6, 6, 6, 6] }
     });
   } else if (ev.nr === 7) {
     // Twist 7 Add any card from the HQ to the Incriminating Evidence.
-    hqCards().each(c => attachCardEv(ev, c, gameState.scheme, 'EVIDENCE'));
+    selectCardEv(ev, "Choose a card to incriminate", hqCards(), c => attachCardEv(ev, c, gameState.scheme, 'EVIDENCE'));
   }
-  schemeProgressEv(ev, gameState.scheme.attached('EVIDENCE').size);
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('EVIDENCE').size));
 }, [], () => {
   setSchemeTarget(5);
 }),
