@@ -209,6 +209,8 @@ addVillainTemplates("Legendary", [
 // VP: 3
   [ 2, makeVillainCard("Spider-Foes", "Venom", 5, 3, {
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
+    fightCond: () => revealable().has(Color.COVERT),
+    fightCost: ev => revealOrEv(ev, Color.COVERT, () => {}),
   })],
 ]},
 ]);
