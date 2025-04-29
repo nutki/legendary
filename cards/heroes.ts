@@ -1047,7 +1047,7 @@ addHeroTemplates("Paint the Town Red", [
         selectCardEv(ev, `Select a Bystander for ${playerState.name} to rescue`, p.victory.deck, c => rescueEv(ev, c), p);
       }, p);
     }),
-    ev => superPower("Spider Friends") && addAttackEvent(ev, turnState.bystandersRescued),
+    ev => superPower("Spider Friends") && addAttackEvent(ev, pastEvents('RESCUE').count(ev => ev.who === playerState && isBystander(ev.what))),
   ]),
 },
 {

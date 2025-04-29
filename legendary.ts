@@ -1044,7 +1044,6 @@ interface Turn extends Ev {
   cardsDrawn: number
   cardsDiscarded: Card[]
   pastEvents: Ev[]
-  bystandersRescued: number
   endDrawMod: number
   endDrawAmount: number
   cardsPlayed: Card[] // excluding card currently played
@@ -1960,7 +1959,6 @@ function popEvent(): Ev {
     cardsDrawn: 0,
     cardsDiscarded: [],
     pastEvents: [],
-    bystandersRescued: 0,
     modifiers: {},
     triggers: [],
     actionFilters: [],
@@ -2974,7 +2972,6 @@ function rescueEv(ev: Ev, what?: Card | number): void {
 }
 function rescueBystander(ev: Ev): void {
   let c = ev.what;
-  if (isBystander(c)) turnState.bystandersRescued++;
   moveCardEv(ev, c, playerState.victory);
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
@@ -3260,7 +3257,7 @@ TODO !attached cards view
 
 ENGINE:
 TODO eliminate count per turn in favor of pastevents or closures
-TODO replace totalRecruit/Attack, bystandersRescued, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
+TODO replace totalRecruit/Attack, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
 TODO remodel triggers to attach on resolution not queuing?
 TODO count escape pile conditions properly (do not count cards temporarly in the escape pile).
 TODO set location of copies (to avoid null pointers in many places)
