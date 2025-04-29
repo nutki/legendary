@@ -173,7 +173,7 @@ const extraShatteraxTriggers: Trigger[] = [{
   before: ev => ev.parent.what.attached('SHARD').each(c => gainShardEv(ev, c)),
 }, {
   event: 'MOVECARD',
-  match: ev => ev.what.attached('SHARD').size > 0,
+  match: ev => ev.what.location?.isHQ && ev.what.attached('SHARD').size > 0,
   after: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
 }];
 
