@@ -155,13 +155,13 @@ addTemplatesWithCounts("WOUNDS", "Civil War", [
 // HEAL: You may discard a card and have each other player discard a card. If you do, KO this Wound.
 [ 2, makeWoundCard("Blinding Flash", c => playerState.hand.count(i => i !== c) >= 2, ev => { eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(i => i !== ev.source), c => discardEv(ev, c), p)); KOEv(ev, ev.source); }) ],
 // HEAL: You may spend 5 Attack. If you do, KO this Wound.
-[ 2, makeWoundCard("Blunt Force Trauma", () => canPayCost(new Ev(u, 'EFFECT', {cost: {attack: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {attack: 5}}))) ],
+[ 2, makeWoundCard("Blunt Force Trauma", () => canPayCost(new Ev(u, 'EFFECT', {func: () => {}, cost: {attack: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {attack: 5}}))) ],
 // HEAL: You may KO this Wound. If you do, gain another Wound.
 [ 2, makeWoundCard("Corrosive Webbing", () => true, ev => { KOEv(ev, ev.source); gainWoundEv(ev); }) ],
 // HEAL: You may KO a Hero that costs 1 or more from your hand or discard pile. If you do, KO this Wound.
 [ 2, makeWoundCard("Fatal Blow", () => handOrDiscard().limit(isHero).has(c => c.cost >= 1), ev => { selectCardAndKOEv(ev, handOrDiscard().limit(isHero).limit(c => c.cost >= 1)); KOEv(ev, ev.source); }) ],
 // HEAL: You may spend 5 Recruit. If you do, KO this Wound.
-[ 2, makeWoundCard("Psychic Trauma", () => canPayCost(new Ev(u, 'EFFECT', {cost: {recruit: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {recruit: 5}}))) ],
+[ 2, makeWoundCard("Psychic Trauma", () => canPayCost(new Ev(u, 'EFFECT', {func: () => {}, cost: {recruit: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {recruit: 5}}))) ],
 // HEAL: You may have the player on your left gain this Wound.
 [ 3, makeWoundCard("Spreading Nanovirus", () => true, ev => gainEv(ev, ev.source, playerState.left)) ],
 // HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
