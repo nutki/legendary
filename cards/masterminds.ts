@@ -2839,6 +2839,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   makeTacticsCard("Template, Infected Sentinel", { printedDefense: 5, fight: ev => {
   // Rescue three Bystanders. KO one of your Heroes. Template ascends to become an additional Mastermind whose only ability is:
     rescueEv(ev, 3);
+    selectCardAndKOEv(ev, yourHeroes());
     addStatSet('fight', c => c === ev.source, () => () => {});
     ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev,
       Color.COVERT, () => selectCardEv(ev, "Choose a Hero to discard", yourHeroes(p).limit(isNonGrayHero), c => discardEv(ev, c), p), p)));
