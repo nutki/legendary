@@ -2335,7 +2335,8 @@ function runOutProgressTrigger(d: "VILLAIN" | "HERO" | "WOUNDS" | "BINDINGS" | "
   return ({
     event: "MOVECARD",
     match: ev => ev.from.id === d || ev.to.id === d,
-    after: useProgress ? ev => schemeProgressEv(ev, ev.parent.from.size) : ev => ev.parent.from.size || evilWinsEv(ev),
+    after: useProgress ? ev => schemeProgressEv(ev, (ev.parent.from.id == d ? ev.parent.from : ev.parent.to).size) :
+      ev => (ev.parent.from.id == d ? ev.parent.from : ev.parent.to).size || evilWinsEv(ev),
   })
 }
 function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {

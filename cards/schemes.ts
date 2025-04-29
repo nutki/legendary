@@ -3336,8 +3336,9 @@ makeSchemeCard("Ritual Sacrifice To Summon Chthon", { twists: [ 7, 8, 9, 10, 11 
       });
       chton.set = "Midnight Sons";
       chton.printedVP = 13;
-      chton.strike = ev => {
-        shuffleIntoEv(ev, ev.what, gameState.villaindeck);
+      chton.isTransformed = true;
+      chton.strike = chton.twist = ev => {
+        shuffleIntoEv(ev, ev.twist || ev.what, gameState.villaindeck);
         gameState.players.length === 1 ? gameOverEv(ev, 'LOSS', ev.source) : destroyCurrentPlayer(ev);
       }
       Object.setPrototypeOf(ev.source, Object.getPrototypeOf(chton));
