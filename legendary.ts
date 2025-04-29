@@ -2955,9 +2955,9 @@ function villainDefeat(ev: Ev): void {
   cont(ev, () => ev.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   ev.what.attached('WEAPON').each(c => gainEv(ev, c));
   ev.what.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
-  b.each(bc => rescueEv(ev, bc));
-  // TODO fight effect should be first
+  b.each(bc => moveCardEv(ev, bc, playerState.victory));
   moveCardEv(ev, c, playerState.victory);
+  b.each(bc => rescueEv(ev, bc));
   pushEffects(ev, c, "fight", c.fight, { where: ev.where });
   if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
@@ -2972,7 +2972,7 @@ function rescueEv(ev: Ev, what?: Card | number): void {
 }
 function rescueBystander(ev: Ev): void {
   let c = ev.what;
-  moveCardEv(ev, c, playerState.victory);
+  if (c.location !== playerState.victory) moveCardEv(ev, c, playerState.victory);
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
 }
