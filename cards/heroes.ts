@@ -7067,8 +7067,8 @@ addHeroTemplates("Midnight Sons", [
 // {MOONLIGHT} Whenever you defeat a Villain or Mastermind this turn, you may rescue a Bystander or gain a Hero from the HQ or Sidekick Deck whose cost is less than that Enemy's Attack.
 // {POWER Instinct} You get +2 Attack.
   ra: makeHeroCard("Werewolf by Night", "Track the Captives", 7, u, 5, Color.INSTINCT, "Marvel Knights", "D", [
-    ev => moonlightPower() && addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), () => {
-      const max = ev.what.defense;
+    ev => moonlightPower() && addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), ev => {
+      const max = ev.parent.what.defense;
       const options: [string, (() => void)][] = [["Rescue a Bystander", () => rescueEv(ev)]];
       max >= 2 && options.push(["Gain a Sidekick", () => gainSidekickEv(ev)]);
       hqHeroes().has(c => c.cost < max) && options.push(["Gain a Hero", () => selectCardOptEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.cost < max), c => gainEv(ev, c))]);
