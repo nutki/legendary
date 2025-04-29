@@ -3156,7 +3156,7 @@ function mainLoop(): void {
       let options = <Card[]>ev.options;
       options.map((option, i) => clickActions[option.id] = () => {
         selected[i] = !selected[i];
-        for (const e of document.querySelectorAll(`[data-card-id="${option.id}"]`)) {
+        for (const e of document.querySelectorAll(`[data-card-id="${CSS.escape(option.id)}"]`)) {
           if (selected[i]) e.classList.add('selected'); else e.classList.remove('selected');
         }
       });
@@ -3177,7 +3177,7 @@ function mainLoop(): void {
     },
   })[ev.type])(ev);
   Object.keys(clickActions).map(v => {
-    const e = document.querySelector(`.topCard[data-deck-id="${v}"], [data-card-id="${v}"]`);
+    const e = document.querySelector(`.topCard[data-deck-id="${CSS.escape(v)}"], [data-card-id="${CSS.escape(v)}"]`);
     if (!e) {
       console.warn("Missing element for action: ", v);
       extraActions.push({ name: "Pick " + v, func: clickActions[v] });
@@ -3190,7 +3190,7 @@ function mainLoop(): void {
     clickActions[id] = action.func;
     return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
   }).join('');
-  Object.keys(clickActions).flatMap(v => [...document.querySelectorAll(`[data-card-id="${v}"]`)]).forEach(e => {
+  Object.keys(clickActions).flatMap(v => [...document.querySelectorAll(`[data-card-id="${CSS.escape(v)}"]`)]).forEach(e => {
     e.classList.add("select");
     if (e.closest('.popup')) {
       const popupId = e.closest('.popup').getAttribute('data-popup-id');
