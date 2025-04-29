@@ -253,7 +253,7 @@ class Card {
     this.cardType = t;
     this.cardName = n;
   }
-  get cost() { return getModifiedStat(this, 'cost', (this.gainable ? this.printedDefense : this.printedCost) || 0); }
+  get cost() { return getModifiedStat(this, 'cost', this.printedCost ?? (this.gainable ? this.printedDefense || 0 : 0)); }
   get attack() { return getModifiedStat(this, 'attack', this.printedAttack); }
   get recruit() { return this.printedRecruit; }
   get piercing() { return this.printedPiercing; }
