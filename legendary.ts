@@ -1546,7 +1546,6 @@ for (let i = 0; i < 5; i++) {
   gameState.city[i].above = gameState.hq[i];
   gameState.city[i].isCity = true;
   gameState.hq[i].isHQ = true;
-  if (i) gameState.city[i].next = gameState.city[i - 1];
 }
 makeCityAdjacent(gameState.city);
 
@@ -1731,8 +1730,10 @@ function cityAdjacent(l: Deck): Deck[] {
 }
 function makeCityAdjacent(city: Deck[], s: number = 0, e: number = city.length) {
   for (let i = s; i < e; i++) {
-    if (i > s) city[i].adjacentLeft = city[i - 1];
+    if (i > s) city[i].adjacentLeft = city[i].next = city[i - 1];
+    else city[i].adjacentLeft = city[i].next = undefined;
     if (i < e - 1) city[i].adjacentRight = city[i + 1];
+    else city[i].adjacentRight = undefined;
   }
 }
 function destroyCity(space: Deck) {
