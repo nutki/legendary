@@ -3521,7 +3521,7 @@ addVillainTemplates("Revelations", [
 // ATTACK: 8
 // VP: 5
   [ 1, makeLocationCard("Dark Avengers", "Sentry's Watchtower", 8, 5, {
-    fight: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.location.below === ev.source.location.attachedTo), c => gainEv(ev, c)),
+    fight: ev => selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(c => c.location.below === ev.where.attachedTo), c => gainEv(ev, c)),
     modifiers: {
       defense: [{
         cond: isVillain,
