@@ -2816,7 +2816,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   const epic = ev.source.epic;
   gameState.bystanders.withTop(c => {
     villainify("Prime Sentinel", c, () => (epic ? 4 : 3) + gameState.ko.count(isStrike), "RESCUE");
-    ascendToMastermind(ev, ev => eachPlayer(p => {
+    ascendCardToMastermind(ev, c, ev => eachPlayer(p => {
       revealPlayerDeckEv(ev, 1, cards => cards.each(c => c.cost >= 1 && (epic ? KOEv(ev, c) : discardEv(ev, c))), p)
     }));
   });
@@ -2828,7 +2828,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   // Rescue three Bystanders. KO one of your Heroes. Master Mold ascends to become an additional Mastermind whose only ability is:
     rescueEv(ev, 3);
     addStatSet('fight', c => c === ev.source, () => () => {});
-    ascendToMastermind(ev, ev => gameState.villaindeck.limit(isHenchman /* TODO and is sentinel */).withFirst(c => {
+    ascendToMastermind(ev, ev => gameState.villaindeck.limit(c => ["Sentinel", "Sentinel Squad O*N*E*"].includes(c.cardName)).withFirst(c => {
       enterCityEv(ev, c);
       cont(ev, () => gameState.villaindeck.shuffle());
     }));

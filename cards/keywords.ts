@@ -261,10 +261,13 @@ function recruitSidekickActionEv(ev: Ev, what: Card) {
   return new Ev(ev, 'RECRUIT', { what, where: what.location, func: ev => buyCard(ev), cost });
 }
 
+function ascendCardToMastermind(ev: Ev, c: Card, strike?: Handler, vp?: number) {
+  if (strike) addStatSet('strike', is(c), (c, prev) => combineHandlers(prev, strike));
+  if (vp) addStatSet('vp', is(c), () => vp);
+  moveCardEv(ev, c, gameState.mastermind);
+}
 function ascendToMastermind(ev: Ev, strike?: Handler, vp?: number) {
-  if (strike) addStatSet('strike', c => c === ev.source, (c, prev) => combineHandlers(prev, strike));
-  if (vp) addStatSet('vp', c => c === ev.source, () => vp);
-  moveCardEv(ev, ev.source, gameState.mastermind);
+  ascendCardToMastermind(ev, ev.source, strike, vp);
 }
 function addFutureTrigger(effect: (ev: Ev) => void, p?: Player) {
   let done: boolean = false; // TODO maybe remove triggers instead
