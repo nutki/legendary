@@ -5517,6 +5517,7 @@ addVillainTemplates("Midnight Sons", [
   [ 2, makeVillainCard("Lilin", "Meatmarket", 3, 3, {
     ambush: ev => huntForVictimsEv(ev),
     fight: ev => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c)),
+    varDefense: c => c.printedDefense + gameState.ko.count(isBystander),
   })],
 // Skinner gets +2 Attack if there are at least four Bystanders in the KO pile.
 // AMBUSH: <b>Hunt for Victims</b>
