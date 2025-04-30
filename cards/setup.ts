@@ -305,13 +305,9 @@ addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
 }, ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
 // Put this on the bottom of the Sidekick Stack.
-[ 2, makeHeroCard("Special Sidekick", "Skids", 2, 3, u, Color.COVERT, "X-Men", "D", ev => returnToStackEv(ev, gameState.sidekick), { trigger: {
-  event: "GAIN",
-  match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
-  replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
-    discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-  }, () => doReplacing(ev), owner(ev.source))
-}}) ],
+[ 2, makeHeroCard("Special Sidekick", "Skids", 2, 3, u, Color.COVERT, "X-Men", "D", ev => returnToStackEv(ev, gameState.sidekick), { trigger:
+  youMayDiscardThisInsteadEv("GAIN", ev => isWound(ev.what), "draw two cards", ev => drawEv(ev, 2, owner(ev.source)))
+}) ],
 // {SHATTER} a Villain.
 // Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Rockslide", 2, u, u, Color.STRENGTH, "X-Men", "FD", [ ev => shatterSelectEv(ev, fightableCards().limit(isVillain)), ev => returnToStackEv(ev, gameState.sidekick) ]) ],

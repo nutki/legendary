@@ -2292,7 +2292,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
     isArtifact: true,
     trigger: {
       event: 'GAIN',
-      match: (ev, source) => isWound(ev.what) && ev.who === owner(source) && !countPerTurn("useArtifactTrigger", source),
+      match: (ev, source) => isWound(ev.what) && ev.who === owner(source) && source.location === owner(source).artifact && !countPerTurn("useArtifactTrigger", source),
       replace: ev => {
         selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
           drawEv(ev, 1, owner(ev.source));

@@ -1,3 +1,19 @@
+function youMayRevealThisInsteadEv(event: TriggerableEvType, match: (ev: Ev, c: Card) => boolean, desc: string, effect: (ev: Ev) => void): Trigger {
+  return {
+    event,
+    match: (ev, source) => match(ev, source) && owner(source) && revealable(owner(source)).includes(source),
+    replace: ev => selectCardOptEv(ev, "Reveal to " + desc, [ ev.source ], () => effect(ev), () => doReplacing(ev), owner(ev.source)),
+  }
+}
+
+function youMayDiscardThisInsteadEv(event: TriggerableEvType, match: (ev: Ev, c: Card) => boolean, desc: string, effect: (ev: Ev) => void): Trigger {
+  return {
+    event,
+    match: (ev, source) => match(ev, source) && owner(source) && source.location === owner(source).hand,
+    replace: ev => selectCardOptEv(ev, "Discard to " + desc, [ ev.source ], c => { discardEv(ev, c); effect(ev); }, () => doReplacing(ev), owner(ev.source)),
+  }
+}
+
 // EXPANSION Dark City
 
 // {TELEPORT}: Instead of playing it, you may set aside a card with the keyword "Teleport". If you do, add it to your new hand at the end of your turn as an extra card.

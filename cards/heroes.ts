@@ -34,11 +34,9 @@ addHeroTemplates("Legendary", [
 // ATTACK: 4
 // If you would gain a Wound, you may reveal this card and draw a card instead.
 // COST: 6
-  uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 1, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
-  }}),
+  uc: makeHeroCard("Captain America", "Diving Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger:
+    youMayRevealThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && owner(source) === ev.who, "draw a card", ev => drawEv(ev, 1, owner(ev.source)))
+  }),
 // ATTACK: 3+
 // {TEAMPOWER Avengers} You get +3 Attack for each other Avengers Hero you played this turn.
 // COST: 7
@@ -462,11 +460,12 @@ addHeroTemplates("Dark City", [
 // RECRUIT: 2
 // When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
 // COST: 3
-  c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger: {
-    event: "STRIKE",
-    match: (ev, source: Card) => owner(source) && source.location === owner(source).hand,
-    before: ev => chooseMayEv(ev, "Discard to draw three extra cards", () => { discardEv(ev, ev.source); addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source))); }, owner(ev.source))
-  }}),
+  c1: makeHeroCard("Cable", "Disaster Survivalist", 3, 2, u, Color.TECH, "X-Force", "D", [], { trigger:
+    youMayDiscardThisInsteadEv("STRIKE", () => true, "draw three extra cards", ev => {
+      KOEv(ev, ev.what);
+      owner(ev.source) === playerState ? addEndDrawMod(3) : addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source)));
+    })
+  }),
 // ATTACK: 2+
 // You get +2 Attack only when fighting Masterminds.
 // COST: 4
@@ -495,13 +494,9 @@ addHeroTemplates("Dark City", [
 // RECRUIT: 2
 // If you would gain a Wound, you may discard this card instead. If you do, draw two cards.
 // COST: 3
-  c2: makeHeroCard("Colossus", "Invulnerability", 3, 2, u, Color.STRENGTH, "X-Force", "D", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && ev.who === owner(source) && source.location === ev.who.hand,
-    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
-      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  c2: makeHeroCard("Colossus", "Invulnerability", 3, 2, u, Color.STRENGTH, "X-Force", "D", [], { trigger:
+    youMayDiscardThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && ev.who === owner(source), "draw two cards", ev => drawEv(ev, 2, owner(ev.source)))
+  }),
 // ATTACK: 4+
 // {POWER Strength} You get +2 Attack.
 // COST: 6
@@ -510,13 +505,11 @@ addHeroTemplates("Dark City", [
 // ATTACK: 6
 // If another player would gain a Wound, you may reveal this card to gain that Wound and draw a card.
 // COST: 8
-  ra: makeHeroCard("Colossus", "Russian Heavy Tank", 8, u, 6, Color.STRENGTH, "X-Force", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && ev.who !== owner(source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+  ra: makeHeroCard("Colossus", "Russian Heavy Tank", 8, u, 6, Color.STRENGTH, "X-Force", "", [], { trigger:
+    youMayRevealThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && ev.who !== owner(source), "draw a card", ev => {
       gainEv(ev, ev.parent.what, owner(ev.source)); drawEv(ev, 1, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+    })
+  }),
 },
 {
   name: "Daredevil",
@@ -683,15 +676,12 @@ addHeroTemplates("Dark City", [
 // ATTACK: 7
 // If a Villain, Master Strike, or Mastermind Tactic would cause you to gain any Wounds or discard any cards, you may reveal this card instead.
 // COST: 8
-  ra: makeHeroCard("Iceman", "Impenetrable Ice Wall", 8, u, 7, Color.RANGED, "X-Men", "", [], { triggers: [ {
-    event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
-    replace: ev => revealOrEv(ev, c => c === ev.source, () => doReplacing(ev), owner(ev.source))
-  }, {
-    event: "DISCARD",
-    match: (ev, source) => owner(source) === owner(ev.what) && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
-    replace: ev => revealOrEv(ev, c => c === ev.source, () => doReplacing(ev), owner(ev.source))
-  }]}),
+  ra: makeHeroCard("Iceman", "Impenetrable Ice Wall", 8, u, 7, Color.RANGED, "X-Men", "", [], { triggers: [
+    youMayRevealThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && owner(source) === ev.who && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
+      "prevent gaining a Wound", () => {}),
+    youMayRevealThisInsteadEv("DISCARD", (ev, source) => owner(source) === owner(ev.what) && (isVillain(ev.getSource()) || isMastermind(ev.getSource()) || isTactic(ev.getSource())),
+      "prevent gaining a Wound", () => {}),
+  ]}),
 },
 {
   name: "Iron Fist",
@@ -918,11 +908,9 @@ addHeroTemplates("Fantastic Four", [
 // ATTACK: 5
 // If an ambush effect would occur, you may reveal this card and draw two cards instead.
 // COST: 7
-  ra: makeHeroCard("Invisible Woman", "Invisible Barrier", 7, u, 5, Color.COVERT, "Fantastic Four", "", [], { trigger: {
-    event: 'CARDEFFECT',
-    match: (ev, source) => ev.effectName == 'ambush' && owner(source) && revealable(owner(source)).includes(source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 2, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
-  }}),
+  ra: makeHeroCard("Invisible Woman", "Invisible Barrier", 7, u, 5, Color.COVERT, "Fantastic Four", "", [], { trigger:
+    youMayRevealThisInsteadEv("CARDEFFECT", ev => ev.effectName == 'ambush', "draw two cards",  ev => drawEv(ev, 2, owner(ev.source)))
+  }),
 },
 {
   name: "Mr. Fantastic",
@@ -2042,11 +2030,9 @@ addHeroTemplates("Secret Wars Volume 1", [
     addAttackEvent(ev, hqHeroes().count(Color.TECH));
   }),
 // When any player defeats a Villain or Mastermind with a "Fight" effect, you may discard this card to cancel that fight effect. If you do, draw three cards.
-  ra: makeHeroCard("Apocalyptic Kitty Pryde", "Untouchable", 7, 5, u, Color.COVERT, "X-Men", "", [], { trigger: {
-    event: 'CARDEFFECT',
-    match: (ev, source) => ev.effectName === 'fight' && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => { discardEv(ev, ev.source); drawEv(ev, 3, owner(ev.source)); }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  ra: makeHeroCard("Apocalyptic Kitty Pryde", "Untouchable", 7, 5, u, Color.COVERT, "X-Men", "", [], { trigger:
+    youMayDiscardThisInsteadEv("CARDEFFECT", ev => ev.effectName === 'fight', "draw three cards", ev => drawEv(ev, 3, owner(ev.source)))
+  }),
 },
 {
   name: "Black Bolt",
@@ -2594,13 +2580,9 @@ addHeroTemplates("Secret Wars Volume 2", [
     }
   }),
 // If a player would gain a Wound, you may discard this card instead. If you do, draw two cards.
-  c2: makeHeroCard("Soulsword Colossus", "Steel Interception", 4, u, 2, Color.STRENGTH | Color.COVERT, "X-Men", "D", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
-      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  c2: makeHeroCard("Soulsword Colossus", "Steel Interception", 4, u, 2, Color.STRENGTH | Color.COVERT, "X-Men", "D", [], { trigger:
+    youMayDiscardThisInsteadEv("GAIN", ev => isWound(ev.what), "draw two cards", ev => drawEv(ev, 2, owner(ev.source)))
+  }),
 // {POWER Strength} {XDRAMPAGE Colossus}. You get +2 Attack if at least one other player didn't reveal a Colossus card.
   uc: makeHeroCard("Soulsword Colossus", "Possessed by the Soulsword", 6, u, 3, Color.STRENGTH, "X-Men", "D", ev => {
     let gainAttack = false;
@@ -2682,11 +2664,11 @@ addHeroTemplates("Captain America 75th Anniversary", [
 // {SAVIOR} You get +2 Attack.
   c2: makeHeroCard("Captain America (Falcon)", "Winged Salvation", 4, u, 2, Color.RANGED, "Avengers", "FD", ev => saviorPower() && addAttackEvent(ev, 2)),
 // Once per turn, if a player would gain a Wound, you may reveal this card and rescue a Bystander instead.
-  uc: makeHeroCard("Captain America (Falcon)", "Flying Shield Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !turnState.pastEvents.has(e => e.type === 'RESCUE' && e.getSource() === source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => rescueByEv(ev, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
-  }}),
+  uc: makeHeroCard("Captain America (Falcon)", "Flying Shield Block", 6, u, 4, Color.TECH, "Avengers", "", [], { trigger:
+    youMayRevealThisInsteadEv("GAIN",
+      (ev, source) => isWound(ev.what) && !turnState.pastEvents.has(e => e.type === 'RESCUE' && e.getSource() === source),
+      "rescue a Bystander", ev => rescueByEv(ev, owner(ev.source)))
+  }),
 // You get +2 Attack for each Hero Class you have.
 // {SAVIOR} You get +2 Recruit for each Hero Class you have.
   ra: makeHeroCard("Captain America (Falcon)", "Star-Spangled Hero", 7, 0, 0, Color.COVERT, "Avengers", "D", [
@@ -2952,13 +2934,9 @@ addHeroTemplates("Civil War", [
   name: "Luke Cage",
   team: "Avengers",
 // If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
-  c1: makeHeroCard("Luke Cage", "Take a Bullet for the Team", 4, 1, 1, Color.STRENGTH, "Avengers", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
-      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  c1: makeHeroCard("Luke Cage", "Take a Bullet for the Team", 4, 1, 1, Color.STRENGTH, "Avengers", "", [], { trigger:
+    youMayDiscardThisInsteadEv("GAIN", ev => isWound(ev.what), "draw two cards", ev => drawEv(ev, 2, owner(ev.source)))
+  }),
 // DIVIDED: Cautious
 // DIVHERO: Luke Cage
 // DIVTEAM: Avengers
@@ -3050,13 +3028,12 @@ addHeroTemplates("Civil War", [
     makeHeroCard("Namorita", "Bubble Up", 5, u, 0, Color.COVERT, "New Warriors", "", ev => addAttackSpecialEv(ev, c => isLocation(c.location, 'BRIDGE') || isMastermind(c), 3)),
   ),
 // If a Master Strike would occur, you may reveal this card to KO that Master Strike, cancel its effects, and draw a card.
-  ra: makeHeroCard("Speedball", "Kinetic Force Field", 7, u, 5, Color.RANGED, "New Warriors", "", [], { trigger: {
-    event: 'STRIKE',
-    match: (ev, source: Card) => owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Reveal to cancel Master Strike", [ev.source], () => {
+  ra: makeHeroCard("Speedball", "Kinetic Force Field", 7, u, 5, Color.RANGED, "New Warriors", "", [], { trigger:
+    youMayRevealThisInsteadEv("STRIKE", () => true, "draw a card", ev => {
+      KOEv(ev, ev.parent.what);
       drawEv(ev, 1, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+    })
+  }),
 },
 {
   name: "Stature",
@@ -3162,13 +3139,9 @@ addHeroTemplates("Civil War", [
     }));
   }),
 // If an Ambush effect would occur, you may discard this card to cancel that effect and draw two cards.
-  uc: makeHeroCard("Tigra", "Can't Surprise a Cat", 5, u, 2, Color.COVERT, "Avengers", "D", [], { trigger: {
-    event: "CARDEFFECT",
-    match: (ev, source: Card) => ev.effectName === 'ambush' && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
-      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  uc: makeHeroCard("Tigra", "Can't Surprise a Cat", 5, u, 2, Color.COVERT, "Avengers", "D", [], { trigger:
+    youMayDiscardThisInsteadEv("CARDEFFECT", ev => ev.effectName === "ambush", "draw 2 cards", ev => drawEv(ev, 2, owner(ev.source)))
+  }),
 // Recruit a Hero from the HQ for free.
 // {TEAMPOWER Avengers} You get that Hero's printed Recruit and Attack.
   ra: makeHeroCard("Tigra", "Mystic Talisman", 7, 0, 0, Color.COVERT, "Avengers", "", ev => {
@@ -3416,13 +3389,12 @@ addHeroTemplates("Noir", [
 // You get +1 Recruit for each other card you played this turn that costs 4 or more.
   c2: makeHeroCard("Luke Cage Noir", "Follow Big Leads", 4, 2, u, Color.STRENGTH, "Marvel Knights", "FD", ev => addRecruitEvent(ev, turnState.cardsPlayed.count(c => c.cost >= 4))),
 // Once per turn, if a player would gain a Wound, you may reveal this card and <b>Investigate</b> for any card instead.
-  uc: makeHeroCard("Luke Cage Noir", "Unbreakable Cage", 6, u, 4, Color.STRENGTH, "Marvel Knights", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand && !turnState.pastEvents.has(e => e.type === 'DRAW' && e.getSource() === source),
-    replace: ev => selectCardOptEv(ev, "Reveal to Investigate", [ev.source], () => {
+  uc: makeHeroCard("Luke Cage Noir", "Unbreakable Cage", 6, u, 4, Color.STRENGTH, "Marvel Knights", "", [], { trigger:
+    youMayRevealThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && !turnState.pastEvents.has(e => e.type === 'DRAW' && e.getSource() === source),
+    "Investigate for any card", ev => {
       investigateEv(ev, u, owner(ev.source).deck, c => drawCardEv(ev, c, owner(c)), owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+    })
+  }),
 // You get +2 Attack for each other card you played this turn that costs 4 or more.
   ra: makeHeroCard("Luke Cage Noir", "Weight of the World", 8, u, 5, Color.STRENGTH, "Marvel Knights", "D", ev => addAttackEvent(ev, 2 * turnState.cardsPlayed.count(c => c.cost >= 4))),
 },
@@ -4464,7 +4436,10 @@ addHeroTemplates("Ant-Man", [
   uc: makeHeroCard("Black Knight", "Flying Steed", 6, u, 3, Color.COVERT, "Avengers", "", [], { trigger: {
     event: 'STRIKE',
     match: (ev, source) => owner(source) && source.location === owner(source).hand,
-    before: ev => chooseMayEv(ev, "Discard Black Knight to draw extra cards", () => { discardEv(ev, ev.source); addEndDrawMod(3); })
+    before: ev => chooseMayEv(ev, "Discard Black Knight to draw extra cards", () => {
+      discardEv(ev, ev.source);
+      owner(ev.source) === playerState ? addEndDrawMod(3) : addTurnTrigger("CLEANUP", undefined, tev => drawEv(tev, 3, owner(ev.source)))
+    })
   }}),
 // You get + Attack equal to the printed Attack of a Villain in your Victory Pile. (Mastermind tactics aren't Villains).
   ra: makeHeroCard("Black Knight", "The Ebony Blade", 7, u, 0, Color.INSTINCT, "Avengers", "", ev => selectCardEv(ev, "Choose a Villain", playerState.victory.limit(isVillain), c => {
@@ -4770,10 +4745,14 @@ addHeroTemplates("Revelations", [
   }),
 // If a Master Strike or Scheme Twist would occur, you may discard this card from your hand instead. If you do, draw three cards, then shuffle that Strike or Twist back into the Villain Deck.
   ra: makeHeroCard("Hellcat", "Second Chance at Life", 8, u, 6, Color.INSTINCT, "Avengers", "", [], { triggers: [
-    { event: 'STRIKE', replace: ev => selectCardOptEv(ev, "Discard Second Chance at Life", [ ev.source ], c => {
-      discardEv(ev, c);
-      drawEv(ev, 3);
-    }, () => doReplacing(ev), owner(ev.source))},
+    youMayDiscardThisInsteadEv("STRIKE", () => true, "draw three cards", ev => {
+      drawEv(ev, 3, owner(ev.source));
+      shuffleIntoEv(ev, ev.parent.what, gameState.villaindeck);
+    }),
+    youMayDiscardThisInsteadEv("TWIST", () => true, "draw three cards", ev => {
+      drawEv(ev, 3, owner(ev.source));
+      shuffleIntoEv(ev, ev.parent.twist, gameState.villaindeck);
+    }),
   ]}),
 },
 {
@@ -4943,14 +4922,10 @@ addHeroTemplates("S.H.I.E.L.D.", [
 // {SHIELDLEVEL 8} You get +4 Attack.
 // GUN: 1
   ra: makeHeroCard("Agent Phil Coulson", "Fake But Inspiring Death", 8, u, 4, Color.COVERT, "S.H.I.E.L.D.", "G", ev => shieldLevelPower(8) && addAttackEvent(ev, 4), {
-    trigger: {
-      event: "KO",
-      match: (ev, source) => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what) && owner(source) && source.location === owner(source).hand,
-      replace: ev => selectCardOptEv(ev, "Discard to send the Hero undercover and draw three cards", [ev.source], () => {
+    trigger: youMayDiscardThisInsteadEv("KO", ev => isHero(ev.what) && isTeam('S.H.I.E.L.D.')(ev.what), "send the Hero undercover and draw three cards", ev => {
         sendUndercoverEv(ev, ev.parent.what, owner(ev.source));
         drawEv(ev, 3, owner(ev.source));
-      }, () => doReplacing(ev), owner(ev.source)),
-    }
+      }),
   }),
 },
 {
@@ -5500,13 +5475,9 @@ addHeroTemplates("Into the Cosmos", [
   c2: makeHeroCard("Phyla-Vell", "Quantum Sword", 4, u, 2, Color.INSTINCT, "Guardians of the Galaxy", "FD",
     ev => playerState.shard.size >= 4 && addAttackEvent(ev, 2)),
 // If any player would gain a Wound, you may discard this card and gain 2 Shards instead.
-  uc: makeHeroCard("Phyla-Vell", "Martyr", 3, u, 2, Color.STRENGTH, "Guardians of the Galaxy", "D", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Discard to gain 2 Shards", [ev.source], () => {
-      discardEv(ev, ev.source); gainShardEv(ev, 2, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  uc: makeHeroCard("Phyla-Vell", "Martyr", 3, u, 2, Color.STRENGTH, "Guardians of the Galaxy", "D", [], { trigger:
+    youMayDiscardThisInsteadEv("GAIN", ev => isWound(ev.what), "gain two Shards", ev => gainShardEv(ev, 2, owner(ev.source)))
+  }),
 // You may KO a card from your hand or discard pile. If you do, gain 2 Shards.
 // Then, if you have at least 8 Shards, you get +3 Attack.
   ra: makeHeroCard("Phyla-Vell", "Avatar of Oblivion", 8, u, 3, Color.INSTINCT, "Guardians of the Galaxy", "D", [
@@ -6019,13 +5990,9 @@ addHeroTemplates("Messiah Complex", [
 // {INVESTIGATE} for a card that's [Strength] and/or X-Factor.
   c1: makeHeroCard("Strong Guy", "X-Factor Investigation", 4, 2, u, Color.STRENGTH, "X-Factor", "FD", ev => investigateEv(ev, c => isTeam("X-Factor")(c) || isColor(Color.STRENGTH)(c))),
 // If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
-  c2: makeHeroCard("Strong Guy", "Absorb Kinetic Energy", 5, u, 3, Color.STRENGTH, "X-Factor", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Discard to draw 2 cards", [ev.source], () => {
-      discardEv(ev, ev.source); drawEv(ev, 2, owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+  c2: makeHeroCard("Strong Guy", "Absorb Kinetic Energy", 5, u, 3, Color.STRENGTH, "X-Factor", "", [], { trigger:
+    youMayDiscardThisInsteadEv("GAIN", ev => isWound(ev.what), "draw two cards", ev => drawEv(ev, 2, owner(ev.source)))
+  }),
 // {TACTICAL FORMATION 445}: You get +3 Attack.
   uc: makeHeroCard("Strong Guy", "Go Big", 4, u, 2, Color.STRENGTH, "X-Factor", "FD", ev => tacticalFormation('445') && addAttackEvent(ev, 3)),
 // {INVESTIGATE} for one of these options, then a different option, then a third different option:
@@ -6493,16 +6460,16 @@ addHeroTemplates("Black Panther", [
     })
   ]),
 // Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack, draw a card, and Wound a Villain.
-  uc: makeHeroCard("General Okoye", "Sovereign Bodyguard", 5, u, 3, Color.STRENGTH, "Heroes of Wakanda", "", ev => [], { trigger: {
-    event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !countPerTurn("onceperturntrigger", source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+  uc: makeHeroCard("General Okoye", "Sovereign Bodyguard", 5, u, 3, Color.STRENGTH, "Heroes of Wakanda", "", ev => [], { trigger:
+    youMayRevealThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && !countPerTurn("onceperturntrigger", source),
+    "draw and Wound a Villain",
+    ev => {
       incPerTurn("onceperturntrigger", ev.source);
       returnToStackEv(ev, gameState.wounds, ev.parent.what);
       drawEv(ev, 1, owner(ev.source));
-      selectCardEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c), owner(ev.source));
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+      selectCardEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c, 1, owner(ev.source)), owner(ev.source));
+    })
+  }),
 // {TEAMPOWER Heroes of Wakanda} You may KO a S.H.I.E.L.D. Hero or Wound from your hand or discard pile to get +2 Attack.
 // GUN: 1
   ra: makeHeroCard("General Okoye", "Direct the Agents of Wakanda", 7, u, 4, Color.COVERT, "Heroes of Wakanda", "GD",
@@ -6565,13 +6532,10 @@ addHeroTemplates("Black Panther", [
 // ---
 // If a Master Strike would occur, you may reveal this card to KO that Strike and Wound the Mastermind instead.
   ra: makeHeroCard("White Wolf", "Reflective Vibranium Armor", 7, u, 4, Color.TECH, "Heroes of Wakanda", "", [], {
-    trigger: {
-      event: "STRIKE",
-      replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+    trigger: youMayRevealThisInsteadEv("STRIKE", () => true, "Wound the Mastermind", ev => {
         KOEv(ev, ev.parent.what);
-        withMastermind(ev, c => woundEnemyEv(ev, c)); // TODO owner(ev.source) to control this choice
-      }, () => doReplacing(ev), owner(ev.source)),
-    },
+        withMastermind(ev, c => woundEnemyEv(ev, c, 1, owner(ev.source)));
+    }),
     ...heroAmbush(Color.TECH, ev => fightableCards().limit(isEnemy).each(c => woundEnemyEv(ev, c))),
   }),
 },
@@ -7151,15 +7115,13 @@ addHeroTemplates("Marvel Studios What If...?", [
     addAttackEvent(ev, yourHeroes().limit(c => c.printedAttack !== undefined).uniqueCount(c => c.printedAttack));
   }),
 // Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack. If you do, the player whose turn it is gets {LIBERATE 3}.
-  uc: makeHeroCard("Captain Carter", "The Shield of Britain", 5, u, 3, Color.TECH, "Guardians of the Multiverse", "", [], { trigger: {
-    event: "GAIN",
-    match: (ev, source) => isWound(ev.what) && owner(source) === ev.who && !countPerTurn("onceperturntrigger", source),
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => {
+  uc: makeHeroCard("Captain Carter", "The Shield of Britain", 5, u, 3, Color.TECH, "Guardians of the Multiverse", "", [], { trigger:
+    youMayRevealThisInsteadEv("GAIN", (ev, source) => isWound(ev.what) && !countPerTurn("onceperturntrigger", source), "return the Wound", ev => {
       incPerTurn("onceperturntrigger", ev.source);
       returnToStackEv(ev, gameState.wounds, ev.parent.what);
       liberateEv(ev, 3);
-    }, () => doReplacing(ev), owner(ev.source))
-  }}),
+    })
+  }),
 // To play this, you must put another card from your hand on top of your deck.
   u2: makeHeroCard("Captain Carter", "Give Them All We've Got", 6, u, 5, Color.STRENGTH, "Guardians of the Multiverse", "F", [], { playCost: 1, playCostType: "TOPDECK" }),
 // You get +1 Recruit for each different printed Recruit number among all your Heroes.
