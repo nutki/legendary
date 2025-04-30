@@ -1087,12 +1087,12 @@ function heroAmbush(cond: Filter<Card>, func: Handler): HeroCardAbillities {
     heroAmbush: ev => revealable().has(cond) && chooseMayEv(ev, "Use Hero Ambush", () => func(ev))
   }
 }
-function woundEnemyEv(ev: Ev, enemy: Card, amount: number = 1) {
+function woundEnemyEv(ev: Ev, enemy: Card, amount: number = 1, who: Player = playerState) {
   repeat(amount, () => cont(ev, () => {
-    const options = [gameState.ko.limit(isWound), gameState.wounds.deck.firstOnly()].merge();
+    const options = [gameState.ko.limit(isWound), gameState.wounds.size ? [gameState.wounds.top]: []].merge();
     selectCardEv(ev, "Choose a Wound", options, c => {
       attachCardEv(ev, c, enemy, 'WOUND');
-    });
+    }, who);
   }));
 }
 function payToWoundEv(effect?: Handler): Card['cardActions'][0] {
