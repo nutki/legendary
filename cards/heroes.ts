@@ -2045,7 +2045,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   ra: makeHeroCard("Apocalyptic Kitty Pryde", "Untouchable", 7, 5, u, Color.COVERT, "X-Men", "", [], { trigger: {
     event: 'CARDEFFECT',
     match: (ev, source) => ev.effectName === 'fight' && owner(source) && source.location === owner(source).hand,
-    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => drawEv(ev, 3, owner(ev.source)), () => doReplacing(ev), owner(ev.source))
+    replace: ev => selectCardOptEv(ev, "Reveal a card", [ ev.source ], () => { discardEv(ev, ev.source); drawEv(ev, 3, owner(ev.source)); }, () => doReplacing(ev), owner(ev.source))
   }}),
 },
 {
