@@ -525,9 +525,9 @@ function makeCardCopyPaste(c: Card, p: Card): Card {
   // TODO: remove tmp state from result?
   return p;
 }
-function makeCardDividedChoice(c: Card, rightSide: boolean) {
+function makeCardDividedChoice(c: Card, side: Card) {
   if (c.ctype !== 'P') throw TypeError("need card in play");
-  Object.setPrototypeOf(c, rightSide ? c.divided.right : c.divided.left);
+  Object.setPrototypeOf(c, side);
 }
 function moveCard(c: Card, where: Deck, bottom?: boolean): void {
   // Card copies do not have a location and cannot be moved
@@ -2167,7 +2167,7 @@ function canPlay(c: Card): boolean {
   const filter = c.playCostLimit;
   if (type === undefined) return true;
   if (type === "DISCARD" || type === "TOPDECK" || type === "BOTTOMDECK")
-    return playerState.hand.count(i => i !== c && (!filter || filter(c))) >= val;
+    return playerState.hand.count(i => i !== c && i.divided?.right !== c && i.divided?.left !== c && (!filter || filter(c))) >= val;
   throw TypeError(`unknown play cost: ${type}`);
 }
 function healCard(ev: Ev): void {
@@ -2667,13 +2667,14 @@ function playCard1(ev: Ev) {
   const d = ev.what.divided;
   if (d) {
     const playBoth = turnState.playDividedBoth;
-    chooseOptionEv(ev, "Choose side to play", [{l:d.left.cardName, v:false}, {l:d.right.cardName, v:true}], v => {
+    chooseOptionEv(ev, "Choose side to play", [{l:d.left.cardName, v:d.left}, {l:d.right.cardName, v:d.right}].limit(({v}) => canPlay(v)), v => {
       if (canPlay(ev.what)) {
         makeCardDividedChoice(ev.what, v);
         playCard2(ev);
       }
       if (playBoth) {
-        playCopyEv(ev, v ? ev.what.divided.left : ev.what.divided.right);
+        const otherSide = v === d.left ? d.right : d.left;
+        canPlay(otherSide) && playCopyEv(ev, otherSide);
       }
     });
   } else playCard2(ev);
