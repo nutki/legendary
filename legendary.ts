@@ -3004,6 +3004,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     p.hand.each(checkCardTrigger);
     p.playArea.each(checkCardTrigger);
     p.victory.each(checkCardTrigger);
+    p.deck.each(checkCardTrigger);
   });
   return triggers;
 }
