@@ -2600,7 +2600,7 @@ makeSchemeCard("Drain Mutants' Powers to...", { twists: 11 }, ev => {
       attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
     }
     // Twist 1-6  Stack the top two cards of the Sidekick Stack face down next to the Scheme as “Kidnapped Mutants.”
-    repeat(2, () => gameState.sidekick.withTop(c => attachCardEv(ev, c, kidnappedMutants, 'KIDNAPPED')));
+    repeat(2, () => gameState.sidekick.withTop(c => attachCardEv(ev, c, gameState.scheme, 'KIDNAPPED')));
     // If there were any Kidnapped Mutants already there, put those on the bottom of the Sidekick Stack and put this Twist next to the Mastermind
     // as a “Drained Power.”
   } else if (ev.nr === 7) {
