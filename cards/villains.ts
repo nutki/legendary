@@ -2759,7 +2759,7 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 4+
 // VP: 3
   [ 1, makeVillainCard("Code Red", "Thundra", 4, 3, {
-    ambush: ev => selectCardOrderEv(ev, "Put a Hero on the bottom of the Hero deck", hqHeroes().limit(Color.COVERT), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ambush: ev => selectCardOrderEv(ev, "Put a Hero on the bottom of the Hero deck", hqHeroes().limit(c => !isColor(Color.COVERT)(c)), c => moveCardEv(ev, c, gameState.herodeck, true)),
     varDefense: c => c.printedDefense + (hqHeroes().has(Color.COVERT) ? 2 : 0),
   })],
 ]},
