@@ -387,7 +387,7 @@ addTemplatesWithCounts("WOUNDS", "Weapon X", [
 // ATTACK: 3
 // To play this, you must discard a card.
 // HEAL: When you discard a card this turn <i>(not including discarding to play this card or discarding at the end of your turn)</i> you may KO this Wound.
-[ 1, makeEnragingWoundCard("Massive Blood Loss", u, 3, 'DISCARD', (ev, c) => ev.who === owner(c) && ev.parent.type !== 'CLEANUP', u, { playCost: 1, playCostType: 'DISCARD' })],
+[ 1, makeEnragingWoundCard("Massive Blood Loss", u, 3, 'DISCARD', (ev, c) => ev.who === owner(c) && ev.getSource() !== c, u, { playCost: 1, playCostType: 'DISCARD' })],
 // RECRUIT: 1
 // ATTACK: 1
 // HEAL: When you recruit two Heroes this turn, you may KO this Wound.
