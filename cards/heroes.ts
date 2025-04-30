@@ -5734,7 +5734,7 @@ addHeroTemplates("Annihilation", [
 // If you played any other cards that cost 4 this turn, you get +2 Recruit.
 // {FOCUS 4} Rescue a Bystander, then you may KO a card from your hand or discard pile.
   uc: makeHeroCard("Fantastic Four United", "Invisible Woman", 4, 2, u, Color.COVERT, "Fantastic Four", "D", [
-    ev => pastEvWhat('PLAY').has(c => c.cost === 4) && addRecruitEvent(ev, 2),
+    ev => pastEvWhat('PLAY').has(c => c.cost === 4 && c !== ev.source) && addRecruitEvent(ev, 2),
     ev => setFocusEv(ev, 4, ev => { rescueEv(ev); KOHandOrDiscardEv(ev); })
   ]),
 // Draw two cards.
