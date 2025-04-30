@@ -1023,7 +1023,7 @@ addHeroTemplates("Paint the Town Red", [
 // COST: 5
 // FLAVOR: Bad luck comes to all who cross Black Cat's path.
   uc: makeHeroCard("Black Cat", "Jinx", 5, u, 3, Color.INSTINCT, "Spider Friends", "F", ev => eachPlayer(p => {
-    revealPlayerDeckEv(ev, 1, cards => cards.each(card => selectCardOptEv(ev, 'Discard a card from top of the deck', [card], c => discardEv(ev, c))))
+    revealPlayerDeckEv(ev, 1, cards => cards.each(card => selectCardOptEv(ev, 'Discard a card from top of the deck', [card], c => discardEv(ev, c))), p, playerState)
   })),
 // ATTACK: 5+
 // Each other player reveals a [Covert] Hero or chooses a Bystander from their Victory Pile. You rescue those Bystanders.
