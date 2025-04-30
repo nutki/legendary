@@ -4202,7 +4202,7 @@ addHeroTemplates("World War Hulk", [
   uc: makeTransformingHeroCard(
     makeHeroCard("No-Name, Brood Queen", "Bursting with Life", 3, 2, u, Color.STRENGTH, "Warbound", "D", [
       ev => chooseMayEv(ev, "Feast", () => feastEv(ev)),
-      ev => turnState.pastEvents.has(e => e.type === 'KO' && ev.where === playerState.deck && isNonGrayHero(ev.what)) && transformHeroEv(ev, ev.source),
+      ev => pastEvents('KO').has(e => e.where === playerState.deck && isNonGrayHero(e.what)) && transformHeroEv(ev, ev.source),
     ]),
     makeHeroCard("No-Name, Brood Queen", "Torrent of Broodlings", 5, u, 2, Color.COVERT, "Warbound", "FD", ev => drawEv(ev, 1)),
   ),
