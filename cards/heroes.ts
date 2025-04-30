@@ -5780,10 +5780,10 @@ addHeroTemplates("Annihilation", [
 // {FOCUS 3} Reveal the top card of the Villain Deck. If it's a Scheme Twist, you get +4 Attack and shuffle the Villain Deck.
 // {TEAMPOWER Fantastic Four, Fantastic Four} {OUTOFTIME}
   ra: makeHeroCard("Psi-Lord", "Reshape Reality", 7, 3, 3, Color.INSTINCT, "Fantastic Four", "", [
-    ev => setFocusEv(ev, 3, ev => revealVillainDeckEv(ev, 1, r => r.limit(isTwist).each(c => {
-      addAttackEvent(ev, 4);
-      gameState.villaindeck.shuffle();
-    }))),
+    ev => setFocusEv(ev, 3, ev => {
+      revealVillainDeckEv(ev, 1, r => r.limit(isTwist).each(c => addAttackEvent(ev, 4)));
+      cont(ev, () => gameState.villaindeck.shuffle());
+    }),
     ev => superPower("Fantastic Four", "Fantastic Four") && outOfTimeEv(ev)
   ]),
 },
