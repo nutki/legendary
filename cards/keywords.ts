@@ -903,6 +903,7 @@ function celestialBoonActionEv(func: (ev: Ev) => void, cond?: (c: Card) => boole
   return (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', {
     desc: 'Celestial Boon',
     source: c,
+    what: c,
     cost: { cond: c => c.location === playerState.hand && (!cond || cond(c)) && !countPerTurn('boon', c)},
     func: ev => { incPerTurn('boon', c); func(ev); },
   })
