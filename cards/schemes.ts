@@ -1434,7 +1434,7 @@ makeSchemeCard("Explosion at the Washington Monument", { twists: 8 }, ev => {
   event: 'FIGHT',
   match: ev => isVillain(ev.what),
   after: ev => {
-    const cards: Card[] = [1, 2, 3, 4, 5, 6, 7, 8].map(i => gameState.scheme.attachedDeck(`FLOOR${i}`)).limit(d => d.size >= 0).map(d => d.top);
+    const cards: Card[] = [1, 2, 3, 4, 5, 6, 7, 8].map(i => gameState.scheme.attachedDeck(`FLOOR${i}`)).limit(d => d.size > 0).map(d => d.top);
     selectCardOptEv(ev, "Choose a card to reveal", cards, c => {
       isBystander(c) ? rescueEv(ev, c) : attachCardEv(ev, c, c.location, 'WOUNDS');
     });
