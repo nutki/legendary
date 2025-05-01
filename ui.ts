@@ -41,6 +41,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "SCHEME") return imageName("schemes", card);
   if (card.cardType === "BYSTANDER" && card.cardName !== "Bystander") return imageName("bystanders", card);
   if (card.cardType === "WOUND" && card.cardName !== "Wound") return imageName("wounds", card);
+  if (card.cardType === "TOKEN") return imageName("tokens", card);
   return imageName("", card);
 }
 function makeDisplayAttached(c: Deck | Card) {
@@ -95,6 +96,7 @@ function getCountHints(deck: Deck): [number, number, string] {
   const c = deck.top;
   if (c && isMastermind(c)) result[0] = c.attached("TACTICS").size;
   let cnt = deck.size;
+  for (const c of deck.deck) gameState.thronesFavorHolder instanceof Card && gameState.thronesFavorHolder === c && cnt++;
   if (c && c._attached) for (let i in c._attached) if (i !== 'SHARD') cnt += c._attached[i].deck.size;
   if (deck._attached) for (let i in deck._attached) cnt += deck._attached[i].deck.size;
   if (cnt > 0) result[1] = cnt - result[0] - (c ? 1 : 0);
@@ -163,6 +165,7 @@ const mainDecks = [
   { id: 'DECK0', x: 0, y: 3, size: 'small', count: 'DECK', popupid: 'popdeck', playerDeck: true },
   { id: 'DISCARD0', x: .5, y: 3, size: 'small', count: 'DISCARD', popupid: 'popdiscard', playerDeck: true },
   { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory', playerDeck: true },
+  { id: 'SPECIAL0', x: 0.5, y: 3.5, size: 'small', playerDeck: true },
 ];
 const popupDecks = [
   { id: 'DISCARD0', container: 'popdiscard' },
@@ -260,7 +263,7 @@ function displayPopupDeck(deck: Deck, name: string, cardsContainer: HTMLElement)
   }
   flat.forEach(([card, name], i) => {
     const cardDiv = makeDisplayCardImg(card);
-    cardDiv.setAttribute('data-deck-id', card.location.id);
+    if (card.location) cardDiv.setAttribute('data-deck-id', card.location.id);
     const shouldShowName = name && (i < flat.length - 1 ? name !== flat[i+1][1] && name : true);
     if (shouldShowName) {
       cardDiv.appendChild(div('deckname', {}, text(name)));
@@ -270,6 +273,22 @@ function displayPopupDeck(deck: Deck, name: string, cardsContainer: HTMLElement)
     positionCard(cardDiv, { x: 0, y: 0 }, total - dist);
     dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
   });
+}
+const thronesFavor = new Card('TOKEN', "Throne's Favor");
+thronesFavor.set = 'Black Panther';
+function displayPlayerSpecial(p: Player, deckPos: typeof mainDecks[0], cardsContainer: HTMLElement): void {
+  if (gameState.thronesFavorHolder === p) {
+    const d = makeDisplayCardImg(thronesFavor, false, false);
+    d.setAttribute('data-player-id', "1")
+    positionCard(d, deckPos);
+    cardsContainer.appendChild(d);
+  }
+  if (p.shard.size) {
+    const d = div("deck-overlay", { 'data-player-id': '1' });
+    d.appendChild(div("shardHint", {}, text(p.shard.size)));
+    positionCard(d, deckPos);
+    cardsContainer.appendChild(d);
+  }
 }
 function displayDecks(ev?: Ev): void {
   let list = Deck.deckList;
@@ -285,6 +304,10 @@ function displayDecks(ev?: Ev): void {
   cardsContainer.appendChild(cityBg);
   for (const deckPos of mainDecks) {
     if (deckPos.playerDeck) for (let i = 0; i < gameState.players.length; i++) {
+      if (deckPos.id === 'SPECIAL0') {
+        displayPlayerSpecial(gameState.players[i], {...deckPos, x: deckPos.x + (i - currenPlayer) * 10 }, cardsContainer);
+        continue;
+      }
       const deck = deckById[deckPos.id.replace(/0/, i.toString())];
       if (deck) displayDeck(deck, { ...deckPos, x: deckPos.x + (i - currenPlayer) * 10 }, cardsContainer);
     } else displayDeck(deckById[deckPos.id], deckPos, cardsContainer);
@@ -309,8 +332,11 @@ function displayDecks(ev?: Ev): void {
     div.innerHTML = deck ? deck.id + makeDisplayAttached(deck) + ': ' + deck.deck.map(makeDisplayCard).join(' ') : 'Not found';
   }
 }
+function maybeFavor(c: Card): [Card, string | undefined][] {
+  return gameState.thronesFavorHolder === c ? [[thronesFavor, 'THONE\'S FAVOR']] : [];
+}
 function flattenCard(card: Card, name?: string): [Card, string | undefined][] {
-  return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => n === "SHARD" ? [] : flattenDeck(c, n)) : []), [card, name]];
+  return [...(card._attached ? Object.entries(card._attached).reverse().flatMap(([n, c]) => n === "SHARD" ? [] : flattenDeck(c, n)) : []), ...maybeFavor(card), [card, name]];
 }
 function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
   return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];

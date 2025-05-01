@@ -44,3 +44,4 @@ d25e0397-3360-4ef3-bc1e-36d09e122e9c villains/enemies_of_wakanda_tetu.jpg
 950947c3-45c1-47cb-974d-3e6a8c90e8bd schemes/poison_lakes_with_nanite_microbots.jpg
 00dec274-139a-4f5d-9a20-e6aff174a9ab schemes/plunder_wakandas_vibranium.jpg
 498dd7ae-483a-4c75-a2ec-96cea4f47970 schemes/provoke_clash_of_nations.jpg
+a4ec3306-e127-4c46-8671-79cb14115343 tokens/thrones_favor.jpg
