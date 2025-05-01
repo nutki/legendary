@@ -2809,7 +2809,7 @@ function playTrap(ev: Ev) {
   addTurnTrigger("CLEANUP", () => true, ev2 => {
     if (ev.what.location.attachedTo === gameState.scheme) {
       KOEv(ev2, ev.what);
-      ev.what.trapPenalty(ev2);
+      pushEv(ev2, "EFFECT", { source: ev.what, func: ev.what.trapPenalty });
     }
   });
 }
