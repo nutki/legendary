@@ -1423,7 +1423,7 @@ makeSchemeCard("Distract the Hero", { twists: 8 }, ev => {
 makeSchemeCard("Explosion at the Washington Monument", { twists: 8 }, ev => {
   // Twist: KO the topmost Floor of the Washington Monument. You gain one of the Wounds KO'd this way.
   if (ev.nr <= 8) {
-    const d = gameState.scheme.attachedDeck(`FLOOR${9-ev.nr}`);
+    const d = gameState.scheme.attachedFaceDownDeck(`FLOOR${9-ev.nr}`);
     const cards = [...d.deck, ...d.attached('WOUNDS')];
     let gain : Card;
     cards.limit(isWound).withFirst(c => gain = c);
@@ -1434,14 +1434,14 @@ makeSchemeCard("Explosion at the Washington Monument", { twists: 8 }, ev => {
   event: 'FIGHT',
   match: ev => isVillain(ev.what),
   after: ev => {
-    const cards: Card[] = [1, 2, 3, 4, 5, 6, 7, 8].map(i => gameState.scheme.attachedDeck(`FLOOR${i}`)).limit(d => d.size > 0).map(d => d.top);
+    const cards: Card[] = [1, 2, 3, 4, 5, 6, 7, 8].map(i => gameState.scheme.attachedFaceDownDeck(`FLOOR${i}`)).limit(d => d.size > 0).map(d => d.top);
     selectCardOptEv(ev, "Choose a card to reveal", cards, c => {
       isBystander(c) ? rescueEv(ev, c) : attachCardEv(ev, c, c.location, 'WOUNDS');
     });
   }
 }], () => {
   const floors: Deck[] = [];
-  repeat(8, i => floors.push(gameState.scheme.attachedDeck(`FLOOR${i+1}`)));
+  repeat(8, i => floors.push(gameState.scheme.attachedFaceDownDeck(`FLOOR${i+1}`)));
   repeat(18, () => gameState.bystanders.withTop(c => moveCard(c, floors[0])));
   repeat(14, () => gameState.wounds.withTop(c => moveCard(c, floors[0])));
   floors[0].shuffle();
