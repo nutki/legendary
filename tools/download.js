@@ -36,6 +36,12 @@ async function downloadBack(name) {
 
   fs.unlinkSync(tempFilePath);
 }
+async function downloadBabyHope(name) {
+  const url = 'https://cf.geekdo-images.com/8NfNlZem7zNAcSkVpmrPpw__original/img/hO41KhqmTaggcPnX5AR5WSNMbdg=/0x0/filters:format(png)/pic8032301.png';
+  const tempFilePath = path.join(baseDir, ".temp.png");
+  await downloadImage(url, tempFilePath);
+  await sharp(tempFilePath).jpeg({ quality: 80 }).toFile(path.join(baseDir, name));
+}
 
 async function downloadCity(name) {
   const url = 'https://cf.geekdo-images.com/gJyZ8n9b6efkP7IeTl_LQg__original/img/KlmV3qEK-dgaY8BjGEwzadhYNMs=/0x0/filters:format(jpeg)/pic1430758.jpg';
@@ -74,6 +80,7 @@ async function downloadOthers(progressCallback) {
     { name: "images/secret_wars_volume_1/sidekicks/sidekick.jpg", func: downloadSidekick },
     { name: "fonts/MatrixBoldSmallCaps.ttf", func: downloadMatrixFont },
     { name: "fonts/percolatorexpert.ttf", func: downloadParcolatorFont },
+    { name: "images/dark_city/tokens/baby_hope.jpg", func: downloadBabyHope },
   ];
   progressCallback?.(0, file.length);
   let count = 0;

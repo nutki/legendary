@@ -104,7 +104,7 @@ makeSchemeCard<{hope: Card}>("Capture Baby Hope", { twists: 8 }, ev => {
     cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached("TWIST").size));
   } else cityVillains().withLast(v => captureEv(ev, v, hope));
 }, [], (s) => {
-  const hopeTemplate = new Card("BABYHOPE", "Baby Hope");
+  const hopeTemplate = new Card("TOKEN", "Baby Hope");
   hopeTemplate.varVP = () => 6;
   hopeTemplate.set = "Dark City";
   s.hope = gameState.scheme.attachedDeck("BABYHOPE").addNewCard(hopeTemplate);
