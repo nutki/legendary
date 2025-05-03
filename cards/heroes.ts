@@ -1544,12 +1544,12 @@ addHeroTemplates("Villains", [
 // Reveal the top card of the Ally Deck. You may play a copy of that card this turn. When you do, put that card on the bottom of the Ally Deck.
 // COST: 4
   uc: makeHeroCard("Mystique", "Turn the Tide", 4, u, u, Color.INSTINCT, "Brotherhood", "", ev => {
-    gameState.herodeck.withTop(c => addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { // TODO make this card visible
+    revealHeroDeckEv(ev, 1, cards => cards.each(c => addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { // TODO make this card visible
       cond: c => c === gameState.herodeck.top
     }, func: ev => {
       playCopyEv(ev, ev.what);
       moveCardEv(ev, ev.what, gameState.herodeck, true);
-    } })));
+    } }))));
   }),
 // ATTACK: 0+
 // Reveal the top five cards of the Ally Deck. You get + Attack equal to their total printed Attack. Then put them back in any order.
