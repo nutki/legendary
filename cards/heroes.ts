@@ -6398,7 +6398,7 @@ addHeroTemplates("Black Panther", [
 // ---
 // {POWER Covert} Gain the {THRONES FAVOR}. If you already have it, you may look at the top card of your deck. Draw or KO it.
   uc: makeHeroCard("King Black Panther", "Heart-Shaped Herb", 5, u, 3, Color.STRENGTH | Color.COVERT, "Heroes of Wakanda", "",
-    ev => thronesFavorGainOrMaySpendEv(ev, () => chooseMayEv(ev, "Look at the deck", () =>
+    ev => superPower(Color.COVERT) && thronesFavorGainOrMaySpendEv(ev, () => chooseMayEv(ev, "Look at the deck", () =>
       revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))
     )),
     heroAmbush(Color.COVERT, ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))),
@@ -6407,7 +6407,7 @@ addHeroTemplates("Black Panther", [
 // ---
 // {TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +1 Recruit and +1 Attack for each Hero Class you have.
   ra: makeHeroCard("King Black Panther", "Unite the Tribes of Wakanda", 8, 0, 5, Color.STRENGTH | Color.RANGED, "Heroes of Wakanda", "", ev => {
-    thronesFavorGainOrMaySpendEv(ev, () => { addRecruitEvent(ev, numClasses()); addAttackEvent(ev, numClasses()); });
+    superPower("Heroes of Wakanda") && thronesFavorGainOrMaySpendEv(ev, () => { addRecruitEvent(ev, numClasses()); addAttackEvent(ev, numClasses()); });
   }, heroAmbush("Heroes of Wakanda", ev => addAttackEvent(ev, numClasses()))),
 },
 {
