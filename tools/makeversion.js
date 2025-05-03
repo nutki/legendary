@@ -7,4 +7,4 @@ try {
 } catch (error) {
     legendaryVersion = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
 }
-fs.writeFileSync('version.js', `const legendaryVersion = "${legendaryVersion}";\n`, { encoding: 'utf8' });
+fs.writeFileSync('version.js', `window.legendaryVersion = "${legendaryVersion}";\n`, { encoding: 'utf8' });
