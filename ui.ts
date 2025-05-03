@@ -91,15 +91,15 @@ function span(className: string, options?: {[key: string]: string}, ...children:
 }
 function br() { return document.createElement('br'); }
 function text(value: string | number) { return document.createTextNode(value.toString()); }
-function getCountHints(deck: Deck): [number, number, string] {
+function getCountHints(deck: Deck, small: boolean): [number, number, string] {
   const result: [number, number, string] = [0, 0, deck.id];
   const c = deck.top;
   if (c && isMastermind(c)) result[0] = c.attached("TACTICS").size;
-  let cnt = deck.size;
+  let cnt = small ? 0 : deck.size;
   for (const c of deck.deck) gameState.thronesFavorHolder instanceof Card && gameState.thronesFavorHolder === c && cnt++;
   if (c && c._attached) for (let i in c._attached) if (i !== 'SHARD') cnt += c._attached[i].deck.size;
   if (deck._attached) for (let i in deck._attached) cnt += deck._attached[i].deck.size;
-  if (cnt > 0) result[1] = cnt - result[0] - (c ? 1 : 0);
+  if (cnt > 0) result[1] = cnt - result[0] - (c && !small? 1 : 0);
   if (c && isScheme(c)) result[0] = getSchemeCountdown();
   return result
 }
@@ -221,7 +221,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
     ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, true, deckPos.size === "small" ? [0, 0, ''] : getCountHints(deck)) ] : [];
+  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, true, getCountHints(deck, deckPos.size === "small")) ] : [];
   const n = cardDivs.size;
   cardDivs.forEach((cardDiv, i) => {
     cardsContainer.appendChild(cardDiv);
