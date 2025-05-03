@@ -1667,7 +1667,7 @@ addVillainTemplates("Civil War", [
     escape: ev => fortifyEv(ev, ev.source, gameState.bystanders),
     trigger: {
       event: 'RESCUE',
-      match: (ev, source) => isFortifying(source, gameState.bystanders) && !ev.what,
+      match: (ev, source) => isFortifying(source, gameState.bystanders) && ev.where === gameState.bystanders,
       replace: ev => gameState.bystanders.withTop(c => KOEv(ev, c)),
     },
     sizeChanging: Color.COVERT,
@@ -1704,7 +1704,12 @@ addVillainTemplates("Civil War", [
 // VP: 2
   [ 2, makeVillainCard("Great Lakes Avengers", "Squirrel Girl", 3, 2, {
     escape: ev => fortifyEv(ev, ev.source, gameState.sidekick),
-    // TODO forify also prevent recruit
+    modifiers: {
+      recruitCost: [{
+        cond: () => true,
+        func: (c, v) => ({ ...v, cond: () => false})
+      }]
+    },
     trigger: { event: 'GAIN', match: (ev, source) => isFortifying(source, gameState.sidekick) && isSidekick(ev.what), replace: () => {}},
     fightCond: c => turnState.cardsPlayed.size <= 1,
   })],
@@ -1715,7 +1720,13 @@ addVillainTemplates("Civil War", [
 // ATTACK: 9*
 // VP: 5
   [ 2, makeVillainCard("Heroes for Hire", "Colleen Wing", 9, 5, {
-    escape: ev => fortifyEv(ev, ev.source, gameState.mastermind), // TODO fortify prevent fight
+    escape: ev => fortifyEv(ev, ev.source, gameState.mastermind),
+    modifiers: {
+      fightCost: [{
+        cond: isMastermind,
+        func: (c, v) => ({ ...v, cond: () => false})
+      }],
+    },
     bribe: true,
   })],
 // {BRIBE}
@@ -1816,7 +1827,7 @@ addVillainTemplates("Civil War", [
 // ATTACK: 6*
 // VP: 5
   [ 2, makeVillainCard("S.H.I.E.L.D. Elite", "Sharon Carter, Agent 13", 6, 5, {
-    escape: ev => fortifyEv(ev, ev.source, gameState.officer), // TODO fortify
+    escape: ev => fortifyEv(ev, ev.source, gameState.officer),
     ...shieldClearance,
   })],
 ]},
@@ -1828,14 +1839,23 @@ addVillainTemplates("Civil War", [
   [ 2, makeVillainCard("Superhuman Registration Act", "Iron Spider", 2, 3, {
     ambush: ev => fortifyEv(ev, ev.source, playerState.deck),
     fight: ev => revealVillainDeckEv(ev, 1, cards => cards.has(c => c.vp <= 2) && fortifyEv(ev, ev.source, playerState.left.deck)),
-    // TODO fortify
+    trigger: {
+      event: 'CLEANUP',
+      match: (ev, source) => isFortifying(source, playerState.deck),
+      before: ev => addEndDrawMod(-1),
+    }
   })],
 // ESCAPE: Fortify an HQ space. While its fortified, Heroes can't be gained from that space.
 // ATTACK: 5
 // VP: 3
   [ 2, makeVillainCard("Superhuman Registration Act", "Ms. Marvel", 5, 3, {
     escape: ev => selectCardEv(ev, "Choose an HQ space", gameState.hq, d => fortifyEv(ev, ev.source, d)),
-    // TODO fortify
+    modifiers: {
+      recruitCost: [{
+        cond: isHero,
+        func: (c, v) => ({ ...v, cond: () => false}),
+      }]
+    }
   })],
 // {SIZECHANGING STRENGTH}
 // ESCAPE: Fortify the Villain Deck. When a Master Strike is completed from that deck, each player gains a Wound and She-Hulk enters the Sewers.
@@ -1843,8 +1863,7 @@ addVillainTemplates("Civil War", [
 // VP: 5
   [ 2, makeVillainCard("Superhuman Registration Act", "She-Hulk", 8, 5, {
     escape: ev => fortifyEv(ev, ev.source, gameState.villaindeck),
-    // TODO fortify is Master Strike from Deck
-    trigger: { event: 'STRIKE', match: (ev, source) => isFortifying(source, gameState.villaindeck), after: ev => {
+    trigger: { event: 'STRIKE', match: (ev, source) => isFortifying(source, gameState.villaindeck) && ev.where === gameState.villaindeck, after: ev => {
       eachPlayer(p => gainWoundEv(ev, p));
       withCity('SEWERS', sewers => enterCityEv(ev, ev.source, sewers));
     }},

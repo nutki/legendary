@@ -865,6 +865,7 @@ makeMastermindCard("Authoritarian Iron Man", 12, 6, "Superhuman Registration Act
   } ],
 ], { init: m => {
   addStatMod('defense', c => isVillain(c) && isFortifying(m, c.location), 3);
+  forbidAction('FIGHT', c => c === m && m.location?.attachedTo instanceof Deck && m.location?.attachedTo.has(isVillain), true);
 }}),
 // Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
 makeMastermindCard("Baron Helmut Zemo", 16, 6, "Thunderbolts", ev => {

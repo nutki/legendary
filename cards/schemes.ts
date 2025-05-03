@@ -1097,22 +1097,26 @@ makeSchemeCard("Epic Super Hero Civil War", { twists: [ 9, 9, 9, 6, 6 ] }, ev =>
 }, runOutProgressTrigger('HERO'), () => gameState.schemeProgress = gameState.herodeck.size),
 // SETUP: 11 Twists.
 // EVILWINS: When 3 Bystanders are in the KO pile and/or Escape Pile.
-makeSchemeCard("Imprison Unregistered Superhumans", { twists: 11 }, ev => {
+makeSchemeCard<{schemeCopy:Card}>("Imprison Unregistered Superhumans", { twists: 11 }, ev => {
+  const schemeCopy = ev.state.schemeCopy;
   if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5 || ev.nr === 7 || ev.nr === 9) {
     // Twist 1, 3, 5, 7, 9 This Scheme fortifies the city space to its right starting with the Bridge. Villains in that space get +1 Attack.
-    const where = ev.source.location.adjacentRight;
-    if (where) {
-      fortifyEv(ev, ev.source, where);
+    const where = schemeCopy.location.attachedTo;
+    if (where && where instanceof Deck) {
+      if (where.adjacentRight) fortifyEv(ev, schemeCopy, where.adjacentRight);
     } else {
-      withCity('BRIDGE', bridge => fortifyEv(ev, ev.source, bridge));
+      withCity('BRIDGE', bridge => fortifyEv(ev, schemeCopy, bridge));
     }
   } else {
     // If there's a Villain in that fortified city space, KO a bystander.
-    gameState.city.each(d => isFortifying(ev.source, d) && d.has(isVillain) && gameState.bystanders.withTop(c => KOEv(ev, c)));
+    gameState.city.each(d => console.log('KO bystander', d, isFortifying(schemeCopy, d) && d.has(isVillain)));
+    gameState.city.each(d => isFortifying(schemeCopy, d) && d.has(isVillain) && gameState.bystanders.withTop(c => KOEv(ev, c)));
   }
-}, koOrEscapeProgressTrigger(isBystander), () => {
+}, koOrEscapeProgressTrigger(isBystander), s => {
   setSchemeTarget(3);
-  addStatMod('defense', c => isFortifying(gameState.scheme.top, c.location) && isVillain(c), 1);
+  gameState.outOfGame.addNewCard(gameState.scheme.top.instance);
+  s.schemeCopy = gameState.outOfGame.deck.find(c => c.instance === gameState.scheme.top.instance);
+  addStatMod('defense', c => isFortifying(s.schemeCopy, c.location) && isVillain(c), 1);
 }),
 // SETUP: 8 Twists.
 // EVILWINS: When 15 Bystanders are in the KO pile and/or Escape Pile.

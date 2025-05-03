@@ -411,6 +411,10 @@ function isFortifying(c: Card, d: Deck) {
 function fortifyEv(ev: Ev, c: Card, d: Deck) {
   attachCardEv(ev, c, d, 'FORTIFY');
 }
+function fortifyingCards(): Card[] {
+  return [gameState.wounds, gameState.herodeck, gameState.villaindeck, ...gameState.hq, ...gameState.city, ...gameState.players.map(p => p.deck),
+    gameState.mastermind, gameState.sidekick, gameState.bystanders].flatMap(d => d.attached('FORTIFY'));
+}
 // {SHIELDCLEARANCE}
 // This keyword represents pro-registration S.H.I.E.L.D. forces that can be only defeated with the help of S.H.I.E.L.D. information.
 // * If a Villain says "S.H.I.E.L.D. Clearance," then you must discard a S.H.I.E.L.D. Hero as an additional cost to fight that Villain.

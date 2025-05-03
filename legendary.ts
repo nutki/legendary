@@ -1671,7 +1671,7 @@ function isFightable(c: Card): boolean {
   const res = c.location == gameState.astralPlane ? true : isVillain(c) ?
     c.location.isCity || c.location === gameState.mastermind :
     isMastermind(c) ?
-      c.location === gameState.mastermind && (!c.tacticsTemplates || c.attachedFaceDownDeck('TACTICS').size > 0 || gameState.finalBlow) :
+      (!c.tacticsTemplates || c.attachedFaceDownDeck('TACTICS').size > 0 || gameState.finalBlow) :
       false;
   return getModifiedStat(c, 'isFightable', res);
 }
@@ -1711,6 +1711,7 @@ function currentVP(p?: Player): number {
 function fightableCards(): Card[] {
   return [
     ...[...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c)),
+    ...fortifyingCards().limit(isEnemy),
     ...gameState.players.map(p => attachedCards('PREYING', p.playArea)).merge(), ...gameState.astralPlane.deck, ...gameState.city.flatMap(d => d.attached('LOCATION')),
   ];
 }
@@ -2789,7 +2790,7 @@ function playTwist(ev: Ev): void {
     }
   });
 }
-function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStrike, what: what }); }
+function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStrike, what: what, where: what.location }); }
 function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
@@ -2964,9 +2965,9 @@ function villainDefeat(ev: Ev): void {
   if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
 function rescueByEv(ev: Ev, who: Player, what: Card | number = 1): void {
-  if (typeof what !== "number") what && pushEv(ev, "RESCUE", { func: rescueBystander, what, who });
+  if (typeof what !== "number") what && pushEv(ev, "RESCUE", { func: rescueBystander, what, who, where: what.location });
   else for (let i = 0; i < what; i++) cont(ev, () => {
-    if (gameState.bystanders.top) pushEv(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top, who });
+    if (gameState.bystanders.top) pushEv(ev, "RESCUE", { func: rescueBystander, what: gameState.bystanders.top, who, where: gameState.bystanders });
   });
 }
 function rescueEv(ev: Ev, what?: Card | number): void {
@@ -3006,6 +3007,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     p.victory.each(checkCardTrigger);
     p.deck.each(checkCardTrigger);
   });
+  fortifyingCards().each(checkCardTrigger);
   return triggers;
 }
 function addTriggers(ev: Ev): Ev[] {
