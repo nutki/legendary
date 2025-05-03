@@ -123,12 +123,12 @@ makeSchemeCard("Detonate the Helicarrier", { twists: 8, heroes: 6 }, ev => {
   event: "KO",
   match: ev => ev.what.location.isHQ,
   replace: ev => {
-    attachCardEv(ev, ev.parent.what, ev.parent.what.location, "EXPLOSION");
-    cont(ev, () => schemeProgressEv(ev, gameState.hq.count(d => d.attachedDeck("EXPLOSION").size >= 6)));
+    attachFaceDownCardEv(ev, ev.parent.what, ev.parent.what.location, "EXPLOSION");
+    cont(ev, () => schemeProgressEv(ev, gameState.hq.count(d => d.attachedFaceDownDeck("EXPLOSION").size >= 6)));
   },
 }, runOutProgressTrigger("HERO", false), {
   event: "MOVECARD",
-  match: ev => ev.to.isHQ && ev.to.attachedDeck("EXPLOSION").size >= 6,
+  match: ev => ev.to.isHQ && ev.to.attachedFaceDownDeck("EXPLOSION").size >= 6,
   replace: () => {},
 }], () => {
   setSchemeTarget(gameState.hq.size);

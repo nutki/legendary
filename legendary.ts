@@ -2264,6 +2264,7 @@ function swapDecks(d1: Deck, d2: Deck) {
   d2.deck = tmp;
 }
 function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedDeck(name)); }
+function attachFaceDownCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedFaceDownDeck(name)); }
 function recruitForFreeEv(ev: Ev, card: Card): void {
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, where: card.location });
 }
