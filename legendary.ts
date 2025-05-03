@@ -3179,7 +3179,7 @@ function mainLoop(): void {
     },
   })[ev.type])(ev);
   Object.keys(clickActions).map(v => {
-    const e = document.querySelector(`.topCard[data-deck-id="${CSS.escape(v)}"], [data-card-id="${CSS.escape(v)}"]`);
+    const e = document.querySelector(`[data-deck-id="${CSS.escape(v)}"], [data-card-id="${CSS.escape(v)}"]`);
     if (!e) {
       console.warn("Missing element for action: ", v);
       extraActions.push({ name: "Pick " + v, func: clickActions[v] });
