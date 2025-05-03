@@ -6390,9 +6390,9 @@ addHeroTemplates("Black Panther", [
     ev => thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2)), heroAmbush("Heroes of Wakanda", ev => rescueEv(ev))),
 // [Instinct] <b>Ambush</b>: You get +2 Attack.
 // ---
-// Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
+// {POWER Instinct} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
   c2: makeHeroCard("King Black Panther", "Vibranium Claws", 4, u, 2, Color.INSTINCT | Color.TECH, "Heroes of Wakanda", "D",
-    ev => thronesFavorGainOrMaySpendEv(ev, () => addAttackEvent(ev, 2)), heroAmbush(Color.INSTINCT, ev => addAttackEvent(ev, 2)),
+    ev => superPower(Color.INSTINCT) && thronesFavorGainOrMaySpendEv(ev, () => addAttackEvent(ev, 2)), heroAmbush(Color.INSTINCT, ev => addAttackEvent(ev, 2)),
   ),
 // [Covert] <b>Ambush</b>: Look at the top card of your deck. Draw or KO it.
 // ---
