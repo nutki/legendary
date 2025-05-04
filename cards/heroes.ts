@@ -3807,7 +3807,7 @@ addHeroTemplates("Spider-Man Homecoming", [
 // {TEAMPOWER Spider Friends} Each Villain gets -2 Attack this turn. The next time you fight the Mastermind this turn, it gets -2 Attack.
   ra: makeHeroCard("Peter's Allies", "May Parker", 7, 5, u, Color.COVERT, "Spider Friends", "D", ev => { if (superPower("Spider Friends")) {
     let once = false;
-    addTurnSet('defense', isEnemy, (c, n) => isVillain(c) || !once ? -2 : 0);
+    addTurnSet('defense', isEnemy, (c, n) => n + (isVillain(c) || !once ? -2 : 0));
     addTurnTrigger('FIGHT', ev => isMastermind(ev.what), () => once = true);
   }}, { coordinate: true }),
 },
