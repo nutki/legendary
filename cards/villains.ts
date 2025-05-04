@@ -727,7 +727,7 @@ addVillainTemplates("Villains", [
   [ 2, makeVillainCard("Uncanny Avengers", "Rogue", 4, 2, {
     fight: ev => { // copied from Rogue Hero card
       let revealed: Card[] = [];
-      eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.each(c => { isHero(c) && revealed.push(c); discardEv(ev, c); }), p));
+      eachOtherPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.each(c => { isHero(c) && revealed.push(c); discardEv(ev, c); }), p));
       cont(ev, () => selectCardOrderEv(ev, "Choose a card to copy", revealed, c => playCopyEv(ev, c)));
     },
     varDefense: xTremeAttack,
