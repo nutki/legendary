@@ -180,9 +180,7 @@ addBystanderTemplates("Dimensions", [
 addBystanderTemplates("Revelations", [
 // RESCUE: each player reveals the top card of their deck. Judge one of those cards to be the "best in show." That player draws that card.
 [ 1, makeBystanderCard("Dog Show Judge", ev => {
-  const revealed: Card[] = [];
-  eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.each(c => revealed.push(c)), p));
-  cont(ev, () => selectCardEv(ev, "Choose a card for a player to draw", revealed, c => drawCardEv(ev, c, owner(c))));
+  revealEachPlayerDeckEv(ev, 1, cards => selectCardEv(ev, "Choose a card for a player to draw", cards.merge(), c => drawCardEv(ev, c, owner(c))));
 }) ],
 // RESCUE: reveal the top 3 cards of your deck. Draw each of them that has at least 10 words of rules text. Put the rest back in any order. (Numerals, icons, and punctuation don't count.)
 [ 1, makeBystanderCard("Lawyer", ev => revealPlayerDeckEv(ev, 3, cards => {
