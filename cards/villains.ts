@@ -595,7 +595,7 @@ addVillainTemplates("Villains", [
 // FIGHT: Same effect.
 // ESCAPE: Demolish each player.
   [ 1, makeVillainCard("Avengers", "Iron Man", 7, 5, {
-    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p))),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p), p)),
     fight: sameEffect,
     escape: demolishEv,
   })],
