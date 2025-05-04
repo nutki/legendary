@@ -3558,7 +3558,6 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     // Each other player reveals the top three cards of their deck, discards all those cards that cost 1 or more, and puts the rest back in any order.
     eachOtherPlayerVM(p => revealPlayerDeckEv(ev, 3, cards => {
       cards.limit(c => c.cost >= 1).each(c => discardEv(ev, c));
-      villainDefeat
     }, p));
   } ],
 ], {
