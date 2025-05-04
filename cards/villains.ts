@@ -716,7 +716,7 @@ addVillainTemplates("Villains", [
 // X-Treme Attack.
 // AMBUSH: Each player who does not reveal a Ranged Ally discards two cards, then draws a card.
   [ 2, makeVillainCard("Uncanny Avengers", "Havok", 4, 2, {
-    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => { pickDiscardEv(ev, 2, p); drawEv(ev, 2, p); })),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => { pickDiscardEv(ev, 2, p); drawEv(ev, 2, p); }, p)),
     varDefense: xTremeAttack,
     xTremeAttack: true,
   })],
