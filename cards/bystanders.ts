@@ -217,7 +217,8 @@ addBystanderTemplates("Messiah Complex", [
 }) ],
 // RESCUE: {CLONE} the next Hero you recruit this turn that has printed cost 3 or less.
 [ 1, makeBystanderCard("Cloning Technician", ev => {
-  playerState === ev.who && addTurnTrigger('RECRUIT', ev => ev.what.printedCost <= 3, ev => {
+  playerState === ev.who && addTurnTrigger('RECRUIT', (ev, source) => ev.what.printedCost <= 3 && !countPerTurn("onceperturntrigger", source), ev => {
+    incPerTurn("onceperturntrigger", ev.source);
     cloneHeroEv(ev, ev.parent.what);
   });
 }) ],
