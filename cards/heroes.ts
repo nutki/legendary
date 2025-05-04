@@ -3799,8 +3799,8 @@ addHeroTemplates("Spider-Man Homecoming", [
   c2: makeHeroCard("Peter's Allies", "Ned", 2, 1, u, Color.COVERT, "Spider Friends", "D", ev => superPower(Color.COVERT) && addRecruitEvent(ev, 2), { coordinate: true }),
 // Whenever you {COORDINATE} a card to another player, you may reveal this to draw two cards instead of one.
   uc: makeHeroCard("Peter's Allies", "Liz", 6, 4, u, Color.INSTINCT, "Spider Friends", "", [], { trigger: {
-    event: 'COORDINATE',
-    match: (ev, source) => source.location === owner(ev.what).hand && owner(ev.what) === owner(source),
+    event: 'COORDINATEDISCARD',
+    match: (ev, source) => source.location === owner(source).hand && ev.who === owner(source) && playerState !== ev.who,
     after: ev => revealAndEv(ev, c => c === ev.source, () => drawEv(ev, 1, ev.parent.who)),
   }}),
 // {COORDINATE}

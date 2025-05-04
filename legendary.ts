@@ -728,7 +728,7 @@ type EvType =
 'ADDPIERCING' |
 'URUENCHANTEDREVEAL' |
 'NTHCIRCLEREVEAL' |
-'COORDINATE' |
+'COORDINATE' | 'COORDINATEDISCARD' |
 'OUTWIT' |
 'TRANSFORM' |
 'DANGERSENSE' |
@@ -759,8 +759,7 @@ type TriggerableEvType =
 // Expansion actions
 'TELEPORT' | 'DODGE' |
 // Expansion effects
-'COORDINATE' | 'OUTWIT' | 'REVEAL' |
-// Special
+'COORDINATE' | 'OUTWIT' | 'REVEAL' | 'COORDINATEDISCARD' |
 'CLEANUP' | 'MOVECARD' | 'TURNSTART';
 interface Ev<TSchemeState = any> {
   type: EvType
@@ -2208,6 +2207,7 @@ function getActions(ev: Ev): Ev[] {
   playerState.hand.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   playerState.victory.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   gameState.scheme.attached('AMBUSHSCHEME').each(c => getCardActions(c).each(a => p.push(a(c, ev))));
+  addCoordinateActions(ev, p);
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);

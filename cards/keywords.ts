@@ -551,6 +551,46 @@ function dangerSenseEv(ev: Ev, amount: number, f?: (cards: Card[]) => void, help
     }, false, false);
   } });
 }
+function coordinatePlayers() {
+  return gameState.players.limit(p => p !== playerState && p.hand.has(c => c.coordinate) && !pastEvents('COORDINATEDISCARD').has(e => e.who === p));
+}
+function coordinateActionEv(ev: Ev) {
+  return new Ev(ev, 'EFFECT', {
+    desc: "Ask for coordinate",
+    func: ev => {
+      const players = coordinatePlayers();
+      players.length && choosePlayerLimitedEv(ev, p => {
+        selectCardEv(ev, "Select card to coordinate", p.hand.limit(c => c.coordinate), c => pushEv(ev, 'COORDINATEDISCARD', {
+          func: ev => {
+            discardEv(ev, c);
+            drawEv(ev, 1, p);
+            chooseMayEv(ev, "Use coordinate ability", () => pushEv(ev, 'COORDINATE', { func: ev => playCopyEv(ev, ev.what), who: p, what: c }));
+          },
+          who: p,
+          what: c,
+        }), p);
+      }, players);
+    },
+  });
+}
+function coordinateSoloAction(ev: Ev, c: Card) {
+  return new Ev(ev, 'COORDINATEDISCARD', {
+    desc: "Coordinate discard",
+    who: playerState,
+    what: c,
+    func: ev => {
+      discardEv(ev, c);
+      drawEv(ev, 1);
+    },
+  });
+}
+function addCoordinateActions(ev: Ev, actions: Ev[]) {
+  if (gameState.players.length > 1) {
+    coordinatePlayers().length && actions.push(coordinateActionEv(ev));
+  } else {
+    pastEvents('COORDINATEDISCARD').size || playerState.hand.limit(c => c.coordinate).each(c => actions.push(coordinateSoloAction(ev, c)));
+  }
+}
 // World War Hulk
 function makeTransformingHeroCard(c1: Card, c2: Card) {
   c1.transformed = c2;
