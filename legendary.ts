@@ -133,6 +133,7 @@ interface Card {
   trapPenalty?: Handler
   epic?: boolean
   coordinate?: boolean
+  cheeringCrowds?: boolean
   transformed?: Card
   isTransformed?: boolean
   backSide?: Card
@@ -733,6 +734,7 @@ type EvType =
 'TRANSFORM' |
 'DANGERSENSE' |
 'EXPLORE' |
+'CHEERINGCROWDS' |
 // Special
 'STATE' |
 'TURN' |
@@ -2669,6 +2671,7 @@ function playCard2(ev: Ev) {
     if (card.playCostType === "BOTTOMDECK") pickTopDeckEv(ev, card.playCost, playerState, card.playCostLimit, true);
     playCardEffects(ev, card);
     cont(ev, () => turnState.cardsPlayed.push(card));
+    card.cheeringCrowds && cheeringCrowdsEv(ev);
   }});
 }
 function playCard1(ev: Ev) {

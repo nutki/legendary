@@ -591,6 +591,15 @@ function addCoordinateActions(ev: Ev, actions: Ev[]) {
     pastEvents('COORDINATEDISCARD').size || playerState.hand.limit(c => c.coordinate).each(c => actions.push(coordinateSoloAction(ev, c)));
   }
 }
+// Champions
+function cheeringCrowdsEv(ev: Ev) {
+  pushEv(ev, 'CHEERINGCROWDS', { what: ev.source, func: ev => {
+    ancestorEvents(ev).has(e => e.type === 'CHEERINGCROWDS') || selectCardOptEv(ev, "Return a Bystander", playerState.victory.limit(isBystander), c => {
+      returnToStackEv(ev, gameState.bystanders, c);
+      playCopyEv(ev, ev.what);
+    });
+  }});
+}
 // World War Hulk
 function makeTransformingHeroCard(c1: Card, c2: Card) {
   c1.transformed = c2;
