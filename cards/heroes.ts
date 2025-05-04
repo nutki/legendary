@@ -5557,8 +5557,8 @@ addHeroTemplates("Realm of Kings", [
 // {WHEN RECRUITED} You may KO one of your cards with no rules text.
 // {POWER Ranged} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
   c1: makeHeroCard("Black Bolt", "Break the Silence", 3, 2, u, Color.RANGED, "Inhumans", "D",
-    ev => superPower(Color.RANGED) && selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)),
-    { whenRecruited: ev => thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2)) }),
+    ev => superPower(Color.RANGED) && thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2)),
+    { whenRecruited: ev => selectCardOptEv(ev, "Choose a card to KO", revealable().limit(hasFlag("N")), c => KOEv(ev, c)) }),
   c2: makeHeroCard("Black Bolt", "Worldess Murmur", 5, 1, 3, Color.RANGED, "Inhumans", "N"),
 // {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to reveal the top two cards of your deck. Put each of those cards with no rules text into your hand and put the rest back in any order.
   uc: makeHeroCard("Black Bolt", "Declaration of War", 4, u, 2, Color.TECH, "Inhumans", "D", ev => superPower("Inhumans") && thronesFavorGainOrMaySpendEv(ev, () => {
