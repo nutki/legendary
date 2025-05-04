@@ -282,7 +282,7 @@ class Card {
   get villainGroup() {
    return getModifiedStat(this, "villainGroup", this.printedVillainGroup)
   }
-  isHealable() { return this.cardType === "WOUND"; }
+  isHealable() { return this.cardType === "WOUND" || this.cardType === "BINDINGS"; }
   isColor(c: number) { return (getModifiedStat(this, 'color', this.color) & c) !== 0; }
   isTeam(t: Affiliation) { return this.divided ? this.divided.left.team === t || this.divided.right.team === t : this.team === t; }
   isGroup(t: string) { return this.villainGroup === t; }
