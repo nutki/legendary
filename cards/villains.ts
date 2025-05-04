@@ -748,7 +748,7 @@ addVillainTemplates("Villains", [
     varDefense: c => xTremeAttack(c) + turnState.cardsDrawn,
     xTremeAttack: true,
     escape: ev => {
-      eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainBindingsEv(ev, p)));
+      eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainBindingsEv(ev, p), p));
       shuffleIntoEv(ev, ev.source, gameState.villaindeck);
     },
   })],
