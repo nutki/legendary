@@ -335,7 +335,7 @@ addTemplates("MASTERMINDS", "Villains", [
 makeMastermindCard("Dr. Strange", 8, 6, "Defenders", ev => {
 // Command Strike: Reveal the top three cards of the Adversary Deck. Put the Adversary you revealed with the highest printed Attack on top of that deck. Then play a Plot Twist from among the cards you revealed. Then put the rest of those cards on the bottom of that deck in random order.
   revealVillainDeckEv(ev, 3, cards => {
-    selectCardEv(ev, "Select card to put on to of the Villain deck", cards.limit(isVillain).highest(c => c.printedAttack || 0), c => moveCardEv(ev, c, gameState.villaindeck));
+    selectCardEv(ev, "Select card to put on to of the Villain deck", cards.limit(isVillain).highest(c => c.printedDefense || 0), c => moveCardEv(ev, c, gameState.villaindeck));
     cards.limit(isTwist).withFirst(c => villainDrawEv(ev, c));
   }, true, true);
 // 
