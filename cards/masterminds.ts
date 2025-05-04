@@ -286,6 +286,7 @@ makeMastermindCard("Carnage", 9, 6, "Maximum Carnage", ev => {
 }, [
   [ "Drooling Jaws", ev => {
   // Each player reveals the top card of their deck. Then Carnage feasts on the player of your choice.
+    revealEachPlayerDeckEv(ev, 1, cards => selectCardEv(ev, "Choose a player to feast on", cards.flatMap(c => c), c => feastEv(ev, u, owner(c))));
   } ],
 // {FEAST}
 // If Carnage feasts on a 0-cost Hero this way, repeat this process.

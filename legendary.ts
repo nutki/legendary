@@ -2560,6 +2560,13 @@ function revealHeroDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), act
 function revealPlayerDeckEv(ev: Ev, amount: number, action: (cards: Card[]) => void, who?: Player, agent?: Player) {
   lookAtDeckEv(ev, amount, action, who, agent);
 }
+function revealEachPlayerDeckEv(ev: Ev, amount: number, action: (cards: Card[][]) => void, agent?: Player) {
+  const f = (i: number, cards: Card[][]) => {
+    if (i >= gameState.players.length) action(cards);
+    else revealPlayerDeckEv(ev, amount, c => f(i+1, [...cards, c]), gameState.players[i], agent);
+  }
+  f(0, []);
+}
 type RevealThreeAction = 'KO' | 'DISCARD' | 'DRAW';
 function revealThreeEv(ev: Ev, a1: RevealThreeAction, a2: RevealThreeAction, a3?: RevealThreeAction, who?: Player) {
   const actions = {
