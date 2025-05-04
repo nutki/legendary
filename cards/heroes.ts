@@ -1189,7 +1189,7 @@ addHeroTemplates("Villains", [
 // COST: 6
   uc: makeHeroCard("Bullseye", "Specialist Assassin", 6, u, 3, Color.COVERT, "Crime Syndicate", "", ev => {
     const p = playerState;
-    selectCardEv(ev, "Choose an Adversary", villains(), c => addStatMod('defense', v => v === c, () => -p.victory.limit(v => v.villainGroup === c.villainGroup)));
+    selectCardEv(ev, "Choose an Adversary", villains(), c => addStatMod('defense', v => v === c, () => -p.victory.count(v => v.villainGroup === c.villainGroup)));
   }),
 // ATTACK: 5+
 // You get +5 Attack for each Commander Tactic in your Victory Pile.
