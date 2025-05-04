@@ -1109,7 +1109,6 @@ makeSchemeCard<{schemeCopy:Card}>("Imprison Unregistered Superhumans", { twists:
     }
   } else {
     // If there's a Villain in that fortified city space, KO a bystander.
-    gameState.city.each(d => console.log('KO bystander', d, isFortifying(schemeCopy, d) && d.has(isVillain)));
     gameState.city.each(d => isFortifying(schemeCopy, d) && d.has(isVillain) && gameState.bystanders.withTop(c => KOEv(ev, c)));
   }
 }, koOrEscapeProgressTrigger(isBystander), s => {
@@ -2928,10 +2927,8 @@ makeSchemeCard("Star-Lord's Awesome Mix Tape", (p, v) => p === 'twists' || p ===
   koProgressTrigger(isNonGrayHero),
 ], () => {
   setSchemeTarget(32);
-  gameState.villaindeck.attached('WHATIF_SOLO_HENCHMEN').each(console.log);
   [...gameState.villaindeck.attached('WHATIF_SOLO_HENCHMEN')].each(c => moveCard(c, gameState.villaindeck));
   const groups = gameState.villaindeck.limit(c => c.printedVillainGroup !== undefined).unique(c => c.printedVillainGroup)
-  console.log(groups);
   groups.each(g => {
     const cards = gameState.villaindeck.limit(isGroup(g));
     const half = cards.slice(0, cards.length/2);

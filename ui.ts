@@ -611,8 +611,6 @@ function closeError() {
 window.onerror = (msg) => {
   document.getElementById("errorModalOverlay").style.display = "block";
   document.getElementById("errorMessage").innerHTML = msg.toString();
-  console.log(undoLog.toString());
-  console.log(JSON.stringify(undoLog.gameSetup));
 }
 function setCurrentPlayer(n: number) {
   if (n !== currenPlayer) setTimeout(() => {

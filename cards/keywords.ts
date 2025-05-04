@@ -1217,7 +1217,6 @@ function exorciseCardActionEv(ev: Ev, c: Card) {
     where: c.location,
     cost: { attack: c.cost },
     func: ev => {
-      console.log("Exorcise", ev.what);
       selectCardOrEv(ev, "Choose a player to gain the Haunted Hero", gameState.players, p => {
         gainEv(ev, c, p);
       }, () => {

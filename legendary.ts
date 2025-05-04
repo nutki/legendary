@@ -1718,7 +1718,6 @@ function fightableCards(): Card[] {
 function heroBelow(c: Card | Deck) {
   const where = c instanceof Card ? c.location : c;
   const x = where && where.above ? where.above.limit(isHero) : [];
-  console.log(x, where, where.above, where.below);
   return x;
 }
 function hqCards(): Card[] { return gameState.hq.map(e => e.top).limit(e => e !== undefined); }
