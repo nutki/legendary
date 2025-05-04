@@ -685,6 +685,7 @@ addVillainTemplates("Villains", [
 // FIGHT: Each player reveals the top card of their deck. Choose any number of those cards to be discarded.
   [ 2, makeVillainCard("Spider Friends", "Black Cat", 2, 2, {
     fight: ev => eachPlayer(p => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Discard revealed", cards, c => discardEv(ev, c)), p)),
+    fightCond: elusive(6),
   })],
 // ATTACK: 5
 // VP: 3
