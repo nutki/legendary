@@ -2773,29 +2773,16 @@ function drawCardEv(ev: Ev, what: Card, who: Player = playerState) {
 }
 function drawEv(ev: Ev, amount: number = 1, who: Player = playerState, bottom: boolean = false) {
   if (amount > 0) pushEv(ev, "DRAWCARDS", { who, amount, func: ev => {
-    for (let i = 0; i < ev.amount; i++)
-      pushEv(ev, "DRAW", { func: drawOne, who: ev.who, bottom });
+    for (let i = 0; i < ev.amount; i++) withPlayerDeckTopEv(ev, c => {
+      pushEv(ev, "DRAW", { func: ev => {
+        turnState.cardsDrawn++;
+        moveCardEv(ev, ev.what, ev.who.hand, ev.bottom);
+      }, what: c, who: ev.who, bottom });
+    });
   }});
 }
 function drawBottomEv(ev: Ev, amount: number = 1, who: Player = playerState) {
   drawEv(ev, amount, who, true);
-}
-function drawOne(ev: Ev): void {
-  if (!ev.who.deck.size && !ev.who.discard.size) {
-  } else if (!ev.who.deck.size) {
-    if (ev.who.discard.size) {
-      reshufflePlayerDeckEv(ev, ev.who);
-      cont(ev, () => {
-        if (ev.who.deck.size) {
-          turnState.cardsDrawn++;
-          moveCardEv(ev, ev.bottom ? ev.who.deck.bottom : ev.who.deck.top, ev.who.hand);
-        }
-      });
-    }
-  } else {
-    turnState.cardsDrawn++;
-    moveCardEv(ev, ev.who.deck.top, ev.who.hand);
-  }
 }
 function reshufflePlayerDeckEv(ev: Ev, p: Player = playerState): void {
   pushEv(ev, "RESHUFFLE", () => {
