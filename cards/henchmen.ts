@@ -279,7 +279,7 @@ addHenchmenTemplates("Into the Cosmos", [
 // ATTACK: 3
 makeHenchmenCard("Sidera Maris, Bridge Builders", 3, {
   ambush: ev => withCity('BRIDGE', bridge => {
-    bridge.has(isVillain) && attachShardEv(ev, ev.source);
+    bridge.has(isVillain) ? attachShardEv(ev, ev.source) : moveCardEv(ev, ev.source, bridge);
     bridge.limit(isVillain).each(c => attachShardEv(ev, c));
   }),
   fight: ev => selectCardAndKOEv(ev, yourHeroes()),
