@@ -745,7 +745,7 @@ addVillainTemplates("Villains", [
 // Wolverine gets +1 Attack for each card you've drawn this turn.
 // ESCAPE: Each player reveals an [Instinct] Ally or gains a Bindings. Then shuffle Wolverine back into the Adversary deck.
   [ 2, makeVillainCard("Uncanny Avengers", "Wolverine", 7, 5, {
-    varDefense: c => xTremeAttack(c) + turnState.cardsDrawn,
+    varDefense: c => xTremeAttack(c) + cardsDrawn(),
     xTremeAttack: true,
     escape: ev => {
       eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => gainBindingsEv(ev, p), p));

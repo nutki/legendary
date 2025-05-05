@@ -365,7 +365,7 @@ addHeroTemplates("Legendary", [
 // Draw three cards.
 // {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
 // COST: 8
-  ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", [ ev => drawEv(ev, 3), ev => superPower(Color.INSTINCT) && addAttackEvent(ev, turnState.cardsDrawn) ]),
+  ra: makeHeroCard("Wolverine", "Berserker Rage", 8, u, 0, Color.INSTINCT, "X-Men", "", [ ev => drawEv(ev, 3), ev => superPower(Color.INSTINCT) && addAttackEvent(ev, cardsDrawn()) ]),
 },
 ]);
 addHeroTemplates("Dark City", [
@@ -853,7 +853,7 @@ addHeroTemplates("Dark City", [
 // ATTACK: 2+
 // If you drew any extra cards this turn, you get +2 Attack.
 // COST: 4
-  c2: makeHeroCard("Wolverine", "Sudden Ambush", 4, u, 2, Color.COVERT, "X-Force", "D", ev => {if (turnState.cardsDrawn > 0) addAttackEvent(ev, 2); }),
+  c2: makeHeroCard("Wolverine", "Sudden Ambush", 4, u, 2, Color.COVERT, "X-Force", "D", ev => {if (cardsDrawn() > 0) addAttackEvent(ev, 2); }),
 // Draw a card.
 // You may KO a card from your hand or discard pile.
 // COST: 4
@@ -861,7 +861,7 @@ addHeroTemplates("Dark City", [
 // ATTACK: 3
 // Count the number of extra cards you drew this turn. Draw that many cards.
 // COST: 7
-  ra: makeHeroCard("Wolverine", "Reckless Abandon", 7, u, 3, Color.COVERT, "X-Force", "", ev => drawEv(ev, turnState.cardsDrawn)),
+  ra: makeHeroCard("Wolverine", "Reckless Abandon", 7, u, 3, Color.COVERT, "X-Force", "", ev => drawEv(ev, cardsDrawn())),
 },
 ]);
 addHeroTemplates("Fantastic Four", [
@@ -1225,7 +1225,7 @@ addHeroTemplates("Villains", [
 // COST: 8
   ra: makeHeroCard("Dr. Octopus", "Octo-Pulverize", 8, u, 0, Color.TECH, "Sinister Six", "", ev => {
     repeat(8, () => cont(ev, () => playerState.deck.withTop(c => discardEv(ev, c))));
-    cont(ev, () => addAttackEvent(ev, turnState.cardsDiscarded.size));
+    cont(ev, () => addAttackEvent(ev, cardsDiscarded()));
   }),
 },
 {
@@ -1252,7 +1252,7 @@ addHeroTemplates("Villains", [
 // You get +1 Attack for each card you discarded this turn.
 // COST: 5
 // FLAVOR: Unlimited Power!
-  uc: makeHeroCard("Electro", "Supercharge", 5, u, 2, Color.INSTINCT, "Sinister Six", "FD", ev => addAttackEvent(ev, turnState.cardsDiscarded.size)),
+  uc: makeHeroCard("Electro", "Supercharge", 5, u, 2, Color.INSTINCT, "Sinister Six", "FD", ev => addAttackEvent(ev, cardsDiscarded())),
 // ATTACK: 4
 // All Adversaries and the Commander get -1 Attack this turn.
 // {TEAMPOWER Sinister Six, Sinister Six} Same Effect
@@ -1307,17 +1307,17 @@ addHeroTemplates("Villains", [
 // {DODGE}
 // If you discarded any cards this turn, you get +2 Attack.
 // COST: 3
-  c2: makeHeroCard("Green Goblin", "Pumpkin Bombs", 3, u, 1, Color.TECH, "Sinister Six", "D", ev => turnState.cardsDiscarded.size && addAttackEvent(ev, 2), { cardActions: [ dodge ] }),
+  c2: makeHeroCard("Green Goblin", "Pumpkin Bombs", 3, u, 1, Color.TECH, "Sinister Six", "D", ev => cardsDiscarded() && addAttackEvent(ev, 2), { cardActions: [ dodge ] }),
 // RECRUIT: 3
 // {DODGE}
 // If you discarded any cards this turn, kidnap a Bystander.
 // COST: 5
-  uc: makeHeroCard("Green Goblin", "Unstable Kidnapper", 5, 3, u, Color.INSTINCT, "Sinister Six", "", ev => turnState.cardsDiscarded.size && rescueEv(ev), { cardActions: [ dodge ] }),
+  uc: makeHeroCard("Green Goblin", "Unstable Kidnapper", 5, 3, u, Color.INSTINCT, "Sinister Six", "", ev => cardsDiscarded() && rescueEv(ev), { cardActions: [ dodge ] }),
 // ATTACK: 4
 // Return from your discard pile to your hand all the cards you discarded this turn.
 // COST: 7
   ra: makeHeroCard("Green Goblin", "Experimental Goblin Serum", 7, u, 4, Color.TECH, "Sinister Six", "", ev => {
-    playerState.discard.deck.each(c => turnState.cardsDiscarded.includes(c) && moveCardEv(ev, c, playerState.hand));
+    playerState.discard.deck.each(c => pastEvents('DISCARD').has(e => e.what === c && e.who === playerState) && moveCardEv(ev, c, playerState.hand));
   }),
 },
 {
@@ -1483,7 +1483,7 @@ addHeroTemplates("Villains", [
 // If you discarded any cards this turn, draw a card.
 // COST: 5
 // FLAVOR: One person's trash is another person's high velocity projectile weapon.
-  uc: makeHeroCard("Magneto", "Weapons From Scrap Metal", 5, u, 3, Color.RANGED, "Brotherhood", "F", ev => turnState.cardsDiscarded.size && drawEv(ev)),
+  uc: makeHeroCard("Magneto", "Weapons From Scrap Metal", 5, u, 3, Color.RANGED, "Brotherhood", "F", ev => cardsDiscarded() && drawEv(ev)),
 // ATTACK: 4+
 // {TEAMPOWER Brotherhood} For each other Brotherhood Ally you played this turn, choose a player to gain a Bindings. Then you get +2 Attack for each Bindings gained this turn.
 // COST: 7
@@ -3004,7 +3004,7 @@ addHeroTemplates("Civil War", [
     makeHeroCard("Aunt May", "Hot Bowl of Soup", 2, 1, u, Color.INSTINCT, "Spider Friends", "D", ev => KOHandOrDiscardEv(ev, isWound)),
   ),
 // {POWER Instinct} You get +1 Attack for each extra card you've drawn this turn.
-  ra: makeHeroCard("Peter Parker", "Reluctant Celebrity", 2, u, 2, Color.INSTINCT, "Avengers", "D", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, turnState.cardsDrawn)),
+  ra: makeHeroCard("Peter Parker", "Reluctant Celebrity", 2, u, 2, Color.INSTINCT, "Avengers", "D", ev => superPower(Color.INSTINCT) && addAttackEvent(ev, cardsDrawn())),
 },
 {
   name: "Speedball",
@@ -3940,7 +3940,7 @@ addHeroTemplates("Champions", [
 // {SIZECHANGING TECH STRENGTH}
 // You get +1 Attack for each extra card you drew this turn.
   ra: makeHeroCard("Totally Awesome Hulk", "7th Smartest Man in the World", 9, u, 5, Color.TECH, "Champions", "", ev => {
-    addAttackEvent(ev, turnState.cardsDrawn);
+    addAttackEvent(ev, cardsDrawn());
   }, { sizeChanging: Color.TECH | Color.STRENGTH }),
 },
 {
@@ -3970,7 +3970,7 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // {OUTWIT}: You get +2 Attack.
   c2: makeTransformingHeroCard(
-    makeHeroCard("Amadeus Cho", "Gamma-Draining Nanites", 3, u, u, Color.TECH, "Champions", "", [ ev => drawEv(ev, 1), ev => turnState.cardsDrawn >= 2 && transformHeroEv(ev, ev.source) ]),
+    makeHeroCard("Amadeus Cho", "Gamma-Draining Nanites", 3, u, u, Color.TECH, "Champions", "", [ ev => drawEv(ev, 1), ev => cardsDrawn() >= 2 && transformHeroEv(ev, ev.source) ]),
     makeHeroCard("Amadeus Cho", "Like Totally Smart Hulk", 5, u, 2, Color.STRENGTH, "Champions", "FD", ev => mayOutwitEv(ev, () => addAttackEvent(ev, 2))),
   ),
 // You get +1 Attack for each different cost of Hero you have.
@@ -4028,7 +4028,7 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // When a card effect causes you to discard this card, you may return this card to your hand.
   c2: makeTransformingHeroCard(
-    makeHeroCard("Gladiator Hulk", "Seize The Throne", 4, u, 0, Color.INSTINCT, "Warbound", "", [ ev => smashEv(ev, 3), ev => turnState.cardsDiscarded.size >= 2 && transformHeroEv(ev, ev.source, 'DECK') ]),
+    makeHeroCard("Gladiator Hulk", "Seize The Throne", 4, u, 0, Color.INSTINCT, "Warbound", "", [ ev => smashEv(ev, 3), ev => cardsDiscarded() >= 2 && transformHeroEv(ev, ev.source, 'DECK') ]),
     makeHeroCard("Gladiator Hulk", "Hulk Is King", 5, u, 3, Color.STRENGTH, "Warbound", "", ev => [], { trigger: {
       event: 'DISCARD',
       match: (ev, source) => ev.what === source && ev.getSource() instanceof Card && owner(source) !== undefined,
@@ -6073,7 +6073,7 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
   name: "Doctor Strange",
   team: "Avengers",
 // {RITUAL ARTIFACT} If you drew a card, you may discard Wand of Watoomb to get +3 Attack.
-  c1: makeHeroCard("Doctor Strange", "Wand of Watoomb", 3, u, u, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, 3), ritualArifact(() => turnState.cardsDrawn > 0)),
+  c1: makeHeroCard("Doctor Strange", "Wand of Watoomb", 3, u, u, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, 3), ritualArifact(() => cardsDrawn() > 0)),
 // If you control an Artifact, draw a card.
   c2: makeHeroCard("Doctor Strange", "Keeper of the Sanctum", 4, u, 2, Color.INSTINCT, "Avengers", "FD", ev => {
     playerState.artifact.size && drawEv(ev);

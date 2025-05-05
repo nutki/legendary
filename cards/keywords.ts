@@ -14,6 +14,13 @@ function youMayDiscardThisInsteadEv(event: TriggerableEvType, match: (ev: Ev, c:
   }
 }
 
+function cardsDrawn() {
+  return pastEvents('DRAW').count(e => e.who === playerState);
+}
+function cardsDiscarded() {
+  return pastEvents('DISCARD').count(e => e.who === playerState);
+}
+
 // EXPANSION Dark City
 
 // {TELEPORT}: Instead of playing it, you may set aside a card with the keyword "Teleport". If you do, add it to your new hand at the end of your turn as an extra card.

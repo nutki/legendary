@@ -1050,8 +1050,6 @@ interface Turn extends Ev {
   totalAttack: number
   attackSpecial: { amount: number, cond: (c: Card) => boolean }[]
   recruitSpecial: { amount: number, cond: (c: Card) => boolean }[]
-  cardsDrawn: number
-  cardsDiscarded: Card[]
   pastEvents: Ev[]
   endDrawMod: number
   endDrawAmount: number
@@ -1971,8 +1969,6 @@ function popEvent(): Ev {
     totalAttach: 0,
     totalRecruit: 0,
     cardsPlayed: [],
-    cardsDrawn: 0,
-    cardsDiscarded: [],
     pastEvents: [],
     modifiers: {},
     triggers: [],
@@ -2290,7 +2286,7 @@ function attachFaceDownCardEv(ev: Ev, what: Card, to: (Card | Deck), name: strin
 function recruitForFreeEv(ev: Ev, card: Card): void {
   pushEv(ev, "RECRUIT", { func: buyCard, what: card, where: card.location });
 }
-function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), where: card.location, func: ev => (turnState.cardsDiscarded.push(ev.what), moveCardEv(ev, ev.what, ev.who.discard)) }); }
+function discardEv(ev: Ev, card: Card) { pushEv(ev, "DISCARD", { what: card, who: owner(card), where: card.location, func: ev => moveCardEv(ev, ev.what, ev.who.discard) }); }
 function discardHandEv(ev: Ev, who?: Player) { (who || playerState).hand.each(c => discardEv(ev, c)); }
 function discardDeckEv(ev: Ev, who: Player = playerState) { who.deck.each(c => discardEv(ev, c)); }
 function drawIfEv(ev: Ev, cond: Filter<Card>, func?: (c?: Card) => void, who?: Player) {
@@ -2766,16 +2762,12 @@ function cleanUp(ev: Ev): void {
   drawEv(ev, drawAmount);
 }
 function drawCardEv(ev: Ev, what: Card, who: Player = playerState) {
-  pushEv(ev, "DRAW", { func: ev => {
-    turnState.cardsDrawn++;
-    moveCardEv(ev, ev.what, ev.who.hand);
-  }, what, who });
+  pushEv(ev, "DRAW", { func: ev => moveCardEv(ev, ev.what, ev.who.hand), what, who });
 }
 function drawEv(ev: Ev, amount: number = 1, who: Player = playerState, bottom: boolean = false) {
   if (amount > 0) pushEv(ev, "DRAWCARDS", { who, amount, func: ev => {
     for (let i = 0; i < ev.amount; i++) withPlayerDeckTopEv(ev, c => {
       pushEv(ev, "DRAW", { func: ev => {
-        turnState.cardsDrawn++;
         moveCardEv(ev, ev.what, ev.who.hand, ev.bottom);
       }, what: c, who: ev.who, bottom });
     });
@@ -3288,7 +3280,7 @@ TODO !attached cards view
 
 ENGINE:
 TODO eliminate count per turn in favor of pastevents or closures
-TODO replace totalRecruit/Attack, cardsDrawn and cardsDiscarded with pastEvents (cardsPlayed also?)
+TODO replace totalRecruit/Attack with pastEvents
 TODO remodel triggers to attach on resolution not queuing?
 TODO count escape pile conditions properly (do not count cards temporarly in the escape pile).
 TODO set location of copies (to avoid null pointers in many places)
