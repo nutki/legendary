@@ -1238,7 +1238,7 @@ makeSchemeCard<{names: string[]}>("Find the Split Personality Killer", { twists:
 // EVILWINS: When 6 Bystanders are in the Escape Pile.
 makeSchemeCard("Silence the Witnesses", { twists: 6 }, ev => {
   // Twist: This Scheme captures 3 <b>Hidden Witnesses</b>. If it already had any <b>Hidden Witnesses</b>, put those into the Escape Pile.
-  ev.source.captured.each(c => moveCardEv(ev, c, gameState.escaped));
+  ev.source.attachedFaceDownDeck('WITNESS').each(c => moveCardEv(ev, c, gameState.escaped));
   captureWitnessEv(ev, ev.source, 3);
 }, escapeProgressTrigger(isBystander), () => setSchemeTarget(6)),
 // SETUP: 8 Twists. Add two extra Villain Groups. Split the Villain Deck into 5 shuffled decks, one above each city space.
