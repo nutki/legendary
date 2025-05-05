@@ -4730,7 +4730,7 @@ addVillainTemplates("Messiah Complex", [
 // VP: 3
   [ 2, makeVillainCard("Acolytes", "Frenzy", 12, 3, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, func: ev => {
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, what: c, source: c, desc: "Shatter", func: ev => {
       shatterEv(ev, ev.source);
       revealHeroDeckEv(ev, 1, cards => {
         cards.has(Color.STRENGTH) && gainWoundEv(ev);
@@ -4745,7 +4745,7 @@ addVillainTemplates("Messiah Complex", [
 // VP: 4
   [ 2, makeVillainCard("Acolytes", "Random", 10, 4, {
     escape: ev => eachPlayer(p => p.hand.withRandom(c => discardEv(ev, c))),
-    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, func: ev => {
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, what: c, source: c, desc: "Shatter", func: ev => {
       shatterEv(ev, ev.source);
       revealHeroDeckEv(ev, 1, cards => cards.limit(Color.COVERT | Color.TECH | Color.RANGED).each(c => {
         addTurnMod('defense', c => c === ev.source, c.cost); // TODO It is worded as it should be permanent
