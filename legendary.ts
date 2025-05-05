@@ -2247,7 +2247,14 @@ function doubleAttackEv(ev: Ev) {
 }
 function moveCardEv(ev: Ev, what: Card, where: Deck, bottom?: boolean): void {
   if (!what.instance) return;
-  pushEv(ev, "MOVECARD", { func: ev => moveCard(ev.what, ev.to, ev.bottom), what: what, to: where, bottom: bottom, from: what.location });
+  pushEv(ev, "MOVECARD", { func: ev => {
+    if (ev.from !== ev.what.location) {
+      console.warn("moveCard: card relocated since scheduling move event", ev.from.id, ev.what.location.id);
+      moveCardEv(ev, ev.what, ev.to, ev.bottom);
+    } else {
+      moveCard(ev.what, ev.to, ev.bottom);
+    }
+  }, what: what, to: where, bottom: bottom, from: what.location });
 }
 function shuffleIntoEv(ev: Ev, what: Card | Deck, where: Deck): void {
   const cards = what instanceof Card ? [ what ] : [ ...what.deck ];
