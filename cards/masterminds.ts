@@ -1052,7 +1052,15 @@ makeMastermindCard("Charles Xavier", 8, 6, "X-Men Noir", ev => {
     eachOtherPlayerVM(p => p.victory.limit(isBystander).withRandom(b => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => captureWitnessEv(ev, c, b), p)));
   } ],
 ], {
-  varDefense: c => c.printedDefense + [...hqCards(), ...CityCards()].sum(c => (isBystander(c) ? 1 : 0) + c.captured.count(isBystander))
+  varDefense: c => c.printedDefense + [...hqCards(), ...CityCards()].sum(c => (isBystander(c) ? 1 : 0) + c.captured.count(isBystander) + c.attached('WITNESS').size + c.attached('HUMAN_SHIELD').size),
+  triggers: [ {
+    event: 'MOVECARD',
+    match: ev => ev.from.isHQ && ev.what.attached('WITNESS').size > 0,
+    before: ev => ev.parent.what.attached('WITNESS').each(c => KOEv(ev, c)),
+  } ],
+  init: c => {
+    addStatSet('recruitCost', c => c.attached('WITNESS').size > 0, (c, v) => ({ ...v, cond: () => false }));
+  }
 }),
 // START: The Goblin captures 2 <b>Hidden Witnesses</b>.
 makeMastermindCard("The Goblin, Underworld Boss", 10, 6, "Goblin's Freak Show", ev => {
