@@ -1139,9 +1139,9 @@ function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, 
     c.cost > 0 && gainWoundEv(ev, p);
   }, p);
   cont(ev, () => {
-    const gainCount = pastEvents('GAIN').count(ev2 => ev2.parent === ev);
-    textLog.log(`Demonic Bargain: ${gainCount === 0 ? 'resisted' : 'corrupted'}`);
-    const e = effect instanceof Array ? effect[gainCount] : effect;
+    const gained = pastEvents('GAIN').has(ev2 => ev2.parent === ev);
+    textLog.log(`Demonic Bargain: ${!gained ? 'resisted' : 'corrupted'}`);
+    const e = effect instanceof Array ? effect[gained ? 1 : 0] : effect;
     e(ev);
   });
 }
