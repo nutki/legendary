@@ -549,9 +549,10 @@ function togglePopup(id: string) {
       openPopups.shift();
     }
   }
+  const dist = 160 / (openPopups.length - 1 || 1);
   openPopups.forEach((e, i) => {
     e.element.style.zIndex = (i + 1).toString();
-    e.element.style.top = 40 + (i * 40) + "px";
+    e.element.style.top = 40 + (i * dist) + "px";
   });
 }
 function initUI() {
