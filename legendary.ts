@@ -537,6 +537,12 @@ function moveCard(c: Card, where: Deck, bottom?: boolean): void {
   if (!c.location) {
     TypeError("Moving card without location " + c);
   };
+  if (c.location.knownTopCard === c) {
+    c.location.knownTopCard = undefined;
+  }
+  if (isFaceUp(c) && !bottom && !where.faceup) {
+    where.knownTopCard = c;
+  }
   c.location.remove(c);
   if (c.location.revealedCards) {
     for (const revealed of c.location.revealedCards) {
@@ -590,6 +596,7 @@ class Deck {
   _attached: {[name: string]:Deck}
   deck: Card[]
   revealedCards?: Card[][];
+  knownTopCard?: Card;
   faceup: boolean
   isHQ?: boolean
   isCity?: boolean
@@ -610,7 +617,7 @@ class Deck {
   addNewCard(c: Card, n?: number): Card { let r = undefined; for (let i = 0; i < (n || 1); i++) r = makeCardInPlay(c, this); return r; }
   _put(c: Card) { this.deck.push(c); c.location = this; }
   _putBottom(c: Card) { this.deck.unshift(c); c.location = this; }
-  shuffle() { shuffleArray(this.deck, gameState.gameRand); }
+  shuffle() { shuffleArray(this.deck, gameState.gameRand); this.knownTopCard = undefined; }
   get bottom(): Card { return this.deck[0]; }
   get top(): Card { return this.deck[this.deck.length - 1]; }
   get first(): Card { return this.deck[0]; }
@@ -629,6 +636,7 @@ class Deck {
   attachedFaceDownDeck(name: string): Deck { return attachedDeck(name, this, false); }
   attached(name: string): Card[] { return attachedCards(name, this); }
   registerRevealed(cards: Card[]) {
+    if (cards.includes(this.top)) this.knownTopCard = this.top;
     textLog.log('Revealed ', ...cards, ' from ' + this.id);
     this.revealedCards = this.revealedCards || [];
     this.revealedCards.push(cards);
@@ -2646,6 +2654,7 @@ function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, ac
 function isFaceUp(c: Card) {
   const d = c.location;
   if (!d || d.faceup) return true;
+  if (d.knownTopCard === c) return true;
   if (d.revealedCards && d.revealedCards.some(cards => cards.includes(c))) return true;
   return false;
 }
@@ -3242,7 +3251,7 @@ function mainLoop(): void {
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   renderTextLog(textLog.contents);
   closePopupDecks();
-  if (ev.type !== 'SELECTEVENT') autoOpenPopupDecks();
+  autoOpenPopupDecks(ev.type !== 'SELECTEVENT');
   if (ev.agent) setCurrentPlayer(ev.agent.nr);
   setTimeout(() => {
     const log = document.getElementById("logContainer");

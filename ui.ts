@@ -518,11 +518,13 @@ function getDecks() {
 function closePopupDecks() {
   getPopups().each(d => d.classList.add("hidden"));
 }
-function autoOpenPopupDecks() {
+function autoOpenPopupDecks(cardSelect: boolean) {
   const topLevelSelects = [...document.querySelectorAll<HTMLSelectElement>(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
+  const idToDeck = new Map<string, Deck>(Deck.deckList.map(d => [d.id, d]));
   getPopups().each(d => {
+    const deck = idToDeck.get(d.getAttribute("data-popup-id"));
     const localSelects = [...d.getElementsByClassName("select")].map(e => e.getAttribute("data-card-id"));
-    localSelects.some(e => !topLevelSelects.includes(e)) && togglePopup(d.id);
+    (cardSelect && localSelects.some(e => !topLevelSelects.includes(e)) || deck?.revealedCards?.sum(c => c.length)) && togglePopup(d.id);
   });
 }
 function togglePopup(id: string) {
