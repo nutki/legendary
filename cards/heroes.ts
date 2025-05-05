@@ -1440,8 +1440,8 @@ addHeroTemplates("Villains", [
   uc: makeHeroCard("Loki", "Father of Lies", 5, u, 3, Color.COVERT, "Foes of Asgard", "", ev => {
     chooseOtherPlayerEv(ev, p => lookAtDeckEv(ev, 2, cards => selectCardEv(ev, "Pick the good card", cards, good => {
       chooseOptionEv(ev, "Which to keep", [{ l:"Good", v:true }, { l:"Bad", v:false }], pickedGood => {
-        cards.limit(c => c === good).each(c => moveCardEv(ev, c, pickedGood ? p.deck : playerState.deck));
-        cards.limit(c => c !== good).each(c => moveCardEv(ev, c, pickedGood ? playerState.deck : p.deck));
+        cards.limit(c => c === good).each(c => moveCardEv(ev, c, pickedGood ? p.discard : playerState.discard));
+        cards.limit(c => c !== good).each(c => moveCardEv(ev, c, pickedGood ? playerState.discard : p.discard));
       }, p);
     }), p, playerState));
   }),
