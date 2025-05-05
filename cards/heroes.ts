@@ -3358,6 +3358,7 @@ addHeroTemplates("Noir", [
       discardEv(ev, c);
       c.cost === 0 && playerState.deck.size > 0 && (addAttackEvent(ev, 1), f());
     })));
+    f();
   }),
 },
 {
