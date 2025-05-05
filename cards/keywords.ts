@@ -478,11 +478,38 @@ function revengeVarDefense(c: Card) {
   return c.printedDefense + playerState.victory.limit(isVillain).count(c.leads ? leadBy(c) : isGroup(c.villainGroup));
 }
 function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
-  // TODO hidden witness
+  if (n instanceof Card) attachCardEv(ev, n, v, 'WITNESS');
+  else repeat(n, () => cont(ev, () => gameState.bystanders.withTop(c => attachFaceDownCardEv(ev, c, v, 'WITNESS'))));
+}
+function rescueWitnessActionEv(ev: Ev, what: Card) {
+  return new Ev(ev, 'EFFECT', {
+    what,
+    desc: "Rescue a Witness",
+    where: what.location,
+    func: ev => rescueEv(ev, ev.what),
+    cost: { recruit: 2 },
+  });
+}
+function addWitnessActions(ev: Ev, actions: Ev[]) {
+  // TODO hqHeroes because cardActions can not return an array (in Noir - Charles Xavier)
+  [...fightableCards(), ...gameState.scheme.deck, ...hqHeroes()].forEach(c => c.attached('WITNESS').withLast(w => actions.push(rescueWitnessActionEv(ev, w))));
 }
 
 function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
-  // TODO human shields
+  if (n instanceof Card) attachCardEv(ev, n, v, 'HUMAN_SHIELD');
+  else repeat(n, () => cont(ev, () => gameState.bystanders.withTop(c => attachFaceDownCardEv(ev, c, v, 'HUMAN_SHIELD'))));
+}
+function rescueHumanShieldActionEv(ev: Ev, what: Card) {
+  return new Ev(ev, 'EFFECT', {
+    what,
+    desc: "Rescue a Human Shield",
+    where: what.location,
+    func: ev => rescueEv(ev, ev.what),
+    cost: { attack: what.defense },
+  });
+}
+function addHumanShieldActions(ev: Ev, actions: Ev[]) {
+  fightableCards().forEach(c => c.attached('HUMAN_SHIELD').withLast(w => actions.push(rescueHumanShieldActionEv(ev, w))));
 }
 function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
 function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {

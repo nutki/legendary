@@ -1525,7 +1525,11 @@ gameState = {
     }
   ],
   endDrawAmount: 6,
-  modifiers: {},
+  modifiers: {
+    fightCost: [
+      { cond: c => c.attached('WITNESS').size + c.attached('HUMAN_SHIELD').size > 0, func: (n, v) => ({ ...v, cond: () => false }) }
+    ],
+  },
   players,
   advancedSolo: players.length === 1 ? 'WHATIF' : false,
   finalBlow: gameSetup.withFinalBlow === true,
@@ -2220,6 +2224,8 @@ function getActions(ev: Ev): Ev[] {
   playerState.victory.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   gameState.scheme.attached('AMBUSHSCHEME').each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   addCoordinateActions(ev, p);
+  addWitnessActions(ev, p);
+  addHumanShieldActions(ev, p);
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);
@@ -2933,7 +2939,7 @@ function enterSewersEv(ev: Ev, c: Card, noAmbush?: boolean) {
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
 function villainEscape(ev: Ev): void {
   let c = ev.what;
-  let b = c.captured;
+  let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
   gameState.villainsEscaped++;
   // Handle GotG shards
   c.attached('SHARD').withFirst(c => withMastermind(ev, m => attachShardEv(ev, m, c)));
@@ -2959,7 +2965,7 @@ function defeatEv(ev: Ev, c: Card) {
 }
 function villainDefeat(ev: Ev): void {
   let c = ev.what;
-  let b = c.captured;
+  let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
   c.attached("TACTICS").withLast(t => c = t);
   // TODO according to https://boardgamegeek.com/article/19007319#19007319 defeat triggers would happen here
   // TODO choose move order
