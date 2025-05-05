@@ -1156,6 +1156,7 @@ interface UndoLog {
   undo: () => void
   restart: () => void
   newGame: () => void
+  truncate: () => void
   toString: () => string
   fromString: (s: string) => void
 }
@@ -1271,6 +1272,11 @@ const undoLog: UndoLog = {
   undo: function(this: UndoLog) { this.actions.pop(); this.pos = 0; },
   restart: function (this: UndoLog) { this.actions.splice(1); this.pos = 0; },
   newGame: function (this: UndoLog) { this.actions = []; this.pos = 0; },
+  truncate: function (this: UndoLog) {
+    console.warn(`Truncating undo log from ${this.actions.length} to ${this.pos - 1}`);
+    this.actions = this.actions.slice(0, this.pos - 1);
+    this.pos = 0;
+  },
   toString: function (this: UndoLog) {
     return this.actions.map(v => v.length === 1 ? v : `[${v}]`).join('');
   },
@@ -3127,7 +3133,7 @@ function playEvent(ev: Ev) {
 function mainLoop(): void {
   let extraActions: { name: string, confirm?: boolean, func: () => void }[] = [];
   clickActions = {};
-  while (undoLog.replaying) {
+  try { while (undoLog.replaying) {
   let ev = popEvent();
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": () => pushEvents((<Ev[]>ev.options)[undoLog.readInt() - 1]),
@@ -3142,6 +3148,13 @@ function mainLoop(): void {
     },
     "CONFIRM": () => {},
   })[ev.type] || playEvent)(ev);
+  }} catch (e) {
+    console.error("Log replay error: ", e);
+    if (undoLog.pos) {
+      undoLog.truncate();
+      startGame();
+    }
+    return;
   }
   let ev = popEvent();
   while (!ev.ui) { playEvent(ev); ev = popEvent(); }
