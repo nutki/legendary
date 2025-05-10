@@ -3104,7 +3104,7 @@ function getDisplayInfo() {
 function getEventName(ev: Ev): string {
   if (ev.type === "ENDOFTURN") return "End Turn";
   if (ev.desc) return ev.desc;
-  if (ev.what) return `${ev.type} ${ev.what.cardName}`;
+  if (ev.what) return `${ev.type} ${ev.what.cardName}` + (ev.withViolence ? ev.type !== "RECRUIT" ? " w/violence" : " w/kindness" : "");
   return ev.type;
 }
 let clickActions: {[id: string]:(() => void)} = {};
