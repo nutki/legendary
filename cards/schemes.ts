@@ -214,7 +214,7 @@ makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 
   // Twist: KO all Heroes captured by enemies. Then play another card from the Villain Deck.
   fightableCards().each(e => e.captured.limit(isHero).each(h => KOEv(ev, h)));
   villainDrawEv(ev);
-}, escapeProgressTrigger(isNonGrayHero), () => {
+}, koProgressTrigger(isNonGrayHero), () => {
   setSchemeTarget(9);
   addStatMod('defense', isVillain, c => 2 * c.captured.count(isHero));
   // addStatSet('capturable', isHero, () => true); // Hardcoded
