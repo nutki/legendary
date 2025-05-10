@@ -562,7 +562,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
   },
   cardActions: [(m, ev) => {
     const goblins = m.captured.limit(isBystander);
-    return goblins.map(c => fightActionEv(ev, c))[0]; // TODO SW1 allow returning array 
+    return goblins.size ? fightActionEv(ev, goblins[0]) : noOpActionEv(ev); // TODO SW1 allow returning array
   }],
 }),
 // You can't fight Nimrod unless you made at least 6 Recruit this turn.
