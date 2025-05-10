@@ -979,7 +979,8 @@ makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
 }, [
   [ "Evil Even Oddball", ev => {
   // Each other player reveals their hand. Whoever has the fewest cards with odd-numbered costs (or tied for fewest) gains a Wound.
-    const lowest = -gameState.players.max(p => -p.hand.count(isCostOdd));
+    const lowest = -getOtherPlayersVM().max(p => -p.hand.count(isCostOdd));
+    // TODO: multiplayer reveal hand
     eachOtherPlayerVM(p => p.hand.count(isCostOdd) === lowest && gainWoundEv(ev, p));
   } ],
   [ "Hyper-Insane Healing Factor", ev => {
@@ -988,7 +989,7 @@ makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
   } ],
   [ "Of Course it's Corpse", ev => {
   // The other player with the fewest Evil Deadpool Corpse Villains in their Victory Pile (or tied for fewest) gains a Wound.
-    const lowest = -gameState.players.max(p => -p.victory.count(leadBy(ev.source.mastermind)));
+    const lowest = -getOtherPlayersVM().max(p => -p.victory.count(leadBy(ev.source.mastermind)));
     eachOtherPlayerVM(p => p.victory.count(leadBy(ev.source.mastermind)) === lowest && gainWoundEv(ev, p));
   } ],
   [ "Stitched from Dead (Pool) Parts", ev => {

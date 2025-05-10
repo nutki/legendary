@@ -1805,6 +1805,9 @@ function atLocation(what: Card, ...locations: CityLocation[]) {
 function hasBystander(c: Card): boolean { return c.captured.has(isBystander); }
 function eachOtherPlayer<T>(f: (p: Player) => T): T[] { return gameState.players.filter(e => e !== playerState).map(f); }
 function eachOtherPlayerVM<T>(f: (p: Player) => T): T[] { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
+function getOtherPlayersVM(): Player[] {
+  return gameState.advancedSolo ? gameState.players : gameState.players.filter(e => e !== playerState);
+}
 function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); } // TODO starting from left
 function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
 function revealable(who = playerState) {
