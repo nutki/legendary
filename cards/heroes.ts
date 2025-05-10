@@ -1623,7 +1623,7 @@ addHeroTemplates("Villains", [
   ra: makeHeroCard("Ultron", "Molecular Rearrangement", 8, u, 5, Color.TECH, u, "", ev => {
     eachOtherPlayer(p => revealOrEv(ev, Color.TECH, () => {
       discardHandEv(ev, p); drawEv(ev, 5, p);
-    }));
+    }, p));
     superPower(Color.TECH) && addAttackEvent(ev, 3 * turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev && e.what.cost >= 7));
   }),
 },
