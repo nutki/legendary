@@ -1654,7 +1654,7 @@ addHeroTemplates("Villains", [
 // {POWER Instinct} Kidnap all Bystanders that were KO'd this turn. Then you get +1 Recruit for each Bystander you kidnapped this turn.
 // COST: 7
   ra: makeHeroCard("Venom", "Ravenous Greed", 7, 0, 5, Color.INSTINCT, "Sinister Six", "", [
-    ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardEv(ev, "KO a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c)), p)),
+    ev => eachOtherPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardEv(ev, "KO a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c), p), p)),
     ev => superPower(Color.INSTINCT) && turnState.pastEvents.limit(e => e.type === "KO" && isBystander(e.what) && gameState.ko.deck.includes(e.what)).each(e => rescueEv(ev, e.what)),
     ev => superPower(Color.INSTINCT) && addRecruitEvent(ev, turnState.pastEvents.count(e => e.type === "RESCUE" && isBystander(e.what) && e.who === playerState)),
   ]),
