@@ -994,8 +994,8 @@ makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
   [ "Stitched from Dead (Pool) Parts", ev => {
   // Each other player discards the top card of their deck. Whoever discards the lowest-costing card (or tied for lowest) gains a Wound.
     const s: Card[] = [];
-    eachPlayer(p => revealPlayerDeckEv(ev, 1, c => c.each(c => s.push(c)), p));
-    cont(ev, () => s.highest(c => -c.cost).each(c => { discardEv(ev, c); gainWoundEv(ev, owner(c)); }));
+    eachOtherPlayerVM(p => withPlayerDeckTopEv(ev, c => { discardEv(ev, c); s.push(c); }, p));
+    cont(ev, () => s.highest(c => -c.cost).each(c => gainWoundEv(ev, owner(c))));
   } ],
 ], {
   varDefense: c => c.printedDefense + playerState.victory.count(isTactic),
