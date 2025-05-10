@@ -5856,9 +5856,9 @@ addHeroTemplates("Annihilation", [
   ra: makeHeroCard("Heralds of Galactus", "Galactus Hungers", 10, u, 8, Color.RANGED, u, "D",
     ev => turnState.cardsPlayed.has(c => c.heroName === "Heralds of Galactus") && withLeftmostCitySpace(ev, space => {
       destroyCity(space);
+      space.deck.limit(isVillain).each(c => defeatEv(ev, c));
       addAttackEvent(ev, 2 * gameState.destroyedCitySpaces.length);
       if (!gameState.city.size) gameOverEv(ev, "LOSS", playerState);
-      space.deck.limit(isVillain).each(c => villainEscapeEv(ev, c));
     })
   ),
 },
