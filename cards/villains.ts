@@ -1111,7 +1111,7 @@ addVillainTemplates("Secret Wars Volume 1", [
     escape: ascendToMastermind,
     strike: [
       ev => captureEv(ev, ev.source),
-      ev => eachPlayer(p => p.hand.size === 6 && selectObjectsEv(ev, "Choose cards to discard", ev.source.captured.count(isBystander), p.hand.deck, c => discardEv(ev, c))),
+      ev => eachPlayer(p => p.hand.size === 6 && revealOrEv(ev, Color.COVERT, () => selectObjectsEv(ev, "Choose cards to discard", ev.source.captured.count(isBystander), p.hand.deck, c => discardEv(ev, c), p), p)),
     ]
   })],
 // AMBUSH: {RISEOFTHELIVINGDEAD}
