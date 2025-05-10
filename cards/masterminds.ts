@@ -3014,7 +3014,7 @@ addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
   },
   triggers: [
     { event: 'MOVECARD',
-      match: ev => ev.what.mastermind.location === gameState.astralPlane && ev.to === playerState.victory,
+      match: ev => ev.what.mastermind?.location === gameState.astralPlane && ev.to === playerState.victory,
       replace: ev => {
         const mastermind = ev.parent.what.mastermind;
         moveCardEv(ev, mastermind, gameState.mastermind);
