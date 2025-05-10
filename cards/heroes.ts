@@ -3240,7 +3240,12 @@ addHeroTemplates("Deadpool", [
   team: "Mercs for Money",
 // If you have a Wound in your hand or discard pile, KO it at you get +1 Attack. Otherwise, gain a Wound. These days, getting wounded mostly just pisses me off.
   c1: makeHeroCard("Deadpool", "It'll Grow Back", 4, u, 2.5, Color.INSTINCT, "Mercs for Money", "D", ev => {
-    playerState.discard.has(isWound) ? addAttackEvent(ev, 1) : gainWoundEv(ev);
+    selectCardOrEv(ev, "Choose a Wound to KO", handOrDiscard().limit(isWound), c => {
+      KOEv(ev, c);
+      addAttackEvent(ev, 1);
+    }, () => {
+      gainWoundEv(ev);
+    });
   }),
 // If it's between 8 p.m. and midnight, you get +2 Attack. Otherwise, you get +2 Recruit.
 // {POWER Tech} Screw it, just take both!
