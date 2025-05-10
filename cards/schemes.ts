@@ -252,7 +252,7 @@ makeSchemeCard("Invincible Force Field", { twists: 7 }, ev => {
   // Twist 7 Evil Wins!
   schemeProgressEv(ev, ev.nr);
 }, [], () => {
-  addStatSet('fightCost', isMastermind, (c, { either, ...rest }) => ({ either: either + c.location.attached("FORCEFIELD").size, ...rest}));
+  addStatSet('fightCost', isMastermind, (c, { either, ...rest }) => ({ either: (either || 0) + c.location.attached("FORCEFIELD").size, ...rest}));
   setSchemeTarget(7);
 }),
 // SETUP: 8 Twists.
