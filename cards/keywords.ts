@@ -50,11 +50,12 @@ function versatileEv(ev: Ev, a: number): void {
 function focusActionEv(ev: Ev, cost: ActionCost, effect: (ev: Ev) => void, limit?: number) {
   let func = effect;
   const what = ev.source;
+  const desc = `Focus ${(cost.recruit || 0) + (cost.attack || 0)} ${what.cardName}`;
   if (limit) {
     cost.cond = () => countPerTurn('focus', what) < limit;
     func = ev => { incPerTurn('focus', what); effect(ev); };
   }
-  return new Ev(ev, 'FOCUS', { what, func, cost });
+  return new Ev(ev, 'FOCUS', { what, func, cost, desc });
 }
 function setFocusEv(ev: Ev, recruit: number, f: Handler, limit?: number) {
   addTurnAction(focusActionEv(ev, { recruit }, f, limit));
