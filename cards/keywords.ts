@@ -267,7 +267,8 @@ function isCharacterName(name: string) {
   const names = [ name ];
   if (name === 'Hulk') names.push('Maestro', 'Nul, Breaker of Worlds');
   if (name === 'Wolverine') names.push('Weapon X', 'Old Man Logan');
-  return (c: Card) => names.has(n => c.cardName.includes(n) || c.heroName && c.heroName.includes(n));
+  return (c: Card) => names.has(n => c.cardName.includes(n) || c.heroName?.includes(n)
+    || c.printedVillainGroup?.includes(n) || c.mastermind?.cardName?.includes(n));
 }
 // generic effect
 function xdRampageEv(ev: Ev, name: string | ((c: Card) => boolean), effect0?: (p: Player) => void) {
