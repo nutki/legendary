@@ -557,7 +557,7 @@ function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: H
   addTurnAction(new Ev(ev, 'EFFECT', {
     what: ev.source,
     desc,
-    cost: { cond: c => c.location === gameState.trap && cond(c) },
+    cost: { cond: c => c.location?.attachedTo === gameState.scheme && cond(c) },
     func: ev => { func(ev); moveCardEv(ev, ev.what, playerState.victory); },
   }));
 }

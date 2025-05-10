@@ -1114,7 +1114,6 @@ interface Game {
   city: Deck[]
   shard: Deck
   horror: Deck
-  trap: Deck
   transformed: Deck
   outOfGame: Deck
   triggers: Trigger[]
@@ -1466,7 +1465,6 @@ gameState = {
   scheme: new Deck('SCHEME', true),
   bystanders: new Deck('BYSTANDERS', true),
   shard: new Deck('SHARD', true),
-  trap: new Deck('TRAP', true),
   horror: new Deck('HORROR'),
   transformed: new Deck('TRANSFORMED', true),
   outOfGame: new Deck('OUTOFGAME', false),

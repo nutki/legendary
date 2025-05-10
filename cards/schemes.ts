@@ -1391,7 +1391,7 @@ makeSchemeCard("X-Men Danger Room Goes Berserk", { twists: 8 }, ev => {
   // Twist: Trap! By End of Turn: You may pay 2 Recruit. If you do, shuffle this Twist back into the Villain Deck, then play a card from the Villain Deck. Or Suffer: Stack this Twist next to the scheme as an "Airborne Neurotoxin."
   let paid = false;
   const c = ev.twist;
-  moveCardEv(ev, c, gameState.trap);
+  attachCardEv(ev, ev.what, gameState.scheme, 'TRAP');
   addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: { recruit: 2 }, func: ev => {
     paid = true;
     shuffleIntoEv(ev, ev.what, gameState.villaindeck);
