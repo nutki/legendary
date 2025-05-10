@@ -2993,9 +2993,10 @@ function rescueEv(ev: Ev, what?: Card | number): void {
 }
 function rescueBystander(ev: Ev): void {
   let c = ev.what;
-  if (c.location !== playerState.victory) moveCardEv(ev, c, playerState.victory);
+  const who = ev.who || playerState;
+  if (c.location !== who.victory) moveCardEv(ev, c, who.victory);
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
-  if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who: ev.who });
+  if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who });
 }
 function addTurnTrigger(type: TriggerableEvType, match: (ev: Ev, source: Card) => boolean, f: { replace?: Handler, before?: Handler, after?: Handler } | ((ev: Ev) => void)) {
   const trigger: Trigger = typeof f === "function" ? { event: type, match, after: f } : { event: type, match, ...f };
