@@ -2989,7 +2989,7 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("Warbound", "Korg", 6, 4, {
-    fight: ev => selectCardEv(ev, 'Choose a card to KO', hqCards(), c => {
+    ambush: ev => selectCardEv(ev, 'Choose a card to KO', hqCards(), c => {
       KOEv(ev, c);
       eachPlayer(p => selectCardAndKOEv(ev, p.hand.limit(v => v.cost === c.cost), p));
     }),
