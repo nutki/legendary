@@ -971,16 +971,20 @@ function giveCosmicThreat(what: Card, color: number) {
 
 function contestOfChampionsEv(ev: Ev, color: Filter<Card>, effect1: ((p: Player) => void), effect0: ((p: Player) => void), effectEvil: (() => void), evilCount: number = 2) {
   const champs = new Map<Player, Card>();
-  eachPlayer(p => selectCardOptEv(ev, "Choose a Champion", p.hand.limit(isHero), c => {
-    champs.set(p, c);
-  }, () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
-    champs.set(p, c);
-  }), p), p));
+  eachPlayer(p => selectCardEv(ev, "Choose a Champion", [...p.hand.deck, p.deck], c => {
+    if (c instanceof Deck) revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+      champs.set(p, c);
+    }), p);
+    else champs.set(p, c);
+  }, p));
   revealHeroDeckEv(ev, evilCount, evilChamps => {
     const goodChamps = champs.values();
     const champValue = (c: Card) => c.cost * ([c].has(color) ? 2 : 1) +
       (gameState.contestOfCampionsEvilBonus && evilChamps.includes(c) ? gameState.contestOfCampionsEvilBonus : 0);
     const winningScore = [...goodChamps, ...evilChamps].max(champValue);
+    textLog.log("Contest of Champions results:");
+    for (const [p, c] of champs) textLog.log(`${p.name}: ${c.cardName} - ${champValue(c)}`);
+    evilChamps.highest(champValue).firstOnly().map(c => textLog.log(`Evil: ${c.cardName} - ${champValue(c)}`));
     eachPlayer(p => cont(ev, () => !(champs.get(p) && champValue(champs.get(p)) === winningScore) && effect0(p)));
     eachPlayer(p => cont(ev, () => champs.get(p) && champValue(champs.get(p)) === winningScore && effect1(p)));
     evilChamps.has(c => champValue(c) === winningScore) && cont(ev, effectEvil);
