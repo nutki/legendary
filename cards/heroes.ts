@@ -2002,7 +2002,7 @@ addHeroTemplates("Fear Itself", [
 // COST: 7
 // GUN: 1
   ra: makeHeroCard("Skirn, Breaker of Men", "Break Your Hopes", 7, u, 4, Color.STRENGTH, "Foes of Asgard", "G", ev => {
-    eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p), p));
+    eachPlayer(p => revealOrEv(ev, Color.COVERT, () => pickDiscardEv(ev, 1, p), p));
     cont(ev, () => drawEv(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev)));
   }),
 },
