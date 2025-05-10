@@ -97,12 +97,12 @@ makeMastermindCard("Apocalypse", 12, 6, "Four Horsemen", ev => {
     if (!finalTactic(ev.source)) { rescueEv(ev, 6); shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS")); }
   } ],
 ], { init: m => {
-  const f = (c: Card) => c.villainGroup === m.leads;
+  const f = leadBy(m);
   addStatMod('defense', f, 2);
   let groupSize = gameState.villaindeck.limit(f).uniqueCount(c => c.cardName);
   gameState.triggers.push({
     event: "ESCAPE",
-    match: ev => ev.what.villainGroup === m.leads,
+    match: ev => f(ev.what),
     after: ev => { if (gameState.escaped.limit(f).uniqueCount(c => c.cardName) === groupSize) evilWinsEv(ev, m) }
   })
 }}),
@@ -261,7 +261,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
 }, [
   [ "Dig to Freedom", ev => {
   // Each other player chooses a Subterranea Villain in their Victory Pile and puts it into the Escaped Villains pile.
-      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a villain", p.victory.limit(c => c.villainGroup === ev.source.mastermind.leads), c => moveCardEv(ev, c, gameState.escaped), p))
+      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a villain", p.victory.limit(leadBy(ev.source.mastermind)), c => moveCardEv(ev, c, gameState.escaped), p))
   } ],
   [ "Master of Monsters", ev => {
   // If this is not the final Tactic, reveal the top six cards of the Villain Deck. Play all the Subterranea Villains you revealed. Put the rest on the bottom of the Villain Deck in random order.
@@ -276,7 +276,7 @@ makeMastermindCard("Mole Man", 7, 6, "Subterranea", ev => {
     addRecruitSpecialEv(ev, c => c.location.below && isLocation(c.location.below, 'STREETS'), 6);
   } ],
 ], {
-  varDefense: c => c.printedDefense + gameState.escaped.count(v => v.villainGroup === c.leads),
+  varDefense: c => c.printedDefense + gameState.escaped.count(leadBy(c)),
 }),
 ]);
 addTemplates("MASTERMINDS", "Paint the Town Red", [
@@ -392,7 +392,7 @@ makeMastermindCard("Nick Fury", 9, 6, "Avengers", ev => {
 // Odin gets +1 Attack for each Asgardian Warrior in the city and in the Overrun Pile.
 makeMastermindCard("Odin", 10, 6, { henchmen: "Asgardian Warriors" }, ev => {
 // Each player puts an Asgardian Warrior from their Victory Pile into an empty city space. Any player who cannot do so gains a Bindings.
-  eachPlayer(p => selectCardOrEv(ev, "Select an Asgardian Warrior", p.victory.limit(c => gameState.city.has(d => !d.size) && c.villainGroup === ev.source.leads), c => {
+  eachPlayer(p => selectCardOrEv(ev, "Select an Asgardian Warrior", p.victory.limit(c => gameState.city.has(d => !d.size) && leadBy(ev.source)(c)), c => {
     selectCardEv(ev, "Select an empty city space", gameState.city.limit(d => !d.size), d => moveCardEv(ev, c, d), p);
   }, () => gainBindingsEv(ev, p), p));
 }, [
