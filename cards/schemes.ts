@@ -366,14 +366,22 @@ makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_hench
     schemeProgressEv(ev, copStack.size); 
     copStack.withTop(cop => {
       attachCardEv(ev, c, cop, "CAGED");
-      attachCardEv(ev, cop, p.deck, "COPS");
+      attachCardEv(ev, cop, gameState.scheme, "ACTIVE_COP");
     });
   }, p));
-}, [], () => {
+}, [{
+  event: 'DEFEAT',
+  match: ev => ev.what.attached('CAGED').size > 0,
+  after: ev => {
+    const caged = ev.parent.what.attached('CAGED');
+    caged.each(c => choosePlayerEv(ev, p => gainEv(ev, c, p)));
+  },
+}], () => {
+  const avtiveCops = gameState.scheme.attachedDeck('ACTIVE_COP');
   const copStack = gameState.scheme.attachedDeck('COPS');
   gameState.villaindeck.limit(c => c.villainGroup === 'Cops').forEach((c, i) => moveCard(c, i < 2 * gameState.players.size ? copStack : gameState.outOfGame));
   gameState.schemeProgress = copStack.size + 1;
-  gameState.specialActions = ev => playerState.deck.attached('COPS').map(c => fightActionEv(ev, c));
+  gameState.specialActions = ev => avtiveCops.deck.map(c => fightActionEv(ev, c));
 }),
 // SETUP: 8 Twists. Put the Thor Adversary next to this Plot.
 // RULE: Whenever Thor overruns, stack a Plot Twist from the KO pile next to this Plot as a "Triumph of Asgard."
