@@ -1041,7 +1041,7 @@ function heroHighestAbominationEv(ev: Ev) {
   addAttackEvent(ev, hqHeroes().max(c => c.printedAttack) || 0);
 }
 function heroAbominationEv(ev: Ev, l: CityLocation) {
-  addAttackEvent(ev, hqHeroes().limit(c => c.location.id === l).max(c => c.printedAttack) || 0);
+  addAttackEvent(ev, hqHeroes().limit(c => c.location?.below?.id === l).max(c => c.printedAttack) || 0);
 }
 function doubleAbominationVarDefense(c: Card) {
   return c.printedDefense + 2 * (c.location.above ? c.location.above.limit(isHero).limit(hasAttackIcon).sum(c => c.printedAttack) || 0 : 0);

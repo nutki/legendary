@@ -5678,7 +5678,7 @@ addHeroTemplates("Realm of Kings", [
 // {WHEN RECRUITED} {SEWERS ABOMINATION} (after refilling HQ)
 // {POWER Strength} {STREETS ABOMINATION}
   c2: makeHeroCard("Gorgon", "Stomping Shockwave", 5, u, 2, Color.STRENGTH, "Inhumans", "D", ev => superPower(Color.STRENGTH) && heroAbominationEv(ev, 'STREETS'), {
-    whenRecruited: ev => heroAbominationEv(ev, 'STREETS'),
+    whenRecruited: ev => heroAbominationEv(ev, 'SEWERS'),
   }),
 // {WHEN RECRUITED} You may KO one of your cards with no Attack icon.
 // {HIGHEST ABOMINATION}
