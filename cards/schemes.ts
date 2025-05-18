@@ -2384,7 +2384,7 @@ makeSchemeCard<{ locations: Map<Player, Deck>, tornado: Card }>("Tornado of Terr
     // Then move this Tornado card and each Villain simultaneously one space to the left. (A Villain on the Bridge escapes.)
     eachPlayer(p => ev.state.locations.get(p) === tornadoAt && gainWoundEv(ev, p));
     gameState.city.each(d => d.limit(isVillain).each(c => {
-      d.adjacentLeft ? moveCardEv(ev, c, d.adjacentLeft) : villainEscapeEv(ev, c);
+      cont(ev, () => d.adjacentLeft ? moveCardEv(ev, c, d.adjacentLeft) : villainEscapeEv(ev, c));
     }));
     tornadoAt.adjacentLeft && attachCardEv(ev, ev.state.tornado, tornadoAt.adjacentLeft, 'TORNADO');
   } else if (ev.nr >= 6 && ev.nr <= 9) {
