@@ -2201,6 +2201,17 @@ function recruitableCards(): Card[] {
   const sidekicks = gameState.sidekick.deck.lastOnly().filter(c => !pastEvents('RECRUIT').has(ev => ev.what.isSidekick));
   return [...hqHeroes(), gameState.officer.top, ...sidekicks, gameState.madame.top, gameState.newRecruit.top].filter(c => c);
 }
+function cheatActionEv(ev: Ev) {
+  return new Ev(ev, 'EFFECT', { desc: "Cheat", func: ev => {
+    chooseOneEv(ev, "Cheat",
+      ["1 recruit", () => addRecruitEvent(ev, 1)],
+      ["1 attack", () => addAttackEvent(ev, 1)],
+      ["1 piercing", () => addPierciengEvent(ev, 1)],
+      ["1 shard", () => gainShardEv(ev)],
+      ["Escape a villain", () => selectCardEv(ev, "Choose a villain to escape", fightableCards().limit(isVillain), c => villainEscapeEv(ev, c))],
+    )
+  }});
+}
 function getActions(ev: Ev): Ev[] {
   let p = playerState.hand.limit(c => (isHero(c) || isArtifact(c) || isEnragingWound(c)) && canPlay(c)).map(e => (new Ev(ev, "PLAY", { func: playCard, what: e })));
   p = p.concat(playerState.hand.deck.limit(c => c.hasTeleport()).map(e => (new Ev(ev, "TELEPORT", { func: teleportCard, what: e }))));
@@ -2231,6 +2242,7 @@ function getActions(ev: Ev): Ev[] {
   addCoordinateActions(ev, p);
   addWitnessActions(ev, p);
   addHumanShieldActions(ev, p);
+  // p.push(cheatActionEv(ev));
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);
