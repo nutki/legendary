@@ -2793,7 +2793,7 @@ function drawEv(ev: Ev, amount: number = 1, who: Player = playerState, bottom: b
       pushEv(ev, "DRAW", { func: ev => {
         moveCardEv(ev, ev.what, ev.who.hand, ev.bottom);
       }, what: c, who: ev.who, bottom });
-    });
+    }, ev.who);
   }});
 }
 function drawBottomEv(ev: Ev, amount: number = 1, who: Player = playerState) {
