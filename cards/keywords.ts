@@ -766,8 +766,9 @@ function chivalrousDuelSources() {
   const amounts = new Map<string, number>();
   pastEvents("ADDATTACK").each(ev => {
     const source = ev.getSource();
-    if (ev.amount && source && source.heroName) {
-      amounts.set(source.heroName, (amounts.get(source.heroName) || 0) + ev.amount);
+    if (ev.amount && source && isHero(source)) {
+      const heroName = source.heroName || source.cardName;
+      amounts.set(heroName, (amounts.get(heroName) || 0) + ev.amount);
     }
   });
   pastEvents("CHIVALROUSSPEND").each(ev => {
