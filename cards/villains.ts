@@ -4809,8 +4809,8 @@ addVillainTemplates("Messiah Complex", [
   [ 2, makeVillainCard("Clan Yashida", "Gorgon", 5, 4, {
     chivalrousDuel: true,
     ambush: ev => {
-      const names = owned(ev.who).limit(isHero).unique(c => c.heroName).map(n => ({l:n, v:n}));
-      chooseOptionEv(ev, "Choose a Hero Name", names, n => forbidAction('PLAY', c => c.heroName !== n && !isColor(Color.GRAY)(c)));
+      const names = owned(ev.who).limit(isHero).unique(c => c.heroName || c.cardName).map(n => ({l:n, v:n}));
+      chooseOptionEv(ev, "Choose a Hero Name", names, n => forbidAction('PLAY', c => (c.heroName || c.cardName) !== n && !isColor(Color.GRAY)(c)));
     },
     fight: ev => {},
   })],
