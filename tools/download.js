@@ -62,6 +62,7 @@ function downloadMatrixFont(name) {
 }
 
 function downloadParcolatorFont(name) {
+  // const url = 'https://db.onlinewebfonts.com/t/c89bbcb900554090a06a5dadaa54ace3.ttf'
   const url = 'https://raw.githubusercontent.com/LegendarySoloPlay/Legendary-Solo-Play/f1daa5f23a9da2c67da700ce6eb0ec4fc642cd89/Fonts/Percolator.otf';
   console.warn("Percolator expert font is not available, using a placeholder.");
   console.warn("You can download the correct font at https://fontzone.net/font-details/percolator-expert and save as " + name);

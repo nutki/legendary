@@ -1795,7 +1795,8 @@ addTemplates("SCHEMES", "Venom", [
 makeSchemeCard("Invasion of the Venom Symbiotes", { twists: 8, vd_henchmen: [2, 2, 2, 3, 3] }, ev => {
   // Twist: This Twist enters the city as a 3 Attack "Symbiote" Villain worth 3VP with "<b>Ambush</b>: This <b>Symbiote Bonds</b> with another Villain in the city. Play another card from the Villain Deck."
   villainify('Symbiote', ev.twist, 3, 3);
-  addStatSet('ambush', c => c === ev.twist, () => ev => symbioteBondEv(ev, cityVillains().limit(v => v !== ev.twist), ev.twist));
+  addStatSet('ambush', is(ev.twist), () => ev => symbioteBondEv(ev, "TO", cityVillains().limit(isNot(ev.source)), ev.source));
+  enterCityEv(ev, ev.twist);
   villainDrawEv(ev);
 }, escapeProgressTrigger(c => true), () => {
   setSchemeTarget(3, true);

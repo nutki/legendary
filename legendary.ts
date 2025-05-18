@@ -806,6 +806,7 @@ interface Ev<TSchemeState = any> {
   failFunc?: (ev: Ev) => void
   withViolence?: boolean
   id: number
+  wasBonded?: boolean
 }
 interface EvParams {
   where?: Deck
@@ -838,6 +839,7 @@ interface EvParams {
   failFunc?: (ev: Ev) => void
   withViolence?: boolean
   actionFilters?: ((ev: Ev) => boolean)[]
+  wasBonded?: boolean
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: EvType, params: EvParams | ((ev: Ev) => void)) {
@@ -1887,6 +1889,7 @@ interface ModifiableStats {
   uSizeChanging?: { color: number, amount: number };
   soaring?: boolean;
   conqueror?: { locations: CityLocation[], amount: number };
+  mastermindUnbind?: Handler;
 }
 
 function safePlus(a: number, b: number) {
@@ -1922,6 +1925,7 @@ function getModifiedStat<T extends keyof ModifiableStats>(c: Card, stat: T, valu
     for (const mod of fortifyModifiers) value = modifyStat(c, mod, value);
     for (const mod of locationModifiers) value = modifyStat(c, mod, value);
   }
+  if (symbioteModifiers[stat] && c.attached("SYMBIOTE").length > 0) value = symbioteModifiers[stat](c.attached("SYMBIOTE")[0], value);
   return modifyStat(c, turnState && turnState.modifiers[stat], modifyStat(c, gameState.modifiers[stat], value));
 }
 function combineHandlers(prev: Handler | Handler[], h: Handler) {
@@ -2164,9 +2168,9 @@ function limitPerTurn(f: (ev: Ev) => boolean, n: number = 1) {
 function pastEvents(t: EvType) {
   return turnState.pastEvents.limit(e => e.type === t);
 }
-function ancestorEvents(ev: Ev) {
+function ancestorEvents(ev: Ev, t: EvType = u) {
   const r: Ev[] = [];
-  for(let e = ev.parent; e; e = e.parent) r.push(e);
+  for(let e = ev.parent; e; e = e.parent) if (!t || e.type === t) r.push(e);
   return r;
 }
 function pastEvWhat(t: EvType) {
@@ -2950,9 +2954,12 @@ function villainEscape(ev: Ev): void {
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   gameState.bystandersCarried += b.count(isBystander);
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, 1, p));
+  const bonded = c.attached('SYMBIOTE')[0];
   moveCardEv(ev, c, gameState.escaped);
+  bonded && moveCardEv(ev, bonded, gameState.escaped);
   selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
   pushEffects(ev, c, "escape", c.escape);
+  bonded && pushEffects(ev, bonded, "escape", bonded.escape);
 }
 function villainFight(ev: Ev): void {
   const c = ev.what;
@@ -2962,24 +2969,37 @@ function villainFight(ev: Ev): void {
   if (ev.withViolence) playViolenceEv(ev);
 }
 function defeatEv(ev: Ev, c: Card) {
-  pushEv(ev, "DEFEAT", { func: villainDefeat, what: c, where: c.location });
+  pushEv(ev, "DEFEAT", { func: villainDefeat, what: c, where: c.location, wasBonded: isBonded(c) });
 }
-function villainDefeat(ev: Ev): void {
+function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   let c = ev.what;
+  const bonded = c.attached('SYMBIOTE')[0];
+  let unbindEffect: Handler | undefined;
+  if (bonded && bondedChoice === undefined) {
+    if (isMastermind(c)) {
+      bondedChoice = false;
+      unbindEffect = getModifiedStat(c, "mastermindUnbind", u);
+    } else {
+      selectCardEv(ev, "Choose a card to defeat", [bonded, c], c1 => villainDefeat(ev, c1 !== c));
+      return;
+    }
+  }
   let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
   c.attached("TACTICS").withLast(t => c = t);
   // TODO according to https://boardgamegeek.com/article/19007319#19007319 defeat triggers would happen here
   // TODO choose move order
-  // TODO all the move effects should happen first
   // Handle GotG shards
   ev.what.attached('SHARD').withFirst(c => gainShardEv(ev, c));
   cont(ev, () => ev.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   ev.what.attached('WEAPON').each(c => gainEv(ev, c));
   ev.what.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
+  if (bondedChoice) c = bonded;
+  else if (bonded) moveCardEv(ev, bonded, c.location);
   b.each(bc => moveCardEv(ev, bc, playerState.victory));
   moveCardEv(ev, c, playerState.victory);
   b.each(bc => rescueEv(ev, bc));
   pushEffects(ev, c, "fight", c.fight, { where: ev.where });
+  if (unbindEffect) pushEv(ev, "EFFECT", { source: c, func: unbindEffect });
   if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
 function rescueByEv(ev: Ev, who: Player, what: Card | number = 1): void {

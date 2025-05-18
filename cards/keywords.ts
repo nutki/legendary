@@ -788,31 +788,42 @@ function digestEv(ev: Ev, amount: number, effect1: Handler, effect0?: Handler, d
   if (hasDigest || doBoth) effect1(ev);
   if (effect0 && (!hasDigest || doBoth)) effect0(ev);
 }
-
-function symbioteBondEv(ev: Ev, to: Card | Card[], what: Card | Card[], unbound?: Handler) {
-  if (to instanceof Array) {
-    selectCardEv(ev, "Choose a Villain to Bond with", to.limit(c => !isBonded(c)), c => symbioteBondEv(ev, c, what, unbound));
-    return;
-  }
+type ModFunc<T> = (c: Card, v?: T) => T
+const symbioteModifiers: {[stat in keyof ModifiableStats]:ModFunc<ModifiableStats[stat]>}  = {
+  defense: (c, v) => v + c.defense,
+  vp: (c, v) => v + c.vp,
+  strike: (c, v) => combineHandlers(v, c.strike),
+  // TODO villainGroup
+}
+function symbioteBondEv(ev: Ev, symbiote: "WHAT" | "TO", what: Card | Card[], to: Card | Card[], unbound?: Handler) {
   if (what instanceof Array) {
-    selectCardEv(ev, 'Choose a Villain to Bond with', what.limit(c => !isBonded(c)), c => symbioteBondEv(ev, to, c, unbound));
-    return;
+    selectCardEv(ev, "Choose a Villain to Bond with", what.limit(c => !isBonded(c)).limit(isNot(to)), c => symbioteBondEv(ev, symbiote, c, to, unbound));
+  } else if (to instanceof Array) {
+    selectCardEv(ev, "Choose a Villain to Bond with", to.limit(c => !isBonded(c)).limit(isNot(what)), c => symbioteBondEv(ev, symbiote, what, c, unbound));
+  } else if (!isBonded(to) && !isBonded(what)) {
+    if (symbiote === "TO") {
+      for (const n in to._attached) if (n !== 'TACTICS') to._attached[n].each(c => attachCardEv(ev, c, what, n));
+      attachCardEv(ev, to, what, 'SYMBIOTE');
+      unbound && addStatSet('mastermindUnbind', is(what), () => unbound);
+    } else {
+      const l = what.location;
+      for (const n in what._attached) if (n !== 'TACTICS') what._attached[n].each(c => attachCardEv(ev, c, to, n));
+      attachCardEv(ev, what, to, 'SYMBIOTE');
+      cont(ev, () => moveCardEv(ev, to, l));
+      unbound && addStatSet('mastermindUnbind', is(to), () => unbound);
+    }
   }
-  if (isBonded(to) || isBonded(what)) return;
- // TODO symbiote bonding
 }
 function isBonded(c: Card) {
-  return false;
-}
-function wasBonded(c: Card) {
-  return false;
+  return c.attached('SYMBIOTE').size > 0 || c.location?.attachedTo?.attached('SYMBIOTE')?.includes(c);
 }
 function poisonBondEv(ev: Ev, to: Card[]) {
   const cards = to.limit(c => c !== ev.source);
-  if (wasBonded(ev.source) || cards.size === 0) {
+  const wasBonded = ancestorEvents(ev, 'DEFEAT').firstOnly().has(e => e.wasBonded);
+  if (wasBonded || cards.size === 0) {
     gainEv(ev, ev.source);
   } else {
-    symbioteBondEv(ev, cards, ev.source);
+    symbioteBondEv(ev, "TO", cards, ev.source);
   }
 }
 // Revelations

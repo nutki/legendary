@@ -1862,16 +1862,16 @@ addTemplates("MASTERMINDS", "Venom", [
 // The highest Attack unbonded Villain from the city and/or Escape Pile <b>Symbiote Bonds</b> with Hybrid. If no new bond could occur, then each player gains a Wound instead.
   const cards = ev.source.epic ? [...cityVillains(), ...gameState.escaped.limit(isVillain)].highest(c => c.defense) : cityVillains();
   const cond = isBonded(ev.source) || (ev.source.epic && cards.size === 0);
-  cond ? eachPlayer(p => gainWoundEv(ev, p)) : symbioteBondEv(ev, ev.source, cards, ev => rescueEv(ev, 3));
+  cond ? eachPlayer(p => gainWoundEv(ev, p)) : symbioteBondEv(ev, "WHAT", ev.source, cards, ev => rescueEv(ev, 3));
 }, [
 // Alien Awakening FIX
   [ "Alien Awakening", ev => {
   // If this is not the final tactic, a Henchman Villain from any Victory Pile <b>Symbiote Bonds</b> with Hybrid.
-    finalTactic(ev.source) || symbioteBondEv(ev, ev.source.mastermind, gameState.players.map(p => p.victory.limit(isHenchman)).merge());
+    finalTactic(ev.source) || symbioteBondEv(ev, "WHAT", ev.source.mastermind, gameState.players.map(p => p.victory.limit(isHenchman)).merge());
   } ],
   [ "Escaped Monstrosity", ev => {
   // If this is not the final Tactic, a Villain from the city or Escape Pile <b>Symbiote Bonds</b> with Hybrid.
-    finalTactic(ev.source) || symbioteBondEv(ev, ev.source.mastermind, [...cityVillains(), ...gameState.escaped.limit(isVillain)]);
+    finalTactic(ev.source) || symbioteBondEv(ev, "WHAT", ev.source.mastermind, [...cityVillains(), ...gameState.escaped.limit(isVillain)]);
   } ],
   [ "Life Foundation Research", ev => {
   // You get +1 Recruit for each Life Foundation Villain in your Victory Pile.
@@ -1879,7 +1879,7 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Symbiotic Call", ev => {
   // If this is not the final Tactic, reveal the top four cards of the Villain Deck. A Henchman Villain you revealed <b>Symbiote Bonds</b> with Hybrid. Put the rest back in any order.
-    finalTactic(ev.source) || revealVillainDeckEv(ev, 4, cards => symbioteBondEv(ev, ev.source.mastermind, cards), false, false);
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 4, cards => symbioteBondEv(ev, "WHAT", ev.source.mastermind, cards), false, false);
   } ],
 ]),
 // Poison Thanos gets +1 Attack for each different cost among cards in his "Poisoned Souls" pile.
