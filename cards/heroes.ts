@@ -4561,7 +4561,7 @@ addHeroTemplates("Venom", [
 // GUN: 1
   c2: makeHeroCard("Venompool", "Shenanigans", 3, u, u, Color.TECH, "Venomverse", "GF", ev => {
     drawEv(ev, 2);
-    cont(ev, () => addTurnTrigger('DRAW', ev => ev.who === playerState && ev.parent.type !== 'CLEANUP', { replace: () => {} }));
+    cont(ev, () => addTurnTrigger('DRAW', ev => ev.who === playerState && ancestorEvents(ev, 'CLEANUP').size === 0, { replace: () => {} }));
   }),
 // Whenever you Rescue a Bystander this turn, do any "rescue" ability on it an extra time.
 // {VIOLENCE} "Rescue" a Bystander.
