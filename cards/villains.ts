@@ -4756,11 +4756,13 @@ addVillainTemplates("Messiah Complex", [
 { name: "Clan Yashida", cards: [
 // <b>Chivalrous Duel</b>
 // AMBUSH: The Villain in the city worth the most VP captures a Bystander.
+// FIGHT: KO a card from your discard pile.
 // ATTACK: 3*
 // VP: 3
   [ 2, makeVillainCard("Clan Yashida", "Silver Samurai", 3, 3, {
     chivalrousDuel: true,
     ambush: ev => selectCardEv(ev, "Choose a villain to capture a bystander", cityVillains().highest(c => c.vp), c => captureEv(ev, c)),
+    fight: ev => selectCardAndKOEv(ev, playerState.discard.deck),
   })],
 // <b>Chivalrous Duel</b>
 // FIGHT: Gain this as a Hero.
