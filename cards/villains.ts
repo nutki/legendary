@@ -4783,12 +4783,15 @@ addVillainTemplates("Messiah Complex", [
     fightCond: c => !c.captured.has(isBystander),
     ambush: ev => {
       captureEv(ev, ev.source);
-      const isBodyguard = (c: Card) => c.location === ev.source.attachedDeck('CAPTURE') && isBystander(c);
+      const isBodyguard = (c: Card) => c.location === ev.source.attachedDeck('CAPTURED') && isBystander(c);
       addStatSet('defense', isBodyguard, () => 3);
       addStatSet('chivalrousDuel', isBodyguard, () => true);
       addStatSet('isVillain', isBodyguard, () => true);
       addStatSet('fight', isBodyguard, () => ev => rescueEv(ev, ev.source));
     },
+    cardActions: [
+      (c, ev) => c.captured.has(isBystander) ? fightActionEv(ev, c.captured.limit(isBystander).lastOnly()[0]) : noOpActionEv(ev),
+    ]
   })],
 // <b>Chivalrous Duel</b>
 // AMBUSH: Choose a Hero Name. You can't play Heroes this turn unless they are that Hero Name or grey Heroes.
