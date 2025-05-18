@@ -2244,7 +2244,7 @@ makeSchemeCard("Turn the Soul of Adam Warlock", { twists: 14, heroes: [ 4, 6, 6,
 // SETUP: 9 Twists. Exactly one Hero must be a Nova Hero. 1 player: 5 Heroes. Each player's starting deck adds 2 Wounds, 1 S.H.I.E.L.D. Officer, and a Nova card that costs 2.
 // RULE: All S.H.I.E.L.D. Officers and a Nova Heroes count as "Nova Centurions."
 // EVILWINS: When there are 5 KO'd Nova Centurions per player.
-makeSchemeCard("Destroy the Nova Corps", { twists: 9, heroes: [ 5, 5, 5, 5, 6 ], required: { heroes: "Nova" } }, ev => {
+makeSchemeCard("Destroy the Nova Corps", { twists: 9, heroes: [ 5, 5, 5, 5, 6 ], required: { heroes: "Nova|Nova@Into the Cosmos" } }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Each player must reveal their hand and discard a Nova Centurion. Each player that discarded this way gains a Shard. Each player that didn't discard this way must KO a card from the S.H.I.E.L.D. Officer Stack.
     eachPlayer(p => selectCardOrEv(ev, "Choose a Centurion to discard",
