@@ -4722,7 +4722,10 @@ addVillainTemplates("Messiah Complex", [
 // VP: 2
   [ 2, makeVillainCard("Acolytes", "Tempo", 16, 2, {
     fight: ev => drawEv(ev, 2),
-    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { func: ev => { shatterEv(ev, ev.source); addEndDrawMod(-1); }})],
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", {
+      what: c, source: c, cost: { cond: c => fightableCards().includes(c) },
+      desc: "Shatter", func: ev => { shatterEv(ev, ev.source); addEndDrawMod(-1); }
+    })],
   })],
 // You may pay 1 Recruit any number of times to {SHATTER} Frenzy. Each time you do, reveal the top card of the Hero Deck and put it on the bottom of that deck. If it's [Strength], gain a Wound. If it's [Instinct], the player on your right gains a Wound.
 // FIGHT: KO one of your Heroes.
@@ -4730,7 +4733,10 @@ addVillainTemplates("Messiah Complex", [
 // VP: 3
   [ 2, makeVillainCard("Acolytes", "Frenzy", 12, 3, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
-    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 1 }, what: c, source: c, desc: "Shatter", func: ev => {
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: {
+      recruit: 1,
+      cond: c => fightableCards().includes(c),
+    }, what: c, source: c, desc: "Shatter", func: ev => {
       shatterEv(ev, ev.source);
       revealHeroDeckEv(ev, 1, cards => {
         cards.has(Color.STRENGTH) && gainWoundEv(ev);
