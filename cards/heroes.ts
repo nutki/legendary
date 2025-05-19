@@ -2171,7 +2171,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   }),
 // {POWER Tech} Whenever you defeat a Villain this turn, you gain a Sidekick.
   c2: makeHeroCard("Maximus", "Enslave the Will", 4, u, 2, Color.TECH, "Cabal", "FD", ev => {
-    superPower(Color.TECH) && addTurnTrigger('DEFEAT', ev => isHenchman(ev.what), ev => gainSidekickEv(ev));
+    superPower(Color.TECH) && addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => gainSidekickEv(ev));
   }),
 // You may have a Henchman Villain from your Victory Pile enter the city. If you do, draw a card.
   uc: makeHeroCard("Maximus", "Pieces on a Chessboard", 5, u, 3, Color.COVERT | Color.TECH, "Cabal", "", ev => {
