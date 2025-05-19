@@ -524,7 +524,7 @@ makeMastermindCard("Uru-Enchanted Iron Man", 7, 6, "The Mighty", ev => {
   } ],
   [ "Repulsor Coils", ev => {
   // Each other player reveals a [Tech] ally or gains a Bindings.
-    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev), p));
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainBindingsEv(ev, p), p));
   } ],
 ], {
   trigger: uruEnchantedTrigger(c => gameState.mastermind.attached("STRIKE").size),
