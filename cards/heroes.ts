@@ -2181,7 +2181,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // {TEAMPOWER Cabal} You get +1 Attack for each Henchman you defeated this turn.
   ra: makeHeroCard("Maximus", "Inhuman Mastery", 7, u, 4, Color.TECH, "Cabal", "", [
     ev => eachOtherPlayer(p => revealOrEv(ev, Color.TECH, () => selectCardEv(ev, "Choose a Henchman", p.victory.limit(isHenchman), c => defeatEv(ev, c), p), p)),
-    ev => superPower("Cabal") && addAttackEvent(ev, turnState.pastEvents.count(e => e.type === 'DEFEAT' && isHenchman(ev.what))),
+    ev => superPower("Cabal") && addAttackEvent(ev, pastEvents('DEFEAT').count(e => isHenchman(e.what))),
   ]),
 },
 {
