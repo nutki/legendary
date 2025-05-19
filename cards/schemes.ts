@@ -3510,6 +3510,7 @@ makeSchemeCard("Marvel Zombies", { twists: 4, heroes: [ 4, 6, 6, 6, 7 ], vd_byst
   villainify("Zombie", isZombie, c => c.cost + 1, ev => playCopyEv(ev, ev.source));
   addStatSet('vp', isZombie, c => c.cost);
   addStatSet('ambush', isZombie, () => riseOfTheLivingDead);
+  addStatSet('riseOfTheLivingDead', isZombie, () => true);
   gameState.villaindeck.shuffle();
   setSchemeTarget(3, true);
 }),

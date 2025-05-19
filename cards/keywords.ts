@@ -260,6 +260,9 @@ function riseOfTheLivingDead(ev: Ev) {
   const cards = gameState.players.map(p => p.victory.top).limit(c => c && hasRiseOfTheLivingDead(c) && isVillain(c));
   selectCardOrderEv(ev, "Choose a card to return to the city", cards, c => villainDrawEv(ev, c));
 }
+function riseOfTheLivingDeadEv(ev: Ev) {
+  pushEv(ev, 'EFFECT', { func: riseOfTheLivingDead });
+}
 
 // {XDRAMPAGE}: "Cross-Dimensional (Character) Rampage" means "Each player reveals one of their (Character) Heroes or a (Character) card in their Victory pile or gains a Wound." (Character) cards include any card with "(Character)" in its card name or Hero name.
 // "Hulk" cards additionally include "Maestro" and "Nul, Breaker of Worlds."

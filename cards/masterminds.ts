@@ -627,28 +627,28 @@ makeMastermindCard("Wasteland Hulk", 7, 6, "Wasteland", ev => {
 // Zombie Green Goblin gets +1 Attack for each Hero in the KO pile that costs 7 or more.
 makeMastermindCard("Zombie Green Goblin", 11, 6, "The Deadlands", ev => {
 // Rise of the Living Dead. KO each Hero in the HQ that costs 7 or more. Then, each player discards a card for each Hero in the KO pile that costs 7 or more.
-  riseOfTheLivingDead(ev);
+  riseOfTheLivingDeadEv(ev);
   hqHeroes().limit(c => c.cost >= 7).each(c => KOEv(ev, c));
   cont(ev, () => eachPlayer(p => selectObjectsEv(ev, "Choose cards to discard", gameState.ko.limit(isHero).count(c => c.cost >= 7), p.hand.deck, c => discardEv(ev, c), p)));
 }, [
   [ "Army of Cadavers", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player discards a card for each Villain in the city that has "Rise of the Living Dead."
-    riseOfTheLivingDead(ev);
-    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", cityVillains().count(c => c.ambush === riseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
+    riseOfTheLivingDeadEv(ev);
+    cont(ev, () => eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", cityVillains().count(hasRiseOfTheLivingDead), p.hand.deck, c => discardEv(ev, c), p)));
   } ],
   [ "The Hungry Dead", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, each other player gains a Wound if there are any Villains in the city with "Rise of the Living Dead".
-    riseOfTheLivingDead(ev);
-    cont(ev, () => cityVillains().has(c => c.ambush === riseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
+    riseOfTheLivingDeadEv(ev);
+    cont(ev, () => cityVillains().has(hasRiseOfTheLivingDead) && eachOtherPlayerVM(p => gainWoundEv(ev, p)));
   } ],
   [ "Love To Have You For Dinner", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, reveal the top 5 cards of the Hero Deck. KO all those Heroes that cost 7 or more. Put the rest on the bottom of the Hero Deck in random order.
-    riseOfTheLivingDead(ev);
+    riseOfTheLivingDeadEv(ev);
     revealHeroDeckEv(ev, 5, cards => cards.limit(c => c.cost >= 7).each(c => KOEv(ev, c)), true, true);
   } ],
   [ "Reign of Terror", ev => {
   // Rise of the Living Dead (this effect never makes Mastermind Tactics return.) Then, put all Heroes from the HQ that cost 6 or less on the bottom of the Hero Deck.
-    riseOfTheLivingDead(ev);
+    riseOfTheLivingDeadEv(ev);
     cont(ev, () => hqHeroes().limit(c => c.cost <= 6).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
   } ],
 ], {
@@ -3695,7 +3695,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     const options = p.victory.limit(c => !isVillain(c) && !hasRiseOfTheLivingDead(c)).firstOnly();
     forceSoulbindEv(ev, c => options.includes(c), p);
   });
-  cont(ev, () => riseOfTheLivingDead(ev));
+  riseOfTheLivingDeadEv(ev);
 }, [
   [ "Chaos Hex", ev => {
     // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
@@ -3734,10 +3734,11 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 ], {
   init: c => {
     addStatSet('riseOfTheLivingDead', leadBy(c), () => true);
+    addStatSet('ambush', leadBy(c), (c, v) => combineHandlers(v, riseOfTheLivingDead));
   },
   commonTacticEffect: ev => {
     attachCardEv(ev, ev.source, playerState.victory, 'WAITFORRISEOFTHELIVINGDEAD');
-    cont(ev, () => riseOfTheLivingDead(ev));
+    riseOfTheLivingDeadEv(ev);
     moveCardEv(ev, ev.source, playerState.victory);
   },
   varDefense: c => c.printedDefense + pastEvents('PLAY').count(ev => isCostOdd(ev.what)),
