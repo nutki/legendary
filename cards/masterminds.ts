@@ -724,6 +724,7 @@ makeMastermindCard("King Hyperion", 12, 6, "Utopolis", ev => {
 }),
 makeMastermindCard("Shiklah, the Demon Bride", 9, 6, "Monster Metropolis", ev => {
 // Reveal the top three cards of the Villain Deck. Put all the Scheme Twists you revealed on top of the Villain Deck. Put the rest on the bottom of that deck in random order.
+  revealVillainDeckEv(ev, 3, cards => cards.limit(isTwist).each(c => moveCardEv(ev, c, gameState.villaindeck)), true, true);
 }, [
   [ "Enslavement Beam", ev => {
   // {FATEFULRESURRECTION}. If she resurrects, rescue four bystanders.
