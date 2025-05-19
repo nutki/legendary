@@ -724,7 +724,7 @@ function copyMastermindTemplate(name: string) {
   const newCard = new Card('MASTERMIND', t.cardName);
   Object.assign(newCard, t);
   newCard.tacticsTemplates = newCard.tacticsTemplates.map(t => {
-    const newTactic = new Card('TACTIC', t.cardName);
+    const newTactic = new Card('TACTICS', t.cardName);
     Object.assign(newTactic, t);
     return newTactic;
   });

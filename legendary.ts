@@ -338,7 +338,7 @@ function makeGainableCard(c: Card, recruit: number, attack: number, color: numbe
   c.team = team;
   c.flags = flags;
   c.printedVP = undefined;
-  if ((c.cardType === "VILLAIN" || c.cardType === "TACTIC") && !c.fight) c.fight = ev => gainEv(ev, ev.source);
+  if ((c.cardType === "VILLAIN" || c.cardType === "TACTICS") && !c.fight) c.fight = ev => gainEv(ev, ev.source);
   if (c.cardType === "BYSTANDER" && !c.rescue) c.rescue = ev => gainEv(ev, ev.source);
   c.effects = typeof effects === "function" ? [ effects ] : effects;
   if (abilities) {
