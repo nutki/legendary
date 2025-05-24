@@ -478,7 +478,7 @@ makeMastermindCard("Supreme Intelligence of the Kree", 9, 6, "Kree Starforce", e
 // Thanos gets -2 Attack for each Infinity Gem Artifact card controlled by any player.
 makeMastermindCard("Thanos", 24, 7, "Infinity Gems", ev => {
 // Each player reveals their hand and puts one of their non-grey Heroes next to Thanos in a "Bound Souls" pile.
-  eachPlayer(p => selectCardEv(ev, "Select a non-grey Hero", p.hand.deck, c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
+  eachPlayer(p => selectCardEv(ev, "Select a non-grey Hero", p.hand.limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
 }, [
   [ "Centuries of Envy", ev => {
   // Each other player discards an Infinity Gem Artifact card they control.
