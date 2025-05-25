@@ -2191,6 +2191,7 @@ function canPlay(c: Card): boolean {
   throw TypeError(`unknown play cost: ${type}`);
 }
 function healCard(ev: Ev): void {
+  textLog.log(`Healing`, ev.what);
   pushEv(ev, "EFFECT", { source: ev.what, func: ev.what.heal });
 }
 function addTurnAction(action: Ev) {
