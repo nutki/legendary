@@ -2381,7 +2381,7 @@ addHeroTemplates("Secret Wars Volume 2", [
 // Reveal the top five cards of the Villain Deck. You get + Attack equal to the printed Victory Point of one of those cards. Put them back in any order.
 // {TEAMPOWER Cabal} Instead, you get + Attack for two of those cards.
   ra: makeHeroCard("Black Swan", "Telepathic Control", 7, u, 0, Color.COVERT, "Cabal", "", ev => {
-    revealVillainDeckEv(ev, 5, cards => selectObjectsEv(ev, "Select cards to gain Attack", superPower("Cabal") ? 2 : 1, cards, c => addAttackEvent(ev, c.vp)));
+    revealVillainDeckEv(ev, 5, cards => selectObjectsEv(ev, "Select cards to gain Attack", superPower("Cabal") ? 2 : 1, cards, c => addAttackEvent(ev, c.vp)), false);
   }),
 },
 {
