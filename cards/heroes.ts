@@ -1518,11 +1518,11 @@ addHeroTemplates("Villains", [
 // {TEAMPOWER Sinister Six} Then, for each other Sinister Six Ally you played this turn, do the same effect. (Use a different Ally from the Lair each time.)
 // COST: 7
   ra: makeHeroCard("Mysterio", "False Reflection", 7, 0, 0, Color.INSTINCT, "Sinister Six", "", ev => {
-    repeat(superPower("Sinister Six") + 1, () => selectCardEv(ev, "Select a card to put on the bottom of the Ally Deck", hqCards(), c => {
+    repeat(superPower("Sinister Six") + 1, () => cont(ev, () => selectCardEv(ev, "Select a card to put on the bottom of the Ally Deck", hqCards(), c => {
       hasAttackIcon(c) && addAttackEvent(ev, c.printedAttack);
       hasRecruitIcon(c) && addRecruitEvent(ev, c.printedRecruit);
       moveCardEv(ev, c, gameState.herodeck, true);
-    }));
+    })));
   }),
 },
 {
