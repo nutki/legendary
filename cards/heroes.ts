@@ -2265,7 +2265,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // {TELEPORT}
 // You may KO a Bystander from your Victory Pile. If you do, you get +2 Attack.
   c2: makeHeroCard("Thanos", "Transdimensional Overlord", 5, u, 2, Color.STRENGTH, "Cabal", "D", ev => {
-    selectCardOptEv(ev, "KO a Bystander", playerState.victory.deck, c => {
+    selectCardOptEv(ev, "KO a Bystander", playerState.victory.limit(isBystander), c => {
       KOEv(ev, c);
       addAttackEvent(ev, 2);
     });
