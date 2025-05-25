@@ -2588,9 +2588,13 @@ function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolea
     src.registerRevealed(cards);
   }});
   cont(ev, () => action(cards));
-  if (random) cont(ev, () => cards.shuffled().each(c => moveCard(c, src, bottom)));
-  else cont(ev, () => cleanupRevealed(ev, cards, src, bottom, agent));
-  cont(ev, () => src.clearRevealed(cards));
+  if (random) {
+    cont(ev, () => src.clearRevealed(cards));
+    cont(ev, () => cards.shuffled().each(c => moveCard(c, src, bottom)));
+  } else {
+    cont(ev, () => cleanupRevealed(ev, cards, src, bottom, agent));
+    cont(ev, () => src.clearRevealed(cards));
+  }
 }
 function revealVillainDeckEv(ev: Ev, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   revealDeckEv(ev, gameState.villaindeck, amount, action, random, bottom, agent);
