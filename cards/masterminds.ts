@@ -1421,7 +1421,7 @@ addTemplates("MASTERMINDS", "Champions", [
 ...makeEpicMastermindCard("Pagliacci", [ 9, 11 ], 6, "Wrecking Crew", ev => {
 // NR[1, 5] This card becomes a Scheme Twist that takes effect immediately.|NR[2, 3, 4] <b>Demolish</b> each player.
 // NR[1, 3, 5] This card becomes a Scheme Twist that takes effect immediately.|NR[2, 4] <b>Demolish</b> each player.
-  if (ev.nr <= 5) (ev.source.epic ? [1, 3, 5] : [1, 5]).includes(ev.nr) ? playTwistEv(ev, ev.source) : demolishEv(ev);
+  if (ev.nr <= 5) (ev.source.epic ? [1, 3, 5] : [1, 5]).includes(ev.nr) ? playTwistEv(ev, ev.twist) : demolishEv(ev);
 }, [
   [ "Commedia Dell'Morte", ev => {
   // Each other player may gain two Wounds. <b>Demolish</b> each of those players who does not.
