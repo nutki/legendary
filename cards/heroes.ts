@@ -2276,7 +2276,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   ),
 // KO six Bystanders from the Bystander Stack. Then, defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in the KO pile.
   ra: makeHeroCard("Thanos", "Utter Annihilation", 8, u, u, Color.RANGED, "Cabal", "", [
-    ev => repeat(6, () => gameState.bystanders.withTop(c => KOEv(ev, c))),
+    ev => repeat(6, () => cont(ev, () => gameState.bystanders.withTop(c => KOEv(ev, c)))),
     ev => selectCardEv(ev, "Choose a Villain", fightableCards().limit(c => c.defense <= gameState.ko.count(isBystander)), c => defeatEv(ev, c)),
   ]),
 },
