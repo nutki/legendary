@@ -2833,7 +2833,7 @@ addVillainTemplates("World War Hulk", [
   [ 2, makeVillainCard("Illuminati", "Hulkbuster Iron Man", 6, 4, {
     escape: ev => xdRampageEv,
     varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 3),
-    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
+    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { source: c, cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
       outwitOrEv(ev, () => {});
     }}) ]
   })],
@@ -2865,7 +2865,7 @@ addVillainTemplates("World War Hulk", [
   [ 2, makeVillainCard("Intelligencia", "Doc Samson", 4, 3, {
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
     varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 4),
-    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
+    cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { source: c, cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
       outwitOrEv(ev, () => {});
     }}) ]
   })],
