@@ -504,17 +504,17 @@ function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
   if (n instanceof Card) attachCardEv(ev, n, v, 'HUMAN_SHIELD');
   else repeat(n, () => cont(ev, () => gameState.bystanders.withTop(c => attachFaceDownCardEv(ev, c, v, 'HUMAN_SHIELD'))));
 }
-function rescueHumanShieldActionEv(ev: Ev, what: Card) {
+function rescueHumanShieldActionEv(ev: Ev, what: Card, villain: Card) {
   return new Ev(ev, 'EFFECT', {
     what,
     desc: "Rescue a Human Shield",
     where: what.location,
     func: ev => rescueEv(ev, ev.what),
-    cost: { attack: what.defense },
+    cost: { attack: villain.defense },
   });
 }
 function addHumanShieldActions(ev: Ev, actions: Ev[]) {
-  fightableCards().forEach(c => c.attached('HUMAN_SHIELD').withLast(w => actions.push(rescueHumanShieldActionEv(ev, w))));
+  fightableCards().forEach(c => c.attached('HUMAN_SHIELD').withLast(w => actions.push(rescueHumanShieldActionEv(ev, w, c))));
 }
 function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
 function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {
