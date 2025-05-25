@@ -2426,9 +2426,9 @@ addHeroTemplates("Secret Wars Volume 2", [
     KOEv(ev, c);
     c.rescue && chooseMayEv(ev, "Use rescue effect", () => pushEffects(ev, c, 'rescue', c.rescue, { who: playerState }));
   })),
-// {PATROL Escape Pile}: If there are none Bystanders in it, you get +2 Attack. Otherwise, you get +2 Recruit.
+// {PATROL Escape Pile}: If there are Bystanders in it, you get +2 Attack. Otherwise, you get +2 Recruit.
   c2: makeHeroCard("Corvus Glaive", "Let None Escape You", 2, 0, 0, Color.STRENGTH | Color.INSTINCT, "Cabal", "FD", ev => {
-    gameState.escaped.has(isBystander) ? addRecruitEvent(ev, 2) : addAttackEvent(ev, 2);
+    gameState.escaped.has(isBystander) ? addAttackEvent(ev, 2) : addRecruitEvent(ev, 2);
   }),
 // {TEAMPOWER Cabal} KO a Bystander from the Bystander Stack. Then, you get +1 Attack for every four Bystanders in the KO Pile.
 // GUN: 1
