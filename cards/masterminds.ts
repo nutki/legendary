@@ -874,6 +874,7 @@ makeMastermindCard("Authoritarian Iron Man", 12, 6, "Superhuman Registration Act
 // Baron Zemo gets -1 Attack for each Villain in your Victory Pile.
 makeMastermindCard("Baron Helmut Zemo", 16, 6, "Thunderbolts", ev => {
 // Each player KOs a Villain from their Victory Pile. Any player who cannot do so gains a Wound.
+  eachPlayer(p => selectCardOrEv(ev, "Choose a Villain to KO", p.victory.limit(isVillain), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
 }, [
   [ "Blasted Henchmen!", ev => {
   // Each other player reveals a Tech Hero or KOs a Villain from their Victory Pile.
