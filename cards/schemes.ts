@@ -1551,7 +1551,7 @@ makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twis
 }),
 // SETUP: 8 Twists. Add another Henchman Villain Group. No Bystanders in the Villain Deck.
 // EVILWINS: When 8 Villains are in the Escape pile.
-makeSchemeCard("Hypnotize Every Human", { twists: 8, vd_bystanders: 0, vd_villain: [ 2, 3, 4, 4, 5 ], }, ev => {
+makeSchemeCard("Hypnotize Every Human", { twists: 8, vd_bystanders: 0, vd_henchmen: [ 2, 2, 2, 3, 3 ], }, ev => {
   if (ev.nr <= 6) {
     // Twist 1-6 Put a Bystander from the Bystander Stack above each city space as a facedown 2 Attack "Hypno-Thrall" Villain. They don't move. When you fight one, rescue it as a Bystander. You can't fight a Villain in a city space that has any Hypno-Thralls above it.
     gameState.city.each(d => cont(ev, () =>{
