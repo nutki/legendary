@@ -2791,7 +2791,7 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 13*
 // VP: 5
   [ 2, makeVillainCard("Illuminati", "Black Bolt", 13, 5, {
-    escape: ev => {},
+    escape: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(hasFlag('N')), c => discardEv(ev, c), p)),
     varDefense: c => c.printedDefense - 2 * pastEvents('DISCARD').count(e => e.source === c),
     cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { source: c, what: c, cost: { cond: c => fightableCards().includes(c) }, func: ev => {
       selectCardEv(ev, "Discard a card with no rules text", playerState.hand.limit(hasFlag('N')), c => discardEv(ev, c));
