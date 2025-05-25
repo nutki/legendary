@@ -3941,7 +3941,7 @@ addHeroTemplates("Champions", [
 // {SIZECHANGING STRENGTH}
 // If you have a Wound in your hand or discard pile, KO it and you get +2 Attack. Otherwise, gain a Wound.
   uc: makeHeroCard("Totally Awesome Hulk", "Growing Pains", 5, u, 2, Color.STRENGTH, "Champions", "D", ev => {
-    handOrDiscard().has(isWound) ? addAttackEvent(ev, 2) : gainWoundEv(ev);
+    selectCardOrEv(ev, "Select a card to KO", handOrDiscard().limit(isWound), c => { KOEv(ev, c); addAttackEvent(ev, 2); }, () => gainWoundEv(ev));
   }, { sizeChanging: Color.STRENGTH }),
 // {SIZECHANGING TECH STRENGTH}
 // You get +1 Attack for each extra card you drew this turn.
