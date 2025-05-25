@@ -482,7 +482,7 @@ makeMastermindCard("Thanos", 24, 7, "Infinity Gems", ev => {
 }, [
   [ "Centuries of Envy", ev => {
   // Each other player discards an Infinity Gem Artifact card they control.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Select an Infinity Gem", p.artifact.limit(isGroup("Inifinity Gems")), c => discardEv(ev, c), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Select an Infinity Gem", p.artifact.limit(isGroup("Infinity Gems")), c => discardEv(ev, c), p));
   } ],
   [ "God of Death", ev => {
   // Each other player reveals their hand and gains a Wound for each card that player has with the same card name as any card in Thanos' Bound Souls pile.
