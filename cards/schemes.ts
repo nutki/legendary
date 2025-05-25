@@ -1222,8 +1222,8 @@ addTemplates("SCHEMES", "Noir", [
 makeSchemeCard<{names: string[]}>("Find the Split Personality Killer", { twists: 8 }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Shuffle 3 Bystanders from the Bystander Stack and the top card of the Hero Deck face down next to this Scheme as a deck of "Murder Suspects."
-    repeat(3, () => cont(ev, () => gameState.bystanders.withTop(c => attachCardEv(ev, c, gameState.scheme, 'SUSPECTS'))));
-    cont(ev, () => gameState.herodeck.withTop(c => attachCardEv(ev, c, gameState.scheme, 'SUSPECTS')));
+    repeat(3, () => cont(ev, () => gameState.bystanders.withTop(c => attachFaceDownCardEv(ev, c, gameState.scheme, 'SUSPECTS'))));
+    cont(ev, () => gameState.herodeck.withTop(c => attachFaceDownCardEv(ev, c, gameState.scheme, 'SUSPECTS')));
   } else if (ev.nr === 6) {
     // Twist 6 Each player writes down their guess for which Hero Name is the Split Personality Killer. Reveal the entire Murder Suspects Deck. The Hero Name with the most cards in the Murder Suspect Deck (or tied for most) is the Split Personality Killer. Each player who guessed right wins. All other players lose.
     const suspects = gameState.scheme.attached('SUSPECTS');
@@ -1238,7 +1238,7 @@ makeSchemeCard<{names: string[]}>("Find the Split Personality Killer", { twists:
   event: 'DEFEAT',
   match: ev => isVillain(ev.what) && canPayCost(new Ev(ev, 'EFFECT', { func: () => {}, cost: { attack: 1 } })),
   after: ev => chooseMayEv(ev, "Pay 1 Attack to Investigate Murder Suspects", () => pushEv(ev, 'EFFECT', { func: ev => {
-    investigateEv(ev, isBystander, gameState.scheme.attachedDeck('SUSPECTS'), c => rescueEv(ev, c));
+    investigateEv(ev, isBystander, gameState.scheme.attachedFaceDownDeck('SUSPECTS'), c => rescueEv(ev, c));
   }, cost: { attack: 1 } })),
 }, s => {
   s.names = gameState.herodeck.deck.unique(c => c.heroName).limit(c => c !== undefined);
