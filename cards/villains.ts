@@ -2115,7 +2115,7 @@ addVillainTemplates("Noir", [
       selectCardEv(ev, "Choose a Hero", hqHeroes(), c => {
         const l = c.location;
         let on = true;
-        addTurnTrigger('MOVECARD', ev => ev.to === c.location && on, { replace: () => {}});
+        addTurnTrigger('MOVECARD', ev => ev.to === l && on, { replace: () => {} });
         KOEv(ev, c);
         cont(ev, () => on = false);
         investigateEv(ev, u, gameState.herodeck, h => moveCardEv(ev, h, l));
