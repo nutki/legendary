@@ -2047,11 +2047,11 @@ addVillainTemplates("Noir", [
     ambush: ev => captureWitnessEv(ev, ev.source, hqHeroes().count(c => c.cost >= 7)),
     varDefense: c => hqHeroes().max(c => c.cost) || 0,
   })],
-// AMBUSH: Each other player reveals a Strength Hero or Ox captures a random Bystander from their Victory Pile as a <b>Hidden Witness</b>.
+// AMBUSH: Each player reveals a Strength Hero or Ox captures a random Bystander from their Victory Pile as a <b>Hidden Witness</b>.
 // ATTACK: 5*
 // VP: 3
   [ 1, makeVillainCard("Goblin's Freak Show", "Ox", 5, 3, {
-    ambush: ev => eachOtherPlayerVM(p => revealOrEv(ev, Color.STRENGTH, () => p.victory.limit(isBystander).withRandom(c => captureWitnessEv(ev, ev.source, c)), p)),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => p.victory.limit(isBystander).withRandom(c => captureWitnessEv(ev, ev.source, c)), p)),
   })],
 // AMBUSH: Each Goblin's Freak Show Villain captures a <b>Hidden Witness</b>.
 // ATTACK: 4*
