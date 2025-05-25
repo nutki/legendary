@@ -2110,7 +2110,7 @@ addHeroTemplates("Secret Wars Volume 1", [
     revealPlayerDeckEv(ev, 3, cards => {
       const selected = new Set<Card>();
       selectObjectsAnyEv(ev, "Choose cards to draw", cards, c => selected.add(c));
-      cards.each(c => selected.has(c) ? drawCardEv(ev, c) : teleportEv(ev, c));
+      cont(ev, () => cards.each(c => selected.has(c) ? drawCardEv(ev, c) : teleportEv(ev, c)));
     });
   }),
 },
