@@ -1968,8 +1968,8 @@ addTemplates("MASTERMINDS", "Dimensions", [
     what: c,
     cost: { recruit: c.epic ? 5 : 4, cond: c => c.attached('MOBS').size > 0 },
     desc: "Reveal Angry Mobs",
-    func: ev => c.attached('MOBS').withRandom(c => {
-      isVillain(c) && leadBy(c) ? enterCityEv(ev, c) : choosePlayerEv(ev, p => moveCardEv(ev, c, p.discard));
+    func: ev => c.attached('MOBS').withRandom(c1 => {
+      isVillain(c1) && leadBy(c)(c1) ? enterCityEv(ev, c1) : choosePlayerEv(ev, p => moveCardEv(ev, c1, p.discard));
     }),
   }) ],
   fightCond: c => c.attached('MOBS').size === 0,
