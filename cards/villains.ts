@@ -1545,7 +1545,9 @@ addVillainTemplates("Secret Wars Volume 2", [
       cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, c, ev.source, "PAWN")));
       cont(ev, () => selected.each(c => attachCardEv(ev, c, ev.source, "PAWN")));
     },
+    fightCond: c => c.attached("PAWN").size === 0,
     cardActions: [ (c: Card, ev: Ev) => c.attached("PAWN").size ? recruitCardActionEv(ev, c.attachedDeck("PAWN").top) : noOpActionEv(ev) ],
+    varDefense: c => c.printedDefense + c.attached("PAWN").size,
   })],
 // FIGHT: Gain this as a Hero.
 // ESCAPE: {XDRAMPAGE Wolverine}
@@ -2097,7 +2099,7 @@ addVillainTemplates("Noir", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("X-Men Noir", "Scott \"Cyclops\" Summers", 6, 4, {
-    escape: ev => {},
+    escape: ev => eachPlayer(p => investigateEv(ev, c => c.cost >= 1, p.deck, c => KOEv(ev, c), p, true)),
   })],
 // ESCAPE: <b>Investigate</b> the Villain Deck for a Scheme Twist and play it. Reveal all the cards you <b>Investigated</b>.
 // ATTACK: 6
