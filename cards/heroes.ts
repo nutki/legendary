@@ -4242,7 +4242,13 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // Count the number of different printed VP values in your Victory Pile. Draw that many cards.
   ra: makeTransformingHeroCard(
-    makeHeroCard("Rick Jones", "Caught in Kree-Skrull War", 7, u, 4, Color.COVERT, "S.H.I.E.L.D.", "", ev => turnState.pastEvents.count(e => e.type === 'DEFEAT' && isVillain(e.what)) >= 2 && transformHeroEv(ev, ev.source, 'DECK')),
+    makeHeroCard("Rick Jones", "Caught in Kree-Skrull War", 7, u, 4, Color.COVERT, "S.H.I.E.L.D.", "", ev => {
+      const source = ev.source;
+      addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => {
+        incPerTurn('TRANSFORM', source);
+        if (countPerTurn('TRANSFORM', source) === 2) transformHeroEv(ev, source, 'DECK');
+      });
+    }),
     makeHeroCard("Rick Jones", "The Destiny Force", 9, u, u, Color.RANGED, "Avengers", "", ev => drawEv(ev, playerState.victory.limit(c => c.printedVP !== undefined).uniqueCount(c => c.printedVP))),
   ),
 },
