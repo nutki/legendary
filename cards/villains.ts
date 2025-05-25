@@ -1416,7 +1416,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // VP: 5
   [ 2, makeVillainCard("K'un-Lun", "Laughing Skull", 5, 5, {
     ...nthCircleParams(5),
-    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 6, () => pickDiscardEv(ev, 1, p), p)),
+    escape: ev => eachPlayer(p => revealOrEv(ev, c => c.cost >= 5, () => pickDiscardEv(ev, 1, p), p)),
   })],
 // {NTHCIRCLE 6}
 // ESCAPE: Each player reveals a Hero that costs 6 or more, or they gain a wound.
