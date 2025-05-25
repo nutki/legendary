@@ -4829,9 +4829,10 @@ addHeroTemplates("Revelations", [
     revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
       discardEv(ev, c);
       addTurnAction(new Ev(ev, 'EFFECT', { what: c, cost: {
-        cond: c => c.location === p.discard
+        cond: c => c.location === p.discard && !countPerTurn('HEXBOLT', c)
       }, func: ev => {
         playCopyEv(ev, ev.what);
+        incPerTurn('HEXBOLT', ev.what);
       } }));
     }), p);
   })),
