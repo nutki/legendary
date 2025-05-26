@@ -362,7 +362,7 @@ function fatefulResurrectionTacticEv(ev: Ev, effect: () => void) {
 // <b>Charge</b>: "Ambush: Charge one space" means "(After this Villain enters the Sewers,) it charges forward an extra space, pushing other Villains forward."
 function villainChargeEv(ev: Ev, c: Card, n: number) {
   repeat(n, () => cont(ev, () => {
-    c.location.next ? moveCardEv(ev, c, c.location.next) : villainEscapeEv(ev, c);
+    if (c.location.isCity) c.location.next ? moveCardEv(ev, c, c.location.next) : villainEscapeEv(ev, c);
   }));
 }
 const chargeAmbushEffect = (n: number) => (ev: Ev) => villainChargeEv(ev, ev.source, n);

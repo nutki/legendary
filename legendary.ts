@@ -2966,6 +2966,7 @@ function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func
 function villainEscape(ev: Ev): void {
   let c = ev.what;
   let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
+  textLog.log("Escaped:", c);
   gameState.villainsEscaped++;
   // Handle GotG shards
   c.attached('SHARD').withFirst(c => withMastermind(ev, m => attachShardEv(ev, m, c)));
