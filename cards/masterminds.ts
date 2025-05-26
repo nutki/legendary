@@ -2588,7 +2588,7 @@ addTemplates("MASTERMINDS", "Realm of Kings", [
 ...makeEpicMastermindCard("Maximus the Mad", [ 8, 9 ], 6, "Inhuman Rebellion", ev => {
 // Reveal one of Maximus' remaining Mastermind Tactics at random. Use its Fight effect, then shuffle it back into those Tactics.
 // Reveal two different Tactics at random from Maximus' remaining Mastrmind Tactics. Then use each of those fight effects in the order that you revealed them. Then shuffle them back into those Tactics.
-  const tactics = ev.source.mastermind.attachedDeck("TACTICS");
+  const tactics = ev.source.attachedDeck("TACTICS");
   tactics.shuffle();
   cont(ev, () => {
     revealDeckEv(ev, tactics, ev.source.epic ? 2 : 1, cards => cards.each(c => {
