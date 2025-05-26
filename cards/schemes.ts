@@ -1256,8 +1256,27 @@ makeSchemeCard("Silence the Witnesses", { twists: 6 }, ev => {
 makeSchemeCard("Five Families of Crime", { twists: 8, vd_villain: [ 3, 4, 5, 5, 6 ] }, ev => { // TODO
   // Twist: Play two cards from a Villain Deck.
   villainDrawEv(ev); villainDrawEv(ev);
-}, escapeProgressTrigger(isVillain), () => {
+}, [
+  escapeProgressTrigger(isVillain),
+  {
+    event: 'TURNSTART',
+    before: ev => {
+      gameState.villaindeck.each(c => moveCardEv(ev, c, gameState.cityEntry.attachedFaceDownDeck('FAMILY'), true));
+      cont(ev, () => {
+        gameState.city.has(d => d.attached('FAMILY').size > 0) || evilWinsEv(ev);
+      });
+      cont(ev, () => selectCardEv(ev, "Choose a family", gameState.city.limit(d => d.attached('FAMILY').size > 0), d => {
+        d.attached('FAMILY').each(c => {console.log(c); moveCardEv(ev, c, gameState.villaindeck, true);});
+        gameState.cityEntry = d;
+      }));
+    }
+  },
+], () => {
   setSchemeTarget(8);
+  [...gameState.villaindeck.deck].forEach((c, i) => {
+    const family = gameState.city[i % gameState.city.size].attachedFaceDownDeck('FAMILY');
+    moveCard(c, family);
+  });
   gameState.city.each(d => d.next = undefined);
 }),
 // SETUP: 8 Twists. Shuffle the Mastermind Tactics into the Villain Deck as Villains.
