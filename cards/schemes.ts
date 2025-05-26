@@ -2462,9 +2462,16 @@ makeSchemeCard("Sneak Attack the Heroes' Homes", { twists: 6 }, ev => {
   schemeProgressEv(ev, ev.nr);
 }, [], () => {
   eachPlayer(p => {
-    repeat(3, () => gameState.wounds.withTop(c => moveCard(c, p.hand)));
-    // TODO init time choices
+    repeat(3, () => gameState.wounds.withTop(c => moveCard(c, p.deck)));
+    const chosenHeroCards = gameState.herodeck.limit(isSetupGroup('heroes', p.nr));
+    const cardNameCounts = new Map<string, number>();
+    chosenHeroCards.each(c => cardNameCounts.set(c.cardName, (cardNameCounts.get(c.cardName) || 0) + 1));
+    const namesByRarity = [...cardNameCounts.entries()].sort((a, b) => b[1] - a[1]).map(([name]) => name);
+    const threeNonRare = namesByRarity.slice(0, -1).shuffled().slice(0, 3) // Remove rarest and take 3 at random
+    threeNonRare.each(name => gameState.herodeck.limit(c => c.cardName === name).withFirst(c => moveCard(c, p.deck)));
+    p.deck.shuffle();
   });
+  gameState.herodeck.shuffle();
   setSchemeTarget(6);
 }),
 // SETUP: 11 Twists. Stack 11 Bystanders next to the Scheme face down as "Galactus Jurors."

@@ -1318,6 +1318,10 @@ interface Setup {
   withShards: boolean
   withFinalBlow?: boolean
 }
+function isSetupGroup(type: 'heroes' | 'villains' | 'henchmen', idx: number = -1): (c: Card) => boolean {
+  return (c: Card) => c.templateId === gameState.gameSetup[type][idx < 0 ? gameState.gameSetup[type].length + idx : idx];
+}
+const isExtraHero = isSetupGroup('heroes');
 function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
   return h[h.length - n];
