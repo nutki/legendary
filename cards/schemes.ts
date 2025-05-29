@@ -1794,14 +1794,15 @@ makeSchemeCard("Transform Commuters into Giant Ants", { twists: [7, 8, 9, 10, 11
     repeat(amount, () => cont(ev, () => {
       gameState.bystanders.withTop(c => {
         villainify("Giant Ant", c, 2, "RESCUE");
-        attachCardEv(ev, c, gameState.scheme, 'ANT');
+        attachFaceDownCardEv(ev, c, gameState.mastermind, 'ANT');
       });
     }));
+    cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('ANT').size));
   });
 }, [], () => {
-  // TODO make ants face down
   // TODO remake excessive violence to work here
-  gameState.specialActions = ev => gameState.scheme.attached('ANT').map(c => fightActionEv(ev, c));
+  setSchemeTarget(10);
+  gameState.specialActions = ev => gameState.mastermind.attached('ANT').map(c => fightActionEv(ev, c));
 }),
 // SETUP: 11 Twists. Add all 14 cards for and extra Hero the Villain Deck.
 // RULE: Heroes in the Villain Deck are "Micro-Sized Villains with Attack equal to their printed cost. They have <b>Size-Changing</b> for their card color and no outher abilites while in the city. When you fight one, choose any player to gain it as a Hero.
