@@ -3298,7 +3298,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 3
 // VP: 3
   [ 1, makeVillainCard("Life Foundation", "Agony", 3, 3, {
-    ambush: ev => revealVillainDeckEv(ev, 3, cards => symbioteBondEv(ev, "WHAT", ev.source, cards), false, false),
+    ambush: ev => revealVillainDeckEv(ev, 3, cards => symbioteBondEv(ev, "WHAT", ev.source, cards.limit(isVillain)), false, false),
     escape: ev => eachPlayer(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p)),
   })],
 // FIGHT: Each [Instinct] and [Tech] Hero currently in the HQ costs 1 less this turn.
