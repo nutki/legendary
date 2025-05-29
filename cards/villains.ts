@@ -5966,7 +5966,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
         if (ev.source.attached('HENCHMEN').size >= gameState.players.length + 2) {
           eachPlayer(p => gainWoundEv(ev, p));
           selectObjectsEv(ev, "Choose Henchmen to enter the city", 3, ev.source.attached('HENCHMEN'), c => {
-            enterCityEv(ev, c);
+            cont(ev, () => enterCityEv(ev, c));
           });
           cont(ev, () => {
             ev.source.attached('HENCHMEN').each(c => KOEv(ev, c));
