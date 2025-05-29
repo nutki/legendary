@@ -5955,6 +5955,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
       match: (ev, source) => ev.where === source.attachedDeck('HENCHMEN') && source.attachedDeck('HENCHMEN').size === 0,
       after: ev => defeatEv(ev, ev.source),
     }],
+    cardActions: [(c, ev) => c.attached('HENCHMEN').size ? fightActionEv(ev, c.attached('HENCHMEN')[0]) : noOpActionEv(ev)],
     twist: ev => {
       const henchmen = ev.source.attachedDeck('HENCHMEN');
       const extraHenchmen = gameState.outOfGame.attachedDeck('CONQUERING_ARMY_HENCHMEN');
