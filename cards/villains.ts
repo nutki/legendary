@@ -3327,7 +3327,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 2
 // VP: 2
   [ 2, makeVillainCard("Life Foundation", "Riot", 2, 2, {
-    ambush: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => symbioteBondEv(ev, "TO", c, ev.source))),
+    ambush: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => symbioteBondEv(ev, "WHAT", ev.source, c))),
     fight: ev => selectCardAndKOEv(ev, yourHeroes()),
   })],
 // AMBUSH: Reveal the top card of the Villain Deck. If it's a Henchman or Life Foundation Villain, it <b>Symbiote Bonds</b> with Scream.
