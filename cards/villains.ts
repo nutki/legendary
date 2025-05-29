@@ -3405,7 +3405,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 1
 // VP: 6
   [ 1, makeVillainCard("Poisons", "Symbiotic Armor", 1, 6, {
-    ambush: ev => withMastermind(ev, m => symbioteBondEv(ev, "WHAT", ev.source, m, ev => selectCardAndKOEv(ev, yourHeroes()))),
+    ambush: ev => withMastermind(ev, m => symbioteBondEv(ev, "TO", m, ev.source, ev => selectCardAndKOEv(ev, yourHeroes()))),
   })],
 ]},
 ]);
