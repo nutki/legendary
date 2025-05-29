@@ -3314,7 +3314,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 2
 // VP: 2
   [ 2, makeVillainCard("Life Foundation", "Lasher", 2, 2, {
-    ambush: ev => symbioteBondEv(ev, "WHAT", ev.source, playerState.victory.limit(isHenchman)),
+    ambush: ev => symbioteBondEv(ev, "WHAT", ev.source, playerState.victory.limit(isHenchmanVillain)),
   })],
 // AMBUSH: A Villain from the Escape Pile or your Victory Pile <b>Symbiote Bonds</b> with Phage.
 // ATTACK: 3

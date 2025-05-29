@@ -1670,6 +1670,7 @@ function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
 function isTwist(c: Card): boolean { return c.cardType === "SCHEME TWIST"; }
 function isScheme(c: Card): boolean { return c.cardType === "SCHEME"; }
 function isHenchman(c: Card): boolean { return getModifiedStat(c, 'isHenchman', c.isHenchman === true); }
+function isHenchmanVillain(c: Card): boolean { return isHenchman(c) && isVillain(c); }
 function isEnemy(c: Card): boolean { return isVillain(c) || isMastermind(c); }
 function isBystander(c: Card): boolean { return c.cardType === "BYSTANDER" && (!c.gainable || !owner(c)); }
 function isHealable(c: Card): boolean { return c.isHealable(); }
