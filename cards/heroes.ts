@@ -7514,7 +7514,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
     villains().size && selectCardOptEv(ev, "Select empty city space", gameState.city.filter(isCityEmpty), dest => {
       selectCardOptEv(ev, "Choose a Villain to move", villains(), v => {
         swapCardsEv(ev, v, dest);
-        selectCardEv(ev, "Choose a Hero to KO", playerState.hand.deck, c => KOEv(ev, c));
+        selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
       });
     });
   } }),
