@@ -6018,8 +6018,8 @@ addVillainTemplates("Ant-Man and the Wasp", [
 // VP: 5
 // FLAVOR: Mechanized Organism Designed Only for KOing.
   [ 1, makeVillainCard("Armada of Kang", "M.O.D.O.K.", 8, 5, {
-    ambush: ev => {},
-    fight: ev => {},
+    ambush: ev => eachPlayer(p => doubleCrossEv(ev, p)),
+    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p), p)),
     uSizeChanging: { color: Color.RANGED, amount: 4 },
   })],
 // {ROOFTOPS CONQUEROR 2}
