@@ -5993,8 +5993,9 @@ addVillainTemplates("Ant-Man and the Wasp", [
   [ 1, makeVillainCard("Armada of Kang", "Energy Shield", 5, 4, {
     ambush: ev => {
       attachCardEv(ev, ev.source, gameState.mastermind, 'ENERGY_SHIELD');
-      addStatSet('fightCost', c => c.location === gameState.mastermind && gameState.mastermind.attached('ENERGY_SHIELD').size > 0, (c, v) => ({cond: () => false, ...v}));
+      addStatSet('fightCost', c => c.location === gameState.mastermind && gameState.mastermind.attached('ENERGY_SHIELD').size > 0, (c, v) => ({...v, cond: () => false}));
     },
+    cardActions: [(c, ev) => c.location === gameState.mastermind.attachedDeck('ENERGY_SHIELD') ? fightActionEv(ev, c) : noOpActionEv(ev)],
     ...conquerorAbility(2, 'STREETS'),
   })],
 // AMBUSH: You may say "<i>I'm sure we can trust Lord Krylar...</i>" If you do: Draw a card, reveal it, and if it has an odd-numbered cost,

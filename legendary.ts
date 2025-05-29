@@ -2245,6 +2245,8 @@ function getActions(ev: Ev): Ev[] {
   playerState.hand.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   playerState.victory.each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   gameState.scheme.attached('AMBUSHSCHEME').each(c => getCardActions(c).each(a => p.push(a(c, ev))));
+  // TODO: remove spacial casing with iterating over all face up cards
+  gameState.mastermind.attached('ENERGY_SHIELD').each(c => getCardActions(c).each(a => p.push(a(c, ev))));
   addCoordinateActions(ev, p);
   addWitnessActions(ev, p);
   addHumanShieldActions(ev, p);
