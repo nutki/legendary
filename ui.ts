@@ -319,9 +319,9 @@ function displayDecks(ev?: Ev): void {
       if (deck) displayDeck(deck, { ...deckPos, x: deckPos.x + (i - currenPlayer) * 10 }, cardsContainer);
     } else displayDeck(deckById[deckPos.id], deckPos, cardsContainer);
   }
-  const popupDecks = allDecks.map(d => ({ id: d.id, container: d.popupid2 || d.popupid })).filter(d => d.container);
+  const popupDecks = allDecks.map(d => ({ id: d.id, container: d.popupid2 || d.popupid, playerDeck: d.playerDeck })).filter(d => d.container);
   for (const popupDeck of popupDecks) {
-    if (popupDeck.id.endsWith('0')) for (let i = 0; i < gameState.players.length; i++) {
+    if (popupDeck.playerDeck) for (let i = 0; i < gameState.players.length; i++) {
       const deck = deckById[popupDeck.id.replace(/0/, i.toString())];
       displayPopupDeck(deck, popupDeck.container + i, cardsContainer);
     } else {

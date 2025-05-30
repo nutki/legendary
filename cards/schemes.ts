@@ -708,7 +708,7 @@ makeSchemeCard("Dark Alliance", { twists: 8, extra_masterminds: 1 }, ev => {
 // SETUP: Add an extra Villain Group. Shuffle the Villain Deck, then split it as evenly as possible into a Villain Deck for each player. Then, shuffle 2 Twists into each player's Villain Deck.
 // RULE: The normal city does not exist. Instead, each player has a different dimension in front of them with one city space. Villains and Bystanders from your Villain Deck enter your dimension. You can fight Villains in any dimension.
 // EVILWINS: When the number of non-grey Heroes in the KO pile is 5 times the number of players.
-makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
+makeSchemeCard<{cities: Deck[]}>("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain: [ 2, 3, 4, 4, 5 ] }, ev => {
   // Twist: Play two card from your Villain Deck
   villainDrawEv(ev);
   villainDrawEv(ev);
@@ -717,7 +717,8 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
   {
     event: 'TURNSTART',
     after: ev => {
-      gameState.cityEntry = gameState.city[playerState.nr];
+      gameState.city = [gameState.schemeState.cities[playerState.nr]];
+      gameState.cityEntry = gameState.city[0];
       swapDecks(gameState.villaindeck, gameState.villaindeck.attachedFaceDownDeck('REALITY' + playerState.nr));
     }
   },
@@ -725,11 +726,12 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
     event: 'CLEANUP',
     after: ev => swapDecks(gameState.villaindeck, gameState.villaindeck.attachedFaceDownDeck('REALITY' + playerState.nr)),
   }
-], () => {
+], s => {
   const num = gameState.players.size;
   const vd = gameState.villaindeck;
   while(gameState.city.length) destroyCity(gameState.city[0], true);
-  gameState.city = gameState.players.map((p, i) => makeCityDeck('CITY' + i, i));
+  s.cities = gameState.players.map((p, i) => makeCityDeck('CITY' + i, i));
+  gameState.city = [s.cities[0]];
   vd.limit(isTwist).forEach((c, i) => moveCard(c, vd.attachedFaceDownDeck('REALITY' + (i % num))));
   [...vd.deck].forEach((c, i) => moveCard(c, vd.attachedFaceDownDeck('REALITY' + (i % num))));
   setSchemeTarget(5, true);
