@@ -718,21 +718,20 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
     event: 'TURNSTART',
     after: ev => {
       gameState.cityEntry = gameState.city[playerState.nr];
-      swapDecks(gameState.villaindeck, gameState.villaindeck.attachedDeck('REALITY' + playerState.nr));
+      swapDecks(gameState.villaindeck, gameState.villaindeck.attachedFaceDownDeck('REALITY' + playerState.nr));
     }
   },
   {
     event: 'CLEANUP',
-    after: ev => swapDecks(gameState.villaindeck, gameState.villaindeck.attachedDeck('REALITY' + playerState.nr)),
+    after: ev => swapDecks(gameState.villaindeck, gameState.villaindeck.attachedFaceDownDeck('REALITY' + playerState.nr)),
   }
 ], () => {
   const num = gameState.players.size;
   const vd = gameState.villaindeck;
   while(gameState.city.length) destroyCity(gameState.city[0], true);
   gameState.city = gameState.players.map((p, i) => makeCityDeck('CITY' + i, i));
-  vd.limit(isTwist).forEach((c, i) => moveCard(c, vd.attachedDeck('REALITY' + (i % num))));
-  vd.deck.forEach((c, i) => moveCard(c, vd.attachedDeck('REALITY' + (i % num))));
-  swapDecks(vd, vd.attachedDeck('REALITY0'));
+  vd.limit(isTwist).forEach((c, i) => moveCard(c, vd.attachedFaceDownDeck('REALITY' + (i % num))));
+  [...vd.deck].forEach((c, i) => moveCard(c, vd.attachedFaceDownDeck('REALITY' + (i % num))));
   setSchemeTarget(5, true);
 }),
 // SETUP: 8 Twists. Choose 3 other Masterminds, and shuffle their 12 Tactics into the Villain Deck. Those Tactics are "Tyrant Villains" with their printed Attack and no abilities.

@@ -2329,6 +2329,8 @@ function swapDecks(d1: Deck, d2: Deck) {
   const tmp = d1.deck;
   d1.deck = d2.deck;
   d2.deck = tmp;
+  d1.each(c => c.location = d1);
+  d2.each(c => c.location = d2);
 }
 function attachCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedDeck(name)); }
 function attachFaceDownCardEv(ev: Ev, what: Card, to: (Card | Deck), name: string) { moveCardEv(ev, what, to.attachedFaceDownDeck(name)); }
