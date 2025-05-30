@@ -471,6 +471,8 @@ function setupChange(): void {
   tmp.withShards = true;
   tmp.withFinalBlow = (<HTMLInputElement>document.getElementById('withFinalBlow')).checked;
   globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
+  if (globalFormSetup) document.getElementById("start").classList.remove("disabled");
+  else document.getElementById("start").classList.add("disabled");
 }
 function setupInit(): void {
   makeBystanderSelects("setup_bystanders");
