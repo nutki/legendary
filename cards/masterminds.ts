@@ -1462,8 +1462,8 @@ makeTransformingMastermindCard(makeMastermindCard("General \"Thunderbolt\" Ross"
   [ "Bust You Down to Private", ev => {
   // Each other player puts a non-grey Hero from their hand on the bottom of the Hero Deck, then puts a 0-cost Hero from the KO pile into their hand.
     eachOtherPlayerVM(p => {
-      selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.herodeck, true));
-      selectCardEv(ev, "Choose a Hero", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => moveCardEv(ev, c, p.hand));
+      selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.herodeck, true), p);
+      selectCardEv(ev, "Choose a Hero", gameState.ko.limit(isHero).limit(c => c.cost === 0), c => moveCardEv(ev, c, p.hand), p);
     })
     transformMastermindEv(ev);
   } ],
