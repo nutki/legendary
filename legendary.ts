@@ -1175,6 +1175,7 @@ interface UndoLog {
   readInts: () => number[]
   write: (w: any) => void
   undo: () => void
+  canUndo: () => boolean
   restart: () => void
   newGame: () => void
   truncate: () => void
@@ -1291,6 +1292,7 @@ const undoLog: UndoLog = {
     localStorage.setItem('legendaryLog', this.toString());
   },
   undo: function(this: UndoLog) { this.actions.pop(); this.pos = 0; },
+  canUndo: function (this: UndoLog) { return this.pos > 1; },
   restart: function (this: UndoLog) { this.actions.splice(1); this.pos = 0; },
   newGame: function (this: UndoLog) { this.actions = []; this.pos = 0; },
   truncate: function (this: UndoLog) {
@@ -3163,6 +3165,7 @@ function getDisplayInfo() {
     piercing: turnState.piercing,
     shard: playerState.shard.size,
     soloVP: gameState.players.length === 1 ? soloVP() : undefined,
+    numPlayers: gameState.players.length,
   });
 }
 

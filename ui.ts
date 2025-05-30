@@ -351,8 +351,12 @@ function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
 }
 
 function displayGame(ev: Ev): void {
-  const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard, piercing } = getDisplayInfo();
+  const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard, piercing, numPlayers } = getDisplayInfo();
   displayDecks(ev);
+  document.getElementById("prevPlayer").style.visibility = numPlayers > 1 ? 'visible' : 'hidden';
+  document.getElementById("nextPlayer").style.visibility = numPlayers > 1 ? 'visible' : 'hidden';
+  if (undoLog.canUndo()) document.getElementById("undo").classList.remove("disabled");
+  else document.getElementById("undo").classList.add("disabled");
   document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
   document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
   if (shard) {
@@ -565,9 +569,7 @@ function togglePopup(id: string) {
 }
 function initUI() {
   window.onclick = clickCard;
-  document.getElementById("undo").onclick = () => { undoLog.undo(); startGame(); };
-  document.getElementById("restart").onclick = () => { undoLog.restart(); startGame(); };
-  document.getElementById("newGame").onclick = () => { undoLog.newGame(); startGame(); };
+  document.getElementById("undo").onclick = () => { if (undoLog.canUndo()) { undoLog.undo(); startGame(); } };
   document.getElementById("start").onclick = () => { if (globalFormSetup) {
     undoLog.init(globalFormSetup); startGame();
     document.getElementById("setupPage").classList.add("hidden");
