@@ -125,7 +125,7 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
   }
   return d;
 }
-function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
+function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string | number, x: number, y: number, fan?: boolean, w?: number}, i: number = 0, t: number = 0): void {
   const spread = w > 1 && t ? Math.min(1, (w - 1) / (t - 1)) : 1;
   card.style.position = "absolute";
   card.style.top = y * 288 + (y >= 2 ? 60 : 0) + "px";
@@ -134,21 +134,27 @@ function positionCard(card: HTMLElement, {size, x, y, w, fan}: {size?: string, x
     card.style.transform = `rotate(${(i - ((t||w||1) - 1)/2) * 3.5 * spread}deg)`;
     card.style.transformOrigin = "center 3000px";
   }
-  if (size) card.classList.add(size);
+  if (typeof(size) === "string") card.classList.add(size);
+  if (typeof(size) === "number") {
+    card.style.transform = `scale(${size})`;
+    card.style.transformOrigin = "top left";
+  }
 }
-const mainDecks = [
+type DeckPos = {
+  id: string;
+  x: number;
+  y: number;
+  popupid?: string;
+  popupid2?: string;
+  size?: 'small' | number;
+  count?: string;
+  playerDeck?: boolean;
+  w?: number; // width in cards
+  fan?: boolean; // fan out cards
+}
+const mainDecks: DeckPos[] = [
   { id: 'MASTERMIND', x: 0, y: 0, popupid2: 'popmastermind' },
-  { id: 'BRIDGE', x: 1, y: 0, popupid2: 'popbridge' },
-  { id: 'STREETS', x: 2, y: 0, popupid2: 'popstreets' },
-  { id: 'ROOFTOPS', x: 3, y: 0, popupid2: 'poprooftops' },
-  { id: 'BANK', x: 4, y: 0, popupid2: 'popbank' },
-  { id: 'SEWERS', x: 5, y: 0, popupid2: 'popsewers' },
   { id: 'SCHEME', x: 6.5, y: 0, popupid2: 'popscheme' },
-  { id: 'HQ1', x: 1, y: 1, popupid2: 'pophq1' },
-  { id: 'HQ2', x: 2, y: 1, popupid2: 'pophq2' },
-  { id: 'HQ3', x: 3, y: 1, popupid2: 'pophq3' },
-  { id: 'HQ4', x: 4, y: 1, popupid2: 'pophq4' },
-  { id: 'HQ5', x: 5, y: 1, popupid2: 'pophq5' },
   { id: 'SHIELDOFFICER', x: 0, y: 1, size: 'small', count: 'OFFICER', popupid: 'popofficers' },
   { id: 'SIDEKICK', x: .5, y: 1, size: 'small', count: 'SIDEKICK', popupid: 'popsidekicks' },
   { id: 'MADAME', x: 0, y: 1.5, size: 'small', popupid: 'popmadame' },
@@ -167,34 +173,6 @@ const mainDecks = [
   { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory', playerDeck: true },
   { id: 'SPECIAL0', x: 0.5, y: 3.5, size: 'small', playerDeck: true },
 ];
-const popupDecks = [
-  { id: 'DISCARD0', container: 'popdiscard' },
-  { id: 'DECK0', container: 'popdeck' },
-  { id: 'VICTORY0', container: 'popvictory' },
-  { id: 'KO', container: 'popko' },
-  { id: 'ESCAPED', container: 'popescaped' },
-  { id: 'HERO', container: 'popheroes' },
-  { id: 'VILLAIN', container: 'popvillains' },
-  { id: 'BYSTANDERS', container: 'popbystanders' },
-  { id: 'MASTERMIND', container: 'popmastermind' },
-  { id: 'BRIDGE', container: 'popbridge' },
-  { id: 'STREETS', container: 'popstreets' },
-  { id: 'ROOFTOPS', container: 'poprooftops' },
-  { id: 'BANK', container: 'popbank' },
-  { id: 'SEWERS', container: 'popsewers' },
-  { id: 'HQ1', container: 'pophq1' },
-  { id: 'HQ2', container: 'pophq2' },
-  { id: 'HQ3', container: 'pophq3' },
-  { id: 'HQ4', container: 'pophq4' },
-  { id: 'HQ5', container: 'pophq5' },
-  { id: 'SCHEME', container: 'popscheme' },
-  { id: 'WOUNDS', container: 'popwounds' },
-  { id: 'BINDINGS', container: 'popbindings' },
-  { id: 'SHIELDOFFICER', container: 'popofficers' },
-  { id: 'SIDEKICK', container: 'popsidekicks' },
-  { id: 'MADAME', container: 'popmadame' },
-  { id: 'NEWRECRUIT', container: 'popnewrecruit' },
-];
 function updatePlayerDecks(n: number): void {
   document.querySelectorAll<HTMLElement>(`div[data-player-id="1"]`).forEach(d => {
     d.style.left = (parseFloat(d.style.left) + n * 212) + "px";
@@ -207,8 +185,22 @@ function frontCard(deck: Deck): Card | undefined {
   return undefined;
 }
 
+function setBackgroundForId(id: string, d: HTMLDivElement): void {
+  const pos = ["BRIDGE", "STREETS", "ROOFTOPS", "BANK", "SEWERS"].indexOf(id);
+  if (pos < 0) {
+    d.style.border = "1px solid white";
+    const nameBadge = div("nameBadge", {}, text(id));
+    d.appendChild(nameBadge);
+  } else {
+    d.style.backgroundImage = `url('images/cityscape.png')`;
+    d.style.backgroundPositionX = `${pos * 25}%`;
+    d.style.backgroundSize = `500% 100%`;
+  }
+}
+
 function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: HTMLElement): void {
   const d = div('deck', { id: deck.id, 'data-player-id': deckPos.playerDeck ? "1" : undefined });
+  if (deck.cityPosition) setBackgroundForId(deck.id, d);
   const playerNr = deckPos.playerDeck ? deck.id.slice(-1) : '';
   let topDiv = d;
   positionCard(d, deckPos);
@@ -290,19 +282,34 @@ function displayPlayerSpecial(p: Player, deckPos: typeof mainDecks[0], cardsCont
     cardsContainer.appendChild(d);
   }
 }
+function arrangeCityDecks(cityDecks: DeckPos[]) {
+  const minX = cityDecks.reduce((min, d) => Math.min(min, d.x), 0);
+  const maxX = cityDecks.reduce((max, d) => Math.max(max, d.x), 4);
+  const minY = cityDecks.reduce((min, d) => Math.min(min, d.y), 0);
+  const maxY = cityDecks.reduce((max, d) => Math.max(max, d.y), 1);
+  const width = maxX - minX + 1;
+  const height = maxY - minY + 1;
+  const scale = Math.min(5 / width, 2 / height);
+  const offsetX = (5 - width * scale) / 2;
+  const offsetY = (2 - height * scale) / 2;
+  cityDecks.forEach(d => {
+    d.x = (d.x - minX) * scale + 1 + offsetX;
+    d.y = (d.y - minY) * scale + offsetY;
+    d.size = scale;
+  });
+}
 function displayDecks(ev?: Ev): void {
   let list = Deck.deckList;
   let deckById:{[id: string]:Deck} = {};
   for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
   const cardsContainer = document.getElementById("card-container");
   cardsContainer.innerHTML = '';
-  const cityBg = img('images/cityscape.png');
-  cityBg.style.position = 'absolute';
-  cityBg.style.left = '211px';
-  cityBg.style.width = '1055px';
-  cityBg.style.height = '285px';
-  cardsContainer.appendChild(cityBg);
-  for (const deckPos of mainDecks) {
+  const cityDecks: DeckPos[] = list.filter(d => d.cityPosition && (!d.isInactive || d.size)).map(({id, cityPosition: [x, y]}) => ({
+    id, x, y, popupid2: 'pop' + id,
+  }));
+  arrangeCityDecks(cityDecks);
+  const allDecks = [...mainDecks, ...cityDecks];
+  for (const deckPos of allDecks) {
     if (deckPos.playerDeck) for (let i = 0; i < gameState.players.length; i++) {
       if (deckPos.id === 'SPECIAL0') {
         displayPlayerSpecial(gameState.players[i], {...deckPos, x: deckPos.x + (i - currenPlayer) * 10 }, cardsContainer);
@@ -312,6 +319,7 @@ function displayDecks(ev?: Ev): void {
       if (deck) displayDeck(deck, { ...deckPos, x: deckPos.x + (i - currenPlayer) * 10 }, cardsContainer);
     } else displayDeck(deckById[deckPos.id], deckPos, cardsContainer);
   }
+  const popupDecks = allDecks.map(d => ({ id: d.id, container: d.popupid2 || d.popupid })).filter(d => d.container);
   for (const popupDeck of popupDecks) {
     if (popupDeck.id.endsWith('0')) for (let i = 0; i < gameState.players.length; i++) {
       const deck = deckById[popupDeck.id.replace(/0/, i.toString())];

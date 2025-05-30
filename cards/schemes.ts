@@ -583,8 +583,7 @@ makeSchemeCard("Fear Itself", { twists: 10 }, ev => {
   cont(ev, () => gameState.hq.withLast(d => { destroyHQ(ev, d); d.each(c => KOEv(ev, c)); }));
   cont(ev, () => schemeProgressEv(ev, gameState.hq.size));
 }, [], () => {
-  const extraLair = [new Deck("HQ11", true), new Deck("HQ12", true), new Deck("HQ13", true)];
-  extraLair.each(d => d.isHQ = true);
+  const extraLair = ["HQ11", "HQ12", "HQ13"].map((n, i) => makeHQDeck(n, i + 5));
   gameState.hq = [...gameState.hq, ...extraLair];
   gameState.schemeProgress = 8;
 }),
@@ -729,12 +728,8 @@ makeSchemeCard("Fragmented Realities", { twists: [ 2, 4, 6, 8, 10 ], vd_villain:
 ], () => {
   const num = gameState.players.size;
   const vd = gameState.villaindeck;
-  while(gameState.city.length) destroyCity(gameState.city[0]);
-  gameState.city = gameState.players.map((p, i) => {
-    const l = new Deck('CITY' + i, true);
-    l.isCity = true;
-    return l;
-  });
+  while(gameState.city.length) destroyCity(gameState.city[0], true);
+  gameState.city = gameState.players.map((p, i) => makeCityDeck('CITY' + i, i));
   vd.limit(isTwist).forEach((c, i) => moveCard(c, vd.attachedDeck('REALITY' + (i % num))));
   vd.deck.forEach((c, i) => moveCard(c, vd.attachedDeck('REALITY' + (i % num))));
   swapDecks(vd, vd.attachedDeck('REALITY0'));
@@ -801,16 +796,12 @@ makeSchemeCard("Smash Two Dimensions Together", { twists: 8 }, ev => {
     selectCardEv(ev, 'Choose a dimension', [gameState.city[2], gameState.city[5]], d => gameState.cityEntry = d);
   }
 }], () => {
-  const secondCity = [0, 1, 2].map(i => {
-    const l = new Deck('CITY' + i, true);
-    l.isCity = true;
-    return l;
-  });
+  const secondCity = [0, 1, 2].map(i => makeCityDeck('CITY' + i, [i, -1]));
   secondCity[2].next = secondCity[1];
   secondCity[1].next = secondCity[0];
   makeCityAdjacent(secondCity);
-  destroyCity(gameState.city[4]);
-  destroyCity(gameState.city[3]);
+  destroyCity(gameState.city[4], true);
+  destroyCity(gameState.city[3], true);
   gameState.city = gameState.city.concat(secondCity);
   gameState.cityEntry = gameState.city[2];
   setSchemeTarget(10);
@@ -1010,8 +1001,7 @@ makeSchemeCard<{current: string, conquered: string[], city: Deck[]}>("Change the
   }
 }, s => {
   setSchemeTarget(3);
-  const extraSpace = new Deck("EXTRACITY", true);
-  extraSpace.isCity = true;
+  const extraSpace = makeCityDeck('EXTRACITY', [-1, 0]);
   s.city = [extraSpace].concat(gameState.city);
 }),
 // SETUP: 9 Twists. 8 Heroes in Hero deck.
@@ -1895,8 +1885,7 @@ makeTransformingSchemeCard<{city: Deck[]}>("Earthquake Drains the Ocean", "Tsuna
   transformed && villainDrawEv(ev);
 }, escapeProgressTrigger(isVillain), (s) => {
   setSchemeTarget(3, true);
-  s.city = [new Deck("LOWTIDE1", true), new Deck("LOWTIDE2", true), ...gameState.city];
-  s.city.each(d => d.isCity = true);
+  s.city = [makeCityDeck("LOWTIDE1", -2), makeCityDeck("LOWTIDE2", -1), ...gameState.city];
   gameState.city = s.city;
   makeCityAdjacent(gameState.city);
 }),
@@ -2217,8 +2206,7 @@ makeSchemeCard("Superhuman Baseball Game", { twists: 9, vd_villain: [ 2, 3, 4, 4
   }
 }, escapeProgressTrigger(isVillain), () => {
   setSchemeTarget(4);
-  gameState.city = gameState.city.filter(d => d.id !== "BANK" && d.id !== "STREETS");
-  makeCityAdjacent(gameState.city);
+  gameState.city.filter(d => d.id === "BANK" || d.id === "STREETS").forEach(d => destroyCity(d, true));
 }),
 ]);
 addTemplates("SCHEMES", "Into the Cosmos", [
@@ -2594,10 +2582,12 @@ makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach
     })];
   };
   const dimensions: Deck[] = [new Deck("DIMENSION_0")];
+  dimensions[0].cityPosition = [0, 4];
   gameState.villaindeck.deck.forEach(c => {
     let last = dimensions[dimensions.length - 1];
     if (last.size === dimensions.length) {
       last = new Deck(`DIMENSION_${dimensions.length}`)
+      last.cityPosition = [0, 4 - dimensions.length];
       dimensions.push(last);
     }
     moveCard(c, last);
@@ -3281,13 +3271,14 @@ makeSchemeCard<{
   schemeProgressEv(ev, ev.nr);
 }, [], s => {
   const pastHeroes = gameState.herodeck.limit(c => c.heroName === extraHeroName(1) || c.heroName === extraHeroName(2) || c.heroName === extraHeroName(3) || c.heroName === extraHeroName(4));
-  const pastHeroDeck = new Deck("HERO_PAST", false);
+  const pastHeroDeck = new Deck("HERO2", false);
+  pastHeroDeck.cityPosition = [5, -1];
   s.deckPairs = [];
   s.deckPairs.push([gameState.herodeck, pastHeroDeck]);
   pastHeroes.each(c => moveCard(c, pastHeroDeck));
-  gameState.city.each(c => s.deckPairs.push([c, new Deck(c.id + "_PAST", true)]));
+  gameState.city.each(c => s.deckPairs.push([c, makeCityDeck(c.id + "_ALT", [c.cityPosition[0], -2])]));
   gameState.hq.each(c => {
-    const pastHQSpace = new Deck(c.id + "_PAST", true)
+    const pastHQSpace = makeHQDeck(c.id + "_ALT", [c.cityPosition[0], -1]);
     s.deckPairs.push([c, pastHQSpace]);
     moveCard(pastHeroDeck.top, pastHQSpace);
   });
@@ -3301,10 +3292,11 @@ makeSchemeCard("Warp Reality Into a TV Show", { twists: 11 }, ev => {
   if (ev.nr <= 4) {
     // Twist 1-4 Another TV show (city space) appears on the left side of the city, representing the 80s, 90s, 2000s, & 2010s. Another HQ space appears beneath it.
     const era = ["80s", "90s", "2000s", "2010s"][ev.nr - 1];
-    gameState.city = [new Deck("CITY_" + era, true), ...gameState.city];
-    gameState.hq = [new Deck("HQ_" + era, true), ...gameState.hq];
+    gameState.city = [makeCityDeck("CITY_" + era, -ev.nr), ...gameState.city];
+    gameState.hq = [makeHQDeck("HQ_" + era, -ev.nr), ...gameState.hq];
+    gameState.city[0].above = gameState.hq[0];
+    gameState.hq[0].below = gameState.city[0];
     makeCityAdjacent(gameState.city);
-    // TODO fix hq adjecency
   } else if (ev.nr >= 5 && ev.nr <= 11) {
     // Twist 5-11 Destroy the rightmost TV show and the HQ space beneath it. KO any Hero in that HQ space. Push forward any Villain there.
     // Move the Villain Deck & Hero Deck to mark the city's right edge.

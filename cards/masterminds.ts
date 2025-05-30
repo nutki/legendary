@@ -3086,11 +3086,9 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
   withLeftmostCitySpace(ev, space => {
     let i = 0;
     while(Deck.deckList.has(d => d.id === "EXTRACITY" + i)) i++;
-    const newSpace = new Deck('EXTRACITY' + i, true);
-    newSpace.isCity = true;
-    newSpace.adjacentRight = space;
-    space.adjacentLeft = newSpace;
+    const newSpace = makeCityDeck('EXTRACITY' + i, 4 - gameState.city.size);
     gameState.city.unshift(newSpace);
+    makeCityAdjacent(gameState.city);
   });
   cityVillains().size >= (ev.source.epic ? 2 : 3) && eachPlayer(p => gainWoundEv(ev, p));
   villainDrawEv(ev);

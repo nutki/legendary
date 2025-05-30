@@ -606,6 +606,8 @@ class Deck {
   adjacentLeft?: Deck
   adjacentRight?: Deck
   attachedTo?: Deck | Card
+  cityPosition?: [number, number]
+  isInactive?: boolean
   constructor(name: string, faceup?: boolean) {
   this.id = name;
   this.deck = [];
@@ -649,6 +651,18 @@ class Deck {
   }
   static deckList: Deck[] = []
 };
+function makeCityDeck(name: string, position: [number, number] | number): Deck {
+  let d = new Deck(name, true);
+  d.isCity = true;
+  d.cityPosition = position instanceof Array ? position : [position, 0];
+  return d;
+}
+function makeHQDeck(name: string, position: [number, number] | number): Deck {
+  let d = new Deck(name, true);
+  d.isHQ = true;
+  d.cityPosition =  position instanceof Array ? position : [position, 1];
+  return d;
+}
 
 interface Array<T> {
   size: number
@@ -1568,6 +1582,8 @@ for (let i = 0; i < 5; i++) {
   gameState.hq[i].isHQ = true;
 }
 makeCityAdjacent(gameState.city);
+gameState.city.forEach((c, i) => c.cityPosition = [i, 0]);
+gameState.hq.forEach((c, i) => c.cityPosition = [i, 1]);
 
 // Init Scheme
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
@@ -1757,9 +1773,9 @@ function makeCityAdjacent(city: Deck[], s: number = 0, e: number = city.length) 
     else city[i].adjacentRight = undefined;
   }
 }
-function destroyCity(space: Deck) {
+function destroyCity(space: Deck, initial = false) {
   gameState.city = gameState.city.filter(d => d !== space);
-  gameState.destroyedCitySpaces.push(space);
+  if (!initial) gameState.destroyedCitySpaces.push(space);
   gameState.city.forEach(d => {
     if (d.next === space) d.next = space.next;
     if (d.adjacentLeft === space) d.adjacentLeft = space.adjacentLeft;
@@ -1769,6 +1785,7 @@ function destroyCity(space: Deck) {
     if (d.below === space) d.below = undefined;
   });
   space.isCity = false;
+  space.isInactive = true;
 }
 function destroyHQ(ev: Ev, space: Deck) {
   space.attached('HAUNTED').each(c => returnFromHauntEv(ev, c));
@@ -1777,6 +1794,7 @@ function destroyHQ(ev: Ev, space: Deck) {
     if (d.above === space) d.above = undefined;
   });
   space.isHQ = false;
+  space.isInactive = true;
 }
 function HQCardsHighestCost(): Card[] {
   return hqHeroes().highest(c => c.cost);
