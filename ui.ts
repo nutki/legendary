@@ -431,6 +431,12 @@ function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTA
     e.appendChild(l);
   });
 }
+function checkAllBystanderSelects(id: string) {
+  const inputs = document.querySelectorAll<HTMLInputElement>(`#${id} input[data-set]`);
+  const allChecked = Array.from(inputs).every(input => input.checked);
+  const allInput = document.querySelector<HTMLInputElement>(`#${id} input:not([data-set])`);
+  if (allInput) allInput.checked = allChecked;
+}
 function getBystanderSelects(id: string) {
   const r: string[] = [];
   [...document.getElementById(id).getElementsByTagName('input')].each(e => {
@@ -442,6 +448,7 @@ function setBysternderSelects(id: string, value: string[]) {
   [...document.getElementById(id).getElementsByTagName('input')].each(e => {
     e.checked = value.includes(e.getAttribute('data-set'));
   })
+  checkAllBystanderSelects(id);
 }
 function getSelects(name: string, t: string[]): boolean {
   const n = t.map((old, i) => t[i] = (<HTMLSelectElement>document.getElementById(name + i)).value);
@@ -458,6 +465,11 @@ function setupChange(): void {
         select.value = '';
       }
     });
+  }
+  if (this.type === "checkbox") {
+    checkAllBystanderSelects("setup_bystanders");
+    checkAllBystanderSelects("setup_sidekicks");
+    checkAllBystanderSelects("setup_wounds");
   }
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
