@@ -415,18 +415,27 @@ function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN
 }
 function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTANDERS') {
   const e = document.getElementById(id);
-  cardTemplates[templateType].each(({set}) => {
+  const sets = ['ALL', ...cardTemplates[templateType].unique(({set}) => set)];
+  console.log("makeBystanderSelects", id, sets);
+  sets.each((set) => {
     const i = document.createElement('input');
-    i.setAttribute('data-set', set);
+    if (set === 'ALL') {
+      i.onclick = () => e.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach(cb => cb.checked = i.checked);
+    } else {
+      i.setAttribute('data-set', set);
+    }
     i.type = "checkbox";
-    e.appendChild(i);
-    e.appendChild(document.createTextNode(set))
+    const l = document.createElement('label');
+    l.classList.add('multiselectlabel');
+    l.appendChild(i);
+    l.appendChild(document.createTextNode(set))
+    e.appendChild(l);
   });
 }
 function getBystanderSelects(id: string) {
   const r: string[] = [];
   [...document.getElementById(id).getElementsByTagName('input')].each(e => {
-    if (e.checked) r.push(e.getAttribute('data-set'));
+    if (e.checked && e.getAttribute('data-set')) r.push(e.getAttribute('data-set'));
   })
   return r;
 }
@@ -448,7 +457,11 @@ function setupChange(): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
   const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
-  if (!sel.value || !mel.value) return;
+  if (!sel.value || !mel.value) {
+    globalFormSetup = undefined;
+    document.getElementById("start").classList.add("disabled");
+    return;
+  };
   const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
   makeSelects("setup_heroes", "HEROES", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "Villains Group", tmp.villains);
@@ -470,7 +483,7 @@ function setupChange(): void {
   tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
   tmp.withShards = true;
   tmp.withFinalBlow = (<HTMLInputElement>document.getElementById('withFinalBlow')).checked;
-  globalFormSetup = s1 && s2 && s3 ? tmp : undefined;
+  globalFormSetup = s1 && s2 && s3 && tmp.bystanders.length ? tmp : undefined;
   if (globalFormSetup) document.getElementById("start").classList.remove("disabled");
   else document.getElementById("start").classList.add("disabled");
 }

@@ -37,9 +37,12 @@ html ::-webkit-scrollbar-thumb:active {
   background-color: orange;
   border-radius: 10px;
 }
-body { background: #555; user-select: none; padding: 0; margin: 0; cursor: url('icons/cursor.png') 5 5, auto;
+body { background: #555; user-select: none; padding: 0; margin: 0;
   font-family: TitleFont, Arial, Helvetica, sans-serif;
   overflow: hidden;
+}
+#boardPage {
+  cursor: url('icons/cursor.png') 5 5, auto;
 }
 .number {
   display: inline-block;
@@ -378,6 +381,21 @@ div.shardHint {
   background-color: rgba(255,255,255,.33);
   font-size: 22px;
 }
+.multiselectlabel {
+  display: block;
+}
+.multiselectlabel:hover {
+  background-color: #aaa;
+}
+/* .multiselectlabel:has(input:checked) {
+  background-color: #0f0;
+}
+.multiselectlabel:has(input:checked):hover {
+  background-color: #0c0;
+} */
+.multiselectcontainer {
+  columns: 5 160px;
+}
 </style>
 </head>
 <body>
@@ -459,16 +477,16 @@ div.shardHint {
 <span><div>Hand</div><div><select id="handType"><option value="HYDRA">HYDRA</option><option value="SHIELD">S.H.I.E.L.D.</option></select></div></span>
 <span><div>City</div><div><select id="cityType"><option value="HERO">Base</option><option value="VILLAIN">Villains</option></select></div></span>
 <span><div></div><div>
-<input type="checkbox" id="withOfficers"> S.H.I.E.L.D. Officers
-<input type="checkbox" id="withSpecialOfficers"> Special S.H.I.E.L.D. Officers
-<input type="checkbox" id="withMadame"> Madame HYDRA
-<input type="checkbox" id="withNewRecruits"> New Recruits
-<input type="checkbox" id="withBindings"> Bindings
+<label><input type="checkbox" id="withOfficers"> S.H.I.E.L.D. Officers</label>
+<label><input type="checkbox" id="withSpecialOfficers"> Special S.H.I.E.L.D. Officers</label>
+<label><input type="checkbox" id="withMadame"> Madame HYDRA</label>
+<label><input type="checkbox" id="withNewRecruits"> New Recruits</label>
+<label><input type="checkbox" id="withBindings"> Bindings</label>
 </div></span>
-<span><div>Bystanders</div><div id="setup_bystanders"></div></span>
-<span><div>Sidekicks</div><div id="setup_sidekicks"></div></span>
-<span><div>Wounds</div><div id="setup_wounds"></div></span>
-<span><div></div><div><input type="checkbox" id="withFinalBlow"> Final Blow</div></span></div>
+<span><div>Bystanders</div><div id="setup_bystanders" class="multiselectcontainer"></div></span>
+<span><div>Sidekicks</div><div id="setup_sidekicks" class="multiselectcontainer"></div></span>
+<span><div>Wounds</div><div id="setup_wounds" class="multiselectcontainer"></div></span>
+<span><div></div><div><label><input type="checkbox" id="withFinalBlow"> Final Blow</div></label></span></div>
 <div><span class="action" id="start">Start</span><span class="action" id="board">Back</span></div>
 </div>
 <svg width="0" height="0">
