@@ -416,7 +416,6 @@ function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN
 function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTANDERS') {
   const e = document.getElementById(id);
   const sets = ['ALL', ...cardTemplates[templateType].unique(({set}) => set)];
-  console.log("makeBystanderSelects", id, sets);
   sets.each((set) => {
     const i = document.createElement('input');
     if (set === 'ALL') {
@@ -445,15 +444,21 @@ function setBysternderSelects(id: string, value: string[]) {
   })
 }
 function getSelects(name: string, t: string[]): boolean {
-  return t.map((old, i) => {
-    const v = (<HTMLSelectElement>document.getElementById(name + i)).value;
-    if (v === "") return false;
-    t[i] = v;
-    return true;
-  }).every(v => v);
+  const n = t.map((old, i) => t[i] = (<HTMLSelectElement>document.getElementById(name + i)).value);
+  return n.every(v => v) && n.uniqueCount(v => v) === n.length;
 }
 let globalFormSetup: Setup;
 function setupChange(): void {
+  if (/\d+$/.test(this.id)) {
+    const prefix = this.id.replace(/\d+$/, '');
+    const currentValue = this.value;
+    const selects = document.querySelectorAll<HTMLSelectElement>(`select[id^="${prefix}"]`);
+    selects.forEach(select => {
+      if (select !== this && select.value === currentValue) {
+        select.value = '';
+      }
+    });
+  }
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
   const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
   const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
@@ -483,7 +488,7 @@ function setupChange(): void {
   tmp.cityType = (<HTMLInputElement>document.getElementById('cityType')).value === 'VILLAIN' ? 'VILLAIN' : 'HERO';
   tmp.withShards = true;
   tmp.withFinalBlow = (<HTMLInputElement>document.getElementById('withFinalBlow')).checked;
-  globalFormSetup = s1 && s2 && s3 && tmp.bystanders.length ? tmp : undefined;
+  globalFormSetup = s1 && s2 && s3 && s4 && tmp.bystanders.length ? tmp : undefined;
   if (globalFormSetup) document.getElementById("start").classList.remove("disabled");
   else document.getElementById("start").classList.add("disabled");
 }
