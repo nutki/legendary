@@ -1137,8 +1137,6 @@ interface Game {
   modifiers: Modifiers
   players: Player[]
   advancedSolo: boolean | 'WHATIF'
-  villainsEscaped: number
-  bystandersCarried: number
   cityEntry: Deck
   specialActions?: (ev: Ev) => Ev[]
   extraTurn?: boolean
@@ -1553,8 +1551,6 @@ gameState = {
   players,
   advancedSolo: players.length === 1 ? 'WHATIF' : false,
   finalBlow: gameSetup.withFinalBlow === true,
-  villainsEscaped: 0,
-  bystandersCarried: 0,
   schemeState: {},
   gameSetup,
   turnNum: 0,
@@ -1743,7 +1739,7 @@ function owned(p: Player = playerState): Card[] {
   ];
 }
 function soloVP(): number {
-  return gameState.players.sum(currentVP) - gameState.villainsEscaped - 4 * gameState.bystandersCarried - 3 * gameState.twistCount;
+  return gameState.players.sum(currentVP) - gameState.escaped.count(isVillain) - 4 * gameState.escaped.count(isBystander) - 3 * gameState.twistCount;
 }
 function currentVP(p?: Player): number {
   return owned(p).sum(c => c.vp || 0);
@@ -2992,14 +2988,12 @@ function villainEscape(ev: Ev): void {
   let c = ev.what;
   let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
   textLog.log("Escaped:", c);
-  gameState.villainsEscaped++;
   // Handle GotG shards
   c.attached('SHARD').withFirst(c => withMastermind(ev, m => attachShardEv(ev, m, c)));
   cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   c.attached('WEAPON').each(c => withMastermind(ev, m => attachCardEv(ev, c, m, 'WEAPON')));
   c.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
-  gameState.bystandersCarried += b.count(isBystander);
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, 1, p));
   const bonded = c.attached('SYMBIOTE')[0];
   moveCardEv(ev, c, gameState.escaped);
