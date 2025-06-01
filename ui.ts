@@ -103,6 +103,18 @@ function getCountHints(deck: Deck, small: boolean): [number, number, string] {
   if (c && isScheme(c)) result[0] = getSchemeCountdown();
   return result
 }
+function makeDisplayCardActions(id: string): HTMLDivElement {
+  const container = div("cardactions");
+  const actionsDiv = div("actions");
+  const actions = clickActions[id];
+  if (typeof actions === "object") for (const { func, desc } of actions) {
+    const a = div("action", {}, text(desc || 'Action'));
+    a.addEventListener("click", () => func());
+    actionsDiv.appendChild(a);
+  }
+  container.appendChild(actionsDiv);
+  return container;
+}
 function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, countHint: [number, number, string] = [0, 0, '']): HTMLDivElement {
   const faceUp = gone || isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
@@ -221,6 +233,12 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     if (deckPos.playerDeck) cardDiv.setAttribute('data-player-id', "1");
     positionCard(cardDiv, deckPos, i, n);
     topDiv = cardDiv;
+    if (currentClickActions === cardDiv.getAttribute('data-card-id')) {
+      const actions = makeDisplayCardActions(cardDiv.getAttribute('data-card-id'));
+      cardsContainer.appendChild(actions);
+      positionCard(actions, deckPos, i, n);
+      if (deckPos.playerDeck) actions.setAttribute('data-player-id', "1");
+    }
   });
   if (deckPos.popupid) topDiv.addEventListener("click", () => togglePopup(deckPos.popupid + playerNr));
   topDiv.querySelectorAll('.count, .capturedHint').forEach(e => {
@@ -350,7 +368,7 @@ function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
   return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];
 }
 
-function displayGame(ev: Ev): void {
+function displayGame(ev?: Ev): void {
   const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard, piercing, numPlayers } = getDisplayInfo();
   displayDecks(ev);
   document.getElementById("prevPlayer").style.visibility = numPlayers > 1 ? 'visible' : 'hidden';
@@ -373,6 +391,23 @@ function displayGame(ev: Ev): void {
     document.getElementById("vp").style.display = 'inline-block';
     document.getElementById("vp").innerHTML = `${soloVP}`;
   } else document.getElementById("vp").style.display = 'none';
+  Object.keys(clickActions).flatMap(v => [...document.querySelectorAll(`[data-card-id="${CSS.escape(v)}"]`)]).forEach(e => {
+    e.classList.add("select");
+    if (e.closest('.popup')) {
+      const popupId = e.closest('.popup').getAttribute('data-popup-id');
+      popupId && document.querySelectorAll(`.capturedHint[data-popup-id="${popupId}"]`).forEach(h => h.classList.add("select"));
+    }
+    if (ev?.desc) {
+      if (/\bKO\b/.test(ev.desc)) e.classList.add("selectko");
+      if ((/\bdiscard\b/i).test(ev.desc) && !(/\bfrom discard\b/i).test(ev.desc)) e.classList.add("selectdiscard");
+      if ((/\brecruit\b/i).test(ev.desc)) e.classList.add("selectrecruit");
+      if ((/\bdefeat\b/i).test(ev.desc)) e.classList.add("selectdefeat");
+    }
+  });
+  for (const deckDiv of document.querySelectorAll('.deck-overlay, .popup .topCard')) {
+    const id = deckDiv.getAttribute('data-deck-id');
+    if (clickActions[id]) deckDiv.classList.add("select");
+  }
 }
 function setMessage(msg: string, gameOverMsg: string): void {
   document.getElementById("message").innerHTML = msg;

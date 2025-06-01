@@ -69,9 +69,17 @@ img.icon {
   height: 45px;
 }
 #message { font-size: 25px; color: yellow; }
+.action:hover { background-color: orange; }
 .action { font-size: 30px; border: 2px solid black; background: yellow; padding: 0px 20px; border-radius: 10px; margin: 20px; }
 .action.noconfirm { background: green; }
 .action.disabled { background: gray; }
+.actions { display: flex; gap: 10px; flex-direction: column; position: absolute; left: 50%; top: 50%; margin: 0; transform: translate(-50%, -50%); text-wrap: nowrap; }
+.actions .action {
+  margin: auto;
+}
+.cardactions {
+  z-index: 1;
+}
 #undo.action { display: block; position: absolute; left: 1990px; top: 500px; width: 130px; text-align: center; }
 #prevPlayer.action { display: block; position: absolute; left: 1990px; top: 450px; width: 75px; text-align: center; padding: 0; }
 #nextPlayer.action { display: block; position: absolute; left: 2085px; top: 450px; width: 75px; text-align: center; padding: 0; }
@@ -97,6 +105,7 @@ div.card div.frame {
 }
 div.card.select div.frame {
     display: block;
+    border-radius: 10px;
 }
 div.card.select.selectko div.frame { box-shadow: inset 0 0 2px 5px black; }
 div.card.select.selectdiscard div.frame { box-shadow: inset 0 0 2px 5px red; }
@@ -111,6 +120,9 @@ div.card {
     width: 200px;
     height: 280px;
     transition: left .5s ease-out, top .5s ease-out, transform 1s ease-out;
+}
+div.card img {
+    border-radius: 10px;
 }
 div.deck-overlay {
     transition: left .5s ease-out, top .5s ease-out, transform 1s ease-out;
@@ -218,7 +230,7 @@ div.large {
   transform: scale(2);
   transform-origin: top left;
 }
-.deck, .deck-overlay {
+.deck, .deck-overlay, .cardactions {
   width: 211px;
   height: 288px;
 }

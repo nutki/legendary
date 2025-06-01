@@ -3173,21 +3173,39 @@ function getDisplayInfo() {
 function getEventName(ev: Ev): string {
   if (ev.type === "ENDOFTURN") return "End Turn";
   if (ev.desc) return ev.desc;
-  if (ev.what) return `${ev.type} ${ev.what.cardName}` + (ev.withViolence ? ev.type !== "RECRUIT" ? " w/violence" : " w/kindness" : "");
+  if (ev.what) return ev.type + (ev.withViolence ? ev.type !== "RECRUIT" ? " w/violence" : " w/kindness" : "");
   return ev.type;
 }
-let clickActions: {[id: string]:(() => void)} = {};
+let clickActions: {[id: string]:{func:(() => void), desc: string}[]|(() => void)} = {};
+let currentClickActions: string | undefined = undefined;
+function handleClickAction(id: string) {
+  const actions = clickActions[id];
+  if (typeof actions === "function") {
+    actions();
+  } else if (actions.length === 0) return;
+  else if (actions.length === 0) {
+    actions[0].func();
+  } else {
+    currentClickActions = id;
+    displayGame();
+  }
+}
 function clickCard(ev: MouseEvent): void {
+  if (currentClickActions) {
+    currentClickActions = undefined;
+    displayGame();
+    return;
+  }
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     if (node.classList?.contains("count") || node.classList?.contains("capturedHint")) return;
     const id = node.id || (node.getAttribute && node.getAttribute('data-card-id'));
     const deckId = node.getAttribute && node.getAttribute('data-deck-id');
     if (id && clickActions[id]) {
-      clickActions[id]();
+      handleClickAction(id);
       return;
     }
     if (clickActions[deckId]) {
-      clickActions[deckId]();
+      handleClickAction(deckId);
       return;
     }
   }
@@ -3229,13 +3247,15 @@ function mainLoop(): void {
   }
   let ev = popEvent();
   while (!ev.ui) { playEvent(ev); ev = popEvent(); }
-  displayGame(ev);
+  currentClickActions = undefined;
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": function () {
       (<Ev[]>ev.options).map((option, i) => {
-        if (option.what && !clickActions[option.what.id]) {
-          clickActions[option.what.id] = () => { pushEvents(option); undoLog.write(i + 1); mainLoop(); };
-        } else {;
+        if (option.what) {
+          clickActions[option.what.id] ||= [];
+          const a = clickActions[option.what.id];
+          if (typeof a === "object") a.push({ func: () => { pushEvents(option); undoLog.write(i + 1); mainLoop(); }, desc: getEventName(option) });
+        } else {
           extraActions.push({name: getEventName(option), confirm: option.confirm, func: () => { pushEvents(option); undoLog.write(i + 1); mainLoop(); }});
         }
       });
@@ -3272,37 +3292,27 @@ function mainLoop(): void {
       extraActions.push({ name: "OK", func: () => mainLoop() });
     },
   })[ev.type])(ev);
+  const desc = ((gameState.players.length > 1) && ev.agent) ? `P${ev.agent.nr + 1}: ${ev.desc || ""}` : ev.desc || "";
+  setMessage(desc, ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
+  displayGame(ev);
   Object.keys(clickActions).map(v => {
     const e = document.querySelector(`[data-deck-id="${CSS.escape(v)}"], [data-card-id="${CSS.escape(v)}"]`);
     if (!e) {
       console.warn("Missing element for action: ", v);
-      extraActions.push({ name: "Pick " + v, func: clickActions[v] });
+      if (typeof clickActions[v] === "function") {
+        extraActions.push({ name: "Pick " + v, func: clickActions[v] });
+      } else if (clickActions[v].length) {
+        for (const { desc, func } of clickActions[v]) {
+          extraActions.push({ name: desc + " " + v, func });
+        }
+      }
     }
   })
-  const desc = ((gameState.players.length > 1) && ev.agent) ? `P${ev.agent.nr + 1}: ${ev.desc || ""}` : ev.desc || "";
-  setMessage(desc, ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
     return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
   }).join('');
-  Object.keys(clickActions).flatMap(v => [...document.querySelectorAll(`[data-card-id="${CSS.escape(v)}"]`)]).forEach(e => {
-    e.classList.add("select");
-    if (e.closest('.popup')) {
-      const popupId = e.closest('.popup').getAttribute('data-popup-id');
-      popupId && document.querySelectorAll(`.capturedHint[data-popup-id="${popupId}"]`).forEach(h => h.classList.add("select"));
-    }
-    if (ev.desc) {
-      if (/\bKO\b/.test(ev.desc)) e.classList.add("selectko");
-      if ((/\bdiscard\b/i).test(ev.desc) && !(/\bfrom discard\b/i).test(ev.desc)) e.classList.add("selectdiscard");
-      if ((/\brecruit\b/i).test(ev.desc)) e.classList.add("selectrecruit");
-      if ((/\bdefeat\b/i).test(ev.desc)) e.classList.add("selectdefeat");
-    }
-  });
-  for (const deckDiv of document.querySelectorAll('.deck-overlay, .popup .topCard')) {
-    const id = deckDiv.getAttribute('data-deck-id');
-    if (clickActions[id]) deckDiv.classList.add("select");
-  }
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   renderTextLog(textLog.contents);
   closePopupDecks();
