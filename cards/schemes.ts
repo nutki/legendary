@@ -361,7 +361,7 @@ makeSchemeCard("Build an Underground MegaVault Prison", { twists: 8, bindings: [
 makeSchemeCard("Cage Villains in Power-Suppressing Cells", { twists: 8, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: 'Cops' } }, ev => {
   // Twist: Each player returns all Cops from their Victory Pile to the Cop Stack. Then each player puts a non-grey Ally from their hand in front of them. Put a Cop from the Cop Stack on top of each of those Allies.
   const copStack = gameState.scheme.attachedDeck('COPS');
-  eachPlayer(p => p.victory.each(c => moveCardEv(ev, c, copStack)));
+  eachPlayer(p => p.victory.limit(isGroup('Cops')).each(c => moveCardEv(ev, c, copStack)));
   eachPlayer(p => selectCardEv(ev, "Choose a non-grey Ally", p.hand.limit(isNonGrayHero), c => {
     schemeProgressEv(ev, copStack.size); 
     copStack.withTop(cop => {
