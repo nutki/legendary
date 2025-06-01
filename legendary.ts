@@ -3183,7 +3183,7 @@ function handleClickAction(id: string) {
   if (typeof actions === "function") {
     actions();
   } else if (actions.length === 0) return;
-  else if (actions.length === 0) {
+  else if (actions.length === 1) {
     actions[0].func();
   } else {
     currentClickActions = id;
