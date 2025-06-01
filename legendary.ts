@@ -537,10 +537,11 @@ function moveCard(c: Card, where: Deck, bottom?: boolean): void {
   if (!c.location) {
     TypeError("Moving card without location " + c);
   };
+  const wasFaceUp = isFaceUp(c);
   if (c.location.knownTopCard === c) {
     c.location.knownTopCard = undefined;
   }
-  if (isFaceUp(c) && !bottom && !where.faceup) {
+  if (wasFaceUp && !bottom && !where.faceup) {
     where.knownTopCard = c;
   }
   c.location.remove(c);
