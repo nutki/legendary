@@ -165,7 +165,7 @@ addTemplatesWithCounts("WOUNDS", "Civil War", [
 // HEAL: You may have the player on your left gain this Wound.
 [ 3, makeWoundCard("Spreading Nanovirus", () => true, ev => gainEv(ev, ev.source, playerState.left)) ],
 // HEAL: You may play a card from the Villain Deck. If you do, KO this Wound.
-[ 2, makeWoundCard("Subdermal Tracker", () => true, ev => { villainDrawEv(ev); KOEv(ev, ev.source); }) ],
+[ 2, makeWoundCard("Subdermal Tracker", () => gameState.villaindeck.size > 0, ev => { villainDrawEv(ev); KOEv(ev, ev.source); }) ],
 ]);
 
 addTemplatesWithCounts("SIDEKICKS", "Civil War", [
