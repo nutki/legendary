@@ -592,7 +592,10 @@ makeSchemeCard("Fear Itself", { twists: 10 }, ev => {
 // EVILWINS: When there are 13 non-grey Allies in the KO pile.
 makeSchemeCard("Last Stand at Avengers Tower", { twists: 6 }, ev => {
   // Twist: Stack this Twist above the Rooftops as StarkTech Defenses. If there is an Adversary on the Rooftops, choose 3 Allies from the Lair and KO them.
-  withCity('ROOFTOPS', rooftops => rooftops.has(isVillain) && selectObjectsEv(ev, "Select Allies to KO", 3, hqHeroes() ,c => KOEv(ev, c)))
+  withCity('ROOFTOPS', rooftops => {
+    attachCardEv(ev, ev.twist, rooftops, "STARKTECH");
+    rooftops.has(isVillain) && selectObjectsEv(ev, "Select Allies to KO", 3, hqHeroes() ,c => KOEv(ev, c));
+  });
 }, koProgressTrigger(isNonGrayHero), () => {
   addStatMod('defense', c => atLocation(c, 'ROOFTOPS'), c => c.location.attached('STARKTECH').size);
   setSchemeTarget(13);
