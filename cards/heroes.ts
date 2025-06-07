@@ -4216,7 +4216,7 @@ addHeroTemplates("World War Hulk", [
   ra: makeHeroCard("No-Name, Brood Queen", "World Spanning Hunger", 8, u, 4, Color.INSTINCT, "Warbound", "D", [
     ev => lookAtDeckEv(ev, 1, cards => selectCardEv(ev, "Put the card back", cards, c => {})),
     ev => chooseMayEv(ev, "Feast", () => { feastEv(ev); chooseMayEv(ev, "Feast again", () => { feastEv(ev); chooseMayEv(ev, "Feast again", () => feastEv(ev)); })}),
-    ev => addAttackEvent(ev, 2 * turnState.pastEvents.count(e => e.type === 'KO' && ev.where === playerState.deck)),
+    ev => addAttackEvent(ev, 2 * pastEvents("KO").count(e => e.where === playerState.deck)),
   ]),
 },
 {
