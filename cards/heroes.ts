@@ -2965,9 +2965,9 @@ addHeroTemplates("Civil War", [
   name: "Patriot",
   team: "Avengers",
 // You get +1 Attack for each Hero Name among your non-S.H.I.E.L.D. Heroes.
-  c1: makeHeroCard("Patriot", "Intuitive Tactician", 3, u, 0, Color.INSTINCT, "Avengers", "F", ev => addAttackEvent(ev, numColors(yourHeroes().filter(c => !isTeam('S.H.I.E.L.D.')(c))))),
+  c1: makeHeroCard("Patriot", "Intuitive Tactician", 3, u, 0, Color.INSTINCT, "Avengers", "F", ev => addAttackEvent(ev, numHeroNames(yourHeroes().filter(c => !isTeam('S.H.I.E.L.D.')(c))))),
 // You get +1 Recruit for each Hero Name among your non-S.H.I.E.L.D. Heroes.
-  c2: makeHeroCard("Patriot", "New Generation of Heroes", 2, u, u, Color.STRENGTH, "Avengers", "D", ev => addRecruitEvent(ev, numColors(yourHeroes().filter(c => !isTeam('S.H.I.E.L.D.')(c))))),
+  c2: makeHeroCard("Patriot", "New Generation of Heroes", 2, u, u, Color.STRENGTH, "Avengers", "D", ev => addRecruitEvent(ev, numHeroNames(yourHeroes().filter(c => !isTeam('S.H.I.E.L.D.')(c))))),
 // DIVIDED: Incredible Effort
 // DIVHERO: Patriot
 // DIVTEAM: Avengers
