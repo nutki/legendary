@@ -11,7 +11,7 @@ npm install
 To download graphical assets, use the following commands:
 ```bash
 npm run download Other
-npm run download Legendary
+npm run download legendary
 ```
 For expansion cards
 ```bash
@@ -33,10 +33,4 @@ The UI should be availiable at http://localhost:8080
 
 # Known issues
 
-## Not Implemented
-
-* Any City altering scheme will not show extra spaces.
-* Missing keyword support: _Venom_ Bonding
-* Missing keyword support: _Noir_ Hidden Witness
-* Missing keyword support: _X-Men_ Human Shields
-* Trigger ordering
+See https://github.com/nutki/legendary/issues/
