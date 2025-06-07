@@ -1032,7 +1032,7 @@ addHeroTemplates("Paint the Town Red", [
   ra: makeHeroCard("Black Cat", "Cat Burglar", 8, u, 5, Color.COVERT, "Spider Friends", "", [
     ev => eachOtherPlayer(p => {
       revealOrEv(ev, Color.COVERT, () => {
-        selectCardEv(ev, `Select a Bystander for ${playerState.name} to rescue`, p.victory.deck, c => rescueEv(ev, c), p);
+        selectCardEv(ev, `Select a Bystander for ${playerState.name} to rescue`, p.victory.limit(isBystander), c => rescueEv(ev, c), p);
       }, p);
     }),
     ev => superPower("Spider Friends") && addAttackEvent(ev, pastEvents('RESCUE').count(ev => ev.who === playerState && isBystander(ev.what))),
