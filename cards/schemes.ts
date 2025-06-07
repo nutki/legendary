@@ -856,23 +856,25 @@ makeSchemeCard("The Fountain of Eternal Life", { twists: [ 4, 8, 8, 8, 8 ] }, ev
   addStatSet('fight', isTactic, (c, prev) => combineHandlers(prev, ev => fatefulResurrectionTacticEv(ev, () => {})));
 }),
 // SETUP: 8 Twists.
-makeSchemeCard("The God-Emperor of Battleworld", { twists: 8 }, ev => {
+makeSchemeCard<{schemeCopy: Card}>("The God-Emperor of Battleworld", { twists: 8 }, ev => {
   if (ev.nr === 1) {
     // Twist 1 This Scheme ascends to becomes (sic) a new 9-Attack "God-Emperor" Mastermind worth 9 VP. It has "<b>Master Strike</b>: Each player with exactly six cards in hand reveals a [Tech] Hero or puts two cards from their hand on top of their deck."
-    moveCardEv(ev, ev.source, gameState.mastermind);
-    addStatSet('strike', c => c === ev.source, () => ev => {
+    gameState.outOfGame.addNewCard(gameState.scheme.top.instance);
+    const scheme = ev.state.schemeCopy = gameState.outOfGame.deck.find(c => c.instance === gameState.scheme.top.instance);
+    moveCardEv(ev, scheme, gameState.mastermind);
+    addStatSet('strike', c => c === scheme, () => ev => {
       eachPlayer(p => p.hand.size === 6 && revealOrEv(ev, Color.TECH, () => {
         selectObjectsEv(ev, "Put two cards on top of your deck", 2, p.hand.deck, c => moveCardEv(ev, c, p.deck), p);
       }))
     });
-    addStatSet('vp', c => c === ev.source, () => 9);
-    addStatSet('defense', c => c === ev.source, () => 9 + 2 * gameState.scheme.attached('TWIST').size);
+    addStatSet('vp', c => c === scheme, () => 9);
+    addStatSet('defense', c => c === scheme, () => 9 + 2 * gameState.scheme.attached('TWIST').size);
   } else if (ev.nr >= 2 && ev.nr <= 6) {
     // Twist 2-6 Stack this Twist next to the Scheme. The God-Emperor gets another +2 Attack.
     attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   } else if (ev.nr === 7) {
     // Twist 7 If the God-Emperor lives, it KOs all other Masterminds.
-    fightableCards().includes(ev.source) && fightableCards().limit(isMastermind).limit(c => c !== ev.source).each(c => KOEv(ev, c)); // TODO detach on KO
+    fightableCards().includes(ev.state.schemeCopy) && fightableCards().limit(isMastermind).limit(c => c !== ev.state.schemeCopy).each(c => KOEv(ev, c)); // TODO detach on KO
   }
   // Twist 8 Evil wins! <i>(If any Mastermind still lives.)</i>
   schemeProgressEv(ev, ev.nr);
