@@ -1606,7 +1606,7 @@ addVillainTemplates("Captain America 75th Anniversary", [
 // VP: 2
   [ 2, makeVillainCard("Masters of Evil (WWII)", "Black Knight", 4, 2, {
     ambush: ev => captureEv(ev, ev.source),
-    fight: ev => saviorPower() && selectCardAndKOEv(ev, playerState.hand.limit(isHero)),
+    fight: ev => saviorPower() && selectCardAndKOEv(ev, yourHeroes()),
   })],
 // AMBUSH: Executioner captures a Bystander
 // FIGHT: Savior: Draw a card.
