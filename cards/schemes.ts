@@ -3424,13 +3424,17 @@ makeSchemeCard("Wager at Blackjack For Heroes' Souls", { twists: 11, heroes: [5,
       return !stopped2;
     }, cards => {
       const [ourSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= ourStop], [0, false]);
+      textLog.log(`You stopped at ${ourSum}.`);
       const [theirSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= 17], [-ourSum, false]);
+      textLog.log(`The Mastermind stopped at ${theirSum}.`);
       if (ourSum > 21 || (theirSum < 21 && theirSum >= ourSum)) {
-        selectCardOptEv(ev, "Choose a Hero to gain", cards.limit(c => c.cost <= 6), c => gainEv(ev, c));
-      } else {
+        textLog.log("The Mastermind wins the wager!");
         selectCardEv(ev, "Choose a Hero to wager", cards.limit(isHero), c => {
           attachCardEv(ev, c, gameState.scheme, 'WAGERED_SOUL');
         });
+      } else {
+        textLog.log("You win the wager!");
+        selectCardOptEv(ev, "Choose a Hero to gain", cards.limit(c => c.cost <= 6), c => gainEv(ev, c));
       };
     }, true, true);
   });
