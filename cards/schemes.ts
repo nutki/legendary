@@ -518,7 +518,7 @@ makeSchemeCard("Intergalactic Kree Nega-Bomb", { twists: 8 }, ev => {
 }),
 // SETUP: 8 Twists. Always include Kree Starforce and Skrull Villain Groups.
 // EVILWINS: When there are 4 Kree Conquests or 4 Skrull Conquests.
-makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], required: { villains: ['Kree Starforce', 'Skrull']} }, ev => {
+makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], required: { villains: ['Kree Starforce', 'Skrulls']} }, ev => {
   const kLoc = gameState.mastermind;
   const sLoc = gameState.villaindeck;
   if (ev.nr <= 7) {
@@ -526,7 +526,7 @@ makeSchemeCard("The Kree-Skrull War", { twists: 8, vd_villain: [2, 2, 3, 3, 4], 
     cityVillains().limit(c => isGroup("Kree Starforce")(c) || isGroup("Skrull")(c)).each(c => villainEscapeEv(ev, c));
     cont(ev, () => {
       const k = gameState.escaped.count(isGroup("Kree Starforce"));
-      const s = gameState.escaped.count(isGroup("Skrull"));
+      const s = gameState.escaped.count(isGroup("Skrulls"));
       k > s && attachCardEv(ev, ev.twist, kLoc, "CONQUEST");
       s > k && attachCardEv(ev, ev.twist, sLoc, "CONQUEST");
     });
@@ -1295,7 +1295,7 @@ addTemplates("SCHEMES", "X-Men", [
 // SETUP: 8 Twists. Add 10 Brood as extra Henchmen. No Bystanders in Villain Deck.
 // RULE: Cards are played from the Villain Deck face-down. You may spend 1 Attack to "scan" a face-down card in the city, turning it face-up and doing any Ambush effect, Twist, Trap, or Master Strike. If a face-down card would escape, scan it, and then it escapes if it's a Villain.
 // EVILWINS: When 3 Villains per player have escaped.
-makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen: [ 2, 2, 2, 3, 3 ], required: { henchmen: 'Brood' } }, ev => {
+makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen: [ 2, 2, 2, 3, 3 ], required: { henchmen: 'The Brood' } }, ev => {
   // Twist: The player on your right gains this Twist as a "Brood Infection." When drawn, they KO it and gain 2 Wounds.
   gainEv(ev, ev.twist, playerState.right);
 }, [
@@ -1603,7 +1603,7 @@ makeSchemeCard("Break the Planet Asunder", { twists: 9 }, ev => {
 }, escapeProgressTrigger(isNonGrayHero), () => setSchemeTarget(25)),
 // SETUP: 10 Twists. Shuffle together 20 Bystanders and 10 Cytoplasm Spike Henchmen as an "Infected Deck."
 // EVILWINS: When the KO pile and Escape Pile combine to have 18 Bystanders and/or Spikes.
-makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: "Cytoplasm Spike" } }, ev => {
+makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: "Cytoplasm Spikes" } }, ev => {
   // Twist: Reveal the top three cards of the Infected Deck. KO all Bystanders you revealed. All Spikes you revealed enter the city.
   const infected = gameState.scheme.attachedDeck('INFECTED');
   repeat(3, () => cont(ev, () => {
@@ -1973,9 +1973,9 @@ makeTransformingSchemeCard("The Korvac Saga", "Korvac Revealed", { twists: 8 }, 
 }),
 ]);
 addTemplates("SCHEMES", "S.H.I.E.L.D.", [
-// SETUP: 7 Twists. Include either the "Hydra Elite" or "A.I.M., Hydra Offshoot" Villain Group, but not both. TODO required villain
+// SETUP: 7 Twists. Include either the "Hydra Elite" or "A.I.M., Hydra Offshoot" Villain Group, but not both.
 // EVILWINS: When the <b>Hydra Level</b> is 11.
-makeSchemeCard("S.H.I.E.L.D. vs. HYDRA War", { twists: 7 }, ev => {
+makeSchemeCard("S.H.I.E.L.D. vs. HYDRA War", { twists: 7, required: { villains: "Hydra Elite|A.I.M., Hydra Offshoot"} }, ev => { // TODO not both requried
   // Twist: Each player puts a card from the S.H.I.E.L.D. Officer Stack face up next to the Scheme as a 3 Attack "Double Agent" Villain. If any Double Agents were already there, put one into the Escape Pile and put the rest on the bottom of the S.H.I.E.L.D. Officer Stack. You can fight any Double Agent next to the Scheme to gain it or send it {UNDERCOVER}.
   const currentAgents = gameState.scheme.attached("DOUBLEAGENT");
   eachPlayer(() => cont(ev, () => gameState.officer.withTop(c => {
@@ -3515,7 +3515,7 @@ makeSchemeCard("Collect an Interstellar Zoo", { twists: 11 }, ev => {
 // RULE: Hero cards from the Villain Deck are "Zombie" Villains with Attack equal to their cost +1, worth VP equal to their cost. They have "<b>Ambush</b>: {RISEOFTHELIVINGDEAD}.
 // <b>Fight</b>: Play a copy of this card as a Hero, then put it into your Victory Pile as a Villain." <i>(It still has <b>Rise</b>.)</i>
 // EVILWINS: When there are 3 Villains per player in the Escape pile or the Villain Deck runs out.
-makeSchemeCard("Marvel Zombies", { twists: 4, heroes: [ 4, 6, 6, 6, 7 ], vd_bystanders: [ 4, 7, 8, 8, 12 ], required: { /* TODO one of villains: ["The Deadlands", "Zombie Avengers"] */} }, ev => { // TODO requried 1 riseof
+makeSchemeCard("Marvel Zombies", { twists: 4, heroes: [ 4, 6, 6, 6, 7 ], vd_bystanders: [ 4, 7, 8, 8, 12 ], required: { villains: "The Deadlands|Zombie Avengers" } }, ev => { // TODO required exactly one riseof
   // Twist: Each Villain in the city with "Rise of the Living Dead" escapes. Then play another card from the Villain Deck.
   cityVillains().limit(hasRiseOfTheLivingDead).each(c => villainEscapeEv(ev, c));
   playAnotherEv(ev);
@@ -3775,7 +3775,7 @@ makeSchemeCard("Subjugate Earth with Mega-Corporations", { twists: 8, heroes: [4
 ]);
 addTemplates("SCHEMES", "Weapon X", [
 // SETUP: 8 Twists. Include exactly 1 Hero with Wolverine or Logan in its name.
-makeSchemeCard("Condition Logan into Weapon X", { twists: 8, required: { /* TODO hero require exactly one Wolverine/Logan */} }, ev => {
+makeSchemeCard("Condition Logan into Weapon X", { twists: 8, required: { heroes: "Wolverine|Wolverine@Dark City|Colossus & Wolverine|Weapon X (Wolverine)|Old Man Logan"} }, ev => { // TODO exactly one required
   if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5) {
     // <b>Twist 1,3,5</b>: <i>"Induce Violent Rage"</i>: If you don't defeat an Enemy worth 2 VP or more this turn, then after you draw a new hand at
     // the end of this turn, each player discards down to four cards.

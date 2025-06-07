@@ -90,7 +90,6 @@ interface Card {
   trigger: Trigger
   init?: (state: any) => void
   twist?: (ev: Ev) => void
-  required?: { heroes?: string, villains?: string, henchmen?:string }
   bribe?: boolean
   ambush?: Handler | Handler[]
   fight?: Handler | Handler[]
@@ -3345,6 +3344,24 @@ function runChecks() {
       const hh = findHenchmanTemplate(h);
       if (!hh) console.error("Lead Henchman missing: ", t.cardName, "Leads", h);
     }
+  });
+  cardTemplates["SCHEMES"].forEach(t => {
+    const getRequired = (r: string | string[] | undefined) => r ? (typeof r === "string" ? r.split("|") : r.flatMap(s => s.split('|'))) : [];
+    const h = getRequired(t.params.required?.henchmen);
+    const v = getRequired(t.params.required?.villains);
+    const heroes = getRequired(t.params.required?.heroes);
+    h.forEach(hc => {
+      const hh = findHenchmanTemplate(hc);
+      if (!hh) console.error("Scheme requires missing Henchman: ", t.cardName, "requires", hc);
+    });
+    v.forEach(vc => {
+      const vv = findVillainTemplate(vc);
+      if (!vv) console.error("Scheme requires missing Villain: ", t.cardName, "requires", vc);
+    });
+    heroes.forEach(hc => {
+      const hh = findHeroTemplate(hc);
+      if (!hh) console.error("Scheme requires missing Hero: ", t.cardName, "requires", hc);
+    });
   });
 }
 document.addEventListener('DOMContentLoaded', startApp, false);
