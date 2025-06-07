@@ -1747,6 +1747,7 @@ function currentVP(p?: Player): number {
 function fightableCards(): Card[] {
   return [
     ...[...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c)),
+    ...playerState.victory.limit(isVillain).limit(isFightable),
     ...fortifyingCards().limit(isEnemy),
     ...gameState.players.map(p => attachedCards('PREYING', p.playArea)).merge(), ...gameState.astralPlane.deck, ...gameState.city.flatMap(d => d.attached('LOCATION')),
   ];
