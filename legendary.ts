@@ -3268,9 +3268,14 @@ function mainLoop(): void {
       let options = <Card[]>ev.options;
       options.map((option, i) => clickActions[option.id] = () => {
         selected[i] = !selected[i];
-        for (const e of document.querySelectorAll(`[data-card-id="${CSS.escape(option.id)}"]`)) {
+        for (const e of document.querySelectorAll(`[data-card-id="${CSS.escape(option.id)}"], [data-deck-id="${CSS.escape(option.id)}"]`)) {
           if (selected[i]) e.classList.add('selected'); else e.classList.remove('selected');
         }
+        const numString = ev.min === ev.max ? ev.min.toString() : `${ev.min}-${ev.max}`;
+        const numSelected = selected.count(s => s);
+        const valid = numSelected >= ev.min && numSelected <= ev.max;
+        setMessage(`${ev.desc} (${numSelected}/${numString} selected)`, "");
+        document.getElementById("extraActions").innerHTML = `<span class="action${!valid ? "" : " noconfirm"}" id="!extraAction0">Confirm</span>`;
       });
       extraActions.push({name: "Confirm", func: () => {
         let num = selected.count(s => s);
@@ -3279,7 +3284,7 @@ function mainLoop(): void {
         indexes.forEach(i => ev.result1(options[i]));
         if (num === 0) ev.result0();
         undoLog.write(indexes.join(',')); mainLoop();
-      }});
+      }, confirm: ev.min > 0});
     },
     "GAMEOVER": function () {
       gameState.gameOver = true;
