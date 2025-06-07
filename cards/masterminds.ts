@@ -2576,8 +2576,8 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   cardActions: [ cosmicThreatAction ],
   init: () => {
     const amount = () => [...gameState.hq, ...gameState.city, ...gameState.destroyedCitySpaces].count(c => c.attached('POCKET').size > 0);
-    addStatSet('recruitCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, recruit: v.recruit + amount()}));
-    addStatSet('fightCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: v.attack + amount()}));
+    addStatSet('recruitCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: (v.attack || 0) + amount()}));
+    addStatSet('fightCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: (v.attack || 0) + amount()}));
   }
 })),
 ]);
