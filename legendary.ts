@@ -1353,13 +1353,13 @@ function setupMastermindName() {
   return gameState.gameSetup.mastermind[0];
 }
 function availiableHeroTemplates() {
-  return cardTemplates.HEROES.filter(t => gameState.gameSetup.heroes.includes(t.templateId));
+  return cardTemplates.HEROES.filter(t => !gameState.gameSetup.heroes.includes(t.templateId));
 }
 function availiableVillainTemplates() {
-  return cardTemplates.VILLAINS.filter(t => gameState.gameSetup.villains.includes(t.templateId));
+  return cardTemplates.VILLAINS.filter(t => !gameState.gameSetup.villains.includes(t.templateId));
 }
 function availiableHenchmenTemplates() {
-  return cardTemplates.HENCHMEN.filter(t => gameState.gameSetup.henchmen.includes(t.templateId));
+  return cardTemplates.HENCHMEN.filter(t => !gameState.gameSetup.henchmen.includes(t.templateId));
 }
 type SetupParamModFunction = (p: keyof SetupParams, v: number, playerCount: number) => number;
 const extraVillainMod: SetupParamModFunction = (p, v) => p === 'vd_villain' ? v + 1 : v;
