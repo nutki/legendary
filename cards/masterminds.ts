@@ -2056,7 +2056,7 @@ addTemplates("MASTERMINDS", "Revelations", [
   // Draw a card for each Mandarin's Ring in your Victory Pile.
     drawEv(ev, playerState.victory.count(leadBy(ev.source.mastermind)));
   } ],
-  makeTacticsCard("Dragon of Heaven Spaceship", { fight: ev => {
+  makeTacticsCard("Dragon of Heaven Spaceship", { printedDefense: 9, fight: ev => {
   // If this was not already a <b>Location</b>, KO up to two of your Heroes, and this card enters the city as a Location with this ability:|KO up to two of your Heroes.
   // Whenever you fight a Villain here, each other player reveals their hand and KOs one of their non-grey Heroes.
     selectObjectsUpToEv(ev, "Choose up to two of your Heros", 2, yourHeroes(), c => KOEv(ev, c));
