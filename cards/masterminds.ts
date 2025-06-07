@@ -2842,6 +2842,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   makeTacticsCard("Master Mold, Sentinel Factory", { printedDefense: 4, fight: ev => {
   // Rescue three Bystanders. KO one of your Heroes. Master Mold ascends to become an additional Mastermind whose only ability is:
     rescueEv(ev, 3);
+    selectCardAndKOEv(ev, yourHeroes());
     addStatSet('fight', c => c === ev.source, () => () => {});
     ascendToMastermind(ev, ev => gameState.villaindeck.limit(c => ["Sentinel", "Sentinel Squad O*N*E*"].includes(c.cardName)).withFirst(c => {
       enterCityEv(ev, c);
