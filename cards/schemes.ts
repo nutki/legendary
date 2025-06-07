@@ -1732,7 +1732,7 @@ makeSchemeCard("World War Hulk", { twists: 9, extra_masterminds: 3 }, ev => {
 }, () => {
   setSchemeTarget(9);
   const lurking = gameState.scheme.attachedDeck('LURKING');
-  gameState.mastermind.deck.forEach((m, i) => {
+  [...gameState.mastermind.deck].forEach((m, i) => {
     m.attachedDeck('TACTICS').deck.splice(2);
     if (i > 0) moveCard(m, lurking);
   });
