@@ -1520,6 +1520,11 @@ gameState = {
       match: ev => isMastermind(ev.what),
       after: ev => fightableCards().has(isMastermind) || gameState.hq.has(d => d.attached('HAUNTED').has(isMastermind)) || gameOverEv(ev, "WIN"),
     },
+    { // Win by KOing masterminds (Warld War Hulk scheme)
+      event: "KO",
+      match: ev => isMastermind(ev.what),
+      after: ev => fightableCards().has(isMastermind) || gameState.hq.has(d => d.attached('HAUNTED').has(isMastermind)) || gameOverEv(ev, "WIN"),
+    },
     { // Loss by villain deck or hero deck running out
       event: "CLEANUP",
       match: () => true,
