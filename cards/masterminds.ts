@@ -779,10 +779,10 @@ addTemplates("MASTERMINDS", "Captain America 75th Anniversary", [
 // Ultimate Abomination
 makeMastermindCard("Arnim Zola", 6, 6, "Zola's Creations", ev => {
 // For each Hero in the HQ that has less than 2 printed Attack, put that Hero on the bottom of the Hero Deck, and each player discards a card of that Hero's cost.
-  hqHeroes().limit(c => (c.printedAttack || 0) < 2).each(c => {
+  hqHeroes().limit(c => (c.printedAttack || 0) < 2).each(c => cont(ev, () => {
     moveCardEv(ev, c, gameState.herodeck, true);
     eachPlayer(p => selectCardEv(ev, "Discard a card", p.hand.limit(v => v.cost === c.cost), c => discardEv(ev, c), p));
-  })
+  }));
 }, [
   [ "Dominate the Weak", ev => {
   // The player of your choice gains a Hero from the HQ that has less than 2 printed Attack.
