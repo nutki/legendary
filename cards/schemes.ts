@@ -2392,8 +2392,9 @@ makeSchemeCard<{ locations: Map<Player, Deck>, tornado: Card }>("Tornado of Terr
   const tornadoAt = ev.state.tornado && ev.state.tornado.location.attachedTo instanceof Deck ? ev.state.tornado.location.attachedTo : undefined;
   if (ev.nr === 1) {
     // Twist 1 Put this Tornado Scheme card above the Sewers.
-    withCity('SEWERS', sewers => attachCardEv(ev, ev.twist, sewers, 'TORNADO'));
-    ev.state.tornado = ev.twist;
+    gameState.outOfGame.addNewCard(gameState.scheme.top.instance);
+    ev.state.tornado = gameState.outOfGame.deck.find(c => c.instance === gameState.scheme.top.instance);
+    withCity('SEWERS', sewers => attachCardEv(ev, ev.state.tornado, sewers, 'TORNADO'));
   } else if (ev.nr >= 2 && ev.nr <= 5) {
     // Twist 2-5 Each player in the Tornado space gains a Wound.
     // Then move this Tornado card and each Villain simultaneously one space to the left. (A Villain on the Bridge escapes.)
@@ -2406,11 +2407,10 @@ makeSchemeCard<{ locations: Map<Player, Deck>, tornado: Card }>("Tornado of Terr
     // Twist 6-9 Same effect, but move them all to the right, if possible. (A Villain in the Sewers doesn't move.)
     eachPlayer(p => ev.state.locations.get(p) === tornadoAt && gainWoundEv(ev, p));
     let i = gameState.city.size - 1;
-    while (i >= 0 && isCityEmpty(gameState.city[i])) i--;
-    while (i > 0) {
-      i--;
-      gameState.city[i].limit(isVillain).each(c => moveCardEv(ev, c, gameState.city[i+1]));
-    }
+    while (i >= 0 && !isCityEmpty(gameState.city[i])) i--;
+    [...Array(i).keys()].reverse().forEach(j => {
+      cont(ev, () => gameState.city[j].limit(isVillain).each(c => moveCardEv(ev, c, gameState.city[j+1])));
+    });
     tornadoAt.adjacentRight && attachCardEv(ev, ev.state.tornado, tornadoAt.adjacentRight, 'TORNADO');
   }
   // Twist 10 Evil Wins!
