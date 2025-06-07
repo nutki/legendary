@@ -2105,7 +2105,7 @@ addVillainTemplates("Noir", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("X-Men Noir", "Warden Emma Frost", 6, 4, {
-    escape: ev => investigateEv(ev, isScheme, gameState.villaindeck, c => villainDrawEv(ev, c), playerState, true),
+    escape: ev => investigateEv(ev, isTwist, gameState.villaindeck, c => villainDrawEv(ev, c), playerState, true),
   })],
 // FIGHT: KO a Hero from the HQ. <b>Investigate</b> the Hero Deck for a card to put in that emptied HQ space.
 // ATTACK: 4

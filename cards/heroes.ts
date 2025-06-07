@@ -4734,7 +4734,7 @@ addHeroTemplates("Revelations", [
 // {POWER Instinct} Choose one - Draw a card or you get +1 Recruit.
   c2: makeHeroCard("Hellcat", "Part-Time PI", 3, 2, u, Color.INSTINCT, "Avengers", "D", [ ev => {
     selectCardEv(ev, "Choose a deck", anyDeck(), d => {
-      const f = (c: Card[]) => selectCardOptEv(ev, "Put on the bottom of the deck", c.limit(c => !isScheme(c)), c => {
+      const f = (c: Card[]) => selectCardOptEv(ev, "Put on the bottom of the deck", c.limit(c => !isTwist(c)), c => {
         moveCardEv(ev, c, c.location, true);
       });
       if (d.owner && d === d.owner.deck) revealPlayerDeckEv(ev, 1, f, d.owner, playerState);
