@@ -7744,12 +7744,14 @@ addHeroTemplates("Weapon X", [
   c1: makeHeroCard("Marrow", "Bone Shards", 3, u, 2, Color.RANGED, "X-Force", "FDA", ev => superPower("X-Force") && berserkEv(ev, 1)),
 // For all of your Heroes' {BERSERK} abilities this turn, you get the Berserked cards' printed Recruit just like you get their printed Attack.
 // {POWER Strength} {BERSERK}
-  c2: makeHeroCard("Marrow", "Hyper-Adaptive Skeleton", 2, 1, 1, Color.STRENGTH, "X-Force", "DRA", [ ev => 0/* TODO */, ev => superPower(Color.STRENGTH) && berserkEv(ev, 1) ]),
+  c2: makeHeroCard("Marrow", "Hyper-Adaptive Skeleton", 2, 1, 1, Color.STRENGTH, "X-Force", "DRA", [ ev => turnState.recruitFromBerserk = true, ev => superPower(Color.STRENGTH) && berserkEv(ev, 1) ]),
 // Draw two cards. Then put a card from your hand on top of your deck.
-  uc: makeHeroCard("Marrow", "Osteogenesis", 6, 1, 2, Color.STRENGTH, "X-Force", "FD", ev => 0/* TODO */),
+  uc: makeHeroCard("Marrow", "Osteogenesis", 6, 1, 2, Color.STRENGTH, "X-Force", "FD", [ ev => drawEv(ev, 2), ev => selectCardEv(ev, "Choose a card to put on top of your deck", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck)) ]),
 // {WEAPON X SEQUENCE}
 // Reveal the top six cards of your deck. Discard all the ones that cost 0 and put the rest back in any order.
-  ra: makeHeroCard("Marrow", "Metabolic Overdrive", 7, u, 3, Color.COVERT, "X-Force", "A", [ ev => weaponXSequenceEv(ev), ev => 0/* TODO */ ]),
+  ra: makeHeroCard("Marrow", "Metabolic Overdrive", 7, u, 3, Color.COVERT, "X-Force", "A", [ ev => weaponXSequenceEv(ev), ev => {
+    revealPlayerDeckEv(ev, 6, cards => cards.filter(c => c.cost === 0).each(c => discardEv(ev, c)));
+  } ]),
 },
 {
   name: "Weapon H",

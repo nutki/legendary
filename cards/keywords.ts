@@ -519,7 +519,11 @@ function addHumanShieldActions(ev: Ev, actions: Ev[]) {
 function xGenePower(c: Filter<Card>) { return playerState.discard.count(c); }
 function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {
   repeat(n, () => {
-    withPlayerDeckTopEv(ev, c => { addAttackEvent(ev, c.printedAttack || 0); f ? f(c) : discardEv(ev, c); });
+    withPlayerDeckTopEv(ev, c => {
+      addAttackEvent(ev, c.printedAttack || 0);
+      turnState.recruitFromBerserk && addRecruitEvent(ev, c.printedRecruit || 0);
+      f ? f(c) : discardEv(ev, c);
+    });
   });
 }
 function addPiercingEv(ev: Ev, amount: number) {

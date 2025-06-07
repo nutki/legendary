@@ -1086,6 +1086,7 @@ interface Turn extends Ev {
   actionFilters: ((ev: Ev) => boolean)[]
   destroyedConqueror?: boolean
   villainCardsToPlay?: number
+  recruitFromBerserk?: boolean
 }
 interface Trigger {
   event: TriggerableEvType
