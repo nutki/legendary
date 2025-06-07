@@ -831,7 +831,7 @@ makeSchemeCard("Enthrone the Barons of Battleworld", { twists: 8 }, ev => {
   };
   if (ev.nr <= 7) {
     // Twist 1-7 The Villain in the city or Escape Pile with the highest printed Attack ascends to become a new Mastermind. It gets +2 Attack. It gains the ability "<b>Master Strike</b>: Each Player discards a card with cost equal to this Mastermind's printed VP." <i>(Keep them separate from any Villains who ascend through Escape effects.)</i>
-    selectCardEv(ev, "Choose a Villain", [...cityVillains(), gameState.escaped.limit(isVillain).highest(c => c.printedDefense)], ascend);
+    selectCardEv(ev, "Choose a Villain", [...cityVillains(), ...gameState.escaped.limit(isVillain)].highest(c => c.printedDefense), ascend);
   } else if (ev.nr === 8) {
     // Twist 8 The Villain in each player's Victory Pile with the highest printed Attack ascends the same way.
     eachPlayer(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain).highest(c => c.printedDefense), ascend));
