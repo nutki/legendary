@@ -1698,7 +1698,7 @@ makeTransformingMastermindCard(makeMastermindCard("The Red King", 7, 6, "Sakaar 
     transformMastermindEv(ev);
   } ],
 ], {
-  fightCond: c => cityVillains().size > 0,
+  fightCond: c => cityVillains().size === 0,
 }), "The Red King, Power Armored", 10, ev => {
 // The Red King {TRANSFORM} then play another card from the Villain Deck.
   transformMastermindEv(ev);
