@@ -4258,7 +4258,7 @@ addVillainTemplates("Into the Cosmos", [
 // VP: 5
   [ 2, makeVillainCard("From Beyond", "The Shaper of Worlds", 10, 5, {
     ambush: ev => gameState.herodeck.withTop(c => attachCardEv(ev, c, ev.source, 'NEWREALITY')),
-    fight: ev => ev.source.attached('NEWREALITY').each(c => choosePlayerEv(ev, p => gainEv(ev, c))),
+    fight: ev => ev.source.attached('NEWREALITY').each(c => choosePlayerEv(ev, p => gainEv(ev, c, p))),
     escape: ev => {
       ev.source.attached('NEWREALITY').each(c => KOEv(ev, c));
       selectCardEv(ev, "Choose an HQ space", gameState.hq, d => {
