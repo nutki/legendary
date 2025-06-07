@@ -3132,10 +3132,9 @@ addHeroTemplates("Civil War", [
 // {POWER Instinct Instinct} You may KO the card you discarded this way.
 // GUN: 1
   c2: makeHeroCard("Tigra", "Supernatural Senses", 3, u, 2, Color.INSTINCT, "Avengers", "GD", ev => {
-    let cards: Card[] = [];
-    lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to discard", cards, c => cards.push(c)));
-    cont(ev, () => cards.each(c => {
-      discardEv(ev, c);
+    let sel: Card[] = [];
+    lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to discard", cards, c => { sel.push(c); discardEv(ev, c); }));
+    cont(ev, () => sel.limit(c => c.location === playerState.discard).each(c => {
       superPower(Color.INSTINCT, Color.INSTINCT) && chooseMayEv(ev, "KO the card discarded", () => KOEv(ev, c));
     }));
   }),
