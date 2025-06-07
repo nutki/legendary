@@ -2686,7 +2686,8 @@ addHeroTemplates("Captain America 75th Anniversary", [
 // {OUTOFTIME}.
   c2: makeHeroCard("Captain America 1941", "Storm the Beachhead", 5, u, 0, Color.TECH, "Avengers", "", [ ev => addAttackEvent(ev, numClasses()), ev => outOfTimeEv(ev) ]),
 // {TEAMPOWER Avengers} Rescue a Bystander
-  uc: makeHeroCard("Captain America 1941", "Liberate the Prisoners", 6, u, 3, Color.COVERT, "Avengers", "F", ev => superPower("Avengers") && rescueEv(ev)),
+// {SAVIOR} Draw a card.
+  uc: makeHeroCard("Captain America 1941", "Liberate the Prisoners", 6, u, 3, Color.COVERT, "Avengers", "F", [ ev => superPower("Avengers") && rescueEv(ev), ev => saviorPower() && drawEv(ev) ]),
 // {SAVIOR} {OUTOFTIME}
   ra: makeHeroCard("Captain America 1941", "Punch Evil in the Face", 8, u, 5, Color.INSTINCT, "Avengers", "F", ev => saviorPower() && outOfTimeEv(ev)),
 },
