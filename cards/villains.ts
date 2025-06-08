@@ -80,7 +80,7 @@ addVillainTemplates("Legendary", [
 // ATTACK: 6
 // VP: 3*
   [ 1, makeVillainCard("HYDRA", "Supreme HYDRA", 6, 3, {
-    varVP: c => 3 * owner(c).victory.count(isGroup("HYDRA")),
+    varVP: c => owner(c) ? 3 * owner(c).victory.count(isGroup("HYDRA")) : c.printedVP,
   })],
 // FIGHT: Each player without another HYDRA Villain in their Victory Pile gains a Wound.
 // ESCAPE: Same effect.
@@ -110,7 +110,7 @@ addVillainTemplates("Legendary", [
 // VP: 2+
   [ 2, makeVillainCard("Masters of Evil", "Ultron", 6, 2, {
     escape: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
-    varVP: c => 2 + owned(owner(c)).count(Color.TECH)
+    varVP: c => owner(c) ? c.printedVP + owned(owner(c)).count(Color.TECH) : c.printedVP
   })],
 // FIGHT: If you fight Whirlwind on the Rooftops or Bridge, KO two of your Heroes.
 // ATTACK: 4
