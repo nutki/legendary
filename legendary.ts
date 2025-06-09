@@ -126,6 +126,7 @@ interface Card {
   printedNthCircle?: number
   sizeChanging?: number
   divided?: { left: Card, right: Card }
+  dividedParent?: Card
   excessiveViolence?: Handler
   lightShow?: Handler
   trapCond?: (c: Card) => boolean
@@ -355,6 +356,7 @@ function makeDividedHeroCard(c1: Card, c2: Card) {
   const orStat = (a: number, b: number) => a === undefined ? b : a | (b || 0);
   const mergeArrayStat = <T>(a: T[], b: T[]) => a === undefined ? b : b === undefined ? a : [...a, ...b].unique(a => a);
   c.divided = { left: c1, right: c2 };
+  c1.dividedParent = c2.dividedParent = c; // Used only in UI
   c.printedRecruit = sumPrintedStat(c1.printedRecruit, c2.printedRecruit);
   c.printedAttack = sumPrintedStat(c1.printedAttack, c2.printedAttack);
   c.printedCost = c1.printedCost;
@@ -2763,7 +2765,9 @@ function playCard1(ev: Ev) {
       }
       if (playBoth) {
         const otherSide = v === d.left ? d.right : d.left;
-        canPlay(otherSide) && playCopyEv(ev, otherSide);
+        const copy = makeCardCopy(ev.what);
+        makeCardDividedChoice(copy, otherSide);
+        canPlay(copy) && pushEv(ev, "PLAY", { func: playCard, what: copy });
       }
     });
   } else playCard2(ev);

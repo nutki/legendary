@@ -23,15 +23,17 @@ function imageName(path: string, card: Card, subname?: string): string {
   return "images/" + set + '/' + path + "/" + name + ".jpg";
 }
 function cardImageTransform(card: Card): string {
-  if (card.instance?.divided) {
-    const proto = Object.getPrototypeOf(card);
-    return card.instance === proto ? 'rotate(90deg) scale(1.4,calc(1/1.4))' :
-      `scaleX(2) translate(${proto === card.instance.divided.left ? '': '-'}25%)`;
+  const proto = Object.getPrototypeOf(card);
+  if (card.dividedParent) {
+    return `scaleX(2) translate(${proto === card.dividedParent.divided.left ? '': '-'}25%)`;
+  } else if (card.divided) {
+    return 'rotate(90deg) scale(1.4,calc(1/1.4))';
   }
   return undefined;
 }
 function cardImageName(card: Card): string {
   if (card.instance && card.instance !== card.backSide) card = card.instance;
+  if (card.dividedParent) card = card.dividedParent;
   if (card.cardType === "HERO" && card.isSidekick) return imageName("sidekicks", card);
   if (card.cardType === "HERO") return imageName("heroes", card, card.templateId?.replace(/@.*/, ""));
   if ((card.cardType === "VILLAIN" || card.cardType === "LOCATION") && card.isHenchman) return imageName("henchmen", card);
