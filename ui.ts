@@ -58,8 +58,8 @@ function makeDisplayCard(c: Card): string {
   let res = `<span class="card" id="${c.id}" >${c.id}</span>`;
   return res + makeDisplayAttached(c);
 }
-function setSourceImg(name: string) {
-  const r = div("card", { id: "source2" }, img(name, "cardface"), div("frame"));
+function setSourceImg(name: string, transform?: string) {
+  const r = div("card", { id: "source2" }, img(name, "cardface", transform), div("frame"));
   positionCard(r, {size: 'large', x:7.5, y:0});
   document.getElementById("card-container").appendChild(r);
 }
@@ -121,9 +121,9 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
   const faceUp = gone || isFaceUp(c);
   const src = faceUp ? cardImageName(c) : 'images/back.jpg';
   const transform = faceUp ? cardImageTransform(c) : undefined;
-  const options: {[key: string]: string} = {
-    onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}')`,
-    onmouseleave: "clearSourceImg()",
+  const options: {[key: string]: string} = faceUp && c.divided ? {} : {
+   onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}'${transform ? `, '${transform}'` : ''})`,
+   onmouseleave: "clearSourceImg()",
   };
   if (id) options['data-card-id'] = c.id;
   const d = div(gone ? "card gone" : "card", options, img(src, "cardface", transform));
@@ -136,6 +136,18 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
   if (countHint[1]) d.appendChild(div("capturedHint", { 'data-popup-id': countHint[2] }, text(countHint[1])));
   if (c.attached("SHARD").size) {
     d.appendChild(div("shardHint", {}, text(c.attached("SHARD").size)));
+  }
+  if (faceUp && c.divided) {
+    d.appendChild(div("dividedtop", {
+      style: 'width: 100%; height: 50%; top: 0;position: absolute',
+      onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}', "scaleX(2) translate(25%)")`,
+      onmouseleave: "clearSourceImg()",
+    }));
+    d.appendChild(div("dividedbottom", {
+      style: 'width: 100%; height: 50%; bottom: 0;position: absolute',
+      onmouseover: `setSourceImg('${src.replace(/'/g, "\\'")}', "scaleX(2) translate(-25%)")`,
+      onmouseleave: "clearSourceImg()",
+    }));
   }
   return d;
 }
@@ -705,5 +717,6 @@ function renderTextLog(contents: (string|Card)[]): void {
   document.getElementById("logContainer").innerHTML = '';
   contents.forEach(c => container.appendChild(c instanceof Card ? div("logcard", {
     onmouseover: `setSourceImg('${cardImageName(c).replace(/'/g, "\\'")}')`,
+    onmouseleave: `clearSourceImg()`,
   }, text(c.cardName)) : c === '\n' ? document.createElement('br') : text(c)));
 }
