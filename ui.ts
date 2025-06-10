@@ -295,6 +295,11 @@ function displayPopupDeck(deck: Deck, name: string, cardsContainer: HTMLElement)
     }
     container.appendChild(cardDiv);
     positionCard(cardDiv, { x: 0, y: 0 }, total - dist);
+    if (currentClickActions === cardDiv.getAttribute('data-card-id')) {
+      const actions = makeDisplayCardActions(cardDiv.getAttribute('data-card-id'));
+      container.appendChild(actions);
+      positionCard(actions, { x: 0, y: 0 }, total - dist);
+    }
     dist = (i < flat.length - 1 && name !== flat[i+1][1]) || isFaceUp(card) ? dist + 1 : dist + .1;
   });
 }
@@ -618,6 +623,14 @@ function autoOpenPopupDecks(cardSelect: boolean) {
     const deck = idToDeck.get(d.getAttribute("data-popup-id"));
     const localSelects = [...d.getElementsByClassName("select")].map(e => e.getAttribute("data-card-id"));
     (cardSelect && localSelects.some(e => !topLevelSelects.includes(e)) || deck?.revealedCards?.sum(c => c.length)) && togglePopup(d.id);
+  });
+}
+function autoOpenMultiClickActionPopup() {
+  const topLevelSelects = [...document.querySelectorAll<HTMLSelectElement>(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
+  if (topLevelSelects.includes(currentClickActions)) return;
+  getPopups().each(d => {
+    const localSelects = [...d.getElementsByClassName("select")].map(e => e.getAttribute("data-card-id"));
+    localSelects.includes(currentClickActions) && togglePopup(d.id);
   });
 }
 function togglePopup(id: string) {

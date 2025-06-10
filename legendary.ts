@@ -3193,6 +3193,7 @@ function handleClickAction(id: string) {
   } else {
     currentClickActions = id;
     displayGame();
+    autoOpenMultiClickActionPopup();
   }
 }
 function clickCard(ev: MouseEvent): void {
