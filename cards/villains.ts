@@ -1635,7 +1635,7 @@ addVillainTemplates("Captain America 75th Anniversary", [
 // VP: 3
   [ 2, makeVillainCard("Masters of Evil (WWII)", "Radioactive Man", 5, 3, {
     ambush: ev => captureEv(ev, ev.source),
-    fight: ev => eachPlayer(p => saviorPower() || gainWoundEv(ev, p)),
+    fight: ev => eachPlayer(p => saviorPower(p) || gainWoundEv(ev, p)),
     escape: sameEffect,
   })],
 ]},
