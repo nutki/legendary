@@ -954,9 +954,7 @@ makeSchemeCard("Brainwash the Military", { twists: 7 }, ev => {
 }, escapeProgressTrigger(isShieldOfficer), () => {
   setSchemeTarget(5);
   repeat(12, () => moveCard(gameState.officer.top, gameState.villaindeck));
-  addStatMod('defense', isShieldOfficer, c => 3 + gameState.scheme.attached('TWIST').size);
-  addStatSet('isVillain', isShieldOfficer, () => true);
-  addStatSet('fight', isShieldOfficer, () => (ev: Ev) => gainEv(ev, ev.source));
+  villainify(u, isShieldOfficer, c => 3 + gameState.scheme.attached('TWIST').size, 'GAIN');
   gameState.villaindeck.shuffle();
 }),
 // SETUP: 7 Twists. Add an extra Villain Group.
