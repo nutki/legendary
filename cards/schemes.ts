@@ -987,6 +987,7 @@ makeSchemeCard<{current: string, conquered: string[], city: Deck[]}>("Change the
   cityVillains().each(c => moveCardEv(ev, c, gameState.villaindeck, true)); // TODO detach cards on move
   cont(ev, () => CityCards().each(c => {})); // TODO handle other cards (Hyperion for now?)
   cont(ev, () => {
+    ev.state.city.forEach((c, i) => c.cityPosition = i < 6 - size ? undefined : [i - 1, 0]);
     gameState.city = ev.state.city.slice(-size);
     makeCityAdjacent(gameState.city);
   });
@@ -1006,7 +1007,9 @@ makeSchemeCard<{current: string, conquered: string[], city: Deck[]}>("Change the
 }, s => {
   setSchemeTarget(3);
   const extraSpace = makeCityDeck('EXTRACITY', [-1, 0]);
+  extraSpace.cityPosition = undefined;
   s.city = [extraSpace].concat(gameState.city);
+  s.conquered = [];
 }),
 // SETUP: 9 Twists. 8 Heroes in Hero deck.
 // RULE: Whenever a Hero is in the HQ whose Hero Name has been Purged from the Timestream, KO that Hero.
