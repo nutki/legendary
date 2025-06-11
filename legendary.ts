@@ -2595,8 +2595,11 @@ function chooseOrderEv<T>(ev: Ev, desc: string, objects: T[], effect: (o: T) => 
     });
   }
 }
+function getMasterminds(real: boolean = false): Card[] {
+  return fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
+}
 function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {
-  const options = fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
+  const options = getMasterminds(real);
   options.size === 1 ? cont(ev, () => effect(options[0])) : selectCardEv(ev, "Choose Mastermind", options, effect);
 }
 function pickDiscardEv(ev: Ev, n: number = 1, who: Player = playerState, cond: Filter<Card> = undefined) {

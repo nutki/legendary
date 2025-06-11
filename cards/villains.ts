@@ -855,7 +855,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 4
   [ 1, makeVillainCard("Kree Starforce", "Captain Atlas", 6, 4, {
     escape: ev => eachPlayer(p => p.shard.size ? spendShardEv(ev, p) : gainWoundEv(ev, p)),
-    varDefense: c => c.printedDefense + gameState.mastermind.deck.max(m => m.attached('SHARD').size),
+    varDefense: c => c.printedDefense + (getMasterminds().max(m => m.attached('SHARD').size) || 0),
   })],
 // AMBUSH: Another Villain in the city gains two Shards.
 // ATTACK: 5
