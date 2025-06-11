@@ -2279,7 +2279,7 @@ function getActions(ev: Ev): Ev[] {
   p = p.filter(canPayCost);
   p = turnState.actionFilters.reduce((p, f) => p.filter(f), p);
   if (gameState.actionFilters) p = gameState.actionFilters.reduce((p, f) => p.filter(f), p);
-  p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => ev.parent.endofturn = true }));
+  p = p.concat(new Ev(ev, "ENDOFTURN", { confirm: p.length > 0, func: ev => turnState.endofturn = true, desc: "End Turn" }));
   return p;
 }
 function addAttackEvent(ev: Ev, c: number): void { pushEv(ev, "ADDATTACK", { func: ev => { turnState.attack += ev.amount; turnState.totalAttack += ev.amount; }, amount: c }); }
@@ -3150,7 +3150,7 @@ function playTurn(ev: Turn) {
   });
   playOutOfTimeEv(ev);
   pushEv(ev, "ACTIONS", ev => {
-    if (!ev.endofturn) {
+    if (!turnState.endofturn) {
       if (turnState.villainCardsToPlay > 0) {
         turnState.villainCardsToPlay--;
         villainDrawEv(ev);
@@ -3179,7 +3179,6 @@ function getDisplayInfo() {
 
 // Main loop
 function getEventName(ev: Ev): string {
-  if (ev.type === "ENDOFTURN") return "End Turn";
   if (ev.desc) return ev.desc;
   if (ev.what) return ev.type + (ev.withViolence ? ev.type !== "RECRUIT" ? " w/violence" : " w/kindness" : "");
   return ev.type;

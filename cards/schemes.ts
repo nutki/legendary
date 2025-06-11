@@ -1033,7 +1033,7 @@ makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Put a card from the Hero Deck face down next to the scheme as part of the "Enigma Code." Mix up those cards face-down.
     gameState.herodeck.withTop(c => attachCardEv(ev, c, gameState.scheme, 'CODE'));
-    gameState.scheme.attachedDeck('CODE').shuffle();
+    cont(ev, () => gameState.scheme.attachedDeck('CODE').shuffle());
   }
   // Twist 6 Evil Wins!
   schemeProgressEv(ev, ev.nr);
@@ -1051,22 +1051,38 @@ makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
   match: ev => isMastermind(ev.what),
   replace: ev => {
     let allGood = true;
-    gameState.scheme.attachedDeck('CODE').each(c => {
-      chooseClassEv(ev, col => allGood = allGood && c.isColor(col));
-      attachCardEv(ev, c, gameState.scheme, 'DECODED');
+    const decoded = gameState.scheme.attached('DECODED').size
+    const codeLen = gameState.scheme.attached('CODE').size + decoded;
+    gameState.scheme.attached('CODE').forEach((c, i) => {
+      chooseOptionEv(ev, `Guess the color of Card ${i + 1 + decoded} of ${codeLen}`,
+        [{l:'Green', v:Color.STRENGTH},
+        {l:'Yellow', v:Color.INSTINCT},
+        {l:'Red', v:Color.COVERT},
+        {l:'Black', v:Color.TECH},
+        {l:'Blue', v:Color.RANGED}], col => {
+        allGood = allGood && c.isColor(col);
+        textLog.log("Card " + (i + 1 + decoded) + ": ", c);
+      });
+      moveCardEv(ev, c, gameState.scheme.attachedDeck('DECODED'), true);
     });
     cont(ev, () => {
+      textLog.log(`You guessed the Code ${allGood ? 'correctly' : 'incorrectly'}.`);
       if (allGood) {
         doReplacing(ev);
       } else {
         gameState.scheme.attachedDeck('DECODED').each(c => attachCardEv(ev, c, gameState.scheme, 'CODE'));
-        gameState.scheme.attachedDeck('CODE').shuffle();
-        turnState.endofturn = true;
+        cont(ev, () => {
+          gameState.scheme.attachedDeck('CODE').shuffle();
+          turnState.endofturn = true;
+        });
       }
     });
   }
 }], () => {
   setSchemeTarget(6);
+  // Create Code decks to ensure the UI order
+  gameState.scheme.attachedDeck('DECODED');
+  gameState.scheme.attachedFaceDownDeck('CODE');
 }),
 ]);
 addTemplates("SCHEMES", "Civil War", [
