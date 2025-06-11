@@ -1033,6 +1033,7 @@ makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Put a card from the Hero Deck face down next to the scheme as part of the "Enigma Code." Mix up those cards face-down.
     gameState.herodeck.withTop(c => attachCardEv(ev, c, gameState.scheme, 'CODE'));
+    gameState.scheme.attachedDeck('DECODED').each(c => attachCardEv(ev, c, gameState.scheme, 'CODE'));
     cont(ev, () => gameState.scheme.attachedDeck('CODE').shuffle());
   }
   // Twist 6 Evil Wins!
