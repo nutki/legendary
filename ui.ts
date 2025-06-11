@@ -387,6 +387,15 @@ function flattenDeck(deck: Deck, name?: string): [Card, string | undefined][] {
   return [...(deck._attached ? Object.entries(deck._attached).reverse().flatMap(([n, d]) => flattenDeck(d, n)) : []), ...deck.deck.flatMap((c, i) => flattenCard(c, name))];
 }
 
+const half = '<span class="fraction"><span class="numerator">1</span><span class="slash">/</span><span class="denominator">2</span></span>';
+const star = '<span class="numberstar">&#x1F7B8;</span>';
+function formatNumber(n: number): string {
+  const hasHalf = n - Math.floor(n) === .5;
+  if (hasHalf) n -= .5 * Math.sign(n);
+  const nDigits = n.toString().length + (hasHalf ? 1 : 0);
+  const size = ['size1', 'size1', 'size2', 'size3'][Math.min(nDigits - 1, 3)];
+  return `<span class="${size}">${n}${hasHalf ? half : ''}</span>`;
+}
 function displayGame(ev?: Ev): void {
   const { recruit, recruitSpecial, attack, attackSpecial, soloVP, shard, piercing, numPlayers } = getDisplayInfo();
   displayDecks(ev);
@@ -394,8 +403,16 @@ function displayGame(ev?: Ev): void {
   document.getElementById("nextPlayer").style.visibility = numPlayers > 1 ? 'visible' : 'hidden';
   if (undoLog.canUndo()) document.getElementById("undo").classList.remove("disabled");
   else document.getElementById("undo").classList.add("disabled");
-  document.getElementById("recruit").innerHTML = recruitSpecial ? `${recruit} <small>(${recruitSpecial})</small>` : `${recruit}`;
-  document.getElementById("attack").innerHTML = attackSpecial ? `${attack} <small>(${attackSpecial})</small>` : `${attack}`;
+  document.getElementById("recruit").innerHTML = formatNumber(recruit);
+  document.getElementById("attack").innerHTML = formatNumber(attack);
+  if (attackSpecial) {
+    document.getElementById("attackspecial").style.display = 'inline-block';
+    document.getElementById("attackspecial").innerHTML = `<small>${formatNumber(attackSpecial)}${star}</small>`;
+  } else document.getElementById("attackspecial").style.display = 'none';
+  if (recruitSpecial) {
+    document.getElementById("recruitspecial").style.display = 'inline-block';
+    document.getElementById("recruitspecial").innerHTML = `<small>${formatNumber(recruitSpecial)}${star}</small>`;
+  } else document.getElementById("recruitspecial").style.display = 'none';
   if (shard) {
     document.getElementById("shards").innerHTML = `${shard}`;
     document.getElementById("shards").style.display = 'inline-block';

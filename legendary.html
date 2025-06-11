@@ -271,8 +271,8 @@ img.vpcount {
   width: 80px;
 }
 .hidden { display: none; }
-#recruit { background-image: url('icons/recruit.svg'); }
-#attack { background-image: url('icons/attack.svg'); }
+#recruit, #recruitspecial { background-image: url('icons/recruit.svg'); }
+#attack, #attackspecial { background-image: url('icons/attack.svg'); }
 #vp { background-image: url('icons/VP.png'); }
 #piercing { background-image: url('icons/piercing.png'); }
 #shield-level { background-image: url('icons/shield.svg'); }
@@ -409,6 +409,12 @@ div.shardHint {
 .multiselectcontainer {
   columns: 5 160px;
 }
+.fraction .slash { position: relative; font-size: 60%; top: -5%; }
+.fraction .numerator { font-size: 40%; position: relative; top: -20%; }
+.fraction .denominator { font-size: 40%; position: relative; top: -5%; }
+.numberstar { position: relative; font-size: 30%; top: -10%; }
+.number .size2 { font-size: 66%; }
+.number .size3 { font-size: 50%; }
 </style>
 </head>
 <body>
@@ -434,7 +440,9 @@ div.shardHint {
 <div id="game-over-message"></div>
 <div id="status-line" style="position: absolute; top: 576px">
   <span class="number" id="recruit"></span>
+  <span class="number" id="recruitspecial"></span>
   <span class="number" id="attack"></span>
+  <span class="number" id="attackspecial"></span>
   <span class="number" id="piercing"></span>
   <span class="number" id="shards"></span>
   <span class="number" id="vp"></span>
