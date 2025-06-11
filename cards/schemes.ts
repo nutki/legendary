@@ -1022,7 +1022,7 @@ makeSchemeCard("Go Back in Time to Slay Heroes' Ancestors", { twists: 9, heroes:
   });
 }, [ runOutProgressTrigger("HERO"), {
   event: 'MOVECARD',
-  match: ev => isHero(ev.what) && ev.to.isCity && gameState.scheme.attached('PURGED').map(c => c.heroName).includes(ev.what.heroName),
+  match: ev => isHero(ev.what) && ev.to.isHQ && gameState.scheme.attached('PURGED').map(c => c.heroName).includes(ev.what.heroName),
   after: ev => KOEv(ev, ev.parent.what),
 } ], () => {
   gameState.schemeProgress = gameState.herodeck.size;
