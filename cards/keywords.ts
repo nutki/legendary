@@ -530,11 +530,15 @@ function berserkEv(ev: Ev, n: number, f?: (c: Card) => void) {
 function addPiercingEv(ev: Ev, amount: number) {
   turnState.piercing += amount;
 }
-function lightShowActionEv(c: Card, ev: Ev) {
-  return new Ev(ev, 'EFFECT', { cost: { cond: () => turnState.cardsPlayed.count(c => c.lightShow !== undefined) >= 2 }, source: c, func: c.lightShow });
+function lightShowCount() {
+  return turnState.cardsPlayed.count(c => c.lightShow !== undefined);
 }
-function hasLightShow(c: Card) {
-  return c.lightShow !== undefined;
+function addLightShowActionEv(ev: Ev) {
+  if (!ev.source.lightShow) {
+    console.warn("addLightShowActionEv called without lightShow on source", ev.source);
+    return;
+  }
+  addTurnAction(new Ev(ev, 'LIGHTSHOW', { cost: { cond: () => lightShowCount() >= 2 && !pastEvents('LIGHTSHOW').size }, source: ev.source, what: ev.source, func: ev.source.lightShow }));
 }
 function dominateEv(ev: Ev, villain: Card, hero: Card) {
   attachCardEv(ev, hero, villain, 'DOMINATED');

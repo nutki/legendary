@@ -749,6 +749,7 @@ type EvType =
 'USEARTIFACT' |
 'THROWARTIFACT' |
 'HEIST' |
+'LIGHTSHOW' |
 // Expansion effects
 'ADDPIERCING' |
 'URUENCHANTEDREVEAL' |

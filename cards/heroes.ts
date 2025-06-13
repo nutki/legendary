@@ -3430,7 +3430,7 @@ addHeroTemplates("X-Men", [
   team: "X-Men",
 // {SOARING FLIGHT}
 // {LIGHTSHOW} Draw a card.
-  c1: makeHeroCard("Aurora & Northstar", "Northern Lights", 3, u, 2, Color.COVERT, "X-Men", "D", [], { soaring: true, lightShow: ev => drawEv(ev, 1), cardActions: [ lightShowActionEv ] }),
+  c1: makeHeroCard("Aurora & Northstar", "Northern Lights", 3, u, 2, Color.COVERT, "X-Men", "D", addLightShowActionEv, { soaring: true, lightShow: ev => drawEv(ev, 1) }),
 // DIVIDED: Blazing Flare
 // DIVHERO: Aurora
 // {LIGHTSHOW} You get +2 Recruit.
@@ -3438,20 +3438,20 @@ addHeroTemplates("X-Men", [
 // DIVHERO: Northstar
 // {BERSERK}
   c2: makeDividedHeroCard(
-    makeHeroCard("Aurora", "Blazing Flare", 4, 2, u, Color.RANGED, "X-Men", "D", [], { lightShow: ev => addRecruitEvent(ev, 2), cardActions: [ lightShowActionEv ] }),
+    makeHeroCard("Aurora", "Blazing Flare", 4, 2, u, Color.RANGED, "X-Men", "D", addLightShowActionEv, { lightShow: ev => addRecruitEvent(ev, 2) }),
     makeHeroCard("Northstar", "Blazing Fists", 4, u, 2, Color.STRENGTH, "X-Men", "D", ev => berserkEv(ev, 1)),
   ),
 // {SOARING FLIGHT}
 // {LIGHTSHOW} You get +3 Attack
-  uc: makeHeroCard("Aurora & Northstar", "Twin Blast", 5, u, 2, Color.RANGED, "X-Men", "D", [], { soaring: true, lightShow: ev => addAttackEvent(ev, 3), cardActions: [ lightShowActionEv ] }),
+  uc: makeHeroCard("Aurora & Northstar", "Twin Blast", 5, u, 2, Color.RANGED, "X-Men", "D", addLightShowActionEv, { soaring: true, lightShow: ev => addAttackEvent(ev, 3) }),
 // {SOARING FLIGHT}
 // All Heroes you recruit this turn have {SOARING FLIGHT}.
 // {LIGHTSHOW} You get +2 Attack for each <b>Lightshow</b> card you played this turn.
-  ra: makeHeroCard("Aurora & Northstar", "Mach 10", 7, 4, 0, Color.INSTINCT, "X-Men", "D", ev => {
+  ra: makeHeroCard("Aurora & Northstar", "Mach 10", 7, 4, 0, Color.INSTINCT, "X-Men", "D", [ev => {
     turnState.nextHeroRecruit = 'SOARING';
     addTurnTrigger('GAIN', ev => ev.who === playerState && isHero(ev.what), () => turnState.nextHeroRecruit = 'SOARING');
-  }, {
-    soaring: true, lightShow: ev => addAttackEvent(ev, 2 * turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ]
+  }, addLightShowActionEv], {
+    soaring: true, lightShow: ev => addAttackEvent(ev, 2 * lightShowCount()),
   }),
 },
 {
@@ -3551,19 +3551,19 @@ addHeroTemplates("X-Men", [
 // PIERCING
 // {LIGHTSHOW} You get +1 Piercing for each <b>Lightshow</b> card you played this turn.
 // 0+ Piercing
-  c1: makeHeroCard("Dazzler", "Convert Sound to Light", 3, 1, u, Color.INSTINCT, "X-Men", "", [], { lightShow: ev => addPiercingEv(ev, turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ], printedPiercing: 0 }),
+  c1: makeHeroCard("Dazzler", "Convert Sound to Light", 3, 1, u, Color.INSTINCT, "X-Men", "", addLightShowActionEv, { lightShow: ev => addPiercingEv(ev, lightShowCount()), printedPiercing: 0 }),
 // {LIGHTSHOW} You get +2 Attack.
-  c2: makeHeroCard("Dazzler", "Dazzling Glamour", 4, u, 2, Color.RANGED, "X-Men", "D", [], { lightShow: ev => addAttackEvent(ev, 2), cardActions: [ lightShowActionEv ] }),
+  c2: makeHeroCard("Dazzler", "Dazzling Glamour", 4, u, 2, Color.RANGED, "X-Men", "D", addLightShowActionEv, { lightShow: ev => addAttackEvent(ev, 2) }),
 // {LIGHTSHOW} When you draw a new hand of cards at the end of this turn, draw two extra cards.
-  uc: makeHeroCard("Dazzler", "City-Wide Mega Concert", 5, u, 3, Color.TECH, "X-Men", "F", [], { lightShow: ev => addEndDrawMod(2), cardActions: [ lightShowActionEv ] }),
+  uc: makeHeroCard("Dazzler", "City-Wide Mega Concert", 5, u, 3, Color.TECH, "X-Men", "F", addLightShowActionEv, { lightShow: ev => addEndDrawMod(2) }),
 // {LIGHTSHOW} Put a Hero from the HQ on top of your deck.
-  ra: makeHeroCard("Dazzler", "Inspire the World", 7, u, 5, Color.RANGED, "X-Men", "", [], { lightShow: ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => moveCardEv(ev, c, playerState.deck)), cardActions: [ lightShowActionEv ] }),
+  ra: makeHeroCard("Dazzler", "Inspire the World", 7, u, 5, Color.RANGED, "X-Men", "", addLightShowActionEv, { lightShow: ev => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => moveCardEv(ev, c, playerState.deck)) }),
 },
 {
   name: "Havok",
   team: "X-Men",
 // {LIGHTSHOW} You get +3 Attack usable only against the Mastermind.
-  c1: makeHeroCard("Havok", "Blinding Burst", 3, 2, u, Color.RANGED, "X-Men", "D", [], { lightShow: ev => addAttackSpecialEv(ev, isMastermind, 3), cardActions: [ lightShowActionEv ] }),
+  c1: makeHeroCard("Havok", "Blinding Burst", 3, 2, u, Color.RANGED, "X-Men", "D", addLightShowActionEv, { lightShow: ev => addAttackSpecialEv(ev, isMastermind, 3) }),
 // To play this card, you must discard a card from your hand.
 // {BERSERK}, {BERSERK}
   c2: makeHeroCard("Havok", "Unleash Havok", 4, u, 2, Color.RANGED, "X-Men", "D", ev => berserkEv(ev, 2), { playCost: 1, playCostType: 'DISCARD' }),
@@ -3578,14 +3578,14 @@ addHeroTemplates("X-Men", [
   team: "X-Men",
 // Draw a card.
 // {LIGHTSHOW} You get +1 Recruit for each <b>Lightshow</b> card you played this turn.
-  c1: makeHeroCard("Jubilee", "Light a Spark", 2, 0, u, Color.COVERT, "X-Men", "D", ev => drawEv(ev, 1), { lightShow: ev => addRecruitEvent(ev, turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ] }),
+  c1: makeHeroCard("Jubilee", "Light a Spark", 2, 0, u, Color.COVERT, "X-Men", "D", [ev => drawEv(ev, 1), addLightShowActionEv], { lightShow: ev => addRecruitEvent(ev, lightShowCount()) }),
 // Draw a card.
 // {LIGHTSHOW} You get +1 Attack for each <b>Lightshow</b> card you played this turn.
-  c2: makeHeroCard("Jubilee", "Blasting Fireworks", 4, u, 1, Color.RANGED, "X-Men", "", ev => drawEv(ev, 1), { lightShow: ev => addAttackEvent(ev, turnState.cardsPlayed.count(hasLightShow)), cardActions: [ lightShowActionEv ] }),
+  c2: makeHeroCard("Jubilee", "Blasting Fireworks", 4, u, 1, Color.RANGED, "X-Men", "", [ev => drawEv(ev, 1), addLightShowActionEv], { lightShow: ev => addAttackEvent(ev, lightShowCount()) }),
 // {LIGHTSHOW} Look at the top card of your deck. If it costs 0, KO it.
-  uc: makeHeroCard("Jubilee", "Unexpected Explosion", 5, u, 3, Color.INSTINCT, "X-Men", "", [], { lightShow: ev => lookAtDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c))), cardActions: [ lightShowActionEv ] }),
+  uc: makeHeroCard("Jubilee", "Unexpected Explosion", 5, u, 3, Color.INSTINCT, "X-Men", "", addLightShowActionEv, { lightShow: ev => lookAtDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c))) }),
 // {LIGHTSHOW} You get +1 Recruit and +1 Attack for each <b>Lightshow</b> card you played this turn.
-  ra: makeHeroCard("Jubilee", "Prismatic Cascade", 7, 0, 5, Color.COVERT, "X-Men", "", [], { lightShow: ev => { const n = turnState.cardsPlayed.count(hasLightShow); addRecruitEvent(ev, n); addRecruitEvent(ev, n); }, cardActions: [ lightShowActionEv ] }),
+  ra: makeHeroCard("Jubilee", "Prismatic Cascade", 7, 0, 5, Color.COVERT, "X-Men", "", addLightShowActionEv, { lightShow: ev => { const n = lightShowCount(); addRecruitEvent(ev, n); addRecruitEvent(ev, n); } }),
 },
 {
   name: "Kitty Pryde",
@@ -3618,7 +3618,7 @@ addHeroTemplates("X-Men", [
 // {LIGHTSHOW} You get +2 Recruit.
   c1: makeDividedHeroCard(
     makeHeroCard("Legion", "Bend Steel", 2, u, 1, Color.STRENGTH, "X-Men", "D", ev => berserkEv(ev, 1)),
-    makeHeroCard("Legion", "Bend Light", 2, 1, u, Color.COVERT, "X-Men", "D", [], { lightShow: ev => addRecruitEvent(ev, 2), cardActions: [ lightShowActionEv ] }),
+    makeHeroCard("Legion", "Bend Light", 2, 1, u, Color.COVERT, "X-Men", "D", addLightShowActionEv, { lightShow: ev => addRecruitEvent(ev, 2) }),
   ),
 // DIVIDED: Split Personality
 // DIVIDED: Split Eardrums
