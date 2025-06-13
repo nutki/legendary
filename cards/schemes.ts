@@ -1088,7 +1088,7 @@ makeSchemeCard("The Unbreakable Enigma Code", { twists: 6 }, ev => {
 ]);
 addTemplates("SCHEMES", "Civil War", [
 // SETUP: 9 Twists. Hero Deck has 3 Heroes of one Team and 3 Heroes of another Team. (Avengers, X-Men, Spider-Friends, Marvel Knights, etc.)
-makeSchemeCard("Avengers vs. X-Men", { twists: 9 }, ev => {
+makeSchemeCard("Avengers vs. X-Men", { twists: 9, heroes: 6 }, ev => {
   // Twist: 1-7 Each player reveals their hand. Each player that has cards of both those teams gains a Wound.
   eachPlayer(p => p.hand.limit(isNonGrayHero).uniqueCount(c => c.team) > 1 && gainWoundEv(ev, p));
   // TODO divided teams
