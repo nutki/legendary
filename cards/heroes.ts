@@ -3320,7 +3320,7 @@ addHeroTemplates("Deadpool", [
     ev => superPower(Color.TECH) && addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'SEWERS', 'BRIDGE'), 2),
   ]),
 // {VIOLENCE} You may KO one of your cards or a card from your discard pile.
-  uc: makeHeroCard("Stingray", "Sting of the Stingray's Sting", 5, 3, u, Color.RANGED, "Mercs for Money", "F", [], { excessiveViolence: ev => selectCardAndKOEv(ev, revealable().concat(playerState.discard.deck)) }),
+  uc: makeHeroCard("Stingray", "Sting of the Stingray's Sting", 5, 3, u, Color.RANGED, "Mercs for Money", "F", [], { excessiveViolence: ev => selectCardOptEv(ev, "Choose a card to KO", revealable().concat(playerState.discard.deck), c => KOEv(ev, c)) }),
 // You may KO a card from your hand or discard pile.
 // {TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.
   ra: makeHeroCard("Stingray", "PhD in Oceanography", 8, u, 4, Color.TECH, "Mercs for Money", "D", [
