@@ -1955,7 +1955,7 @@ addVillainTemplates("Deadpool", [
 // FLAVOR: They call it Photographic Reflexes: I can copy any fighting move I've ever seen. And I've seen Howard the Duck."
   [ 2, makeVillainCard("Deadpool's \"Friends\"", "Taskmaster", 3, 4, {
     ambush: ev => captureEv(ev, ev.source),
-    varDefense: c => c.printedDefense + turnState.cardsPlayed.max(c => c.cost),
+    varDefense: c => c.printedDefense + (turnState.cardsPlayed.max(c => c.cost) || 0),
   })],
 // {REVENGE Deadpool's "Friends"}
 // AMBUSH: Each player simultaneously passes a card from their hand to the player on their left.
