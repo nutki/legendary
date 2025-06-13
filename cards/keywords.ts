@@ -484,7 +484,7 @@ function revengeVarDefense(c: Card) {
   return c.printedDefense + playerState.victory.limit(isVillain).count(c.leads ? leadBy(c) : isGroup(c.villainGroup));
 }
 function captureWitnessEv(ev: Ev, v: Card, n: number | Card = 1) {
-  if (n instanceof Card) attachCardEv(ev, n, v, 'WITNESS');
+  if (n instanceof Card) attachFaceDownCardEv(ev, n, v, 'WITNESS');
   else repeat(n, () => cont(ev, () => gameState.bystanders.withTop(c => attachFaceDownCardEv(ev, c, v, 'WITNESS'))));
 }
 function rescueWitnessActionEv(ev: Ev, what: Card) {
@@ -502,7 +502,7 @@ function addWitnessActions(ev: Ev, actions: Ev[]) {
 }
 
 function captureShieldEv(ev: Ev, v: Card, n: number | Card = 1) {
-  if (n instanceof Card) attachCardEv(ev, n, v, 'HUMAN_SHIELD');
+  if (n instanceof Card) attachFaceDownCardEv(ev, n, v, 'HUMAN_SHIELD');
   else repeat(n, () => cont(ev, () => gameState.bystanders.withTop(c => attachFaceDownCardEv(ev, c, v, 'HUMAN_SHIELD'))));
 }
 function rescueHumanShieldActionEv(ev: Ev, what: Card, villain: Card) {
