@@ -1182,7 +1182,7 @@ makeSchemeCard("United States Split by Civil War", { twists: 10 }, ev => {
 addTemplates("SCHEMES", "Deadpool", [
 // SETUP: Use Deadpool as one of the Heroes. 2 players: Use 4 Heroes total. 1-3 players: 6 Twists. 4-5 Players: 5 Twists.
 // EVILWINS: When the Hero Deck runs out.
-makeSchemeCard("Deadpool Kills the Marvel Universe", { twists: [ 6, 6, 6, 5, 5 ], heroes: [ 3, 4, 5, 5, 6 ] }, ev => {
+makeSchemeCard("Deadpool Kills the Marvel Universe", { twists: [ 6, 6, 6, 5, 5 ], heroes: [ 3, 4, 5, 5, 6 ], required: { heroes: "Deadpool|Deadpool@Deadpool" } }, ev => {
   // Twist: Reveal cards from the Hero Deck until you reveal a Deadpool card. KO all the cards you revealed.
   revealHeroDeckEv(ev, c => c.has(c => c.heroName === 'Deadpool'), cards => cards.each(c => KOEv(ev, c)));
 }, runOutProgressTrigger("HERO"), () => gameState.schemeProgress = gameState.herodeck.size),
