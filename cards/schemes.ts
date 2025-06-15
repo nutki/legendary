@@ -1285,6 +1285,16 @@ makeSchemeCard("Five Families of Crime", { twists: 8, vd_villain: [ 3, 4, 5, 5, 
       }));
     }
   },
+  {
+    event: 'CLEANUP',
+    match: () => gameState.villaindeck.size === 0,
+    before: ev => {
+      gameState.city.limit(d => d.attached('FAMILY').size > 0).withFirst(d => {
+        d.attached('FAMILY').each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+        gameState.cityEntry = d;
+      });
+    }
+  }
 ], () => {
   setSchemeTarget(8);
   [...gameState.villaindeck.deck].forEach((c, i) => {
