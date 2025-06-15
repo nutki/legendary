@@ -3753,7 +3753,7 @@ addHeroTemplates("Spider-Man Homecoming", [
 // {COORDINATE}
 // KO all Wounds you gained this turn.
   c1: makeHeroCard("Happy Hogan", "Head of Security", 3, 2, u, Color.INSTINCT, u, "D", ev => {
-    const w = turnState.pastEvents.limit(e => e.type === 'GAIN' && isWound(ev.what) && ev.who === playerState).map(e => e.what);
+    const w = pastEvents('GAIN').limit(e => isWound(e.what) && e.who === playerState).map(e => e.what);
     handOrDiscard().limit(isWound).limit(c => w.includes(c)).each(c => KOEv(ev, c));
   }, { coordinate: true }),
 // {POWER Instinct} {DANGERSENSE 2}. If this revealed any Master Strikes, KO those Strikes, then you may KO a card from your hand or discard pile.
@@ -3806,7 +3806,7 @@ addHeroTemplates("Spider-Man Homecoming", [
 // Whenever you {COORDINATE} a card to another player, you may reveal this to draw two cards instead of one.
   uc: makeHeroCard("Peter's Allies", "Liz", 6, 4, u, Color.INSTINCT, "Spider Friends", "", [], { trigger: {
     event: 'COORDINATEDISCARD',
-    match: (ev, source) => source.location === owner(source).hand && ev.who === owner(source) && playerState !== ev.who,
+    match: (ev, source) => ev.who === owner(source) && source.location === owner(source).hand && playerState !== ev.who,
     after: ev => revealAndEv(ev, c => c === ev.source, () => drawEv(ev, 1, ev.parent.who)),
   }}),
 // {COORDINATE}
