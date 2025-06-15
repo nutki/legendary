@@ -301,7 +301,7 @@ addHenchmenTemplates("Messiah Complex", [
 // ATTACK: 3
 makeHenchmenCard("Mr. Sinister Clones", 3, {
   fight: ev => addTurnTrigger('RECRUIT', ev => ev.what.printedCost <= 4, ev => {
-    cloneHeroEv(ev, ev.parent.what);
+    !incPerTurn("clone", ev.source) && cloneHeroEv(ev, ev.parent.what);
   }),
   ambush: ev => {
     cloningInProgress(ev) ? gameState.bystanders.withTop(c => shuffleIntoEv(ev, c, gameState.villaindeck)) : cloneVillainEv(ev);
