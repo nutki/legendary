@@ -3680,7 +3680,7 @@ addHeroTemplates("X-Men", [
   c2: makeHeroCard("Phoenix", "Obliterating Fire", 4, u, u, Color.RANGED, "X-Men", "", ev => KOEv(ev, ev.source), { soaring: true, printedPiercing: 4 }),
 // Draw two cards.
 // You may put a Hero that was KO'd this turn into your discard pile.
-  uc: makeHeroCard("Phoenix", "Reincarnating Phoenix", 6, u, u, Color.COVERT, "X-Men", "", [ ev => drawEv(ev, 2), ev => selectCardOptEv(ev, "Choose a Hero", playerState.discard.limit(isHero).limit(c => turnState.pastEvents.has(e => e.type === 'KO' && e.what === c)), c => moveCardEv(ev, c, playerState.discard)) ]),
+  uc: makeHeroCard("Phoenix", "Reincarnating Phoenix", 6, u, u, Color.COVERT, "X-Men", "", [ ev => drawEv(ev, 2), ev => selectCardOptEv(ev, "Choose a Hero", gameState.ko.limit(isHero).limit(c => pastEvWhat('KO').has(is(c))), c => moveCardEv(ev, c, playerState.discard)) ]),
 // {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}
 // KO all the cards you <b>Berserked</b>. If this card makes at least 13 Attack, then the Phoenix Force becomes corrupted by power and devours the Earth. You win, Evil wins, and all other players lose.
   ra: makeHeroCard("Phoenix", "Driven Mad by Power", 9, u, 6, Color.STRENGTH, "X-Men", "", ev => {
