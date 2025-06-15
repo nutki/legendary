@@ -4198,7 +4198,7 @@ addVillainTemplates("Into the Cosmos", [
 // ATTACK: 12*
 // VP: 5
   [ 2, makeVillainCard("Celestials", "Exitar, The Exterminator", 12, 5, {
-    escape: ev => revealVillainDeckEv(ev, () => false, cards => selectObjectsEv(ev, "Choose 5 Henchmen", 5, cards.limit(isHenchman), c => KOEv(ev, c))),
+    escape: ev => revealVillainDeckEv(ev, () => true, cards => selectObjectsEv(ev, "Choose 5 Henchmen", 5, cards.limit(isHenchman), c => KOEv(ev, c))),
     cosmicThreat: Color.TECH | Color.RANGED,
     cardActions: [ cosmicThreatAction, celestialBoonActionEv(ev => {
       const cards = playerState.victory.limit(isHenchman).map(c => fightActionEv(u, c)).limit(ev => canPayCost(ev)).map(ev => ev.what);

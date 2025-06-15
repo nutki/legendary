@@ -7809,7 +7809,7 @@ addHeroTemplates("Weapon X", [
 // If you gain a Wound this way, {BERSERK}.
   ra: makeHeroCard("Weapon X (Wolverine)", "Escape the Weapon X Lab", 6, u, 3, Color.INSTINCT, "Marvel Knights", "A", [
     ev => weaponXSequenceEv(ev),
-    ev => superPower(Color.INSTINCT) && revealDeckEv(ev, gameState.wounds, cards => cards.has(isEnragingWound), cards => {
+    ev => superPower(Color.INSTINCT) && revealDeckEv(ev, gameState.wounds, cards => !cards.has(isEnragingWound), cards => {
       cards.limit(isEnragingWound).each(c => {
         gainEv(ev, c);
         berserkEv(ev, 1);

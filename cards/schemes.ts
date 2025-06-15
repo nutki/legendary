@@ -1184,7 +1184,7 @@ addTemplates("SCHEMES", "Deadpool", [
 // EVILWINS: When the Hero Deck runs out.
 makeSchemeCard("Deadpool Kills the Marvel Universe", { twists: [ 6, 6, 6, 5, 5 ], heroes: [ 3, 4, 5, 5, 6 ], required: { heroes: "Deadpool|Deadpool@Deadpool" } }, ev => {
   // Twist: Reveal cards from the Hero Deck until you reveal a Deadpool card. KO all the cards you revealed.
-  revealHeroDeckEv(ev, c => c.has(c => c.heroName === 'Deadpool'), cards => cards.each(c => KOEv(ev, c)));
+  revealHeroDeckEv(ev, c => !c.has(c => c.heroName === 'Deadpool'), cards => cards.each(c => KOEv(ev, c)));
 }, runOutProgressTrigger("HERO"), () => gameState.schemeProgress = gameState.herodeck.size),
 // SETUP: 6 Twists. 12 total Bystanders in the Villain Deck. All Bystanders represent "Chimichangas." <i>(They're Bystanders too.)</i> 3-5 players: Add a Villain Group.
 // <b>Nobody Eats Just One Chimichanga!</b> Whenever you play a Chimichanga from the Villain Deck, play another card from the Villain Deck.
