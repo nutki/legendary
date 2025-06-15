@@ -1108,7 +1108,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 }, [
   [ "I Love a Parade!", ev => {
   // Arcade captures two <b>Human Shields</b>. Play an extra card from the Villain Deck next turn.
-    captureShieldEv(ev, ev.source.mastermind, 2); villainDrawEv(ev);
+    captureShieldEv(ev, ev.source.mastermind, 2); addFutureTrigger(ev => playAnotherEv(ev));
   } ],
   [ "I Need an Audience", ev => {
   // Arcade captures <b>Human Shields</b> equal to the number of Villains in the city.
