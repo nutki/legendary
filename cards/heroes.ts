@@ -5184,7 +5184,7 @@ addHeroTemplates("New Mutants", [
   ]),
 // {SUNLIGHT} You may put a card from your hand on the bottom of you deck. If you do, you get +2 Attack.
   c2: makeHeroCard("Sunspot", "Solar-Powered", 4, u, 2, Color.STRENGTH, "X-Men", "FD", ev => {
-    sunlightPower() && selectCardOptEv(ev, "Choose a card", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck, true));
+    sunlightPower() && selectCardOptEv(ev, "Choose a card", playerState.hand.deck, c => { moveCardEv(ev, c, playerState.deck, true); addAttackEvent(ev, 2); });
   }),
 // To play this, you must put a card from your hand on the bottom of your deck.
 // {SUNLIGHT} You get +1 Attack for each other X-Men card you played this turn.
