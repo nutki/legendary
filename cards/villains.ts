@@ -2237,7 +2237,7 @@ addVillainTemplates("X-Men", [
     // Have no Bystanders in the city captured by Villains.
     () => !cityVillains().has(c => c.captured.has(isBystander)),
     // After you draw your new hand at end of turn, each player discards down to four cards in hand.
-    ev => pickDiscardEv(ev, -4),
+    ev => eachPlayer(p => pickDiscardEv(ev, -4, p)),
   )],
 // AMBUSH: Minor Domo captures 2 <b>Human Shields</b>.
 // ESCAPE: Each player simultaneously reveals a card from their hand. Whoever revealed the lowest cost card (or tied for lowest) gains a Wound.
