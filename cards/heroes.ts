@@ -3661,8 +3661,8 @@ addHeroTemplates("X-Men", [
 // Reveal the top card of the Villain Deck. If it's a Villain, you may put it on the bottom of that Deck.
 // {TEAMPOWER X-Men} You get +Attack equal to the printed Victory Points of the card you revealed.
   ra: makeHeroCard("Longshot", "Escape from Mojo World", 7, u, 5, Color.TECH, "X-Men", "", ev => {
-    revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => {
-      moveCardEv(ev, c, gameState.villaindeck, true);
+    revealVillainDeckEv(ev, 1, cards => cards.each(c => {
+      selectCardOptEv(ev, "Choose a card to put on bottom", cards.limit(isVillain), c => moveCardEv(ev, c, gameState.villaindeck, true));
       superPower("X-Men") && addAttackEvent(ev, c.vp);
     }), false, false);
   }),
