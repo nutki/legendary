@@ -1117,7 +1117,7 @@ addTemplates("MASTERMINDS", "X-Men", [
   [ "Roulette Wheel of Death", ev => {
   // Arcade captures a random Bystander as a <b>Human Shield</b> from each of these places: The Bystander Stack, the Escape Pile, each city space, and each other player's Victory Pile.
     gameState.bystanders.withRandom(c => captureShieldEv(ev, ev.source.mastermind, c));
-    gameState.ko.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c));
+    gameState.escaped.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c));
     gameState.city.each(d => d.limit(isVillain).each(c => c.captured.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c))));
     eachOtherPlayerVM(p => p.victory.limit(isBystander).withRandom(c => captureShieldEv(ev, ev.source.mastermind, c)));
   } ],
