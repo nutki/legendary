@@ -1181,6 +1181,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     rescueEv(ev, 4);
     addStatSet('isVillain', c => c === ev.source, () => true);
     addStatSet('escape', c => c === ev.source, () => ev => shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck('TACTICS')));
+    addStatSet('fight', is(ev.source), () => () => {});
     enterCityEv(ev, ev.source);
   } ],
   [ "Shi'ar Extermination Legion", ev => {
@@ -1188,6 +1189,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     rescueEv(ev, 4);
     addStatSet('isVillain', c => c === ev.source, () => true);
     addStatSet('escape', c => c === ev.source, () => ev => eachPlayer(p => pickDiscardEv(ev, 2, p)));
+    addStatSet('fight', is(ev.source), () => () => {});
     enterCityEv(ev, ev.source);
   } ],
   [ "Shi'ar Hovertake Battalion", ev => {
@@ -1195,6 +1197,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     rescueEv(ev, 4);
     addStatSet('isVillain', c => c === ev.source, () => true);
     addStatSet('escape', c => c === ev.source, () => ev => eachPlayer(p => gainWoundEv(ev, p)));
+    addStatSet('fight', is(ev.source), () => () => {});
     enterCityEv(ev, ev.source);
   } ],
   [ "Shi'ar Master Spies", ev => {
@@ -1202,6 +1205,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     rescueEv(ev, 4);
     addStatSet('isVillain', c => c === ev.source, () => true);
     addStatSet('escape', c => c === ev.source, () => ev => playTwistEv(ev, ev.source));
+    addStatSet('fight', is(ev.source), () => () => {});
     enterCityEv(ev, ev.source);
   } ],
 ], {
