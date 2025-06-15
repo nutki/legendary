@@ -2804,23 +2804,23 @@ function buyCard(ev: Ev): void {
 }
 function gainEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.discard });
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.discard, from: card.location });
 }
 function gainToHandEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.hand });;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.hand, from: card.location });;
 }
 function gainToDeckEv(ev: Ev, card: Card, who?: Player, bottom: boolean = false) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where, ev.bottom), what: card, who, where: who.deck, bottom });;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where, ev.bottom), what: card, who, where: who.deck, bottom, from: card.location });;
 }
 function gainSoaringEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.teleported });;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.teleported, from: card.location });
 }
 function gainOutOfTimeEv(ev: Ev, card: Card, who?: Player) {
   who = who || playerState;
-  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.outOfTime });;
+  pushEv(ev, "GAIN", { func: ev => moveCardEv(ev, ev.what, ev.where), what: card, who, where: who.outOfTime, from: card.location });
 }
 function cleanUp(ev: Ev): void {
   moveAll(playerState.hand, playerState.discard);

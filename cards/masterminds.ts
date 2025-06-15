@@ -1348,8 +1348,16 @@ addTemplates("MASTERMINDS", "Spider-Man Homecoming", [
 // EPICNAME: Vulture
 // {STRIKER 1}
 ...makeEpicMastermindCard("Vulture", [ 8, 10 ], 6, "Vulture Tech", ev => {
-// Put a Wound from the Wound Stack below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space.
-// Put a Wound from the Wound Stack or KO pile below each HQ space as a "Winged Assault." Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space, putting it on top of their deck.
+// Put a Wound from the Wound Stack below each HQ space as a "Winged Assault."
+// Put a Wound from the Wound Stack or KO pile below each HQ space as a "Winged Assault."
+  gameState.hq.each(h => cont(ev, () => {
+    gameState.wounds.withTop(c => attachCardEv(ev, c, h, 'WINGED_ASSAULT'));
+    if (!gameState.wounds.size && ev.source.epic) {
+      selectCardEv(ev, "Choose a Wound to put under the HQ", gameState.ko.limit(isWound), c => attachCardEv(ev, c, h, 'WINGED_ASSAULT'));
+    }
+  }));
+// Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space.
+// Whenever a player gains or KOs a Hero from the HQ, the player on their right gains one of the Wounds below that HQ space, putting it on top of their deck.
 }, [
   [ "Bird of Prey", ev => {
   // Each other player discards a Spider Friends Hero or discards two cards.
@@ -1374,12 +1382,12 @@ addTemplates("MASTERMINDS", "Spider-Man Homecoming", [
   varDefense: strikerVarDefense,
   triggers: [{
     event: 'GAIN',
-    match: ev => ev.what.location.isHQ && ev.what.location.attached('WINGED_ASSAULT').size > 0,
-    after: ev => ev.parent.what.location.attached('WINGED_ASSAULT').withFirst(c => gainWoundEv(ev, ev.parent.who.right)),
+    match: ev => ev.from.isHQ && ev.from.attached('WINGED_ASSAULT').size > 0,
+    after: ev => ev.parent.from.attached('WINGED_ASSAULT').withFirst(c => ev.source.epic ? gainToDeckEv(ev, c, ev.parent.who.right) : gainEv(ev, c, ev.parent.who.right)),
   }, {
     event: 'KO',
     match: ev => ev.what.location.isHQ && ev.what.location.attached('WINGED_ASSAULT').size > 0,
-    after: ev => ev.parent.what.location.attached('WINGED_ASSAULT').withFirst(c => gainWoundEv(ev, playerState.right)),
+    after: ev => ev.parent.what.location.attached('WINGED_ASSAULT').withFirst(c => ev.source.epic ? gainToDeckEv(ev, c, playerState.right) : gainEv(ev, c, playerState.right)),
   }]
 }),
 ]);
