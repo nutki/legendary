@@ -2194,7 +2194,7 @@ addVillainTemplates("X-Men", [
     ev => !cityVillains().has(isGroup("Hellfire Club")),
     // This Trap becomes a 6 Attack "Phoenix Force" Token Villain taht enters the city and Dominates all the Heroes in the HQ that cost 6 or less.
     ev => {
-      villainify('Phoenix Force', ev.source, 6, 'GAIN');
+      villainify('Phoenix Force', ev.source, 6);
       enterCityEv(ev, ev.source);
       cont(ev, () => hqHeroes().limit(c => c.cost <= 6).each(c => dominateEv(ev, ev.source, c)))
     },
