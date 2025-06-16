@@ -1328,7 +1328,7 @@ addTemplates("SCHEMES", "X-Men", [
 // SETUP: 8 Twists. Add 10 Brood as extra Henchmen. No Bystanders in Villain Deck.
 // RULE: Cards are played from the Villain Deck face-down. You may spend 1 Attack to "scan" a face-down card in the city, turning it face-up and doing any Ambush effect, Twist, Trap, or Master Strike. If a face-down card would escape, scan it, and then it escapes if it's a Villain.
 // EVILWINS: When 3 Villains per player have escaped.
-makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen: [ 2, 2, 2, 3, 3 ], required: { henchmen: 'The Brood' } }, ev => {
+makeSchemeCard<{hidden: Card}>("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_henchmen: [ 2, 2, 2, 3, 3 ], required: { henchmen: 'The Brood' } }, ev => {
   // Twist: The player on your right gains this Twist as a "Brood Infection." When drawn, they KO it and gain 2 Wounds.
   gainEv(ev, ev.twist, playerState.right);
 }, [
@@ -1344,24 +1344,33 @@ makeSchemeCard("Alien Brood Encounters", { twists: 8, vd_bystanders: 0, vd_hench
     event: 'VILLAINDRAW',
     match: ev => !ev.what,
     replace: ev => gameState.villaindeck.withTop(c => {
-      const scan = (ev: Ev, c: Card) => {
-        const where = c.location;
-        where.remove(c);
-        c.attached('HIDDEN').each(c => {
-          isVillain(c) ? enterCityEv(ev, c, where) : villainDrawEv(ev, c)
-        });
-      };
-      const tokenTemplate = new Card('HIDDEN', 'Unknown');
-      tokenTemplate.cardActions = [
-        (c, ev) => new Ev(ev, 'EFFECT', { what: c, cost: { recruit: 1 }, func: ev => scan(ev, ev.what) })
-      ];
-      tokenTemplate.escape = ev => scan(ev, ev.source);
-      const token = gameState.villaindeck.addNewCard(tokenTemplate);
-      moveCard(c, token.attachedDeck('HIDDEN'));
+      const token = gameState.outOfGame.addNewCard(gameState.schemeState.hidden);
+      moveCard(c, token.attachedFaceDownDeck('HIDDEN'));
       enterCityEv(ev, token);
     }),
   }
-], () => setSchemeTarget(3, true)),
+], s => {
+  setSchemeTarget(3, true);
+  const scan = (ev: Ev, c: Card) => {
+    const where = c.location;
+    where.remove(c);
+    c.attached('HIDDEN').each(c => {
+      isVillain(c) ? enterCityEv(ev, c, where) : villainDrawEv(ev, c)
+    });
+  };
+  const tokenTemplate = new Card('TOKEN', 'Hidden');
+  tokenTemplate.escape = ev => {
+    const where = ev.source.location;
+    where.remove(ev.source);
+    ev.source.attached('HIDDEN').each(c => {
+      isVillain(c) ? villainEscapeEv(ev, c) : villainDrawEv(ev, c)
+    });
+  }
+  s.hidden = tokenTemplate;
+  gameState.specialActions = ev => CityCards().limit(c => c.attached('HIDDEN').size > 0).map(c => {
+    return new Ev(ev, 'EFFECT', { what: c, cost: { attack: 1 }, func: ev => scan(ev, ev.what) });
+  }
+}),
 // SETUP: 11 Twists. 30 Wounds.
 // RULE: At the start of your turn, for each Angry Mob in your hand, the player on your right gains a Wound and gains that Angry Mob.
 // EVILWINS: When the Wound Stack or Villain Deck runs out.
