@@ -2324,23 +2324,20 @@ addVillainTemplates("X-Men", [
   [ 1, makeTrapCard("Murderworld", "Monstrous Pinball Machine", 3,
     ev => {
       addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, func: ev => {
-        gameState.herodeck.withTop(c => {
+        revealHeroDeckEv(ev, 1, cards => cards.each(c => {
           const fail = () => {
             KOEv(ev, c);
-            addFutureTrigger(ev => { villainDrawEv(ev); villainDrawEv(ev); })
           };
           const success = () => {
-            gainEv(ev, c);
+            isHero(c) && recruitForFreeEv(ev, c);
             moveCardEv(ev, ev.source, playerState.victory);
           };
-          const actions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => {
-            return n >= c.cost ?
-              new Ev(ev, 'RECRUIT', { what: c, func: success, cost: { recruit: n }}) :
-              new Ev(ev, 'EFFECT', { what: c, func: fail, cost: { recruit: n }});
-          }).filter(ev => canPayCost(ev));
+          const actions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
+            new Ev(ev, 'EFFECT', { what: c, func: n >= c.cost ? success : fail, cost: { recruit: n }})
+          )).filter(ev => canPayCost(ev));
           const options = actions.map(a => ({l:a.cost.recruit.toString(), v:a}));
           chooseOptionEv(ev, "Choose amount to pay", options, a => playEvent(a));
-        });
+        }));
       }}));
     },
     // Pay any amount of Recruit. Then you must reveal the top card of the Hero Deck. If you paid enough, recruit that Hero and put this Trap in your Victory Pile.
