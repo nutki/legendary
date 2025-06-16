@@ -4275,7 +4275,7 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // Reveal the top card of your deck. If it costs 0, then {FEAST}. Otherwise, {TRANSFORM} this into Mournful Sentinel and put it in your discard pile.
   uc: makeTransformingHeroCard(
-    makeHeroCard("Sentry", "Mournful Sentinel", 3, 2, u, Color.RANGED, "Avengers", "D", ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost >= 1) && transformHeroEv(ev, ev.source, 'DECK'))),
+    makeHeroCard("Sentry", "Mournful Sentinel", 3, 2, u, Color.RANGED, "Avengers", "D", ev => revealPlayerDeckEv(ev, 1, cards => { cards.each(c => moveCardEv(ev, c, playerState.deck)); cards.has(c => c.cost >= 1) && transformHeroEv(ev, ev.source, 'DECK'); })),
     makeHeroCard("Sentry", "The Void Unchained", 5, u, 3, Color.COVERT, "Avengers", "", ev => revealPlayerDeckEv(ev, 1, cards => cards.has(c => c.cost === 0) ? feastEv(ev) : transformHeroEv(ev, ev.source, 'DISCARD'))),
   ),
 // Reveal the top five cards of the Hero Deck, gain their total printed Attack, and put them on the bottom of that deck. If this card makes 12 Attack or more, then {TRANSFORM} this card into The Void Mastermind and add it to the game at the start of the next turn with one random Tactic.
