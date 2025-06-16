@@ -543,6 +543,13 @@ function addLightShowActionEv(ev: Ev) {
 function dominateEv(ev: Ev, villain: Card, hero: Card) {
   attachCardEv(ev, hero, villain, 'DOMINATED');
 }
+function distributeDominatedEv(ev: Ev, cards: Card[]) {
+  const selected = new Set<Card>();
+  eachPlayer(p => cont(ev, () => {
+    selectCardOptEv(ev, `Choose a card for ${p.name}`, cards, c => { moveCardEv(ev, c, p.discard); selected.add(c); });
+  }));
+  cont(ev, () => cards.limit(c => !selected.has(c)).each(c => KOEv(ev, c)));
+}
 function _chooseForEachPlayerEv(ev: Ev, desc: string, players: Player[], cards: Card[], effect1: (p: Player, c: Card) => void, effect0: (c: Card) => void, agent: Player = playerState) {
   if (players.size > 0) {
     selectCardEv(ev, desc, cards, c => {

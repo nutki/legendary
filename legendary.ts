@@ -271,6 +271,7 @@ class Card {
     if (this.nthCircle) value += nthCircleDefense(this);
     value += this.attached('WEAPON').sum(c => c.defense);
     value -= this.attached('WOUND').size;
+    value += this.attached('DOMINATED').size;
     if (isSizeChanged(this)) value -= 2;
     if (value < 0) value = 0;
     value -= uSizeChangingAmount(this); // Only this can make the attack negative
@@ -3008,6 +3009,7 @@ function villainEscape(ev: Ev): void {
   cont(ev, () => c.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   c.attached('WEAPON').each(c => withMastermind(ev, m => attachCardEv(ev, c, m, 'WEAPON')));
   c.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
+  c.attached('DOMINATED').each(c => moveCardEv(ev, c, gameState.escaped));
   b.each(function (bc) { moveCardEv(ev, bc, gameState.escaped); });
   if (b.has(isBystander)) eachPlayer(p => pickDiscardEv(ev, 1, p));
   const bonded = c.attached('SYMBIOTE')[0];
@@ -3049,6 +3051,7 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   cont(ev, () => ev.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)));
   ev.what.attached('WEAPON').each(c => gainEv(ev, c));
   ev.what.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
+  ev.what.attached('DOMINATED').size && distributeDominatedEv(ev, ev.what.attached('DOMINATED'));
   if (bondedChoice) c = bonded;
   else if (bonded) moveCardEv(ev, bonded, c.location);
   b.each(bc => moveCardEv(ev, bc, playerState.victory));
