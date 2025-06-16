@@ -1382,7 +1382,8 @@ makeSchemeCard("Anti-Mutant Hatred", { twists: 11, wounds: 30 }, ev => {
 // TODO can use any version of Jean Grey (Phoenix or Time travelling)
 makeSchemeCard("The Dark Phoenix Saga", { twists: 10, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Jean Grey", villains: "Hellfire Club" } }, ev => {
   // Twist: Shuffle all Jean Grey cards from the KO pile and from all players' hands and discard piles into the Villain Deck.
-  [gameState.ko.deck, ...gameState.players.map(p => handOrDiscard(p))].each(d => d.each(c => shuffleIntoEv(ev, c, gameState.villaindeck)));
+  const isJeanGrey = (c: Card) => c.heroName === "Jean Grey";
+  [...gameState.ko.deck, ...gameState.players.flatMap(p => handOrDiscard(p))].limit(isJeanGrey).each(c => shuffleIntoEv(ev, c, gameState.villaindeck));
 }, escapeProgressTrigger(c => c.heroName === "Jean Grey"), () => {
   setSchemeTarget(5);
   const isJeanGrey = (c: Card) => c.heroName === "Jean Grey";
