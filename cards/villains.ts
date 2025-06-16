@@ -2330,7 +2330,7 @@ addVillainTemplates("X-Men", [
           };
           const success = () => {
             isHero(c) && recruitForFreeEv(ev, c);
-            moveCardEv(ev, ev.source, playerState.victory);
+            moveCardEv(ev, ev.what, playerState.victory);
           };
           const actions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
             new Ev(ev, 'EFFECT', { what: c, func: n >= c.cost ? success : fail, cost: { recruit: n }})
