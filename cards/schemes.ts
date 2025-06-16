@@ -1372,7 +1372,7 @@ makeSchemeCard<{hidden: Card}>("Alien Brood Encounters", { twists: 8, vd_bystand
   s.hidden = tokenTemplate;
   gameState.specialActions = ev => CityCards().limit(c => c.attached('HIDDEN').size > 0).map(c => {
     return new Ev(ev, 'EFFECT', { what: c, cost: { attack: 1 }, func: ev => scan(ev, ev.what) });
-  }
+  });
 }),
 // SETUP: 11 Twists. 30 Wounds.
 // RULE: At the start of your turn, for each Angry Mob in your hand, the player on your right gains a Wound and gains that Angry Mob.
