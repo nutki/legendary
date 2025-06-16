@@ -1092,7 +1092,7 @@ makeMastermindCard("The Goblin, Underworld Boss", 10, 6, "Goblin's Freak Show", 
     investigateEv(ev, leadBy(ev.source.mastermind), gameState.villaindeck, c => moveCardEv(ev, c, playerState.victory));
   } ],
 ], {
-  init: c => repeat(2, () => gameState.bystanders.size && moveCard(gameState.bystanders.top, c.attachedDeck('WITNESS')))
+  init: c => repeat(2, () => gameState.bystanders.size && moveCard(gameState.bystanders.top, c.attachedFaceDownDeck('WITNESS')))
 }),
 ]);
 addTemplates("MASTERMINDS", "X-Men", [
