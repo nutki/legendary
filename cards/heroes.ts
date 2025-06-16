@@ -3226,7 +3226,13 @@ addHeroTemplates("Deadpool", [
 // {POWER Covert} Look at the top card of another player's deck. Ask them a yes or no question about it. If they guess right, then they draw that card. If not, then you draw a card.
   uc: makeHeroCard("Bob, Agent of HYDRA", "How Do I Get Out of Here??", 6, u, 4, Color.COVERT, "HYDRA", "", ev => superPower(Color.COVERT) && chooseOtherPlayerEv(ev, p => {
     lookAtDeckEv(ev, 1, cards => {
-      cards.each(c => chooseMayEv(ev, `Player ${p.name} draws this card`, () => drawCardEv(ev, c, p)));
+      cards.each(c => {
+        chooseOneEv(ev, `${p.name} guessed`, [
+          "Correctly", () => drawCardEv(ev, c, p)
+        ], [
+          "Incorrectly", () => drawEv(ev, 1),
+        ])
+      });
     }, p, playerState);
   })),
 // {VIOLENCE} KO up to two HYDRA and/or S.H.I.E.L.D. Heroes from your discard pile. Draw a card for each Hero KO'd this way.
