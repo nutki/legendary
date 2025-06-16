@@ -2170,7 +2170,7 @@ addVillainTemplates("X-Men", [
     ev => {
       const left = turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.where === gameState.hq[0]);
       const right = turnState.pastEvents.has(e => e.type === 'RECRUIT' && e.where === gameState.hq[gameState.hq.size - 1]);
-      hqHeroes().limit(c => c.location === gameState.hq[0] && left || c.location === gameState.hq[gameState.hq.size - 1] && right).each(c => {
+      hqHeroes().limit(c => c.location === gameState.hq[0] && !left || c.location === gameState.hq[gameState.hq.size - 1] && !right).each(c => {
         villainify(u, c, c.cost, 'GAIN');
         enterCityEv(ev, c);
       });
