@@ -1224,7 +1224,7 @@ makeSchemeCard("Deadpool Writes a Scheme", { twists: 8 }, ev => {
 // SETUP: 6 Twists. Use at least 1 Mercs for Money Hero.
 // RULE: All Villains have Revenge for their own Villain Groups. (If they already have Revenge, double it.)
 // EVILWINS: When 3 Villains per player have escaped.
-makeSchemeCard("Everybody Hates Deadpool", { twists: 6 }, ev => {
+makeSchemeCard("Everybody Hates Deadpool", { twists: 6, required: { heroes: "Deadpool@Deadpool|Slapstick|Solo|Stingray"} }, ev => {
   // Twist: Everyone reveals their hand. Whoever reveals the fewest Mercs for Money cards (or tied for fewest) gains a Wound.
   const fewest = -gameState.players.max(p => -p.hand.count("Mercs for Money"));
   eachPlayer(p => p.hand.count("Mercs for Money") === fewest && gainWoundEv(ev, p));
