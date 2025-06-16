@@ -979,7 +979,8 @@ makeMastermindCard("Evil Deadpool", 11, 6, "Evil Deadpool Corpse", ev => {
 // Without talking, each player simultaneously discards a card. Whoever discards the lowest-costing card <i>(or tied for lowest)</i> gains a Wound.
   const s: Card[] = [];
   eachPlayer(p => selectCardEv(ev, "Discard a card", p.hand.deck, c => s.push(c), p));
-  cont(ev, () => s.highest(c => -c.cost).each(c => { discardEv(ev, c); gainWoundEv(ev, owner(c)); }));
+  cont(ev, () => s.each(c => discardEv(ev, c)));
+  cont(ev, () => s.highest(c => -c.cost).each(c => gainWoundEv(ev, owner(c))));
 }, [
   [ "Evil Even Oddball", ev => {
   // Each other player reveals their hand. Whoever has the fewest cards with odd-numbered costs (or tied for fewest) gains a Wound.
