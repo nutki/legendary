@@ -1196,7 +1196,10 @@ makeSchemeCard("Deadpool Wants a Chimichanga", { twists: 6, vd_bystanders: 12, v
   cont(ev, () => eachPlayer(p => {
     selectCardOrEv(ev, "Choose a Chimichanga", p.victory.limit(isBystander), c => shuffleIntoEv(ev, c, gameState.villaindeck), () => gainWoundEv(ev, p), p);
   }));
-}, escapeProgressTrigger(isBystander), () => setSchemeTarget(6)),
+}, [
+  { event: 'VILLAINDRAW', after: ev => isBystander(ev.parent.what) && villainDrawEv(ev) },
+  escapeProgressTrigger(isBystander)
+], () => setSchemeTarget(6)),
 // SETUP: Hey, writing these doesn't seem so tough. Use the best Hero in the game: Deadpool! Add 6 Twists of Lemon, shake vigorously, and I'll make it up as I go.
 makeSchemeCard("Deadpool Writes a Scheme", { twists: 8 }, ev => {
   if (ev.nr === 1) {
