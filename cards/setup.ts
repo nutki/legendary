@@ -324,7 +324,7 @@ addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
 //     <li><b>“Boomer”</b>: You get +3 Attack and put this on the bottom of the Sidekick Stack.</li>
 //     <li><b>“Meltdown”</b>: You get +4 Attack, KO this, and gain a Wound.</li>
 // </ul>
-[ 2, makeHeroCard("Special Sidekick", "Boom-Boom", 2, u, u, Color.RANGED, "X-Force", "D", ev => {
+[ 2, makeHeroCard("Special Sidekick", "Boom-Boom", 2, u, 0, Color.RANGED, "X-Force", "DA", ev => {
   chooseOneEv(ev, "Choose a nickname",
     [ "Time Bomb", () => { addAttackEvent(ev, 1); moveCardEv(ev, ev.source, playerState.deck); }],
     [ "Boomer", () => { addAttackEvent(ev, 3); returnToStackEv(ev, gameState.sidekick); }],
