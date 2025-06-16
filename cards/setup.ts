@@ -2,7 +2,7 @@
 
 const shieldAgentTemplate = makeHeroCard(u, 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "GN");
 const shieldTrooperTemplate = makeHeroCard(u, 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.", "GN");
-const officerTemplate = makeHeroCard(u /*'Maria Hill'*/, 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"DN");
+const officerTemplate = makeHeroCard(u /*'Maria Hill'*/, 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"GDN");
 const twistTemplate = new Card("SCHEME TWIST", "Scheme Twist");
 const strikeTemplate = new Card("MASTER STRIKE", "Master Strike");
 addTemplatesWithCounts("WOUNDS", "Legendary", [[ 30,
