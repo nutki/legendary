@@ -842,6 +842,7 @@ addVillainTemplates("Villains", [
   [ 1, makeVillainCard("X-Men First Class", "Cyclops", 6, 4, {
     fightCond: () => playerState.hand.size >= 1,
     fightCost: ev => pickDiscardEv(ev),
+    escape: ev => eachPlayer(p => revealOrEv(ev, "Brotherhood", () => pickDiscardEv(ev, 1, p), p)),
     xTremeAttack: true,
     varDefense: xTremeAttack,
   })],
