@@ -1778,7 +1778,12 @@ addVillainTemplates("Civil War", [
 // VP: 4
   [ 2, makeVillainCard("Registration Enforcers", "Captain Marvel", 6, 4, {
     fight: ev => eachPlayer(p => selectCardEv(ev, "Choose a card to swap", p.hand.deck, c => swapCardsEv(ev, c, p.deck), p)),
-    escape: ev => eachPlayer(p => {/*TODO swap hand with top*/}),
+    escape: ev => eachPlayer(p => {
+      revealPlayerDeckEv(ev, 4, cards => {
+        chooseOrderEv(ev, "Choose a card to put on the deck", p.hand.deck, c => moveCardEv(ev, c, p.deck), p);
+        cont(ev, () => cards.each(c => moveCardEv(ev, c, p.hand)));
+      }, p);
+    }),
   })],
 // AMBUSH: Each player reveals a card that costs 5 or discards down to 5 cards.
 // FIGHT: Same effect.

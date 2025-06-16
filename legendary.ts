@@ -2593,7 +2593,7 @@ function chooseOrderEv<T>(ev: Ev, desc: string, objects: T[], effect: (o: T) => 
     selectCardEv(ev, desc, objects, o => {
       effect(o);
       chooseOrderEv(ev, desc, objects.filter(o2 => o2 !== o), effect, who);
-    });
+    }, who);
   }
 }
 function getMasterminds(real: boolean = false): Card[] {
