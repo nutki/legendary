@@ -1971,8 +1971,8 @@ addVillainTemplates("Deadpool", [
   [ 2, makeVillainCard("Deadpool's \"Friends\"", "Weasel", 4, 3, {
     ambush: ev => {
       const s = new Map<Player, Card>();
-      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => s.set(p.left, c)));
-      cont(ev, () => eachPlayer(p => gainEv(ev, s.get(p), p)));
+      eachPlayer(p => selectCardEv(ev, "Choose a card", p.hand.deck, c => s.set(p.left, c), p));
+      cont(ev, () => eachPlayer(p => s.has(p) && moveCardEv(ev, s.get(p), p.hand)));
     },
     fight: sameEffect,
     varDefense: revengeVarDefense,
