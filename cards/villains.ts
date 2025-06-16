@@ -3777,16 +3777,16 @@ addVillainTemplates("S.H.I.E.L.D.", [
       gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
       cont(ev, () => {
         const amount = Math.floor(hydraLevel()/2);
-        repeat(amount, () => cont(ev, () => gameState.officer.withTop(c => captureEv(ev, ev.source, c))));
+        repeat(amount, () => cont(ev, () => gameState.officer.withTop(c => attachCardEv(ev, c, ev.source, "AIM_CAPTURE"))));
       })
     },
     fight: ev => {
-      selectCardEv(ev, "Choose an Officer", ev.source.captured.limit(isShieldOfficer), c => {
+      selectCardEv(ev, "Choose an Officer", ev.source.attachedDeck("AIM_CAPTURE").limit(isShieldOfficer), c => {
         chooseOneEv(ev, "Choose one", ["Gain", () => gainEv(ev, c)], ["Send Undercover", () => sendUndercoverEv(ev, c)]);
       });
-      cont(ev, () => ev.source.captured.limit(isShieldOfficer).each(c => KOEv(ev, c)));
+      cont(ev, () => ev.source.attachedDeck("AIM_CAPTURE").limit(isShieldOfficer).each(c => KOEv(ev, c)));
     },
-    varDefense: c => c.printedDefense + c.captured.count(isShieldOfficer),
+    varDefense: c => c.printedDefense + c.attachedDeck("AIM_CAPTURE").count(isShieldOfficer),
   })],
 // AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then each player reveals a random card from their hand. If the <b>Hydra Level</b> is higher than that card's cost, that player discards that card.
 // ATTACK: 5
