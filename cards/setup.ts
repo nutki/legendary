@@ -369,7 +369,7 @@ addTemplatesWithCounts("WOUNDS", "Weapon X", [
 // ATTACK: 3
 // To play this, you must put another card from your hand on top of your deck.
 // HEAL: When you draw a card this turn <i>(including drawing this card but not including drawing a new hand at the end of your turn)</i>, you may KO this Wound.
-[ 1, makeEnragingWoundCard("Broken Bones", u, 3, 'DRAW', (ev, c) => ev.who === owner(c) && ev.parent.type !== 'CLEANUP', u, { playCost: 1, playCostType: 'TOPDECK' }) ],
+[ 1, makeEnragingWoundCard("Broken Bones", u, 3, 'DRAW', (ev, c) => ev.who === owner(c) && ancestorEvents(ev, 'CLEANUP').size === 0, u, { playCost: 1, playCostType: 'TOPDECK' }) ],
 // ATTACK: 2
 // HEAL: When you play two cards of the same Hero Class this turn, you may KO this Wound.
 [ 1, makeEnragingWoundCard("Concussion", u, 2, 'PLAY', ({what}) => pastEvents('PLAY').has(ev => (what.color & ~Color.GRAY) && isColor(what.color)(ev.what))) ],
