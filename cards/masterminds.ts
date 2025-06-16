@@ -1567,7 +1567,7 @@ makeTransformingMastermindCard(makeMastermindCard("Illuminati, Secret Society", 
     transformMastermindEv(ev);
   } ],
 ], {
-  cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
+  cardActions: [ (c, ev) => new Ev(ev, 'EFFECT', { source: c, cost: { cond: c => canOutwit() && !pastEvents('OUTWIT').has(e => e.getSource() === c)}, what: c, func: ev => {
     outwitOrEv(ev, () => {});
   }}) ],
   varDefense: c => c.printedDefense + (pastEvents('OUTWIT').has(e => e.getSource() === c) ? 0 : 4),  
