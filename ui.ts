@@ -67,7 +67,7 @@ function clearSourceImg() {
   document.getElementById("source2").remove();
 }
 function makeDisplayPlayAreaImg(c: Card) {
-  const gone = !playerState.playArea.deck.includes(c);;
+  const gone = !playerState.playArea.deck.has(c2 => c2.id === c.id);
   return makeDisplayCardImg(c, gone);
 }
 function img(src: string, className?: string, transform?: string) {
@@ -237,7 +237,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
   ] : [
     ...playerState.artifact.deck.map(c => makeDisplayCardImg(c)),
     ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
-    ...deck.deck.filter(c => !turnState.cardsPlayed.includes(c)).map(c => makeDisplayCardImg(c)),
+    ...deck.deck.filter(c => !turnState.cardsPlayed.has(c2 => c2.id === c.id)).map(c => makeDisplayCardImg(c)),
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
   frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, true, getCountHints(deck, deckPos.size === "small")) ] : [];
   const n = cardDivs.size;

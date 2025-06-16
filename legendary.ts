@@ -2754,7 +2754,7 @@ function playCard2(ev: Ev) {
     if (card.playCostType === "TOPDECK") pickTopDeckEv(ev, card.playCost, playerState, card.playCostLimit);
     if (card.playCostType === "BOTTOMDECK") pickTopDeckEv(ev, card.playCost, playerState, card.playCostLimit, true);
     playCardEffects(ev, card);
-    cont(ev, () => turnState.cardsPlayed.push(card));
+    cont(ev, () => turnState.cardsPlayed.push(card.copyPasteCard ? Object.assign(Object.create(Object.getPrototypeOf(card)), card) : card));
     card.cheeringCrowds && cheeringCrowdsEv(ev);
   }});
 }
