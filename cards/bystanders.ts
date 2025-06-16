@@ -274,9 +274,9 @@ addBystanderTemplates("Ant-Man and the Wasp", [
 }) ],
 // <b>Rescue</b>: You may defeat a Henchman.
 [ 1, makeBystanderCard("Officer Jim Paxton", ev => {
-  playerState === ev.who && selectCardEv(ev, "Choose a Henchman", fightableCards().limit(isHenchman), c => {
+  playerState === ev.who && selectCardOptEv(ev, "Choose a Henchman", fightableCards().limit(isHenchman), c => {
     defeatEv(ev, c);
-  }, ev.who);
+  }, u, ev.who);
 }) ],
 // <b>Rescue</b>: You get +2 Recruit, usable only to recruit a Hero that costs 2 or less or a Hero with <b>Size-Changing</b>.
 [ 2, makeBystanderCard("Young Cassie Lang", ev => {
