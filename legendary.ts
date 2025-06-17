@@ -1415,6 +1415,9 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
     for(let name of names instanceof Array ? names : [names]) {
       if (!a.includes(name) || name.includes('|')) {
         const pos = a.findIndex(v => v === undefined);
+        if (name.startsWith('%')) {
+          name = cardTemplates.HEROES.limit(h => h.team === name.slice(1)).map(h => h.templateId).join('|');
+        }
         if (pos >= 0) a[pos] = name;
       }
     }

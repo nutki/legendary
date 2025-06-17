@@ -1471,7 +1471,7 @@ makeSchemeCard("X-Men Danger Room Goes Berserk", { twists: 8 }, ev => {
 addTemplates("SCHEMES", "Spider-Man Homecoming", [
 // SETUP: 8 Twists. Use at least one Spider Friends Hero.
 // EVILWINS: When there have been 5 Villainous Interruptions.
-makeSchemeCard("Distract the Hero", { twists: 8 }, ev => {
+makeSchemeCard("Distract the Hero", { twists: 8, required: { heroes: "%Spider Friends" } }, ev => {
   // Comunity ruling https://boardgamegeek.com/thread/2092842/distract-hero-what-does-it-mean-get-some-vp
   // Twist: If you get any Victory Points this turn, put this Twist on the bottom of the Villain Deck. Otherwise, stack this Twist next to the Scheme as a Villainous Interruption.
   let done = false;
