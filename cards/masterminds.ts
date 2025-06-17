@@ -1809,7 +1809,7 @@ addTemplates("MASTERMINDS", "Ant-Man", [
   const threat = ev.source.attachedDeck('THREAT');
   threat.faceup = true;
   eachPlayer(p => revealOrEv(ev, Color.TECH, () => {
-    selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => moveCardEv(ev, c, threat));
+    selectCardEv(ev, "Choose a Hero", (ev.source.epic ? p.hand : p.discard).limit(isNonGrayHero), c => moveCardEv(ev, c, threat));
   }, p));
 }, [
   [ "Arrogant Blindspot", ev => {
