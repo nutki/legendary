@@ -1444,9 +1444,9 @@ makeSchemeCard("Televised Deathtraps of Mojoworld", { twists: 11, wounds: [ 6, 1
   // Twist: Stack this Twist next to the Scheme as a "Deathtrap.' This turn, you may pay 1 Attack for each Deathtrap stacked there. If you don't, each player gains a Wound.
   attachCardEv(ev, ev.twist, gameState.scheme, 'DEATHTRAP');
   cont(ev, () => {
-    const recruit = gameState.scheme.attached('DEATHTRAP').size;
+    const attack = gameState.scheme.attached('DEATHTRAP').size;
     let paid = false;
-    addTurnAction(new Ev(ev, 'EFFECT', { what: gameState.scheme.top, cost: { recruit }, func: ev => paid = true }))
+    addTurnAction(new Ev(ev, 'EFFECT', { what: gameState.scheme.top, cost: { attack }, func: ev => paid = true }))
     addTurnTrigger('CLEANUP', () => true, ev => paid || eachPlayer(p => gainWoundEv(ev, p)));
   });
 }, [ runOutProgressTrigger('WOUNDS'), runOutProgressTrigger('VILLAIN', false)], () => gameState.schemeProgress = 6 * gameState.players.size),
