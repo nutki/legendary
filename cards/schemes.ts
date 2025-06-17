@@ -1651,17 +1651,17 @@ makeSchemeCard("Break the Planet Asunder", { twists: 9 }, ev => {
 // EVILWINS: When the KO pile and Escape Pile combine to have 18 Bystanders and/or Spikes.
 makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: "Cytoplasm Spikes" } }, ev => {
   // Twist: Reveal the top three cards of the Infected Deck. KO all Bystanders you revealed. All Spikes you revealed enter the city.
-  const infected = gameState.scheme.attachedDeck('INFECTED');
+  const infected = gameState.scheme.attachedFaceDownDeck('INFECTED');
   repeat(3, () => cont(ev, () => {
     infected.withTop(c => {
       isBystander(c) && KOEv(ev, c);
-      c.cardName === extraHenchmenName() && enterCityEv(ev, c);
+      c.cardName === "Cytoplasm Spikes" && enterCityEv(ev, c);
     })
   }));
-}, koOrEscapeProgressTrigger(c => isBystander(c) || c.cardName == extraHenchmenName()), () => {
+}, koOrEscapeProgressTrigger(c => isBystander(c) || c.cardName == "Cytoplasm Spikes"), () => {
   setSchemeTarget(18);
-  const infected = gameState.scheme.attachedDeck('INFECTED');
-  gameState.villaindeck.limit(c => c.cardName === extraHenchmenName()).each(c => moveCard(c, infected));
+  const infected = gameState.scheme.attachedFaceDownDeck('INFECTED');
+  gameState.villaindeck.limit(c => c.cardName === "Cytoplasm Spikes").each(c => moveCard(c, infected));
   repeat(20, () => gameState.bystanders.withTop(c => moveCard(c, infected)));
   infected.shuffle();
 }),
