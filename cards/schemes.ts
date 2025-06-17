@@ -1521,18 +1521,21 @@ makeSchemeCard("Explosion at the Washington Monument", { twists: 8 }, ev => {
 makeSchemeCard<{ferryPos: Deck}>("Ferry Disaster", { twists: 9 }, ev => {
   if (ev.nr <= 4) {
     // Twist 1-4 If there's a Villain in the city space below the Ferry, KO 2 Bystanders from the Ferry. Whether you KO'd or not, the Ferry moves one space left.
-    if (ev.state.ferryPos.has(isVillain)) repeat(2, () => gameState.bystanders.withTop(c => KOEv(ev, c)));
+    if (ev.state.ferryPos.has(isVillain)) repeat(2, () => cont(ev, () => gameState.bystanders.withTop(c => KOEv(ev, c))));
     if (ev.state.ferryPos.adjacentLeft) ev.state.ferryPos = ev.state.ferryPos.adjacentLeft;
+    gameState.bystanders.cityPosition = [4 - ev.nr, -1];
   } else if (ev.nr >= 5 && ev.nr <= 8) {
     // Twist 5-8 Same effect, but it moves right.
-    if (ev.state.ferryPos.has(isVillain)) repeat(2, () => gameState.bystanders.withTop(c => KOEv(ev, c)));
+    if (ev.state.ferryPos.has(isVillain)) repeat(2, () => cont(ev, () => gameState.bystanders.withTop(c => KOEv(ev, c))));
     if (ev.state.ferryPos.adjacentRight) ev.state.ferryPos = ev.state.ferryPos.adjacentRight;
+    gameState.bystanders.cityPosition = [ev.nr - 4, -1];
   } else if (ev.nr === 9) {
     // Twist 9 KO half the Bystanders from the Bystander deck, rounding up.
     repeat(Math.ceil(gameState.bystanders.size / 2), () => cont(ev, () => gameState.bystanders.withTop(c => KOEv(ev, c))));
   }
 }, koOrEscapeProgressTrigger(isBystander), s => {
   setSchemeTarget(7);
+  gameState.bystanders.cityPosition = [4, -1];
   withCity('SEWERS', sewers => s.ferryPos = sewers);
 }),
 // SETUP: 7 Twists. Add an extra Henchmen Group of 10 cards as Smugglers.
