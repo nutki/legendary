@@ -1667,7 +1667,10 @@ makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen: [2, 2, 2, 
 }),
 // SETUP: 10 Twists. 6 Wounds per player in Wound Stack. Use exactly two Heroes with "Hulk" in their Hero Names.
 // EVILWINS: When the Wound Stack runs out.
-makeSchemeCard("Fall of the Hulks", { twists: 10, wounds: [6, 12, 18, 24, 30] }, ev => { // TODO use 2 Hulk
+makeSchemeCard("Fall of the Hulks", { twists: 10, wounds: [6, 12, 18, 24, 30], required: { heroes: [
+  "Hulk|Hulkling|Totally Awesome Hulk|Gladiator Hulk|Hulkbuster Iron Man|Joe Fixit, Grey Hulk|She-Hulk|Skaar, Son of Hulk|Hulk@Marvel Studios Phase 1|Hulk 2099",
+  "Hulk|Hulkling|Totally Awesome Hulk|Gladiator Hulk|Hulkbuster Iron Man|Joe Fixit, Grey Hulk|She-Hulk|Skaar, Son of Hulk|Hulk@Marvel Studios Phase 1|Hulk 2099"
+]} }, ev => { // TODO use exactly two HULK
   if (ev.nr >= 3 && ev.nr <= 6) {
     // Twist 3-6 <b>Cross-Dimension Hulk Rampage</b>. FIX
     xdRampageEv(ev, 'Hulk');

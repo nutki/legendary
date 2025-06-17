@@ -1413,7 +1413,7 @@ function getGameSetup(schemeName: string, mastermindName: string, numPlayers: nu
   function setRequired(t: "henchmen" | "villains" | "heroes", names: string | string[]) {
     const a = setup[t];
     for(let name of names instanceof Array ? names : [names]) {
-      if (!a.includes(name)) {
+      if (!a.includes(name) || name.includes('|')) {
         const pos = a.findIndex(v => v === undefined);
         if (pos >= 0) a[pos] = name;
       }
