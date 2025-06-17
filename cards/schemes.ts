@@ -1551,7 +1551,7 @@ addTemplates("SCHEMES", "Champions", [
 makeSchemeCard("Clash of the Monsters Unleashed", { twists: 10, wounds: [ 6, 12, 18, 24, 30 ], vd_villain: [ 2, 3, 4, 4, 5 ], required: { villains: "Monsters Unleashed" } }, ev => {
   if (ev.nr >= 3 && ev.nr <= 10) {
     // Twist 3-10 Each player chooses a Villain from their Victory Pile as their "Gladiator." Then the top card of the Monster Pit enteres the city. Each player whose Gladiator has a lower printed Attack than that Monster gains a Wound.
-    gameState.scheme.attachedDeck('PIT').withTop(c => {
+    gameState.scheme.attachedFaceDownDeck('PIT').withTop(c => {
       enterCityEv(ev, c);
       eachPlayer(p => p.victory.limit(isVillain).max(c => c.printedDefense) < c.printedDefense && gainWoundEv(ev, p));
     });
@@ -1559,7 +1559,7 @@ makeSchemeCard("Clash of the Monsters Unleashed", { twists: 10, wounds: [ 6, 12,
   cont(ev, () => gameState.scheme.attached('PIT').size === 0 && evilWinsEv(ev));
 }, runOutProgressTrigger('WOUNDS'), () => {
   gameState.schemeProgress = gameState.wounds.size;
-  gameState.villaindeck.limit(isGroup("Monsters Unleashed")).each(c => moveCard(c, gameState.scheme.attachedDeck('PIT')));
+  gameState.villaindeck.limit(isGroup("Monsters Unleashed")).each(c => moveCard(c, gameState.scheme.attachedFaceDownDeck('PIT')));
 }),
 // SETUP: 8 Twists. 7 Heroes. Sort the Hero Deck by Hero Class. [Strength] [Instinct] [Covert] [Tech] [Ranged] (If a card has multiple Classes, break ties at random.) Put these 5 smaller, shuffled Hero Decks beneath the 5 HQ Spaces.
 // RULE: Whenever an HQ Space is empty, fill it with the top card of the Hero Deck below that space.
