@@ -1678,7 +1678,7 @@ if (gameState.scheme.top.init) gameState.scheme.top.init(gameState.schemeState);
 // Draw initial hands
 for (let i = 0; i < gameState.endDrawAmount; i++) gameState.players.forEach(p => moveCard(p.deck.top, p.hand));
 // Populate HQ
-gameState.hq.forEach(x => moveCard(gameState.herodeck.top, x));
+gameState.hq.forEach(x => x.size || moveCard(gameState.herodeck.top, x));
 Ev.nextId = new Map();
 }
 

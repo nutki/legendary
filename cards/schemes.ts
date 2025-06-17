@@ -1583,7 +1583,7 @@ makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twis
   event: 'MOVECARD',
   match: ev => ev.from === gameState.herodeck && ev.to.isHQ && ev.to.attachedDeck('HEROES') !== gameState.herodeck,
   replace: ev => {
-    ev.to.attachedDeck('HEROES').withTop(c => moveCardEv(ev, c, ev.parent.to));
+    ev.parent.to.attachedDeck('HEROES').withTop(c => moveCardEv(ev, c, ev.parent.to));
   },
 }, {
   event: 'MOVECARD',
@@ -1594,15 +1594,16 @@ makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twis
   },
 }], s => {
   const classes = [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED];
-  s.decks = classes.map((col, i) => ({col, d:gameState.hq[i].attachedDeck('HEROES')}));
-  gameState.herodeck.each(c => {
+  s.decks = classes.map((col, i) => ({col, d:gameState.hq[i].attachedFaceDownDeck('HEROES')}));
+  [...gameState.herodeck.deck].each(c => {
     s.decks.limit(({col}) => isColor(col)(c)).withRandom(({d}) => moveCard(c, d));
   })
   gameState.herodeck = gameState.hq.map(d => d.attachedDeck('HEROES')).find(d => d.size > 0);
+  gameState.hq.each(d => d.attached('HEROES').size && moveCard(d.attachedDeck('HEROES').top, d));
   gameState.specialActions = ev => [
-    new Ev(ev, "EFFECT", ev => {
-      selectCardEv(ev, "Choose Hero deck", gameState.hq.limit(d => d.attachedDeck('HEROES').size > 0), d => gameState.herodeck = d);
-    })
+    new Ev(ev, "EFFECT", { desc: "Change default Hero deck", func: ev => {
+      selectCardEv(ev, "Choose Hero deck", gameState.hq.limit(d => d.attachedDeck('HEROES').size > 0), d => gameState.herodeck = d.attachedDeck('HEROES'));
+    }})
   ];
 }),
 // SETUP: 8 Twists. Add another Henchman Villain Group. No Bystanders in the Villain Deck.
