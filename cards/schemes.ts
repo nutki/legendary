@@ -1639,14 +1639,14 @@ makeSchemeCard("Steal All Oxygen on Earth", { twists: 8 }, ev => {
 addTemplates("SCHEMES", "World War Hulk", [
 // SETUP: 9 Twists. 7 Heroes.
 // EVILWINS: When 25 non-grey Heroes are KO'd.
-makeSchemeCard("Break the Planet Asunder", { twists: 9 }, ev => {
+makeSchemeCard("Break the Planet Asunder", { twists: 9, heroes: 7 }, ev => {
   // Twist: Stack this Twist next to the Scheme as a "Tectonic Break." Then KO each Hero from the HQ whose printed Attack is less than the number of Tectonic Breaks (no printed Attack counts as 0).
   attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   cont(ev, () => {
     const n = gameState.scheme.attached('TWIST').size;
     hqHeroes().limit(c => !c.printedAttack || c.printedAttack < n).each(c => KOEv(ev, c));
   })
-}, escapeProgressTrigger(isNonGrayHero), () => setSchemeTarget(25)),
+}, koProgressTrigger(isNonGrayHero), () => setSchemeTarget(25)),
 // SETUP: 10 Twists. Shuffle together 20 Bystanders and 10 Cytoplasm Spike Henchmen as an "Infected Deck."
 // EVILWINS: When the KO pile and Escape Pile combine to have 18 Bystanders and/or Spikes.
 makeSchemeCard("Cytoplasm Spike Invasion", { twists: 10, vd_henchmen: [2, 2, 2, 3, 3], required: { henchmen: "Cytoplasm Spikes" } }, ev => {
