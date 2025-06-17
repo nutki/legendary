@@ -2718,7 +2718,7 @@ addVillainTemplates("World War Hulk", [
 // AMBUSH: Infini-Tendrils captures a Bystander.
 // ATTACK: 6+
 // VP: 3
-  [ 2, makeVillainCard("Aspects of the Void", "Infini-Tendrils", 6, 3, {
+  [ 2, makeVillainCard("Aspects of the Void", "Infini-Tendrils", 4, 3, {
     ambush: ev => captureEv(ev, ev.source),
     varDefense: woundedFuryVarDefense,
   })],
