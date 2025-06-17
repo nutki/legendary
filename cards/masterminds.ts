@@ -1780,7 +1780,7 @@ makeMastermindCard("Iron Monger", 9, 5, "Iron Foes", ev => {
 }, [
   [ "Hostile Takeover", ev => {
   // If there are no Villains in the bank, reveal the top card of the Villain Deck. If it’s a Villain, it enters the Bank.
-    withCity('BANK', bank => bank.has(isVillain) || revealVillainDeckEv(ev, 1, cards => cards.each(c => enterCityEv(ev, c, bank))));
+    withCity('BANK', bank => bank.has(isVillain) || revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).each(c => enterCityEv(ev, c, bank))));
   } ],
   [ "Overloaded Arsenal ", ev => {
   // Each other player reveals a [Tech] Hero or gains a Wound. Then each other player reveals a [Ranged] Hero or gains a Wound.
