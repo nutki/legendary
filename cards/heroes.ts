@@ -4167,7 +4167,7 @@ addHeroTemplates("World War Hulk", [
   ra: makeTransformingHeroCard(
     makeHeroCard("Miek, The Unhived", "Metamorphosis", 7, 5, u, Color.COVERT, "Warbound", "", [
       ev => chooseMayEv(ev, "Feast", () => feastEv(ev)),
-      ev => turnState.pastEvents.has(e => e.type === 'KO' && ev.where === playerState.deck && hasAttackIcon(ev.what)) && transformHeroEv(ev, ev.source),
+      ev => pastEvents('KO').has(e => e.where === playerState.deck && hasAttackIcon(e.what)) && transformHeroEv(ev, ev.source),
     ]),
     makeHeroCard("Miek, The Unhived", "Hive King Miek", 8, u, 6, Color.STRENGTH, "Warbound", "", [
       ev => lookAtDeckEv(ev, 3, () => {}),
