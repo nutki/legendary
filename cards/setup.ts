@@ -153,7 +153,7 @@ makeAmbitionCard("Rack and Ruin", 10, ev => { playStrikeEv(ev, ev.source); playT
 
 addTemplatesWithCounts("WOUNDS", "Civil War", [
 // HEAL: You may discard a card and have each other player discard a card. If you do, KO this Wound.
-[ 2, makeWoundCard("Blinding Flash", c => playerState.hand.count(i => i !== c) >= 2, ev => { eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(i => i !== ev.source), c => discardEv(ev, c), p)); KOEv(ev, ev.source); }) ],
+[ 2, makeWoundCard("Blinding Flash", c => playerState.hand.count(i => i !== c) >= 1, ev => { eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(i => i !== ev.source), c => discardEv(ev, c), p)); KOEv(ev, ev.source); }) ],
 // HEAL: You may spend 5 Attack. If you do, KO this Wound.
 [ 2, makeWoundCard("Blunt Force Trauma", () => canPayCost(new Ev(u, 'EFFECT', {func: () => {}, cost: {attack: 5}})), ev => playEvent(new Ev(ev, 'EFFECT', {func: ev => KOEv(ev, ev.what), what: ev.source, cost: {attack: 5}}))) ],
 // HEAL: You may KO this Wound. If you do, gain another Wound.
