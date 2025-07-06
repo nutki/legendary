@@ -1685,26 +1685,23 @@ makeSchemeCard("Fall of the Hulks", { twists: 10, wounds: [6, 12, 18, 24, 30], r
 }, runOutProgressTrigger('WOUNDS'), () => gameState.schemeProgress = gameState.wounds.size),
 // SETUP: 6 Twists.
 // EVILWINS: When 2 Villains per player have escaped or the Villain Deck runs out.
-makeSchemeCard<{enabledUntil: Player, team: Map<Player, Affiliation>}>("Gladiator Pits of Sakaar", { twists: 6 }, ev => {
+makeSchemeCard<{enabledUntil: Player}>("Gladiator Pits of Sakaar", { twists: 6 }, ev => {
   // Twist: Until the start of your next turn, each player can only play cards from a single Team of their choice during their turn. (e.g. S.H.I.E.L.D., Avengers, X-Men, Warbound, etc.)
   ev.state.enabledUntil = playerState;
 }, [escapeProgressTrigger(isVillain), runOutProgressTrigger("VILLAIN", false), {
   event: "TURNSTART",
   match: ev => playerState === gameState.schemeState.enabledUntil,
   after: ev => {
-    gameState.schemeState.team = new Map();
     gameState.schemeState.enabledUntil = undefined;
   }
 }, {
   event: "PLAY",
-  match: ev => gameState.schemeState.enabledUntil !== undefined,
-  after: ev => gameState.schemeState.team.put(playerState, ev.what.team), // TODO multi team cards?
+  match: ev => gameState.schemeState.enabledUntil && !pastEvents('PLAY').size,
+  after: ev => {
+    textLog.log(`${playerState.name} has chosen to play ${ev.parent.what.team} Heroes until the start of their next turn.`);
+  }
 }], s => {
-  s.team = new Map();
-  addStatSet('fightCost', () => true, (c, p) => { // TODO playCost mod
-    if (!s.team.has(playerState)) return p;
-    return { ...p, cond: c => p.cond(c) && isTeam(s.team.get(playerState))(c) };
-  })
+  forbidAction('PLAY', c => s.enabledUntil && (!c.team || pastEvWhat('PLAY').has(c2 => !isTeam(c.team)(c2))), true);
 }),
 // SETUP: 7 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Put them in a face-up "Mutation Pile."
 makeSchemeCard("Mutating Gamma Rays", { twists: 7, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Hulk|Hulkling|Totally Awesome Hulk|Gladiator Hulk|Hulkbuster Iron Man|Joe Fixit, Grey Hulk|She-Hulk|Skaar, Son of Hulk|Hulk@Marvel Studios Phase 1|Hulk 2099" } }, ev => {
