@@ -3841,7 +3841,7 @@ addVillainTemplates("Heroes of Asgard", [
 // VP: 4
 // FLAVOR: It is the coalesced hatred of a billion beings slain by Thor's father Odin.
   [ 1, makeVillainCard("Dark Council", "The Mangog", 3, 4, {
-    escape: ev => eachPlayer(p => worthyPower(p) && gainWoundEv(ev, p)),
+    escape: ev => eachPlayer(p => worthyPower(p) || gainWoundEv(ev, p)),
     varDefense: c => c.printedDefense + playerState.right.victory.count(isVillain),
   })],
 // AMBUSH: Laufey captures The Casket of Eternal Winters from any Villain, Mastermind, player's control, or discard pile.
