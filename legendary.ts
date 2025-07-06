@@ -2785,7 +2785,7 @@ function playCard(ev: Ev): void {
   moveCardEv(ev, ev.what, playerState.playArea);
   if (ev.what.copyPasteCard) {
     const cards = ev.what.copyPasteLimit ? turnState.cardsPlayed.limit(ev.what.copyPasteLimit) : turnState.cardsPlayed;
-    selectCardEv(ev, "Choose a card to copy", cards, target => {
+    selectCardEv(ev, "Choose a Hero to copy", cards.limit(isHero), target => {
       makeCardCopyPaste(target, ev.what);
       if (canPlay(ev.what)) playCard1(ev);
     });
