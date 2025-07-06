@@ -440,7 +440,7 @@ const shieldClearance = { fightCond: shieldClearanceCond(1), fightCost: shieldCl
 function villainify(name: string, c: Card | ((c: Card) => boolean), defense?: number | ((c: Card) => number), reward?: number | 'GAIN' | 'RESCUE' | ((ev: Ev) => void), t: "VILLAIN" | "LOCATION" = "VILLAIN") {
   const cond = c instanceof Card ? ((v: Card) => v === c) : c;
   addStatSet(t === "LOCATION" ? 'isLocation' : 'isVillain', cond, () => true);
-  defense != undefined && addStatSet('defense', cond, typeof defense === "number" ? (() => defense) : defense);
+  defense != undefined && addStatSet('baseDefense', cond, typeof defense === "number" ? (() => defense) : defense);
   name && addStatSet('villainGroup', cond, () => name);
   if (typeof reward === "number") {
     addStatSet('vp', cond, () => reward);

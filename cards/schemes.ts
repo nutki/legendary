@@ -46,7 +46,7 @@ makeSchemeCard("Replace Earth's Leaders with Killbots", { twists: 5, vd_bystande
 }, escapeProgressTrigger(isBystander), function () {
   let isKillbot = (c: Card) => isBystander(c) && (c.location && (c.location.isCity || c.location.id === "VILLAIN")); // TODO isCity => fightable?
   gameState.scheme.attachedDeck('TWIST').addNewCard(twistTemplate, 3);
-  addStatSet('defense', isKillbot, () => gameState.scheme.attached('TWIST').size);
+  addStatSet('baseDefense', isKillbot, () => gameState.scheme.attached('TWIST').size);
   addStatSet('isVillain', isKillbot, () => true);
   addStatSet('villainGroup', isKillbot, () => "Killbots");
   setSchemeTarget(5);
@@ -59,7 +59,7 @@ makeSchemeCard("Secret Invasion of the Skrull Shapeshifters", { twists: 8, heroe
   withCity("SEWERS", d => selectCardEv(ev, "Choose a Hero to become a Skull", HQCardsHighestCost(), sel => moveCardEv(ev, sel, d)));
 }, escapeProgressTrigger(isHero), function () {
   let isSkrull = (c: Card) => isHero(c) && (c.location && (c.location.isCity || c.location.id === "VILLAIN"));  // TODO isCity => fightable?
-  addStatSet('defense', isSkrull, c => c.cost + 2);
+  addStatSet('baseDefense', isSkrull, c => c.cost + 2);
   addStatSet('isVillain', isSkrull, () => true);
   addStatSet('villainGroup', isSkrull, () => "Skrulls");
   addStatSet('fight', isSkrull, () => (ev: Ev) => gainEv(ev, ev.source));
@@ -196,9 +196,9 @@ makeSchemeCard("Transform Citizens Into Demons", { twists: 8, vd_bystanders: 0, 
   const isDemonGoblin = (c: Card) => c.location === demonGoblins;
   gameState.herodeck.limit(isGoblinQueen).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
-  addStatSet('defense', isGoblinQueen, c => c.cost + demonGoblins.size);
+  addStatSet('baseDefense', isGoblinQueen, c => c.cost + demonGoblins.size);
   addStatSet('vp', isGoblinQueen, () => 4);
-  addStatSet('defense', isDemonGoblin, () => 2);
+  addStatSet('baseDefense', isDemonGoblin, () => 2);
   addStatSet('fight', isDemonGoblin, () => ev => rescueEv(ev, ev.source));
   addStatSet('isVillain', isGoblinQueen, () => true);
   gameState.specialActions = (ev) => {
@@ -663,7 +663,7 @@ makeSchemeCard("Corrupt the Next Generation of Heroes", { twists: 8 }, ev => {
   }
 }, escapeProgressTrigger(isSidekick), () => {
   setSchemeTarget(4);
-  addStatSet('defense', isSidekick, c => c.cost + 2);
+  addStatSet('baseDefense', isSidekick, c => c.cost + 2);
   addStatSet('isVillain', isSidekick, c => !owner(c));
   addStatSet('fight', isSidekick, () => (ev: Ev) => gainToDeckEv(ev, ev.source));
   repeat(10, () => gameState.sidekick.withTop(c => moveCard(c, gameState.villaindeck)));
@@ -868,7 +868,7 @@ makeSchemeCard<{schemeCopy: Card}>("The God-Emperor of Battleworld", { twists: 8
       }))
     });
     addStatSet('vp', c => c === scheme, () => 9);
-    addStatSet('defense', c => c === scheme, () => 9 + 2 * gameState.scheme.attached('TWIST').size);
+    addStatSet('baseDefense', c => c === scheme, () => 9 + 2 * gameState.scheme.attached('TWIST').size);
   } else if (ev.nr >= 2 && ev.nr <= 6) {
     // Twist 2-6 Stack this Twist next to the Scheme. The God-Emperor gets another +2 Attack.
     attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
@@ -890,7 +890,7 @@ makeSchemeCard("The Mark of Khonshu", { twists: 10, heroes: [4, 6, 6, 6, 7], req
   setSchemeTarget(7);
   const isExtra = (c: Card) => c.heroName === extraHeroName();
   // Based on 'Secret Invasion of the Skrull Shapeshifters'
-  addStatSet('defense', isExtra, c => c.cost * (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 2 : 1));
+  addStatSet('baseDefense', isExtra, c => c.cost * (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 2 : 1));
   addStatSet('isVillain', isExtra, () => true);
   addStatSet('villainGroup', isExtra, () => "Khonshu Guardians");
   addStatSet('fight', isExtra, () => (ev: Ev) => gainEv(ev, ev.source));
@@ -3239,7 +3239,7 @@ makeSchemeCard("Train Black Widows in the Red Room", { twists: [7, 6, 5, 4, 3] }
       ["as an Officer", () => gainEv(ev, ev.source)],
       ["undercover", () => sendUndercoverEv(ev, ev.source)]);
   });
-  addStatSet('defense', isInitiate, darkMemoriesVarDefense(1));
+  addStatSet('baseDefense', isInitiate, darkMemoriesVarDefense(1));
   setSchemeTarget(3, true);
   repeat(8, () => gameState.officer.withTop(c => moveCard(c, gameState.villaindeck)));
   gameState.villaindeck.shuffle();

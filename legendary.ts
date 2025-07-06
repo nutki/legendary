@@ -259,8 +259,7 @@ class Card {
   get recruit() { return this.printedRecruit; }
   get piercing() { return this.printedPiercing; }
   get baseDefense() {
-    if (this.varDefense) return this.varDefense(this);
-    return this.printedDefense;
+    return getModifiedStat(this, "baseDefense", this.varDefense ? this.varDefense(this) : this.printedDefense);
   }
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
@@ -1925,6 +1924,7 @@ interface ModifiableStats {
   soaring?: boolean;
   conqueror?: { locations: CityLocation[], amount: number };
   mastermindUnbind?: Handler;
+  baseDefense?: number;
 }
 
 function safePlus(a: number, b: number) {

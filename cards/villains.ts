@@ -1399,7 +1399,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // VP: 4
   [ 2, makeVillainCard("Guardians of Knowhere", "Groot", 5, 4, {
     fight: fatefulResurrectionAndEv(ev => {
-      addTurnSet('defense', c => c === ev.source, () => 1);
+      addTurnSet('baseDefense', c => c === ev.source, () => 1);
       addTurnSet('fight', c => c === ev.source, () => [] as Handler[]);
     }),
   })],
@@ -4797,7 +4797,7 @@ addVillainTemplates("Messiah Complex", [
     ambush: ev => {
       captureEv(ev, ev.source);
       const isBodyguard = (c: Card) => c.location === ev.source.attachedDeck('CAPTURED') && isBystander(c);
-      addStatSet('defense', isBodyguard, () => 3);
+      addStatSet('baseDefense', isBodyguard, () => 3);
       addStatSet('chivalrousDuel', isBodyguard, () => true);
       addStatSet('isVillain', isBodyguard, () => true);
       addStatSet('fight', isBodyguard, () => ev => rescueEv(ev, ev.source));
@@ -4983,7 +4983,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
         if (!isVillainousWeapon(c)) {
           const thisCard = (c2: Card) => c2 === c;
           addStatSet('isVillainousWeapon', thisCard, () => true);
-          addStatSet('defense', thisCard, () => 2);
+          addStatSet('baseDefense', thisCard, () => 2);
         }
         attachCardEv(ev, c, ev.source, 'WEAPON');
       });

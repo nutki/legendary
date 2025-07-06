@@ -560,7 +560,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
     const isDemonGoblin = (c: Card) => c.location.attachedTo === m && isBystander(c);
     addStatSet('isVillain', isDemonGoblin, () => true);
     addStatSet('villainGroup', isDemonGoblin, () => "Demon Goblin");
-    addStatSet('defense', isDemonGoblin, () => 2);
+    addStatSet('baseDefense', isDemonGoblin, () => 2);
   },
   cardActions: [(m, ev) => {
     const goblins = m.captured.limit(isBystander);
@@ -2235,7 +2235,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
   const thisStrikeCard = (c: Card) => c === ev.what;
   addStatSet('isVillainousWeapon', thisStrikeCard, () => true);
   addStatSet('isArtifact', thisStrikeCard, () => true);
-  addStatSet('defense', thisStrikeCard, () => epic ? 3 : 2);
+  addStatSet('baseDefense', thisStrikeCard, () => epic ? 3 : 2);
   addStatSet('effects', thisStrikeCard, () => [ playArtifact ]);
   addStatSet('cardActions', thisStrikeCard, () => [ throwArtifactAction ]);
   addStatSet('artifactEffects', thisStrikeCard, () => [ (ev: Ev) => addAttackEvent(ev, 2) ]);
@@ -2897,7 +2897,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   }}),
 ], {
   init: c => {
-    addStatSet('defense', c2 => c2.mastermind === c || c2 === c, (c, v) => v + gameState.ko.count(isStrike));
+    addStatMod('defense', c2 => c2.mastermind === c || c2 === c, () => gameState.ko.count(isStrike));
   },
 }),
 // You may pay 3 Recruit any number of times to {SHATTER} Exodus.
@@ -3054,7 +3054,7 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
   const thisStrikeCard = (c: Card) => c === ev.what;
   addStatSet('isVillainousWeapon', thisStrikeCard, () => true);
   addStatSet('isArtifact', thisStrikeCard, () => true);
-  addStatSet('defense', thisStrikeCard, () => epic ? 2 : 1);
+  addStatSet('baseDefense', thisStrikeCard, () => epic ? 2 : 1);
   addStatSet('effects', thisStrikeCard, () => [ playArtifact ]);
   addStatSet('triggers', thisStrikeCard, () => [ triggeredArifact('STRIKE', () => true).trigger ]);
   addStatSet('artifactEffects', thisStrikeCard, () => [ (ev: Ev) => drawEv(ev) ]);
@@ -4162,7 +4162,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
         eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c.color), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
       });
       addStatSet('fight', is(c), c => ev => choosePlayerEv(ev, p => gainEv(ev, c, p)));
-      addStatSet('defense', is(c), c => c.printedCost);
+      addStatSet('baseDefense', is(c), c => c.printedCost);
       moveCardEv(ev, c, gameState.mastermind);
     });
   } ],
