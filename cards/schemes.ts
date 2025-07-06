@@ -1884,6 +1884,11 @@ makeSchemeCard("Maximum Carnage", { twists: 10, wounds: [6, 12, 18, 24, 30] }, e
     villainify('Possesed Psychotic', c, () => gameState.scheme.attached('TWIST').size, 'RESCUE');
     enterCityEv(ev, c, streets);
   }) : eachPlayer(p => gainWoundEv(ev, p)))
+}, [
+  escapeProgressTrigger(isBystander),
+  runOutProgressTrigger('WOUNDS', false),
+], () => {
+  setSchemeTarget(6);
 }),
 // SETUP: 6 Twists. All Bystanders are also "Biochemists."
 makeSchemeCard("Paralyzing Venom", { twists: 6 }, ev => {
