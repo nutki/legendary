@@ -1932,7 +1932,7 @@ addTemplates("MASTERMINDS", "Venom", [
     hqHeroes().limit(c => c.cost >= 5).each(c => attachCardEv(ev, c, ev.source.mastermind, 'SOULS'));
   } ],
 ], {
-  varDefense: c => c.attached('SOULS').uniqueCount(c => c.cost) * (c.epic ? 2 : 1)
+  varDefense: c => c.printedDefense + c.attached('SOULS').uniqueCount(c => c.cost) * (c.epic ? 2 : 1)
 }),
 ]);
 addTemplates("MASTERMINDS", "Dimensions", [
