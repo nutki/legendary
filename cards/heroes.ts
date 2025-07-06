@@ -4769,7 +4769,7 @@ addHeroTemplates("Revelations", [
     }),
     youMayDiscardThisInsteadEv("TWIST", () => true, "draw three cards", ev => {
       drawEv(ev, 3, owner(ev.source));
-      shuffleIntoEv(ev, ev.parent.twist, gameState.villaindeck);
+      shuffleIntoEv(ev, ev.parent.what, gameState.villaindeck);
     }),
   ]}),
 },
