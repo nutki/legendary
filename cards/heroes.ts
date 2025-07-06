@@ -4876,12 +4876,16 @@ addHeroTemplates("Revelations", [
   uc: makeHeroCard("Speed", "Race to the Rescue", 5, u, 3, Color.COVERT, "Avengers", "", ev => chooseClassEv(ev, col => {
     revealPlayerDeckEv(ev, 1, cards => {
       cards.limit(col).each(c => drawCardEv(ev, c));
-    }); // TODO top or bottom cleanup
+      cont(ev, () => cards.each(c => chooseOneEv(ev, "Put the card back", ["Top", () => {}], ["Bottom", () => moveCardEv(ev, c, playerState.deck, true)])));
+    });
   })),
 // Look at the top six cards of your deck, draw two of them, and put the rest back on the top or bottom in any order.
 // {POWER Covert} {HYPERSPEED 6}
   ra: makeHeroCard("Speed", "Break the Sound Barrier", 8, u, 0, Color.COVERT, "Avengers", "", [ ev => revealPlayerDeckEv(ev, 6, cards => {
     selectObjectsEv(ev, "Choose cards to draw", 2, cards, c => drawCardEv(ev, c)); // TODO top or bottom cleanup
+    cont(ev, () => chooseOneEv(ev, "Put the rest back", ["Top", () => {}], ["Bottom", () => {
+      chooseOrderEv(ev, "Choose order", cards, c => moveCardEv(ev, c, playerState.deck));
+    }]));
   }), ev => superPower(Color.COVERT) && hyperspeedEv(ev, 6) ]),
 },
 {
