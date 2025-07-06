@@ -3419,7 +3419,7 @@ addVillainTemplates("Revelations", [
 // ATTACK: 4
 // VP: 2
   [ 2, makeVillainCard("Army of Evil", "Blackout", 4, 2, {
-    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p))),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p), p)),
     fight: ev => drawEv(ev, 2),
   })],
 // AMBUSH: All players reveal their hands. Unless all those revealed cards together include [Strength], [Instinct], [Covert], [Tech], and [Ranged] Heroes, each player gains a Wound.
