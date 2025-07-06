@@ -1707,7 +1707,7 @@ makeSchemeCard<{enabledUntil: Player, team: Map<Player, Affiliation>}>("Gladiato
   })
 }),
 // SETUP: 7 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Put them in a face-up "Mutation Pile."
-makeSchemeCard("Mutating Gamma Rays", { twists: 7, heroes: [ 4, 6, 6, 6, 7 ] }, ev => { // TODO use HULK
+makeSchemeCard("Mutating Gamma Rays", { twists: 7, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Hulk|Hulkling|Totally Awesome Hulk|Gladiator Hulk|Hulkbuster Iron Man|Joe Fixit, Grey Hulk|She-Hulk|Skaar, Son of Hulk|Hulk@Marvel Studios Phase 1|Hulk 2099" } }, ev => {
   if (ev.nr <= 6) {
     // Twist 1-6 Each player in turn does the following: Put a non-grey Hero from your hand into the Mutation Pile. Then you may put a different card name with the same cost from the Mutation Pile into your discard pile.
     eachPlayer(p => cont(ev, () => {
