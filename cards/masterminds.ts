@@ -2092,7 +2092,7 @@ addTemplates("MASTERMINDS", "Revelations", [
     }, p))
   } ],
 ], {
-  varDefense: c => c.printedDefense - gameState.players.sum(p => p.victory.count(leadBy(c)) * (gameState.players.length === 1 ? 3 : 1)),
+  varDefense: c => c.printedDefense - gameState.players.sum(p => p.victory.count(leadBy(c)) * (gameState.players.length === 1 ? 3 : 1) * (c.epic ? 2 : 1)),
   init: c => {
     addStatMod('defense', leadBy(c), c.epic ? 2 : 1);
   }
