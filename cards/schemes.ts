@@ -1730,7 +1730,7 @@ makeSchemeCard("Mutating Gamma Rays", { twists: 7, heroes: [ 4, 6, 6, 6, 7 ] }, 
 // SETUP: 8 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Shuffle them into a "Hulk Deck."
 // RULE: You may recruit the top card of the Prison Ship stack.
 // EVILWINS: When there are 10 cards in the Prison Ship or the Hulk Deck runs out.
-makeSchemeCard("Shoot Hulk into Space", { twists: 8, heroes: [ 4, 6, 6, 6, 7 ] }, ev => { // TODO use HULK
+makeSchemeCard("Shoot Hulk into Space", { twists: 8, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Hulk|Hulkling|Totally Awesome Hulk|Gladiator Hulk|Hulkbuster Iron Man|Joe Fixit, Grey Hulk|She-Hulk|Skaar, Son of Hulk|Hulk@Marvel Studios Phase 1|Hulk 2099" } }, ev => {
   // Twist: Put 2 cards from the Hulk Deck into a face-up "Prison Ship" stack next to the S.H.I.E.L.D. Officer Stack.
   const hulkDeck = gameState.scheme.attachedDeck('HULK');
   const prison = gameState.officer.attachedDeck('PRISON');
@@ -1740,9 +1740,12 @@ makeSchemeCard("Shoot Hulk into Space", { twists: 8, heroes: [ 4, 6, 6, 6, 7 ] }
     hulkDeck.size === 0 && evilWinsEv(ev);
   });
 }, [], () => {
-  const hulkDeck = gameState.scheme.attachedDeck('HULK');
+  const hulkDeck = gameState.scheme.attachedFaceDownDeck('HULK');
   gameState.officer.attachedDeck('PRISON');
-  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, hulkDeck));
+  gameState.herodeck.limit(isSetupHero()).each(c => moveCard(c, hulkDeck));
+  gameState.specialActions = ev => gameState.officer.attachedDeck('PRISON').size ? [
+    recruitCardActionEv(ev, gameState.officer.attachedDeck('PRISON').top)
+  ] : [];
   setSchemeTarget(10);
 }),
 // SETUP: 11 Twists.

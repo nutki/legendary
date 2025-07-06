@@ -1340,6 +1340,7 @@ function isSetupGroup(type: 'heroes' | 'villains' | 'henchmen', idx: number = -1
   return (c: Card) => c.templateId === gameState.gameSetup[type][idx < 0 ? gameState.gameSetup[type].length + idx : idx];
 }
 const isExtraHero = isSetupGroup('heroes');
+const isSetupHero = (n: number = 1) => isSetupGroup('heroes', n - 1);
 function extraHeroName(n: number = 1) {
   const h = gameState.gameSetup.heroes;
   return h[h.length - n];
