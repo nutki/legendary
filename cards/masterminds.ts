@@ -2073,13 +2073,14 @@ addTemplates("MASTERMINDS", "Revelations", [
   makeTacticsCard("Dragon of Heaven Spaceship", { printedDefense: 9, fight: ev => {
   // If this was not already a <b>Location</b>, KO up to two of your Heroes, and this card enters the city as a Location with this ability:|KO up to two of your Heroes.
   // Whenever you fight a Villain here, each other player reveals their hand and KOs one of their non-grey Heroes.
-    selectObjectsUpToEv(ev, "Choose up to two of your Heros", 2, yourHeroes(), c => KOEv(ev, c));
+    selectObjectsUpToEv(ev, "Choose up to two of your Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c));
     if (!isRevelationsLocation(ev.source)) {
       addStatSet('isLocation', c => c === ev.source, () => true);
       playLocationEv(ev, ev.source);
     }
   }, trigger: fightVillainAtLocationEachOtherPlayerTrigger((ev, p) => {
-    pickDiscardEv(ev, 1, p, isNonGrayHero);
+    selectCardAndKOEv(ev, yourHeroes(p).limit(isNonGrayHero), p);
+    // TODO multiplayer reveal hand
   })}),
   [ "Intertwining Powers", ev => {
   // Each other player without at least two Mandarin's Rings in their Victory Pile gains a Wound.
