@@ -4103,7 +4103,10 @@ addVillainTemplates("Into the Cosmos", [
   [ 2, makeVillainCard("Elders of the Universe", "The Runner", 5, 3, {
     ambush: ev => contestOfChampionsEv(ev, Color.INSTINCT, () => {},
       p => pickDiscardEv(ev, 1, p),
-      () => attachShardEv(ev, ev.source, pastEvents('DISCARD').count(e => e.getSource() === ev.source)) // TODO e.childOf(ev)
+      () => {
+        attachShardEv(ev, ev.source, pastEvents('DISCARD').count(e => e.getSource() === ev.source)); // TODO e.childOf(ev)
+        villainChargeEv(ev, ev.source, 2); // not a charge effect, but no card cares about that
+      }
     ),
   })],
 // AMBUSH: {CONTEST OF CHAMPIONS}[Tech]. Each player that loses must reveal their hand and trade a non-grey card from their hand with a card in the HQ that costs the same or less. If Evil wins, the Trader gains a Shard for each trade that occurred.
