@@ -1289,9 +1289,11 @@ addTemplates("MASTERMINDS", "X-Men", [
 // START: Play two random Horrors.
 ...makeEpicMastermindCard("Shadow King", [ 7, 9 ], 6, "Shadow-X", ev => {
 // KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
-// KO all Heroes Dominated by Shadow King. Then each player chooses a non-grey Hero from their discard pile. Shadow King Dominates those Heroes.
+// KO all Heroes Dominated by Shadow King. Then each player chooses two non-grey Heroes from their discard pile. Shadow King Dominates those Heroes.
   ev.source.attached('DOMINATED').each(c => KOEv(ev, c));
-  eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p));
+  ev.source.epic ?
+    eachPlayer(p => selectObjectsEv(ev, "Choose two Heroes", 2, p.discard.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p)) :
+    eachPlayer(p => selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => dominateEv(ev, ev.source, c), p));
 }, [
   [ "Fiend of the Astral Plane", ev => {
   // Each other player reveals their hand and shuffles two cards with Recruit icons from their hand back into their deck.
