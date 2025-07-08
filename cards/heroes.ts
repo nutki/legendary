@@ -3864,13 +3864,13 @@ addHeroTemplates("Spider-Man Homecoming", [
   })),
 // {COORDINATE}
 // If another player accepts this {COORDINATE}, then at the end of this turn, move all cards that entered that player's Victory Pile this turn into your Victory Pile.
-  ra: makeHeroCard("Tony Stark", "As Usual, I Did All the Work", 7, u, 5, Color.RANGED, "Avengers", "", [], { coordinate: true, trigger: {
-    event: 'COORDINATE',
-    match: (ev, source) => ev.what === source,
-    after: ev => addTurnTrigger('CLEANUP', () => true, () => {
-      turnState.pastEvents.limit(e => e.type === 'MOVECARD' && ev.to === playerState.victory && e.what.location === e.to).each(e => moveCardEv(ev, e.what, owner(ev.source).victory))
-    }),
-  } }),
+  ra: makeHeroCard("Tony Stark", "As Usual, I Did All the Work", 7, u, 5, Color.RANGED, "Avengers", "", ev => {
+    const coordinateEvents = ancestorEvents(ev, 'COORDINATE');
+    const coordinatingPlayer = coordinateEvents.size ? owner(coordinateEvents[0].what) : undefined;
+    coordinatingPlayer && addTurnTrigger('CLEANUP', () => true, () => {
+      turnState.pastEvents.limit(e => e.type === 'MOVECARD' && e.to === playerState.victory && e.what.location === e.to).each(e => moveCardEv(ev, e.what, coordinatingPlayer.victory))
+    });
+  }, { coordinate: true }),
 },
 ]);
 addHeroTemplates("Champions", [
