@@ -5229,7 +5229,7 @@ addHeroTemplates("New Mutants", [
 // GUN: 1
   ra: makeHeroCard("Wolfsbane", "Nocturnal Savagery", 7, u, 4, Color.INSTINCT, "X-Men", "G", [
     ev => lookAtDeckEv(ev, 3, cards => selectObjectsAnyEv(ev, "Choose cards to discard", cards, c => discardEv(ev, c))),
-    ev => moonlightPower() && addAttackEvent(ev, pastEvents('DISCARD').limit(e => playerState.deck === e.where).sum(e => e.what.printedAttack)),
+    ev => moonlightPower() && addAttackEvent(ev, pastEvents('DISCARD').limit(e => playerState.deck === e.where).sum(e => e.what.printedAttack || 0)),
   ]),
 },
 {
