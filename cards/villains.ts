@@ -2533,7 +2533,7 @@ addVillainTemplates("Spider-Man Homecoming", [
 // ATTACK: 3+
 // VP: 3
   [ 2, makeVillainCard("Salvagers", "Shocker #1", 3, 3, {
-    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p))),
+    escape: ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => pickDiscardEv(ev, 1, p), p)),
     varDefense: strikerVarDefense,
   })],
 // AMBUSH: Each player reveals their hand and discards all cards with the same card name as a card in the HQ.
