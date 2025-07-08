@@ -2893,8 +2893,12 @@ function playTrap(ev: Ev) {
   }}));
   addTurnTrigger("CLEANUP", () => true, ev2 => {
     if (ev.what.location.attachedTo === gameState.scheme) {
-      KOEv(ev2, ev.what);
-      pushEv(ev2, "EFFECT", { source: ev.what, func: ev.what.trapPenalty });
+      if (ev.what.trapCond(ev.what)) {
+        moveCardEv(ev2, ev.what, playerState.victory);
+      } else {
+        KOEv(ev2, ev.what);
+        pushEv(ev2, "EFFECT", { source: ev.what, func: ev.what.trapPenalty });
+      }
     }
   });
 }

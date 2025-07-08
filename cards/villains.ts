@@ -2886,10 +2886,9 @@ addVillainTemplates("World War Hulk", [
 // TRAP
   [ 1, makeTrapCard("Sakaar Imperial Guard", "Gladiators' Colosseum", 4, u,
     // Only play cards from a single Team of your choice this turn (e.g. S.H.I.E.L.D., AVENGERS, X-MEN, WARBOUND, etc.)
-    ev => false,
+    ev => turnState.cardsPlayed.uniqueCount(c => c.team) <= 1 && pastEvents('CLEANUP').size > 0, // TODO team => teams
     // <i>(After you draw your new hand)</i> Each player reveals their hand, chooses a Team, and discards all cards that don't belong to that Team.
-    ev => turnState.cardsPlayed.uniqueCount(c => c.team) > 1 && // TODO team => teams
-    eachPlayer(p => chooseOptionEv(ev, "Choose a team", p.hand.deck.unique(c => c.team).map(t => ({l:t, v:t})), v => {
+    ev => eachPlayer(p => chooseOptionEv(ev, "Choose a team", p.hand.deck.unique(c => c.team).map(t => ({l:t, v:t})), v => {
       p.hand.limit(c => !isTeam(v)(c)).each(c => discardEv(ev, c));
     }, p)),
   )],
