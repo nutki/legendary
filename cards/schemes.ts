@@ -1593,7 +1593,7 @@ makeSchemeCard<{decks: { col: number, d: Deck }[]}>("Divide and Conquer", { twis
   match: ev => ev.to === gameState.herodeck && ev.from !== gameState.herodeck,
   replace: ev => {
     const state: {decks: { col: number, d: Deck }[]} = gameState.schemeState;
-    state.decks.limit(({col}) => isColor(col)(ev.parent.what)).withRandom(({d}) => moveCardEv(ev, ev.parent.what, d));
+    state.decks.limit(({col}) => isColor(col)(ev.parent.what)).withRandom(({d}) => d === ev.parent.to ? doReplacing(ev) : moveCardEv(ev, ev.parent.what, d, ev.parent.bottom));
   },
 }], s => {
   const classes = [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED];

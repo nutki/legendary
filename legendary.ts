@@ -1988,7 +1988,14 @@ function attachedCards(name: string, where: Deck | Card) {
   if (!where._attached[name]) return [];
   return where._attached[name].deck;
 }
+let nonInteractiveCount = 0;
 function pushEvents(ev: Ev, withTriggers: boolean = true): void {
+  if (ev.ui) nonInteractiveCount = 0;
+  else nonInteractiveCount++;
+  if (nonInteractiveCount > 2000) {
+    console.warn("Non-interactive event queue overflow, clearing queue");
+    throw new Error("Too many non-interactive events, possible infinite loop");
+  }
   eventQueueNew = eventQueueNew.concat(withTriggers ? addTriggers(ev) : ev);
 }
 function joinQueue(): void {
