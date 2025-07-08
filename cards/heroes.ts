@@ -5240,8 +5240,9 @@ addHeroTemplates("New Mutants", [
     event: 'DISCARD',
     match: (ev, source) => ev.what === source && ev.parent.getSource() instanceof Card,
     replace: ev => {
-      attachCardEv(ev, ev.source, owner(ev.source).deck, 'SETASIDE');
-      addTurnTrigger('CLEANUP', undefined, () => moveCardEv(ev, ev.source, owner(ev.source).hand));
+      const p = owner(ev.source);
+      attachCardEv(ev, ev.source, p.deck, 'SETASIDE');
+      addTurnTrigger('CLEANUP', undefined, () => moveCardEv(ev, ev.source, p.hand));
     },
   }}),
 // {MOONLIGHT} You may discard a card. If you do, draw a card.
