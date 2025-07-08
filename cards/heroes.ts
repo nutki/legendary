@@ -4895,7 +4895,7 @@ addHeroTemplates("Revelations", [
   c1: makeHeroCard("War Machine", "Simulated Target Practice", 3, u, 2, Color.TECH, "Avengers", "D", ev => {
     let done = false;
     addTurnSet('isFightable', c => c.location === playerState.victory && isHenchman(c) && !done, () => true);
-    addTurnTrigger('FIGHT', ev => ev.what.location === playerState.victory && isHenchman(ev.what) && !done, () => {
+    addTurnTrigger('FIGHT', ev => ev.what.location === playerState.victory && isHenchman(ev.what) && !done, ev => {
       KOEv(ev, ev.parent.what);
       rescueEv(ev);
       done = true;

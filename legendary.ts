@@ -3089,6 +3089,7 @@ function rescueBystander(ev: Ev): void {
   let c = ev.what;
   const who = ev.who || playerState;
   if (c.location !== who.victory) moveCardEv(ev, c, who.victory);
+  textLog.log("Rescued ", c);
   const rescue = getModifiedStat(c, 'rescue', c.rescue);
   if (rescue) pushEv(ev, "EFFECT", { source: c, func: rescue, who });
 }
