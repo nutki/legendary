@@ -5054,7 +5054,7 @@ addHeroTemplates("Heroes of Asgard", [
   c1: makeHeroCard("Thor", "Test of Virtue", 3, 2, 0, Color.RANGED, "Heroes of Asgard", "FD", ev => worthyPower() && addAttackEvent(ev, 2)),
 // You get +1 Attack for each other card you played this turn that makes you {WORTHY}.
   c2: makeHeroCard("Thor", "Divine Lightning", 5, u, 3, Color.RANGED, "Heroes of Asgard", "F", ev => {
-    addRecruitEvent(ev, turnState.cardsPlayed.limit(isHero).count(c => c !== ev.source && c.cost >= 5));
+    addAttackEvent(ev, turnState.cardsPlayed.limit(isHero).count(c => c !== ev.source && c.cost >= 5));
   }),
 // You cannot throw Mjolnir unless you are {WORTHY}.
 // {THROWN ARTIFACT} When you throw this, you get +3 Attack, then you get +1 Attack for each [Ranged] Hero you played this turn.
