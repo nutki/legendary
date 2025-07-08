@@ -1162,7 +1162,7 @@ addTemplates("MASTERMINDS", "X-Men", [
   } ],
   [ "Worship Me as a God", ev => {
   // Each other player gains two 0-cost cards from the KO pile.
-    eachOtherPlayerVM(p => cont(ev, () => selectObjectsEv(ev, "Choose 2 cards to gain", 2, gameState.ko.limit(c => c.cost === 0), c => gainEv(ev, c))));
+    eachOtherPlayerVM(p => cont(ev, () => selectObjectsEv(ev, "Choose 2 cards to gain", 2, gameState.ko.limit(c => c.cost === 0), c => gainEv(ev, c, p), p)));
   } ],
 ], {
   trigger: { event: 'MOVECARD', match: ev => ev.from === gameState.herodeck, after: ev => gameState.herodeck.size || gameOverEv(ev, 'LOSS', ev.source) }
