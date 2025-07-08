@@ -2294,7 +2294,7 @@ addVillainTemplates("X-Men", [
     ev => turnState.pastEvents.count(e => e.type === 'RECRUIT') >= 2,
     // This Trap enters the city as a 3 Attack "Animatronic Killer Clown" Token Villain that captures a <b>Human Shield</b>.
     ev => {
-      villainify('Animatronic Killer Clown', ev.source, 3);
+      villainify(u, ev.source, 3);
       enterCityEv(ev, ev.source);
       cont(ev, () => captureShieldEv(ev, ev.source));
     },
