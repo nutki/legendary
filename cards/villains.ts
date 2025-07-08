@@ -3537,7 +3537,7 @@ addVillainTemplates("Revelations", [
   [ 1, makeVillainCard("Dark Avengers", "Sentry", 7, 5, {
     escape: ev => eachPlayer(p => gainWoundEv(ev, p)),
     varDefense: c => c.printedDefense + (atLocation(c, "BANK", "STREETS") ? 5 : 0),
-    fight: ev => atLocation(ev.source, "BANK", "STREETS") && selectObjectsUpToEv(ev, "Choose up to two cards to KO", 2, playerState.discard.deck, c => discardEv(ev, c)),
+    fight: ev => isLocation(ev.where, "BANK", "STREETS") && selectObjectsUpToEv(ev, "Choose up to two cards to KO", 2, playerState.discard.deck, c => discardEv(ev, c)),
     // TODO var name and var fight?
   })],
 // <b>Location</b>
