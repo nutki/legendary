@@ -171,8 +171,8 @@ addBystanderTemplates("Dimensions", [
 [ 1, makeBystanderCard("Photographer", () => {}, c => c.printedVP + owned(owner(c)).limit(isHero).count(c => c.printedCost >= 7)) ],
 // RESCUE: say a Hero name. Then reveal the top three cards of your deck. Put one of those cards with that exact Hero name into your hand. Put the rest back in any order.
 [ 1, makeBystanderCard("Stan Lee", ev => {
-  const names = owned(ev.who).limit(isHero).unique(c => c.heroName).map(n => ({l:n, v:n}));
-  chooseOptionEv(ev, "Choose a Hero name", names, n => revealPlayerDeckEv(ev, 3, cards => cards.limit(c => c.heroName === n).each(c => {
+  const names = owned(ev.who).limit(isHero).unique(c => c.heroName || c.cardName).map(n => ({l:n, v:n}));
+  chooseOptionEv(ev, "Choose a Hero name", names, n => revealPlayerDeckEv(ev, 3, cards => cards.limit(c => (c.heroName || c.cardName) === n).each(c => {
     moveCardEv(ev, c, playerState.hand);
   }), ev.who), ev.who);
 }) ],
