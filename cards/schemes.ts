@@ -1138,7 +1138,7 @@ makeSchemeCard<{schemeCopy:Card}>("Imprison Unregistered Superhumans", { twists:
   setSchemeTarget(3);
   gameState.outOfGame.addNewCard(gameState.scheme.top.instance);
   s.schemeCopy = gameState.outOfGame.deck.find(c => c.instance === gameState.scheme.top.instance);
-  addStatMod('defense', c => isFortifying(s.schemeCopy, c.location) && isVillain(c), 1);
+  addStatMod('defense', c => isFortifying(s.schemeCopy, c) && isVillain(c), 1);
 }),
 // SETUP: 8 Twists.
 // EVILWINS: When 15 Bystanders are in the KO pile and/or Escape Pile.
