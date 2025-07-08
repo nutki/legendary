@@ -1018,7 +1018,7 @@ makeSchemeCard("Go Back in Time to Slay Heroes' Ancestors", { twists: 9, heroes:
   // Twist: Put a Hero form the HQ next to the Scheme, "Purged from the Timestream."
   selectCardEv(ev, "Select a Hero to purge from the Timestream", hqHeroes(), c => {
     attachCardEv(ev, c, gameState.scheme, 'PURGED');
-    cont(ev, () => hqHeroes().each(c => gameState.scheme.attached('PURGED').map(c => c.heroName).includes(c.heroName)));
+    cont(ev, () => hqHeroes().limit(c => gameState.scheme.attached('PURGED').map(c => c.heroName).includes(c.heroName)).each(c => KOEv(ev, c)));
   });
 }, [ runOutProgressTrigger("HERO"), {
   event: 'MOVECARD',
