@@ -1174,7 +1174,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 // If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
 // If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
   cityVillains().has(c => leadBy(ev.source)(c) || isStrike(c)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
-  villainify("Shi'ar Battle Cruiser", ev.what, ev.source.epic ? 9 : 7, ev.source.epic ? 6 : 5);
+  villainify(u, ev.what, ev.source.epic ? 9 : 7, ev.source.epic ? 6 : 5);
   enterCityEv(ev, ev.what);
 }, [
   [ "Shi'ar Elite Bodyguards", ev => {
@@ -1210,7 +1210,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     enterCityEv(ev, ev.source);
   } ],
 ], {
-  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.escaped.count(leadBy(c))
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * [...gameState.escaped.deck, ...cityVillains()].count(c1 => c1.villainGroup?.includes("Shi'ar") || leadBy(c)(c1) || isStrike(c1))
 }),
 // START: Mojo captures 3 <b>Human Shields</b>. All Bystanders in Victory Piles are worth 3 VP.
 // EPICNAME: Mojo
