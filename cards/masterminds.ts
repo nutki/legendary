@@ -1588,7 +1588,7 @@ makeTransformingMastermindCard(makeMastermindCard("Illuminati, Secret Society", 
 // {WOUNDED FURY}
 makeTransformingMastermindCard(makeMastermindCard("King Hulk, Sakaarson", 9, 6, "Warbound", ev => {
 // Each player KO's a Warbound Villain from their Victory Pile or gains a Wound. King Hulk {TRANSFORM}.
-  eachPlayer(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(leadBy(ev.source)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Villain to KO", p.victory.limit(isVillain).limit(leadBy(ev.source)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   transformMastermindEv(ev);
 }, [
 // King Hulk {TRANSFORM}.
