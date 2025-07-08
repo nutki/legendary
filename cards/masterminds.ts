@@ -1125,7 +1125,7 @@ addTemplates("MASTERMINDS", "X-Men", [
   [ "Welcome to my Theme Park!", ev => {
   // Arcade and each Murderworld Villain in the city capture two <b>Human Shields</b>.
     captureShieldEv(ev, ev.source.mastermind, 2);
-    cityVillains().limit(leadBy(ev.source.mastermind)).each(c => captureShieldEv(ev, c));
+    cityVillains().limit(leadBy(ev.source.mastermind)).each(c => captureShieldEv(ev, c, 2));
   } ],
 ], {
   init: c => addFutureTrigger(ev => {
