@@ -5143,10 +5143,12 @@ addHeroTemplates("Heroes of Asgard", [
     ...thrownArtifact,
     trigger: {
       event: "GAIN",
-      match: (ev, source: Card) => isWound(ev.what) && source.location === ev.who.artifact,
+      match: (ev, source: Card) => isWound(ev.what) && owner(source) && source.location === owner(source).artifact,
       replace: ev => selectCardOptEv(ev, "Throw to draw 2 cards", [ev.source], () => {
-        moveCardEv(ev, ev.what, playerState.deck, true); // TODO this should count as throw in case of throw triggers/counters
-        drawEv(ev, 2, owner(ev.source));
+        pushEv(ev, 'THROWARTIFACT', { what: ev.source, func: ev => {
+          moveCardEv(ev, ev.what, owner(ev.what).deck, true);
+          drawEv(ev, 2, owner(ev.what));
+        }});
       }, () => doReplacing(ev), owner(ev.source))
     }
   }),
