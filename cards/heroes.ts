@@ -4320,7 +4320,7 @@ addHeroTemplates("World War Hulk", [
 }),
 // For every 2 Recruit you made this turn, Reveal the top card of the Hero Deck, put it on the bottom of that deck, and you get that card's printed Attack.
   ra: makeHeroCard("She-Hulk", "Jade Giantess", 8, 4, 0, Color.STRENGTH, "Avengers", "D", ev => {
-    repeat(Math.floor(turnState.totalRecruit / 2), () => revealHeroDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, playerState.deck, true); }), false, true));
+    repeat(Math.floor(turnState.totalRecruit / 2), () => revealHeroDeckEv(ev, 1, cards => cards.each(c => { addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, gameState.herodeck, true); }), false, true));
   }),
 },
 {
