@@ -5249,11 +5249,11 @@ addHeroTemplates("New Mutants", [
     moonlightPower() && selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
   }),
 // You may have a {WAKING NIGHTMARE}. You get +Attack equal to the cost of the card you discarded this way.
-  uc: makeHeroCard("Mirage", "Nightmare Wolves", 6, u, 1, Color.COVERT, "X-Men", "", ev => wakingNightmareOptEv(ev)),
+  uc: makeHeroCard("Mirage", "Nightmare Wolves", 6, u, 1, Color.COVERT, "X-Men", "", ev => wakingNightmareOptEv(ev, c => addAttackEvent(ev, c.cost))),
 // Whenever a card effect causes you to discard a card from your hand this turn, you get +2 Attack.
 // {MOONLIGHT} You may have a {WAKING NIGHTMARE}.
   ra: makeHeroCard("Mirage", "Haunted By the Demon Bear", 7, u, 4, Color.COVERT, "X-Men", "D", [
-    ev => addTurnTrigger('DISCARD', e => e.where === playerState.hand, { after: ev => addAttackEvent(ev, 2) }),
+    ev => addTurnTrigger('DISCARD', e => e.where === playerState.hand && ev.getSource() instanceof Card, { after: ev => addAttackEvent(ev, 2) }),
     ev => moonlightPower() && wakingNightmareOptEv(ev)
   ]),
 },
