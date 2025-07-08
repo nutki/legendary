@@ -7825,7 +7825,7 @@ addHeroTemplates("Weapon X", [
     ev => weaponXSequenceEv(ev),
     ev => superPower(Color.INSTINCT) && revealDeckEv(ev, gameState.wounds, cards => !cards.has(isEnragingWound), cards => {
       cards.limit(isEnragingWound).each(c => {
-        gainEv(ev, c);
+        gainToHandEv(ev, c);
         berserkEv(ev, 1);
       });
     }, false, true),
