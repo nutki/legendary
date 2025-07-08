@@ -1276,7 +1276,8 @@ makeSchemeCard("Five Families of Crime", { twists: 8, vd_villain: [ 3, 4, 5, 5, 
 }, [
   escapeProgressTrigger(isVillain),
   {
-    event: 'TURNSTART',
+    event: 'VILLAINDRAW',
+    match: ev => !ev.what,
     before: ev => {
       gameState.villaindeck.each(c => moveCardEv(ev, c, gameState.cityEntry.attachedFaceDownDeck('FAMILY'), true));
       cont(ev, () => {
