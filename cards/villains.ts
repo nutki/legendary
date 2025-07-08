@@ -2398,7 +2398,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Ranged]} Return a [Ranged] Hero from your discard pile to your hand.
 // ATTACKG: 3
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Cyclops", 7, u, {
-    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p))),
+    ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p), p)),
   }), u, 3, Color.RANGED, "X-Men", "", ev => xGenePower(Color.RANGED) && selectCardEv(ev, "Choose a Hero to put in your hand", playerState.discard.limit(isHero).limit(Color.RANGED), c => moveCardEv(ev, c, playerState.hand)))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
