@@ -2505,7 +2505,12 @@ addVillainTemplates("X-Men", [
 // VP: 3
   [ 2, makeVillainCard("Sisterhood of Mutants", "Selene", 3, 3, {
     ambush: ev => gameState.ko.limit(isHero).limit(c => c.cost === 0).each(c => dominateEv(ev, ev.source, c)),
-    fight: ev => ev.source.attached('DOMINATED').each(c => KOEv(ev, c)),
+    fight: ev => ev.source.attached('DOMINATED').each(c => KOEv(ev, c)), // This is too late, actual KO by trigger
+    trigger: {
+      event: 'DEFEAT',
+      match: (ev, c) => c === ev.what,
+      before: ev => ev.source.attached('DOMINATED').each(c => KOEv(ev, c)),
+    },
     escape: ev => chooseForEachPlayerEv(ev, "Choose a Hero", ev.source.attached('DOMINATED'), (p, c) => moveCardEv(ev, c, p.discard)),
   })],
 // AMBUSH: Each player reveals their hand and chooses a 3-cost Hero from it. Typhoid Mary Dominates those Heroes.
