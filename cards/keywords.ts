@@ -107,8 +107,8 @@ const cosmicThreatAction = (what: Card, ev: Ev) => {
 function feastEv(ev: Ev, effect?: (c: Card) => void, who?: Player) {
   who = who || playerState;
   revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
-    KOEv(ev, c);
     effect && cont(ev, () => effect(c));
+    KOEv(ev, c);
   }), who);
 }
 // EXPANSION Villains
