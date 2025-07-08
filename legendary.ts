@@ -2230,7 +2230,7 @@ function canPlay(c: Card): boolean {
   const filter = c.playCostLimit;
   if (type === undefined) return true;
   if (type === "DISCARD" || type === "TOPDECK" || type === "BOTTOMDECK")
-    return playerState.hand.count(i => i !== c && i.divided?.right !== c && i.divided?.left !== c && (!filter || filter(c))) >= val;
+    return playerState.hand.count(i => i !== c && i.divided?.right !== c && i.divided?.left !== c && (!filter || filter(i))) >= val;
   throw TypeError(`unknown play cost: ${type}`);
 }
 function healCard(ev: Ev): void {
