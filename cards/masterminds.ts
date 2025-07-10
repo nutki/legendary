@@ -1897,7 +1897,7 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Symbiotic Call", ev => {
   // If this is not the final Tactic, reveal the top four cards of the Villain Deck. A Henchman Villain you revealed <b>Symbiote Bonds</b> with Hybrid. Put the rest back in any order.
-    finalTactic(ev.source) || revealVillainDeckEv(ev, 4, cards => symbioteBondEv(ev, "WHAT", ev.source.mastermind, cards), false, false);
+    finalTactic(ev.source) || revealVillainDeckEv(ev, 4, cards => symbioteBondEv(ev, "WHAT", ev.source.mastermind, cards.limit(isHenchmanVillain)), false, false);
   } ],
 ]),
 // Poison Thanos gets +1 Attack for each different cost among cards in his "Poisoned Souls" pile.
