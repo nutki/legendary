@@ -2119,10 +2119,11 @@ addTemplates("MASTERMINDS", "Revelations", [
   // Each other player reveals their hand and discards a non-grey Hero.
     eachOtherPlayerVM(p => pickDiscardEv(ev, 1, p, isNonGrayHero));
   } ],
-// Then each other player reveals a [Tech] Hero or gains a Wound.
   [ "Focus Magic Through Guns", ev => {
   // Each other player reveals a [Covert] Hero or discards a card.
     eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => pickDiscardEv(ev, 1, p), p));
+  // Then each other player reveals a [Tech] Hero or gains a Wound.
+    eachOtherPlayerVM(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p));
   } ],
   [ "Paean to Dormammu", ev => {
   // Each other player discards their deck.
