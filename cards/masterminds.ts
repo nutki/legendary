@@ -2305,7 +2305,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
   const epic = ev.source.epic;
   villainify("Army of the Dead", ev.what, epic ? 6 : 5, epic ? 4 : 3);
   enterCityEv(ev, ev.what);
-  selectCardOrEv(ev, "Choose a Villain to enter the city", playerState.victory.limit(c => c.vp >= (epic ? 4 : 3)),
+  selectCardOrEv(ev, "Choose a Villain to enter the city", playerState.victory.limit(c => isVillain(c) && c.vp >= (epic ? 4 : 3)),
     c => enterCityEv(ev, c),
     () => eachPlayer(p => gainWoundEv(ev, p)));
 }, [
