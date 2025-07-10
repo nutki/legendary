@@ -2617,7 +2617,7 @@ addTemplates("MASTERMINDS", "Realm of Kings", [
 // FLAVOR: Maximus Boltagon harnessed Black Bolt's sonic powers into technology, then turned them against him.
   [ "Echo-Tech Chorus Sentries", ev => {
   // Each player KOs one of their [Tech] or Inhuman Heroes or gains a Wound.
-    eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(c => isTeam('Inhumans')(c) || isColor(Color.TECH)(c)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(p).limit(c => isTeam('Inhumans')(c) || isColor(Color.TECH)(c)), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Sieve of Secrets", ev => {
   // Each player reveals the top 6 cards of their deck, discards all the non-grey Heroes revealed, and puts the rest back in any order.
