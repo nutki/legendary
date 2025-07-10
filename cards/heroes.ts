@@ -5473,7 +5473,7 @@ addHeroTemplates("Into the Cosmos", [
 // {DANGERSENSE 3}
 // {TEAMPOWER Guardians of the Galaxy} You may do the Fight effect of a Henchman Villain revealed this way. (Don't defeat it.)
   uc: makeHeroCard("Yondu", "Anticipate Their Movements", 5, u, 1, Color.INSTINCT, "Guardians of the Galaxy", "", 
-    ev => dangerSenseEv(ev, 3, cards => superPower("Guardians of the Galaxy") && selectCardOptEv(ev, "Choose a Villain", cards.limit(isVillain), c => {
+    ev => dangerSenseEv(ev, 3, cards => superPower("Guardians of the Galaxy") && selectCardOptEv(ev, "Choose a Villain", cards.limit(isHenchmanVillain), c => {
       pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use 
     }))),
 // Choose one: Gain a Hero from the HQ for free, or gain a Shard for each empty city space.
