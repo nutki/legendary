@@ -3817,7 +3817,7 @@ addVillainTemplates("S.H.I.E.L.D.", [
       gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
     },
     fight: ev => {
-      eachPlayer(p => numColors(p.hand.deck) >= hydraLevel() || gainWoundEv(ev, p)); // TODO multiplayer reveal
+      eachPlayer(p => numColors(yourHeroes(p)) >= hydraLevel() || gainWoundEv(ev, p)); // TODO multiplayer reveal
     },
     escape: sameEffect,
   })],
