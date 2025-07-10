@@ -4413,7 +4413,7 @@ addVillainTemplates("Realm of Kings", [
 // ATTACK: 5+
 // VP: 5
   [ 2, makeVillainCard("Inhuman Rebellion", "The Unspoken", 5, 5, {
-    ambush: ev => selectCardEv(ev, "Choose a Hero to remove from HQ", hqHeroes().limit(c => !(c.printedAttack >= 2)), c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ambush: ev => selectCardOrEv(ev, "Choose a Hero to remove from HQ", hqHeroes().limit(c => !(c.printedAttack >= 2)), c => moveCardEv(ev, c, gameState.herodeck, true), () => eachPlayer(p => gainWoundEv(ev, p))),
     fight: ev => selectCardAndKOEv(ev, yourHeroes().limit(c => !hasAttackIcon(c))),
     varDefense: doubleAbominationVarDefense,
   })],
