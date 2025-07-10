@@ -2036,7 +2036,7 @@ addTemplates("SCHEMES", "S.H.I.E.L.D.", [
 // EVILWINS: When the <b>Hydra Level</b> is 11.
 makeSchemeCard("S.H.I.E.L.D. vs. HYDRA War", { twists: 7, required: { villains: "Hydra Elite|A.I.M., Hydra Offshoot"} }, ev => { // TODO not both requried
   // Twist: Each player puts a card from the S.H.I.E.L.D. Officer Stack face up next to the Scheme as a 3 Attack "Double Agent" Villain. If any Double Agents were already there, put one into the Escape Pile and put the rest on the bottom of the S.H.I.E.L.D. Officer Stack. You can fight any Double Agent next to the Scheme to gain it or send it {UNDERCOVER}.
-  const currentAgents = gameState.scheme.attached("DOUBLEAGENT");
+  const currentAgents = [...gameState.scheme.attached("DOUBLEAGENT")];
   eachPlayer(() => cont(ev, () => gameState.officer.withTop(c => {
     villainify("Double Agent", c, 3, ev => {
       chooseOneEv(ev, "Choose One", ["Gain", () => gainEv(ev, ev.source)], ["Send Undercover", () => sendUndercoverEv(ev)]);
