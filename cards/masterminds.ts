@@ -2663,8 +2663,8 @@ addTemplates("MASTERMINDS", "Realm of Kings", [
   [ "Contempt for Weakness", ev => {
     // If Vulcan has the {THRONES FAVOR}, each other player discards each of their cards that costs 2 or less.
     gameState.thronesFavorHolder === ev.source.mastermind && eachOtherPlayerVM(p => p.hand.limit(c => c.cost <= 2).each(c => discardEv(ev, c)));
-    // Then Vulcan gains the {THRONES FAVOR}.
-    thronesFavorGainEv(ev, ev.source.mastermind);
+    // Then you gain the {THRONES FAVOR}.
+    thronesFavorGainEv(ev, playerState);
   } ],
   [ "Solar Cage", ev => {
     // If Vulcan has the {THRONES FAVOR}, each other player shuffles a Wound from the Wound Stack and a non-grey Hero from their hand into their deck.
@@ -2672,8 +2672,8 @@ addTemplates("MASTERMINDS", "Realm of Kings", [
       cont(ev, () => gameState.wounds.withTop(c => shuffleIntoEv(ev, c, p.deck)));
       selectCardEv(ev, "Choose a Hero to shuffle into your deck", p.hand.limit(isNonGrayHero), c => shuffleIntoEv(ev, c, p.deck), p);
     });
-    // Then Vulcan gains the {THRONES FAVOR}.
-    thronesFavorGainEv(ev, ev.source.mastermind);
+    // Then you gain the {THRONES FAVOR}.
+    thronesFavorGainEv(ev, playerState);
   } ],
 ], { varDefense: c => c.printedDefense + (gameState.thronesFavorHolder === c ? c.epic ? 5 : 3 : 0) }),
 ]);
