@@ -813,7 +813,7 @@ type ModFunc<T> = (c: Card, v?: T) => T
 const symbioteModifiers: {[stat in keyof ModifiableStats]:ModFunc<ModifiableStats[stat]>}  = {
   defense: (c, v) => v + c.defense,
   vp: (c, v) => v + c.vp,
-  strike: (c, v) => combineHandlers(v, c.strike),
+  strike: (c, v) => c.strike ? combineHandlers(v, c.strike) : v,
   // TODO villainGroup
 }
 function symbioteBondEv(ev: Ev, symbiote: "WHAT" | "TO", what: Card | Card[], to: Card | Card[], unbound?: Handler) {
