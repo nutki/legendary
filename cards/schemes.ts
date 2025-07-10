@@ -2085,7 +2085,9 @@ makeSchemeCard("Hydra Helicarriers Hunt Heroes", { twists: 8, heroes: [4, 6, 6, 
     }
   });
   cont(ev, () => hqHeroes().limit(chosenClasses).each(c => KOEv(ev, c)));
-}, [], () => {
+}, [
+  koProgressTrigger(isNonGrayHero),
+], () => {
   setSchemeTarget(18);
 }),
 // SETUP: 11 Twists. Randomly pick 5 cards that cost 5 or less from an additional Hero. Shuffle them to form a "Dark Loyalty" deck.
