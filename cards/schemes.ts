@@ -2104,8 +2104,8 @@ makeSchemeCard("Secret Empire of Betrayal", { twists: 11, heroes: [4, 6, 6, 6, 7
     }
   }));
 }, [], () => {
-  const darkStack = gameState.scheme.attachedDeck('DARK_LOYALTY');
-  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, darkStack));
+  const darkStack = gameState.scheme.attachedFaceDownDeck('DARK_LOYALTY');
+  gameState.herodeck.limit(isExtraHero).each(c => moveCard(c, darkStack));
   darkStack.deck = darkStack.deck.limit(c => c.printedCost <= 5);
   darkStack.shuffle();
   darkStack.deck.splice(5);
