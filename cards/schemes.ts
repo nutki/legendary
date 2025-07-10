@@ -2296,6 +2296,9 @@ makeSchemeCard("The Contest of Champions", { twists: 11, heroes: [ 4, 6, 6, 6, 7
 // EVILWINS: When there are 8 Souls Corruptions.
 makeSchemeCard("Turn the Soul of Adam Warlock", { twists: 14, heroes: [ 4, 6, 6, 6, 7 ], required: { heroes: "Adam Warlock" } }, ev => {
   // Twist: Set aside the top card of the Adam Warlock stack.
+  gameState.scheme.attachedDeck("ADAM").withTop(c => {
+    attachCardEv(ev, c, gameState.scheme, "ADAMASIDE");
+  });
   // This turn you may "Purify" it by spending Attack equal to double its cost.
   // If you do, choose a player to gain that card, then you rescue a Bystander, and you may KO one of your Heroes.
   // If you don't do this by the end of your turn, put that Adam Warlock card into a "Soul's Corruption" stack next to the Scheme.
@@ -2307,8 +2310,9 @@ makeSchemeCard("Turn the Soul of Adam Warlock", { twists: 14, heroes: [ 4, 6, 6,
     cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached("CORRUPTION").size));
   }),
 }, () => {
+  gameState.scheme.attachedDeck("ADAMASIDE");
   const adam = gameState.scheme.attachedDeck("ADAM");
-  gameState.herodeck.limit(c => c.heroName === "Adam Warlock").each(c => moveCard(c, adam));
+  gameState.herodeck.limit(c => c.heroName === "Adam Warlock").sort((a, b) => b.cost - a.cost).each(c => moveCard(c, adam));
   setSchemeTarget(8);
   gameState.specialActions = ev => gameState.scheme.attached("ADAMASIDE").map(c => {
     return new Ev(ev, 'EFFECT', { what: c, cost: { attack: c.cost * 2 }, func: ev => {
