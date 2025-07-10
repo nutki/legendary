@@ -1427,7 +1427,7 @@ function heistAction(ev: Ev) {
           gainWoundEv(ev);
         } else if (theirValue < ourValue) {
           const cards = turnState.pastEvents.limit(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist).map(ev => ev.what);
-          if (gameState.scheme.top.heist) cards.push(gameState.scheme.top);
+          gameState.scheme.each(s => s.heist && cards.push(s));
           selectCardOrderEv(ev, "Choose Heist order", cards, c1 => {
             pushEv(ev, 'EFFECT', { source: c1, what: c, func: c1.heist });
           });

@@ -3107,7 +3107,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     triggers?.forEach(t => checkTrigger(c)(t))
   };
   gameState.triggers.forEach(checkTrigger());
-  gameState.scheme.top.triggers.forEach(checkTrigger());
+  gameState.scheme.each(checkCardTrigger);
   turnState.triggers.forEach(checkTrigger());
   gameState.mastermind.each(checkCardTrigger);
   CityCards().each(checkCardTrigger);

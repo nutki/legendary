@@ -2023,12 +2023,13 @@ makeTransformingSchemeCard("The Korvac Saga", "Korvac Revealed", { twists: 8 }, 
   transformSchemeEv(ev);
 }, [], () => {
   setSchemeTarget(8);
-  const isKorvac = (c: Card) => gameState.scheme.top.isTransformed && c.location === gameState.scheme;
+  const isKorvac = (c: Card) => gameState.scheme.has(c => c.isTransformed) && c.location === gameState.scheme;
   villainify("Korvac", isKorvac, 19, 9);
   addStatSet("fight", isKorvac, () => ev => {
     gameState.mastermind.each(c => c.attached("TACTICS").each(c => KOEv(ev, c)));
     gameState.mastermind.each(c => KOEv(ev, c));
   });
+  gameState.specialActions = ev => gameState.scheme.limit(c => c.isTransformed).map(c => fightActionEv(ev, c));
 }),
 ]);
 addTemplates("SCHEMES", "S.H.I.E.L.D.", [
