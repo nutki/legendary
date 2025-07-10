@@ -15,11 +15,11 @@ fa786858-2827-491a-b823-55a7c9923d98 heroes/mockingbird_take_cover.jpg
 df9d751b-45f6-4330-8f94-29dc25b20669 heroes/mockingbird_battle_staves.jpg
 dc9d5474-5289-42e1-a8d9-0ce189a92fd3 heroes/mockingbird_spymaster.jpg
 208b2a72-1ed4-4881-bf0f-25952c90ec7a heroes/mockingbird_infinity_formula.jpg
-d017748b-f36d-4e56-9c4d-a3322ab76c95 masterminds/hydra_high_council.jpg
+d017748b-f36d-4e56-9c4d-a3322ab76c95 masterminds/hydra_high_council_red_skull.jpg
 1870dd6c-5ebb-4a97-b22a-afecfd5f2f76 masterminds/hydra_high_council_viper.jpg
 4273f484-1300-4db4-ad7a-01befa149cb6 masterminds/hydra_high_council_arnim_zola.jpg
 48428f94-4c3c-4177-ba2a-9ac0306fd811 masterminds/hydra_high_council_baron_helmut_zemo.jpg
-0195c18f-8625-462e-a060-f7feded7900e masterminds/hydra_superadaptoid.jpg
+0195c18f-8625-462e-a060-f7feded7900e masterminds/hydra_superadaptoid_black_widows_bite.jpg
 c0b95c20-fce0-489f-b979-7e2dc4b1cca9 masterminds/hydra_superadaptoid_captain_americas_shield.jpg
 4642be2a-c9fa-45c3-9aac-f4146bcf0128 masterminds/hydra_superadaptoid_iron_mans_armor.jpg
 c466bc41-4391-46be-9449-8f4bf514cb09 masterminds/hydra_superadaptoid_thors_hammer.jpg
