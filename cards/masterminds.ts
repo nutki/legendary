@@ -2254,7 +2254,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
     fight: ev => {
       // Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
       rescueEv(ev, 4);
-      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source.mastermind, 'WEAPON'));
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
@@ -2269,7 +2269,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
     fight: ev => {
       // Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
       rescueEv(ev, 4);
-      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source.mastermind, 'WEAPON'));
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
@@ -2284,7 +2284,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
     fight: ev => {
       // Rescue 4 Bystanders. Malekith captures a {VILLAINOUS WEAPON} from the city or from any player's control or discard pile. The this Tactic enters the city as a {VILLAINOUS WEAPON}.
       rescueEv(ev, 4);
-      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source, 'WEAPON'));
+      selectCardEv(ev, "Choose a Weapon for Malekith to capture", weaponsAnywhere(), c => attachCardEv(ev, c, ev.source.mastermind, 'WEAPON'));
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
