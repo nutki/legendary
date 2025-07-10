@@ -2119,7 +2119,7 @@ makeSchemeCard("Asgardian Test of Worth", { twists: 11 }, ev => {
   if (ev.nr <= 7) {
     // Twist 1-7 Each player who is not {WORTHY} discards a card. Then, if at least half the players <i>(round up)</i> are not {WORTHY}, put this Twist next to the Scheme as a "Moral Failing."
     eachPlayer(p => worthyPower(p) || pickDiscardEv(ev, 1, p));
-    if(gameState.players.count(worthyPower) * 2 >= gameState.players.size)
+    if(gameState.players.count(worthyPower) <= Math.floor(gameState.players.size / 2))
       attachCardEv(ev, ev.twist, gameState.scheme, 'TWIST');
   } else if (ev.nr >= 8 && ev.nr <= 11) {
     // Twist 8-11 Put this Twist next to the Scheme as a "Moral Failing."
