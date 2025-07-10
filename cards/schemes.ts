@@ -1984,7 +1984,7 @@ makeTransformingSchemeCard("Secret HYDRA Corruption", "Open HYDRA Revolution", {
   runOutProgressTrigger("SHIELDOFFICER", false),
 ], () => {
   setSchemeTarget(15);
-  villainify("Hydra Traitor", c => c.location.id === "SCHEME/HYDRA" && gameState.scheme.top.isTransformed, 3, ev => {
+  villainify("Hydra Traitor", c => c.location?.id === "SCHEME/HYDRA" && gameState.scheme.top.isTransformed, 3, ev => {
     selectCardAndKOEv(ev, yourHeroes())
     returnToStackEv(ev, gameState.officer);
     cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached("HYDRA").size));
