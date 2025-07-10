@@ -3929,6 +3929,7 @@ addVillainTemplates("Heroes of Asgard", [
   [ 1, makeGainableCard(makeVillainCard("Omens of Ragnarok", "Surtur, Fire Giant King", 6, u, {
     escape: ev => {
       if (ev.source.attached('WEAPON').has(c => c.cardName === "The Eternal Flame")) {
+        textLog.log("Ragnarok has come");
         hqHeroes().limit('Heroes of Asgard').each(c => KOEv(ev, c));
         eachPlayer(p => (gainWoundEv(ev, p), gainWoundEv(ev, p)));
       }
@@ -3944,11 +3945,11 @@ addVillainTemplates("Heroes of Asgard", [
   [ 1, makeGainableCard(makeVillainousWeaponCard("Omens of Ragnarok", "The Eternal Flame", 4, {
     ambush: ev => {
       cityVillains().limit(c => c.cardName === "Surtur, Fire Giant King").withFirst(c => {
-        attachCardEv(ev, c, ev.source, 'WEAPON');
+        attachCardEv(ev, ev.source, c, 'WEAPON');
       });
       gameState.players.each(p => p.artifact.limit(c => c.cardName === "Surtur, Fire Giant King").withFirst(c => {
         enterCityEv(ev, c);
-        attachCardEv(ev, c, ev.source, 'WEAPON');
+        attachCardEv(ev, ev.source, c, 'WEAPON');
       }));
     },
   }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
