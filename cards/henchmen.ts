@@ -251,7 +251,7 @@ makeHenchmenLocationCard("HYDRA Base", 2, {
 // ATTACK: 3
 [1, makeHenchmenCard("Remaker, The Matter Rearranger", 3, {
   fight: ev => selectCardOptEv(ev, `Choose a card to give to ${playerState.right.name}`, handOrDiscard(), c => {
-    moveCardEv(ev, c, playerState.right.discard);
+    moveCardEv(ev, c, playerState.right.hand);
   }),
 }, "Mandarin's Rings")],
 // FIGHT: KO one of your Heroes.
