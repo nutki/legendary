@@ -2186,7 +2186,7 @@ addTemplates("SCHEMES", "New Mutants", [
 // EVILWINS: When there are 3 Dream Horrors.
 makeSchemeCard("The Demon Bear Saga", { twists: 8, required: { villains: "Demons of Limbo" } }, ev => {
   // Twist: If the Demon Bear is in the city, it escapes. Otherwise, the Demon Bear enters the city from wherever it is. If it was in a player's Victory Pile, that player rescues 4 Bystanders.
-  const cards = [villains(), gameState.scheme.attached('BEAR'), gameState.players.map(p => p.victory.deck).merge()].merge();
+  const cards = [villains(), gameState.scheme.attached('BEAR'), gameState.players.map(p => p.victory.deck).merge(), gameState.escaped.deck, gameState.ko.deck].merge();
   cards.limit(c => c.cardName === "Demon Bear").withFirst(bear => {
     const where = bear.location;
     if (where.isCity) {
