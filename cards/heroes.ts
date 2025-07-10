@@ -5433,7 +5433,7 @@ addHeroTemplates("Into the Cosmos", [
     if (superPower(Color.RANGED)) {
       addRecruitEvent(ev, 2); gainShardEv(ev);
     } else {
-      chooseOneEv(ev, "Choose One", ["+2 Recruit", () => addRecruitEvent(ev, 2)], ["Gain a Shard", () => gainShardEv]);
+      chooseOneEv(ev, "Choose One", ["+2 Recruit", () => addRecruitEvent(ev, 2)], ["Gain a Shard", () => gainShardEv(ev)]);
     }
   }),
 // A Villain gains {COSMIC THREAT}[Tech] this turn. (It loses any previous Cosmic Threat abilities and penalties it had.)
