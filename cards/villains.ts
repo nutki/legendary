@@ -4379,7 +4379,8 @@ addVillainTemplates("Realm of Kings", [
 // ATTACK: 3+
 // VP: 2
   [ 2, makeVillainCard("Inhuman Rebellion", "Lineage", 3, 2, {
-    fight: ev => {},
+    fight: ev => ev.where.above && rescueEv(ev, ev.where.above.deck.max(c => c.printedAttack || 0) || 0),
+    varDefense: abominationVarDefense,
   })],
 // {ABOMINATION}
 // FIGHT: Choose "Alpha" or "Omega." Then reveal the top card of your deck:
