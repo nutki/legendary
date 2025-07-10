@@ -5596,7 +5596,7 @@ addHeroTemplates("Realm of Kings", [
 // Put the rest back in any order.
   ra: makeHeroCard("Black Bolt", "The King's Speech", 8, u, 5, Color.RANGED, "Inhumans", "", ev => thronesFavorGainOrMaySpendEv(ev, () => {
     chooseOneEv(ev, "Choose", ["Speak", () => {
-      revealPlayerDeckEv(ev, 3, cards => cards.limit(hasFlag("N")).each(c => moveCardEv(ev, c, playerState.hand)));
+      revealPlayerDeckEv(ev, 3, cards => cards.limit(c => !hasFlag("N")(c)).each(c => moveCardEv(ev, c, playerState.hand)));
     }], ["Don't Speak", () => {
       revealPlayerDeckEv(ev, 3, cards => selectObjectsAnyEv(ev, "Choose cards to KO", cards.limit(hasFlag("N")), c => KOEv(ev, c)));
     }]);
