@@ -4911,7 +4911,7 @@ addVillainTemplates("Doctor Strange and the Shadows of Nightmare", [
     },
     fight: ev => {
       selectCardAndKOEv(ev, yourHeroes());
-      ev.where === gameState.astralPlane && enterCityEv(ev, ev.source);
+      ev.where === gameState.astralPlane && enterCityEv(ev, ev.source, u, u, true);
     },
   })],
 // FIGHT: Reveal the top card of the Hero Deck. You may spend Recruit equal to that card’s cost to have the player of your choice gain that Hero. If you don’t, the Lurking Unknown enters the <b>Astral Plane</b> (even if it was already there).
