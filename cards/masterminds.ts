@@ -2723,7 +2723,7 @@ addTemplates("MASTERMINDS", "Annihilation", [
   } ],
   [ "Surging Annihilation", ev => {
   // Check all Annihilation Wave villains from each other player's victory pile. The one worth the most VP enters the city, and that player rescues bystanders equal to that villain's VP.
-    const options = eachPlayer(p => p.victory.limit(leadBy(ev.source.mastermind))).merge().highest(c => c.vp);
+    const options = eachOtherPlayerVM(p => p.victory.limit(leadBy(ev.source.mastermind))).merge().highest(c => c.vp);
     selectCardEv(ev, "Choose a Villain", options, c => {
       enterCityEv(ev, c);
       rescueByEv(ev, c.location.owner, c.vp);
