@@ -4161,16 +4161,16 @@ addVillainTemplates("Into the Cosmos", [
       if (p.hand.has(wantedColors) || p.discard.has(wantedColors))
         options.push({l:`Give a Hero`, v: () => {
           selectCardEv(ev, "Choose a Hero", [...p.hand.deck, ...p.discard.deck].limit(wantedColors), c => {
-            captureEv(ev, ev.source, c);
+            attachCardEv(ev, c, ev.source, 'COLLECTED_HEROES');
           }, p);
         }});
       chooseOptionEv(ev, "Choose one", options, f => f(), p);
     }, () => {}),
     fight: ev => {
       choosePlayerEv(ev, p => {
-        selectCardEv(ev, "Choose a Hero", ev.source.captured.limit(isHero), c => gainEv(ev, c, p));
+        selectCardEv(ev, "Choose a Hero", ev.source.attached('COLLECTED_HEROES'), c => gainEv(ev, c, p));
       });
-      cont(ev, () => ev.source.captured.limit(isHero).each(c => moveCardEv(ev, c, gameState.herodeck, true)));
+      cont(ev, () => ev.source.attached('COLLECTED_HEROES').each(c => moveCardEv(ev, c, gameState.herodeck, true)));
     },
   })],
 ]},
