@@ -2557,41 +2557,47 @@ makeSchemeCard("Sneak Attack the Heroes' Homes", { twists: 6 }, ev => {
 // EVILWINS: When 6 Jurors vote to Condmen Humanity.
 makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 }, ev => {
   let done = false;
+  const convinceJuror = () => {
+    done = true;
+    gameState.scheme.attachedDeck('JUROR').withTop(juror => {
+      rescueEv(ev, juror);
+      textLog.log(`You convinced the juror!`);
+    });
+  }
   if (ev.nr <= 2) {
     // Twist 1-2 "Opening Arguments": Discard three cards with different names.
     addTurnAction(new Ev(ev, 'EFFECT', {
       desc: "Discard three cards with different names",
-      cost: { cond: () => playerState.hand.deck.uniqueCount(c => c.cardName) >= 3 },
+      cost: { cond: () => playerState.hand.deck.uniqueCount(c => c.cardName) >= 3 && !done },
       func: ev => {
         const names = new Set<string>();
-        repeat(3, () => selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => !names.has(c.cardName)), c => {
+        repeat(3, () => cont(ev, () => selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => !names.has(c.cardName)), c => {
           names.add(c.cardName);
           discardEv(ev, c);
-        }));
-        done = true;
+        })));
+        convinceJuror();
       }
     }));
   } else if (ev.nr === 3 || ev.nr === 5 || ev.nr === 7) {
     // Twist 3,5,7 "Question Witnesses": Recruit a Hero that costs 5 or more.
-    addTurnTrigger('RECRUIT', ev => isHero(ev.what) && ev.what.cost >= 5, () => done = true);
+    addTurnTrigger('RECRUIT', ev => isHero(ev.what) && ev.what.cost >= 5, () => convinceJuror());
   } else if (ev.nr === 4 || ev.nr === 6 || ev.nr === 8) {
     // Twist 4,6,8 "Introduce Evidence": Defeat Villain(s) worth 3VP or more.
     let vp = 0;
     addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => {
       vp += ev.parent.what.vp;
-      if (vp >= 3) done = true;
+      if (vp >= 3) convinceJuror();
     });
   } else if (ev.nr >= 9 && ev.nr <= 11) {
     // Twist 9-11 "Closing Arguments": Defeat the Mastermind.
-    addTurnTrigger('DEFEAT', ev => isMastermind(ev.what), () => done = true);
+    addTurnTrigger('DEFEAT', ev => isMastermind(ev.what), () => convinceJuror());
   }
   addTurnTrigger('CLEANUP', () => true, ev => {
     gameState.scheme.attachedDeck('JUROR').withTop(juror => {
-      if (done) {
-        rescueEv(ev, juror);
-      } else {
+      if (!done) {
         KOEv(ev, juror);
         schemeProgressEv(ev, ++gameState.schemeState.condemnations);
+        textLog.log(`Humanity is condemned!`);
       }
     });
   });
