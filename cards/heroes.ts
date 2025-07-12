@@ -6904,10 +6904,10 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
     });
   }),
 // {POWER Strength} You may gain a Wound. If you do, KO up to two other cards from your hand and/or discard pile.
-  uc: makeHeroCard("Bruce Banner", "Hulk Gets Smashed", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPower(Color.STRENGTH) && gameState.wounds.withTop(c => { 
+  uc: makeHeroCard("Bruce Banner", "Hulk Gets Smashed", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPower(Color.STRENGTH) && gameState.wounds.withTop(c => chooseMayEv(ev, "Gain a wound", () => {
     gainEv(ev, c);
     selectObjectsUpToEv(ev, "Choose a card to KO", 2, handOrDiscard().limit(c1 => c1 !== c), c => KOEv(ev, c));
-  })),
+  }))),
 // {POWER Tech} You get +1 Attack for each Henchman in your Victory Pile.
   u2: makeHeroCard("Bruce Banner", "Crush Puny Weaklings", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPower(Color.TECH) && addAttackEvent(ev, playerState.victory.count(isHenchman))),
 // [Tech] {SACRIFICE}: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cards that cost 0 into your discard pile.
