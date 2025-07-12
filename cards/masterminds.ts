@@ -2788,7 +2788,12 @@ addTemplates("MASTERMINDS", "Annihilation", [
   } ],
   // TODO this should be using conqueror ability but can use city spaces that cannot normally by named in the ability (because of potential scheme changes to the city)
   // so it may be ignored by Armada of Kang: Pursuit Craft
-], { varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * gameState.city.count(d => d.has(isVillain) && d.attached('TIMEINCURSION').size > 0) }),
+], {
+  varDefense: c => c.printedDefense + (c.epic ? 3 : 2) * gameState.city.count(d => d.has(isVillain) && d.attached('TIMEINCURSION').size > 0),
+  init: c => {
+    addStatMod('defense', c => isVillain(c) && c.location?.attached?.('TIMEINCURSION')?.size > 0, c.epic ? 3 : 2);
+  },
+}),
 ]);
 addTemplates("MASTERMINDS", "Messiah Complex", [
 // EPICNAME: Lady Deathstrike
