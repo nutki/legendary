@@ -1156,10 +1156,22 @@ function preyEv(ev: Ev, handScore: (p: Player) => number, immediateEffect?: (p: 
   }, gameState.players.highest(handScore), playerState);
 }
 // EXPANSION Doctor Strange and the Shadows of Nightmare
-function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean = false) {
+function useRitualArtifactEv(ev: Ev, what: Card) {
+  pushEv(ev, 'USEARTIFACT', {
+    what, source: what,
+    func: ev => {
+      const f = () => {
+        getArtifactEffects(ev.what)[0](ev);
+        discardEv(ev, ev.what);
+      }
+      playerState === owner(ev.what) ? f() : chooseMayEv(ev, "Use Ritual Artifact", f, owner(ev.what));
+    }
+  });
+}
+function useRitualArtifactAction(cond: (what: Card) => boolean) {
   return (c: Card, ev: Ev) => new Ev(ev, 'USEARTIFACT', {
     what: c, source: c,
-    cost: { cond: c => isControlledArtifact(c, anyTurn) && cond(c) },
+    cost: { cond: c => isControlledArtifact(c) && cond(c) },
     func: ev => {
       const f = () => {
         getArtifactEffects(ev.what)[0](ev);
@@ -1170,10 +1182,10 @@ function useRitualArtifactAction(cond: (what: Card) => boolean, anyTurn: boolean
   });
 }
 
-function ritualArifact(cond: (what: Card) => boolean, anyTurn: boolean = false) {
+function ritualArifact(cond: (what: Card) => boolean) {
   return {
     isArtifact: true,
-    cardActions: [useRitualArtifactAction(cond, anyTurn)],
+    cardActions: [useRitualArtifactAction(cond)],
   }
 }
 function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, (ev: Ev) => void], p: Player = playerState) {

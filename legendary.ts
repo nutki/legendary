@@ -2442,6 +2442,7 @@ function captureEv(ev: Ev, villain: Card, what: Card | number = 1) {
 function gainWoundEv(ev: Ev, who?: Player): void {
   who = who || playerState;
   cont(ev, () => {
+    if (gameState.wounds.top) textLog.log(`${who.name} gained a wound`);
     if (gameState.wounds.top) gainEv(ev, gameState.wounds.top, who);
   });
 }

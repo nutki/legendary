@@ -6214,11 +6214,17 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
   })) ]),
 // {RITUAL ARTIFACT} If any player gained a Wound, you may set aside the Book of the Vishanti to KO up to one Wound from any player’s discard pile, then draw three cards. Then discard the Book of the Vishanti. You can use this during any player’s turn.
   ra: makeHeroCard("The Vishanti", "The Book of the Vishanti", 7, u, u, Color.COVERT, u, "", ev => {
-    // TODO any player - add card actions from other players artifacts - if allowed
     const agent = owner(ev.what); // can be different that the current player
     selectCardOptEv(ev, "Choose a Wound to KO", gameState.players.map(p => p.discard.deck).merge().limit(isWound), c => KOEv(ev, c), undefined, agent);
     drawEv(ev, 3, agent);
-  }, ritualArifact(() => pastEvents('GAIN').map(ev => ev.what).has(isWound), true))
+  }, {
+    ...ritualArifact(() => pastEvents('GAIN').map(ev => ev.what).has(isWound)),
+    trigger: {
+      event: 'GAIN',
+      match: (ev, c) => isWound(ev.what) && isControlledArtifact(c, true) && playerState !== owner(c),
+      after: ev => useRitualArtifactEv(ev, ev.source),
+    }
+  })
 },
 ]);
 addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
