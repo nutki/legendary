@@ -2603,7 +2603,7 @@ makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 
   });
 }, [], s => {
   setSchemeTarget(6);
-  const jurors = gameState.scheme.attachedDeck('JUROR');
+  const jurors = gameState.scheme.attachedFaceDownDeck('JUROR');
   repeat(11, () => gameState.bystanders.withTop(c => moveCard(c, jurors)));
   s.condemnations = 0;
 }),
