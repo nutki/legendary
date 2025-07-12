@@ -2379,7 +2379,7 @@ addTemplates("MASTERMINDS", "New Mutants", [
 }, [
   [ "A Demon's Mercy", ev => {
   // Each other player KOs a non-grey Hero from their hand or discard pile.
-    eachOtherPlayerVM(p => selectCardAndKOEv(ev, handOrDiscard().limit(isNonGrayHero), p));
+    eachOtherPlayerVM(p => selectCardAndKOEv(ev, handOrDiscard(p).limit(isNonGrayHero), p));
   } ],
   [ "Bargain for Souls", ev => {
   // Reveal cards from the Hero Deck equal to the number of players. Gain one of them and KO the rest.
