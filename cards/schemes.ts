@@ -2657,12 +2657,12 @@ makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach
     })];
   };
   const dimensions: Deck[] = [new Deck("DIMENSION_0")];
-  dimensions[0].cityPosition = [0, 4];
-  gameState.villaindeck.deck.forEach(c => {
+  dimensions[0].cityPosition = [0, -1];
+  [...gameState.villaindeck.deck].forEach(c => {
     let last = dimensions[dimensions.length - 1];
     if (last.size === dimensions.length) {
       last = new Deck(`DIMENSION_${dimensions.length}`)
-      last.cityPosition = [0, 4 - dimensions.length];
+      last.cityPosition = [dimensions.length, -1];
       dimensions.push(last);
     }
     moveCard(c, last);
