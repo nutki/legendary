@@ -1546,7 +1546,11 @@ addVillainTemplates("Secret Wars Volume 2", [
       cont(ev, () => selectCardEv(ev, "Put first Pawn", selected, c => attachCardEv(ev, c, ev.source, "PAWN")));
       cont(ev, () => selected.each(c => attachCardEv(ev, c, ev.source, "PAWN")));
     },
-    fightCond: c => c.attached("PAWN").size === 0,
+    trigger: {
+      event: 'MOVECARD',
+      match: (ev, source) => ev.what === source && ev.to.owner && ev.to === ev.to.owner.victory,
+      after: ev => ev.source.attached("PAWN").each(c => moveCardEv(ev, c, gameState.ko)),
+    },
     cardActions: [ (c: Card, ev: Ev) => c.attached("PAWN").size ? recruitCardActionEv(ev, c.attachedDeck("PAWN").top) : noOpActionEv(ev) ],
     varDefense: c => c.printedDefense + c.attached("PAWN").size,
   })],
