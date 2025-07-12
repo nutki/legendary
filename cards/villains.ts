@@ -4520,7 +4520,7 @@ addVillainTemplates("Annihilation", [
   [ 2, makeVillainCard("Timelines of Kang", "Immortus", 5, 5, {
     fight: ev => {
       revealOrEv(ev, Color.RANGED, () =>
-        revealVillainDeckEv(ev, 1, cards => cards.limit(c => c.vp <= 4).each(
+        revealVillainDeckEv(ev, 1, cards => cards.limit(isVillain).limit(c => c.vp <= 4).each(
           c => { defeatEv(ev, c); moveCardEv(ev, ev.source, gameState.villaindeck); }
         ))
       );
