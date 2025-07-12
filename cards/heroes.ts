@@ -6707,6 +6707,7 @@ addHeroTemplates("Black Widow", [
     let done = false;
     const cond: (c: Card) => boolean = c => !done && c === gameState.bystanders.top
     addTurnSet('isHenchman', cond, () => true);
+    addTurnSet('isFightable', cond, () => true);
     villainify("Hand Ninjas", cond, 3, ev => {
       addRecruitEvent(ev, 1);
       rescueEv(ev, ev.source);
