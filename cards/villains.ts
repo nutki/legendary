@@ -5407,7 +5407,7 @@ addVillainTemplates("Marvel Studios The Infinity Saga", [
       selectCardEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
       selectCardEv(ev, "Choose a Wound to KO", handOrDiscard().limit(isWound), c => KOEv(ev, c));
     },
-    varDefense: c => c.printedDefense + [...cityVillains(), ...gameState.escaped.limit(isVillain)].count(isGroup("Infinity Stones")),
+    varDefense: c => c.printedDefense + [...cityVillains(), ...gameState.escaped.limit(isVillain)].limit(isNot(c)).count(isGroup("Infinity Stones")),
   })],
 // The Space Stone gets +1 Attack for each empty space in the city.
 // AMBUSH: The Space Stone captures three Bystanders. Then move an Infinity Stone from any city space to the Bridge. If there's already a Villain there, swap them.
