@@ -4184,7 +4184,7 @@ addVillainTemplates("Into the Cosmos", [
     fight: ev => {
       addStatMod('defense', isMastermind, c => ev.source.location === playerState.victory ? -Math.floor(c.printedDefense / 5) : 0); // TODO once per game
     },
-    escape: ev => gameState.mastermind.each(c => attachShardEv(ev, c, Math.floor(c.printedAttack/5))),
+    escape: ev => gameState.mastermind.each(c => attachShardEv(ev, c, Math.floor(c.printedDefense/5))),
     cosmicThreat: Color.COVERT | Color.TECH,
     cardActions: [ cosmicThreatAction ],
   })],
