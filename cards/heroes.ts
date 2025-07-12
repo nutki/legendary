@@ -6932,7 +6932,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // {POWER Strength} You get +2 Recruit.
 // {ENDGAME} This card makes all Attack instead of Recruit.
   c2: makeHeroCard("Captain Marvel", "Return From the Stars", 4, 2, 0, Color.STRENGTH, "Avengers", "FD", ev => {
-    const amount = ev.source.printedRecruit + superPower(Color.STRENGTH) ? 2 : 0;
+    const amount = ev.source.printedRecruit + (superPower(Color.STRENGTH) ? 2 : 0);
     isEndgame(ev.source) ? addAttackEvent(ev, amount) : addRecruitEvent(ev, amount);
   }, { customRecruitAndAttack: true }),
 // For the rest of this turn, it is the Endgame for your Hero cards.
