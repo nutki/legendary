@@ -2779,7 +2779,7 @@ makeSchemeCard("...Control the Mutant Messiah", { }, ev => {
     addTurnTrigger('CLEANUP', u, ev => {
       if (c.location === gameState.scheme.attachedDeck('ASIDE')) {
         moveCardEv(ev, c, gameState.scheme.attachedDeck('FALLEN'));
-        schemeProgressEv(ev, gameState.scheme.attachedDeck('FALLEN').size);
+        cont(ev, () => schemeProgressEv(ev, gameState.scheme.attachedDeck('FALLEN').size));
       }
     });
   });
