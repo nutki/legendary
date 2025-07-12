@@ -2943,10 +2943,10 @@ makeSchemeCard("Duels of Science and Magic", { twists: [ 9, 10, 11, 10, 11] }, e
   if (ev.nr === 1 || ev.nr === 3 || ev.nr === 5) {
     // Twist 1, 3, and 5 “Duel of Science”: Each player reveals a [Tech] or [Ranged] Hero or discards down to 4 cards.
     // If at least half the players (round up) failed to reveal, put this Twist next to the Mastermind as a “Duel Won.”
-    eachPlayer(p => revealOrEv(ev, c => c.color === Color.TECH || c.color === Color.RANGED, () => (failed++, pickDiscardEv(ev, -4, p))));
+    eachPlayer(p => revealOrEv(ev, c => c.color === Color.TECH || c.color === Color.RANGED, () => (failed++, pickDiscardEv(ev, -4, p)), p));
   } else if (ev.nr === 2 || ev.nr === 4 || ev.nr === 6) {
     // Twist 2, 4, and 6 “Duel of Magic”: Same effect, but with [Instinct] or [Covert].
-    eachPlayer(p => revealOrEv(ev, c => c.color === Color.INSTINCT || c.color === Color.COVERT, () => (failed++, pickDiscardEv(ev, -4, p))));
+    eachPlayer(p => revealOrEv(ev, c => c.color === Color.INSTINCT || c.color === Color.COVERT, () => (failed++, pickDiscardEv(ev, -4, p)), p));
   } else if (ev.nr >= 7 && ev.nr <= 11) {
     // Twist 7-11 “Duel of Science and Magic”: Same effect, but each player must reveal at least three of these colors: [Instinct], [Covert], [Tech], [Ranged].
     const colors = [Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED];
