@@ -7326,7 +7326,7 @@ addHeroTemplates("Marvel Studios What If...?", [
 // {POWER Covert} Choose a Hero Name. You are <b>Empowered</b> by that Hero Name.
   uc: makeHeroCard("Uatu, The Watcher", "Anoint a Champion", 5, u, 2, Color.COVERT, "Guardians of the Multiverse", "FD", ev => {
     superPower(Color.COVERT) && chooseOptionEv(ev, "Choose a Hero Name", splitDivided(hqHeroes()).unique(c => c.heroName).map(v => ({l:v, v})), name => {
-      empowerEv(ev, c => splitDivided([c]).has(c => c.heroName === name)); // TODO divided abstract hero names
+      empowerEv(ev, isHeroName(name));
     });
   }),
 // [Ranged] {SOULBIND} You get +2 Attack and you may do that Villain's Fight effect.

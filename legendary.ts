@@ -1881,6 +1881,12 @@ function numHeroNames(heroes: Card[]) {
   return heroes.limit(isHero).uniqueCount(c => c.heroName || c.cardName);
   // TODO CW
 }
+function heroNameChoices(p: Player = playerState) {
+  return owned(p).limit(isHero).unique(c => c.heroName || c.cardName).map(n => ({l:n, v:n}));
+}
+function isHeroName(name: string) {
+  return (c: Card) => splitDivided([c]).has(c => (c.heroName || c.cardName) === name);
+}
 function isMuliColor(c: Card) {
   return c.color && (c.color & c.color - 1) !== 0;
 }
