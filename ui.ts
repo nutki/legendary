@@ -174,6 +174,7 @@ type DeckPos = {
   popupid2?: string;
   size?: 'small' | number;
   count?: string;
+  countWhenEmpty?: boolean; // whether to show count when deck is empty
   playerDeck?: boolean;
   w?: number; // width in cards
   fan?: boolean; // fan out cards
@@ -190,7 +191,7 @@ const mainDecks: DeckPos[] = [
   { id: 'KO', x: 6, y: 0, size: 'small', count: 'KO', popupid: 'popko' },
   { id: 'ASTRALPLANE', x: 7, y: 1, size: 'small', popupid: 'popastralplane' },
   { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS', popupid: 'popwounds' },
-  { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS', popupid: 'popbindings' },
+  { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS', popupid: 'popbindings', countWhenEmpty: false },
   { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTDR', popupid: 'popbystanders' },
   { id: 'HERO', x: 6, y: 1, size: 'small', count: 'HERO', popupid: 'popheroes' },
   { id: 'PLAYAREA0', x: 0, y: 2, w: 9, playerDeck: true },
@@ -199,6 +200,7 @@ const mainDecks: DeckPos[] = [
   { id: 'DISCARD0', x: .5, y: 3, size: 'small', count: 'DISCARD', popupid: 'popdiscard', playerDeck: true },
   { id: 'VICTORY0', x: 0, y: 3.5, size: 'small', count: 'VP', popupid: 'popvictory', playerDeck: true },
   { id: 'SPECIAL0', x: 0.5, y: 3.5, size: 'small', playerDeck: true },
+  { id: 'OUTOFTIME0', x: 8, y: 3.5, size: 'small', count: 'OUTOFTIME', popupid: 'popoutoftime', playerDeck: true, countWhenEmpty: false },
 ];
 function updatePlayerDecks(n: number): void {
   document.querySelectorAll<HTMLElement>(`div[data-player-id="1"]`).forEach(d => {
@@ -266,7 +268,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     if (deckPos.count === 'VP') {
       d1.appendChild(img("icons/VP.png", "vpcount"));
       d1.appendChild(div("deckcount vpcount", {}, text(currentVP(gameState.players[parseInt(deck.id.slice(-1))]))));
-    } else if(deckPos.count) d1.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
+    } else if(deckPos.count && (deck.size || deckPos.countWhenEmpty !== false)) d1.appendChild(div('deckcount', {}, span('name', {}, text(deckPos.count)), br(), text(deck.size)));
   }
 }
 function displayPopupDeck(deck: Deck, name: string, cardsContainer: HTMLElement): void {
