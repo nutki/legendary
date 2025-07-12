@@ -6680,11 +6680,12 @@ addHeroTemplates("Black Widow", [
     whenRecruited: whenRecruitedSendUndercover,
     triggers: [{
       event: "TWIST",
-      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+      match: (ev, source) => source.location.owner && source.location === source.location.owner.victory,
+      after: ev => unleashFromUndercoverEv(ev, is(ev.source), owner(ev.source)),
     }, {
       event: "PLAY",
-      match: ev => [ev, ...pastEvents('PLAY')].count(e => e.who === playerState && isHero(ev.what) && isColor(Color.COVERT)(ev.what)) === 3,
-      after: ev => unleashFromUndercoverEv(ev, c => c === ev.source, ev.parent.who),
+      match: (ev, source) => source.location === playerState.victory && [ev, ...pastEvents('PLAY')].count(e => isHero(e.what) && isColor(Color.COVERT)(e.what)) === 3,
+      after: ev => unleashFromUndercoverEv(ev, is(ev.source), playerState),
     }],
   }),
 },
