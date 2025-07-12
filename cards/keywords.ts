@@ -376,8 +376,10 @@ function outOfTimeEv(ev: Ev, c: Card = ev.source) {
   moveCardEv(ev, c, playerState.outOfTime);
 }
 function playOutOfTimeEv(ev: Ev) {
+  // Snapshot the oot cards when scheduled, since Scarlet Centurion can add one during ambush.
+  const cards = [...playerState.outOfTime.deck];
   cont(ev, () => {
-    selectCardOrderEv(ev, "Play Out of Time Heroes", playerState.outOfTime.deck, c => {
+    selectCardOrderEv(ev, "Play Out of Time Heroes", cards, c => {
       pushEv(ev, "PLAY", { func: playCard, what: c });
       discardEv(ev, c);
     });
