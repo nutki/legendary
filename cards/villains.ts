@@ -5236,7 +5236,7 @@ addVillainTemplates("Black Widow", [
     ambush: ev => captureEv(ev, ev.source),
     fight: ev => revealVillainDeckEv(ev, 4, cards => {
       chooseOrderEv(ev, "Choose order to play Henchmen", cards.filter(isHenchman), c => villainDrawEv(ev, c));
-    }),
+    }, false),
   })],
 // AMBUSH: Choose a Henchman from a player's Victory Pile to enter the city.
 // ATTACK: 3
