@@ -2953,8 +2953,8 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
     choosePlayerEv(ev, p => {
       selectCardEv(ev, "Choose a Hero to gain", gameState.ko.limit(c => teams.includes(c.team)), c => {
         gainEv(ev, c, p);
-        selectCardEv(ev, "Choose a Villain to enter", p.victory.limit(c => !isHenchman(c)), c => enterCityEv(ev, c), p);
       }, p);
+      selectCardEv(ev, "Choose a Villain to enter", p.victory.limit(isVillain).limit(c => !isHenchman(c)), c => enterCityEv(ev, c), p);
     });
   } ],
 ], {
