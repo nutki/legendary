@@ -188,6 +188,7 @@ const mainDecks: DeckPos[] = [
   { id: 'VILLAIN', x: 6, y: .5, size: 'small', count: 'VILLAIN', popupid: 'popvillains' },
   { id: 'ESCAPED', x: 6.5, y: 1, size: 'small', count: 'ESCAPED', popupid: 'popescaped' },
   { id: 'KO', x: 6, y: 0, size: 'small', count: 'KO', popupid: 'popko' },
+  { id: 'ASTRALPLANE', x: 7, y: 1, size: 'small', popupid: 'popastralplane' },
   { id: 'WOUNDS', x: 6.5, y: 1.5, size: 'small', count: 'WOUNDS', popupid: 'popwounds' },
   { id: 'BINDINGS', x: 7, y: 1.5, size: 'small', count: 'BINDINGS', popupid: 'popbindings' },
   { id: 'BYSTANDERS', x: 6, y: 1.5, size: 'small', count: 'BYSTDR', popupid: 'popbystanders' },
