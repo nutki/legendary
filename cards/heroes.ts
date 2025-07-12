@@ -6115,7 +6115,7 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
   }, ritualArifact(() => pastEvents('FIGHT').map(ev => ev.what).has(isVillain))),
 // {RITUAL ARTIFACT} If you played another Artifact or three other cards of the same Hero Class, you may discard the Eye of Agamotto to get +7 Attack.
   ra: makeHeroCard("Doctor Strange", "The Eye of Agamotto", 8, u, u, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, 7), ritualArifact(what => 
-    turnState.cardsPlayed.has(c => c !== what && (c.isArtifact || classes.has(col => turnState.cardsPlayed.limit(col).count(isNot(what)) >= 3))
+    turnState.cardsPlayed.has(c => c !== what && (c.isArtifact || classes.has(col => turnState.cardsPlayed.limit(col).count(isNot(what)) >= 3)))
   )),
 },
 {
