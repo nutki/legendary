@@ -2699,14 +2699,14 @@ makeSchemeCard("Hack Cerebro Servers to...", { twists: 10 }, ev => {
 // SETUP: 11 Twists
 // RULE: Players may spend 3 Recruit or 3 Attack to gain a Kidnapped Mutant.
 makeSchemeCard("Drain Mutants' Powers to...", { twists: 11 }, ev => {
-  const kidnappedMutants = gameState.scheme.attachedDeck('KIDNAPPED');
+  const kidnappedMutants = gameState.scheme.attachedFaceDownDeck('KIDNAPPED');
   if (ev.nr <= 6) {
-    if (gameState.scheme.attachedDeck('KIDNAPPED').size > 0) {
+    if (gameState.scheme.attachedFaceDownDeck('KIDNAPPED').size > 0) {
       kidnappedMutants.each(c => moveCardEv(ev, c, gameState.sidekick, true));
       attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
     }
     // Twist 1-6  Stack the top two cards of the Sidekick Stack face down next to the Scheme as “Kidnapped Mutants.”
-    repeat(2, () => gameState.sidekick.withTop(c => attachCardEv(ev, c, gameState.scheme, 'KIDNAPPED')));
+    repeat(2, () => cont(ev, () => gameState.sidekick.withTop(c => attachFaceDownCardEv(ev, c, gameState.scheme, 'KIDNAPPED'))));
     // If there were any Kidnapped Mutants already there, put those on the bottom of the Sidekick Stack and put this Twist next to the Mastermind
     // as a “Drained Power.”
   } else if (ev.nr === 7) {
@@ -2715,7 +2715,7 @@ makeSchemeCard("Drain Mutants' Powers to...", { twists: 11 }, ev => {
   }
   vailedSchemeProgressEv(ev);
 }, [], () => {
-  gameState.specialActions = ev => gameState.scheme.attachedDeck('KIDNAPPED').deck.map(c =>
+  gameState.specialActions = ev => gameState.scheme.attachedFaceDownDeck('KIDNAPPED').deck.map(c =>
     [new Ev(ev, 'EFFECT', { cost: { recruit: 3 }, what: c, func: ev => gainEv(ev, c) }),
      new Ev(ev, 'EFFECT', { cost: { attack: 3 }, what: c, func: ev => gainEv(ev, c) })]
   ).merge();
