@@ -4976,7 +4976,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
         n++;
       }, p));
       cont(ev, () => n && revealVillainDeckEv(ev, n, cards => {
-        selectCardEv(ev, "Choose a card to play", cards.limit(isVillain).limit(isGroup("Followers of Ronan")), c => villainDrawEv(ev, c));
+        selectCardEv(ev, "Choose a card to play", cards.limit(isGroup("Followers of Ronan")), c => villainDrawEv(ev, c));
       }, false));
     },
     fight: sameEffect,
