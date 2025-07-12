@@ -1545,8 +1545,10 @@ gameState = {
       match: ev => ev.to === gameState.astralPlane && gameState.astralPlane.size > 0,
       before: ev => {
         const c = gameState.astralPlane.top;
-        if (isMastermind(c)) moveCardEv(ev, c, gameState.mastermind);
-        else if (isVillain(c)) villainEscapeEv(ev, c);
+        if (isMastermind(c)) {
+          moveCardEv(ev, c, gameState.mastermind);
+          pushEffects(ev, c, "escape", c.escape);
+        } else if (isVillain(c)) villainEscapeEv(ev, c);
       }
     },
     { // Hero ambush
