@@ -2577,7 +2577,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   // Rescue four Bystanders. Put this card above the Sewers, pulling it into a Pocket Dimension. To fight a Villain there, you must also pay 1 Attack for each Pocket Dimension in play.
     withCity('SEWERS', sewers => {
       rescueEv(ev, 4);
-      attachCardEv(ev, ev.what, sewers, 'POCKET');
+      attachCardEv(ev, ev.source, sewers, 'POCKET');
     });
   } ],
   [ "Create the Secret Wars", ev => {
