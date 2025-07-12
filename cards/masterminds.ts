@@ -3302,7 +3302,7 @@ addTemplates("MASTERMINDS", "Black Widow", [
   init: c => {
     addStatMod('defense', isHenchman, () => gameState.mastermind.attached('STRIKE').size * (c.epic ? 2 : 1));
   },
-  varDefense: c => c.printedDefense + pastEvents('PLAY').max(ev => ev.what.cost) * (c.epic ? 2 : 1),
+  varDefense: c => c.printedDefense + (pastEvents('PLAY').max(ev => ev.what.cost) || 0) * (c.epic ? 2 : 1),
   commonTacticEffect: ev => {
     selectCardEv(ev, "Choose a Henchman to enter", gameState.players.flatMap(p => p.victory.deck).limit(isHenchman), c => enterCityEv(ev, c));
   },
