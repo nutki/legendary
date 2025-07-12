@@ -2432,6 +2432,7 @@ makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
       withMastermind(ev, mastermind => thronesFavorGainOrEv(ev, () => gainWoundEv(ev), mastermind));
       cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('GENERAL').size));
     }));
+    state.toPay = [];
   }
 }, s => {
   setSchemeTarget(6);
@@ -2441,6 +2442,7 @@ makeSchemeCard<{ toPay: number[] }>("War of Kings", { twists: 11 }, ev => {
       thronesFavorGainEv(ev);
       selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c));
       s.toPay.pop();
+      textLog.log(`${playerState.name} supplied the war`);
     } })] : [];
   }
   s.toPay = [];
