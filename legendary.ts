@@ -1850,10 +1850,14 @@ function getOtherPlayersVM(): Player[] {
 }
 function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); } // TODO starting from left
 function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
+function revealableLocations(who: Player = playerState): Deck[] {
+  return [who.hand, who.playArea, who.artifact];
+}
 function revealable(who = playerState) {
   return [...who.hand.deck, ...who.playArea.deck, ...who.artifact.deck];
 }
 function yourHeroes(who?: Player) { return revealable(who).limit(isHero); }
+const yourHeroesLocations = revealableLocations;
 function splitDivided(cards: Card[]) {
   return cards.map(c => c.divided ? [c.divided.left, c.divided.right] : [c]).merge();
 }

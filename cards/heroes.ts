@@ -6164,7 +6164,7 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
 // The first time that one of your Heroes or a Hero from your deck or discard pile is KO’d this turn, you get +4 Recruit or +4 Attack.
   ra: makeHeroCard("Doctor Voodoo", "Possessed by Brother’s Spirit", 7, 0, 4, Color.INSTINCT, "Avengers", "", ev => {
     let done = false;
-    addTurnTrigger('KO', ev => isHero(ev.what) && (ev.where == playerState.hand || ev.where == playerState.discard), ev => {
+    addTurnTrigger('KO', ev => isHero(ev.what) && (yourHeroesLocations().includes(ev.where) || ev.where == playerState.discard), ev => {
       if (!done) chooseOneEv(ev, "Choose a bonus", ["Recruit", () => addRecruitEvent(ev, 4)], ["Attack", () => addAttackEvent(ev, 4)]);
       done = true;
     });
