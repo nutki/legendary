@@ -2784,13 +2784,13 @@ makeSchemeCard("...Control the Mutant Messiah", { }, ev => {
     });
   });
 }, [], () => {
-  gameState.specialActions = ev => gameState.scheme.attachedDeck('MUTANTMESSIAH').deck.map(c => new Ev(ev, 'EFFECT', {
+  gameState.specialActions = ev => gameState.scheme.attachedDeck('ASIDE').deck.map(c => new Ev(ev, 'EFFECT', {
+    what: c,
     cost: { recruit: c.cost + gameState.scheme.attached('TWIST').size },
-    func: ev => gainEv(ev, c),
+    func: ev => gainToDeckEv(ev, c),
   }));
   availiableHeroTemplates().withRandom(heroTemplate => {
-    const mutantMessiah = gameState.scheme.attachedDeck('MUTANTMESSIAH');
-    mutantMessiah.faceup = false;
+    const mutantMessiah = gameState.scheme.attachedFaceDownDeck('MUTANTMESSIAH');
     heroToCardTamplates(heroTemplate).each(([c, n]) => mutantMessiah.addNewCard(c, n));
     mutantMessiah.shuffle();
   });
