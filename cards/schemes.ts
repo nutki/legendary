@@ -2618,9 +2618,9 @@ makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 
 makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach Parallel Dimensions", { twists: 6, vd_bystanders: [ 5, 8, 12, 12, 16] }, ev => {
   // Twist: Choose a Dimension and play two cards from it. <i>(It's ok if it only has 1.)</i>
   const state = ev.state;
-  gameState.villaindeck.each(c => moveCardEv(ev, c, state.current, true));
+  swapDecks(gameState.villaindeck, state.current);
   selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
-    d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+    swapDecks(d, gameState.villaindeck);
     state.current = d;
   });
   playAnotherEv(ev, 2);
@@ -2628,21 +2628,22 @@ makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach
   event: 'TURNSTART',
   after: ev => {
     const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
-    gameState.villaindeck.each(c => moveCardEv(ev, c, state.current, true));
+    swapDecks(state.current, gameState.villaindeck);
     selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
-      d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+      swapDecks(d, gameState.villaindeck);
       state.current = d;
     });
   }
 }, {
   event: 'MOVECARD',
-  match: (ev, source) => ev.from === gameState.villaindeck && ev.getSource() !== source,
+  match: (ev, source) => ev.from === gameState.villaindeck,
   after: ev => {
     if (gameState.villaindeck.size === 0) {
       const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
       state.destroyed.push(state.current.id);
-      selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
-        d.each(c => moveCardEv(ev, c, gameState.villaindeck, true));
+      gameState.wounds.withTop(c => attachCardEv(ev, c, state.current, 'DESTROYED'));
+      selectCardEv(ev, "Current dimension was destroyed, choose another", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
+        swapDecks(d, gameState.villaindeck);
         state.current = d;
       });
     }
