@@ -6879,12 +6879,12 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
     });
   })),
 // [Instinct] {SACRIFICE}: Guess the name of the top card of the Villain Deck, then reveal it. If you guessed right, draw six cards.
-  ra: makeHeroCard("Doctor Strange", "1 In 14,000,065", 7, u, 5, Color.INSTINCT, "Avengers", "", ev => {
+  ra: makeHeroCard("Doctor Strange", "1 In 14,000,065", 7, u, 5, Color.INSTINCT, "Avengers", "", ev => sacrificeEv(ev, Color.INSTINCT, () => {
     const names = gameState.villaindeck.deck.unique(c => c.cardName).sort().map(c => ({l: c, v: c}));
     chooseOptionEv(ev, "Choose a card name", names, name => {
       revealVillainDeckEv(ev, 1, cards => cards.has(c => c.cardName === name) && drawEv(ev, 6));
     });
-  }),
+  })),
 },
 {
   name: "Bruce Banner",
