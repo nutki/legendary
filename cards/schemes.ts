@@ -2930,6 +2930,7 @@ makeSchemeCard("Cursed Pages of the Darkhold Tome", { twists: 11, vd_villain: [ 
 ], s => {
   setSchemeTarget(7);
   addStatSet('isArtifact', isTwist, () => true);
+  addStatSet('effects', isTwist, () => [ playArtifact ]);
   addStatSet('cardActions', isTwist, () => [ useRitualArtifactAction(() => pastEvents('FIGHT').map(ev => ev.what).has(isEnemy)) ]);
   addStatSet('artifactEffects', isTwist, () => [ev => addRecruitEvent(ev, 3)]);
 }),
