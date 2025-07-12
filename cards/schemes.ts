@@ -2812,7 +2812,9 @@ makeSchemeCard("...Open Rifts to Future Timelines", { }, ev => {
   });
   cont(ev, () => gameState.villaindeck.shuffle());
   cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attachedDeck('TWIST').size));
-}, [], () => {
+}, [
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
   setSchemeTarget(7);
   availiableVillainTemplates().withRandom(({cards}) => {
     cards.each(([n, c]) => gameState.villaindeck.addNewCard(c, n));
