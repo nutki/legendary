@@ -922,7 +922,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Mind Gem", 6, u, {
     ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isTwist) + gameState.scheme.attached("TWIST").size),
-  }), u, u, 0, u, "D", ev => addRecruitEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] }) ],
+  }), u, u, 0, u, "D", ev => addRecruitEvent(ev, 2), oncePerTurnArtifact()) ],
 // AMBUSH: Power Gem gains a Shard for each Master Strike in the KO pile and/or stacked next to the Mastermind.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - Once per turn, you get +2 Attack.
@@ -930,7 +930,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Power Gem", 7, u, {
     ambush: ev => attachShardEv(ev, ev.source, strikerCount(false)),
-  }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] }) ],
+  }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), oncePerTurnArtifact()) ],
 // AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
@@ -950,7 +950,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Soul Gem", 6, u, {
     ambush: ev => attachShardEv(ev, ev.source, cityVillains().size),
-  }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { isArtifact: true, cardActions: [ useArtifactAction() ], triggers: [{
+  }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { ...oncePerTurnArtifact(), triggers: [{
     event: "MOVECARD",
     match: (ev, source) => ev.what === source && isControlledArtifact(source),
     before: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
@@ -971,7 +971,7 @@ addVillainTemplates("Guardians of the Galaxy", [
       selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => swapCardsEv(ev, v.location, dest));
       gainShardEv(ev);
     });
-  }, { isArtifact: true, cardActions: [ useArtifactAction() ]}) ],
+  }, oncePerTurnArtifact()) ],
 // AMBUSH: Play another card from the Villain Deck. Time Gem gains Shards equal to that card's printed Victory Points.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - When you play this Artifact, take another turn after this one. Use this ability only if this is the fist time any player has played the Time Gem this game.
@@ -3873,7 +3873,7 @@ addVillainTemplates("Heroes of Asgard", [
 // {ARTIFACT} Once per turn, if you are {WORTHY}, you get +2 Recruit.
 // ATTACK: +4
   [ 1, makeGainableCard(makeVillainousWeaponCard("Dark Council", "The Casket of Ancient Winters", 4, {
-  }), u, u, 0, u, "D", ev => worthyPower() && addRecruitEvent(ev, 2), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
+  }), u, u, 0, u, "D", ev => worthyPower() && addRecruitEvent(ev, 2), oncePerTurnArtifact())],
 // {VILLAINOUS WEAPON}
 // GAINABLE
 // {THROWN ARTIFACT} When you throw this, you get +3 Attack.
@@ -3934,9 +3934,7 @@ addVillainTemplates("Heroes of Asgard", [
         eachPlayer(p => (gainWoundEv(ev, p), gainWoundEv(ev, p)));
       }
     },
-  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'SEWERS', 1), {
-    isArtifact: true, cardActions: [ useArtifactAction() ]
-  })],
+  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'SEWERS', 1), oncePerTurnArtifact())],
 // {VILLAINOUS WEAPON}
 // AMBUSH: If Surtur is in the city, he captures The Eternal Flame. If a player controls "Surtur's Crown," that card enters the city as the Villain Surtur and captures The Eternal Flame.
 // GAINABLE
@@ -3952,13 +3950,13 @@ addVillainTemplates("Heroes of Asgard", [
         attachCardEv(ev, ev.source, c, 'WEAPON');
       }));
     },
-  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
+  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), oncePerTurnArtifact())],
 // {VILLAINOUS WEAPON}
 // GAINABLE
 // {ARTIFACT} Once per turn, you get {STREETS CONQUEROR 1}.
 // ATTACK: +3
   [ 1, makeGainableCard(makeVillainousWeaponCard("Omens of Ragnarok", "The Hel-Crown", 3, {
-  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'STREETS', 1), { isArtifact: true, cardActions: [ useArtifactAction() ] })],
+  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'STREETS', 1), oncePerTurnArtifact())],
 ]},
 ]);
 addVillainTemplates("New Mutants", [

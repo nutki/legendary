@@ -2259,9 +2259,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
-  }), u, u, 0, u, "", ev => KOHandOrDiscardEv(ev), {
-    isArtifact: true, cardActions: [ useArtifactAction() ],
-  }),
+  }), u, u, 0, u, "", ev => KOHandOrDiscardEv(ev), oncePerTurnArtifact()),
 // ---
 // {ARTIFACT} Once per turn, you may defeat a Villain worth 2VP or less.
 // ATTACK: +2
@@ -2274,9 +2272,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
-  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a villain to defeat", villains().limit(c => c.vp <= 2), c => defeatEv(ev, c)), {
-    isArtifact: true, cardActions: [ useArtifactAction() ],
-  }),
+  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a villain to defeat", villains().limit(c => c.vp <= 2), c => defeatEv(ev, c)), oncePerTurnArtifact()),
 // ---
 // {ARTIFACT} Once per turn, draw a card.
 // ATTACK: +3
@@ -2289,9 +2285,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
-  }), u, u, 0, u, "", ev => drawEv(ev), {
-    isArtifact: true, cardActions: [ useArtifactAction() ],
-  }),
+  }), u, u, 0, u, "", ev => drawEv(ev), oncePerTurnArtifact()),
   [ "Vulnerable to Cold Iron", ev => {
   // You get +2 Recruit for each [Tech] Hero you have.
     addRecruitEvent(ev, 2 * yourHeroes().count(Color.TECH));
@@ -2346,8 +2340,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       attachCardEv(ev, ev.source, ev.source.mastermind, 'WEAPON');
     }
   }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'BRIDGE', 3), {
-    isArtifact: true,
-    cardActions: [ useArtifactAction() ],
+    ...thrownArtifact,
   }),
   [ "Seize Bifrost, The Rainbow Bridge", ev => {
   // Reveal the top card of the Villain Deck. If it's a Villain, that Villain enters the Bridge or Streets, if one of those spaces is empty.

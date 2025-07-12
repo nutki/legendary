@@ -1667,7 +1667,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // <b>Artifact -</b>
   // Once per turn, you get +1 Attack.
   // COST: 3
-    c1: makeHeroCard("Drax the Destroyer", "Knives of the Hunter", 3, u, u, Color.STRENGTH, "Guardians of the Galaxy", "", ev => addAttackEvent(ev, 1), { isArtifact: true, cardActions: [ useArtifactAction() ] }),
+    c1: makeHeroCard("Drax the Destroyer", "Knives of the Hunter", 3, u, u, Color.STRENGTH, "Guardians of the Galaxy", "", ev => addAttackEvent(ev, 1), oncePerTurnArtifact()),
   // RECRUIT: 2
   // Look at the top card of your deck. Discard it or put it back.
   // {POWER Instinct} You may KO the card you discarded this way.
@@ -1720,10 +1720,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // COST: 8
     ra: makeHeroCard("Gamora", "Godslayer Blade", 8, u, u, Color.COVERT, "Guardians of the Galaxy", "", [
       ev => gainShardEv(ev, 2),
-      ev => playerState.shard.size >= 5 && repeat(5, () => { spendShardEv(ev); addAttackEvent(ev, 2); }) ], { isArtifact: true, cardActions: [
-        useArtifactAction(),
-        useArtifactAction(1, 5),
-      ] }),
+      ev => playerState.shard.size >= 5 && repeat(5, () => { spendShardEv(ev); addAttackEvent(ev, 2); }) ], oncePerTurnArtifact([0, 5])),
   },
   {
     name: "Groot",
@@ -1796,22 +1793,22 @@ addHeroTemplates("Guardians of the Galaxy", [
   // Once per turn, gain a Shard.
   // COST: 4
   // GUN: 1
-    c1: makeHeroCard("Star-Lord", "Element Guns", 4, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev), { isArtifact: true, cardActions: [ useArtifactAction() ]  }),
+    c1: makeHeroCard("Star-Lord", "Element Guns", 4, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev), oncePerTurnArtifact()),
   // RECRUIT: 2
   // Choose an <b>Artifact</b> any player controls with a "once per turn" ability. Play a copy of one of those abilities.
   // COST: 4
     c2: makeHeroCard("Star-Lord", "Legendary Outlaw", 4, 2, u, Color.COVERT, "Guardians of the Galaxy", "D", ev => {
-      selectCardEv(ev, "Choose an Artifact", gameState.players.map(p => p.artifact.deck).merge(), c => playCardEffects(ev, c));
+      selectCardEv(ev, "Choose an Artifact", gameState.players.flatMap(p => p.artifact.deck).limit(c => c.isOncePerTurnArtifact), c => playCardEffects(ev, c));
     }),
   // <b>Artifact -</b>
   // Once per turn, draw a card.
   // COST: 6
-    uc: makeHeroCard("Star-Lord", "Implanted Memory Chip", 6, u, u, Color.TECH, "Guardians of the Galaxy", "", ev => drawEv(ev), { isArtifact: true, cardActions: [ useArtifactAction() ]  }),
+    uc: makeHeroCard("Star-Lord", "Implanted Memory Chip", 6, u, u, Color.TECH, "Guardians of the Galaxy", "", ev => drawEv(ev), oncePerTurnArtifact()),
   // <b>Artifact -</b>
   // Once per turn, gain a Shard for each <b>Artifact</b> you control.
   // COST: 8
   // GUN: 1
-    ra: makeHeroCard("Star-Lord", "Sentient Starship", 8, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev, playerState.artifact.size), { isArtifact: true, cardActions: [ useArtifactAction() ]  }),
+    ra: makeHeroCard("Star-Lord", "Sentient Starship", 8, u, u, Color.RANGED, "Guardians of the Galaxy", "G", ev => gainShardEv(ev, playerState.artifact.size), oncePerTurnArtifact()),
   },
 ]);
 addHeroTemplates("Fear Itself", [

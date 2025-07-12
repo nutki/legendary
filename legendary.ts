@@ -120,6 +120,7 @@ interface Card {
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   xTremeAttack?: boolean
   isArtifact?: boolean
+  isOncePerTurnArtifact?: boolean
   artifactEffects?: ((ev: Ev) => void)[]
   throwCond?: (c: Card) => boolean;
   gainable?: boolean
@@ -235,6 +236,7 @@ interface HeroCardAbillities {
   wallcrawl?: boolean
   cardActions?: ((c: Card, ev: Ev) => Ev)[]
   isArtifact?: boolean
+  isOncePerTurnArtifact?: boolean
   throwCond?: (c: Card) => boolean;
   sizeChanging?: number
   uSizeChanging?: { color: number, amount: number }

@@ -164,6 +164,13 @@ function playArtifact(ev: Ev) {
     moveCardEv(ev, ev.source, playerState.artifact);
   }
 }
+function oncePerTurnArtifact(shardCosts: number[] = [0]) {
+  return {
+    isArtifact: true,
+    isOncePerTurnArtifact: true,
+    cardActions: shardCosts.map((shardCost, i) => useArtifactAction(i, shardCost)),
+  }
+}
 
 function useShardActionEv(ev: Ev) {
   return new Ev(ev, 'USESHARD', {
