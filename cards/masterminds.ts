@@ -2490,7 +2490,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
     addTurnSet('fightCost', c => c === ev.source.mastermind, (c, v) => ({ ...v, recruit: v.recruit + v.attack + v.either, attack: 0, either: 0 }));
   } ],
 ], {
-  varDefense: c => c.printedAttack + (c.epic ? 2 : 1) + cityVillains().count(c => c.attached('SHARD').size > 0),
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) + cityVillains().count(c => c.attached('SHARD').size > 0),
 }),
 // EPICNAME: Grandmaster
 // Evil adds +2 to its final total in every {CONTEST OF CHAMPIONS} caused by any card.
