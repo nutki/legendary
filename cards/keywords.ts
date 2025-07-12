@@ -410,7 +410,11 @@ function ultimateAbominationVarDefense(c: Card) {
 // * This lets you get a different card instead, save a crucial Phasing card for the next turn, or set up a combo that cares about the top card of your deck.
 // * Swapping cards this way isn't "playing a card" or "drawing a card," so it doesn't count for other abilities that trigger on those things.
 function phasingActionEv(c: Card, ev: Ev) {
-  return new Ev(ev, 'EFFECT', { what: c, desc: 'Phase', func: ev => swapCardsEv(ev, ev.what, playerState.deck), cost: { cond: c => c.location === playerState.hand } });
+  return new Ev(ev, 'EFFECT', { what: c, desc: 'Phase', func: ev => {
+    lookAtDeckEv(ev, 1, cards => cards.each(c => {
+      swapCardsEv(ev, ev.what, c);
+    }));
+  }, cost: { cond: c => c.location === playerState.hand } });
 }
 
 // <b>Fortify</b>
