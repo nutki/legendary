@@ -226,7 +226,7 @@ function setBackgroundForId(id: string, d: HTMLDivElement): void {
 
 function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: HTMLElement): void {
   const d = div('deck', { id: deck.id, 'data-player-id': deckPos.playerDeck ? "1" : undefined });
-  if (deck.cityPosition) setBackgroundForId(deck.id, d);
+  if (deck.cityPosition && !deck.isInactive) setBackgroundForId(deck.id, d);
   const playerNr = deckPos.playerDeck ? deck.id.slice(-1) : '';
   let topDiv = d;
   positionCard(d, deckPos);
@@ -239,7 +239,7 @@ function displayDeck(deck: Deck, deckPos: typeof mainDecks[0], cardsContainer: H
     ...turnState.cardsPlayed.filter(c => !playerState.artifact.has(v => v === c)).map(makeDisplayPlayAreaImg),
     ...deck.deck.filter(c => !turnState.cardsPlayed.has(c2 => c2.id === c.id)).map(c => makeDisplayCardImg(c)),
   ] : deckPos.w > 1 ? deck.deck.map(card => makeDisplayCardImg(card)) :
-  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), false, true, getCountHints(deck, deckPos.size === "small")) ] : [];
+  frontCard(deck) ? [ makeDisplayCardImg(frontCard(deck), deck.isInactive, true, getCountHints(deck, deckPos.size === "small")) ] : [];
   const n = cardDivs.size;
   cardDivs.forEach((cardDiv, i) => {
     cardsContainer.appendChild(cardDiv);
@@ -341,7 +341,8 @@ function displayDecks(ev?: Ev): void {
   for (let i = 0; i < list.length; i++) deckById[list[i].id] = list[i];
   const cardsContainer = document.getElementById("card-container");
   cardsContainer.innerHTML = '';
-  const cityDecks: DeckPos[] = list.filter(d => d.cityPosition && (!d.isInactive || d.size)).map(({id, cityPosition: [x, y]}) => ({
+  const hasAttached = (d: Deck) => d._attached && Object.values(d._attached).some(a => a.size > 0);
+  const cityDecks: DeckPos[] = list.filter(d => d.cityPosition && (!d.isInactive || d.size || hasAttached(d))).map(({id, cityPosition: [x, y]}) => ({
     id, x, y, popupid2: 'pop' + id,
   }));
   arrangeCityDecks(cityDecks);
