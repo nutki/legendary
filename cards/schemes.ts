@@ -2806,7 +2806,7 @@ makeSchemeCard("...Open Rifts to Future Timelines", { }, ev => {
     revealVillainDeckEv(ev, gameState.mastermind.attached('TWIST').size, (cards) => {
       // Play a Henchman you revealed, then play the Villain you revealed that is worth the most VP.
       selectCardEv(ev, "Choose a Henchman to play", cards.limit(isHenchman), c => villainDrawEv(ev, c));
-      selectCardEv(ev, "Choose a Villain to play", cards.limit(isVillain).highest(c => c.vp), c => villainDrawEv(ev, c));
+      cont(ev, () => selectCardEv(ev, "Choose a Villain to play", cards.limit(isVillain).highest(c => c.vp), c => villainDrawEv(ev, c)));
       // Shuffle the other set aside cards into the Villain Deck. (If the Villain Deck runs out during this, this doesn't end the game.)
     }, true);
   });
