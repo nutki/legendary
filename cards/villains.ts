@@ -5166,8 +5166,13 @@ addVillainTemplates("Black Panther", [
         woundEnemyEv(ev, ev.source);
       }, p));
     },
+    trigger: {
+      event: 'ESCAPE',
+      match: (ev, source) => ev.what === source,
+      before: ev => ev.source.attached('WOUND').each(c => attachCardEv(ev, c, ev.source, 'SAVED_WOUND')),
+    },
     escape: ev => {
-      const wounds = ev.source.attached('WOUND');
+      const wounds = ev.source.attached('SAVED_WOUND');
       distributeEvenlyEv(ev, c => `Choose a player to gain ${c.cardName}`, wounds, gameState.players, (c, p) => gainEv(ev, c, p));
     },
   })],
