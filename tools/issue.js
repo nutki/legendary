@@ -1,6 +1,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 function fetchIssueDescription(issueNumber) {
     const options = {
@@ -47,6 +48,19 @@ function fetchIssueDescription(issueNumber) {
 
                         fs.writeFileSync('version.js', versionFileContent, 'utf8');
                         console.log('version.js file has been created.');
+                        const versionLine = lines[jsonLineIdx - 2];
+                        const versionMatch = versionLine.match(/Version:\s*([^\s]+)/);
+                        if (versionMatch) {
+                            const version = versionMatch[1];
+                            try {
+                                execSync(`git checkout ${version}`, { stdio: 'inherit' });
+                                console.log(`Checked out git version: ${version}`);
+                            } catch (err) {
+                                console.error(`Failed to checkout version ${version}:`, err.message);
+                            }
+                        } else {
+                            console.log('No version information found in the debug info line.');
+                        }
                     } else {
                         console.log('No debug information found in the issue description.');
                         console.log('Full description:', description);
