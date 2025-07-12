@@ -5957,7 +5957,7 @@ addHeroTemplates("Messiah Complex", [
 // {WHEN RECRUITED} {CLONE}
 // {POWER Tech} {INVESTIGATE} the Sidekick Stack for a card and put it in your discard pile.
   c1: makeHeroCard("Stepford Cuckoos", "Find Mutants with Cerebro", 2, u, 1, Color.TECH, "X-Men", "D",
-    ev => superPower(Color.TECH) && investigateEv(ev, () => true, gameState.sidekick),
+    ev => superPower(Color.TECH) && investigateEv(ev, () => true, gameState.sidekick, c => moveCardEv(ev, c, playerState.discard)),
     { whenRecruited: ev => cloneHeroEv(ev) }),
 // {WHEN RECRUITED} {CLONE}
 // {TACTICAL FORMATION 22}: You get +1 Attack.
