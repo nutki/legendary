@@ -3136,6 +3136,7 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
   // You may KO one of your Heroes. Choose a Henchman from any Victory Pile to enter the city.
     selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
     selectCardEv(ev, "Choose a Henchman to enter", gameState.players.flatMap(p => p.victory.deck).limit(isHenchman), c => enterCityEv(ev, c));
+    ev.source.mastermind.commonTacticEffect(ev);
   } ],
 ], {
   varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * gameState.city.size,
