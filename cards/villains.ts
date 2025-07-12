@@ -4079,7 +4079,7 @@ addVillainTemplates("New Mutants", [
     ambush: ev => {
       eachPlayer(p => wakingNightmareEv(ev, p));
       cont(ev, () => {
-        const cards = pastEvents('DISCARD').limit(e => e.getSource() === ev.source).map(e => e.what);
+        const cards = pastEvents('DISCARD').limit(e => e.getSource() === ev.source).map(e => e.what).highest(c => -c.cost);
         selectCardEv(ev, "Choose a hero", cards, c => attachCardEv(ev, c, ev.source, "DEMON_BEAR_CAPTURE"));
       });
     },
