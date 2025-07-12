@@ -5193,7 +5193,7 @@ addVillainTemplates("Black Panther", [
 // ATTACK: 4+
 // VP: 3
   [ 2, makeVillainCard("Enemies of Wakanda", "Tetu", 4, 3, {
-    ambush: ev => hqHeroes().limit(c => !isColor(empoweringVillainGroup(ev.source.villainGroup))(c)).each(c => moveCardEv(ev, c, gameState.herodeck, true)),
+    ambush: ev => selectCardEv(ev, "Choose a Hero to put on the bottom of the Hero Deck", hqHeroes().limit(c => !isColor(empoweringVillainGroup(ev.source.villainGroup))(c)), c => moveCardEv(ev, c, gameState.herodeck, true)),
     fight: sameEffect,
     varDefense: stableEmpowerVarDefense.get(Color.RANGED),
   })],
