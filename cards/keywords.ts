@@ -1194,13 +1194,13 @@ function demonicBargain(ev: Ev, effect: ((ev: Ev) => void) | [(ev: Ev) => void, 
   withPlayerDeckTopEv(ev, c => {
     discardEv(ev, c);
     c.cost > 0 && gainWoundEv(ev, p);
+    cont(ev, () => {
+      const gained = pastEvents('GAIN').has(ev2 => ev2.parent === ev);
+      textLog.log(`Demonic Bargain: ${!gained ? 'resisted' : 'corrupted'}`);
+      const e = effect instanceof Array ? effect[gained ? 1 : 0] : effect;
+      e(ev);
+    });
   }, p);
-  cont(ev, () => {
-    const gained = pastEvents('GAIN').has(ev2 => ev2.parent === ev);
-    textLog.log(`Demonic Bargain: ${!gained ? 'resisted' : 'corrupted'}`);
-    const e = effect instanceof Array ? effect[gained ? 1 : 0] : effect;
-    e(ev);
-  });
 }
 function enterAstralPlaneEv(ev: Ev, c: Card) {
   moveCardEv(ev, c, gameState.astralPlane);
