@@ -2517,7 +2517,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   } ],
   [ "Galactic Marathon", ev => {
   // {CONTEST OF CHAMPIONS}[Instinct], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must discard down to four cards. If you win, draw two cards. If the Grandmaster wins, he gains 2 Shards.
-    contestOfChampionsEv(ev, Color.COVERT, p => {
+    contestOfChampionsEv(ev, Color.INSTINCT, p => {
       p === playerState && drawEv(ev, 2);
     }, p => {
       isOtherPlayerVM(p) && pickDiscardEv(ev, -4, p);
@@ -2527,7 +2527,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   } ],
   [ "Cheat Against Thanos", ev => {
   // {CONTEST OF CHAMPIONS}[Ranged], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must KO half the Bystanders (round up) from their Victory Pile. If you win, rescue three Bystanders. If the Grandmaster Wins, he gains 3 Shards.
-    contestOfChampionsEv(ev, Color.COVERT, p => {
+    contestOfChampionsEv(ev, Color.RANGED, p => {
       p === playerState && rescueEv(ev, 3);
     }, p => {
       isOtherPlayerVM(p) && selectObjectsEv(ev, "Choose Bystanders to KO", Math.ceil(p.victory.count(isBystander)/2), p.victory.limit(isBystander), c => KOEv(ev, c), p);
@@ -2537,7 +2537,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   } ],
   [ "Match Offenders vs. Defenders", ev => {
   // {CONTEST OF CHAMPIONS}[Strength], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must gain a 0-cost card from the KO pile. If you win, reveal the top four cards of your deck, KO any number of them, and put the rest back in any order. If the Grandmaster wins, he gains 4 Shards.
-    contestOfChampionsEv(ev, Color.COVERT, p => {
+    contestOfChampionsEv(ev, Color.STRENGTH, p => {
       p === playerState &&
         revealPlayerDeckEv(ev, 4, cards => selectObjectsAnyEv(ev, "Choose cards to KO", cards, c => KOEv(ev, c)));
     }, p => {
