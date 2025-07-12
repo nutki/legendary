@@ -3008,17 +3008,17 @@ addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
   [ "Don’t Fall Asleep", ev => {
   // Each other player discards two cards with Recruit icons. Nightmare enters the <b>Astral Plane</b>.
     eachOtherPlayerVM(p => selectObjectsEv(ev, "Choose cards to discard", 2, p.hand.limit(hasRecruitIcon), c => discardEv(ev, c), p));
-    enterAstralPlaneEv(ev, ev.source);
+    enterAstralPlaneEv(ev, ev.source.mastermind);
   } ],
   [ "Dream Weaver", ev => {
   // For each of your [Ranged] Heroes, rescue a Bystander. Nightmare enters the <b>Astral Plane</b>.
     rescueEv(ev, yourHeroes().count(isColor(Color.RANGED)));
-    enterAstralPlaneEv(ev, ev.source);
+    enterAstralPlaneEv(ev, ev.source.mastermind);
   } ],
   [ "Night Terrors", ev => {
   // Each other player reveals a [Covert] Hero or gains a Wound. Nightmare enters the <b>Astral Plane</b>.
     eachOtherPlayerVM(p => revealOrEv(ev, Color.COVERT, () => gainWoundEv(ev, p), p));
-    enterAstralPlaneEv(ev, ev.source);
+    enterAstralPlaneEv(ev, ev.source.mastermind);
   } ],
   [ "Deadly Waking Nightmares", ev => {
   // Each other player KOs one of their non-grey Heroes. Each player who KO'd a Hero this way draws a card. Nightmare enters the <b>Astral Plane</b>.
@@ -3026,7 +3026,7 @@ addTemplates("MASTERMINDS", "Doctor Strange and the Shadows of Nightmare", [
       KOEv(ev, c);
       drawEv(ev, 1, p);
     }, p));
-    enterAstralPlaneEv(ev, ev.source);
+    enterAstralPlaneEv(ev, ev.source.mastermind);
   } ],
 ], {
   escape: ev => {
