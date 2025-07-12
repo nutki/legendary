@@ -1154,6 +1154,7 @@ interface Game {
   outwitAmount?: () => number
   reversePlayerOrder?: boolean // TODO revese player order
   destroyedCitySpaces: Deck[]
+  destroyedHQSpaces: Deck[]
   actionFilters: ((ev: Ev) => boolean)[];
   contestOfCampionsEvilBonus?: number;
   thronesFavorHolder: Player | Card | undefined;
@@ -1569,6 +1570,7 @@ gameState = {
   turnNum: 0,
   strikeCount: 0,
   destroyedCitySpaces: [],
+  destroyedHQSpaces: [],
   actionFilters: [
     // Can't recruit haunted heroes
     ev => !(ev.type === 'RECRUIT' && ev.where && ev.where.attached('HAUNTED').size > 0),
@@ -1801,6 +1803,7 @@ function destroyCity(space: Deck, initial = false) {
 }
 function destroyHQ(ev: Ev, space: Deck) {
   space.attached('HAUNTED').each(c => returnFromHauntEv(ev, c));
+  gameState.destroyedHQSpaces.push(space);
   gameState.hq = gameState.hq.filter(d => d !== space);
   gameState.city.forEach(d => {
     if (d.above === space) d.above = undefined;

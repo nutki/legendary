@@ -2593,7 +2593,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   cosmicThreat: c => c.cost >= (epic ? 6 : 5),
   cardActions: [ cosmicThreatAction ],
   init: () => {
-    const amount = () => [...gameState.hq, ...gameState.city, ...gameState.destroyedCitySpaces].count(c => c.attached('POCKET').size > 0);
+    const amount = () => [...gameState.hq, ...gameState.city, ...gameState.destroyedCitySpaces, ...gameState.destroyedHQSpaces].count(c => c.attached('POCKET').size > 0);
     addStatSet('recruitCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: (v.attack || 0) + amount()}));
     addStatSet('fightCost', c => c.location.attached('POCKET').size > 0, (c, v) => ({ ...v, attack: (v.attack || 0) + amount()}));
   }
