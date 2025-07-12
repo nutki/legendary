@@ -2465,7 +2465,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   villainify("Cosmic Wraith", ev.what, epic ? 6 : 4, epic ? 6 : 4);
   enterCityEv(ev, ev.what);
 // Then put a Shard on each Villain in the city.
-  cityVillains().each(c => attachShardEv(ev, c));
+  cont(ev, () => cityVillains().each(c => attachShardEv(ev, c)));
 }, [
   [ "Dark Side of Adam Warlock", ev => {
   // Magus gains a Shard. Then Magus takes a Shard from each other player that does not reveal a [Covert] Hero.
