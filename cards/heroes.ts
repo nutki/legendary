@@ -6506,7 +6506,7 @@ addHeroTemplates("Black Panther", [
 // {TEAMPOWER Heroes of Wakanda} You may KO a S.H.I.E.L.D. Hero or Wound from your hand or discard pile to get +2 Attack.
 // GUN: 1
   ra: makeHeroCard("General Okoye", "Direct the Agents of Wakanda", 7, u, 4, Color.COVERT, "Heroes of Wakanda", "GD",
-    ev => superPower("Heroes of Wakanda") && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isShieldOfficer(c)), c => {
+    ev => superPower("Heroes of Wakanda") && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isTeam('S.H.I.E.L.D.')(c)), c => {
       KOEv(ev, c);
       addAttackEvent(ev, 2);
     })),
