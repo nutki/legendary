@@ -3482,7 +3482,7 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
     });
     // Each other player discards a [Instinct] or [Covert] Hero or discards down to 3 cards.
     eachOtherPlayerVM(p => {
-      selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.COVERT), c => discardEv(ev, c), () => pickDiscardEv(ev, -3, p), p);
+      selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.COVERT), c => discardEv(ev, c), () => pickDiscardEv(ev, -3, p), p);
     });
   } ],
   [ "Demonic Essence of Ghost Rider", ev => {
@@ -3504,7 +3504,7 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
     });
     // Each other player discards a [Covert] or [Ranged] Hero or gains a Wound.
     eachOtherPlayerVM(p => {
-      selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT | Color.RANGED), c => discardEv(ev, c), () => gainWoundEv(ev, p), p);
+      selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT | Color.RANGED), c => discardEv(ev, c), () => gainWoundEv(ev, p), p);
     });
   } ],
   [ "Imprison in the Soul Crystal", ev => {
