@@ -6786,7 +6786,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
     makeHeroCard("Wanda", "Hold On", 3, u, 1, Color.COVERT, "Avengers", "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2)),
     makeHeroCard("Vision", "Let Go", 3, 2, u, Color.RANGED, "Avengers", "D", ev => sacrificeEv(ev, Color.RANGED, ev => {
       drawEv(ev, 3);
-      selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c));
+      cont(ev, () => selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c)));
     }), { cardActions: [ phasingActionEv ] }),
   ),
 // DIVIDED: Rage
