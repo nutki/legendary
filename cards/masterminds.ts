@@ -2732,7 +2732,7 @@ addTemplates("MASTERMINDS", "Annihilation", [
 // FLAVOR: He's got a really negative attitude.
   [ "Pull Into the Negative Zone", ev => {
   // The cost of each hero currently in the HQ gets -2 this turn.
-    addTurnSet('recruitCost', c => isHero(c) && c.location.isHQ, (c, v) => ({ ...v, recruit: v.recruit - 2 }));
+    hqHeroes().each(c => addTurnMod('cost', is(c), -2));
   } ],
 ], epic => ({
   setupParamMod: epic ? extraVillainMod : ((p, v) => p === 'solo_henchmen' ? Math.max(6, v) : v),
