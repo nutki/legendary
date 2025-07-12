@@ -2444,7 +2444,7 @@ addTemplates("MASTERMINDS", "New Mutants", [
   } ],
   [ "Contempt for Weakness", ev => {
   // Put a 0-cost Hero from the KO pile on top of each other player's deck.
-    eachOtherPlayerVM(p => selectCardEv(ev, `Choose a Hero for ${p.name} to gain`, gameState.ko.deck, c => gainEv(ev, c, p)))
+    eachOtherPlayerVM(p => selectCardEv(ev, `Choose a Hero for ${p.name} to gain`, gameState.ko.limit(isHero).limit(c => c.cost === 0), c => gainToDeckEv(ev, c, p)))
   } ],
 ], {
   varDefense: c => c.printedDefense + yourHeroes().count(Color.GRAY) * (c.epic ? 2 : 1),
