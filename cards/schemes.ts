@@ -2716,8 +2716,8 @@ makeSchemeCard("Drain Mutants' Powers to...", { twists: 11 }, ev => {
   vailedSchemeProgressEv(ev);
 }, [], () => {
   gameState.specialActions = ev => gameState.scheme.attachedFaceDownDeck('KIDNAPPED').deck.map(c =>
-    [new Ev(ev, 'EFFECT', { cost: { recruit: 3 }, what: c, func: ev => gainEv(ev, c) }),
-     new Ev(ev, 'EFFECT', { cost: { attack: 3 }, what: c, func: ev => gainEv(ev, c) })]
+    [new Ev(ev, 'EFFECT', { desc: "Pay 3 recruit", cost: { recruit: 3 }, what: c, func: ev => gainEv(ev, c) }),
+     new Ev(ev, 'EFFECT', { desc: "Pay 3 attack", cost: { attack: 3 }, what: c, func: ev => gainEv(ev, c) })]
   ).merge();
   setSchemeTarget(7);
 }),
