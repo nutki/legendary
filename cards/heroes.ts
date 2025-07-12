@@ -6813,8 +6813,9 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
   ),
 // {PHASING}
 // {POWER Ranged} Reveal the top five cards of the Hero Deck. You may put one of them with an odd-numbered cost into your hand. You may KO one of them. Put the rest back in any order.
-  ra: makeHeroCard("Wanda & Vision", "Odd Couple", 7, u, 4, Color.RANGED, "Avengers", "", ev => superPower(Color.RANGED) && revealHeroDeckEv(ev, 5, cards => {
-    selectCardEv(ev, "Choose a card to put in your hand", cards.limit(isCostOdd), c => moveCardEv(ev, c, playerState.hand));
+  ra: makeHeroCard("Wanda & Vision", "Odd Couple", 7, u, 4, Color.COVERT, "Avengers", "", ev => superPower(Color.RANGED) && revealHeroDeckEv(ev, 5, cards => {
+    selectCardOptEv(ev, "Choose a card to put in your hand", cards.limit(isCostOdd), c => moveCardEv(ev, c, playerState.hand));
+    cont(ev, () => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)));
   }, false), { cardActions: [ phasingActionEv ] }),
 },
 {
