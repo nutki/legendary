@@ -1133,11 +1133,11 @@ function shatterEv(ev: Ev, c: Card) {
   }
 }
 function isPreying(c: Card) {
-  return gameState.players.some(p => p.playArea.attachedDeck('PREYING') === c.location);
+  return gameState.players.some(p => p.deck.attachedDeck('PREYING') === c.location);
 }
 function finishThePreyEv(ev: Ev, card: Card) {
   eachPlayer(p => {
-    if(card.location === p.playArea.attachedDeck('PREYING')) {
+    if(card.location === p.deck.attachedDeck('PREYING')) {
       pushEv(ev, "EFFECT", { source: card, who: p, func: card.finishThePrey });
       if (isMastermind(card)) moveCardEv(ev, card, gameState.mastermind);
       else enterSewersEv(ev, card, true);
@@ -1146,7 +1146,7 @@ function finishThePreyEv(ev: Ev, card: Card) {
 }
 function preyEv(ev: Ev, handScore: (p: Player) => number, immediateEffect?: (p: Player) => void, card: Card = ev.source) {
   choosePlayerLimitedEv(ev, p => {
-    attachCardEv(ev, card, p.playArea, 'PREYING');
+    attachCardEv(ev, card, p.deck, 'PREYING');
     const setupTrigger = () => {
       addTurnTrigger('CLEANUP', u, ev => finishThePreyEv(ev, card));
       if (isMastermind(card)) addTurnTrigger('DEFEAT', ev => ev.what === card, ev => {

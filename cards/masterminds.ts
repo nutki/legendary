@@ -2809,7 +2809,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   } ],
   [ "Prey on the Weak", ev => {
   // Each Villain that's <b>Preying</b> on a player <b>Finishes the Prey</b>. After those have all entered the city, then each Villain in the city with a <b>"Prey"</b> Ambush does that Ambush, starting from the Sewers.
-    eachPlayer(p => p.playArea.attachedDeck("PREYING").each(c => finishThePreyEv(ev, c)));
+    eachPlayer(p => p.deck.attachedDeck("PREYING").each(c => finishThePreyEv(ev, c)));
     cont(ev, () => cityVillains().reverse().limit(c => !!c.finishThePrey).each(c => {
       pushEffects(ev, c, 'ambush', c.ambush);
     }));
