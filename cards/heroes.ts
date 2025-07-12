@@ -6288,7 +6288,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
   ),
 // If you drew at least two cards this turn, you may KO a card from your hand or discard pile.
 // GUN: 1
-  u2: makeHeroCard("Gamora", "Stolen Necroblaster", 6, u, 3, Color.RANGED, "Guardians of the Galaxy", "G", ev => pastEvents('DRAW').count(ev => ev.who === playerState) >= 2 && selectCardAndKOEv(ev, handOrDiscard())),
+  u2: makeHeroCard("Gamora", "Stolen Necroblaster", 6, u, 3, Color.RANGED, "Guardians of the Galaxy", "G", ev => pastEvents('DRAW').count(ev => ev.who === playerState) >= 2 && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c))),
 // If you drew at least two cards this turn, you get +2 Attack.
   ra: makeHeroCard("Gamora", "Guardians Escape", 7, u, 5, Color.TECH, "Guardians of the Galaxy", "FD", ev => pastEvents('DRAW').count(ev => ev.who === playerState) >= 2 && addAttackEvent(ev, 2)),
 },
