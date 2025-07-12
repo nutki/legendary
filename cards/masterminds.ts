@@ -2372,7 +2372,7 @@ addTemplates("MASTERMINDS", "New Mutants", [
 // {SUNLIGHT} Each player KOs two non-grey Heroes from their discard pile. {MOONLIGHT} Each player has two {WAKING NIGHTMARE}. KO Heroes discarded this way.
   eachPlayer(p => {
     repeat(ev.source.epic ? 2 : 1, () => {
-      sunlightPower() && selectCardAndKOEv(ev, p.discard.deck, p);
+      sunlightPower() && selectCardAndKOEv(ev, p.discard.limit(isNonGrayHero), p);
       moonlightPower() && wakingNightmareEv(ev, p);
     });
   })
