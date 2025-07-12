@@ -2917,8 +2917,10 @@ makeSchemeCard("Cursed Pages of the Darkhold Tome", { twists: 11, vd_villain: [ 
   // Twist:  Put this Cursed Page next to the Mastermind, plus a Cursed Page from any player’s control or discard pile or the KO pile.
   // For this turn only, the first time you fight a Villain or Mastermind, put one of the Mastermind’s Cursed Pages into your discard pile.
   attachCardEv(ev, ev.twist, gameState.mastermind, 'CURSED_PAGE');
-  const allCards = [...gameState.players.map(p => p.artifact), ...gameState.players.map(p => p.discard), gameState.ko].merge().limit(isTwist);
-  selectCardOptEv(ev, "Choose a Cursed Page to attach", allCards, c => attachCardEv(ev, c, gameState.mastermind, 'CURSED_PAGE'));
+  cont(ev, () => {
+    const allCards = [...gameState.players.map(p => p.artifact), ...gameState.players.map(p => p.discard), gameState.ko].flatMap(d => d.limit(isTwist));
+    selectCardOptEv(ev, "Choose a Cursed Page to attach", allCards, c => attachCardEv(ev, c, gameState.mastermind, 'CURSED_PAGE'));
+  });
   let done = false;
   addTurnTrigger('FIGHT', ev => isEnemy(ev.what), ev => {
     done || gameState.mastermind.attached('CURSED_PAGE').withFirst(c => moveCardEv(ev, c, playerState.discard));
