@@ -2421,9 +2421,9 @@ addTemplates("MASTERMINDS", "New Mutants", [
   attachCardEv(ev, ev.what, gameState.mastermind, "STRIKE");
   cont(ev, () => {
     const amount = gameState.mastermind.attached('STRIKE').size + (ev.source.epic ? 1 : 0);
-    eachPlayer(p => repeat(amount, () => {
+    eachPlayer(p => repeat(amount, () => cont(ev, () => {
       wakingNightmareEv(ev, p);
-    }));
+    })));
   });
 }, [
   [ "Tempting Bargain", ev => {
