@@ -6808,7 +6808,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // {PHASING}
 // {POWER Tech} You get +2 Attack.
   u2: makeDividedHeroCard(
-    makeHeroCard("Wanda", "Magic", 5, u, 1, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, pastEvents('PLAY').count(ev => isCostOdd(ev.what)))),
+    makeHeroCard("Wanda", "Magic", 5, u, 1, Color.RANGED, "Avengers", "", ev => addAttackEvent(ev, pastEvents('PLAY').count(e => e.what !== ev.source && isCostOdd(e.what)))),
     makeHeroCard("Vision", "Science", 5, u, 2, Color.TECH, "Avengers", "D", ev => superPower(Color.TECH) && addAttackEvent(ev, 2), { cardActions: [ phasingActionEv ] }),
   ),
 // {PHASING}
