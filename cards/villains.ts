@@ -4533,7 +4533,7 @@ addVillainTemplates("Annihilation", [
   })],
 // {BRIDGE CONQUEROR 3}
 // AMBUSH: If the Bridge is empty, move a Villain to the Bridge.
-// FIGHT: Send a [Strength] or [Ranged] Hero you played this turn as a <b>Man or Woman Out of Time</b>.
+// FIGHT: Send a [Strength] or [Instinct] Hero you played this turn as a <b>Man or Woman Out of Time</b>.
 // ATTACK: 4+
 // VP: 4
   [ 2, makeVillainCard("Timelines of Kang", "Pharaoh Rama-Tut", 4, 4, {
@@ -4541,7 +4541,7 @@ addVillainTemplates("Annihilation", [
       withCity('BRIDGE', bridge => bridge.size || selectCardEv(ev, "Choose a villain", villains(), c => moveCardEv(ev, c, bridge)));
     },
     fight: ev => {
-      selectCardEv(ev, "Choose an out of time hero", playerState.playArea.limit(isHero).limit(Color.STRENGTH | Color.RANGED), c => outOfTimeEv(ev, c));
+      selectCardEv(ev, "Choose an out of time hero", playerState.playArea.limit(isHero).limit(Color.STRENGTH | Color.INSTINCT), c => outOfTimeEv(ev, c));
     },
     ...conquerorAbility(3, 'BRIDGE'),
   })],
