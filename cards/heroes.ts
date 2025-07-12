@@ -6913,7 +6913,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // [Tech] {SACRIFICE}: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cards that cost 0 into your discard pile.
 // Shuffle the rest into a new deck.
   ra: makeHeroCard("Bruce Banner", "Reverse The Snap", 7, u, 5, Color.TECH, "Avengers", "", ev => sacrificeEv(ev, Color.TECH, () => {
-    selectCardOptEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero), c => gainEv(ev, c));
+    selectCardOptEv(ev, "Choose a Hero to gain", gameState.ko.limit(isHero).limit(isNot(ev.source)), c => gainEv(ev, c));
     cont(ev, () => {
       playerState.deck.limit(c => c.cost === 0).each(c => moveCardEv(ev, c, playerState.discard));
       playerState.discard.limit(c => c.cost > 0).each(c => moveCardEv(ev, c, playerState.deck));
