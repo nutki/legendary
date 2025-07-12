@@ -2498,11 +2498,11 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
 // Reveal the top card of the Hero Deck then put it back. {CONTEST OF CHAMPIONS} for that card's color(s).
 // Each player that loses gains a Wound. If the Grandmaster wins, he gains a Shard.
 // Each player that loses gains a Wound. If the Grandmaster wins, he gains 2 Shards.
-  gameState.herodeck.withTop(c => contestOfChampionsEv(ev, c.color, () => {}, p => {
+  revealHeroDeckEv(ev, 1, cards => cards.each(c => contestOfChampionsEv(ev, c.color, () => {}, p => {
     gainWoundEv(ev, p);
   }, () => {
     attachShardEv(ev, ev.source, ev.source.epic ? 2 : 1);
-  }))
+  })));
 }, [
   [ "Deal With Death", ev => {
   // {CONTEST OF CHAMPIONS}[Covert], with Evil selecting from 4 cards from the Hero Deck. Each other player that loses must KO a non-grey Hero from their discard pile. If you win, you may gain a non-grey Hero from the KO pile. If the Grandmaster wins, he gains a Shard.
