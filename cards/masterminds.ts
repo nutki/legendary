@@ -2882,6 +2882,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   makeTacticsCard("Nimrod, Future Sentinel", { printedDefense: 6, fight: ev => {
   // Rescue three Bystanders. KO one of your Heroes. Nimrod ascends to become an additional Mastermind whose only abilities are:
     rescueEv(ev, 3);
+    selectCardAndKOEv(ev, yourHeroes());
     addStatSet('fight', c => c === ev.source, () => () => {});
     ascendToMastermind(ev, ev => chooseOptionEv(ev, "Choose an icon", [{l: "Recruit", v: hasRecruitIcon}, {l: "Attack", v: hasAttackIcon}], icon => {
       eachPlayer(p => selectCardEv(ev, "Choose a card to discard", p.hand.limit(icon), c => discardEv(ev, c), p));
@@ -2893,6 +2894,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   makeTacticsCard("Machine Man, Sentinel Supreme", { printedDefense: 7, fight: ev => {
   // Rescue three Bystanders. KO one of your Heroes. Machine Man ascends to become an additional Mastermind whose only ability is:
     rescueEv(ev, 3);
+    selectCardAndKOEv(ev, yourHeroes());
     addStatSet('fight', c => c === ev.source, () => () => {});
     ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)));
   }}),
