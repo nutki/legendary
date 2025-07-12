@@ -4728,7 +4728,7 @@ addVillainTemplates("Messiah Complex", [
 // VP: 4
   [ 2, makeVillainCard("Acolytes", "Unuscione", 8, 4, {
     ambush: ev => captureEv(ev, ev.source),
-    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { cost: { recruit: 2 }, func: ev => shatterEv(ev, ev.source)})],
+    cardActions: [(c, ev) => new Ev(ev, "EFFECT", { desc: 'Shatter', cost: { recruit: 2 }, what: c, func: ev => shatterEv(ev, c)})],
   })],
 // You may {SHATTER} Tempo any number of times. Each time you do this, draw one fewer card when you draw a new hand of cards at the end of this turn.
 // FIGHT: Draw two cards.
