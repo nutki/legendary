@@ -5391,7 +5391,7 @@ addVillainTemplates("Marvel Studios The Infinity Saga", [
 // ATTACK: 4+
 // VP: 3
   [ 1, makeVillainCard("Children of Thanos", "Outrider Dropship", 4, 3, {
-    ambush: ev => selectCardEv(ev, "Choose a Villain to enter the city", gameState.players.flatMap(p => p.victory.limit(c => [2, 3, 4].includes(c.vp))), c => enterCityEv(ev, c)),
+    ambush: ev => selectCardEv(ev, "Choose a Villain to enter the city", gameState.players.flatMap(p => p.victory.limit(isVillain).limit(c => [2, 3, 4].includes(c.vp))), c => enterCityEv(ev, c)),
     varDefense: endgameVarDefense(2),
   })],
 ]},
