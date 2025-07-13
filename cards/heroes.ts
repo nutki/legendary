@@ -7711,7 +7711,7 @@ addHeroTemplates("2099", [
 // You may send this {UNDERCOVER}.
 // {CYBER-MOD COVERT} Draw a card.
   c1: makeHeroCard("Spider-Man 2099", "Retractable Talons", 2, u, 1, Color.COVERT, "Spider Friends", "FD", [ ev => {
-    chooseMayEv(ev, "Choose a card to send Undercover", c => sendUndercoverEv(ev));
+    chooseMayEv(ev, "Send this card Undercover", c => sendUndercoverEv(ev));
   }, ev => cyberModEv(ev, Color.COVERT, 1, () => drawEv(ev)) ]),
 // {CYBER-MOD COVERT COVERT} Draw a card.
   c2: makeHeroCard("Spider-Man 2099", "Venomous Fangs", 3, u, 2, Color.COVERT, "Spider Friends", "FD", ev => cyberModEv(ev, Color.COVERT, 2, () => drawEv(ev))),

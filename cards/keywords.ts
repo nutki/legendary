@@ -918,6 +918,7 @@ function fightVillainAtLocationEachOtherPlayerTrigger(effect: (ev: Ev, p: Player
 }
 // S.H.I.E.L.D.
 function sendUndercoverEv(ev: Ev, c: Card = ev.source, p?: Player) {
+  if (!c.location) return;
   addStatSet("vp", c1 => c1 === c && owner(c1) && c1.location === owner(c1).victory, () => 1);
   moveCardEv(ev, c, (p || owner(c) || playerState).victory);
 }
