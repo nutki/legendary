@@ -3831,7 +3831,7 @@ makeTransformingMastermindCard(makeMastermindCard("Darren Cross", 8, 6, "Cross T
 // {USIZECHANGING TECH 1}[Tech]
 "Yellowjacket", 12, ev => {
 // Each player discards a [Instinct] Hero or Size-Changing Hero or gains a Wound. Yellowjacket {TRANSFORM}.
-  eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c => isColor(Color.INSTINCT)(c) || !hasNoSizeChanging(c)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(c => isColor(Color.INSTINCT)(c) || !hasNoSizeChanging(c)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   transformMastermindEv(ev);
 }, {
   uSizeChanging: { amount: 2, color: Color.TECH },
