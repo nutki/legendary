@@ -1822,6 +1822,9 @@ function HQCardsHighestCost(): Card[] {
 function villains(): Card[] {
   return fightableCards().limit(isVillain);
 }
+function enemies(): Card[] {
+  return fightableCards().limit(c => isEnemy(c));
+}
 function cityVillains(): Card[] {
   return CityCards().limit(isVillain);
 }

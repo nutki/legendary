@@ -1327,7 +1327,7 @@ function bloodFrenzyVarDefense(n: number = 1) {
 // * This means <b>"KO a Bystander that is captured by any Enemy or from the Escape Pile. If you can't, then this captures a Bystander instead."</b>
 // * If a player fights Lilith, and her Mastermind Tactic Hunts for Victims and captures a Bystander, the player doesn't immediately rescue that Bystander.
 function huntForVictimsEv(ev: Ev, hunter: Card = ev.source, whenKOed?: (c: Card) => void) {
-  selectCardOrEv(ev, "Choose a Victim", [...cityVillains().flatMap(c => c.captured.limit(isBystander)), ...gameState.escaped.limit(isBystander)], c => {
+  selectCardOrEv(ev, "Choose a Victim", [...enemies().flatMap(c => c.captured.limit(isBystander)), ...gameState.escaped.limit(isBystander)], c => {
     KOEv(ev, c);
     whenKOed && cont(ev, () => whenKOed(c));
   }, () => {
