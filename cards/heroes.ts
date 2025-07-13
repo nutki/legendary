@@ -7457,7 +7457,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // Reveal the top card of your deck. If that card has any "holes" printed inside any of its icons <b>(0, 4, 6, 8, or 9)</b>, draw it.
 // {POWER Instinct} You may KO the card you drew this way.
   u2: makeHeroCard("Freedom Fighters", "Veb", 2, u, 1, Color.INSTINCT, u, "D", ev => {
-    drawIfEv(ev, c => [0, 4, 6, 8, 9].has(v => [c.printedAttack, c.printedRecruit, c.printedDefense].has(v)), c => {
+    drawIfEv(ev, c => [0, 4, 6, 8, 9].has(v => [c.printedAttack, c.printedRecruit, c.printedDefense, c.printedCost, c.printedVP, c.printedPiercing].includes(v)), c => {
       superPower(Color.INSTINCT) && selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c));
     });
   }),
