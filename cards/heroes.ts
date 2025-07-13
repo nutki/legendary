@@ -7804,7 +7804,8 @@ addHeroTemplates("Weapon X", [
 // {BERSERK}
 // {POWER Strength} You may KO the card you Berserked.
   uc: makeHeroCard("Weapon H", "Slice and Smash", 5, u, 2, Color.STRENGTH, "Avengers", "FDA", ev => berserkEv(ev, 1, c => {
-    superPower(Color.STRENGTH) ? selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c)) : discardEv(ev, c);
+    discardEv(ev, c);
+    superPower(Color.STRENGTH) && selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c));
   })),
 // {WEAPON X SEQUENCE}
 // {POWER Strength} Using the Wound Deck, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, putting those discarded Wounds on the bottom of the Wound Deck.
