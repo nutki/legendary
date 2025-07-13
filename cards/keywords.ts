@@ -1383,13 +1383,13 @@ function whatIfEv(ev: Ev, effect: (c: Card) => void) {
     {l:'Covert', v:Color.COVERT},
     {l:'Tech', v:Color.TECH},
     {l:'Ranged', v:Color.RANGED}].filter(({v}) => playerState.deck.has(v));
-  const nameOptions = splitDivided(playerState.deck.deck).unique(c => c.heroName).limit(n => !!n).sort().map(n => ({l:n, v:n}));
+  const nameOptions = splitDivided(playerState.deck.deck).unique(c => c.heroName || c.cardName).limit(n => !!n).sort().map(n => ({l:n, v:n}));
   const options = [...classOptions, ...nameOptions];
   chooseOptionEv<string | number>(ev, "What If...?", options, choice => {
     let c: Card;
     revealPlayerDeckEv(ev, 1, cards => {
       selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c));
-      const passed = typeof choice === 'string' ? splitDivided(cards).has(c => c.heroName === choice) : cards.has(choice); // TODO: abstract divided heroName checks
+      const passed = typeof choice === 'string' ? splitDivided(cards).has(c => (c.heroName || c.cardName) === choice) : cards.has(choice); // TODO: abstract divided heroName checks
       if (passed) c = cards[0];
     });
     cont(ev, () => c && effect(c));
