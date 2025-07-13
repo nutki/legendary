@@ -7523,7 +7523,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // {BRIDGE CONQUEROR 1}
 // You get +1 Attack for each Villain worth 4 VP or more and each Mastermind Tactic in your Victory Pile.
   ra: makeHeroCard("Jentorra", "Conquer the Conqueror", 7, u, 5, Color.INSTINCT, u, "", [ ev => heroConquerorEv(ev, 'BRIDGE', 1), ev => {
-    addAttackEvent(ev, playerState.victory.count(c => c.vp >= 4) + playerState.victory.count(isTactic));
+    addAttackEvent(ev, playerState.victory.limit(isVillain).count(c => c.vp >= 4) + playerState.victory.count(isTactic));
   } ]),
 },
 {
