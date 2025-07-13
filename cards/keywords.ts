@@ -1551,7 +1551,9 @@ function weaponXSequenceEv(ev: Ev) {
 }
 function berserkWoundsEv(ev: Ev, n: number) {
   repeat(n, () => {
-    gameState.wounds.withTop(c => { addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, gameState.wounds, true); });
+    revealDeckEv(ev, gameState.wounds, 1, cards => cards.each(c => {
+      addAttackEvent(ev, c.printedAttack || 0); moveCardEv(ev, c, gameState.wounds, true);
+    }));
   });
 }
 function isEnragingWound(c: Card) {
