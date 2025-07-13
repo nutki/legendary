@@ -2974,6 +2974,7 @@ makeSchemeCard("Inescapable \"Kyln\" Space Prison", { twists: 8, vd_villain: [ 2
   if (ev.nr <= 7) {
     const cost: ActionCost = ev.nr <= 3 ? { attack: 3 } : ev.nr <= 5 ? { attack: 5 } : ev.nr <= 6 ? { recruit: 6 } : { attack: 7 };
     const desc = ev.nr <= 3 ? "Quarnyx Battery" : ev.nr <= 5 ? "Prison Control Device" : ev.nr <= 6 ? "That Guy's Leg" : "Cassette Player";
+    textLog.log(`To advance: ${desc} (${cost.attack || cost.recruit} ${cost.attack ? 'Attack' : 'Recruit'})`);
     let done = false;
     cost.cond = () => !done;
     addTurnAction(new Ev(ev, 'EFFECT', {
