@@ -3965,7 +3965,7 @@ addTemplates("MASTERMINDS", "2099", [
     }));
   }, ev => {
     // Each other player puts a non-grey Hero from their hand or discard pile into the Escape Pile. <b>Adapt</b>.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to put into the Escape Pile", handOrDiscard(p).limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.escaped)));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to put into the Escape Pile", handOrDiscard(p).limit(isNonGrayHero), c => moveCardEv(ev, c, gameState.escaped), p));
   }),
 // Fearmaster gets +1 Attack for each grey Hero you have.
 // Fearmaster gets +2 Attack for each grey Hero you have.
