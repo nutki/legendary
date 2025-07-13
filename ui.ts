@@ -64,7 +64,7 @@ function setSourceImg(name: string, transform?: string) {
   document.getElementById("card-container").appendChild(r);
 }
 function clearSourceImg() {
-  document.getElementById("source2").remove();
+  document.getElementById("source2")?.remove();
 }
 function makeDisplayPlayAreaImg(c: Card) {
   const gone = !playerState.playArea.deck.has(c2 => c2.id === c.id);
