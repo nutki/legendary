@@ -3538,6 +3538,13 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
   } ],
   [ "Mesopotamian Demon Goddess", ev => {
     // Each other player may discard a card for each Bystander in the KO pile. Each of those players who didn't must gain a Wound instead.
+    const num = gameState.ko.count(isBystander);
+    num && eachOtherPlayerVM(p => {
+      p.hand.size >= num ? chooseOptionEv(ev, "Choose", [
+        { l: `Discard ${num} cards`, v: () => pickDiscardEv(ev, num, p) },
+        { l: "Gain a Wound", v: () => gainWoundEv(ev, p) }
+      ], v => v(), p) : gainWoundEv(ev, p);
+    });
     // Then Lilith <b>Hunts for Victims</b>.
     huntForVictimsEv(ev, ev.source.mastermind);
   } ],
@@ -3545,6 +3552,10 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
     // Choose one:
     // - Gain a Wound and and each other player KOs one of their Heroes, or
     // - KO one of your Heroes and each other player gains a Wound.
+    chooseOneEv(ev, "Who gains a wound",
+      [ "You", () => { gainWoundEv(ev, playerState), eachOtherPlayerVM(p => selectCardAndKOEv(ev, yourHeroes(p), p)) } ],
+      [ "Each other player", () => { eachOtherPlayerVM(p => gainWoundEv(ev, p)); selectCardAndKOEv(ev, yourHeroes()) } ],
+    );
     // Then Lilith <b>Hunts for Victims</b>.
     huntForVictimsEv(ev, ev.source.mastermind);
   } ],
@@ -3553,7 +3564,8 @@ addTemplates("MASTERMINDS", "Midnight Sons", [
     // Then Lilith <b>Hunts for Victims</b>.
     huntForVictimsEv(ev, ev.source.mastermind);
     // [Don't do any Escape or Ambush effects until after you've done all the other effects on this card.]
-    const options = gameState.players.flatMap(p => p.victory.limit(leadBy(ev.source))).highest(c => c.vp);
+    // TODO effect timing
+    const options = gameState.players.flatMap(p => p.victory.limit(leadBy(ev.source.mastermind))).highest(c => c.vp);
     selectCardEv(ev, "Choose a Villain to enter", options, c => {
       enterCityEv(ev, c);
       rescueByEv(ev, c.location.owner, 3);
