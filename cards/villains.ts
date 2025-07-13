@@ -6443,7 +6443,7 @@ addVillainTemplates("2099", [
     fight: ev => {
       withCity('BRIDGE', rainbowBridge => {
         isCityEmpty(rainbowBridge) && uruEnchantedCards(ev).limit(isVillain).each(c => {
-          enterCityEv(ev, c);
+          enterCityEv(ev, c, rainbowBridge);
           gameState.bystanders.withTop(b => shuffleIntoEv(ev, b, gameState.villaindeck));
         });
       });
