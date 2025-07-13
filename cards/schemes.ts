@@ -3175,6 +3175,11 @@ makeSchemeCard("Plunder Wakanda's Vibranium", { twists: 10 }, ev => {
   escapeProgressTrigger(isTwist),
   runOutProgressTrigger('VILLAIN', false),
   {
+    event: 'ESCAPE',
+    match: ev => ev.what.attached('VIBRANIUM').size > 0,
+    after: ev => ev.parent.what.attached('VIBRANIUM').each(c => moveCardEv(ev, c, gameState.escaped))
+  },
+  {
     event: 'DEFEAT',
     match: ev => ev.what.attached('VIBRANIUM').size > 0,
     after: ev => ev.parent.what.attached('VIBRANIUM').each(c => moveCardEv(ev, c, playerState.victory))
