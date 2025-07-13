@@ -1225,15 +1225,18 @@ function playKindnessEv(ev: Ev) {
     pushEv(ev, 'EFFECT', { source: c, what: ev.what, func: c.excessiveKindness });
   });
 }
-function triggeredArifact(event: TriggerableEvType, cond: (ev: Ev, source: Card) => boolean, selfTrigger: boolean = false): HeroCardAbillities {
+function triggeredArifact(event: TriggerableEvType, cond: (ev: Ev, source: Card) => boolean, selfTrigger: boolean = false, anyTurn: boolean = false): HeroCardAbillities {
   return {
     isArtifact: true,
     trigger: {
       event,
-      match: (ev, source) => owner(source) === playerState && (source.location === owner(source)?.artifact || (selfTrigger && ev.what === source)) && cond(ev, source),
+      match: (ev, source) => owner(source) && (owner(source) === playerState || anyTurn) && (source.location === owner(source).artifact || (selfTrigger && ev.what === source)) && cond(ev, source),
       after: ev => getArtifactEffects(ev.source)[0](ev),
     }
   }
+}
+function triggeredArtifactAnyTurn(event: TriggerableEvType, cond: (ev: Ev, source: Card) => boolean): HeroCardAbillities {
+  return triggeredArifact(event, cond, false, true);
 }
 // <b>Command</b>:
 // Some Villains say things like "Taserface gets +2 Attack while he Commands the Ravagers."

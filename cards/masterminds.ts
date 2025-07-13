@@ -3059,8 +3059,8 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
   addStatSet('isArtifact', thisStrikeCard, () => true);
   addStatSet('baseDefense', thisStrikeCard, () => epic ? 2 : 1);
   addStatSet('effects', thisStrikeCard, () => [ playArtifact ]);
-  addStatSet('triggers', thisStrikeCard, () => [ triggeredArifact('STRIKE', () => true).trigger ]);
-  addStatSet('artifactEffects', thisStrikeCard, () => [ (ev: Ev) => drawEv(ev) ]);
+  addStatSet('triggers', thisStrikeCard, () => [ triggeredArtifactAnyTurn('STRIKE', () => true).trigger ]);
+  addStatSet('artifactEffects', thisStrikeCard, () => [ (ev: Ev) => drawEv(ev, 1, owner(ev.source)) ]);
   attachCardEv(ev, ev.what, ev.source, 'WEAPON');
 }, [
 // ---
@@ -3068,7 +3068,7 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: +4
   // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
   makeGainableCard(makeTacticsCard("Hood of the Accuser", { printedDefense: 4, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
-  u, u, Color.GRAY, u, "D", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)), triggeredArifact('STRIKE', () => true)),
+  u, u, Color.GRAY, u, "D", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(owner(ev.source)), c => KOEv(ev, c), () => {}, owner(ev.source)), triggeredArtifactAnyTurn('STRIKE', () => true)),
 // ---
 // <b>Triggered Artifact</b> - Whenever you gain your first Wound in any turn, you may KO it.
 // ATTACK: +5
@@ -3085,7 +3085,7 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
 // <b>Triggered Artifact</b> - Whenever a Scheme Twist is completed, draw two cards.
 // ATTACK: +3
   makeGainableCard(makeTacticsCard("Ronan's Throne", { printedDefense: 3, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
-  u, u, Color.GRAY, u, "D", ev => drawEv(ev, 2), triggeredArifact('TWIST', () => true)),
+  u, u, Color.GRAY, u, "D", ev => drawEv(ev, 2, owner(ev.source)), triggeredArtifactAnyTurn('TWIST', () => true)),
 ], {
   commonTacticEffect: ev => {
     // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
