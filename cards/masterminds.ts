@@ -3833,6 +3833,8 @@ makeTransformingMastermindCard(makeMastermindCard("Darren Cross", 8, 6, "Cross T
 // Each player discards a [Instinct] Hero or Size-Changing Hero or gains a Wound. Yellowjacket {TRANSFORM}.
   eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c => isColor(Color.INSTINCT)(c) || !hasNoSizeChanging(c)), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   transformMastermindEv(ev);
+}, {
+  uSizeChanging: { amount: 2, color: Color.TECH },
 }),
 // Ghost gets +1 Attack for each different cost among her "Kidnapped Victims." While this side is face up, you may recruit cards from her Kidnapped Victims
 // <i>(in any order)</i>, spending 2 Recruit extra for each.

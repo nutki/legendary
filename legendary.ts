@@ -200,6 +200,7 @@ interface MastermindCardAbillities {
   escape?: Handler | Handler[] // King Hyperion
   printedNthCircle?: number
   sizeChanging?: number
+  uSizeChanging?: { color: number, amount: number }
   chivalrousDuel?: boolean
   cosmicThreat?: Filter<Card>;
   finishThePrey?: Handler
