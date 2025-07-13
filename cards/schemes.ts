@@ -3081,17 +3081,18 @@ makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
           attachCardEv(ev, c2, c, 'TENTACLECAPTURE');
         }, p);
       }, p);
-    } else if (ev.nr === 9) {
-      // Twist 9 Replay all the captured Tentacles.
-      eachPlayer(p => p.victory.limit(c => c.villainGroup === "Abilisk Tentacle").each(c => {
-        attachCardEv(ev, c, gameState.scheme, 'TENTACLE');
-        selectCardEv(ev, "Choose a non-grey Hero to capture", p.discard.limit(isNonGrayHero), c2 => {
-          attachCardEv(ev, c2, c, 'TENTACLECAPTURE');
-        }, p);
-      }));
     }
-    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TENTACLE').size));
+  } else if (ev.nr === 9) {
+    // Twist 9 Replay all the captured Tentacles.
+    console.log("Replay all Tentacles");
+    eachPlayer(p => p.victory.limit(c => c.villainGroup === "Abilisk Tentacle").each(c => {
+      attachCardEv(ev, c, gameState.scheme, 'TENTACLE');
+      selectCardEv(ev, "Choose a non-grey Hero to capture", p.discard.limit(isNonGrayHero), c2 => {
+        attachCardEv(ev, c2, c, 'TENTACLECAPTURE');
+      }, p);
+    }));
   }
+  cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('TENTACLE').size));
 }, [{
   event: 'MOVECARD',
   match: ev => ev.from.id === 'SCHEME/TENTACLE',
