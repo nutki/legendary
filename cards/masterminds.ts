@@ -3198,6 +3198,7 @@ addTemplates("MASTERMINDS", "Black Panther", [
     },
   }],
   cardActions: [payToWoundEv(ev => addRecruitEvent(ev, 1))],
+  fightCond: c => c.defense === 0,
 }),
 // Klaw is <b>Double Empowered</b> by the color(s) of his "Sonic Frequency."
 // EPICNAME: Klaw

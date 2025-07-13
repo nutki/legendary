@@ -1267,7 +1267,7 @@ function woundEnemyEv(ev: Ev, enemy: Card, amount: number = 1, who: Player = pla
   }));
 }
 function payToWoundEv(effect?: Handler): Card['cardActions'][0] {
-  return (c, ev) => new Ev(ev, "EFFECT", { what: c, cost: {cond: c => c.defense > 0 && isFightable(c), attack: c.defense}, func: ev => {
+  return (c, ev) => new Ev(ev, "EFFECT", { desc: 'Wound', what: c, cost: {cond: c => c.defense > 0 && isFightable(c), attack: c.defense}, func: ev => {
     woundEnemyEv(ev, ev.what);
     effect?.(ev);
   }})
