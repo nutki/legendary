@@ -3979,7 +3979,7 @@ addTemplates("MASTERMINDS", "2099", [
       pickDiscardEv(ev, n, p, isNonGrayHero);
     })));
     cont(ev, () => eachPlayer(p => {
-      drawEv(ev, ev.source.epic ? 2 : pastEvents('DISCARD').count(e => e.parent === ev));
+      drawEv(ev, ev.source.epic ? 2 : pastEvents('DISCARD').count(e => e.parent === ev && e.who === p), p);
     }));
   }, ev => {
     // Each other player discards 2 grey Heroes. <b>Adapt</b>.
