@@ -7021,7 +7021,7 @@ addHeroTemplates("Midnight Sons", [
 // GUN: 1
   ra: makeHeroCard("Elsa Bloodstone", "Vengeance of the Bloodstone Gem", 8, 0, 4, Color.INSTINCT, "Marvel Knights", "G", [
     ev => selectCardEv(ev, "Choose a city space", gameState.city, c => patrolDeck(c, () => {
-      const h = c.below?.top;
+      const h = c.above?.top;
       h?.printedRecruit && addRecruitEvent(ev, h.printedRecruit);
       h?.printedAttack && addAttackEvent(ev, h.printedAttack);
     })),
