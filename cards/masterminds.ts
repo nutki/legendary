@@ -3330,6 +3330,7 @@ addTemplates("MASTERMINDS", "Black Widow", [
       rescueEv(ev, 4);
       villainify("Molot Boga", ev.source, u, ev => selectCardAndKOEv(ev, yourHeroes()));
       addStatSet('escape', c => c === ev.source, () => ev => shuffleIntoEv(ev, ev.source, ev.source.mastermind.attachedDeck("TACTICS")));
+      addStatSet('ambush', c => c === ev.source, () => ev => playAnotherEv(ev, 2));
       enterCityEv(ev, ev.source);
     }
   }}),
