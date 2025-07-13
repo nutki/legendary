@@ -3158,6 +3158,7 @@ makeSchemeCard("Poison Lakes with Nanite Microbots", { twists: [ 6, 7, 8, 9, 10 
   runOutProgressTrigger('WOUNDS'),
   runOutProgressTrigger('VILLAIN', false),
 ], () => {
+  gameState.schemeProgress = 30;
   addStatMod('cost', c => isHero(c), c => -c.attached('WOUND').size);
 }),
 // SETUP: 10 Twists, representing "Vibranium."
@@ -3329,7 +3330,7 @@ makeSchemeCard("Halve All Life In The Universe", { twists: 5 }, ev => {
   runOutProgressTrigger('HERO'),
   runOutProgressTrigger('VILLAIN', false),
 ], () => {
-  setSchemeTarget(gameState.herodeck.size);
+  gameState.schemeProgress = gameState.herodeck.size;
 }),
 // SETUP: Twists equal to the number of players plus 4.
 // EVILWINS: When the Mastermind has sacrificed 5 Heroes for the Soul Stone.
@@ -3435,7 +3436,7 @@ makeSchemeCard("Midnight Massacre", { twists: 11, heroes: [ 4, 6, 6, 6, 7] }, ev
   addStatSet('fightCost', isExtra, (c, cost) => sunlightPower() ? { recruit: (cost.recruit || 0) + 3, ...cost} : cost);
   gameState.herodeck.limit(isExtra).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
-  setSchemeTarget(gameState.herodeck.size);
+  gameState.schemeProgress = gameState.herodeck.size;
 }),
 // SETUP: 6 Twists, plus 1 per player. Add Lilin as an extra Villain Group. If using Lilith: Use 1 Twist total <i>[and still use and extra Villain Group]</i>.
 // RULE: When 5 Bystanders are in the KO pile, shuffle all Twists from the KO pile back into the Villain Deck. Then this Scheme {TRANSFORM} into "Great Old One Chthon."
