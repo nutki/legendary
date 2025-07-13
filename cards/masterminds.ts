@@ -3248,7 +3248,7 @@ addTemplates("MASTERMINDS", "Black Panther", [
   } ],
   [ "Cruelty Provokes Resistance", ev => {
   // Set aside all Heroes from the HQ that do not share any colors with Klaw's Sonic Frequency. Gain one of them. Put the rest on the bottom of the Hero Deck. Then refill the empty HQ spaces.
-    const options = hqHeroes().limit(c => !isColor(c.attached('SONICFQ').sum(c => c.color)));
+    const options = hqHeroes().limit(c => !isColor(ev.source.mastermind.attached('SONICFQ').sum(c => c.color))(c));
     selectCardEv(ev, "Choose a Hero to gain", options, c => {
       options.each(c1 => c1 === c ? gainEv(ev, c) : moveCardEv(ev, c1, gameState.herodeck, true));
     });
