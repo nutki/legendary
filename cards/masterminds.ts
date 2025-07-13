@@ -3438,7 +3438,7 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
   } ],
   [ "Price To Pay", ev => {
   // Each other player discards cards equal to the number of Infinity Stones in the city and/or Escape Pile or gains a Wound.
-    const num = cityVillains().count(leadBy(ev.source)) + gameState.escaped.count(leadBy(ev.source));
+    const num = cityVillains().count(leadBy(ev.source.mastermind)) + gameState.escaped.count(leadBy(ev.source.mastermind));
     num && eachOtherPlayerVM(p => {
       p.hand.size >= num ?
         chooseOptionEv(ev, "Choose", [{l:"Discard", v: () => pickDiscardEv(ev, num, p)},{l:"Gain a Wound", v: () => gainWoundEv(ev, p)}], v => v(), p) :
