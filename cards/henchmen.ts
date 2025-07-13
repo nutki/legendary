@@ -381,7 +381,7 @@ makeHenchmenCard("Vibranium Liberator Drones", 3, {
     addTurnTrigger('RESCUE', ev => ev.what === ev.source && ev.who === playerState, ev => selectCardAndKOEv(ev, yourHeroes()));
     // TODO allow ordering effects, so this can trigger if this henchman had a bystander
   },
-  ambush: ev => selectCardEv(ev, "Choose a Villain", villains(), c => captureEv(ev, c)),
+  ambush: ev => selectCardEv(ev, "Choose a Villain", villains().limit(isNot(ev.source)), c => captureEv(ev, c)),
 }),
 ]);
 addHenchmenTemplates("Ant-Man and the Wasp", [
