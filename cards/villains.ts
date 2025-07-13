@@ -6111,12 +6111,12 @@ addVillainTemplates("Ant-Man and the Wasp", [
       captureEv(ev, ev.source, gameState.players.length + 1);
     },
     cardActions: [
-      (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', { cost: { recruit: 3 }, desc: "Rescue Scientist with 3 Recruit", func: ev => {
+      (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', { cost: { recruit: 3, cond: () => c.location === gameState.scheme.attachedDeck('AMBUSHSCHEME') }, desc: "Rescue Scientist with 3 Recruit", func: ev => {
         selectCardEv(ev, "Choose a Scientist to rescue", c.captured, c => rescueEv(ev, c));
         drawEv(ev);
         cont(ev, () => c.captured.size === 0 && defeatEv(ev, c));
       }}),
-      (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', { cost: { cond: () => playerState.hand.has(c => !hasNoSizeChanging(c))}, desc: "Rescue scientist with discard", func: ev => {
+      (c: Card, ev: Ev) => new Ev(ev, 'EFFECT', { cost: { cond: () => c.location === gameState.scheme.attachedDeck('AMBUSHSCHEME') && playerState.hand.has(c => !hasNoSizeChanging(c))}, desc: "Rescue scientist with discard", func: ev => {
         selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => !hasNoSizeChanging(c)), c => discardEv(ev, c));
         selectCardEv(ev, "Choose a Scientist to rescue", c.captured, c => rescueEv(ev, c));
         drawEv(ev);
