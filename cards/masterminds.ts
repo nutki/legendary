@@ -3638,7 +3638,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 // "<b>Fight</b>: KO this or choose a player to gain it."
   (ev.source.epic ? gameState.players : [playerState]).each(p => {
     const options = [...p.hand.deck, ...p.discard.deck, ...hqHeroes()].filter(isKillmonger);
-    !ev.source.epic && options.push(...gameState.players.limit(p => p !== playerState).flatMap(p => p.discard.deck));
+    !ev.source.epic && options.push(...gameState.players.limit(p => p !== playerState).flatMap(p => p.discard.deck).limit(isKillmonger));
     selectCardEv(ev, "Choose a Killmonger Hero to enter", options, c => {
       villainify(u, is(c), c => c.cost + (ev.source.epic ? 4 : 3), ev => {
         selectCardOptEv(ev, "Choose a player to gain Killmonger", gameState.players,
