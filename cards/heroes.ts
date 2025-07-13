@@ -7682,7 +7682,7 @@ addHeroTemplates("2099", [
   name: "Ravage 2099",
   team: "Marvel Knights",
 // {POWER Instinct} Draw a card from the bottom of your deck.
-  c1: makeHeroCard("Ravage 2099", "Down in the Dregs", 3, 2, u, Color.INSTINCT, "Marvel Knights", "FD", ev => superPower(Color.INSTINCT) && drawBottomEv(ev, 2)),
+  c1: makeHeroCard("Ravage 2099", "Down in the Dregs", 3, 2, u, Color.INSTINCT, "Marvel Knights", "FD", ev => superPower(Color.INSTINCT) && drawBottomEv(ev)),
 // {POWER Strength} You get +2 Attack and {FATED FUTURE}.
   c2: makeHeroCard("Ravage 2099", "Toxic Mutations", 5, u, 2, Color.STRENGTH, "Marvel Knights", "FDA", ev => {
     if (superPower(Color.STRENGTH)) { addAttackEvent(ev, 2); fatedFutureEv(ev); }
