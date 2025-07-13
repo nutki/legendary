@@ -3799,6 +3799,9 @@ makeTransformingMastermindCard(makeMastermindCard("Darren Cross", 8, 6, "Cross T
   [ "Corporate Raider", ev => {
   // KO one of your Heroes with a Recruit icon. If the Bank is empty, move a Villain to the Bank.
     selectCardEv(ev, "Choose a Hero to KO", yourHeroes().limit(hasRecruitIcon), c => KOEv(ev, c));
+    withCity('BANK', bank => {
+      isCityEmpty(bank) && selectCardEv(ev, "Choose a Villain to enter the Bank", cityVillains(), c => moveCardEv(ev, c, bank));
+    });
     transformMastermindEv(ev);
   } ],
 // This Mastermind {TRANSFORM}.
