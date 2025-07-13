@@ -3807,8 +3807,8 @@ makeTransformingMastermindCard(makeMastermindCard("Darren Cross", 8, 6, "Cross T
     withCity('BANK', bank => {
       if (isCityEmpty(bank)) {
         const options: Card[] = [];
-        eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(c => c.vp >= 2), c => options.push(c), p));
-        selectCardEv(ev, "Choose a Villain to enter", options, c => enterCityEv(ev, c, bank));
+        eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Villain", p.victory.limit(isVillain).limit(c => c.vp >= 2), c => options.push(c), p));
+        cont(ev, () => selectCardEv(ev, "Choose a Villain to enter", options, c => enterCityEv(ev, c, bank)));
       }
     });
     transformMastermindEv(ev);
