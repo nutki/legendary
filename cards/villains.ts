@@ -6403,7 +6403,9 @@ addVillainTemplates("2099", [
     ambush: ev => {
       gameState.herodeck.withTop(c => moveCardEv(ev, c, gameState.escaped));
       captureEv(ev, ev.source);
-      selectCardEv(ev, "Choose a Hero to capture", yourHeroes().limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'VENTURE_CAPTURED'));
+      cyberModEnemyEv(ev, Color.RANGED, 1, () => {
+        selectCardEv(ev, "Choose a Hero to capture", playerState.discard.limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'VENTURE_CAPTURED'));
+      })
     },
     fight: ev => {
       ev.source.attached('VENTURE_CAPTURED').each(c => {
