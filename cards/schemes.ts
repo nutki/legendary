@@ -2987,7 +2987,11 @@ makeSchemeCard("Inescapable \"Kyln\" Space Prison", { twists: 8, vd_villain: [ 2
         textLog.log(`You gain a Wound for failing to advance the Escape Plan!`);
         gainWoundEv(ev, playerState);
         gameState.hq.each(c => c.faceup = false);
-        // TODO shuffle the Heroes in the HQ
+        gameState.hq.forEach((c, i) => {
+          gameState.hq.slice(i).withRandom(d => {
+            c !== d && swapCardsEv(ev, c, d);
+          })
+        });
       }
     });
   }
