@@ -7420,7 +7420,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // {USIZECHANGING STRENGTH 3}
 // {POWER Strength} You may do the Fight effect of a Villain in your Victory Pile worth 2 VP or less.
   uc: makeHeroCard("Cassie Lang", "Learn from the Past", 6, u, 3, Color.STRENGTH, "Avengers", "D", ev => superPower(Color.STRENGTH) && selectCardOptEv(ev,
-    "Choose a Villain to do the Fight effect", playerState.victory.limit(c => c.vp <= 2), c => pushEffects(ev, c, 'fight', c.fight)
+    "Choose a Villain to do the Fight effect", playerState.victory.limit(isVillain).limit(c => c.vp <= 2), c => pushEffects(ev, c, 'fight', c.fight)
   ), { uSizeChanging: { color: Color.STRENGTH, amount: 3 } }),
 // {USIZECHANGING TECH 3}
 // {POWER Tech} Reveal the top card of the Villain Deck. If it's a Bystander, rescue it. If it's a Villain worth 2 VP or less, you may fight it this turn. If you rescue or defeat that card, don't play a card from the Villain Deck next turn.
