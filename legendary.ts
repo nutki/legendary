@@ -1529,12 +1529,12 @@ gameState = {
     { // Win by defeating masterminds
       event: "DEFEAT",
       match: ev => isMastermind(ev.what),
-      after: ev => fightableCards().has(isMastermind) || gameState.hq.has(d => d.attached('HAUNTED').has(isMastermind)) || gameOverEv(ev, "WIN"),
+      after: ev => allEnemies().has(isMastermind) || gameOverEv(ev, "WIN"),
     },
     { // Win by KOing masterminds (Warld War Hulk scheme)
       event: "KO",
       match: ev => isMastermind(ev.what),
-      after: ev => fightableCards().has(isMastermind) || gameState.hq.has(d => d.attached('HAUNTED').has(isMastermind)) || gameOverEv(ev, "WIN"),
+      after: ev => allEnemies().has(isMastermind) || gameOverEv(ev, "WIN"),
     },
     { // Loss by villain deck or hero deck running out
       event: "CLEANUP",
@@ -2635,8 +2635,11 @@ function chooseOrderEv<T>(ev: Ev, desc: string, objects: T[], effect: (o: T) => 
     }, who);
   }
 }
+function allEnemies(): Card[] {
+  return [...fightableCards(), ...gameState.hq.flatMap(d => d.attached('HAUNTED'))];
+}
 function getMasterminds(real: boolean = false): Card[] {
-  return fightableCards().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
+  return allEnemies().limit(real ? (c => isMastermind(c) && !isVillain(c)) : isMastermind);
 }
 function withMastermind(ev: Ev, effect: (m: Card) => void, real: boolean = false) {
   const options = getMasterminds(real);
@@ -2913,7 +2916,7 @@ function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
   // TODO mastermind order
   const nr = ++gameState.strikeCount;
-  fightableCards().limit(isMastermind).each(m => {
+  getMasterminds().each(m => {
     pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr });
     m.isAdaptingMastermind && adaptMastermindEv(ev, m);
   });
