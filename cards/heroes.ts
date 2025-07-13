@@ -7436,7 +7436,7 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // {USIZECHANGING STRENGTH 5}
 // You get +1 Attack for each Villain worth 2 VP or less in your Victory Pile.
   ra: makeHeroCard("Cassie Lang", "Inspire Revolution", 9, u, 5, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev,
-    playerState.victory.count(c => c.vp <= 2)
+    playerState.victory.limit(isVillain).count(c => c.vp <= 2)
   ), { uSizeChanging: { color: Color.STRENGTH, amount: 5 } }),
 },
 {
