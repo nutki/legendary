@@ -5542,10 +5542,10 @@ addVillainTemplates("Midnight Sons", [
 // ATTACK: 6+
 // VP: 5
   [ 1, makeVillainCard("Fallen", "Salomé, Sorceress Supreme", 6, 5, {
-    fight: ev => selectObjectsEv(ev, "Choose cards to KO", 2, playerState.discard.deck, c => KOEv(ev, c)),
+    fight: ev => selectObjectsUpToEv(ev, "Choose cards to KO", 2, playerState.discard.deck, c => KOEv(ev, c)),
     escape: ascendToMastermind,
     varDefense: bloodFrenzyVarDefense(),
-    strike: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit("Marvel Knights"), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
+    strike: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit("Marvel Knights"), c => discardEv(ev, c), () => gainWoundEv(ev, p), p)),
   })],
 ]},
 { name: "Lilin", cards: [
