@@ -5717,7 +5717,7 @@ addVillainTemplates("Marvel Studios What If...?", [
 // ATTACK: 2+
 // VP: 3
   [ 1, makeVillainCard("Intergalactic Party Animals", "Party Skrull", 2, 3, {
-    ambush: ev => selectCardEv(ev, "Choose a hero for Party Skrull to capture", hqHeroes().limit(c => c.location.above?.has(isGroup(c.villainGroup))).highest(c => c.cost), c => {
+    ambush: ev => selectCardEv(ev, "Choose a hero for Party Skrull to capture", hqHeroes().limit(c => c.location.below?.has(isGroup(ev.source.villainGroup))).highest(c => c.cost), c => {
       attachCardEv(ev, c, ev.source, 'PARTY_SKRULL_CAPTURE');
     }),
     fight: ev => ev.source.attached('PARTY_SKRULL_CAPTURE').each(c => selectCardOptEv(ev, "Choose a player to gain the captured Hero", gameState.players,
