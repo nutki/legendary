@@ -3606,15 +3606,23 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     }, p));
   } ],
 ], {
+  fightFail: ev => {
+    gainWoundEv(ev);
+    turnState.endofturn = true;
+    textLog.log("Failed to track down");
+  },
   trigger: {
     event: 'FIGHT',
     match: (ev, source) => source === ev.what,
     replace: ev => {
       let v = 0;
-      repeat(6, () => cont(ev, () => playerState.discard.withTop(c => v += c.cost === 0 ? ev.source.epic ? 3 : 2 : 0)));
+      repeat(6, () => withPlayerDeckTopEv(ev, c => { discardEv(ev, c); v += c.cost === 0 ? ev.source.epic ? 3 : 2 : 0; }));
       cont(ev, () => {
+        textLog.log(`${v} Attack needed to track down`);
         pushEv(ev, "EFFECT", { func: () => doReplacing(ev), cost: { attack: v }, failFunc: ev => {
+          gainWoundEv(ev);
           turnState.endofturn = true;
+          textLog.log("Failed to track down");
         } });
       });
     }
