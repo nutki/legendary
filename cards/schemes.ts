@@ -3148,6 +3148,13 @@ makeSchemeCard("Poison Lakes with Nanite Microbots", { twists: [ 6, 7, 8, 9, 10 
       distributeEvenlyEv(ev, w => `Choose a player to gain ${w.cardName}`, ev.parent.what.attached('WOUND'), gameState.players, (w, p) => gainEv(ev, w, p));
     },
   },
+  {
+    event: 'SWAPMOVE',
+    match: ev => ev.what.location.isHQ && !ev.to.isHQ && ev.what.attached('WOUND').size > 0,
+    before: ev => {
+      distributeEvenlyEv(ev, w => `Choose a player to gain ${w.cardName}`, ev.parent.what.attached('WOUND'), gameState.players, (w, p) => gainEv(ev, w, p));
+    },
+  },
   runOutProgressTrigger('WOUNDS'),
   runOutProgressTrigger('VILLAIN', false),
 ], () => {

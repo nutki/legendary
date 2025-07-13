@@ -773,6 +773,7 @@ type EvType =
 'NOOP' |
 'TURNSTART' |
 'CHIVALROUSSPEND' |
+'SWAPMOVE' |
 // Scheme Actions
 'PAYTORESCUE' |
 'BETRAY' |
@@ -789,7 +790,7 @@ type TriggerableEvType =
 'TELEPORT' | 'DODGE' |
 // Expansion effects
 'COORDINATE' | 'OUTWIT' | 'REVEAL' | 'COORDINATEDISCARD' |
-'CLEANUP' | 'MOVECARD' | 'TURNSTART';
+'CLEANUP' | 'MOVECARD' | 'TURNSTART' | 'SWAPMOVE';
 interface Ev<TSchemeState = any> {
   type: EvType
   desc?: string
@@ -2351,6 +2352,11 @@ function shuffleIntoEv(ev: Ev, what: Card | Deck, where: Deck): void {
   cont(ev, () => cards.each(c => moveCard(c, where)));
   cont(ev, () => where.shuffle());
 }
+function swapMoveEv(ev: Ev, what: Card, where: Deck) {
+  pushEv(ev, "SWAPMOVE", { func: ev => {
+    moveCard(ev.what, ev.to);
+  }, what: what, to: where, from: what.location });
+}
 // Swaps contents of 2 city spaces
 function swapCardsEv(ev: Ev, p1: (Card | Deck), p2: (Card | Deck)) {
   cont(ev, () => {
@@ -2358,8 +2364,8 @@ function swapCardsEv(ev: Ev, p1: (Card | Deck), p2: (Card | Deck)) {
     const what1 = p1 instanceof Deck ? p1.top : p1;
     const where2 = p2 instanceof Deck ? p2 : p2.location;
     const what2 = p2 instanceof Deck ? p2.top : p2;
-    if (what1) moveCard(what1, where2);
-    if (what2) moveCard(what2, where1);
+    if (what1) swapMoveEv(ev, what1, where2);
+    if (what2) swapMoveEv(ev, what2, where1);
   });
 }
 function swapDecks(d1: Deck, d2: Deck) {
