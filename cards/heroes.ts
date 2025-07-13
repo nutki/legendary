@@ -7615,9 +7615,11 @@ addHeroTemplates("2099", [
   ra: makeHeroCard("Doctor Doom 2099", "Tear Through Time Itself", 8, u, 6, Color.RANGED, u, "D", [
     ev => selectCardOptEv(ev, "Choose a card to send Undercover", handOrDiscard(), c => sendUndercoverEv(ev, c)),
     ev => fatedFutureEv(ev), ev => cyberModEv(ev, Color.RANGED, 2, () => {
-      gameState.extraTurn = true; // TODO once per game
-      incPerGame('extraTurn', ev.source) || addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
-    }) ]),
+      if (!incPerGame('extraTurn', ev.source)) chooseMayEv(ev, "Take an extra turn", () => {
+        gameState.extraTurn = true; // TODO once per game
+        addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
+      });
+    }) ],
 },
 {
   name: "Ghost Rider 2099",
