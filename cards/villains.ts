@@ -5967,7 +5967,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
       })
       extraHenchmen.shuffle();
       extraHenchmen.deck.forEach((c, i) => i < gameState.players.length && moveCard(c, henchmen));
-      addStatSet('conqueror', c => c.location === henchmen, (c, v) => ({ amount: 1, locations: [...v.locations, 'BRIDGE'] })); // TODO this works as currently there are no Henchmen with conqueror != 1
+      addStatSet('conqueror', c => c.location === henchmen, (c, v) => ({ amount: 1, locations: [...(v?.locations || []), 'BRIDGE'] })); // TODO this works as currently there are no Henchmen with conqueror != 1
     },
     triggers: [{
       event: 'DEFEAT',

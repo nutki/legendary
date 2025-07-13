@@ -266,7 +266,7 @@ class Card {
   get defense() {
     let value = getModifiedStat(this, "defense", this.baseDefense);
     const conqueror = this.getConqueror();
-    if (this.conqueror) value += conqueror.amount * isConquering(...conqueror.locations);
+    if (conqueror) value += conqueror.amount * isConquering(...conqueror.locations);
     if (value === undefined) return value;
     value += this.attached('SHARD').size;
     if (this.nthCircle) value += nthCircleDefense(this);
