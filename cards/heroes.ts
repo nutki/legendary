@@ -7210,7 +7210,7 @@ addHeroTemplates("Marvel Studios What If...?", [
 // Draw two cards. Then put a card from your hand on top of your deck.
   c2: makeHeroCard("Gamora, Destroyer of Thanos", "Tactical Insight", 3, u, 1, Color.COVERT, "Guardians of the Multiverse", "F", [
     ev => drawEv(ev, 2),
-    ev => selectCardEv(ev, "Choose a card to topdeck", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck, true)),
+    ev => selectCardEv(ev, "Choose a card to topdeck", playerState.hand.deck, c => moveCardEv(ev, c, playerState.deck)),
   ]),
 // You get +1 Attack for each card you drew this turn.
   c3: makeHeroCard("Gamora, Destroyer of Thanos", "Wield the Blade of Thanos", 4, u, 1, Color.INSTINCT, "Guardians of the Multiverse", "F", ev => {
