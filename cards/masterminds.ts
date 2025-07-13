@@ -3230,20 +3230,20 @@ addTemplates("MASTERMINDS", "Black Panther", [
     });
     cont(ev, () => {
       heroes.each(c => KOEv(ev, c));
-      selectCardEv(ev, "Choose a Hero to attach", heroes.highest(c => -c.cost), c => {
-        ev.source.attached('SONICFQ').each(c => {
+      selectCardEv(ev, "Choose new Sonic Frequency", heroes.highest(c => -c.cost), c => {
+        ev.source.mastermind.attached('SONICFQ').each(c => {
           moveCardEv(ev, c, gameState.herodeck, true);
         });
-        attachCardEv(ev, c, ev.source, 'SONICFQ');
+        attachCardEv(ev, c, ev.source.mastermind, 'SONICFQ');
       });
     });
   } ],
   [ "Ultrasonic Boom", ev => {
   // Put the top card of the Hero Deck next to Klaw as a Sonic Frequency. Each other player must discard a card that shares a color with it. Put any previous Frequency on the bottom of the Hero Deck.
     gameState.herodeck.withTop(c => {
-      ev.source.attached('SONICFQ').each(c => moveCardEv(ev, c, gameState.herodeck, true));
-      attachCardEv(ev, c, ev.source, 'SONICFQ');
-      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to discard", revealable().limit(c.color), c => discardEv(ev, c), p)); // TODO: multiplayer reveal hand?
+      ev.source.mastermind.attached('SONICFQ').each(c => moveCardEv(ev, c, gameState.herodeck, true));
+      attachCardEv(ev, c, ev.source.mastermind, 'SONICFQ');
+      eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to discard", revealable(p).limit(c.color), c => discardEv(ev, c), p)); // TODO: multiplayer reveal hand?
     });
   } ],
   [ "Cruelty Provokes Resistance", ev => {
