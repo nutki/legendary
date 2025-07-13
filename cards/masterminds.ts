@@ -3422,12 +3422,12 @@ addTemplates("MASTERMINDS", "Marvel Studios The Infinity Saga", [
 // Then an Infinity Stone worth 4VP or more enters the city from your Victory Pile.
 // If you don't have any, each player gains a Wound. (Epic: Each player that didn't have any gains a Wound.)
   cont(ev, () => {
-    const options: (p: Player) => Card[] = p => p.victory.limit(c => leadBy(c) && c.vp >= 4);
+    const options: (p: Player) => Card[] = p => p.victory.limit(c => leadBy(ev.source)(c) && c.vp >= 4);
     selectCardOrEv(ev, "Choose an Infinity Stone to enter the city", options(playerState), c => {
       enterCityEv(ev, c);
-      ev.source.epic && eachPlayer(p => p !== playerState && options(p).size === 0 && gainWoundEv(ev, p));
+      ev.source.epic && eachPlayer(p => options(p).size || gainWoundEv(ev, p));
     }, () => {
-      eachPlayer(p => (ev.source.epic && options(p).size) || gainWoundEv(ev, p));
+      eachPlayer(p => options(ev.source.epic ? p : playerState).size || gainWoundEv(ev, p));
     });
   });
 
