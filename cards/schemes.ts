@@ -3291,7 +3291,7 @@ makeSchemeCard("Sniper Rifle Assassins", { twists: [10, 9, 8, 7, 6] }, ev => {
   eachPlayer(p => {
     selectCardEv(ev, "Choose a Hero to dodge", p.hand.limit(isHero), c => dodgeCardEv(ev, c), p);
   });
-  addTurnTrigger('DRAW', fev => fev.parent === ev, ev => isNonGrayHero(ev.parent.what) && KOEv(ev, ev.parent.what)); // TODO add isChildOf
+  addTurnTrigger('DRAW', fev => ancestorEvents(fev).includes(ev), ev => isNonGrayHero(ev.parent.what) && KOEv(ev, ev.parent.what));
 }, [
   koProgressTrigger(isNonGrayHero),
 ], () => {
