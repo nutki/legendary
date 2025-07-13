@@ -3710,7 +3710,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
   } ],
   [ "Struggle for the Infinity Stones", ev => {
   // Gain a Hero from the HQ that has one of the Hero Classes that is <b>Empowering</b> Ultron.
-    selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(empoweringVillains([...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')])), c => gainEv(ev, c));
+    selectCardEv(ev, "Choose a Hero to gain", hqHeroes().limit(empoweringVillains([...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')].limit(leadBy(ev.source.mastermind)))), c => gainEv(ev, c));
   } ],
   [ "Transcend Mortality", ev => {
   // Search the Villain Deck and stack the first Ultron Sentry you find next to Ultron. Shuffle the Villain Deck.
@@ -3724,7 +3724,10 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     selectObjectsEv(ev, "Choose cards to KO", playerState.victory.count(leadBy(ev.source.mastermind)), handOrDiscard().limit(isHero), c => KOEv(ev, c));
   } ],
 ], {
-  varDefense: empowerVarDefense(c1 => isColor(empoweringVillains([...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')]))(c1)),
+  varDefense: c => {
+    const sentries = [...cityVillains(), ...gameState.escaped.deck, ...gameState.mastermind.attached('SENTRY')].limit(leadBy(c));
+    return c.printedDefense + sentries.sum(s => hqCards().count(empoweringVillains([s])));
+  },
 }),
 // Zombie Scarlet Witch gets +1 Attack for each Hero with an odd-numbered cost you played this turn.
 //  <i>(In solo mode, if using another Villain Group, add "Zombie" to their card names and they all get <b>Ambush</b>: {RISEOFTHELIVINGDEAD}.</i>
