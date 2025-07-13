@@ -7096,10 +7096,11 @@ addHeroTemplates("Midnight Sons", [
       let done = false;
       const cond: (c: Card) => boolean = c => !done && c === gameState.bystanders.top
       villainify("Darkhold Demon", cond, 4, ev => {
-        selectObjectsEv(ev, "Choose a Hero to KO", 2, yourHeroes(), c => KOEv(ev, c));
+        selectObjectsUpToEv(ev, "Choose a Hero to KO", 2, yourHeroes(), c => KOEv(ev, c));
         rescueEv(ev, ev.source);
         done = true;
       });
+      addTurnSet('isFightable', cond, () => true);
     },
     ev => sunlightPower() && addAttackEvent(ev, 2) ]),
 },
