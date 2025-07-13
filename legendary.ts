@@ -827,6 +827,7 @@ interface Ev<TSchemeState = any> {
   withViolence?: boolean
   id: number
   wasBonded?: boolean
+  attachedCards?: Record<string, Card[]> // For fight effect - cards that were attached to the villain
 }
 interface EvParams {
   where?: Deck
@@ -860,6 +861,7 @@ interface EvParams {
   withViolence?: boolean
   actionFilters?: ((ev: Ev) => boolean)[]
   wasBonded?: boolean
+  attachedCards?: Record<string, Card[]>
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: EvType, params: EvParams | ((ev: Ev) => void)) {
@@ -3095,6 +3097,8 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
       return;
     }
   }
+  const attachedCards: Record<string, Card[]> = {};
+  for (const t in c._attached) attachedCards[t] = [...c._attached[t].deck];
   let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
   c.attached("TACTICS").withLast(t => c = t);
   // TODO according to https://boardgamegeek.com/article/19007319#19007319 defeat triggers would happen here
@@ -3110,7 +3114,7 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   moveCardEv(ev, c, playerState.victory);
   if (bondedChoice === false) cont(ev, () => moveCardEv(ev, bonded, ev.where));
   b.each(bc => rescueEv(ev, bc));
-  pushEffects(ev, c, "fight", c.fight, { where: ev.where });
+  pushEffects(ev, c, "fight", c.fight, { where: ev.where, attachedCards });
   if (unbindEffect) pushEv(ev, "EFFECT", { source: c, func: unbindEffect });
   if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }

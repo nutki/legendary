@@ -6386,7 +6386,7 @@ addVillainTemplates("2099", [
     fight: ev => {
       selectCardAndKOEv(ev, yourHeroes());
       cyberModEnemyEv(ev, Color.STRENGTH, 1, n => {
-        if (!ev.source.captured.has(isBystander)) {
+        if (!ev.attachedCards.CAPTURED?.has(isBystander)) {
           enterCityEv(ev, ev.source);
           captureEv(ev, ev.source, n);
         }
