@@ -2155,7 +2155,11 @@ function payCost(action: Ev, resolve: (r: boolean) => void) {
     chivalrousSpendEv(action, attackToPay);
   }
   if (action.type === 'FIGHT') turnState.attackSpecial.limit(a => a.cond(action.what)).each(a => {
-    attackToPay -= payMin(a, attackToPay);
+    const attackMin = payMin(a, attackToPay);
+    if (attackMin === Infinity)
+      attackToPay = 0; // Gamora infinite attack, hardcoded for Inf - Inf
+    else
+      attackToPay -= attackMin;
     eitherToPay -= payMin(a, eitherToPay);
   });
   if (action.type === 'RECRUIT') turnState.recruitSpecial.limit(a => a.cond(action.what)).each(a => {

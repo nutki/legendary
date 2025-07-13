@@ -7223,9 +7223,9 @@ addHeroTemplates("Marvel Studios What If...?", [
   u2: makeHeroCard("Gamora, Destroyer of Thanos", "Destroy an Infinity Stone", 6, u, 3, Color.INSTINCT, "Guardians of the Multiverse", "F", ev => {
     soulbindEv(ev, Color.INSTINCT, c => selectCardEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c)));
   }),
-// Guardians of the Galaxy {SOULBIND six Villains} You get <b>+&infin;</b> Attack, usable only for a single fight.
+// Guardians of the Multiverse {SOULBIND six Villains} You get <b>+&infin;</b> Attack, usable only for a single fight.
   ra: makeHeroCard("Gamora, Destroyer of Thanos", "The Infinity Crusher", 8, u, 5, Color.TECH, "Guardians of the Multiverse", "F", ev => {
-    soulbindEv(ev, "Guardians of the Galaxy", () => addAttackSpecialEv(ev, () => true, Infinity), u, 6);
+    soulbindEv(ev, "Guardians of the Multiverse", () => addAttackSpecialEv(ev, () => true, Infinity), u, 6);
   }),
 },
 {

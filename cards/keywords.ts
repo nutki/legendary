@@ -1402,6 +1402,7 @@ function liberateEv(ev: Ev, n: number) {
 function soulbindEv(ev: Ev, cond: number | Affiliation, effect: (c: Card) => void, limit: Filter<Card> = isVillain, n: number = 1) {
   let bound: Card;
   if (cond && !superPower(cond)) return;
+  if (playerState.victory.count(limit) < n) return;
   if (n > 1) chooseMayEv(ev, "Use Soulbind", () => selectObjectsEv(ev, "Choose cards to Soulbind", n, playerState.victory.limit(limit), c => {
     bound = c;
     attachCardEv(ev, c, playerState.victory, 'SOULBIND');
