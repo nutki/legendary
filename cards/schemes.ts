@@ -3336,12 +3336,13 @@ makeSchemeCard("Halve All Life In The Universe", { twists: 5 }, ev => {
 // EVILWINS: When the Mastermind has sacrificed 5 Heroes for the Soul Stone.
 makeSchemeCard("Sacrifice For The Soul Stone", { twists: [5, 6, 7, 8, 9] }, ev => {
   // Twist: You may KO one of your non-grey Heroes and one of your grey Heroes to "Sacrifice for the Soul Stone." If you do, draw three cards,
-  // shuffle this Twist back into Villain Deck. If you don't stack a Hero from the HQ next to the Mastermind, "Sacrificed for the Soul Stone."
+  // shuffle this Twist back into Villain Deck, then play another card from the Villain Deck. If you don't stack a Hero from the HQ next to the Mastermind, "Sacrificed for the Soul Stone."
   selectCardOptEv(ev, "Choose a non-grey Hero to sacrifice", yourHeroes().has(isColor(Color.GRAY)) ? yourHeroes().limit(isNonGrayHero) : [], c => {
     selectCardEv(ev, "Choose a grey Hero to sacrifice", yourHeroes().limit(Color.GRAY), c2 => {
       KOEv(ev, c); KOEv(ev, c2);
       drawEv(ev, 3);
       shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
+      playAnotherEv(ev);
     });
   }, () => {
     selectCardEv(ev, "Choose a hero", hqCards().limit(isHero), c => {
