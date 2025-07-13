@@ -7690,9 +7690,9 @@ addHeroTemplates("2099", [
     if (superPower(Color.STRENGTH)) { addAttackEvent(ev, 2); fatedFutureEv(ev); }
   }),
 // Reveal the top two cards of the Villain Deck and put them back in any order. {FATED FUTURE}
-  uc: makeHeroCard("Ravage 2099", "Detect Vibrations", 6, u, 4, Color.COVERT, "Marvel Knights", "FD", ev => {
+  uc: makeHeroCard("Ravage 2099", "Detect Vibrations", 6, u, 4, Color.COVERT, "Marvel Knights", "FD", [ ev => {
     revealVillainDeckEv(ev, 2, () => {}, false);
-  }),
+  }, ev => fatedFutureEv(ev)]),
 // Reveal the top card of your deck. You get + Attack equal to that card's cost. Discard it or put it back.
 // {TEAMPOWER Marvel Knights} Then do the same thing with the bottom card of your deck.
   ra: makeHeroCard("Ravage 2099", "Overhorns and Underhorns", 8, u, 3, Color.INSTINCT, "Marvel Knights", "DA", [ ev => {
