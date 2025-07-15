@@ -11,7 +11,7 @@ constructor(seed?: number) {
   this.state = seed === undefined ? Math.floor(Math.random() * (this.m-1)) : seed;
 }
 nextInt(): number {
-  this.state = (this.a * this.state + this.c) % this.m;
+  this.state = (Math.imul(this.a, this.state) + this.c) >>> 0;
   return this.state;
 };
 nextFloat(): number {
@@ -30,7 +30,7 @@ function shuffleArray<T>(a: T[], r: RNG): void {
     let len = a.length;
     let i = len;
     while (i--) {
-	let p = r.nextRange(0,len);
+	let p = r.nextRange(0,i+1);
 	let t = a[i];
 	a[i] = a[p];
 	a[p] = t;
