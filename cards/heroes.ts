@@ -7619,7 +7619,7 @@ addHeroTemplates("2099", [
         gameState.extraTurn = true; // TODO once per game
         addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
       });
-    }) ],
+    }) ]),
 },
 {
   name: "Ghost Rider 2099",
