@@ -3849,14 +3849,14 @@ makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "
 // Ghost {TRANSFORM}.
   [ "Draining Quantum Energy Chamber", ev => {
   // Each other player reveals their hand and KOs one of their cards that shares a Hero Class with any of Ghost's Kidnapped Victims.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to KO", p.hand.limit(gameState.mastermind.attached('KIDNAPPED VICTIM').reduce((a, c) => c.color | a, 0)), c => KOEv(ev, c), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a card to KO", p.hand.limit(ev.source.mastermind.attached('KIDNAPPED VICTIM').reduce((a, c) => c.color | a, 0)), c => KOEv(ev, c), p));
     transformMastermindEv(ev);
   } ],
 // Ghost {TRANSFORM}.
   [ "Elaborate Rescue Plan", ev => {
   // You may choose a player to gain one of Ghost's Kidnapped Victims.
   // If you do, that player may KO one of their Heroes.
-    selectCardOptEv(ev, "Choose a Kidnapped Victim to gain", gameState.mastermind.attached('KIDNAPPED VICTIM'), c => {
+    selectCardOptEv(ev, "Choose a Kidnapped Victim to gain", ev.source.mastermind.attached('KIDNAPPED VICTIM'), c => {
       choosePlayerEv(ev, p => {
         gainEv(ev, c, p);
         selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(p), c => KOEv(ev, c), () => {}, p);
@@ -3867,13 +3867,13 @@ makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "
 // Ghost {TRANSFORM}.
   [ "Nightmarish Wraith", ev => {
   // Each other player puts a non-grey Hero from their discard pile next to Ghost as a Kidnapped Victim.
-    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to put next to Ghost", p.discard.limit(isNonGrayHero), c => attachCardEv(ev, c, gameState.mastermind, 'KIDNAPPED VICTIM'), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, "Choose a Hero to put next to Ghost", p.discard.limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source.mastermind, 'KIDNAPPED VICTIM'), p));
     transformMastermindEv(ev);
   } ],
 // Ghost {TRANSFORM}.
   [ "Shadowy Abduction", ev => {
   // Put the highest-cost Hero from the HQ next to Ghost as a Kidnapped Victim.
-    selectCardEv(ev, "Choose a Hero to put next to Ghost", hqHeroes().highest(c => c.cost), c => attachCardEv(ev, c, gameState.mastermind, 'KIDNAPPED VICTIM'));
+    selectCardEv(ev, "Choose a Hero to put next to Ghost", hqHeroes().highest(c => c.cost), c => attachCardEv(ev, c, ev.source.mastermind, 'KIDNAPPED VICTIM'));
     transformMastermindEv(ev);
   } ],
 ], {
@@ -3881,12 +3881,13 @@ makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "
     addStatMod('cost', c => c.location === source.attachedDeck('KIDNAPPED VICTIM'), 2);
     addStatSet('cardActions', is(source), () => source.attached('KIDNAPPED VICTIM').map(c => (source, ev) => recruitCardActionEv(ev, c)));
   },
+  varDefense: c => c.printedDefense + c.attached('KIDNAPPED VICTIM').uniqueCount(c => c.cost),
 }),
 // You can't fight Ghost unless you made at least 6 Recruit this turn.
 "Ghost, Intangible", 6, ev => {
 // Each player discards a [Covert] Hero or puts a non-grey Hero from their hand or discard pile next to Ghost as a "Kidnapped Victim." Ghost {TRANSFORM}.
   eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c),
-  () => selectCardEv(ev, "Choose a Hero to put next to Ghost", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, gameState.mastermind, 'KIDNAPPED VICTIM'), p)));
+  () => selectCardEv(ev, "Choose a Hero to put next to Ghost", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'KIDNAPPED VICTIM'), p)));
   transformMastermindEv(ev);
 }, {
   fightCond: ev => turnState.totalRecruit >= 6,
