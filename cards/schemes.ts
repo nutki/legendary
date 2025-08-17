@@ -2053,7 +2053,7 @@ makeSchemeCard("S.H.I.E.L.D. vs. HYDRA War", { twists: 7, required: { villains: 
   }));
 }, escapeProgressTrigger(isShieldOrHydraInAnyWay), () => {
   setSchemeTarget(11);
-  gameState.specialActions = ev => gameState.mastermind.attachedDeck('DOUBLEAGENT').deck.map(c => fightActionEv(ev, c));
+  gameState.specialActions = ev => gameState.scheme.attachedDeck('DOUBLEAGENT').deck.map(c => fightActionEv(ev, c));
 }),
 // SETUP: 11 Twists.
 // -Say "I'd never abandon S.H.I.E.L.D.", and you can't fight this turn.
