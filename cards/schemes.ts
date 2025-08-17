@@ -2656,7 +2656,7 @@ makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach
     return [focusActionEv(ev, { recruit: 1 }, () => {
       const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
       selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)).map(d => d === s.current ? gameState.villaindeck : d), d => {
-        revealDeckEv(ev, d, 1, cards => selectCardEv(ev, "Choose a card to put on the bottom", cards, c => moveCardEv(ev, c, d, true)));
+        revealDeckEv(ev, d, 1, cards => selectCardOptEv(ev, "Choose a card to put on the bottom", cards, c => moveCardEv(ev, c, d, true)));
       });
     })];
   };
