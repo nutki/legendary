@@ -2409,8 +2409,8 @@ makeSchemeCard("Ruin the Perfect Wedding", { twists: 11, heroes: [ 5, 7, 7, 7, 8
 }, [], () => {
   const bride = gameState.scheme.attachedDeck('BRIDE');
   const groom = gameState.scheme.attachedDeck('GROOM');
-  gameState.herodeck.limit(c => c.heroName === extraHeroName(1)).each(c => moveCard(c, bride));
-  gameState.herodeck.limit(c => c.heroName === extraHeroName(2)).each(c => moveCard(c, groom));
+  gameState.herodeck.limit(isSetupHero(-1)).each(c => moveCard(c, bride));
+  gameState.herodeck.limit(isSetupHero(-2)).each(c => moveCard(c, groom));
   bride.deck.sort((a, b) => b.cost - a.cost);
   groom.deck.sort((a, b) => b.cost - a.cost);
   setSchemeTarget(14);
