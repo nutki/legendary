@@ -5862,7 +5862,7 @@ addVillainTemplates("Marvel Studios What If...?", [
   [ 1, makeVillainCard("Strange’s Demons", "Skull Demon", 5, 3, {
     fight: ev => soulbindEv(ev, 0, c => {
       drawEv(ev, 2);
-      chooseMayEv(ev, "Do the Bystander's Rescue effect?", () => pushEffects(ev, c, 'rescue', c.rescue));
+      c.rescue && chooseMayEv(ev, "Do the Bystander's Rescue effect?", () => pushEffects(ev, c, 'rescue', c.rescue, { who: playerState }));
     }, isBystander),
   })],
 // FIGHT: {SOULBIND two other Villains} KO up to two cards from your discard pile.
