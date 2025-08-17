@@ -587,12 +587,16 @@ function playHorrorEv(ev: Ev) {
     })
   })
 }
-function addTrapAction(ev: Ev, desc: string, cond: (c: Card) => boolean, func: Handler) {
+function addTrapAction(ev: Ev, desc: string, cond: ((c: Card) => boolean) | ActionCost, func: Handler, moveToVictory: boolean = true) {
+  const cost = typeof cond === "function" ? { cond } : cond;
+  const orgCond = cost.cond;
+  const isActiveTrap = (c: Card) => c.location?.attachedTo === gameState.scheme
+  cost.cond = orgCond ? c => isActiveTrap(c) && orgCond(c) : isActiveTrap;
   addTurnAction(new Ev(ev, 'EFFECT', {
     what: ev.source,
     desc,
-    cost: { cond: c => c.location?.attachedTo === gameState.scheme && cond(c) },
-    func: ev => { func(ev); moveCardEv(ev, ev.what, playerState.victory); },
+    cost,
+    func: ev => { func(ev); moveToVictory && moveCardEv(ev, ev.what, playerState.victory); },
   }));
 }
 // Spider Man

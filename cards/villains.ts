@@ -2327,29 +2327,28 @@ addVillainTemplates("X-Men", [
 // TRAP
   [ 1, makeTrapCard("Murderworld", "Monstrous Pinball Machine", 3,
     ev => {
-      addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, func: ev => {
-        revealHeroDeckEv(ev, 1, cards => cards.each(c => {
-          const fail = () => {
-            KOEv(ev, c);
-          };
-          const success = () => {
-            isHero(c) && recruitForFreeEv(ev, c);
-            moveCardEv(ev, ev.what, playerState.victory);
-          };
-          const actions = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
-            new Ev(ev, 'EFFECT', { what: c, func: n >= c.cost ? success : fail, cost: { recruit: n }})
-          )).filter(ev => canPayCost(ev));
-          const options = actions.map(a => ({l:a.cost.recruit.toString(), v:a}));
-          chooseOptionEv(ev, "Choose amount to pay", options, a => playEvent(a));
-        }));
-      }}));
+      addTrapAction(ev, 'Pay Recruit', { cond: () => countPerTurn('TRAPTEST', ev.source) === 0}, ev => {
+        incPerTurn('TRAPTEST', ev.what);
+        const actions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (new Ev(ev, 'EFFECT', { func: () => {}, cost: { recruit: n }}))).filter(ev => canPayCost(ev));
+        const options = actions.map(a => ({l:a.cost.recruit.toString(), v:a}));
+        chooseOptionEv(ev, "Choose amount to pay", options, a => {
+          revealHeroDeckEv(ev, 1, cards => cards.limit(isHero).each(c => {
+            playEvent(a);
+            if (c.cost <= a.cost.recruit) {
+              recruitForFreeEv(ev, c);
+              moveCardEv(ev, ev.what, playerState.victory);
+            } else {
+              KOEv(ev, c);
+            }
+          }));
+        });
+      }, false);
     },
     // Pay any amount of Recruit. Then you must reveal the top card of the Hero Deck. If you paid enough, recruit that Hero and put this Trap in your Victory Pile.
     ev => false,
     // KO that Hero. Play two extra cards from the Villain Deck next turn.
     ev => {
-      gameState.herodeck.withTop(c => KOEv(ev, c));
-      addFutureTrigger(ev => { villainDrawEv(ev); villainDrawEv(ev); })
+      addFutureTrigger(ev => playAnotherEv(ev, 2));
     },
   )],
 // SUBNAME: Sulfuric Acid Water Slide
@@ -2369,9 +2368,7 @@ addVillainTemplates("X-Men", [
 // TRAP
   [ 1, makeTrapCard("Shadow-X", "Betrayal of the Shadow", 4,
     ev => {
-      addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 6 }, func: ev => {
-        moveCardEv(ev, ev.what, playerState.victory);
-      }}));
+      addTrapAction(ev, 'Pay 6 Recruit', { recruit: 6 }, () => {});
     },
     // You may pay 6 Recruit.
     ev => false,
@@ -2492,10 +2489,10 @@ addVillainTemplates("X-Men", [
 // TRAP
   [ 1, makeTrapCard("Sisterhood of Mutants", "Resurrect Madelyne Pryor", 0,
     ev => {
-      addTurnAction(new Ev(ev, 'EFFECT', { what: ev.source, cost: { recruit: 3 }, func: ev => {
+      addTrapAction(ev, "Pay 3 Recruit", { recruit: 3 }, ev => {
         shuffleIntoEv(ev, ev.what, gameState.villaindeck);
         villainDrawEv(ev);
-      }}));
+      }, false);
     },
     // You may pay 3 Recruit. If you do, shuffle this Trap back into the Villain Deck, then play a card from the Villain Deck.
     ev => false,
