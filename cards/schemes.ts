@@ -1872,7 +1872,10 @@ makeSchemeCard("Invasion of the Venom Symbiotes", { twists: 8, vd_henchmen: [2, 
   addStatSet('ambush', is(ev.twist), () => ev => symbioteBondEv(ev, "TO", cityVillains().limit(isNot(ev.source)), ev.source));
   enterCityEv(ev, ev.twist);
   villainDrawEv(ev);
-}, escapeProgressTrigger(c => true), () => {
+}, [
+  escapeProgressTrigger(c => true),
+  runOutProgressTrigger('VILLAIN', false),
+], () => {
   setSchemeTarget(3, true);
 }),
 // SETUP: 10 Twists. Wound Stack has 6 Wounds per player.
