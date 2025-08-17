@@ -3392,15 +3392,17 @@ makeSchemeCard("Warp Reality Into a TV Show", { twists: 11 }, ev => {
   if (ev.nr <= 4) {
     // Twist 1-4 Another TV show (city space) appears on the left side of the city, representing the 80s, 90s, 2000s, & 2010s. Another HQ space appears beneath it.
     const era = ["80s", "90s", "2000s", "2010s"][ev.nr - 1];
-    gameState.city = [makeCityDeck("CITY_" + era, -ev.nr), ...gameState.city];
-    gameState.hq = [makeHQDeck("HQ_" + era, -ev.nr), ...gameState.hq];
+    gameState.city = [makeCityDeck("CITY_" + era, 2-ev.nr), ...gameState.city];
+    gameState.hq = [makeHQDeck("HQ_" + era, 2-ev.nr), ...gameState.hq];
     gameState.city[0].above = gameState.hq[0];
     gameState.hq[0].below = gameState.city[0];
     makeCityAdjacent(gameState.city);
+    gameState.herodeck.withTop(c => moveCardEv(ev, c, gameState.hq[0]));
   } else if (ev.nr >= 5 && ev.nr <= 11) {
     // Twist 5-11 Destroy the rightmost TV show and the HQ space beneath it. KO any Hero in that HQ space. Push forward any Villain there.
     // Move the Villain Deck & Hero Deck to mark the city's right edge.
     gameState.city.withLast(d => {
+      gameState.cityEntry = d.next;
       destroyCity(d);
       d.deck.each(c => d.next ? moveCardEv(ev, c, d.next) : villainEscapeEv(ev, c));
     });
@@ -3411,6 +3413,12 @@ makeSchemeCard("Warp Reality Into a TV Show", { twists: 11 }, ev => {
   }
   schemeProgressEv(ev, ev.nr);
 }, [], s => {
+  gameState.city[0].cityPosition = undefined;
+  gameState.city[1].cityPosition = undefined;
+  gameState.city = gameState.city.slice(2);
+  gameState.hq[0].cityPosition = undefined;
+  gameState.hq[1].cityPosition = undefined;
+  gameState.hq = gameState.hq.slice(2)
   setSchemeTarget(11);
 }),
 ]);
