@@ -6515,7 +6515,7 @@ addVillainTemplates("Weapon X", [
         playAnotherEv(ev);
       }
     },
-    fightFail: enemyBerserkFail(ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p)))),
+    fightFail: enemyBerserkFail(ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p))),
     escape: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
     trigger: enemyBerserkTrigger(2),
   })],
