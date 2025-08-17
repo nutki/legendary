@@ -3887,7 +3887,7 @@ makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "
 "Ghost, Intangible", 6, ev => {
 // Each player discards a [Covert] Hero or puts a non-grey Hero from their hand or discard pile next to Ghost as a "Kidnapped Victim." Ghost {TRANSFORM}.
   eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c),
-  () => selectCardEv(ev, "Choose a Hero to put next to Ghost", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'KIDNAPPED VICTIM'), p)));
+  () => selectCardEv(ev, "Choose a Hero to put next to Ghost", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'KIDNAPPED VICTIM'), p), p));
   transformMastermindEv(ev);
 }, {
   fightCond: ev => turnState.totalRecruit >= 6,
