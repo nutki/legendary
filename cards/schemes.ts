@@ -2085,7 +2085,7 @@ makeSchemeCard("Hydra Helicarriers Hunt Heroes", { twists: 8, heroes: [4, 6, 6, 
     if (amount >= allClasses.size) {
       chosenClasses = allClasses.reduce((p, c) => p | c, 0);
     } else {
-      repeat(amount, () => chooseClassEv(ev, c => chosenClasses |= c, c => !(c && chosenClasses)));
+      repeat(amount, () => cont(ev, () => chooseClassEv(ev, c => chosenClasses |= c, c => !(c & chosenClasses))));
     }
   });
   cont(ev, () => hqHeroes().limit(chosenClasses).each(c => KOEv(ev, c)));
