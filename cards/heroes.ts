@@ -4881,7 +4881,7 @@ addHeroTemplates("Revelations", [
   ra: makeHeroCard("Speed", "Break the Sound Barrier", 8, u, 0, Color.COVERT, "Avengers", "", [ ev => revealPlayerDeckEv(ev, 6, cards => {
     selectObjectsEv(ev, "Choose cards to draw", 2, cards, c => drawCardEv(ev, c)); // TODO top or bottom cleanup
     cont(ev, () => chooseOneEv(ev, "Put the rest back", ["Top", () => {}], ["Bottom", () => {
-      chooseOrderEv(ev, "Choose order", cards, c => moveCardEv(ev, c, playerState.deck));
+      chooseOrderEv(ev, "Choose order", cards, c => moveCardEv(ev, c, playerState.deck, true));
     }]));
   }), ev => superPower(Color.COVERT) && hyperspeedEv(ev, 6) ]),
 },
