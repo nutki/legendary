@@ -6198,12 +6198,12 @@ addVillainTemplates("Ant-Man and the Wasp", [
       repeat(2, () => cont(ev, () => gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source, 'DANGEROUS_STUNT'))));
     },
     twist: ev => {
-      withCity('STREETS', d => { isCityEmpty(d) ?
+      withCity('STREETS', d => { !isCityEmpty(d) ?
         repeat(2, () => cont(ev, () => gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source, 'DANGEROUS_STUNT')))) : (
-          ev.source.attachedDeck('DANGEROUS_STUNTS').withTop(c => returnToStackEv(ev, gameState.wounds, c))
+          selectCardEv(ev, "Choose a stunt to return", ev.source.attachedDeck('DANGEROUS_STUNT').deck, c => returnToStackEv(ev, gameState.wounds, c))
         )});
       cont(ev, () => {
-        const stunts = ev.source.attachedDeck('DANGEROUS_STUNTS');
+        const stunts = ev.source.attachedDeck('DANGEROUS_STUNT');
         if (stunts.size >= 5) {
           eachPlayer(p => cont(ev, () => stunts.withTop(c => gainEv(ev, c, p))));
           cont(ev, () => {
