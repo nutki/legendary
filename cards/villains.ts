@@ -6185,7 +6185,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
 // VP: 5
   [ 1, makeVillainCard("Ghost Chasers", "Goliath", 8, 5, {
     ambush: ev => eachPlayer(p => doubleCrossEv(ev, p)),
-    fight: ev => selectCardEv(ev, "Choose a villain to crush", cityAdjacent(ev.source.location).flatMap(d => d.limit(isVillain)), c => defeatEv(ev, c)),
+    fight: ev => selectCardEv(ev, "Choose a villain to crush", cityAdjacent(ev.where).flatMap(d => d.limit(isVillain).limit(c => c.defense <= 4)), c => defeatEv(ev, c)),
     sizeChanging: Color.STRENGTH,
   })],
 // AMBUSH: Stack 2 cards from the Wound Deck next to this Scheme as "Dangerous Stunts."
