@@ -1173,7 +1173,7 @@ addTemplates("MASTERMINDS", "X-Men", [
 ...makeEpicMastermindCard("Deathbird", [ 8, 10 ], 6, { villains: "Shi'ar Imperial Guard", henchmen: "Shi'ar Death Commandos|Shi'ar Patrol Craft" }, ev => {
 // If there are already any Shi'ar Villains in the city, each player gains a Wound. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 7 Attack worth 5 VP.
 // If there are already any Shi'ar Villains in the city, play a random Horror. Then this strike enters the city as a Shi'ar Battle Cruiser Token Villain with 9 Attack worth 6 VP.
-  cityVillains().has(c => leadBy(ev.source)(c) || isStrike(c)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
+  cityVillains().has(c => c.villainGroup?.includes("Shi'ar") || c.cardName?.includes("Shi'ar") || leadBy(ev.source)(c) || isStrike(c)) && (ev.source.epic ? playHorrorEv(ev) : eachPlayer(p => gainWoundEv(ev, p)));
   villainify(u, ev.what, ev.source.epic ? 9 : 7, ev.source.epic ? 6 : 5);
   enterCityEv(ev, ev.what);
 }, [
@@ -1210,7 +1210,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     enterCityEv(ev, ev.source);
   } ],
 ], {
-  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * [...gameState.escaped.deck, ...cityVillains()].count(c1 => c1.villainGroup?.includes("Shi'ar") || leadBy(c)(c1) || isStrike(c1))
+  varDefense: c => c.printedDefense + (c.epic ? 2 : 1) * [...gameState.escaped.deck, ...cityVillains()].count(c1 => c1.villainGroup?.includes("Shi'ar") || c1.cardName?.includes("Shi'ar") || leadBy(c)(c1) || isStrike(c1))
 }),
 // START: Mojo captures 3 <b>Human Shields</b>. All Bystanders in Victory Piles are worth 3 VP.
 // EPICNAME: Mojo
