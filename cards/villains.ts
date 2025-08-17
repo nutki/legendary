@@ -6610,7 +6610,7 @@ addVillainTemplates("Weapon X", [
 // ATTACK: 3+
 // VP: 3
   [ 1, makeVillainCard("Weapon Plus", "Skinless Man (Weapon III)", 3, 3, {
-    ambush: ev => selectCardOptEv(ev, "Choose a Bystander to capture", playerState.victory.limit(isBystander), c => captureEv(ev, ev.source, c), () => {
+    ambush: ev => selectCardOrEv(ev, "Choose a Bystander to capture", playerState.victory.limit(isBystander), c => captureEv(ev, ev.source, c), () => {
       gainWoundEv(ev, playerState);
       captureEv(ev, ev.source);
     }),
