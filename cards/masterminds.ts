@@ -1885,7 +1885,7 @@ addTemplates("MASTERMINDS", "Venom", [
 // Alien Awakening FIX
   [ "Alien Awakening", ev => {
   // If this is not the final tactic, a Henchman Villain from any Victory Pile <b>Symbiote Bonds</b> with Hybrid.
-    finalTactic(ev.source) || symbioteBondEv(ev, "WHAT", ev.source.mastermind, gameState.players.map(p => p.victory.limit(isHenchman)).merge());
+    finalTactic(ev.source) || symbioteBondEv(ev, "WHAT", ev.source.mastermind, gameState.players.map(p => p.victory.limit(isHenchmanVillain)).merge());
   } ],
   [ "Escaped Monstrosity", ev => {
   // If this is not the final Tactic, a Villain from the city or Escape Pile <b>Symbiote Bonds</b> with Hybrid.
