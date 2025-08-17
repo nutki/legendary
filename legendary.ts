@@ -3044,13 +3044,15 @@ function villainDraw(ev: Ev): void {
   }
 }
 function enterCityEv(ev: Ev, c: Card, d?: Deck | undefined, extraEffects?: () => void, noAmbush?: boolean) {
-  if (isRevelationsLocation(c)) {
-    playLocationEv(ev, c);
-    return;
-  }
-  moveCardEv(ev, c, d || gameState.cityEntry);
-  extraEffects?.();
-  noAmbush || pushEffects(ev, c, 'ambush', c.ambush);
+  cont(ev, () => {
+    if (isRevelationsLocation(c)) {
+      playLocationEv(ev, c);
+      return;
+    }
+    moveCardEv(ev, c, d || gameState.cityEntry);
+    extraEffects?.();
+    noAmbush || pushEffects(ev, c, 'ambush', c.ambush);
+  });
 }
 function enterSewersEv(ev: Ev, c: Card, noAmbush?: boolean) {
   withCity('SEWERS', d => enterCityEv(ev, c, d, undefined, noAmbush));
