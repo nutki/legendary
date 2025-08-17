@@ -1023,7 +1023,7 @@ function giveCosmicThreat(what: Card, color: number) {
 
 function contestOfChampionsEv(ev: Ev, color: Filter<Card>, effect1: ((p: Player) => void), effect0: ((p: Player) => void), effectEvil: (() => void), evilCount: number = 2) {
   const champs = new Map<Player, Card>();
-  eachPlayer(p => selectCardEv(ev, "Choose a Champion", [...p.hand.deck, p.deck], c => {
+  eachPlayer(p => selectCardEv(ev, "Choose a Champion", [...p.hand.deck, ...p.playArea.deck, p.deck], c => {
     if (c instanceof Deck) revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
       champs.set(p, c);
     }), p);
