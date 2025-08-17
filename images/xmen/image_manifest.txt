@@ -75,7 +75,7 @@ de619a24-5fb3-49df-b2c8-d168ced78a9b masterminds/deathbird.jpg
 737ccce2-35de-4d18-8654-e6d5a3a5e9d8 masterminds/epic_deathbird.jpg
 d542f5ce-e2ed-4f59-ae8a-dce5420d5993 masterminds/deathbird_shiar_elite_bodyguards.jpg
 ce011bb1-fbed-4eb7-8695-39c52091b39d masterminds/deathbird_shiar_extermination_legion.jpg
-207d3330-1642-46aa-8a4e-d216240ddaff masterminds/deathbird_shiar_hovertake_battalion.jpg
+207d3330-1642-46aa-8a4e-d216240ddaff masterminds/deathbird_shiar_hovertank_battalion.jpg
 960e28f1-56ee-4c7a-a962-edd1088d80d5 masterminds/deathbird_shiar_master_spies.jpg
 31342ec8-3f71-4f37-8e6f-634a3e170e53 masterminds/mojo.jpg
 ee85bf23-c4a5-473f-829e-d9e115442987 masterminds/epic_mojo.jpg

@@ -1193,7 +1193,7 @@ addTemplates("MASTERMINDS", "X-Men", [
     addStatSet('fight', is(ev.source), () => () => {});
     enterCityEv(ev, ev.source);
   } ],
-  [ "Shi'ar Hovertake Battalion", ev => {
+  [ "Shi'ar Hovertank Battalion", ev => {
   // Rescue 4 Bystanders. This Tactic enters the city as a Villain whose only ability is: "<b>Escape</b>: Each player gains a Wound."
     rescueEv(ev, 4);
     addStatSet('isVillain', c => c === ev.source, () => true);
