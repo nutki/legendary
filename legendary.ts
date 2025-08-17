@@ -3167,6 +3167,7 @@ function findTriggers(ev: Ev): {trigger: Trigger, source: Card|Ev, state?: objec
     p.deck.each(checkCardTrigger);
   });
   fortifyingCards().each(checkCardTrigger);
+  gameState.astralPlane.each(checkCardTrigger);
   return triggers;
 }
 function addTriggers(ev: Ev): Ev[] {
