@@ -3898,7 +3898,6 @@ makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11,
 // Each player discards a [Strength] Hero or gains a Wound. Put a random Timeline Variant Villain face up in the "Multiverse" space.
   eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   gameState.outOfGame.attachedDeck('TIMELINE VARIANTS').withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'MULTIVERSE'));
-  // TODO mutliverse fightable
   transformMastermindEv(ev);
 }, [
 // Kang {TRANSFORM}.
@@ -3936,6 +3935,7 @@ makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11,
     const variants = gameState.outOfGame.attachedDeck('TIMELINE VARIANTS');
     availiableVillainTemplates().withRandom(v => v.cards.each(([n, c]) => variants.addNewCard(c, n)));
     variants.deck.limit(c => !isVillain(c)).each(c => moveCard(c, gameState.outOfGame));
+    addStatSet('cardActions', is(source), () => source.isTransformed ? gameState.mastermind.attached('MULTIVERSE').map(c => (s, ev) => fightActionEv(ev, c)) : []);
   },
 }),
 // {MULTIVERSE CONQUEROR 8}
@@ -3943,8 +3943,8 @@ makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11,
 "Kang, Multiverse Conqueror", 10, ev => {
 // If there are any Villains in the Multiverse, each player gains a Wound. Then a Villain from the Multiverse enters an empty space among the Rooftops, Streets, or Bridge. Kang {TRANSFORM}.
   gameState.mastermind.attached('MULTIVERSE').size > 0 && eachPlayer(p => gainWoundEv(ev, p));
-  selectCardEv(ev, "Choose a villain to enter", gameState.mastermind.attached('MULTIVERSE'), c => {
-    selectCardEv(ev, "Choose a space to enter", gameState.city.limit(d => isLocation(d, 'ROOFTOPS', 'STREETS', 'BRIDGE')).limit(isCityEmpty), d => {
+  gameState.mastermind.attached('MULTIVERSE').size > 0 && selectCardEv(ev, "Choose a space to enter", gameState.city.limit(d => isLocation(d, 'ROOFTOPS', 'STREETS', 'BRIDGE')).limit(isCityEmpty), d => {
+    selectCardEv(ev, "Choose a villain to enter", gameState.mastermind.attached('MULTIVERSE'), c => {
       enterCityEv(ev, c, d);
     });
   });
