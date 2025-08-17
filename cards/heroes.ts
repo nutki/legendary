@@ -3810,7 +3810,7 @@ addHeroTemplates("Spider-Man Homecoming", [
   uc: makeHeroCard("Peter's Allies", "Liz", 6, 4, u, Color.INSTINCT, "Spider Friends", "", [], { trigger: {
     event: 'COORDINATEDISCARD',
     match: (ev, source) => ev.who === owner(source) && source.location === owner(source).hand && playerState !== ev.who,
-    after: ev => revealAndEv(ev, c => c === ev.source, () => drawEv(ev, 1, ev.parent.who)),
+    after: ev => revealAndEv(ev, c => c === ev.source, () => drawEv(ev, 1, ev.parent.who), owner(ev.source)),
   }}),
 // {COORDINATE}
 // {TEAMPOWER Spider Friends} Each Villain gets -2 Attack this turn. The next time you fight the Mastermind this turn, it gets -2 Attack.
