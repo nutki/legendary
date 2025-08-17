@@ -2933,7 +2933,7 @@ addVillainTemplates("World War Hulk", [
 // ATTACK: 6
 // VP: 4
   [ 1, makeVillainCard("U-Foes", "Ironclad", 6, 4, {
-    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => selectCardAndKOEv(ev, p.victory.limit(isHero).limit(c => c.cost >= 1), p), p)),
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.STRENGTH, () => selectCardAndKOEv(ev, p.discard.limit(isHero).limit(c => c.cost >= 1), p), p)),
     escape: sameEffect,
   })],
 // FIGHT: Each player reveals a [Covert] Hero or gains a Wound.
