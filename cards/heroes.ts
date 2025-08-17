@@ -6409,7 +6409,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
 // {KINDNESS} You get +Attack equal to the total of all the printed Recruit and Attack of the Hero you recruited this way.
   u2: makeHeroCard("Mantis", "Emotional Wave", 6, 3, 0, Color.RANGED, "Guardians of the Galaxy", "", [], { excessiveKindness: ev => addAttackEvent(ev, (ev.what.printedAttack || 0) + (ev.what.printedRecruit || 0)) }),
 // {KINDNESS} You get +Attack equal to the cost of the Hero you recruited this way.
-  ra: makeHeroCard("Mantis", "Discover the Dead", 7, u, u, Color.INSTINCT, "Guardians of the Galaxy", "F", [], { excessiveKindness: ev => addAttackEvent(ev, ev.what.cost) }),
+  ra: makeHeroCard("Mantis", "Discover the Dead", 7, u, 2, Color.INSTINCT, "Guardians of the Galaxy", "FDA", [], { excessiveKindness: ev => addAttackEvent(ev, ev.what.cost) }),
 },
 ]);
 addHeroTemplates("Black Panther", [
