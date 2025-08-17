@@ -1923,7 +1923,7 @@ addTemplates("MASTERMINDS", "Venom", [
   } ],
   [ "Poisoned Loyalties", ev => {
   // Each other player puts a Poisons card from their discard pile into Poison Thanos' "Poisoned Souls" pile.
-    eachOtherPlayerVM(p => selectCardEv(ev, 'Choose a card', p.discard.limit(leadBy(ev.source.mastermind)), c => attachCardEv(ev, c, ev.source, 'SOULS'), p));
+    eachOtherPlayerVM(p => selectCardEv(ev, 'Choose a card', p.discard.limit(leadBy(ev.source.mastermind)), c => attachCardEv(ev, c, ev.source.mastermind, 'SOULS'), p));
   } ],
   [ "Searing Poisons", ev => {
   // Each other player discards a Poisons card from their hand or gains a Wound.
