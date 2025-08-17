@@ -3726,7 +3726,20 @@ addVillainTemplates("S.H.I.E.L.D.", [
   [ 2, makeVillainCard("Hydra Elite", "Crossbones", 4, 2, {
     ambush: ev => {
       gameState.officer.withTop(c => moveCardEv(ev, c, gameState.escaped));
-      cont(ev, () => eachPlayer(p => p.hand.limit(isHero).count('S.H.I.E.L.D.') >= hydraLevel())); // TODO mutli reveal
+      cont(ev, () => eachPlayer(p => {
+        const options = revealable(p).limit(isHero).limit('S.H.I.E.L.D.');
+        const count = hydraLevel();
+        if (options.length >= count) {
+          chooseOptionEv(ev, "Reveal Heroes", [
+            { l: "Yes", v: true },
+            { l: "No", v: false },
+          ],
+            v => v ? selectObjectsEv(ev, "Reveal Heroes", count, options, () => {}, p) : gainWoundEv(ev, p), p
+          );
+        } else {
+          gainWoundEv(ev, p);
+        }
+      })); // TODO mutli reveal
     },
   })],
 // AMBUSH: Put a card from the S.H.I.E.L.D. Officer Stack into the Escape Pile. Then check the <b>Hydra Level.</b> You can't play Heroes of that cost this turn.
