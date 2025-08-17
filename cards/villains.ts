@@ -5601,7 +5601,7 @@ addVillainTemplates("Midnight Sons", [
   [ 1, makeVillainCard("Lilin", "Blackout", 7, 5, {
     ambush: ev => {
       huntForVictimsEv(ev);
-      if (moonlightPower()) huntForVictimsEv(ev);
+      if (moonlightPower()) cont(ev, () => huntForVictimsEv(ev));
     },
     escape: ev => moonlightPower() && eachPlayer(p => gainWoundEv(ev, p)),
     varDefense: c => c.printedDefense + (moonlightPower() ? gameState.ko.count(isBystander) : 0),
