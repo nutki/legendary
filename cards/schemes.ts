@@ -2618,23 +2618,19 @@ makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 
 // Dimension and put it back on the top or bottom of that deck." If a Dimension ever has no cards left, even in the middle of a card ability,
 // it is destroyed. Mark it with a face up Wound.
 // EVILWINS: When at least half of the original Dimensions are destroyed.
-makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach Parallel Dimensions", { twists: 6, vd_bystanders: [ 5, 8, 12, 12, 16] }, ev => {
+makeSchemeCard<{dimensions: Deck[], destroyed: string[]}>("Breach Parallel Dimensions", { twists: 6, vd_bystanders: [ 5, 8, 12, 12, 16] }, ev => {
   // Twist: Choose a Dimension and play two cards from it. <i>(It's ok if it only has 1.)</i>
   const state = ev.state;
-  swapDecks(gameState.villaindeck, state.current);
   selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
-    swapDecks(d, gameState.villaindeck);
-    state.current = d;
+    gameState.villaindeck = d;
   });
   playAnotherEv(ev, 2);
 }, [{
   event: 'TURNSTART',
   after: ev => {
-    const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
-    swapDecks(state.current, gameState.villaindeck);
+    const state: {dimensions: Deck[], destroyed: string[]} = gameState.schemeState;
     selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
-      swapDecks(d, gameState.villaindeck);
-      state.current = d;
+      gameState.villaindeck = d;
     });
   }
 }, {
@@ -2642,20 +2638,34 @@ makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach
   match: (ev, source) => ev.from === gameState.villaindeck,
   after: ev => {
     if (gameState.villaindeck.size === 0) {
-      const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
-      state.destroyed.push(state.current.id);
-      gameState.wounds.withTop(c => attachCardEv(ev, c, state.current, 'DESTROYED'));
-      selectCardEv(ev, "Current dimension was destroyed, choose another", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
-        swapDecks(d, gameState.villaindeck);
-        state.current = d;
-      });
+      const state: {dimensions: Deck[], destroyed: string[]} = gameState.schemeState;
+      state.destroyed.push(gameState.villaindeck.id);
+      gameState.wounds.withTop(c => attachCardEv(ev, c, gameState.villaindeck, 'DESTROYED'));
+      cont(ev, () => schemeProgressEv(ev, state.destroyed.length));
     }
+  }
+}, {
+  event: 'REVEAL',
+  match: ev => ev.where === gameState.villaindeck,
+  before: ev => {
+    const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
+    selectCardEv(ev, "Choose a Dimension to reveal", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
+      gameState.villaindeck = d;
+      ev.parent.where = d;
+    });
+  }
+}, {
+  event: 'CLEANUP',
+  before: ev => {
+    const state: {dimensions: Deck[], destroyed: string[]} = gameState.schemeState;
+    const nextDimension = state.dimensions.find(d => !state.destroyed.includes(d.id) && d.size > 0);
+    if (nextDimension) gameState.villaindeck = nextDimension;
   }
 }], s => {
   gameState.specialActions = ev => {
     return [focusActionEv(ev, { recruit: 1 }, () => {
       const state: {dimensions: Deck[], current: Deck, destroyed: string[]} = gameState.schemeState;
-      selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)).map(d => d === s.current ? gameState.villaindeck : d), d => {
+      selectCardEv(ev, "Choose a Dimension", state.dimensions.limit(d => !state.destroyed.includes(d.id)), d => {
         revealDeckEv(ev, d, 1, cards => selectCardOptEv(ev, "Choose a card to put on the bottom", cards, c => moveCardEv(ev, c, d, true)));
       });
     })];
@@ -2671,10 +2681,9 @@ makeSchemeCard<{dimensions: Deck[], current: Deck, destroyed: string[]}>("Breach
     }
     moveCard(c, last);
   });
-  setSchemeTarget(dimensions.length);
+  setSchemeTarget(Math.ceil(dimensions.length / 2));
   s.dimensions = dimensions;
-  dimensions[0].each(c => moveCard(c, gameState.villaindeck));
-  s.current = dimensions[0];
+  gameState.villaindeck = dimensions[0];
   s.destroyed = [];
 }),
 ]);

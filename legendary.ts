@@ -2667,7 +2667,8 @@ function cleanupRevealed (ev: Ev, src: Card[], dst: Deck, bottom: boolean = fals
 function revealDeckEv(ev: Ev, src: Deck, amount: number | ((c: Card[]) => boolean), action: (c: Card[]) => void, random: boolean = true, bottom: boolean = false, agent: Player = playerState) {
   if (amount === 0) return;
   const cards: Card[] = [];
-  pushEv(ev, "REVEAL", { where: src, who: agent, func: () => {
+  pushEv(ev, "REVEAL", { where: src, who: agent, func: ev2 => {
+    src = ev2.where;
     for(let i = 0; typeof amount === "number" ? i < amount : amount(cards); i++) {
       const c = src.deck[src.deck.size - i - 1];
       if (!c) break;
@@ -2754,7 +2755,8 @@ function investigateEv(ev: Ev, f: Filter<Card>, src: Deck = playerState.deck, ac
   let cards: Card[] = [];
   const amount = turnState.investigateAmount || 2;
   gameState.players.each(p => src === p.deck && p.deck.size < amount && reshufflePlayerDeckEv(ev, p));
-  pushEv(ev, "REVEAL", { where: src, who: agent, func: () => {
+  pushEv(ev, "REVEAL", { where: src, who: agent, func: ev2 => {
+    src = ev2.where;
     cards = src.deck.slice(-amount);
     src.registerRevealed(cards);
   }})
