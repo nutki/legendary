@@ -1450,6 +1450,9 @@ function exploreEv(ev: Ev, effect: (c: Card) => void) {
     }, false, true);
   }));
 }
+function heistCards() {
+  return [...turnState.cardsPlayed.limit(c => !!c.heist), ...pastEvWhat('DEFEAT').limit(c => !!c.heist)];
+}
 function heistAction(ev: Ev) {
   return new Ev(ev, 'HEIST', {
     desc: 'Attempt a Heist',
@@ -1461,7 +1464,7 @@ function heistAction(ev: Ev) {
         if (theirValue > ourValue) {
           gainWoundEv(ev);
         } else if (theirValue < ourValue) {
-          const cards = turnState.pastEvents.limit(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist).map(ev => ev.what);
+          const cards = heistCards();
           gameState.scheme.each(s => s.heist && cards.push(s));
           selectCardOrderEv(ev, "Choose Heist order", cards, c1 => {
             pushEv(ev, 'EFFECT', { source: c1, what: c, func: c1.heist });
@@ -1472,8 +1475,7 @@ function heistAction(ev: Ev) {
   });
 }
 function canHeist() {
-  return turnState.pastEvents.has(ev => (ev.type === 'PLAY' || ev.type === 'DEFEAT') && !!ev.what.heist) &&
-    !turnState.pastEvents.has(ev => ev.type === 'HEIST');
+  return !turnState.pastEvents.has(ev => ev.type === 'HEIST') && heistCards().size > 0;
 }
 function doubleCrossEv(ev: Ev, p: Player = playerState) {
   // TODO: multiplayer reveal
