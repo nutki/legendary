@@ -2201,7 +2201,7 @@ makeAdaptingMastermindCard("Hydra Super-Adaptoid", 6, "A.I.M., Hydra Offshoot", 
   makeAdaptingTacticsCard("Black Widow's Bite", 8, ev => {
     eachPlayer(p => {
       const bystanders = p.victory.limit(isBystander);
-      bystanders.size >= 2 ? selectObjectsEv(ev, "Choose Bystanders to KO", 2, bystanders, c => KOEv(ev, c), p) : gainWoundEv(ev, p);
+      bystanders.size >= 2 ? chooseOptionEv(ev, "Choose", [{l:"KO 2 Bystanders", v:true}, {l:"Gain a Wound", v:false}], v => v ? selectObjectsEv(ev, "Choose Bystanders to KO", 2, bystanders, c => KOEv(ev, c), p) : gainWoundEv(ev, p), p) : gainWoundEv(ev, p);
     });
   }, ev => {
     rescueEv(ev, yourHeroes().count(Color.COVERT));
