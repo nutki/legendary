@@ -2798,7 +2798,7 @@ makeSchemeCard("...Control the Mutant Messiah", { }, ev => {
 }, [], () => {
   gameState.specialActions = ev => gameState.scheme.attachedDeck('ASIDE').deck.map(c => new Ev(ev, 'EFFECT', {
     what: c,
-    cost: { recruit: c.cost + gameState.scheme.attached('TWIST').size },
+    cost: { recruit: c.cost + gameState.mastermind.attached('TWIST').size },
     func: ev => gainToDeckEv(ev, c),
   }));
   availiableHeroTemplates().withRandom(heroTemplate => {
