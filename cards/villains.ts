@@ -3942,7 +3942,7 @@ addVillainTemplates("Heroes of Asgard", [
 // ATTACK: 6
   [ 1, makeGainableCard(makeVillainCard("Omens of Ragnarok", "Surtur, Fire Giant King", 6, u, {
     escape: ev => {
-      if (ev.source.attached('WEAPON').has(c => c.cardName === "The Eternal Flame")) {
+      if (ev.attachedCards.WEAPON?.has(c => c.cardName === "The Eternal Flame")) {
         textLog.log("Ragnarok has come");
         hqHeroes().limit('Heroes of Asgard').each(c => KOEv(ev, c));
         eachPlayer(p => (gainWoundEv(ev, p), gainWoundEv(ev, p)));
