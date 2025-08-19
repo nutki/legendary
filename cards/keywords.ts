@@ -1126,6 +1126,11 @@ function cloningInProgress(ev: Ev) {
 function cloneVillainEv(ev: Ev) {
   cloningInProgress(ev) || cont(ev, _cloneVillain);
 }
+function shatterHeroesEv(ev: Ev, cards: Card[]) {
+  cards.filter(isHero).each(c => {
+    addTurnMod('cost', v => c === v, shatterAmount(c.cost));
+  });
+}
 function shatterSelectEv(ev: Ev, c: Card[]) {
   selectCardEv(ev, "Choose a card to shatter", c, c => shatterEv(ev, c));
 }
@@ -1134,9 +1139,7 @@ function shatterAllEv(ev: Ev, c: Card[]) {
 }
 const shatterAmount = (n: number) => -Math.floor(n / 2);
 function shatterEv(ev: Ev, c: Card) {
-  if (isHero(c)) {
-    addTurnMod('cost', v => c === v, shatterAmount(c.cost));
-  } else if (isVillain(c)) {
+  if (isVillain(c)) {
     addTurnMod('defense', v => c === v, shatterAmount(c.defense));
   } else if (isMastermind(c)) {
     let amount = shatterAmount(c.defense);

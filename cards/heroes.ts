@@ -6069,7 +6069,7 @@ addHeroTemplates("Messiah Complex", [
   c1: makeHeroCard("Siryn", "Echolocation", 2, u, 1, Color.COVERT, "X-Factor", "FD", ev => chooseClassEv(ev, color => investigateEv(ev, color))),
 // {POWER Covert} {SHATTER} each Hero currently in the HQ whose printed cost is 2, 4, 6, and/or 8.
   c2: makeHeroCard("Siryn", "Hypnotic Call", 4, u, 2, Color.COVERT, "X-Factor", "D",
-    ev => superPower(Color.COVERT) && shatterAllEv(ev, hqHeroes().limit(c => [2, 4, 6, 8].includes(c.cost)))),
+    ev => superPower(Color.COVERT) && shatterHeroesEv(ev, hqHeroes().limit(c => [2, 4, 6, 8].includes(c.cost)))),
 // <b>Tactical Formation 246: Shatter</b> all Villains.
   uc: makeHeroCard("Siryn", "Three-Octave Arpeggio", 6, u, 4, Color.RANGED, "X-Factor", "FD",
     ev => tacticalFormation('246') && shatterAllEv(ev, fightableCards().limit(isVillain))),
@@ -6091,7 +6091,7 @@ addHeroTemplates("Messiah Complex", [
     ev => superPower(Color.RANGED) && investigateEv(ev, c => c.cost === 0, playerState.deck, c => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c)))),
 // {SHATTER} the Mastermind or {SHATTER} all Heroes currently in the HQ.
   ra: makeHeroCard("Rictor", "Massive Earthquake", 7, u, u, Color.RANGED, "X-Factor", "", ev => {
-    chooseOneEv(ev, "Choose a target", ["Mastermind", () => shatterSelectEv(ev, gameState.mastermind.deck)], ["Heroes in HQ", () => shatterAllEv(ev, hqHeroes())]);
+    chooseOneEv(ev, "Choose a target", ["Mastermind", () => shatterSelectEv(ev, gameState.mastermind.deck)], ["Heroes in HQ", () => shatterHeroesEv(ev, hqHeroes())]);
   }),
 },
 ]);
