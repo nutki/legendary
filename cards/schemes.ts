@@ -2843,7 +2843,7 @@ makeSchemeCard("...Reveal the Heroes' Evil Clones", { }, ev => {
   attachCardEv(ev, ev.twist, gameState.mastermind, 'TWIST');
   // The top card of the Hero Deck enters the city as an “Evil Clone” Villain.
   gameState.herodeck.withTop(c => {
-    const clones = [gameState.herodeck.limit(c2 => c2.cardName === c.cardName && c2 !== c).firstOnly(), [c]].merge();
+    const clones = [[...hqHeroes(), ...gameState.herodeck.deck].limit(c2 => c2.cardName === c.cardName && c2 !== c).firstOnly(), [c]].merge();
     cont(ev, () => gameState.herodeck.shuffle());
     clones.each(c => cont(ev, () => {
       villainify("Evil Clone", c1 => c1 === c, c => c.cost + gameState.mastermind.attached('TWIST').size, ev => {
@@ -2853,7 +2853,7 @@ makeSchemeCard("...Reveal the Heroes' Evil Clones", { }, ev => {
       enterCityEv(ev, c);
     }));
   });
-  // {CLONE} a copy of it from the Hero Deck as another Evil Clone.
+  // {CLONE} a copy of it from the HQ or Hero Deck as another Evil Clone.
 }, [
   escapeOrCityProgressTrigger(c => c.villainGroup === "Evil Clone"),
   runOutProgressTrigger('VILLAIN', false),
