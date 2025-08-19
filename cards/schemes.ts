@@ -2600,7 +2600,7 @@ makeSchemeCard<{ condemnations: number }>("Put Humanity on Trial", { twists: 11 
   addTurnTrigger('CLEANUP', () => true, ev => {
     gameState.scheme.attachedDeck('JUROR').withTop(juror => {
       if (!done) {
-        KOEv(ev, juror);
+        attachCardEv(ev, juror, gameState.villaindeck, 'CONDEMNATION');
         schemeProgressEv(ev, ++gameState.schemeState.condemnations);
         textLog.log(`Humanity is condemned!`);
       }
