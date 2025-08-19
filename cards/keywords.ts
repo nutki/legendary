@@ -973,7 +973,7 @@ function conquerorVarDefese(amount: number, ...l: CityLocation[]) {
 function conquerorAbility(amount: number, ...l: CityLocation[]) {
   return ({ conqueror: { amount, locations: l }});
 }
-const weaponsInTheCity = () => cityVillains().map(c => c.attached('WEAPONS')).merge();
+const weaponsInTheCity = () => cityVillains().map(c => c.attached('WEAPON')).merge();
 const weaponsPlayersOwn = () => gameState.players.map(p => [...p.discard.limit(isVillainousWeapon), ...p.artifact.limit(isVillainousWeapon)]).merge();
 const weaponsAnywhere = () => [...weaponsInTheCity(), ...weaponsPlayersOwn()];
 
