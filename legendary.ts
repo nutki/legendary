@@ -3060,6 +3060,8 @@ function enterSewersEv(ev: Ev, c: Card, noAmbush?: boolean) {
 function villainEscapeEv(ev: Ev, what: Card) { pushEv(ev, "ESCAPE", { what, func: villainEscape }); }
 function villainEscape(ev: Ev): void {
   let c = ev.what;
+  const attachedCards: Record<string, Card[]> = {};
+  for (const t in c._attached) attachedCards[t] = [...c._attached[t].deck];
   let b = [...c.captured, ...c.attached('WITNESS'), ...c.attached('HUMAN_SHIELD')];
   textLog.log("Escaped:", c);
   // Handle GotG shards
@@ -3074,8 +3076,8 @@ function villainEscape(ev: Ev): void {
   moveCardEv(ev, c, gameState.escaped);
   bonded && moveCardEv(ev, bonded, gameState.escaped);
   selectCardAndKOEv(ev, hqHeroes().limit(c => c.cost <= 6));
-  pushEffects(ev, c, "escape", c.escape);
-  bonded && pushEffects(ev, bonded, "escape", bonded.escape);
+  pushEffects(ev, c, "escape", c.escape, { attachedCards });
+  bonded && pushEffects(ev, bonded, "escape", bonded.escape, { attachedCards });
 }
 function villainFight(ev: Ev): void {
   const c = ev.what;

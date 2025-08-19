@@ -3878,7 +3878,7 @@ addVillainTemplates("Heroes of Asgard", [
       });
     },
     escape: ev => {
-      ev.source.attached('WEAPON').has(c => c.cardName === "The Casket of Ancient Winters") &&
+      ev.attachedCards.WEAPON?.has(c => c.cardName === "The Casket of Ancient Winters") &&
         eachPlayer(p => pickDiscardEv(ev, -3, p));
     },
   })],
