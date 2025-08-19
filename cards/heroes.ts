@@ -7545,8 +7545,8 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // Whenever you gain a Wound this turn, return that Wound to the Wound Deck.
 // {HEIST} Rescue a Bystander.
   uc: makeHeroCard("Scott Lang, Cat Burglar", "Anything for Cassie", 2, 1, 1, Color.INSTINCT, "Crime Syndicate", "D", ev => {
-    addTurnTrigger('GAIN', ev => isWound(ev.what) && playerState === ev.who, () => {
-      returnToStackEv(ev, gameState.wounds, ev.parent.what);
+    addTurnTrigger('GAIN', ev => isWound(ev.what) && playerState === ev.who, e => {
+      returnToStackEv(ev, gameState.wounds, e.parent.what);
     })
   }, { heist: ev => rescueEv(ev) }),
 // {HEIST} You get +1 Attack for each different cost of card you have.
