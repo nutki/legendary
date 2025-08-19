@@ -7728,7 +7728,7 @@ addHeroTemplates("2099", [
         sendUndercoverEv(ev, c);
         superPower("Spider Friends") && playCopyEv(ev, c);
       });
-    });
+    }, false);
   }),
 },
 ]);
