@@ -2931,7 +2931,7 @@ makeSchemeCard("Cursed Pages of the Darkhold Tome", { twists: 11, vd_villain: [ 
   attachCardEv(ev, ev.twist, gameState.mastermind, 'CURSED_PAGE');
   cont(ev, () => {
     const allCards = [...gameState.players.map(p => p.artifact), ...gameState.players.map(p => p.discard), gameState.ko].flatMap(d => d.limit(isTwist));
-    selectCardOptEv(ev, "Choose a Cursed Page to attach", allCards, c => attachCardEv(ev, c, gameState.mastermind, 'CURSED_PAGE'));
+    selectCardEv(ev, "Choose a Cursed Page to attach", allCards, c => attachCardEv(ev, c, gameState.mastermind, 'CURSED_PAGE'));
   });
   let done = false;
   addTurnTrigger('FIGHT', ev => isEnemy(ev.what), ev => {
