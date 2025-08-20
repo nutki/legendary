@@ -4239,7 +4239,7 @@ addHeroTemplates("World War Hulk", [
 // {SMASH 5}
   uc: makeTransformingHeroCard(
     makeHeroCard("Rick Jones", "Irradiated Blood", 5, u, 3, Color.TECH, "S.H.I.E.L.D.", "", ev => playerState.victory.count(isVillain) >= 5 && transformHeroEv(ev, ev.source, 'DECK')),
-    makeHeroCard("Rick Jones", "A-Bomb", 6, u, 0, Color.STRENGTH, "S.H.I.E.L.D.", "F", ev => smashEv(ev, 5)),
+    makeHeroCard("Rick Jones", "A-Bomb", 6, u, 0, Color.STRENGTH, u, "F", ev => smashEv(ev, 5)),
   ),
 // If you defeat two Villains this turn, {TRANSFORM} this into The Destiny Force and put it on top of your deck.
 // TRANSFORMED
