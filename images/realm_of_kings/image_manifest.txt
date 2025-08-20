@@ -26,7 +26,7 @@ c5574562-c97b-46d6-8e1e-8b7c132ab13f masterminds/maximus_the_mad_echotech_chorus
 f426ff29-fd3c-4a1b-982e-5f5e0e0e5e30 masterminds/maximus_the_mad_seize_the_inhuman_throne.jpg
 69dbad10-cbf4-4ee3-b356-be91d853612b masterminds/maximus_the_mad_terrigen_bomb.jpg
 a780992d-632e-4997-ba49-eebb27ccad21 masterminds/emperor_vulcan_of_the_shiar.jpg
-74809a56-2412-4a7c-a5cd-434d77ca1fef masterminds/epic_emperor_vulcan_of_the_shiar.jpg
+74809a56-2412-4a7c-a5cd-434d77ca1fef masterminds/epic_emperor_vulcan.jpg
 55315982-7449-471b-89fd-fe9384bd7623 masterminds/emperor_vulcan_of_the_shiar_blast_every_form_of_energy.jpg
 55fd71f6-a3e2-4c6b-ae6f-5db8ed3abc7b masterminds/emperor_vulcan_of_the_shiar_vast_wealth_of_the_shiar.jpg
 af7c997a-73a7-4586-aa48-d9649b5cb103 masterminds/emperor_vulcan_of_the_shiar_contempt_for_weakness.jpg
