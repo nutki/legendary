@@ -3284,9 +3284,10 @@ makeSchemeCard("Train Black Widows in the Red Room", { twists: [7, 6, 5, 4, 3] }
   gameState.officer.withTop(c => enterCityEv(ev, c));
   playAnotherEv(ev);
 }, [
-  escapeProgressTrigger(isGroup("Black Widow Initiate")),
+  escapeProgressTrigger(isVillain),
+  runOutProgressTrigger('VILLAIN', false),
 ], () => {
-  const isInitiate = (c: Card) => isShieldOfficer(c) && (c.location?.isCity || c.location == gameState.villaindeck);
+  const isInitiate = (c: Card) => isShieldOfficer(c) && (c.location?.isCity || c.location == gameState.villaindeck || c.location == gameState.escaped);
   villainify("Black Widow Initiate", isInitiate, 3, ev => {
     chooseOneEv(ev, "Gain this",
       ["as an Officer", () => gainEv(ev, ev.source)],
