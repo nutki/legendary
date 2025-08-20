@@ -2575,12 +2575,14 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   } ],
   [ "Create the Secret Wars", ev => {
   // Choose a team (e.g. S.H.I.E.L.D., Avengers, X-Men, Guardians of the Galaxy, etc.), {CONTEST OF CHAMPIONS} for that team icon, with Evil selecting from 4 cards from the Hero Deck. Each other player that loses gains a Wound. If you win, the player of your choice gains a Hero from a Pocket Dimension.
-    contestOfChampionsEv(ev, "Avengers", p => {
-      const heroes = hqHeroes().limit(c => c.location.attached('POCKET').size > 0);
-      p === playerState && selectCardEv(ev, "Choose a Hero", heroes, c => choosePlayerEv(ev, p => gainEv(ev, c, p)));
-    }, p => {
-      isOtherPlayerVM(p) && gainWoundEv(ev, p);
-    }, () => {}, 4);
+    chooseTeamEv(ev, team => {
+      contestOfChampionsEv(ev, team, p => {
+        const heroes = hqHeroes().limit(c => c.location.attached('POCKET').size > 0);
+        p === playerState && selectCardEv(ev, "Choose a Hero", heroes, c => choosePlayerEv(ev, p => gainEv(ev, c, p)));
+      }, p => {
+        isOtherPlayerVM(p) && gainWoundEv(ev, p);
+      }, () => {}, 4);
+    });
   } ],
 ], epic => ({
   cosmicThreat: c => c.cost >= (epic ? 6 : 5),

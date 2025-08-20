@@ -2624,6 +2624,10 @@ function chooseColorEv(ev: Ev, f: ((color: number) => void), limit?: (color: num
     f
   );
 }
+function chooseTeamEv(ev: Ev, f: ((team: Affiliation) => void), who: Player = playerState) {
+  const teams = [...gameState.players.flatMap(p => owned(p)), ...gameState.herodeck.deck].unique(c => c.team);
+  chooseOptionEv(ev, "Choose a Team", teams.map(l => ({ l, v: l })), f, who);
+}
 function distributeEvenlyEv<P,C>(ev: Ev, desc: (o: C) => string, objects: C[], targets: P[], effect: (o: C, t: P) => void, who: Player = playerState) {
   let availableTargets = [...targets];
   objects.each(c => cont(ev, () => selectCardEv(ev, desc(c), availableTargets, p => {
