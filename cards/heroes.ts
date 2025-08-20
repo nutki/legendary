@@ -3588,7 +3588,7 @@ addHeroTemplates("X-Men", [
 // {LIGHTSHOW} Look at the top card of your deck. If it costs 0, KO it.
   uc: makeHeroCard("Jubilee", "Unexpected Explosion", 5, u, 3, Color.INSTINCT, "X-Men", "", addLightShowActionEv, { lightShow: ev => lookAtDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c))) }),
 // {LIGHTSHOW} You get +1 Recruit and +1 Attack for each <b>Lightshow</b> card you played this turn.
-  ra: makeHeroCard("Jubilee", "Prismatic Cascade", 7, 0, 5, Color.COVERT, "X-Men", "", addLightShowActionEv, { lightShow: ev => { const n = lightShowCount(); addRecruitEvent(ev, n); addRecruitEvent(ev, n); } }),
+  ra: makeHeroCard("Jubilee", "Prismatic Cascade", 7, 0, 5, Color.COVERT, "X-Men", "", addLightShowActionEv, { lightShow: ev => { const n = lightShowCount(); addRecruitEvent(ev, n); addAttackEvent(ev, n); } }),
 },
 {
   name: "Kitty Pryde",
