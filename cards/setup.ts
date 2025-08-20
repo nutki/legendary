@@ -383,7 +383,7 @@ addTemplatesWithCounts("WOUNDS", "Weapon X", [
 // ATTACK: 4
 // To play this, you must gain a Wound to the top of your deck.
 // HEAL: When you KO another Wound this turn, you may KO this Wound.
-[ 1, makeEnragingWoundCard("Last Breath", u, 4, 'KO', (ev, c) => isWound(ev.what) && owner(ev.what) === owner(c), ev => gainWoundToDeckEv(ev)) ],
+[ 1, makeEnragingWoundCard("Last Breath", u, 4, 'KO', (ev, c) => isWound(ev.what) && owner(ev.what) === owner(c) && c !== ev.what, ev => gainWoundToDeckEv(ev)) ],
 // ATTACK: 3
 // To play this, you must discard a card.
 // HEAL: When you discard a card this turn <i>(not including discarding to play this card or discarding at the end of your turn)</i> you may KO this Wound.
