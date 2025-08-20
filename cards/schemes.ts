@@ -3373,11 +3373,6 @@ makeSchemeCard<{
 }>("The Time Heist", { twists: 11, heroes: 8 }, ev => {
   // <b>Twist 1,3,5,7,9</b>: Until the next Twist, move the Villain Deck next to "The Past," and play as if "The Past" city, HQ, and Hero Deck exist, while the normal
   // city, HQ, and Hero Deck don't exist. (Use the normal decks and spaces for everything except the city, HQ, and Hero Deck.)
-  const swapDecks = (d1: Deck, d2: Deck) => {
-    [d1.deck, d2.deck] = [d2.deck, d1.deck];
-    [d1._attached, d2._attached] = [d2._attached, d1._attached];
-    [d1.faceup, d2.faceup] = [d2.faceup, d1.faceup];
-  };
   if (ev.nr <= 9) {
     gameState.schemeState.deckPairs.each((pair: [Deck, Deck]) => swapDecks(...pair));
   }
