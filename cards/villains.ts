@@ -5732,6 +5732,7 @@ addVillainTemplates("Marvel Studios What If...?", [
     }),
     fight: ev => ev.source.attached('PARTY_SKRULL_CAPTURE').each(c => selectCardOptEv(ev, "Choose a player to gain the captured Hero", gameState.players,
       p => gainEv(ev, c, p), () => KOEv(ev, c))),
+    varDefense: c => c.printedDefense + c.attached('PARTY_SKRULL_CAPTURE').sum(c => c.cost),
   })],
 // AMBUSH: {XDRAMPAGE Party}
 // FIGHT: You may KO a grey Hero from your discard pile.
