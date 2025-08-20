@@ -5719,7 +5719,7 @@ addVillainTemplates("Marvel Studios What If...?", [
 // ATTACK: 5
 // VP: 3
   [ 1, makeVillainCard("Intergalactic Party Animals", "Party Nebula", 5, 3, {
-    ambush: ev => cityVillains().has(c => c !== ev.source && isGroup(c.villainGroup)(c)) && eachPlayer(p => pickDiscardEv(ev, 1, p)),
+    ambush: ev => cityVillains().has(c => c !== ev.source && isGroup(ev.source.villainGroup)(c)) && eachPlayer(p => pickDiscardEv(ev, 1, p)),
     escape: sameEffect,
   })],
 // AMBUSH: Party Skrull captures the highest-cost Hero from all the HQ spaces under Intergalactic Party Animals. Party Skrull gets +Attack equal to that Hero's Cost.
