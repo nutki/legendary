@@ -4297,7 +4297,7 @@ addVillainTemplates("Into the Cosmos", [
     ],
     trigger: {
       event: "MOVECARD",
-      match: (ev, source) => ev.from === source.attachedDeck('NEWREALITY'),
+      match: (ev, source) => ev.from === source.attachedDeck('NEWREALITY') && source.location !== gameState.escaped && !source.location.owner,
       after: ev => gameState.herodeck.withTop(c => moveCardEv(ev, c, ev.parent.from)),
     }
   })],
