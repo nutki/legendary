@@ -4186,7 +4186,7 @@ addHeroTemplates("World War Hulk", [
 // If you {SMASH} a 0-cost Hero this way, KO it.
   uc: makeTransformingHeroCard(
     makeHeroCard("Namora", "Herculean Effort", 5, 3, u, Color.RANGED, "Champions", "", ev => addTurnTrigger('DEFEAT', ev2 => isLocation(ev2.where, 'SEWERS', 'BRIDGE') && isVillain(ev2.what), ev3 => transformHeroEv(ev3, ev.source, 'DECK'))),
-    makeHeroCard("Namora", "Master of Depths", 6, u, 0, Color.STRENGTH, "Champions", "", ev => smashEv(ev, 3, c => c.cost === 0 && KOEv(ev, c))),
+    makeHeroCard("Namora", "Master of Depths", 6, u, 0, Color.STRENGTH, "Champions", "", ev => smashEv(ev, 3, c => c.cost === 0 && isHero(c) && KOEv(ev, c))),
   ),
 // {POWER Covert} If the Bridge is empty, you may move a Villain there from another city space. A Villain moved this way gets -3 Attack this turn.
   ra: makeHeroCard("Namora", "Turning The Tide", 7, u, 5, Color.COVERT, "Champions", "", ev => superPower(Color.COVERT) && withCity('BRIDGE', bridge => isCityEmpty(bridge) && selectCardOptEv(ev, "Choose a Villain to move to the Bridge", cityVillains(), c => {
