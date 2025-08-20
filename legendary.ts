@@ -1952,8 +1952,8 @@ interface ModifiableStats {
   baseDefense?: number;
 }
 
-function safePlus(a: number, b: number) {
-  return a === undefined ? b === undefined ? undefined : b : a + (b || 0);
+function safeSum(...a: number[]) {
+  return a.some(v => v !== undefined) ? a.reduce((s, v) => s + (v || 0), 0) : undefined;
 }
 function safeOr(a: number, b: number) {
   return a === undefined ? b === undefined ? undefined : b : a | (b || 0);

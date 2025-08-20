@@ -1670,7 +1670,7 @@ makeTransformingMastermindCard(makeMastermindCard("M.O.D.O.K.", 9, 6, "Intellige
 ], {
   init: c => {
     gameState.outwitAmount = () => c.isTransformed ? 3 : 4;
-    addStatSet('fightCost', v => v === c, (c, p) => c.isTransformed ? ({ ...p, either: 0, attack: 0, recruit: safePlus(p.recruit, safePlus(p.attack, p.either))}) : p);
+    addStatSet('fightCost', v => v === c, (c, p) => c.isTransformed ? ({ ...p, either: 0, attack: 0, recruit: safeSum(p.recruit, p.attack, p.either)}) : p);
   },
 }), "M.O.D.O.K., Network Nightmare", 8, ev => {
 // Each player who can't {OUTWIT} M.O.D.O.K. KO's a non-grey Hero from their discard pile. M.O.D.O.K. {TRANSFORM}.
@@ -2480,7 +2480,7 @@ addTemplates("MASTERMINDS", "Into the Cosmos", [
   } ],
   [ "Resurrected as the Child Magus", ev => {
   // Until the start of your next turn, Magus can only be fought with Recruit instead of Attack.
-    addTurnSet('fightCost', c => c === ev.source.mastermind, (c, v) => ({ ...v, recruit: v.recruit + v.attack + v.either, attack: 0, either: 0 }));
+    addTurnSet('fightCost', c => c === ev.source.mastermind, (c, v) => ({ ...v, recruit: safeSum(v.recruit, v.attack, v.either), attack: 0, either: 0 }));
   } ],
 ], {
   varDefense: c => c.printedDefense + (c.epic ? 2 : 1) + cityVillains().count(c => c.attached('SHARD').size > 0),
