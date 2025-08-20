@@ -723,7 +723,7 @@ function woundedFuryVarDefense(c: Card) {
 }
 function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' = 'HAND') {
   const to: Deck = where === 'DECK' ? playerState.deck : where === 'DISCARD' ? playerState.discard : playerState.hand;
-  if (what.location !== gameState.transformed) {
+  if (what.location !== gameState.transformed && !isCopy(what)) {
     pushEv(ev, 'TRANSFORM', { what, to, func: ev => {
       moveCardEv(ev, ev.what, gameState.transformed);
       what.transformed && gameState.transformed.limit(c => c.cardName === what.transformed.cardName).withFirst(c => moveCardEv(ev, c, ev.to));
