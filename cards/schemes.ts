@@ -3670,7 +3670,7 @@ makeSchemeCard("Trash Earth with Hugest Party Ever", { twists: 8, required: { he
   }
 }, [], () => {
   setSchemeTarget(5);
-  forbidAction('FIGHT', c => c.cardName === "Frigga, Mother of Thor");
+  forbidAction('FIGHT', c => c.cardName === "Frigga, Mother of Thor", true);
 }),
 ]);
 addTemplates("SCHEMES", "Ant-Man and the Wasp", [
