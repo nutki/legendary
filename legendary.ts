@@ -1700,7 +1700,7 @@ function isWound(c: Card): boolean { return c.cardType === "WOUND"; }
 function isHero(c: Card): boolean { return getModifiedStat(c, 'isHero', c.cardType === "HERO" || (c.gainable && owner(c) !== undefined && !c.isArtifact)); }
 function isNonGrayHero(c: Card) { return isHero(c) && !isColor(Color.GRAY)(c); }
 function isVillain(c: Card): boolean { return getModifiedStat(c, 'isVillain', c.cardType === "VILLAIN" && (!c.gainable || !owner(c))); }
-function isMastermind(c: Card): boolean { return c.cardType === "MASTERMIND" || c.location === gameState.mastermind; }
+function isMastermind(c: Card): boolean { return getModifiedStat(c, 'isMastermind', c.cardType === "MASTERMIND" || c.location === gameState.mastermind); }
 function isTactic(c: Card): boolean { return getModifiedStat(c, 'isTactic', c.cardType === "TACTICS"); }
 function finalTactic(c: Card): boolean { return c.mastermind.attached("TACTICS").size === 0; }
 function isStrike(c: Card): boolean { return c.cardType === "MASTER STRIKE"; }
@@ -1772,6 +1772,7 @@ function fightableCards(): Card[] {
     ...[...CityCards(), ...hqCards(), gameState.villaindeck.top, ...gameState.mastermind.deck, gameState.bystanders.top].filter(c => c && isFightable(c)),
     ...playerState.victory.limit(isVillain).limit(isFightable),
     ...fortifyingCards().limit(isEnemy),
+    ...gameState.scheme.limit(isEnemy),
     ...gameState.players.map(p => attachedCards('PREYING', p.deck)).merge(), ...gameState.astralPlane.deck, ...gameState.city.flatMap(d => d.attached('LOCATION')),
   ];
 }
@@ -1950,6 +1951,7 @@ interface ModifiableStats {
   conqueror?: { locations: CityLocation[], amount: number };
   mastermindUnbind?: Handler;
   baseDefense?: number;
+  isMastermind?: boolean;
 }
 
 function safeSum(...a: number[]) {
@@ -2408,6 +2410,14 @@ function gameOverEv(ev: Ev, result: "WIN" | "LOSS" | "DRAW", mastermind?: Card |
   pushEv(ev, "GAMEOVER", { ui: true, result, desc });
 }
 function destroyCurrentPlayer(ev: Ev) {
+  textLog.log("Destroyed " + playerState.name);
+  owned().each(c => moveCardEv(ev, c, gameState.outOfGame));
+  // remove player from the order
+  const left = playerState.left;
+  const right = playerState.right;
+  left.right = right;
+  right.left = left;
+  turnState.endofturn = true;
   // TODO multiplayer
 }
 function unvailSchemeEv(ev: Ev) {
@@ -2914,9 +2924,9 @@ function playTwist(ev: Ev): void {
   confirmEv(ev, 'Scheme Twist!', gameState.scheme.top);
   const params = { nr: ++gameState.twistCount, twist: ev.what, state: gameState.schemeState }
   if (gameState.scheme.attached('AMBUSHSCHEME').size)
-    selectCardOrderEv(ev, "Choose Scheme Twist order", [gameState.scheme.attached('AMBUSHSCHEME')[0], gameState.scheme.top], (c: Card) => pushEv(ev, "EFFECT", { source: c, func: c.twist, ...params }));
+    selectCardOrderEv(ev, "Choose Scheme Twist order", [gameState.scheme.attached('AMBUSHSCHEME')[0], ...gameState.scheme.deck], (c: Card) => pushEv(ev, "EFFECT", { source: c, func: c.twist, ...params }));
   else
-    pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, ...params });
+    gameState.scheme.top && pushEv(ev, "EFFECT", { source: gameState.scheme.top, func: gameState.scheme.top.twist, ...params });
   isSoloGame() && cont(ev, () => {
     if (!(gameState.advancedSolo === "WHATIF" && pastEvents("TWIST").has(isNot(ev)))) {
       if (gameState.advancedSolo) selectCardEv(ev, "Choose a card to put on the bottom of the Hero deck", hqHeroes().limit(c => c.cost <= 6), sel => moveCardEv(ev, sel, gameState.herodeck, true));

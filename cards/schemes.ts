@@ -3478,17 +3478,18 @@ makeSchemeCard("Ritual Sacrifice To Summon Chthon", { twists: [ 7, 8, 9, 10, 11 
       // <i>[This card can only start the game as the Scheme on the other side.]</i>
       const chton = makeSchemeCard("Great Old One Chthon", {}, ev => {
         shuffleIntoEv(ev, ev.twist, gameState.villaindeck);
-        gameState.players.length === 1 ? gameOverEv(ev, 'LOSS', ev.source) : destroyCurrentPlayer(ev);
+        playerState.right === playerState ? gameOverEv(ev, 'LOSS', ev.source) : destroyCurrentPlayer(ev);
       });
       chton.set = "Midnight Sons";
       chton.printedVP = 13;
+      chton.backSide = ev.source.instance;
       chton.isTransformed = true;
-      chton.strike = chton.twist = ev => {
-        shuffleIntoEv(ev, ev.twist || ev.what, gameState.villaindeck);
-        gameState.players.length === 1 ? gameOverEv(ev, 'LOSS', ev.source) : destroyCurrentPlayer(ev);
-      }
-      Object.setPrototypeOf(ev.source, Object.getPrototypeOf(chton));
-      // addStatSet('isMastermind', chton, () => true); TODO
+      chton.strike = chton.twist;
+      chton.printedDefense = 27;
+      Object.setPrototypeOf(ev.source, chton);
+      addStatSet('isMastermind', is(ev.source), () => true);
+      gameState.schemeTarget = gameState.schemeProgress = undefined;
+      getMasterminds().limit(isNot(ev.source)).each(m => KOEv(ev, m));
     }
   }},
 ], () => {
