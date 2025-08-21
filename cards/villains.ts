@@ -5682,7 +5682,7 @@ addVillainTemplates("Marvel Studios What If...?", [
   [ 1, makeVillainCard("Intergalactic Party Animals", "Frigga, Mother of Thor", 12, 6, {
     ambush: ascendToMastermind,
     cardActions: [(c, ev) => {
-      return new Ev(ev, 'EFFECT', { desc: "Hide the party", cost: { cond: () => playerState.hand.has(c => c.cost >= 5) }, source: c, func: ev => {
+      return new Ev(ev, 'EFFECT', { desc: "Hide the party", cost: { cond: () => playerState.hand.has(c => c.cost >= 5) && isFightable(c) }, source: c, func: ev => {
         selectCardEv(ev, "Choose a card to discard", playerState.hand.limit(c => c.cost >= 5), c => {
           discardEv(ev, c);
           shuffleIntoEv(ev, ev.source, gameState.villaindeck);
