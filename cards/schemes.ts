@@ -3620,6 +3620,7 @@ makeSchemeCard("Collect an Interstellar Zoo", { twists: 11 }, ev => {
     const f: Filter<Card>[] = [, Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.TECH, Color.RANGED,
       c => c.cost === 5, c => c.cost === 4, c => c.cost === 3, c => c.cost === 0, hasRecruitIcon, hasAttackIcon];
     let done = false;
+    // TODO: multiplayer reveal hand
     eachPlayer(p => cont(ev, () => {
       !done && selectCardEv(ev, "Choose a Hero to steal", handOrDiscard(p).limit(f[ev.nr]), c => {
         attachCardEv(ev, c, gameState.scheme, 'STOLEN');
@@ -3628,6 +3629,8 @@ makeSchemeCard("Collect an Interstellar Zoo", { twists: 11 }, ev => {
     }));
     cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('STOLEN').size));
   }
+}, [], () => {
+  setSchemeTarget(5);
 }),
 // SETUP: 4 Twists. Include exactly one Villain Group with "{RISEOFTHELIVINGDEAD}." Add 8 random cards from an extra Hero to the Villain Deck.
 // 1-2 players; Add 3 extra Bystanders.
