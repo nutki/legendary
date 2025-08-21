@@ -3545,7 +3545,7 @@ addHeroTemplates("X-Men", [
 // Then, draw a card for each X-Men card you <b>Berserked</b>.
   ra: makeHeroCard("Colossus & Wolverine", "Uncanny X-Men", 7, u, 3, Color.STRENGTH, "X-Men", "", ev => {
     berserkEv(ev, 3);
-    cont(ev, () => drawEv(ev, turnState.pastEvents.count(e => e.type === 'DISCARD' && e.parent === ev)));
+    cont(ev, () => drawEv(ev, turnState.pastEvents.count(e => e.type === 'DISCARD' && e.parent === ev && isTeam("X-Men")(e.what))));
   }),
 },
 {
