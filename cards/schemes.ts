@@ -3683,7 +3683,11 @@ makeSchemeCard("Auction Shrink Tech to Highest Bidder", { twists: 11, heroes: [ 
   gameState.scheme.attachedDeck('SHRINKTECH').withRandom(c => {
     // If you recruit it, either KO that Hero or choose any player to gain it.
     attachCardEv(ev, c, gameState.scheme, 'RECRUITABLE');
-    addTurnAction(new Ev(ev, 'RECRUIT', { cost: getRecruitCost(c), what: c}));
+    addTurnAction(recruitCardActionEv(ev, c));
+    addTurnMod('cost', is(c), () => gameState.scheme.attached('HOSTILE BID').size);
+    addTurnTrigger('RECRUIT', ev => ev.what === c, e => {
+      selectCardOptEv(e, "Choose a player to gain this Hero", gameState.players, p => gainEv(e, c, p), () => KOEv(e, c));
+    });
     // If you don't recruit it by the end of this turn, stack it next to the Scheme as "Controlled by Arms Dealers."
     addTurnTrigger('CLEANUP', () => true, () => {
       if (c.location.attachedTo === gameState.scheme) {
@@ -3697,7 +3701,7 @@ makeSchemeCard("Auction Shrink Tech to Highest Bidder", { twists: 11, heroes: [ 
   // TODO not selectable but random with restriction
   const isShrinkTech = (c: Card) => c.heroName === extraHeroName();
   gameState.herodeck.deck.filter(isShrinkTech).forEach((c, i) => {
-    moveCard(c, gameState.scheme.attachedDeck('SHRINKTECH'));
+    moveCard(c, gameState.scheme.attachedFaceDownDeck('SHRINKTECH'));
   });
 }),
 // SETUP: 5 Twists.
