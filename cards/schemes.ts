@@ -3506,7 +3506,7 @@ makeSchemeCard("Sire Vampires at the Blood Bank", { twists: 10, vd_henchmen: [ 2
   // Twist:  If there is a Villain in the Blood Bank, stack a card from the Bystander Deck next to the Scheme as a "Vampire Thrall".
   villainIn('BANK').size ? gameState.bystanders.withTop(c => {
     attachCardEv(ev, c, gameState.scheme, 'VAMPIRE_THRALL');
-    schemeProgressEv(ev, gameState.scheme.attached('VAMPIRE_THRALL').size);
+    cont(ev, () => schemeProgressEv(ev, gameState.scheme.attached('VAMPIRE_THRALL').size));
   }) :
   // Otherwise, move a Villain from another city space to the Blood Bank.
   withCity('BANK', bank => {
