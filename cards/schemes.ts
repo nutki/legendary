@@ -3528,18 +3528,24 @@ makeSchemeCard("Wager at Blackjack For Heroes' Souls", { twists: 11, heroes: [5,
   const won = true;
   // <b>If you win</b>, you may gain one of the revealed Heroes that costs 6 or less.
   // <b>If the Mastermind wins,</b> stack one of the revelaed Heroes next to the Scheme as a "Wagered Soul."
-  chooseOptionEv(ev, "Stop at", [18, 19, 20, 21].map(v => ({l:`${v}`,v})), ourStop => {
+  let n = 1;
+  let ourSum = 0;
+  const f = () => revealHeroDeckEv(ev, n, cards => {
+    ourSum = cards.sum(c => c.cost);
+    if (ourSum <= 21) chooseOneEv(ev, "Your total is " + ourSum, ["Stop", () => {}], ["Reveal another", () => { n++; f(); }]);
+    cont(ev, () => cards.splice(0, cards.length)); // Hack to return cards in the same order
+  });
+  cont(ev, f);
+  cont(ev, () => {
     revealHeroDeckEv(ev, cards => {
-      const [ourSum, stopped] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= ourStop], [0, false]);
+      if (cards.length < n) return true;
       if (ourSum > 21) return false;
-      if (!stopped) return true;
-      const [theirSum, stopped2] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= 17], [-ourSum, false]);
+      const [theirSum, stopped2] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || (sum + c.cost) >= 17], [-ourSum, false]);
       return !stopped2;
     }, cards => {
-      const [ourSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= ourStop], [0, false]);
       textLog.log(`You stopped at ${ourSum}.`);
-      const [theirSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || sum >= 17], [-ourSum, false]);
-      textLog.log(`The Mastermind stopped at ${theirSum}.`);
+      const [theirSum] = cards.reduce<[number, boolean]>(([sum, stopped], c) => [stopped ? sum : sum + c.cost, stopped || (sum + c.cost) >= 17], [-ourSum, false]);
+      if (ourSum <= 21) textLog.log(`The Mastermind stopped at ${theirSum}.`);
       if (ourSum > 21 || (theirSum < 21 && theirSum >= ourSum)) {
         textLog.log("The Mastermind wins the wager!");
         selectCardEv(ev, "Choose a Hero to wager", cards.limit(isHero), c => {
