@@ -3144,7 +3144,7 @@ addVillainTemplates("Marvel Studios Phase 1", [
 // ATTACK: 6
 // VP: 4
   [ 2, makeVillainCard("Iron Foes", "Whiplash", 6, 4, {
-    fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p))),
+    fight: ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)),
     escape: sameEffect,
   })],
 // {BANK CONQUEROR 2}
