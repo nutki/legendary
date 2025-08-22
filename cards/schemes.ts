@@ -3928,10 +3928,10 @@ makeSchemeCard("Condition Logan into Weapon X", { twists: 8, required: { heroes:
 // EVILWINS: When the Hero Deck runs out.
 makeSchemeCard("Go After Heroes' Loved Ones", { twists: [ 8, 10, 10, 10, 11 ], heroes: [ 4, 6, 6, 6, 7] }, ev => {
   const effect = () => {
-    hqHeroes().withFirst(c => {
+    hqHeroes().withLast(c => {
       KOEv(ev, c);
-      gameState.scheme.attached('HEROES').limit(c => c.heroName === c.heroName).map(c => c.attachedDeck('LOVED_ONES')).withFirst(lovedOnes => {
-        lovedOnes.withFirst(c => KOEv(ev, c));
+      gameState.scheme.attached('HEROES').limit(c1 => c.heroName === c1.heroName).map(c => c.attachedDeck('LOVED_ONES')).withFirst(lovedOnes => {
+        selectCardAndKOEv(ev, lovedOnes.deck);
         eachPlayer(p => pickDiscardEv(ev, 1, p, c1 => c1.heroName === c.heroName));
         playerState.hand.has(c1 => c1.heroName === c.heroName) && berserkEv(ev, 1);
         cont(ev, () => {
@@ -3963,7 +3963,7 @@ makeSchemeCard("Go After Heroes' Loved Ones", { twists: [ 8, 10, 10, 10, 11 ], h
     const c = gameState.herodeck.limit(c => c.heroName === h).highest(c => -c.cost)[0];
     moveCard(gameState.bystanders.top, c.attachedDeck('LOVED_ONES'));
     moveCard(gameState.bystanders.top, c.attachedDeck('LOVED_ONES'));
-    moveCard(c, gameState.scheme.attachedDeck('HEREOS'));
+    moveCard(c, gameState.scheme.attachedDeck('HEROES'));
   });
   gameState.herodeck.shuffle();
 }),
