@@ -2332,7 +2332,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
 // {THROWN ARTIFACT} When you throw this, you get {BRIDGE CONQUEROR 3}.
 // ATTACK: +3
   makeGainableCard(makeTacticsCard("The Nightsword", {
-    printedDefense: 2,
+    printedDefense: 3,
     fight: ev => {
       // Rescue 4 Bystanders. Hela captures this card as a {VILLAINOUS WEAPON}.
       rescueEv(ev, 4);
