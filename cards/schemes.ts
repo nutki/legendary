@@ -3836,7 +3836,7 @@ makeSchemeCard("Befoul Earth into a Polluted Wasteland", { twists: 8, heroes: [4
       eachPlayer(p => gainWoundEv(ev, p));
     },
   })];
-  addStatSet('recruitCost', c => c.attached('SLUDGE').size > 0, (c, v) => ({ recruit: (v.recruit || 0) + c.location.attached('SLUDGE').size * 2, ...v}));
+  addStatSet('recruitCost', c => c.location?.attached('SLUDGE')?.size > 0, (c, v) => ({ ...v, recruit: (v.recruit || 0) + c.location.attached('SLUDGE').size * 2 }));
 }),
 // SETUP: 7 Twists, representing "Cyberspace."
 // RULE: Enemies under any Cyberspace get +1 Attack for each Cyberspace on the board, and they can be fought with any combination of Recruit and Attack.
