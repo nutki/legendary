@@ -3312,7 +3312,7 @@ function playEvent(ev: Ev) {
   });
 }
 function mainLoop(): void {
-  let extraActions: { name: string, confirm?: boolean, func: () => void }[] = [];
+  let extraActions: { name: string, confirm?: boolean, disabled?: boolean, func: () => void }[] = [];
   clickActions = {};
   try { while (undoLog.replaying) {
   let ev = popEvent();
@@ -3367,20 +3367,18 @@ function mainLoop(): void {
         for (const e of document.querySelectorAll(`[data-card-id="${CSS.escape(option.id)}"], [data-deck-id="${CSS.escape(option.id)}"]`)) {
           if (selected[i]) e.classList.add('selected'); else e.classList.remove('selected');
         }
-        const numString = ev.min === ev.max ? ev.min.toString() : `${ev.min}-${ev.max}`;
         const numSelected = selected.count(s => s);
         const valid = numSelected >= ev.min && numSelected <= ev.max;
-        setMessage(`${ev.desc} (${numSelected}/${numString} selected)`, "");
-        document.getElementById("extraActions").innerHTML = `<span class="action${!valid ? "" : " noconfirm"}" id="!extraAction0">Confirm</span>`;
+        document.getElementById("extraActions").innerHTML = `<span class="action${!valid ? " disabled" : ""}" id="!extraAction0">Select ${numSelected}</span>`;
       });
-      extraActions.push({name: "Confirm", func: () => {
+      extraActions.push({name: "Select 0", func: () => {
         let num = selected.count(s => s);
         if (num < ev.min || num > ev.max) return;
         let indexes = selected.map((s, i) => s ? i : -1).filter(i => i >= 0);
         indexes.forEach(i => ev.result1(options[i]));
         if (num === 0) ev.result0();
         undoLog.write(indexes.join(',')); mainLoop();
-      }, confirm: ev.min > 0});
+      }, disabled: ev.min > 0});
     },
     "GAMEOVER": function () {
       gameState.gameOver = true;
@@ -3389,7 +3387,8 @@ function mainLoop(): void {
       extraActions.push({ name: "OK", func: () => mainLoop() });
     },
   })[ev.type])(ev);
-  const desc = ((gameState.players.length > 1) && ev.agent) ? `P${ev.agent.nr + 1}: ${ev.desc || ""}` : ev.desc || "";
+  let desc = ((gameState.players.length > 1) && ev.agent) ? `P${ev.agent.nr + 1}: ${ev.desc || ""}` : ev.desc || "";
+  if (ev.type === "SELECTOBJECTS") desc += ` (${ev.min === ev.max ? ev.min.toString() : `${ev.min}-${ev.max}`} to select)`;
   setMessage(desc, ev.type !== "GAMEOVER" ? "" : ev.result === "WIN" ? "Good Wins" : ev.result === "LOSS" ? "Evil Wins" : "Drawn Game");
   displayGame(ev);
   Object.keys(clickActions).map(v => {
@@ -3408,7 +3407,7 @@ function mainLoop(): void {
   let extraActionsHTML = extraActions.map((action, i) => {
     const id = "!extraAction" + i;
     clickActions[id] = action.func;
-    return `<span class="action${action.confirm === false ? " noconfirm" : ""}" id="${id}">${action.name}</span>`;
+    return `<span class="action${action.confirm === false ? " noconfirm" : ""}${action.disabled ? " disabled" : ""}" id="${id}">${action.name}</span>`;
   }).join('');
   document.getElementById("extraActions").innerHTML = extraActionsHTML;
   renderTextLog(textLog.contents);
