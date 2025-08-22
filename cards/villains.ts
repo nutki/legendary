@@ -5982,8 +5982,8 @@ addVillainTemplates("Ant-Man and the Wasp", [
     },
     triggers: [{
       event: 'DEFEAT',
-      match: (ev, source) => ev.where === source.attachedDeck('HENCHMEN') && source.attachedDeck('HENCHMEN').size === 0,
-      after: ev => defeatEv(ev, ev.source),
+      match: (ev, source) => source.location === gameState.scheme.attachedDeck('AMBUSHSCHEME') && ev.where === source.attachedDeck('HENCHMEN'),
+      after: ev => ev.source.attachedDeck('HENCHMEN').size === 0 && defeatEv(ev, ev.source),
     }],
     cardActions: [(c, ev) => c.attached('HENCHMEN').size ? fightActionEv(ev, c.attached('HENCHMEN')[0]) : noOpActionEv(ev)],
     twist: ev => {
