@@ -4109,7 +4109,7 @@ addTemplates("MASTERMINDS", "2099", [
   makeEpicAdaptingTacticsCard("Venom 2099", [10, 13], ev => {
     // STRIKE: Each player KOs a card that costs 2 from their hand or discard pile or gains a Wound. <b>Adapt</b>.
     // STRIKE: Each player KOs a card that costs 2 from their hand or gains a Wound. <b>Adapt</b>.
-    eachPlayer(p => selectCardOrEv(ev, "Choose a card to KO", (ev.source.epic ? p.hand.deck : handOrDiscard(p)).limit(c => c.cost === 2), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachPlayer(p => selectCardOptEv(ev, "Choose a card to KO", (ev.source.epic ? p.hand.deck : handOrDiscard(p)).limit(c => c.cost === 2), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
   }, ev => {
     // You may gain a Hero that costs 2 from the HQ or KO pile. <b>Adapt</b>.
     selectCardOptEv(ev, "Choose a Hero to gain", [...hqHeroes(), ...gameState.ko.limit(isHero)].limit(c => c.cost === 2), c => gainEv(ev, c));
