@@ -4253,7 +4253,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
     gameState.wounds.withTop(c => attachCardEv(ev, c, ev.source.mastermind, 'SAVAGERIES'));
   } ],
 ], {
-  trigger: enemyBerserkTrigger(c => c.attachedDeck('SAVAGERY').size + (c.epic ? 2 : 0)),
+  trigger: enemyBerserkTrigger(c => c.attachedDeck('SAVAGERIES').size + (c.epic ? 2 : 0)),
   fightFail: ev => selectCardAndKOEv(ev, enemyBerserkCards(ev).limit(isNonGrayHero)),
 }),
 ]);
