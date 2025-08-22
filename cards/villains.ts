@@ -6598,7 +6598,7 @@ addVillainTemplates("Weapon X", [
       selectCardEv(ev, "Choose a Hero to gain", ev.source.attached('HUNTSMAN_CAPTURED'), c => {
         choosePlayerEv(ev, p => gainEv(ev, c, p));
       });
-      cont(ev, () => ev.source.attached('HUNTSMAN_CAPTURED').size && enterCityEv(ev, ev.source, u, u, true));
+      ev.source.attached('HUNTSMAN_CAPTURED').size && enterCityEv(ev, ev.source, u, u, true);
     },
     varDefense: weaponXSequenceVarDefense(1),
   })],
