@@ -6657,8 +6657,8 @@ addVillainTemplates("Weapon X", [
 // VP: 6
   [ 1, makeVillainCard("Weapon Plus", "Ultimaton (Weapon XV)", 4, 6, {
     ambush: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, isNonGrayHero)),
-    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes().limit(Color.GRAY), p)),
-    escape: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes().limit(isNonGrayHero), p)),
+    fight: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p).limit(Color.GRAY), p)),
+    escape: ev => eachPlayer(p => selectCardAndKOEv(ev, yourHeroes(p).limit(isNonGrayHero), p)),
     varDefense: weaponXSequenceVarDefense(2),
   })],
 ]},
