@@ -4082,7 +4082,7 @@ addTemplates("MASTERMINDS", "2099", [
         count < 2 ? gainWoundEv(ev, p) : chooseOptionEv(ev, "", [{l:"Gain a Wound", v:() => gainWoundEv(ev, p)}, {l:"Put 2 Bystanders into the Escape Pile", v:() => {
           selectObjectsEv(ev, "Choose Bystanders to put into the Escape Pile", 2, p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped), p);
         }}], v => v(), p);
-      } else selectCardOrEv(ev, "Choose a Bystander to put into the Escape Pile", p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped), () => gainWoundEv(ev, p), p);  
+      } else selectCardOptEv(ev, "Choose a Bystander to put into the Escape Pile", p.victory.limit(isBystander), c => moveCardEv(ev, c, gameState.escaped), () => gainWoundEv(ev, p), p);  
     });
   }, ev => {
     // Each Villain in the city captures a Bystander. <b>Adapt</b>.
