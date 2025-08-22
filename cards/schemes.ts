@@ -3820,7 +3820,7 @@ makeSchemeCard("Befoul Earth into a Polluted Wasteland", { twists: 8, heroes: [4
   selectCardEv(ev, "Choose a Hero to put Sludge under", gameState.hq.limit(d => d.attached('SLUDGE').size === -gameState.hq.max(c => -c.attached('SLUDGE').size)), c => {
     attachCardEv(ev, ev.twist, c, 'SLUDGE');
   });
-  cont(ev, () => schemeProgressEv(ev, gameState.hq.sum(d => d.attached('SLUDGE').size + gameState.ko.count(isTwist))));
+  cont(ev, () => schemeProgressEv(ev, gameState.hq.sum(d => d.attached('SLUDGE').size) + gameState.ko.count(isTwist)));
 }, [
   runOutProgressTrigger('HERO', false),
 ], () => {
