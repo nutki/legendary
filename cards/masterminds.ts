@@ -4017,8 +4017,11 @@ addTemplates("MASTERMINDS", "2099", [
       addTurnTrigger('CLEANUP', () => true, () => !done && eachPlayer(p => gainWoundEv(ev, p)));
     }));
   }, ev => {
+    // KO two of your Heroes. <b>Adapt</b>.
     // KO one of your Heroes. <b>Adapt</b>.
-    selectCardAndKOEv(ev, yourHeroes());
+    !ev.source.epic ?
+      selectObjectsEv(ev, "Choose two Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c)) :
+      selectCardAndKOEv(ev, yourHeroes());
   }, {
     varDefense: c => c.printedDefense + (cyberModEnemyAmount(Color.COVERT) >= 2 ? c.epic ? 7 : 5 : 0),
   }),
