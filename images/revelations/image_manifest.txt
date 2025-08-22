@@ -48,7 +48,7 @@ bfd40a28-04d8-4974-b7ae-bfc629631a17 masterminds/epic_mandarin.jpg
 af75c3b4-dc2d-4c58-b17d-e70fcb2fc621 masterminds/mandarin_intertwining_powers.jpg
 70f33860-5200-4692-9c58-6dc68725c516 masterminds/mandarin_rings_seek_their_true_hand.jpg
 d0ad6f80-b445-4829-95af-467e97c58522 masterminds/the_hood.jpg
-25a4c425-bd6e-414b-9caa-e87d7167a875 masterminds/epic_the_hood.jpg
+25a4c425-bd6e-414b-9caa-e87d7167a875 masterminds/epic_hood.jpg
 1b5e50af-7b36-460c-8620-3d7d59b18867 masterminds/the_hood_demonic_revelation.jpg
 587e12c0-577e-48e5-a775-be971994253b masterminds/the_hood_focus_magic_through_guns.jpg
 4cd22319-5969-4dd0-aed9-4980f763606e masterminds/the_hood_paean_to_dormammu.jpg

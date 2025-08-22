@@ -42,13 +42,13 @@ fb9503c1-ab07-4d5a-8655-7cfe60fbc8e9 heroes/nebula_illusion_device.jpg
 fed3eb3b-53bd-4d12-8efc-07ec968a6d4a masterminds/magus_conjured_shade_of_thanos.jpg
 894948ee-c93f-4f65-a9e7-3ad5da50efa8 masterminds/magus_resurrected_as_the_child_magus.jpg
 fe3b01e7-8213-40a0-8107-6eb08a3672aa masterminds/the_grandmaster.jpg
-e12bee2c-d4ad-4cf8-b23b-4a93bf249aff masterminds/epic_the_grandmaster.jpg
+e12bee2c-d4ad-4cf8-b23b-4a93bf249aff masterminds/epic_grandmaster.jpg
 b08f8dde-152d-47cc-86e1-1e191cbafdb1 masterminds/the_grandmaster_deal_with_death.jpg
 1b558148-afdc-489c-a0d9-e47f934dae96 masterminds/the_grandmaster_galactic_marathon.jpg
 0cbd9edc-2118-4d09-8882-bee540f3b073 masterminds/the_grandmaster_cheat_against_thanos.jpg
 bb05f89e-24f0-451b-9926-5ec15529f387 masterminds/the_grandmaster_match_offenders_vs_defenders.jpg
 4371bc44-bcbd-4367-aed4-7980639583af masterminds/the_beyonder.jpg
-7a2c08b4-b8f6-4adc-b0f0-f207fa96f65b masterminds/epic_the_beyonder.jpg
+7a2c08b4-b8f6-4adc-b0f0-f207fa96f65b masterminds/epic_beyonder.jpg
 f2e417fa-55e3-4041-b1ff-4d2314661261 masterminds/the_beyonder_playthings_of_a_petulant_god.jpg
 c44afdeb-4fb7-4a72-9953-3213f8b59682 masterminds/the_beyonder_dimensional_collapse.jpg
 847eb7a0-6b3a-48d2-b708-245f47b3ea99 masterminds/the_beyonder_pull_earth_into_the_beyond.jpg

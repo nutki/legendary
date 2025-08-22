@@ -20,13 +20,13 @@ da8c20bd-7b41-4fe2-8e42-431af5006892 heroes/warlock_analyze_planetary_rotation.j
 3ef838d0-a47e-4eb9-8a94-56b860fb7004 heroes/karma_karmic_balance.jpg
 19dc2717-2110-453b-9b4b-c47686c8bebe heroes/karma_control_like_a_puppet.jpg
 2ad78f9a-c173-4317-8559-fbbf42adcaeb masterminds/belasco_demon_lord_of_limbo.jpg
-0ece0ef2-d77c-4f6f-85d6-f81ad4cfdbe4 masterminds/epic_belasco_demon_lord_of_limbo.jpg
+0ece0ef2-d77c-4f6f-85d6-f81ad4cfdbe4 masterminds/epic_belasco.jpg
 d185b321-665d-41dd-8ae9-8e9f943c7d7b masterminds/belasco_demon_lord_of_limbo_a_demons_mercy.jpg
 ff7141ce-6627-41d7-9b33-37b04c2bdf61 masterminds/belasco_demon_lord_of_limbo_bargain_for_souls.jpg
 f3480637-4b5c-4445-8e24-d3a7987b3448 masterminds/belasco_demon_lord_of_limbo_rescue_from_limbo.jpg
 cac5fab1-d898-42d9-ba23-199a15c5f91b masterminds/belasco_demon_lord_of_limbo_cleaving_demonblade.jpg
 2df0a67e-dfaf-4477-8b2f-6de1a3666ec2 masterminds/emma_frost_the_white_queen.jpg
-43744d38-9287-4568-82ba-89d16f23e530 masterminds/epic_emma_frost_the_white_queen.jpg
+43744d38-9287-4568-82ba-89d16f23e530 masterminds/epic_emma_frost.jpg
 69ac13e6-000d-4bad-870b-4729d3510661 masterminds/emma_frost_the_white_queen_tempting_bargain.jpg
 70833b5c-29b0-4aef-b8a0-84838e8b3af0 masterminds/emma_frost_the_white_queen_psychic_xmen_link.jpg
 bca69377-52c1-4442-8f3a-77fb8afb55bb masterminds/emma_frost_the_white_queen_assume_diamond_form.jpg
