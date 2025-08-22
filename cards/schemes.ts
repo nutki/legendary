@@ -3855,9 +3855,9 @@ makeSchemeCard("Pull Reality into Cyberspace", { twists: 7 }, ev => {
   schemeProgressEv(ev, ev.nr);
 }, [], () => {
   setSchemeTarget(7);
-  addStatMod('defense', c => c.attached('CYBERSPACE').size > 0, () => [gameState.mastermind, ...gameState.city].count(d => d.attached('CYBERSPACE').size > 0));
-  addStatSet('fightCost', c => c.attached('CYBERSPACE').size > 0, (c, v) => ({
-    either: (v.recruit || 0) + (v.attack || 0), recruit: 0, attack: 0, ...v
+  addStatMod('defense', c => c.location?.attached('CYBERSPACE')?.size > 0, () => [gameState.mastermind, ...gameState.city].count(d => d.attached('CYBERSPACE').size > 0));
+  addStatSet('fightCost', c => c.location?.attached('CYBERSPACE')?.size > 0, (c, v) => ({
+    ...v, either: (v.recruit || 0) + (v.attack || 0), recruit: 0, attack: 0,
   }));
 }),
 // SETUP: Add an extra Hero. 11 Twists.
