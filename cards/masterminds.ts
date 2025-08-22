@@ -4050,7 +4050,7 @@ addTemplates("MASTERMINDS", "2099", [
   }, ev => {
     // You may discard a card. If you do, draw a card. <b>Adapt</b>.
     // You may discard any number of cards, then draw that many cards. <b>Adapt</b>.
-    ev.source.epic ?
+    !ev.source.epic ?
       selectObjectsAnyEv(ev, "Choose cards to discard", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); }) :
       selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev); });
   }),
