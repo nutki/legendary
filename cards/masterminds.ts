@@ -1807,11 +1807,11 @@ addTemplates("MASTERMINDS", "Ant-Man", [
 // EPICNAME: Ultron
 ...makeEpicMastermindCard("Ultron", [ 9, 10 ], 6, "Ultron's Legacy", ev => {
 // Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Empowered</b> by each color in his Threat Analysis pile.
-// Each player reveals a [Tech] Hero or puts a non-grey Hero from their discard pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
+// Each player puts a non-grey Hero from their hand pile into a "Threat Analysis pile" next to Ultron. Ultron is <b>Triple Empowered</b> by each color in his Threat Analysis pile.
   const threat = ev.source.attachedDeck('THREAT');
   threat.faceup = true;
-  eachPlayer(p => revealOrEv(ev, Color.TECH, () => {
-    selectCardEv(ev, "Choose a Hero", (ev.source.epic ? p.hand : p.discard).limit(isNonGrayHero), c => moveCardEv(ev, c, threat));
+  eachPlayer(p => ev.source.epic ? selectCardEv(ev, "Choose a Hero", p.hand.limit(isNonGrayHero), c => moveCardEv(ev, c, threat)) : revealOrEv(ev, Color.TECH, () => {
+    selectCardEv(ev, "Choose a Hero", p.discard.limit(isNonGrayHero), c => moveCardEv(ev, c, threat));
   }, p));
 }, [
   [ "Arrogant Blindspot", ev => {
