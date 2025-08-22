@@ -1454,7 +1454,7 @@ function exploreEv(ev: Ev, effect: (c: Card) => void) {
   }));
 }
 function heistCards() {
-  return [...turnState.cardsPlayed.limit(c => !!c.heist), ...pastEvWhat('DEFEAT').limit(c => !!c.heist)];
+  return [...turnState.cardsPlayed.limit(c => !!c.heist), ...pastEvWhat('DEFEAT').limit(c => !!c.heist), ...gameState.scheme.limit(s => !!s.heist)];
 }
 function heistAction(ev: Ev) {
   return new Ev(ev, 'HEIST', {
@@ -1468,7 +1468,6 @@ function heistAction(ev: Ev) {
           gainWoundEv(ev);
         } else if (theirValue < ourValue) {
           const cards = heistCards();
-          gameState.scheme.each(s => s.heist && cards.push(s));
           selectCardOrderEv(ev, "Choose Heist order", cards, c1 => {
             pushEv(ev, 'EFFECT', { source: c1, what: c, func: c1.heist });
           });
