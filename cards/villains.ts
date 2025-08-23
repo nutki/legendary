@@ -475,7 +475,7 @@ addVillainTemplates("Fantastic Four", [
     fight: burrowEv,
     ambush: ev => villainIn('STREETS').each(c => withCity('BRIDGE', bridge => {
       bridge.limit(isVillain).each(c => villainEscapeEv(ev, c));
-      moveCardEv(ev, c, bridge);
+      cont(ev, () => moveCardEv(ev, c, bridge));
     })),
   })],
 ]},
