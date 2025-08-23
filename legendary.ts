@@ -1468,8 +1468,8 @@ playerState.outOfTime.owner = playerState;
 players.push(playerState);
 }
 players.forEach((p, i) => {
-  p.left = players[(i + players.length - 1) % players.length];
-  p.right = players[(i + 1) % players.length];
+  p.right = players[(i + players.length - 1) % players.length];
+  p.left = players[(i + 1) % players.length];
 });
 gameState = {
   nextId: 0,
@@ -1844,12 +1844,17 @@ function atLocation(what: Card, ...locations: CityLocation[]) {
   return locations.some(l => what.location.id === l);
 }
 function hasBystander(c: Card): boolean { return c.captured.has(isBystander); }
-function eachOtherPlayer<T>(f: (p: Player) => T): T[] { return gameState.players.filter(e => e !== playerState).map(f); }
+function playersInOrder(other: boolean = false): Player[] {
+  const players: Player[] = other ? [] : [ playerState ];
+  for (let p = playerState.left; p !== playerState; p = p.left) players.push(p);
+  return players;
+}
+function eachOtherPlayer<T>(f: (p: Player) => T): T[] { return playersInOrder(true).map(f); }
 function eachOtherPlayerVM<T>(f: (p: Player) => T): T[] { return gameState.advancedSolo ? eachPlayer(f) : eachOtherPlayer(f); }
 function getOtherPlayersVM(): Player[] {
-  return gameState.advancedSolo ? gameState.players : gameState.players.filter(e => e !== playerState);
+  return gameState.advancedSolo ? playersInOrder() : playersInOrder(true);
 }
-function eachPlayer<T>(f?: (p: Player) => T): T[] { return gameState.players.map(f); } // TODO starting from left
+function eachPlayer<T>(f?: (p: Player) => T): T[] { return playersInOrder().map(f); }
 function eachPlayerEv(ev: Ev, f: (p: Ev) => void): void { eachPlayer(p => pushEv(ev, "EFFECT", { who:p, func:f })); }
 function revealableLocations(who: Player = playerState): Deck[] {
   return [who.hand, who.playArea, who.artifact];
