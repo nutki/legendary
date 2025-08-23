@@ -3025,7 +3025,7 @@ function villainDraw(ev: Ev): void {
   ev.what = c;
   if (!c) {
   } else if (isVillain(c)) {
-    moveCardEv(ev, c, gameState.cityEntry);
+    moveIntoCityEv(ev, c);
     pushEffects(ev, c, 'ambush', c.ambush);
   } else if (isRevelationsLocation(c)) {
     playLocationEv(ev, c);
@@ -3053,13 +3053,28 @@ function villainDraw(ev: Ev): void {
     throw Error("dont know what to do with: " + c.id);
   }
 }
+function moveIntoCityEv(ev: Ev, c: Card, d: Deck = gameState.cityEntry) {
+  const toShift: Deck[] = [];
+  const escaped: Card[] = [];
+  for(let c = d; c && c.size; c = c.next) toShift.unshift(c);
+  console.log("City shift:", [...toShift.map(d => d.top.cardName), c.cardName]);
+  toShift.each(d => {
+    if (d.next) cont(ev, () => d.each(c => moveCardEv(ev, c, d.next)));
+    else cont(ev, () => d.each(c => {
+      escaped.push(c);
+      moveCardEv(ev, c, gameState.escaped);
+    }));
+  });
+  cont(ev, () => moveCardEv(ev, c, d));
+  cont(ev, () => escaped.each(c => villainEscapeEv(ev, c)));
+}
 function enterCityEv(ev: Ev, c: Card, d?: Deck | undefined, extraEffects?: () => void, noAmbush?: boolean) {
   cont(ev, () => {
     if (isRevelationsLocation(c)) {
       playLocationEv(ev, c);
       return;
     }
-    moveCardEv(ev, c, d || gameState.cityEntry);
+    moveIntoCityEv(ev, c, d);
     extraEffects?.();
     noAmbush || pushEffects(ev, c, 'ambush', c.ambush);
   });
