@@ -219,7 +219,7 @@ makeSchemeCard("X-Cutioner's Song", { twists: 8, vd_bystanders: 0, heroes: [ 4, 
   addStatMod('defense', isVillain, c => 2 * c.captured.count(isHero));
   // addStatSet('capturable', isHero, () => true); // Hardcoded
   addStatSet('rescue', isHero, () => ev => gainEv(ev, ev.source)); // TODO this should not be a rescue action
-  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, gameState.villaindeck));
+  gameState.herodeck.limit(isExtraHero).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
 }),
 ]);
@@ -306,7 +306,7 @@ makeSchemeCard("Invade the Daily Bugle News HQ", { twists: 8, vd_henchmen: [2, 2
   after: ev => schemeProgressEv(ev, hqCards().count(isVillain)),
 }, () => {
   setSchemeTarget(5);
-  gameState.villaindeck.deck.filter(c => c.cardName === extraHenchmenName()).forEach((c, i) => moveCard(c, i < 6 ? gameState.herodeck : gameState.outOfGame));
+  gameState.villaindeck.deck.filter(isExtraHenchman).forEach((c, i) => moveCard(c, i < 6 ? gameState.herodeck : gameState.outOfGame));
   gameState.herodeck.shuffle();
   addStatSet('isFightable', c => isVillain(c) && c.location.isHQ, () => true);
 }),
@@ -636,17 +636,17 @@ addTemplates("SCHEMES", "Secret Wars Volume 1", [
 // EVILWINS: When there are 10 Annihilation Henchmen next to the Mastermind.
 makeSchemeCard("Build an Army of Annihilation", { twists: 9, vd_henchmen: [ 2, 2, 2, 3, 3 ] }, ev => {
   // Twist: KO all Annihilation Henchmen from the players' Victory Piles. Stack this Twist next to the Scheme. Then, for each Twist in that stack, put an Annihilation Henchman from the KO pile next to the Mastermind. Players can fight those Henchmen.
-  eachPlayer(p => p.victory.limit(isGroup(extraHenchmenName())).each(c => KOEv(ev, c)));
+  eachPlayer(p => p.victory.limit(isExtraHenchman).each(c => KOEv(ev, c)));
   attachCardEv(ev, ev.twist, gameState.scheme, "TWIST");
   cont(ev, () => {
-    const w = gameState.ko.limit(isGroup(extraHenchmenName()));
+    const w = gameState.ko.limit(isExtraHenchman);
     const n = gameState.scheme.attached('TWIST').size;
     w.forEach((c, i) => i < n && attachCardEv(ev, c, gameState.mastermind, 'WAVE'));
   });
   cont(ev, () => schemeProgressEv(ev, gameState.mastermind.attached('WAVE').size));
 }, [], () => {
   setSchemeTarget(10);
-  gameState.villaindeck.limit(isGroup(extraHenchmenName())).each(c => moveCard(c, gameState.ko));
+  gameState.villaindeck.limit(isExtraHenchman).each(c => moveCard(c, gameState.ko));
   gameState.specialActions = ev => gameState.mastermind.attached('WAVE').map(c => fightActionEv(ev, c));
 }),
 // SETUP: 8 Twists. Add 10 Sidekicks to the Villain Deck.
@@ -888,7 +888,7 @@ makeSchemeCard("The Mark of Khonshu", { twists: 10, heroes: [4, 6, 6, 6, 7], req
   villainDrawEv(ev);
 }, escapeProgressTrigger(isGroup('Khonshu Guardians')), () => {
   setSchemeTarget(7);
-  const isExtra = (c: Card) => c.heroName === extraHeroName();
+  const isExtra = isExtraHero;
   // Based on 'Secret Invasion of the Skrull Shapeshifters'
   addStatSet('baseDefense', isExtra, c => c.cost * (isLocation(c.location, 'SEWERS', 'ROOFTOPS', 'BRIDGE') ? 2 : 1));
   addStatSet('isVillain', isExtra, () => true);
@@ -1546,7 +1546,7 @@ makeSchemeCard("Scavenge Alien Weaponry", { twists: 7, vd_henchmen: [2, 2, 2, 3,
   // Twist: Play two cards from the Villain Deck.
   villainDrawEv(ev); villainDrawEv(ev);
 }, [ runOutProgressTrigger('VILLAIN', false), escapeProgressTrigger(isVillain)], () => {
-  addStatMod('defense', c => c.cardName === extraHenchmenName(), () => strikerCount());
+  addStatMod('defense', isExtraHenchman, () => strikerCount());
 }),
 ]);
 addTemplates("SCHEMES", "Champions", [
@@ -1722,7 +1722,7 @@ makeSchemeCard("Mutating Gamma Rays", { twists: 7, heroes: [ 4, 6, 6, 6, 7 ], re
   schemeProgressEv(ev, ev.nr);
 }, [], () => {
   const mutation = gameState.scheme.attachedDeck('MUTATION');
-  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, mutation));
+  gameState.herodeck.limit(isExtraHero).each(c => moveCard(c, mutation));
   setSchemeTarget(7);
 }),
 // SETUP: 8 Twists. Take 14 cards from an extra Hero with "Hulk" in its Hero Name. Shuffle them into a "Hulk Deck."
@@ -1740,7 +1740,7 @@ makeSchemeCard("Shoot Hulk into Space", { twists: 8, heroes: [ 4, 6, 6, 6, 7 ], 
 }, [], () => {
   const hulkDeck = gameState.scheme.attachedFaceDownDeck('HULK');
   gameState.officer.attachedDeck('PRISON');
-  gameState.herodeck.limit(isSetupHero()).each(c => moveCard(c, hulkDeck));
+  gameState.herodeck.limit(isExtraHero).each(c => moveCard(c, hulkDeck));
   gameState.specialActions = ev => gameState.officer.attachedDeck('PRISON').size ? [
     recruitCardActionEv(ev, gameState.officer.attachedDeck('PRISON').top)
   ] : [];
@@ -1857,10 +1857,10 @@ makeSchemeCard("Trap Heroes in the Microverse", { twists: 11, heroes: [ 4, 6, 6,
   villainDrawEv(ev); villainDrawEv(ev);
 }, [ escapeProgressTrigger(isVillain), runOutProgressTrigger('VILLAIN', false) ], () => {
   setSchemeTarget(3, true);
-  gameState.herodeck.limit(c => c.heroName === extraHeroName()).each(c => moveCard(c, gameState.villaindeck));
+  gameState.herodeck.limit(isExtraHero).each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
-  villainify("Giant Ant", c => c.heroName === extraHeroName(), c => c.printedCost, ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)));
-  addStatSet('sizeChanging', c => c.heroName === extraHeroName(), c => c.color);
+  villainify("Giant Ant", isExtraHero, c => c.printedCost, ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)));
+  addStatSet('sizeChanging', isExtraHero, c => c.color);
 }),
 ]);
 addTemplates("SCHEMES", "Venom", [
@@ -2508,7 +2508,7 @@ makeSchemeCard("Devolve with Xerogen Crystals", { twists: [4, 5, 6, 7, 8], vd_he
   runOutProgressTrigger('VILLAIN', false),
 ], () => {
   setSchemeTarget(3, true);
-  addStatMod('defense', c => c.cardName === extraHenchmenName(), abominationAmount);
+  addStatMod('defense', isExtraHenchman, abominationAmount);
 }),
 ]);
 addTemplates("SCHEMES", "Annihilation", [
@@ -2543,7 +2543,7 @@ makeSchemeCard("Sneak Attack the Heroes' Homes", { twists: 6 }, ev => {
 }, [], () => {
   eachPlayer(p => {
     repeat(3, () => gameState.wounds.withTop(c => moveCard(c, p.deck)));
-    const chosenHeroCards = gameState.herodeck.limit(isSetupGroup('heroes', p.nr));
+    const chosenHeroCards = gameState.herodeck.limit(isSetupHero(p.nr));
     const cardNameCounts = new Map<string, number>();
     chosenHeroCards.each(c => cardNameCounts.set(c.cardName, (cardNameCounts.get(c.cardName) || 0) + 1));
     const namesByRarity = [...cardNameCounts.entries()].sort((a, b) => b[1] - a[1]).map(([name]) => name);
@@ -3378,7 +3378,7 @@ makeSchemeCard<{
   }
   schemeProgressEv(ev, ev.nr);
 }, [], s => {
-  const pastHeroes = gameState.herodeck.limit(c => c.heroName === extraHeroName(1) || c.heroName === extraHeroName(2) || c.heroName === extraHeroName(3) || c.heroName === extraHeroName(4));
+  const pastHeroes = gameState.herodeck.limit(c => isSetupHero(-1)(c) || isSetupHero(-2)(c) || isSetupHero(-3)(c) || isSetupHero(-4)(c));
   const pastHeroDeck = new Deck("HERO2", false);
   pastHeroDeck.cityPosition = [5, -1];
   s.deckPairs = [];
@@ -3446,7 +3446,7 @@ makeSchemeCard("Midnight Massacre", { twists: 11, heroes: [ 4, 6, 6, 6, 7] }, ev
   runOutProgressTrigger('HERO'),
   runOutProgressTrigger('VILLAIN', false),
 ], () => {
-  const isExtra = (c: Card) => c.heroName === extraHeroName();
+  const isExtra = isExtraHero;
   villainify("Switchblade", isExtra, c => c.printedCost + (moonlightPower() ? bloodFrenzyAmount() : 0), ev => {
     chooseOneEv(ev, "Switchblade", ["KO", () => KOEv(ev, ev.source)], ["Gain as a Hero", () => gainEv(ev, ev.source)]);
   });
@@ -3515,7 +3515,7 @@ makeSchemeCard("Sire Vampires at the Blood Bank", { twists: 10, vd_henchmen: [ 2
   // Either way, play another card form the Villain Deck.
   playAnotherEv(ev);
 }, [], () => {
-  const isVampire = (c: Card) => c.villainGroup == extraHenchmenName();
+  const isVampire = isExtraHenchman;
   addStatMod('defense', isVampire, c => bloodFrenzyAmount() * (isLocation(c.location, 'BANK') ? 2 : 1));
   setSchemeTarget(5);
 }),
@@ -3652,7 +3652,7 @@ makeSchemeCard("Marvel Zombies", { twists: 4, heroes: [ 4, 6, 6, 6, 7 ], vd_byst
   escapeProgressTrigger(isVillain),
   runOutProgressTrigger('VILLAIN', false),
 ], () => {
-  const isZombie = (c: Card) => c.heroName === extraHeroName();
+  const isZombie = isExtraHero;
   gameState.herodeck.deck.filter(isZombie).forEach((c, i) => {
     moveCard(c, i < 8 ? gameState.villaindeck : gameState.outOfGame);
   });
@@ -3709,7 +3709,7 @@ makeSchemeCard("Auction Shrink Tech to Highest Bidder", { twists: 11, heroes: [ 
 }, [], () => {
   setSchemeTarget(8);
   // TODO not selectable but random with restriction
-  const isShrinkTech = (c: Card) => c.heroName === extraHeroName();
+  const isShrinkTech = isExtraHero;
   gameState.herodeck.deck.filter(isShrinkTech).forEach((c, i) => {
     moveCard(c, gameState.scheme.attachedFaceDownDeck('SHRINKTECH'));
   });

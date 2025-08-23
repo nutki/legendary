@@ -1347,19 +1347,8 @@ function isSetupGroup(type: 'heroes' | 'villains' | 'henchmen', idx: number = -1
   return (c: Card) => c.templateId === gameState.gameSetup[type][idx < 0 ? gameState.gameSetup[type].length + idx : idx];
 }
 const isExtraHero = isSetupGroup('heroes');
-const isSetupHero = (n: number = 1) => isSetupGroup('heroes', n - 1);
-function extraHeroName(n: number = 1) {
-  const h = gameState.gameSetup.heroes;
-  return h[h.length - n];
-}
-function extraHenchmenName(n: number = 1) {
-  const h = gameState.gameSetup.henchmen;
-  return h[h.length - n];
-}
-function extraVillainName(n: number = 1) {
-  const h = gameState.gameSetup.villains;
-  return h[h.length - n];
-}
+const isSetupHero = (n: number = 0) => isSetupGroup('heroes', n);
+const isExtraHenchman = isSetupGroup('henchmen');
 function setupMastermindName() {
   return gameState.gameSetup.mastermind[0];
 }
