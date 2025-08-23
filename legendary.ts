@@ -2506,7 +2506,7 @@ function pushEffects(ev: Ev, c: Card, effectName: EffectStat, effects: Handler |
   }});
 }
 function confirmEv(ev: Ev, desc: string, what?: Card) {
-  pushEv(ev, "CONFIRM", { desc, what, ui: true });
+  pushEv(ev, "CONFIRM", { desc, what, ui: true, agent: playerState });
 }
 function selectObjectsMinMaxEv<T>(ev: Ev, desc: string, min: number, max: number, objects: T[], effect1: (o: T) => void, effect0?: () => void, simple?: boolean, who: Player = playerState) {
   if (objects.length === 0 || max === 0) {
