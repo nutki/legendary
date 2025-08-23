@@ -2536,7 +2536,7 @@ makeSchemeCard<{ pulse: number }>("Pulse Waves From the Negative Zone", { twists
 makeSchemeCard("Sneak Attack the Heroes' Homes", { twists: 6 }, ev => {
   if (ev.nr <= 5) {
     // Twist 1-5 Each player discards a non-grey Hero or gains a Wound.
-    eachPlayer(p => selectCardOrEv(ev, "Choose a non-grey Hero to discard", p.hand.limit(isNonGrayHero), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
+    eachPlayer(p => selectCardOptEv(ev, "Choose a non-grey Hero to discard", p.hand.limit(isNonGrayHero), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
   } 
   // Twist 6 Evil Wins
   schemeProgressEv(ev, ev.nr);
@@ -3890,7 +3890,7 @@ makeSchemeCard("Subjugate Earth with Mega-Corporations", { twists: 8, heroes: [4
       if (corp == Color.STRENGTH) {
         eachPlayer(p => pickDiscardEv(ev, 1, p, hasRecruitIcon));
       } else if (corp == Color.INSTINCT) {
-        eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", handOrDiscard(p).limit(Color.INSTINCT), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
+        eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", handOrDiscard(p).limit(Color.INSTINCT), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
       } else if (corp == Color.COVERT) {
         eachPlayer(p => pickDiscardEv(ev, 2, p));
         eachPlayer(p => drawEv(ev, 1, p));
@@ -3917,7 +3917,7 @@ makeSchemeCard("Condition Logan into Weapon X", { twists: 8, required: { heroes:
     });
   } else if (ev.nr === 2 || ev.nr === 4 || ev.nr === 6) {
     // <b>Twist 2,4,6</b>: <i>"Test the Subject's Healing Factor"</i>: Each player discards a [Strength] or [Instinct] Hero or gains a Wound.
-    eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH | Color.INSTINCT), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
+    eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH | Color.INSTINCT), c => discardEv(ev, c), () => gainWoundEv(ev, p)));
   } else if (ev.nr === 7) {
     // Twist 7 <i>"Unleash Weapon X"</i>: For each Wolverine and/or Logan Hero in the HQ, each player gains a Wound.
     const count = hqHeroes().limit(c => c.heroName.includes("Wolverine") || c.heroName.includes("Logan")).size;

@@ -3679,7 +3679,7 @@ addVillainTemplates("Revelations", [
 // ATTACK: 5+
 // VP: 4
   [ 1, makeVillainCard("Lethal Legion", "Power Man (Erik Josten)", 5, 4, {
-    escape: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Villain", p.victory.limit(isVillain),
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Villain", p.victory.limit(isVillain),
       c => moveCardEv(ev, c, gameState.escaped),
       () => gainWoundEv(ev, p),
       p),
@@ -3703,7 +3703,7 @@ addVillainTemplates("Revelations", [
 // VP: 4
   [ 1, makeLocationCard("Lethal Legion", "\"The Raft\" Prison", 6, 4, {
     trigger: fightVillainAtLocationEachOtherPlayerTrigger(
-      (ev, p) => selectCardOrEv(ev, "Choose a Villain", p.victory.limit(isVillain),
+      (ev, p) => selectCardOptEv(ev, "Choose a Villain", p.victory.limit(isVillain),
         c => moveCardEv(ev, c, gameState.escaped),
         () => gainWoundEv(ev, p),
         p),
@@ -5340,7 +5340,7 @@ addVillainTemplates("Marvel Studios The Infinity Saga", [
 // VP: 5
   [ 1, makeVillainCard("Children of Thanos", "Corvus Glaive", 6, 5, {
     ambush: ev => {
-      isEndgame(ev.source) && eachPlayer(p => selectCardOrEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
+      isEndgame(ev.source) && eachPlayer(p => selectCardOptEv(ev, "Choose a Bystander to KO", p.victory.limit(isBystander), c => KOEv(ev, c), () => gainWoundEv(ev, p), p));
       addTurnSet('isEndgame', () => true, () => true);
     },
     varDefense: endgameVarDefense(3),
@@ -6529,8 +6529,8 @@ addVillainTemplates("Weapon X", [
         playAnotherEv(ev);
       }
     },
-    fightFail: enemyBerserkFail(ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p))),
-    escape: ev => eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
+    fightFail: enemyBerserkFail(ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p))),
+    escape: ev => eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.INSTINCT | Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p))),
     trigger: enemyBerserkTrigger(2),
   })],
 // {BERSERK}, {BERSERK}

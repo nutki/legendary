@@ -3747,7 +3747,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
     // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
     ev.source.mastermind.commonTacticEffect(ev);
     // Each other player discards a card with an odd-numbered cost or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a card to discard", p.hand.limit(isCostOdd), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a card to discard", p.hand.limit(isCostOdd), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Even the Odds", ev => {
     // Before putting this Tactic in your Victory Pile, {RISEOFTHELIVINGDEAD}. <i>(This ability never makes Mastermind Tactics return.)</i>
@@ -3888,7 +3888,7 @@ makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "
 // You can't fight Ghost unless you made at least 6 Recruit this turn.
 "Ghost, Intangible", 6, ev => {
 // Each player discards a [Covert] Hero or puts a non-grey Hero from their hand or discard pile next to Ghost as a "Kidnapped Victim." Ghost {TRANSFORM}.
-  eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c),
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.COVERT), c => discardEv(ev, c),
   () => selectCardEv(ev, "Choose a Hero to put next to Ghost", handOrDiscard(p).limit(isNonGrayHero), c => attachCardEv(ev, c, ev.source, 'KIDNAPPED VICTIM'), p), p));
   transformMastermindEv(ev);
 }, {
@@ -3899,7 +3899,7 @@ makeTransformingMastermindCard(makeMastermindCard("Ghost, Master Thief", 8, 6, "
 // Kang {TRANSFORM}.
 makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11, 6, "Armada of Kang", ev => {
 // Each player discards a [Strength] Hero or gains a Wound. Put a random Timeline Variant Villain face up in the "Multiverse" space.
-  eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+  eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.STRENGTH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   gameState.outOfGame.attachedDeck('TIMELINE VARIANTS').withRandom(c => attachCardEv(ev, c, gameState.mastermind, 'MULTIVERSE'));
   transformMastermindEv(ev);
 }, [
@@ -4164,7 +4164,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
 // FLAVOR: Just as Wolverine has a Healing Factor, Omega Red brings a Death Factor.
   [ "Death Pheremones", ev => {
   // Each other player discards a [Tech] Hero or gains a Wound.
-    eachOtherPlayerVM(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+    eachOtherPlayerVM(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(Color.TECH), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
   } ],
   [ "Drain Life Force", ev => {
   // If this is not the final Tactic, and if you have at least two Wounds in your hand and/or discard pile, return all of them to the bottom of
@@ -4199,7 +4199,7 @@ addTemplates("MASTERMINDS", "Weapon X", [
   // STRIKE: Each player discards a card of this Hero Class or gains a Wound."
     if(!finalTactic(ev.source)) selectCardEv(ev, "Choose a Hero to ascend", hqHeroes().limit(c => c.cost >= 6), c => {
       addStatSet('strike', is(c), c => ev => {
-        eachPlayer(p => selectCardOrEv(ev, "Choose a Hero to discard", p.hand.limit(c.color), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
+        eachPlayer(p => selectCardOptEv(ev, "Choose a Hero to discard", p.hand.limit(c.color), c => discardEv(ev, c), () => gainWoundEv(ev, p), p));
       });
       addStatSet('fight', is(c), c => ev => choosePlayerEv(ev, p => gainEv(ev, c, p)));
       addStatSet('baseDefense', is(c), c => c.printedCost);
