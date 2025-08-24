@@ -270,6 +270,10 @@ function riseOfTheLivingDead(ev: Ev) {
 function riseOfTheLivingDeadEv(ev: Ev) {
   pushEv(ev, 'EFFECT', { func: riseOfTheLivingDead });
 }
+function riseOfTheLivingDeadInSetup() {
+  return [gameState.gameSetup.villains, gameState.extraTemplatesUsed.villains].flat().some(t => ['The Deadlands', 'Zombie Avengers'].includes(t))
+    || [gameState.gameSetup.mastermind, gameState.extraTemplatesUsed.mastermind].flat().some(t => ['Zombie Scarlet Witch', 'Zombie Green Goblin'].includes(t));
+}
 
 // {XDRAMPAGE}: "Cross-Dimensional (Character) Rampage" means "Each player reveals one of their (Character) Heroes or a (Character) card in their Victory pile or gains a Wound." (Character) cards include any card with "(Character)" in its card name or Hero name.
 // "Hulk" cards additionally include "Maestro" and "Nul, Breaker of Worlds."

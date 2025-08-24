@@ -3148,11 +3148,15 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   ev.what.attached('WOUND').each(w => returnToStackEv(ev, gameState.wounds, w));
   ev.what.attached('DOMINATED').size && distributeDominatedEv(ev, ev.what.attached('DOMINATED'));
   if (bondedChoice) c = bonded;
-  b.each(bc => moveCardEv(ev, bc, playerState.victory));
-  moveCardEv(ev, c, playerState.victory);
+  const moveToVictory = [...b, c];
+  if (riseOfTheLivingDeadInSetup())
+    chooseOrderEv(ev, "Choose victory pile order", moveToVictory, bc => moveCardEv(ev, bc, playerState.victory));
+  else
+    moveToVictory.forEach(card => moveCardEv(ev, card, playerState.victory));
   if (bondedChoice === false) cont(ev, () => moveCardEv(ev, bonded, ev.where));
-  b.each(bc => rescueEv(ev, bc));
-  pushEffects(ev, c, "fight", c.fight, { where: ev.where, attachedCards });
+  chooseOrderEv(ev, "Choose rescue and fight order", moveToVictory, bc => {
+    bc === c ? pushEffects(ev, c, "fight", c.fight, { where: ev.where, attachedCards }) : rescueEv(ev, bc);
+  });
   if (unbindEffect) pushEv(ev, "EFFECT", { source: c, func: unbindEffect });
   if (fightingMastermind && ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
