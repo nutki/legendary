@@ -730,8 +730,24 @@ function transformHeroEv(ev: Ev, what: Card, where: 'DECK' | 'DISCARD' | 'HAND' 
     } });
   }
 }
+function addMastermind(name?: string, target: Deck = gameState.mastermind, tacticCount?: number, func?: (m: Card) => void) {
+  if (name) {
+    const m = findMastermindTemplate(name);
+    let mastermind = target.addNewCard(m);
+    let tactics = mastermind.attachedFaceDownDeck('TACTICS');
+    mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
+    tactics.shuffle();
+    if (tacticCount) tactics.deck.splice(tacticCount);
+    tactics.each(t => t.mastermind = mastermind);
+    mastermind.init?.(mastermind);
+    func?.(mastermind);
+    if (mastermind.isAdaptingMastermind) adaptMastermind(mastermind);
+  } else {
+    withRandomMastermindTemplate(m => addMastermind(m.templateId, target, tacticCount, func));
+  }
+}
 function addMastermindEv(ev: Ev, name?: string) {
-  // TODO add mastermind with one tactic
+  cont(ev, () => addMastermind(name, gameState.mastermind, 1));
 }
 // EXPANSION: Marvel Studios Phase 1
 function copyVillainTemplate(group: string, name: string, newName?: string) {

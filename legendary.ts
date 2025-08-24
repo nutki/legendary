@@ -530,6 +530,12 @@ function makeCardCopyPaste(c: Card, p: Card): Card {
   // TODO: remove tmp state from result?
   return p;
 }
+function makeAdaptingMastermindFaceCopy(m: Card, t: Card) {
+  if (m.ctype !== 'P') throw TypeError("need card in play");
+  if (t.ctype !== 'P') throw TypeError("need card in play");
+  Object.setPrototypeOf(m, Object.getPrototypeOf(t));
+  m.instance = t.instance;
+}
 function makeCardDividedChoice(c: Card, side: Card) {
   if (c.ctype !== 'P') throw TypeError("need card in play");
   Object.setPrototypeOf(c, side);
@@ -1167,6 +1173,7 @@ interface Game {
   astralPlane: Deck;
   finalBlow: boolean;
   gameOver: boolean
+  extraTemplatesUsed: Pick<Setup, 'villains' | 'henchmen' | 'heroes' | 'mastermind'>;
 }
 let eventQueue: Ev[] = [];
 let eventQueueNew: Ev[] = [];
@@ -1361,6 +1368,20 @@ function availiableVillainTemplates() {
 function availiableHenchmenTemplates() {
   return cardTemplates.HENCHMEN.filter(t => !gameState.gameSetup.henchmen.includes(t.templateId));
 }
+function availiableMastermindTemplates() {
+  return cardTemplates.MASTERMINDS.filter(t => !gameState.gameSetup.mastermind.includes(t.templateId));
+}
+function withRandomTemplate<T extends keyof Templates>(templateType: T, setupType: 'heroes' | 'villains' | 'henchmen' | 'mastermind', func: (selected: Templates[T][number]) => void) {
+  const avail = cardTemplates[templateType].filter(t => !gameState.extraTemplatesUsed[setupType].includes(t.templateId) && !gameState.gameSetup[setupType].includes(t.templateId));
+  avail.withRandom(selected => {
+    gameState.extraTemplatesUsed[setupType].push(selected.templateId);
+    func(selected);
+  });
+}
+const withRandomMastermindTemplate = (func: (selected: Card) => void) => withRandomTemplate('MASTERMINDS', 'mastermind', func);
+const withRandomHeroTemplate = (func: (selected: Templates['HEROES'][number]) => void) => withRandomTemplate('HEROES', 'heroes', func);
+const withRandomVillainTemplate = (func: (selected: Templates['VILLAINS'][number]) => void) => withRandomTemplate('VILLAINS', 'villains', func);
+const withRandomHenchmenTemplate = (func: (selected: Templates['HENCHMEN'][number]) => void) => withRandomTemplate('HENCHMEN', 'henchmen', func);
 type SetupParamModFunction = (p: keyof SetupParams, v: number, playerCount: number) => number;
 const extraVillainMod: SetupParamModFunction = (p, v) => p === 'vd_villain' ? v + 1 : v;
 const extraHeroMod: SetupParamModFunction = (p, v) => p === 'heroes' ? v + 1 : v;
@@ -1575,6 +1596,7 @@ gameState = {
   thronesFavorHolder: undefined,
   astralPlane: new Deck('ASTRALPLANE', true),
   gameOver: false,
+  extraTemplatesUsed: { mastermind: [], villains: [], henchmen: [], heroes: []},
 };
 if (undoLog.replaying) {
   gameState.gameRand = new RNG(undoLog.readInt());
@@ -1659,14 +1681,15 @@ for (let i = 0; i < getParam('vd_bystanders'); i++)
   moveCard(gameState.bystanders.top, gameState.villaindeck);
 gameState.villaindeck.shuffle();
 // Init Mastermind
-gameSetup.mastermind.forEach((m, i) => {
+{
+  const m = gameSetup.mastermind[0];
   let mastermind = gameState.mastermind.addNewCard(findMastermindTemplate(m));
   let tactics = mastermind.attachedFaceDownDeck('TACTICS');
   mastermind.tacticsTemplates.forEach(function (c) { tactics.addNewCard(c); });
   tactics.shuffle();
   tactics.each(t => t.mastermind = mastermind);
-  if (i === 0) updateLeads(mastermind, gameSetup.villains[0], gameSetup.henchmen[0]);
-});
+  updateLeads(mastermind, gameSetup.villains[0], gameSetup.henchmen[0]);
+}
 if (gameState.advancedSolo === 'WHATIF') {
   for (let i = 0; i < 2; i++) {
     const c = gameState.villaindeck.deck.find(c => c.printedVillainGroup === gameState.gameSetup.henchmen[0]);
@@ -2277,6 +2300,7 @@ function cheatActionEv(ev: Ev) {
       ["1 piercing", () => addPierciengEvent(ev, 1)],
       ["1 shard", () => gainShardEv(ev)],
       ["Escape a villain", () => selectCardEv(ev, "Choose a villain to escape", fightableCards().limit(isVillain), c => villainEscapeEv(ev, c))],
+      ["Stack villain deck", () => revealVillainDeckEv(ev, c => true, () => {}, false, true)],
     )
   }});
 }
@@ -3000,17 +3024,12 @@ function playAmbushScheme(ev: Ev) {
 function playAmbushSchemeEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { what, func: playAmbushScheme }); }
 function adaptMastermind(mastermind: Card) {
   const tactics = mastermind.attachedFaceDownDeck("TACTICS");
-  const mastermindLocation = mastermind.location;
   if (!tactics.size) {
     mastermind.location.remove(mastermind);
     return;
   }
-  const mastermindPos = mastermindLocation.deck.indexOf(mastermind);
   tactics.shuffle();
-  const newMastermind = makeCardCopy(tactics.top);
-  newMastermind._attached = mastermind._attached;
-  newMastermind.location = mastermindLocation;
-  mastermindLocation.deck[mastermindPos] = newMastermind;
+  makeAdaptingMastermindFaceCopy(mastermind, tactics.top);
 }
 function adaptMastermindEv(ev: Ev, what: Card) { pushEv(ev, "EFFECT", { func: () => adaptMastermind(what) }); }
 
@@ -3118,8 +3137,9 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   let c = ev.what;
   const bonded = c.attached('SYMBIOTE')[0];
   let unbindEffect: Handler | undefined;
+  const fightingMastermind = isMastermind(c) || ev.where === gameState.mastermind;
   if (bonded && bondedChoice === undefined) {
-    if (isMastermind(c)) {
+    if (fightingMastermind) {
       bondedChoice = false;
       unbindEffect = getModifiedStat(c, "mastermindUnbind", u);
     } else {
@@ -3146,7 +3166,7 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   b.each(bc => rescueEv(ev, bc));
   pushEffects(ev, c, "fight", c.fight, { where: ev.where, attachedCards });
   if (unbindEffect) pushEv(ev, "EFFECT", { source: c, func: unbindEffect });
-  if (ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
+  if (fightingMastermind && ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
 function rescueByEv(ev: Ev, who: Player, what: Card | number = 1): void {
   if (typeof what !== "number") what && pushEv(ev, "RESCUE", { func: rescueBystander, what, who, where: what.location });

@@ -682,13 +682,13 @@ makeSchemeCard("Crush Them With My Bare Hands", { twists: 5, vd_villain: [ 2, 2,
 makeSchemeCard("Dark Alliance", { twists: 8, extra_masterminds: 1 }, ev => {
   if (ev.nr === 1) {
     // Twist 1 Add a random second Mastermind to the game with one Mastermind Tactic.
-    gameState.scheme.attachedDeck('EXTRA_MASTERMIND').limit(isMastermind).each(m => {
-      moveCardEv(ev, m, gameState.mastermind);
+    addMastermind(gameState.gameSetup.mastermind[1], u, u, m => {
+      m.attached('TACTICS').slice(1).each(c => moveCard(c, gameState.scheme.attachedDeck('EXTRA_TACTICS')));
     });
   } else if (ev.nr >= 2 && ev.nr <= 4) {
     // Twist 2-4 If the second Mastermind is still in play, it gains another Mastermind Tactic.
-    gameState.scheme.attachedDeck('EXTRA_MASTERMIND').limit(isTactic).each(c => {
-      gameState.mastermind.limit(m => c.mastermind === m).withRandom(m => {
+    gameState.scheme.attachedDeck('EXTRA_TACTICS').limit(isTactic).withRandom(c => {
+      gameState.mastermind.limit(m => c.mastermind === m).each(m => {
         shuffleIntoEv(ev, c, m.attachedDeck('TACTICS'));
       });
     });
@@ -701,12 +701,6 @@ makeSchemeCard("Dark Alliance", { twists: 8, extra_masterminds: 1 }, ev => {
   schemeProgressEv(ev, ev.nr);
 }, [], () => {
   setSchemeTarget(7);
-  gameState.mastermind.withTop(m => {
-    moveCard(m, gameState.scheme.attachedDeck('EXTRA_MASTERMIND'));
-    while(attachedCards('TACTICS', m).size > 1) {
-      moveCard(attachedCards('TACTICS', m)[0], gameState.scheme.attachedDeck('EXTRA_MASTERMIND'));
-    }
-  })
 }),
 // SETUP: Add an extra Villain Group. Shuffle the Villain Deck, then split it as evenly as possible into a Villain Deck for each player. Then, shuffle 2 Twists into each player's Villain Deck.
 // RULE: The normal city does not exist. Instead, each player has a different dimension in front of them with one city space. Villains and Bystanders from your Villain Deck enter your dimension. You can fight Villains in any dimension.
@@ -751,13 +745,14 @@ makeSchemeCard("Master of Tyrants", { twists: 8, extra_masterminds: 3 }, ev => {
   }
 }, escapeProgressTrigger(isTactic), () => {
   setSchemeTarget(5);
-  const tyrants = gameState.mastermind.deck.splice(1);
-  const isTyrant = (c: Card) => tyrants.includes(c.mastermind);
+  const tyrants: Card[] = [];
+  gameState.gameSetup.mastermind.forEach((m, i) => i > 0 && addMastermind(m, gameState.outOfGame, 4, c => tyrants.push(...c.attached('TACTICS'))));
+  const isTyrant = (c: Card) => tyrants.includes(c);
   addStatMod('defense', isTyrant, c => c.attached('DARK_POWER').size * 2);
   addStatSet('isVillain', isTyrant, c => true);
   addStatSet('villainGroup', isTyrant, c => 'Tyrant Villain');
   addStatSet('fight', isTyrant, c => [] as Handler[]);
-  tyrants.each(t => t.attached('TACTICS').each(c => moveCard(c, gameState.villaindeck)));
+  tyrants.each(c => moveCard(c, gameState.villaindeck));
   gameState.villaindeck.shuffle();
 }),
 // SETUP: 10 Twists.
@@ -909,10 +904,10 @@ makeSchemeCard("Master the Mysteries of Kung-Fu", { twists: 8 }, ev => {
   setSchemeTarget(2, true);
 }),
 // SETUP: 8 Twists.
-makeSchemeCard("Secret Wars", { twists: 8 }, ev => {
+makeSchemeCard("Secret Wars", { twists: 8, extra_masterminds: 3 }, ev => {
   if (ev.nr <= 3) {
     // Twist 1-3 Add another random Mastermind to the game with one Tactic.
-    addMastermindEv(ev)
+    addMastermindEv(ev, gameState.gameSetup.mastermind[ev.nr]);
   }
   // Twist 8 Evil wins!
   schemeProgressEv(ev, ev.nr);
@@ -1780,11 +1775,9 @@ makeSchemeCard("World War Hulk", { twists: 9, extra_masterminds: 3 }, ev => {
   after: ev => KOEv(ev, ev.parent.what),
 }, () => {
   setSchemeTarget(9);
+  gameState.mastermind.each(m => m.attachedDeck('TACTICS').deck.splice(2));
   const lurking = gameState.scheme.attachedDeck('LURKING');
-  [...gameState.mastermind.deck].forEach((m, i) => {
-    m.attachedDeck('TACTICS').deck.splice(2);
-    if (i > 0) moveCard(m, lurking);
-  });
+  gameState.gameSetup.mastermind.forEach((m, i) => i > 0 && addMastermind(m, lurking, 2));
 }),
 ]);
 addTemplates("SCHEMES", "Marvel Studios Phase 1", [
@@ -1920,8 +1913,7 @@ makeSchemeCard<{drained: Card}>("Symbiotic Absorption", { twists: 11, extra_mast
   schemeProgressEv(ev, ev.nr);
 }, [], s => {
   setSchemeTarget(11);
-  s.drained = gameState.mastermind.deck[1]; // TODO init extra masterminds attached to scheme already
-  moveCard(s.drained, gameState.scheme.attachedDeck('DRAINED'));
+  addMastermind(gameState.gameSetup.mastermind[1], gameState.scheme.attachedDeck('DRAINED'), u, m => s.drained = m);
 }),
 ]);
 addTemplates("SCHEMES", "Revelations", [

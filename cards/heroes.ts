@@ -4281,7 +4281,11 @@ addHeroTemplates("World War Hulk", [
     addAttackEvent(ev, n);
     if (n > 12) {
       transformHeroEv(ev, ev.source);
-      addFutureTrigger(ev => addMastermindEv(ev, 'The Void'));
+      addFutureTrigger(ev => {
+        // The Void is The Sentry transformed
+        addMastermindEv(ev, 'The Sentry');
+        cont(ev, () => getMasterminds().filter(m => m.cardName === 'The Sentry').each(m => transformMastermindEv(ev, m)));
+      });
     }
   }, false, true)),
 },
