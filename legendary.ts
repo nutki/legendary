@@ -1359,18 +1359,6 @@ const isExtraHenchman = isSetupGroup('henchmen');
 function setupMastermindName() {
   return gameState.gameSetup.mastermind[0];
 }
-function availiableHeroTemplates() {
-  return cardTemplates.HEROES.filter(t => !gameState.gameSetup.heroes.includes(t.templateId));
-}
-function availiableVillainTemplates() {
-  return cardTemplates.VILLAINS.filter(t => !gameState.gameSetup.villains.includes(t.templateId));
-}
-function availiableHenchmenTemplates() {
-  return cardTemplates.HENCHMEN.filter(t => !gameState.gameSetup.henchmen.includes(t.templateId));
-}
-function availiableMastermindTemplates() {
-  return cardTemplates.MASTERMINDS.filter(t => !gameState.gameSetup.mastermind.includes(t.templateId));
-}
 function withRandomTemplate<T extends keyof Templates>(templateType: T, setupType: 'heroes' | 'villains' | 'henchmen' | 'mastermind', func: (selected: Templates[T][number]) => void) {
   const avail = cardTemplates[templateType].filter(t => !gameState.extraTemplatesUsed[setupType].includes(t.templateId) && !gameState.gameSetup[setupType].includes(t.templateId));
   avail.withRandom(selected => {

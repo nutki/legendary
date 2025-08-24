@@ -5973,7 +5973,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
       withCity('BRIDGE', d => isCityEmpty(d) && selectCardEv(ev, "Choose a Villain to move to the Bridge", villains(), c => moveCardEv(ev, c, d)));
       const extraHenchmen = gameState.outOfGame.attachedDeck('CONQUERING_ARMY_HENCHMEN');
       const henchmen = ev.source.attachedDeck('HENCHMEN');
-      availiableHenchmenTemplates().withRandom(h => { // TODO - not random
+      withRandomHenchmenTemplate(h => { // TODO - not random
         h instanceof Card ? extraHenchmen.addNewCard(h, 10) : h.cards.each(([n, c]) => extraHenchmen.addNewCard(c, n));
       })
       extraHenchmen.shuffle();

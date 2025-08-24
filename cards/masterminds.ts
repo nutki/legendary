@@ -3936,7 +3936,7 @@ makeTransformingMastermindCard(makeMastermindCard("Kang, Quantum Conqueror", 11,
   ...conquerorAbility(3, 'ROOFTOPS', 'STREETS', 'BRIDGE'),
   init: source => {
     const variants = gameState.outOfGame.attachedDeck('TIMELINE VARIANTS');
-    availiableVillainTemplates().withRandom(v => v.cards.each(([n, c]) => variants.addNewCard(c, n)));
+    withRandomVillainTemplate(v => v.cards.each(([n, c]) => variants.addNewCard(c, n)));
     variants.deck.limit(c => !isVillain(c)).each(c => moveCard(c, gameState.outOfGame));
     addStatSet('cardActions', is(source), () => source.isTransformed ? gameState.mastermind.attached('MULTIVERSE').map(c => (s, ev) => fightActionEv(ev, c)) : []);
   },

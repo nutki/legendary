@@ -2793,7 +2793,7 @@ makeSchemeCard("...Control the Mutant Messiah", { }, ev => {
     cost: { recruit: c.cost + gameState.mastermind.attached('TWIST').size },
     func: ev => gainToDeckEv(ev, c),
   }));
-  availiableHeroTemplates().withRandom(heroTemplate => {
+  withRandomHeroTemplate(heroTemplate => {
     const mutantMessiah = gameState.scheme.attachedFaceDownDeck('MUTANTMESSIAH');
     heroToCardTamplates(heroTemplate).each(([c, n]) => mutantMessiah.addNewCard(c, n));
     mutantMessiah.shuffle();
@@ -2820,7 +2820,7 @@ makeSchemeCard("...Open Rifts to Future Timelines", { }, ev => {
   runOutProgressTrigger('VILLAIN', false),
 ], () => {
   setSchemeTarget(7);
-  availiableVillainTemplates().withRandom(({cards}) => {
+  withRandomVillainTemplate(({cards}) => {
     cards.each(([n, c]) => gameState.villaindeck.addNewCard(c, n));
     gameState.villaindeck.shuffle();
   });
