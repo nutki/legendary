@@ -3736,7 +3736,7 @@ addTemplates("MASTERMINDS", "Marvel Studios What If...?", [
 ...makeEpicMastermindCard("Zombie Scarlet Witch", [ 9, 13 ], 6, "Zombie Avengers", ev => {
 // {XDRAMPAGE Zombie}. Then {RISEOFTHELIVINGDEAD}.
 // {XDRAMPAGE Zombie}. Then each player must <b>Soulbind</b> the topmost card of their Victory Pile that isn't a Villain with "Rise of the Living Dead." Then {RISEOFTHELIVINGDEAD}.
-  xdRampageEv(ev, c => isCharacterName('Zombie')(c) || leadBy(ev.source)(c));
+  xdRampageEv(ev, ['Zombie', c => isCharacterName('Zombie')(c) || leadBy(ev.source)(c)]);
   ev.source.epic && eachPlayer(p => {
     const options = p.victory.limit(c => !isVillain(c) && !hasRiseOfTheLivingDead(c)).firstOnly();
     forceSoulbindEv(ev, c => options.includes(c), p);

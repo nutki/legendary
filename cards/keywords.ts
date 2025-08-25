@@ -286,8 +286,9 @@ function isCharacterName(name: string) {
     || c.printedVillainGroup?.includes(n) || c.mastermind?.cardName?.includes(n));
 }
 // generic effect
-function xdRampageEv(ev: Ev, name: string | ((c: Card) => boolean), effect0?: (p: Player) => void) {
-  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${name} card`, [...revealable(p), ...p.victory.deck].limit(typeof(name) === "string" ? isCharacterName(name) : name), () => {}, () => {
+function xdRampageEv(ev: Ev, name: string | [string, ((c: Card) => boolean)], effect0?: (p: Player) => void) {
+  const [n, filter] = typeof(name) === "string" ? [name, isCharacterName(name)] : name;
+  eachPlayer(p => selectCardOptEv(ev, `Reveal a ${n} card`, [...revealable(p), ...p.victory.deck].limit(filter), () => {}, () => {
     gainWoundEv(ev, p);
     effect0 && effect0(p);
   }, p))
