@@ -810,7 +810,7 @@ function getUSizeChanging(c: Card) {
 }
 function isSizeChanged(c: Card) {
   const color = getSizeChanging(c);
-  return color && (superPower(color) > 0);
+  return color && (superPowerCount(color) > 0);
 }
 function hasNoSizeChanging(c: Card) {
   return !getSizeChanging(c) && !getUSizeChanging(c);
@@ -818,7 +818,7 @@ function hasNoSizeChanging(c: Card) {
 function uSizeChangingAmount(c: Card): number {
   const v = getUSizeChanging(c);
   if (!v) return 0;
-  return Math.min(superPower(v.color), v.amount) * 2;
+  return Math.min(superPowerCount(v.color), v.amount) * 2;
 }
 function chivalrousDuelSources() {
   const amounts = new Map<string, number>();
@@ -1334,7 +1334,7 @@ function endgameVarDefense(n: number) {
 }
 function sacrificeEv(ev: Ev, color: number, effect: Handler) {
   const what = ev.source;
-  superPower(color) && chooseMayEv(ev, "Sacrifice", () => {
+  superPowerCount(color) && chooseMayEv(ev, "Sacrifice", () => {
     KOEv(ev, what);
     pushEv(ev, 'EFFECT', effect);
   });
@@ -1430,7 +1430,7 @@ function liberateEv(ev: Ev, n: number) {
 }
 function soulbindEv(ev: Ev, cond: number | Affiliation, effect: (c: Card) => void, limit: Filter<Card> = isVillain, n: number = 1) {
   let bound: Card;
-  if (cond && !superPower(cond)) return;
+  if (cond && !superPowerCount(cond)) return;
   if (playerState.victory.count(limit) < n) return;
   if (n > 1) chooseMayEv(ev, "Use Soulbind", () => selectObjectsEv(ev, "Choose cards to Soulbind", n, playerState.victory.limit(limit), c => {
     bound = c;
