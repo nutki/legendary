@@ -173,7 +173,7 @@ addTemplatesWithCounts("SIDEKICKS", "Civil War", [
 // Put this on the bottom of the Sidekick Stack.
 [ 3, makeHeroCard("Special Sidekick", "Hairball", 2, u, 1, Color.COVERT, "Avengers", "FD", [ ev => drawEv(ev, 1), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // {POWER Ranged} You get +1 Attack. Put this on the bottom of the Sidekick Stack.
-[ 2, makeHeroCard("Special Sidekick", "Lockheed", 2, u, 2, Color.RANGED, "Avengers", "FD", [ ev => superPower(Color.RANGED) && addAttackEvent(ev, 1), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
+[ 2, makeHeroCard("Special Sidekick", "Lockheed", 2, u, 2, Color.RANGED, "Avengers", "FD", [ ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackEvent(ev, 1)), ev => returnToStackEv(ev, gameState.sidekick) ]) ],
 // {PHASING}
 // Put this on the bottom of the Sidekick Stack.
 [ 2, makeHeroCard("Special Sidekick", "Lockjaw", 2, u, 2, Color.RANGED, "Avengers", "FD", ev => returnToStackEv(ev, gameState.sidekick), { cardActions: [ phasingActionEv ] }) ],
@@ -275,24 +275,22 @@ const shieldOfficerTemplates: [number, Card][] = [
   ], f => f());
 }) ],
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} Draw a card.
-[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Melinda May", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "D", ev => superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && drawEv(ev)) ],
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Melinda May", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "D", ev => superPowerEv(ev, ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."], () => drawEv(ev))) ],
 // You may send this Hero {UNDERCOVER}. If you do, you get +1 Recruit
 // GUN: 1
 [ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Sharon Carter", 3, 2, u, Color.COVERT, "S.H.I.E.L.D.", "GD", ev => chooseUndercoverEv(ev, () => addRecruitEvent(ev, 1))) ],
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} You may send this Hero or a S.H.I.E.L.D. Hero from your hand {UNDERCOVER}.
-[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Victoria Hand", 3, 2, u, Color.COVERT, "S.H.I.E.L.D.", "D", ev => {
-  superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.") && selectCardOptEv(ev, "Send Undercover", [ev.source, ...playerState.hand.limit('S.H.I.E.L.D.')], c => {
-    sendUndercoverEv(ev, c);
-  });
-}) ],
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Victoria Hand", 3, 2, u, Color.COVERT, "S.H.I.E.L.D.", "D", ev => { superPowerLikelyEv(ev, ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."],
+    () => selectCardOptEv(ev, "Send Undercover", [ev.source, ...playerState.hand.limit('S.H.I.E.L.D.')], c => { sendUndercoverEv(ev, c); })
+  ); }) ],
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D.} You may send this Hero {UNDERCOVER} or put it on top of your deck.
 // GUN: 1
-[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "\"Yo-Yo\" Rodriguez", 3, 2, u, Color.RANGED, "S.H.I.E.L.D.", "GD", ev => {
-  superPower("S.H.I.E.L.D.", "S.H.I.E.L.D.") && chooseOptionEv(ev, "Send this Hero", [
-    { l: "Undercover", v: () => sendUndercoverEv(ev) },
-    { l: "on top of your deck", v: () => moveCardEv(ev, ev.source, playerState.deck) },
-  ], f => f());
-}) ],
+[ 2, makeHeroCard("S.H.I.E.L.D. Officer", "\"Yo-Yo\" Rodriguez", 3, 2, u, Color.RANGED, "S.H.I.E.L.D.", "GD", ev => { superPowerEv(ev,
+    ["S.H.I.E.L.D.", "S.H.I.E.L.D."], () => chooseOptionEv(ev, "Send this Hero", [
+      { l: "Undercover", v: () => sendUndercoverEv(ev) },
+      { l: "on top of your deck", v: () => moveCardEv(ev, ev.source, playerState.deck) },
+    ], f => f())
+  ); }) ],
 ];
 shieldOfficerTemplates.forEach(([n, c]) => c.set = "S.H.I.E.L.D.");
 

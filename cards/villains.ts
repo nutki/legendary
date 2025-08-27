@@ -1253,14 +1253,14 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACKG: 3+
   [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Thor", 7, u, {
     escape: ev => xdRampageEv(ev, 'Thor'),
-  }), u, 3, Color.RANGED, "Avengers", "", ev => superPower(Color.RANGED) && addAttackEvent(ev, 3))],
+  }), u, 3, Color.RANGED, "Avengers", "", ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackEvent(ev, 3)))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
 // CLASS: [Covert]
 // {POWER Covert} You get +2 Attack.
 // ATTACKG: 2+
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, "Avengers", "D", ev => superPower(Color.COVERT) && addAttackEvent(ev, 2))],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, "Avengers", "D", ev => superPowerLikelyEv(ev, Color.COVERT, () => addAttackEvent(ev, 2)))],
 ]},
 { name: "Sentinel Territories", cards: [
 // FIGHT: <i>Colossus changes the future:</i> Don't play a Villain card at the beginning of next turn.
@@ -1525,7 +1525,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Beast", 5, u, {
     ambush: chargeAmbushEffect(1),
-  }), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPower(Color.TECH) && drawEv(ev, 1))],
+  }), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPowerEv(ev, Color.TECH, () => drawEv(ev, 1)))],
 // FIGHT: Gain this as a Hero.
 // ATTACKG: 4
 // GAINABLE
@@ -1563,7 +1563,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("X-Men '92", "'92 Wolverine", 7, u, {
     escape: ev => xdRampageEv(ev, 'Wolverine'),
-  }), u, 2, Color.INSTINCT, "X-Men", "D", ev => superPower(Color.INSTINCT) && drawEv(ev, 2))],
+  }), u, 2, Color.INSTINCT, "X-Men", "D", ev => superPowerEv(ev, Color.INSTINCT, () => drawEv(ev, 2)))],
 ]},
 ]);
 addVillainTemplates("Captain America 75th Anniversary", [
@@ -3372,7 +3372,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2+
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Hulk", 5, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(isHenchman)),
-  }), u, 2, Color.STRENGTH, "Venomverse", "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 2))],
+  }), u, 2, Color.STRENGTH, "Venomverse", "D", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, 2)))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Streets. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 4
 // GAINABLE
@@ -3381,7 +3381,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Sabretooth", 4, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'STREETS'))),
-  }), u, 2, Color.INSTINCT, "Venomverse", "D", ev => superPower(Color.INSTINCT) && lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c))))],
+  }), u, 2, Color.INSTINCT, "Venomverse", "D", ev => superPowerEv(ev, Color.INSTINCT, () => lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))))],
 // FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3408,7 +3408,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 2+
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Storm", 3, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'ROOFTOPS', 'BRIDGE'))),
-  }), u, 2, Color.RANGED, "Venomverse", "D", ev => superPower(Color.RANGED) && addAttackSpecialEv(ev, isMastermind, 2))],
+  }), u, 2, Color.RANGED, "Venomverse", "D", ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackSpecialEv(ev, isMastermind, 2)))],
 // AMBUSH: This Symbiote Bonds with the Mastermind. When you fight the Mastermind, defeat Symbiotic Armor and KO one of your Heroes instead of taking a Tactic.
 // ATTACK: 1
 // VP: 6
@@ -4575,7 +4575,7 @@ addVillainTemplates("Annihilation", [
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Timelines of Kang", "Iron Lad", 4, u, {
     fight: ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)),
-  }), u, 2, Color.TECH, u, "D", ev => superPower(Color.TECH) && outOfTimeEv(ev))],
+  }), u, 2, Color.TECH, u, "D", ev => superPowerEv(ev, Color.TECH, () => outOfTimeEv(ev)))],
 ]},
 ]);
 addVillainTemplates("Messiah Complex", [
@@ -4806,7 +4806,7 @@ addVillainTemplates("Messiah Complex", [
 // ATTACK: 2
   [ 2, makeGainableCard(makeVillainCard("Clan Yashida", "Scarlet Samurai", 3, u, {
     chivalrousDuel: true,
-  }), u, 2, Color.INSTINCT, "Crime Syndicate", "D", ev => superPower(Color.INSTINCT) && drawEv(ev))],
+  }), u, 2, Color.INSTINCT, "Crime Syndicate", "D", ev => superPowerEv(ev, Color.INSTINCT, () => drawEv(ev)))],
 // <b>Chivalrous Duel</b>
 // AMBUSH: Lord Shingen captures a Bystander. Bystanders held by Lord Shingen are “Samurai Bodyguards.” You can’t fight Lord Shingen while he has
 // any Bodyguards. You can fight them as if they were 3 Attack Villains with “<b>Chivalrous Duel</b>. <b>Fight</b>: Rescue this as a Bystander.”
@@ -6548,7 +6548,7 @@ addVillainTemplates("Weapon X", [
     fightFail: ev => selectCardEv(ev, "Choose a Hero to KO", playerState.discard.limit(isNonGrayHero), c => KOEv(ev, c)),
     escape: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, isNonGrayHero)),
     trigger: enemyBerserkTrigger(2),
-  }), u, 2, Color.INSTINCT, "X-Force", "D", ev => superPower(Color.INSTINCT) && berserkEv(ev, 2))],
+  }), u, 2, Color.INSTINCT, "X-Force", "D", ev => superPowerEv(ev, Color.INSTINCT, () => berserkEv(ev, 2)))],
 // {BERSERK}
 // AMBUSH: Choose a card named "Feral" from any player's discard pile to enter the city as a Villain.
 // FIGHT: Draw the card you Berserked.

@@ -65,7 +65,7 @@ addBystanderTemplates("X-Men", [
 // {POWER Tech} You may KO a card from your hand or discard pile.
 // RECRUIT: 2
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Heartless Computer Scientist"), 2, u, Color.TECH, u, "D", ev => superPower(Color.TECH) && KOHandOrDiscardEv(ev, undefined), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Heartless Computer Scientist"), 2, u, Color.TECH, u, "D", ev => superPowerEv(ev, Color.TECH, () => KOHandOrDiscardEv(ev, undefined)), { printedCost: 3 }) ],
 // TEAM: X-Men
 // CLASS: [Covert]
 // Reveal the top card of the Hero Deck. You get +Attack equal to its printed Attack.
@@ -100,13 +100,13 @@ addBystanderTemplates("X-Men", [
 // {POWER Strength} You get +1 Attack.
 // 2+ Attack.
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Sunspot"), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPower(Color.STRENGTH) && addAttackEvent(ev, 1), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Sunspot"), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, 1)), { printedCost: 3 }) ],
 // TEAM: X-Men
 // CLASS: [Tech]
 // {POWER Tech} Draw a card.
 // ATTACKG: 2
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Warlock"), u, 2, Color.TECH, "X-Men", "D", ev => superPower(Color.TECH) && drawEv(ev, 1), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Warlock"), u, 2, Color.TECH, "X-Men", "D", ev => superPowerEv(ev, Color.TECH, () => drawEv(ev, 1)), { printedCost: 3 }) ],
 // TEAM: X-Men
 // CLASS: [Instinct]
 // {BERSERK}, {BERSERK}, {BERSERK}
