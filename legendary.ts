@@ -1914,9 +1914,6 @@ function superPowerCount(f: (number | Affiliation)): number {
 function superPowerMultiCount(f: (number | Affiliation)[]): number {
   return f.count(c => superPowerCount(c) < f.count(e => c === e)) === 0 ? 1 : 0;
 }
-function superPower(...f: (number | Affiliation)[]) {
-  return f.length > 1 ? superPowerMultiCount(f) : superPowerCount(f[0]);
-}
 function superPowerEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect1: (n: number) => void, effect0?: () => void): void {
   const powerValue = f instanceof Array ? superPowerMultiCount(f) : superPowerCount(f);
   if (powerValue) effect1(powerValue); else if (effect0) effect0();
