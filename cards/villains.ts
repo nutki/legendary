@@ -4564,7 +4564,7 @@ addVillainTemplates("Annihilation", [
 // VP: 3
   [ 2, makeVillainCard("Timelines of Kang", "Scarlet Centurion", 4, 3, {
     ambush: ev => selectCardEv(ev, "Choose a hero", playerState.hand.limit(isHero).highest(c => c.cost), c => outOfTimeEv(ev, c)),
-    fight: ev => superPower(Color.COVERT) && selectCardAndKOEv(ev, yourHeroes()),
+    fight: ev => turnState.cardsPlayed.has(Color.COVERT) && selectCardAndKOEv(ev, yourHeroes()),
     ...conquerorAbility(2, 'BANK'),
   })],
 // FIGHT: The player of your choice gains this as a Hero.

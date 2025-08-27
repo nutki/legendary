@@ -2218,14 +2218,14 @@ makeAdaptingMastermindCard("Hydra Super-Adaptoid", 6, "A.I.M., Hydra Offshoot", 
   makeAdaptingTacticsCard("Iron Man's Armor", 12, ev => {
     eachPlayer(p => revealOrEv(ev, Color.TECH, () => pickDiscardEv(ev, -3, p), p));
   }, ev => {
-    drawEv(ev, superPower(Color.TECH));
+    drawEv(ev, yourHeroes().count(Color.TECH));
   }),
 // #STRIKE: Each player reveals a [Ranged] Hero or gains a Wound. <b>Adapt</b>.
 // #FIGHT: For each of your [Strength] Heroes, KO one of your Heroes. <b>Adapt</b>.
   makeAdaptingTacticsCard("Thor's Hammer", 14, ev => {
     eachPlayer(p => revealOrEv(ev, Color.RANGED, () => gainWoundEv(ev, p), p));
   }, ev => {
-    selectObjectsEv(ev, "Choose Heroes to KO", superPower(Color.STRENGTH), yourHeroes(), c => KOEv(ev, c));
+    selectObjectsEv(ev, "Choose Heroes to KO", yourHeroes().count(Color.STRENGTH), yourHeroes(), c => KOEv(ev, c));
   }),
 ]),
 ]);
@@ -2820,7 +2820,7 @@ addTemplates("MASTERMINDS", "Messiah Complex", [
   } ],
   [ "Stretching Adamantium Claws", ev => {
   // You may KO one of your Heroes. If you have a [Instinct] Hero, you may instead KO up to two of you Heroes.
-    superPower(Color.INSTINCT) ? selectObjectsUpToEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c)) :
+    yourHeroes().has(Color.INSTINCT) ? selectObjectsUpToEv(ev, "Choose Heroes to KO", 2, yourHeroes(), c => KOEv(ev, c)) :
       selectCardOptEv(ev, "Choose a Hero to KO", yourHeroes(), c => KOEv(ev, c));
   } ],
 ], {
