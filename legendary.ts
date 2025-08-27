@@ -1908,9 +1908,27 @@ function isMuliColor(c: Card) {
   return c.color && (c.color & c.color - 1) !== 0;
 }
 
-function superPower(...f: (number | Affiliation)[]): number {
-  if (f.length > 1) return f.count(c => superPower(c) < f.count(e => c === e)) === 0 ? 1 : 0;
-  return count(turnState.cardsPlayed, f[0]);
+function superPowerCount(f: (number | Affiliation)): number {
+  return count(turnState.cardsPlayed, f);
+}
+function superPowerMultiCount(f: (number | Affiliation)[]): number {
+  return f.count(c => superPowerCount(c) < f.count(e => c === e)) === 0 ? 1 : 0;
+}
+function superPower(...f: (number | Affiliation)[]) {
+  return f.length > 1 ? superPowerMultiCount(f) : superPowerCount(f[0]);
+}
+function superPowerEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect1: (n: number) => void, effect0?: () => void): void {
+  const powerValue = f instanceof Array ? superPowerMultiCount(f) : superPowerCount(f);
+  if (powerValue) effect1(powerValue); else if (effect0) effect0();
+}
+function superPowerLikelyEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect1: (n: number) => void, effect0?: () => void): void {
+  superPowerEv(ev, f, effect1, effect0);
+}
+function superPowerCondEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect: (n: number) => void): void {
+  superPowerEv(ev, f, effect, () => effect(0));
+}
+function superPowerCondLikelyEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect: (n: number) => void): void {
+  superPowerLikelyEv(ev, f, effect, () => effect(0));
 }
 function addEndDrawMod(a: number): void { turnState.endDrawMod = (turnState.endDrawMod || 0) + a; }
 function setEndDrawAmount(a: number): void { turnState.endDrawAmount = a; }
