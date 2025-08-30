@@ -374,7 +374,7 @@ addTemplatesWithCounts("WOUNDS", "Weapon X", [
 // ATTACK: 3
 // To play this, you must discard three cards, then draw a card.
 // HEAL: When you use a Superpower Ability this turn, you may KO this Wound. <i>(e.g. "[Strength]: You get +1 Attack.")</i>
-[ 1, makeEnragingWoundCard("Erratic Powers", u, 3, 'CLEANUP', ev => false, ev => drawEv(ev), { playCost: 3, playCostType: 'DISCARD' }) ], // TODO superpower trigger
+[ 1, makeEnragingWoundCard("Erratic Powers", u, 3, 'SUPERPOWER', (ev, c) => owner(c) === playerState, ev => drawEv(ev), { playCost: 3, playCostType: 'DISCARD' }) ],
 // ATTACK: 2
 // HEAL: When you defeat a Villain worth at least 2 VP this turn, you may KO this Wound.
 [ 1, makeEnragingWoundCard("Insults and Injuries", u, 2, 'DEFEAT', ev => isVillain(ev.what) && ev.what.vp >= 2) ],

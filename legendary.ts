@@ -793,7 +793,7 @@ type TriggerableEvType =
 'RECRUIT' | 'FIGHT' | 'PLAY' |
 // Basic effects
 'KO' | 'RESCUE' | 'DISCARD' | 'GAIN' | 'STRIKE' | 'TWIST' | 'DEFEAT' | 'ESCAPE' | 'ADDRECRUIT' | 'VILLAINDRAW' | 'DRAW' | 'DRAWCARDS' | 'RESHUFFLE' | 'CARDEFFECT' |
-'ADDATTACK' |
+'ADDATTACK' | 'SUPERPOWER' |
 // Expansion actions
 'TELEPORT' | 'DODGE' |
 // Expansion effects
