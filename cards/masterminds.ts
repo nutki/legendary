@@ -557,7 +557,7 @@ makeMastermindCard("Madelyne Pryor, Goblin Queen", 10, 6, "Limbo", ev => {
 ], {
   fightCond: c => !c.captured.has(isBystander),
   init: m => {
-    const isDemonGoblin = (c: Card) => c.location.attachedTo === m && isBystander(c);
+    const isDemonGoblin = (c: Card) => c.location?.attachedTo === m && isBystander(c);
     addStatSet('isVillain', isDemonGoblin, () => true);
     addStatSet('villainGroup', isDemonGoblin, () => "Demon Goblin");
     addStatSet('baseDefense', isDemonGoblin, () => 2);
