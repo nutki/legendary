@@ -4172,6 +4172,7 @@ addHeroTemplates("Spider-Man Homecoming", [
     a.cost.recruit = (a.cost.recruit || 0) + (a.cost.attack || 0) + (a.cost.either || 0);
     a.cost.attack = 0;
     a.cost.either = 0;
+    a.cost.cond = c => isFightable(c);
     a.desc = "Fight with Recruit";
     addTurnAction(a);
   })),
