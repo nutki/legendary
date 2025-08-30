@@ -3145,7 +3145,7 @@ function villainEscape(ev: Ev): void {
 }
 function villainFight(ev: Ev): void {
   const c = ev.what;
-  textLog.log(`Fought `, c);
+  textLog.log(`Fought `, c.instance === c.backSide ? c : c.instance || c);
   if (c.fightCost) pushEv(ev, "EFFECT", { func: c.fightCost, source: c });
   defeatEv(ev, c);
   if (ev.withViolence) playViolenceEv(ev);
