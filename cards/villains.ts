@@ -6080,7 +6080,7 @@ addVillainTemplates("Ant-Man and the Wasp", [
 // ATTACK: 4+
 // VP: 3
   [ 1, makeVillainCard("Armada of Kang", "Troop Ships of Kang", 4, 3, {
-    ambush: ev => selectCardEv(ev, "Choose a Villain to enter the city", gameState.players.flatMap(p => p.victory.limit(c => c.vp === 2 || c.vp === 3)), c => enterCityEv(ev, c)),
+    ambush: ev => selectCardEv(ev, "Choose a Villain to enter the city", gameState.players.flatMap(p => p.victory.limit(isVillain).limit(c => c.vp === 2 || c.vp === 3)), c => enterCityEv(ev, c)),
     ...conquerorAbility(2, 'ROOFTOPS'),
   })],
 ]},
