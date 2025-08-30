@@ -474,7 +474,7 @@ addHeroTemplates("Dark City", [
       addAttackEvent(ev, cards.sum(c => c.printedAttack || 0));
       cards.each(c => discardEv(ev, c));
 
-      superPowerEv(
+      superPowerLikelyEv(
         ev,
         "X-Men",
         () => selectObjectsAnyEv(ev, "KO cards", [...cards], c => KOEv(ev, c))
@@ -599,7 +599,7 @@ addHeroTemplates("Dark City", [
 // {TEAMPOWER X-Force} {VERSATILE 1}
 // COST: 1
   c1: makeHeroCard("Domino", "Lucky Break", 1, 0, 0, Color.TECH, "X-Force", "G", [ ev => drawEv(ev, 1), ev => {
-    superPowerEv(ev, "X-Force", () => versatileEv(ev, 1));
+    superPowerLikelyEv(ev, "X-Force", () => versatileEv(ev, 1));
   } ]),
 // RECRUIT: 0+
 // ATTACK: 0+
@@ -784,7 +784,7 @@ addHeroTemplates("Dark City", [
 // {POWER Strength Strength} {VERSATILE 2}
 // COST: 1
   uc: makeHeroCard("Iron Fist", "Ancient Legacy", 1, 0, 0, Color.STRENGTH, "Marvel Knights", "D", [ ev => drawEv(ev, 1), ev => {
-    superPowerEv(ev, [Color.STRENGTH, Color.STRENGTH], () => versatileEv(ev, 2));
+    superPowerLikelyEv(ev, [Color.STRENGTH, Color.STRENGTH], () => versatileEv(ev, 2));
   } ]),
 // ATTACK: 8
 // Reveal cards from your deck until you have revealed two cards with the same Cost. Draw all the cards you revealed.
@@ -4295,7 +4295,7 @@ addHeroTemplates("Champions", [
 // {CHEERING CROWDS}
   c2: makeHeroCard("Nova", "Interstellar Hero", 4, 0, 0, Color.RANGED, "Champions", "FD", ev => versatileEv(ev, 2), { cheeringCrowds: true }),
 // {POWER Ranged} {VERSATILE 3}
-  uc: makeHeroCard("Nova", "Holographic Projection", 5, 0, 2, Color.RANGED, "Champions", "FD", ev => superPowerEv(ev, Color.RANGED, () => versatileEv(ev, 3))),
+  uc: makeHeroCard("Nova", "Holographic Projection", 5, 0, 2, Color.RANGED, "Champions", "FD", ev => superPowerLikelyEv(ev, Color.RANGED, () => versatileEv(ev, 3))),
 // {SIZECHANGING RANGED STRENGTH}
 // For each other card you played this turn with a Recruit icon, you get +1 Recruit. For each other card you played this turn with an Attack icon, you get +1 Attack.
   ra: makeHeroCard("Nova", "Growing Nova Force", 9, 0, 0, Color.RANGED, "Champions", "", ev => {
