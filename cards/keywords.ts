@@ -715,7 +715,7 @@ function canOutwit(p: Player = playerState) {
   return yourHeroes(p).uniqueCount(c => c.cost) >= (gameState.outwitAmount ? gameState.outwitAmount() : 3);
 }
 function mayOutwitEv(ev: Ev, func: () => void) {
-  canOutwit() && chooseMayEv(ev, "Use Outwit ability", () => pushEv(ev, 'OUTWIT', func));
+  canOutwit() && chooseOneEv(ev, "Use Outwit ability", ["Yes", () => pushEv(ev, 'OUTWIT', func), 'OUTWIT'], ["No", () => {}]);
 }
 function outwitOrEv(ev: Ev, func: () => void, p: Player = playerState) {
   canOutwit(p) ? chooseOneEv(ev, "Outwit", ["Yes", () => pushEv(ev, 'OUTWIT', () => {})], ["No", () => func()]) : func();

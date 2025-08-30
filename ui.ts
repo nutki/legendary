@@ -682,6 +682,11 @@ function togglePopup(id: string) {
     e.element.style.top = 40 + (i * dist) + "px";
   });
 }
+let fullControl = false;
+let fullControlShift = false;
+function getFullControl() {
+  return fullControl !== fullControlShift;
+}
 function initUI() {
   window.onclick = clickCard;
   document.getElementById("undo").onclick = () => { if (undoLog.canUndo()) { undoLog.undo(); startGame(); } };
@@ -690,18 +695,20 @@ function initUI() {
     document.getElementById("setupPage").classList.add("hidden");
     document.getElementById("boardPage").classList.remove("hidden");
   } };
-  document.getElementById("nextPlayer").onclick = () => {
+  const nextPlayerAction = () => {
     if (currenPlayer < gameState.players.length - 1) {
       updatePlayerDecks(-10);
       currenPlayer++;
     }
   };
-  document.getElementById("prevPlayer").onclick = () => {
+  document.getElementById("nextPlayer").onclick = nextPlayerAction;
+  const prevPlayerAction = () => {
     if (currenPlayer > 0) {
       updatePlayerDecks(10);
       currenPlayer--;
     }
   };
+  document.getElementById("prevPlayer").onclick = prevPlayerAction;
   document.getElementById("setupPage").classList.add("hidden");
   document.getElementById("setup").onclick = () => {
     document.getElementById("setupPage").classList.remove("hidden");
@@ -722,6 +729,38 @@ function initUI() {
     document.getElementById("scalable-container").style.height = `${scale * 1250}px`;
   }
   document.getElementById("errorReport").onclick = document.getElementById("issueReport").onclick = () => window.open(reportUrl(), '_blank');
+  const updateFullControlDisplay = () => {
+    const state = getFullControl();
+    document.getElementById("fullControl").innerText = `Full Control: ${state ? "On" : "Off"}`;
+    const cl = document.getElementById("fullControl").classList;
+    if (state) cl.add("noconfirm"); else cl.remove("noconfirm");
+  };
+  document.getElementById("fullControl").onclick = () => {
+    fullControl = !fullControl;
+    updateFullControlDisplay();
+  };
+  // track Shift key state
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Shift" && !fullControlShift) {
+      fullControlShift = true;
+      updateFullControlDisplay();
+    } else if (e.key === "ArrowLeft") prevPlayerAction();
+    else if (e.key === "ArrowRight") nextPlayerAction();
+  });
+  window.addEventListener("keyup", (e) => {
+    if (e.key === "Shift" && fullControlShift) {
+      fullControlShift = false;
+      updateFullControlDisplay();
+    }
+  });
+  // reset if window loses focus so state doesn't get stuck
+  window.addEventListener("blur", () => {
+    if (fullControlShift) {
+      fullControlShift = false;
+      updateFullControlDisplay();
+    }
+  });
+
   window.addEventListener("resize", updateSize);
   updateSize();
 }

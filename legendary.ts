@@ -742,6 +742,7 @@ type EvType =
 'RESHUFFLE' |
 'CARDEFFECT' |
 'REVEAL' |
+'SUPERPOWER' |
 // UI
 'SELECTEVENT' |
 'SELECTCARD1' |
@@ -835,7 +836,10 @@ interface Ev<TSchemeState = any> {
   id: number
   wasBonded?: boolean
   attachedCards?: Record<string, Card[]> // For fight effect - cards that were attached to the villain
+  likely?: LikelyOption
 }
+type LikelyChoice = "SUPERPOWER" | "OUTWIT" | "STRIKEORDER";
+type LikelyOption = { type: LikelyChoice, idx: number };
 interface EvParams {
   where?: Deck
   func?: (ev: Ev) => void
@@ -869,6 +873,7 @@ interface EvParams {
   actionFilters?: ((ev: Ev) => boolean)[]
   wasBonded?: boolean
   attachedCards?: Record<string, Card[]>
+  likely?: LikelyOption
 }
 class Ev implements EvParams {
   constructor (ev: Ev, type: EvType, params: EvParams | ((ev: Ev) => void)) {
@@ -897,6 +902,9 @@ class Ev implements EvParams {
     const id = Ev.nextId.get(this.type) || 0;
     this.id = id;
     Ev.nextId.set(this.type, id + 1);
+  }
+  hasLikelySkip(fullControl: boolean = false) {
+    return !!this.likely && !fullControl;
   }
   static nextId = new Map<string, number>();
 };
@@ -1183,13 +1191,14 @@ let gameState: Game = undefined;
 interface UndoLog {
   actions: string[]
   pos: number
+  undoPos: number
   gameSetup?: Setup
   init: (setup?: Setup) => void
   replaying: boolean
   read: () => string
   readInt: () => number
   readInts: () => number[]
-  write: (w: any) => void
+  write: (w: any, skipping?: boolean) => void
   undo: () => void
   canUndo: () => boolean
   restart: () => void
@@ -1282,6 +1291,7 @@ const exampleGameSetup: Setup = {
 const undoLog: UndoLog = {
   actions: [],
   pos: 0,
+  undoPos: -1,
   gameSetup: exampleGameSetup,
   init: function (this: UndoLog, gameSetup?: Setup) {
     this.pos = 0;
@@ -1302,12 +1312,13 @@ const undoLog: UndoLog = {
     const v = this.read();
     return v.length ? v.split(',').map(v => parseInt(v)) : [];
   },
-  write: function(this: UndoLog, v) {
+  write: function(this: UndoLog, v, skipping = false) {
+    if (!skipping) this.undoPos = this.pos;
     const strValue = v.toString();
     this.actions[this.pos++] = strValue;
     localStorage.setItem('legendaryLog', this.toString());
   },
-  undo: function(this: UndoLog) { this.actions.pop(); this.pos = 0; },
+  undo: function(this: UndoLog) { this.actions.splice(this.undoPos); this.pos = 0; },
   canUndo: function (this: UndoLog) { return this.pos > 1; },
   restart: function (this: UndoLog) { this.actions.splice(1); this.pos = 0; },
   newGame: function (this: UndoLog) { this.actions = []; this.pos = 0; },
@@ -1914,12 +1925,18 @@ function superPowerCount(f: (number | Affiliation)): number {
 function superPowerMultiCount(f: (number | Affiliation)[]): number {
   return f.count(c => superPowerCount(c) < f.count(e => c === e)) === 0 ? 1 : 0;
 }
-function superPowerEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect1: (n: number) => void, effect0?: () => void): void {
+function superPowerEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect1: (n: number) => void, effect0?: () => void, likely?: boolean): void {
   const powerValue = f instanceof Array ? superPowerMultiCount(f) : superPowerCount(f);
-  if (powerValue) effect1(powerValue); else if (effect0) effect0();
+  if (powerValue) {
+    if (likely) pushEv(ev, 'SUPERPOWER', () => effect1(powerValue));
+    else chooseOneEv(ev, "Use superpower",
+      ["Yes", () => pushEv(ev, 'SUPERPOWER', () => effect1(powerValue)), 'SUPERPOWER'],
+      ["No", () => effect0 && effect0()]
+    )
+  } else effect0 && effect0();
 }
 function superPowerLikelyEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect1: (n: number) => void, effect0?: () => void): void {
-  superPowerEv(ev, f, effect1, effect0);
+  superPowerEv(ev, f, effect1, effect0, true);
 }
 function superPowerCondEv(ev: Ev, f: (number | Affiliation | (number | Affiliation)[]), effect: (n: number) => void): void {
   superPowerEv(ev, f, effect, () => effect(0));
@@ -2595,10 +2612,11 @@ function revealAndEv(ev: Ev, cond: Filter<Card>, effect: () => void, who?: Playe
   let cards = revealable(who).limit(cond);
   selectCardOptEv(ev, "Reveal a card", cards, effect, () => {}, who);
 }
-function chooseOneEv(ev: Ev, desc: string, ...a: [string, () => void][]): void {
+function chooseOneEv(ev: Ev, desc: string, ...a: [string, () => void, likely?: LikelyChoice ][]): void {
   let options = a.map(o => new Ev(ev, "EFFECT", { func: o[1], desc: o[0] }));
   if (!options.length) return;
-  pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState });
+  const likelyIndex = a.findIndex(o => !!o[2]);
+  pushEv(ev, "SELECTEVENT", { desc, options, ui: true, agent: playerState, likely: likelyIndex >= 0 ? ({ idx: likelyIndex, type: a[likelyIndex][2] }) : undefined });
 }
 function chooseOptionEv<T>(ev: Ev, desc: string, choices: { l: string, v: T }[], effect: (v: T) => void, agent: Player = playerState) {
   let options = choices.map(o => new Ev(ev, "EFFECT", { func: () => effect(o.v), desc: o.l }));
@@ -3353,6 +3371,7 @@ function mainLoop(): void {
   clickActions = {};
   try { while (undoLog.replaying) {
   let ev = popEvent();
+  if (ev.ui && !ev.hasLikelySkip()) undoLog.undoPos = undoLog.pos;
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": () => pushEvents((<Ev[]>ev.options)[undoLog.readInt() - 1]),
     "SELECTCARD1": () => ev.result1((<Card[]>ev.options)[undoLog.readInt() - 1]),
@@ -3375,7 +3394,10 @@ function mainLoop(): void {
     return;
   }
   let ev = popEvent();
-  while (!ev.ui) { playEvent(ev); ev = popEvent(); }
+  while (!ev.ui || ev.hasLikelySkip(getFullControl())) {
+    if (ev.ui) { pushEvents(<Ev>ev.options[0]); undoLog.write(ev.likely.idx + 1, true); } else playEvent(ev);
+    ev = popEvent();
+  }
   currentClickActions = undefined;
   ((<{[t: string]: (ev: Ev) => void}>{
     "SELECTEVENT": function () {
