@@ -3088,7 +3088,6 @@ makeSchemeCard("Unleash the Abilisk Space Monster", { twists: 9 }, ev => {
     }
   } else if (ev.nr === 9) {
     // Twist 9 Replay all the captured Tentacles.
-    console.log("Replay all Tentacles");
     eachPlayer(p => p.victory.limit(c => c.villainGroup === "Abilisk Tentacle").each(c => {
       attachCardEv(ev, c, gameState.scheme, 'TENTACLE');
       selectCardEv(ev, "Choose a non-grey Hero to capture", p.discard.limit(isNonGrayHero), c2 => {
