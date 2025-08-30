@@ -7,11 +7,7 @@ addHeroTemplates("Legendary", [
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, rescue a Bystander.
 // COST: 3
   c1: makeHeroCard("Black Widow", "Dangerous Rescue", 3, u, 2, Color.COVERT, "Avengers", "GD", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => KOHandOrDiscardEv(ev, undefined, () => rescueEv(ev))
-    );
+    superPowerEv(ev, Color.COVERT, () => KOHandOrDiscardEv(ev, undefined, () => rescueEv(ev)));
   }),
 // Draw a card.
 // {POWER Tech} Rescue a Bystander.
@@ -280,11 +276,7 @@ addHeroTemplates("Legendary", [
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
 // COST: 3
   c2: makeHeroCard("Rogue", "Energy Drain", 3, 2, u, Color.COVERT, "X-Men", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1))
-    );
+    superPowerEv(ev, Color.COVERT, () => KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1)));
   }),
 // Play this card as a copy of another Hero you played this turn. This card is both [Covert] and the color you copy.
 // COST: 5
@@ -474,11 +466,7 @@ addHeroTemplates("Dark City", [
       addAttackEvent(ev, cards.sum(c => c.printedAttack || 0));
       cards.each(c => discardEv(ev, c));
 
-      superPowerLikelyEv(
-        ev,
-        "X-Men",
-        () => selectObjectsAnyEv(ev, "KO cards", [...cards], c => KOEv(ev, c))
-      );
+      superPowerLikelyEv(ev, "X-Men", () => selectObjectsAnyEv(ev, "KO cards", [...cards], c => KOEv(ev, c)));
     });
   }),
 },
@@ -661,22 +649,14 @@ addHeroTemplates("Dark City", [
 // COST: 3
 // GUN: 1
   c1: makeHeroCard("Forge", "Dirty Work", 3, u, 2, Color.TECH, "X-Force", "GD", ev => {
-    superPowerEv(
-      ev,
-      Color.TECH,
-      () => addTurnMod("defense", c => isVillain(c) && atLocation(c, "SEWERS"), -2)
-    );
+    superPowerEv(ev, Color.TECH, () => addTurnMod("defense", c => isVillain(c) && atLocation(c, "SEWERS"), -2));
   }),
 // RECRUIT: 2
 // {POWER Tech} You may discard a card. If you do, draw two cards.
 // COST: 4
 // GUN: 1
   c2: makeHeroCard("Forge", "Reboot", 4, 2, u, Color.TECH, "X-Force", "GD", ev => {
-    superPowerLikelyEv(
-      ev,
-      Color.TECH,
-      () => selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev, 2); })
-    );
+    superPowerLikelyEv(ev, Color.TECH, () => selectCardOptEv(ev, "Discard a card", playerState.hand.deck, c => { discardEv(ev, c); drawEv(ev, 2); }));
   }),
 // RECRUIT: 0+
 // ATTACK: 0+
@@ -690,11 +670,7 @@ addHeroTemplates("Dark City", [
 // FLAVOR: That's a BIG FREAKING GUN!!!!
 // GUN: 1
   ra: makeHeroCard("Forge", "B.F.G.", 7, u, 5, Color.TECH, "X-Force", "GF", ev => {
-    superPowerEv(
-      ev,
-      [Color.TECH, Color.TECH],
-      () => selectCardEv(ev, "Defeat a mastermind", fightableCards().limit(isMastermind), sel => defeatEv(ev, sel))
-    );
+    superPowerEv(ev, [Color.TECH, Color.TECH], () => selectCardEv(ev, "Defeat a mastermind", fightableCards().limit(isMastermind), sel => defeatEv(ev, sel)));
   }),
 },
 {
@@ -717,11 +693,7 @@ addHeroTemplates("Dark City", [
 // {POWER Strength} Defeat a Villain of 3 Attack or less for free.
 // COST: 2
   uc: makeHeroCard("Ghost Rider", "Infernal Chains", 2, u, u, Color.STRENGTH, "Marvel Knights", "D", [ ev => drawEv(ev, 1), ev => {
-    superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => selectCardEv(ev, "Defeat a Villain", villains().limit(c => c.defense <= 3), sel => defeatEv(ev, sel))
-    );
+    superPowerEv(ev, Color.STRENGTH, () => selectCardEv(ev, "Defeat a Villain", villains().limit(c => c.defense <= 3), sel => defeatEv(ev, sel)));
   }]),
 // ATTACK: 3+
 // Each player KOs a Villain from their Victory Pile. You get +1 Attack for each Villain KO'd this way.
@@ -733,11 +705,7 @@ addHeroTemplates("Dark City", [
     cont(ev, () => {
       addAttackEvent(ev, koed.length);
 
-      superPowerEv(
-        ev,
-        "Marvel Knights",
-        () => selectCardEv(ev, "Choose a Villain", koed, c => moveCardEv(ev, c, playerState.victory))
-      );
+      superPowerEv(ev, "Marvel Knights", () => selectCardEv(ev, "Choose a Villain", koed, c => moveCardEv(ev, c, playerState.victory)));
     });
   }),
 },
@@ -920,11 +888,7 @@ addHeroTemplates("Dark City", [
     revealVillainDeckEv(ev, 1, r => r.limit(isVillain).each(c => {
       c.printedVP && addAttackEvent(ev, c.printedVP);
 
-      superPowerLikelyEv(
-        ev,
-        [Color.TECH, Color.TECH],
-        () => chooseMayEv(ev, "Defeat the revealed villain", () => defeatEv(ev, c))
-      );
+      superPowerLikelyEv(ev, [Color.TECH, Color.TECH], () => chooseMayEv(ev, "Defeat the revealed villain", () => defeatEv(ev, c)));
     }));
   }),
 // RECRUIT: 2+
@@ -1096,11 +1060,7 @@ addHeroTemplates("Fantastic Four", [
 // {POWER Strength} You get +3 Attack for each other [Strength] card you played this turn.
 // COST: 8
 // FLAVOR: Thing doesn't wear a watch, but he's happy to tell you what time it is.
-  ra: makeHeroCard("Thing", "It's Clobberin' Time!", 8, u, 5, Color.STRENGTH, "Fantastic Four", "F", ev => superPowerLikelyEv(
-    ev,
-    Color.STRENGTH,
-    () => superPowerLikelyEv(ev, Color.STRENGTH, n => addAttackEvent(ev, 3 * n))
-  )),
+  ra: makeHeroCard("Thing", "It's Clobberin' Time!", 8, u, 5, Color.STRENGTH, "Fantastic Four", "F", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => superPowerLikelyEv(ev, Color.STRENGTH, n => addAttackEvent(ev, 3 * n)))),
 },
 ]);
 addHeroTemplates("Paint the Town Red", [
@@ -1144,11 +1104,7 @@ addHeroTemplates("Paint the Town Red", [
         selectCardEv(ev, `Select a Bystander for ${playerState.name} to rescue`, p.victory.limit(isBystander), c => rescueEv(ev, c), p);
       }, p);
     }),
-    ev => superPowerLikelyEv(
-      ev,
-      "Spider Friends",
-      () => addAttackEvent(ev, pastEvents('RESCUE').count(ev => ev.who === playerState && isBystander(ev.what)))
-    ),
+    ev => superPowerLikelyEv(ev, "Spider Friends", () => addAttackEvent(ev, pastEvents('RESCUE').count(ev => ev.who === playerState && isBystander(ev.what)))),
   ]),
 },
 {
@@ -1181,11 +1137,7 @@ addHeroTemplates("Paint the Town Red", [
 // COST: 8
   ra: makeHeroCard("Moon Knight", "Golden Ankh of Khonshu", 8, u, 6, Color.INSTINCT, "Marvel Knights", "", [
     ev => addTurnTrigger('DEFEAT', ev => isLocation(ev.where, 'ROOFTOPS'), ev => ev.parent.what.printedVP && rescueEv(ev, ev.parent.what.printedVP)),
-    ev => superPowerEv(
-      ev,
-      Color.TECH,
-      () => withCity('ROOFTOPS', rooftops => selectCardOptEv(ev, "Move to Rooftops", cityVillains().limit(c => c.location !== rooftops), c => swapCardsEv(ev, c.location, rooftops)))
-    ),
+    ev => superPowerEv(ev, Color.TECH, () => withCity('ROOFTOPS', rooftops => selectCardOptEv(ev, "Move to Rooftops", cityVillains().limit(c => c.location !== rooftops), c => swapCardsEv(ev, c.location, rooftops)))),
   ]),
 },
 {
@@ -1362,11 +1314,7 @@ addHeroTemplates("Villains", [
 // COST: 3
   c2: makeHeroCard("Electro", "Shocking Robbery", 3, u, 0, Color.RANGED, "Sinister Six", "", ev => {
     let cond = (c: Card) => isLocation(c.location, 'BANK');
-    superPowerLikelyEv(
-      ev,
-      Color.RANGED,
-      () => chooseMayEv(ev, "Choose attack against the Commander", () => cond = isMastermind)
-    );
+    superPowerLikelyEv(ev, Color.RANGED, () => chooseMayEv(ev, "Choose attack against the Commander", () => cond = isMastermind));
     cont(ev, () => addAttackSpecialEv(ev, cond, 3));
   }, { cardActions: [ dodge ] }),
 // ATTACK: 2+
@@ -1390,11 +1338,7 @@ addHeroTemplates("Villains", [
 // {POWER Ranged} Whenever you defeat an Adversary this turn, you gain a New Recruit.
 // COST: 3
   c1: makeHeroCard("Enchantress", "Enchant the Senses", 3, u, 2, Color.RANGED, "Foes of Asgard", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.RANGED,
-      () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what), () => gameState.newRecruit.withTop(c => gainEv(ev, c)))
-    );
+    superPowerEv(ev, Color.RANGED, () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what), () => gameState.newRecruit.withTop(c => gainEv(ev, c))));
   }),
 // RECRUIT: 1+
 // You may KO a card from your hand or discard pile. You get + Recruit equal to that card's Cost.
@@ -1406,22 +1350,14 @@ addHeroTemplates("Villains", [
 // COST: 6
   uc: makeHeroCard("Enchantress", "Irresistible Bribe", 6, 3, u, Color.COVERT, "Foes of Asgard", "", [
     ev => selectCardEv(ev, "Choose an Adversary", villains(), c => addTurnSet('fightCost', v => v === c, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)}))),
-    ev => superPowerEv(
-      ev,
-      [Color.COVERT, Color.COVERT],
-      () => addTurnSet('fightCost', isMastermind, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)}))
-    )
+    ev => superPowerEv(ev, [Color.COVERT, Color.COVERT], () => addTurnSet('fightCost', isMastermind, (c, prev) => ({...prev, attack: 0, either: (prev.either || 0) + (prev.attack || 0)})))
   ]),
 // Draw three cards.
 // {TEAMPOWER Foes of Asgard} Then put Unending Anguish on the bottom of your deck.
 // COST: 7
   ra: makeHeroCard("Enchantress", "Unending Anguish", 7, u, u, Color.COVERT, "Foes of Asgard", "", [
     ev => drawEv(ev, 3),
-    ev => superPowerEv(
-      ev,
-      "Foes of Asgard",
-      () => moveCardEv(ev, ev.source, playerState.deck, true)
-    ) ]),
+    ev => superPowerEv(ev, "Foes of Asgard", () => moveCardEv(ev, ev.source, playerState.deck, true)) ]),
 },
 {
   name: "Green Goblin",
@@ -1461,11 +1397,7 @@ addHeroTemplates("Villains", [
 // {POWER Strength} Each other player reveals the top card of their deck, and if it costs 1, 2, or 3, discards it. You get +1 Recruit for each card discarded this way.
 // COST: 4
   c1: makeHeroCard("Juggernaut", "Crimson Gem of Cyttorak", 4, 2, u, Color.STRENGTH, "Brotherhood", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => eachOtherPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => [1, 2, 3].includes(c.cost)).each(c => discardEv(ev, c)), p))
-    );
+    superPowerEv(ev, Color.STRENGTH, () => eachOtherPlayer(p => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => [1, 2, 3].includes(c.cost)).each(c => discardEv(ev, c)), p)));
     cont(ev, () => addRecruitEvent(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent == ev)));
   }),
 // ATTACK: 2+
@@ -1516,13 +1448,9 @@ addHeroTemplates("Villains", [
   ra: makeHeroCard("Kingpin", "Endless Underlings", 8, u, u, Color.STRENGTH, "Crime Syndicate", "", [
   ev => repeat(3, () => cont(ev, () => gameState.newRecruit.withTop(c => gainEv(ev, c)))),
   ev => {
-    superPowerEv(
-      ev,
-      ["Crime Syndicate", "Crime Syndicate"],
-      () => addTurnTrigger('MOVECARD',
-         ev => ev.to === gameState.newRecruit && ev.from === playerState.playArea && ev.what.cardName === "New Recruits",
-        ev => moveCardEv(ev, ev.parent.what, playerState.deck, true))
-    );
+    superPowerEv(ev, ["Crime Syndicate", "Crime Syndicate"], () => addTurnTrigger('MOVECARD',
+       ev => ev.to === gameState.newRecruit && ev.from === playerState.playArea && ev.what.cardName === "New Recruits",
+      ev => moveCardEv(ev, ev.parent.what, playerState.deck, true)));
   }]),
 },
 {
@@ -1568,20 +1496,12 @@ addHeroTemplates("Villains", [
 // ATTACK: 2
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, gain a New Recruit.
 // COST: 3
-  c1: makeHeroCard("Loki", "All Humans Are Expendable", 3, u, 2, Color.COVERT, "Foes of Asgard", "D", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => KOHandOrDiscardEv(ev, undefined, () => gameState.newRecruit.withTop(c => gainEv(ev, c)))
-  )),
+  c1: makeHeroCard("Loki", "All Humans Are Expendable", 3, u, 2, Color.COVERT, "Foes of Asgard", "D", ev => superPowerEv(ev, Color.COVERT, () => KOHandOrDiscardEv(ev, undefined, () => gameState.newRecruit.withTop(c => gainEv(ev, c))))),
 // RECRUIT: 2+
 // {POWER Ranged} Each other player reveals a [Ranged] Ally or gains a Bindings. If any number of players gained a Bindings this way, you get +1 Recruit.
 // COST: 4
   c2: makeHeroCard("Loki", "Illusionary Bindings", 4, 2, u, Color.RANGED, "Foes of Asgard", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.RANGED,
-      () => eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => gameState.bindings.withTop(c => gainEv(ev, c, p)), p))
-    );
+    superPowerEv(ev, Color.RANGED, () => eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => gameState.bindings.withTop(c => gainEv(ev, c, p)), p)));
     cont(ev, () => turnState.pastEvents.has(e => e.type === "GAIN" && e.parent === ev) && addRecruitEvent(ev, 1));
   }),
 // ATTACK: 3
@@ -1626,11 +1546,7 @@ addHeroTemplates("Villains", [
 // {POWER Strength} Choose a player. That player reveals a Brotherhood Ally or gains a Bindings. If a Bindings is gained this way, you get +1 Recruit.
 // COST: 4
   c2: makeHeroCard("Magneto", "Mutants Will Rule", 4, 2, u, Color.STRENGTH, "Brotherhood", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => choosePlayerEv(ev, p => revealOrEv(ev, "Brotherhood", () => gameState.bindings.withTop(c => gainEv(ev, c, p)), p))
-    );
+    superPowerEv(ev, Color.STRENGTH, () => choosePlayerEv(ev, p => revealOrEv(ev, "Brotherhood", () => gameState.bindings.withTop(c => gainEv(ev, c, p)), p)));
     cont(ev, () => turnState.pastEvents.has(pev => pev.type === "GAIN" && pev.parent === ev) && addRecruitEvent(ev, 1));
   }, { cardActions: [ dodge ] }),
 // ATTACK: 3
@@ -1751,11 +1667,7 @@ addHeroTemplates("Villains", [
     ev => eachPlayer(p => revealOrEv(ev, Color.INSTINCT, () => {
       revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "KO revealed card", cards, c => KOEv(ev, c)), p, playerState);
     }, p)),
-    ev => superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => addAttackEvent(ev, turnState.pastEvents.count(ev => ev.type === "KO"))
-    ),
+    ev => superPowerLikelyEv(ev, Color.INSTINCT, () => addAttackEvent(ev, turnState.pastEvents.count(ev => ev.type === "KO"))),
   ]),
 },
 {
@@ -1785,11 +1697,7 @@ addHeroTemplates("Villains", [
     eachOtherPlayer(p => revealOrEv(ev, Color.TECH, () => {
       discardHandEv(ev, p); drawEv(ev, 5, p);
     }, p));
-    superPowerLikelyEv(
-      ev,
-      Color.TECH,
-      () => addAttackEvent(ev, 3 * turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev && e.what.cost >= 7))
-    );
+    superPowerLikelyEv(ev, Color.TECH, () => addAttackEvent(ev, 3 * turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev && e.what.cost >= 7)));
   }),
 },
 {
@@ -1820,16 +1728,8 @@ addHeroTemplates("Villains", [
 // COST: 7
   ra: makeHeroCard("Venom", "Ravenous Greed", 7, 0, 5, Color.INSTINCT, "Sinister Six", "", [
     ev => eachOtherPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardEv(ev, "KO a Bystander", p.victory.limit(isBystander), c => KOEv(ev, c), p), p)),
-    ev => superPowerEv(
-      ev,
-      Color.INSTINCT,
-      () => turnState.pastEvents.limit(e => e.type === "KO" && isBystander(e.what) && gameState.ko.deck.includes(e.what)).each(e => rescueEv(ev, e.what))
-    ),
-    ev => superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => addRecruitEvent(ev, turnState.pastEvents.count(e => e.type === "RESCUE" && isBystander(e.what) && e.who === playerState))
-    ),
+    ev => superPowerEv(ev, Color.INSTINCT, () => turnState.pastEvents.limit(e => e.type === "KO" && isBystander(e.what) && gameState.ko.deck.includes(e.what)).each(e => rescueEv(ev, e.what))),
+    ev => superPowerLikelyEv(ev, Color.INSTINCT, () => addRecruitEvent(ev, turnState.pastEvents.count(e => e.type === "RESCUE" && isBystander(e.what) && e.who === playerState))),
   ]),
 },
 ]);
@@ -1849,23 +1749,15 @@ addHeroTemplates("Guardians of the Galaxy", [
       lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Discard revealed", cards, c => {
         discardEv(ev, c)
       }));
-      superPowerEv(
-        ev,
-        Color.INSTINCT,
-        () => cont(ev, () => turnState.pastEvents.limit(e => e.type === "DISCARD" && e.parent === ev).each(e => {
-          chooseMayEv(ev, "KO discarded card", () => KOEv(ev, e.what));
-        }))
-      );
+      superPowerEv(ev, Color.INSTINCT, () => cont(ev, () => turnState.pastEvents.limit(e => e.type === "DISCARD" && e.parent === ev).each(e => {
+        chooseMayEv(ev, "KO discarded card", () => KOEv(ev, e.what));
+      })));
     }),
   // ATTACK: 4
   // {TEAMPOWER Guardians of the Galaxy} Each other player reveals an [Instinct] Hero or discards an <b>Artifact</b> they control. For each <b>Artifact</b> discarded this way, you gain a Shard.
   // COST: 6
     uc: makeHeroCard("Drax the Destroyer", "The Destroyer", 6, u, 4, Color.INSTINCT, "Guardians of the Galaxy", "", ev => {
-      superPowerEv(
-        ev,
-        "Guardians of the Galaxy",
-        () => eachOtherPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardEv(ev, "Choose an Artifact to discard", p.artifact.deck, c => discardEv(ev, c), p), p))
-      );
+      superPowerEv(ev, "Guardians of the Galaxy", () => eachOtherPlayer(p => revealOrEv(ev, Color.INSTINCT, () => selectCardEv(ev, "Choose an Artifact to discard", p.artifact.deck, c => discardEv(ev, c), p), p)));
       cont(ev, () => gainShardEv(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev)));
     }),
   // Double the Attack you have.
@@ -1895,11 +1787,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // GUN: 1
     uc: makeHeroCard("Gamora", "Galactic Assassin", 5, u, 3, Color.COVERT, "Guardians of the Galaxy", "G", [
       ev => selectCardEv(ev, "Choose a Villain", villains(), v => addTurnMod('defense', c => c === v, c => -c.attached('SHARD').size)),
-      ev => superPowerEv(
-        ev,
-        [Color.COVERT, Color.COVERT],
-        () => addTurnMod('defense', isMastermind, c => -c.attached('SHARD').size)
-      )
+      ev => superPowerEv(ev, [Color.COVERT, Color.COVERT], () => addTurnMod('defense', isMastermind, c => -c.attached('SHARD').size))
     ]),
   // <b>Artifact -</b>
   // Once per turn, gain two Shards. Once per turn, you may spend 5 Shards to get +10 Attack.
@@ -1914,11 +1802,7 @@ addHeroTemplates("Guardians of the Galaxy", [
   // ATTACK: 2
   // {POWER Strength} You may KO a card from your hand or discard pile. If you do, gain a Shard.
   // COST: 4
-    c1: makeHeroCard("Groot", "Prune the Growths", 4, u, 2, Color.STRENGTH, "Guardians of the Galaxy", "D", ev => superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => KOHandOrDiscardEv(ev, undefined, () => gainShardEv(ev))
-    )),
+    c1: makeHeroCard("Groot", "Prune the Growths", 4, u, 2, Color.STRENGTH, "Guardians of the Galaxy", "D", ev => superPowerEv(ev, Color.STRENGTH, () => KOHandOrDiscardEv(ev, undefined, () => gainShardEv(ev)))),
   // ATTACK: 1
   // When you draw a new hand of cards at the end of this turn, draw an extra card.
   // COST: 3
@@ -1929,11 +1813,7 @@ addHeroTemplates("Guardians of the Galaxy", [
     uc: makeHeroCard("Groot", "Groot and Branches", 4, u, u, Color.COVERT, "Guardians of the Galaxy", "", [
       ev => gainShardEv(ev, 2),
       ev => addTurnAction(useShardForRecruitActionEv(ev)),
-      ev => superPowerLikelyEv(
-        ev,
-        Color.COVERT,
-        () => chooseMayEv(ev, "Another player may gain a Shard", () => chooseOtherPlayerEv(ev, p => gainShardEv(ev, 1, p)))
-      ),
+      ev => superPowerLikelyEv(ev, Color.COVERT, () => chooseMayEv(ev, "Another player may gain a Shard", () => chooseOtherPlayerEv(ev, p => gainShardEv(ev, 1, p)))),
     ]),
   // RECRUIT: 5
   // When you recruit your next Hero this turn, you gain Shards equal to that Hero's cost.
@@ -2023,11 +1903,7 @@ addHeroTemplates("Fear Itself", [
 // ATTACK: 3+
 // {POWER Covert} Each player discards the bottom card of their deck. For each non-grey card discard this way, you get +1 Attack.
 // COST: 5
-  uc: makeHeroCard("Greithoth, Breaker of Wills", "Break the Will to Resist", 5, u, 3, Color.STRENGTH, "Foes of Asgard", "", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => (eachPlayer(p => p.deck.withLast(c => discardEv(ev, c))), addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev && !isColor(Color.GRAY)(ev.what))))
-  )),
+  uc: makeHeroCard("Greithoth, Breaker of Wills", "Break the Will to Resist", 5, u, 3, Color.STRENGTH, "Foes of Asgard", "", ev => superPowerEv(ev, Color.COVERT, () => (eachPlayer(p => p.deck.withLast(c => discardEv(ev, c))), addAttackEvent(ev, turnState.pastEvents.count(e => e.type === "DISCARD" && e.parent === ev && !isColor(Color.GRAY)(ev.what)))))),
 // ATTACK: 4+
 // You get +Attack equal to the total number of <b>Artifact</b>s controlled by players and <b>Artifact</b>s the Lair.
 // COST: 7
@@ -2118,11 +1994,7 @@ addHeroTemplates("Fear Itself", [
 // {POWER Strength} Choose a player and <b>Demolish</b> them. If that player discards a card this way, draw a card.
 // COST: 3
   c1: makeHeroCard("Nul, Breaker of Worlds", "Demolition Derby", 3, 2, u, Color.STRENGTH, "Foes of Asgard", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => choosePlayerEv(ev, who => demolishEv(ev, p => p === who))
-    );
+    superPowerEv(ev, Color.STRENGTH, () => choosePlayerEv(ev, who => demolishEv(ev, p => p === who)));
     cont(ev, () => turnState.pastEvents.has(e => e.type === "DISCARD" && e.parent === ev) && drawEv(ev));
   }),
 // <b>Thrown Artifact</b>
@@ -2191,11 +2063,7 @@ addHeroTemplates("Fear Itself", [
     lookAtDeckBottomEv(ev, 1, cards => {
       selectCardOptEv(ev, "Discard a card", cards, c => discardEv(ev, c));
     });
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => playerState.deck.withBottom(c => drawCardEv(ev, c))
-    );
+    superPowerEv(ev, Color.COVERT, () => playerState.deck.withBottom(c => drawCardEv(ev, c)));
   }),
 // <b>Thrown Artifact</b>
 // When you throw this, you get +1 Attack for each card you've drawn this turn.
@@ -2216,11 +2084,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   name: "Apocalyptic Kitty Pryde",
   team: "X-Men",
 // {POWER Covert} You may KO a card from your hand or discard pile. If you do, you get +1 Attack.
-  c1: makeHeroCard("Apocalyptic Kitty Pryde", "Phase Out", 4, u, 2, Color.COVERT, "X-Men", "D", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => KOHandOrDiscardEv(ev, undefined, () => addAttackEvent(ev, 1))
-  )),
+  c1: makeHeroCard("Apocalyptic Kitty Pryde", "Phase Out", 4, u, 2, Color.COVERT, "X-Men", "D", ev => superPowerEv(ev, Color.COVERT, () => KOHandOrDiscardEv(ev, undefined, () => addAttackEvent(ev, 1)))),
 // You may put a Hero from the HQ on the bottom of the Hero Deck. The Hero that replaces it in the HQ costs 1 less during this turn.
   c2: makeHeroCard("Apocalyptic Kitty Pryde", "Infiltrate HQ", 3, 2, u, Color.TECH, "X-Men", "D", ev => {
     let where: Deck;
@@ -2293,31 +2157,19 @@ addHeroTemplates("Secret Wars Volume 1", [
 // {POWER Strength} For each other [Strength] Hero you have played this turn, you get +1 Attack.
   uc: makeHeroCard("Captain Marvel", "Marvelous Strength", 5, u, 3, Color.STRENGTH, "Avengers", "G", ev => superPowerLikelyEv(ev, Color.STRENGTH, n => addAttackEvent(ev, n))),
 // {POWER Ranged Ranged Strength Strength} You get +6 Attack.
-  ra: makeHeroCard("Captain Marvel", "Cosmic Energies", 7, u, 5, Color.RANGED, "Avengers", "F", ev => superPowerLikelyEv(
-    ev,
-    [Color.RANGED, Color.RANGED, Color.STRENGTH, Color.STRENGTH],
-    () => addAttackEvent(ev, 6)
-  )),
+  ra: makeHeroCard("Captain Marvel", "Cosmic Energies", 7, u, 5, Color.RANGED, "Avengers", "F", ev => superPowerLikelyEv(ev, [Color.RANGED, Color.RANGED, Color.STRENGTH, Color.STRENGTH], () => addAttackEvent(ev, 6))),
 },
 {
   name: "Dr. Strange",
   team: "Illuminati",
 // {POWER Ranged} Reveal the top card of your deck. Draw it or {TELEPORT} it.
   c1: makeHeroCard("Dr. Strange", "Cloak of Levitation", 4, u, 2, Color.RANGED, "Illuminati", "FD", ev => {
-    superPowerEv(
-      ev,
-      Color.RANGED,
-      () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
-        chooseOneEv(ev, "Choose one", ["Teleport revealed", () => teleportEv(ev, c)], ["Draw revealed", () => drawCardEv(ev, c)]);
-      }))
-    );
+    superPowerEv(ev, Color.RANGED, () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+      chooseOneEv(ev, "Choose one", ["Teleport revealed", () => teleportEv(ev, c)], ["Draw revealed", () => drawCardEv(ev, c)]);
+    })));
   }),
 // {TEAMPOWER Illuminati} You may KO a card from your hand or discard pile. If you do, you get +1 Recruit.
-  c2: makeHeroCard("Dr. Strange", "Trust Me, I'm a Doctor", 2, 1, u, Color.INSTINCT | Color.RANGED, "Illuminati", "D", ev => superPowerEv(
-    ev,
-    "Illuminati",
-    () => KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1))
-  )),
+  c2: makeHeroCard("Dr. Strange", "Trust Me, I'm a Doctor", 2, 1, u, Color.INSTINCT | Color.RANGED, "Illuminati", "D", ev => superPowerEv(ev, "Illuminati", () => KOHandOrDiscardEv(ev, undefined, () => addRecruitEvent(ev, 1)))),
 // {POWER Instinct} Reveal the top card of the Villain Deck. If it's a Villain, you get +2 Attack and may fight that Villain this turn.
   uc: makeHeroCard("Dr. Strange", "Fight the Future", 5, u, 3, Color.INSTINCT, "Illuminati", "D", ev => superPowerEv(ev, Color.INSTINCT, () => revealVillainDeckEv(ev, 1, r => {
     r.limit(isVillain).each(c => {
@@ -2387,19 +2239,11 @@ addHeroTemplates("Secret Wars Volume 1", [
   team: "Cabal",
 // {POWER Covert} Defeat a Henchman Villain for free.
   c1: makeHeroCard("Maximus", "Mental Domination", 3, 2, u, Color.COVERT, "Cabal", "FD", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => selectCardEv(ev, "Select a Henchman", villains().limit(isHenchman), c => defeatEv(ev, c))
-    );
+    superPowerEv(ev, Color.COVERT, () => selectCardEv(ev, "Select a Henchman", villains().limit(isHenchman), c => defeatEv(ev, c)));
   }),
 // {POWER Tech} Whenever you defeat a Villain this turn, you gain a Sidekick.
   c2: makeHeroCard("Maximus", "Enslave the Will", 4, u, 2, Color.TECH, "Cabal", "FD", ev => {
-    superPowerEv(
-      ev,
-      Color.TECH,
-      () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => gainSidekickEv(ev))
-    );
+    superPowerEv(ev, Color.TECH, () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what), ev => gainSidekickEv(ev)));
   }),
 // You may have a Henchman Villain from your Victory Pile enter the city. If you do, draw a card.
   uc: makeHeroCard("Maximus", "Pieces on a Chessboard", 5, u, 3, Color.COVERT | Color.TECH, "Cabal", "", ev => {
@@ -2409,11 +2253,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // {TEAMPOWER Cabal} You get +1 Attack for each Henchman you defeated this turn.
   ra: makeHeroCard("Maximus", "Inhuman Mastery", 7, u, 4, Color.TECH, "Cabal", "", [
     ev => eachOtherPlayer(p => revealOrEv(ev, Color.TECH, () => selectCardEv(ev, "Choose a Henchman", p.victory.limit(isHenchman), c => defeatEv(ev, c), p), p)),
-    ev => superPowerLikelyEv(
-      ev,
-      "Cabal",
-      () => addAttackEvent(ev, pastEvents('DEFEAT').count(e => isHenchman(e.what)))
-    ),
+    ev => superPowerLikelyEv(ev, "Cabal", () => addAttackEvent(ev, pastEvents('DEFEAT').count(e => isHenchman(e.what)))),
   ]),
 },
 {
@@ -2422,11 +2262,7 @@ addHeroTemplates("Secret Wars Volume 1", [
 // {POWER Instinct} Gain a Sidekick.
   c1: makeHeroCard("Namor, the Sub-Mariner", "Lead the Armies of Atlantis", 3, 2, u, Color.INSTINCT, "Cabal", "D", ev => superPowerEv(ev, Color.INSTINCT, () => gainSidekickEv(ev))),
 // {POWER Strength} You get +2, usable only against Villains on the Bridge or the Mastermind.
-  c2: makeHeroCard("Namor, the Sub-Mariner", "Ruler of the Seas", 4, u, 2, Color.STRENGTH, "Cabal", "FD", ev => superPowerLikelyEv(
-    ev,
-    Color.STRENGTH,
-    () => addAttackSpecialEv(ev, c => isLocation(c.location, 'BRIDGE') || isMastermind(c), 2)
-  )),
+  c2: makeHeroCard("Namor, the Sub-Mariner", "Ruler of the Seas", 4, u, 2, Color.STRENGTH, "Cabal", "FD", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackSpecialEv(ev, c => isLocation(c.location, 'BRIDGE') || isMastermind(c), 2))),
 // You may KO a card from your hand or discard pile. If you do, draw a card.
   uc: makeHeroCard("Namor, the Sub-Mariner", "Feed the Sharks", 6, u, 2, Color.STRENGTH | Color.INSTINCT, "Cabal", "D", ev => KOHandOrDiscardEv(ev, undefined, () => drawEv(ev, 1))),
 // Defeat a Villain for free.
@@ -2439,11 +2275,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   name: "Old Man Logan",
   team: "X-Men",
 // {POWER Instinct} You may KO a card from your hand or discard pile. If you KO a wound this way, draw a card.
-  c1: makeHeroCard("Old Man Logan", "Last Survivor", 3, u, 2, Color.INSTINCT, "X-Men", "D", ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => KOHandOrDiscardEv(ev, undefined, c => isWound(c) && drawEv(ev))
-  )),
+  c1: makeHeroCard("Old Man Logan", "Last Survivor", 3, u, 2, Color.INSTINCT, "X-Men", "D", ev => superPowerEv(ev, Color.INSTINCT, () => KOHandOrDiscardEv(ev, undefined, c => isWound(c) && drawEv(ev)))),
 // If you don't recruit any heroes this turn, you get +2 Attack.
   c2: makeHeroCard("Old Man Logan", "Loner", 5, u, 2, Color.INSTINCT | Color.COVERT, "X-Men", "FD", ev => {
     if (!turnState.pastEvents.has(e => e.type === 'RECRUIT')) {
@@ -2512,11 +2344,7 @@ addHeroTemplates("Secret Wars Volume 1", [
   }, { teleport: true }),
 // {POWER Ranged} Each other player reveals a [Ranged] Hero or chooses a Bystander from their Victory Pile. You "rescue" those bystanders.
   uc: makeHeroCard("Thanos", "Galactic Domination", 6, u, 4, Color.RANGED, "Cabal", "",
-    ev => superPowerEv(
-      ev,
-      Color.RANGED,
-      () => eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => rescueEv(ev, c), p), p))
-    ),
+    ev => superPowerEv(ev, Color.RANGED, () => eachOtherPlayer(p => revealOrEv(ev, Color.RANGED, () => selectCardEv(ev, "Choose a Bystander", p.victory.limit(isBystander), c => rescueEv(ev, c), p), p))),
   ),
 // KO six Bystanders from the Bystander Stack. Then, defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in the KO pile.
   ra: makeHeroCard("Thanos", "Utter Annihilation", 8, u, u, Color.RANGED, "Cabal", "", [
@@ -2607,11 +2435,7 @@ addHeroTemplates("Secret Wars Volume 2", [
 // For each other [Tech] card you played this turn, you get +1 Attack.
   uc: makeHeroCard("Beast", "Doctor of Beatdown", 6, u, 2, Color.STRENGTH | Color.TECH, "Illuminati", "D", ev => addAttackEvent(ev, turnState.cardsPlayed.count(Color.STRENGTH) + turnState.cardsPlayed.count(Color.TECH))),
 // {POWER Strength Strength Tech Tech} Draw three cards.
-  ra: makeHeroCard("Beast", "Multi-Variable Smackulus", 8, u, 4, Color.STRENGTH | Color.TECH, "Illuminati", "F", ev => superPowerEv(
-    ev,
-    [Color.STRENGTH, Color.STRENGTH, Color.TECH, Color.TECH],
-    () => drawEv(ev, 3)
-  )),
+  ra: makeHeroCard("Beast", "Multi-Variable Smackulus", 8, u, 4, Color.STRENGTH | Color.TECH, "Illuminati", "F", ev => superPowerEv(ev, [Color.STRENGTH, Color.STRENGTH, Color.TECH, Color.TECH], () => drawEv(ev, 3))),
 },
 {
   name: "Black Swan",
@@ -2621,11 +2445,7 @@ addHeroTemplates("Secret Wars Volume 2", [
     cards.has(isTwist) ? addAttackEvent(ev, 2) : chooseMayEv(ev, "Put revealed on the bottom of the Villain Deck", () => cards.each(c => moveCardEv(ev, c, gameState.villaindeck, true)));
   }))),
 // {POWER Instinct} You may KO a card from your hand or discard pile. If you do, draw a card.
-  c2: makeHeroCard("Black Swan", "Witness the End", 5, 2, u, Color.INSTINCT, "Cabal", "FD", ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => KOHandOrDiscardEv(ev, undefined, () => drawEv(ev, 1))
-  )),
+  c2: makeHeroCard("Black Swan", "Witness the End", 5, 2, u, Color.INSTINCT, "Cabal", "FD", ev => superPowerEv(ev, Color.INSTINCT, () => KOHandOrDiscardEv(ev, undefined, () => drawEv(ev, 1)))),
 // Reveal the top three cards of the Villain Deck. Rescue any Bystanders you revealed, then put the rest back in any order.
   uc: makeHeroCard("Black Swan", "Dark Foretelling", 6, u, 4, Color.INSTINCT | Color.RANGED, "Cabal", "", ev => {
     revealVillainDeckEv(ev, 3, cards => cards.limit(isBystander).each(c => rescueEv(ev, c)), false);
@@ -2684,11 +2504,7 @@ addHeroTemplates("Secret Wars Volume 2", [
   }),
 // {TEAMPOWER Cabal} KO a Bystander from the Bystander Stack. Then, you get +1 Attack for every four Bystanders in the KO Pile.
 // GUN: 1
-  uc: makeHeroCard("Corvus Glaive", "Rictus Grin", 6, u, 3, Color.STRENGTH, "Cabal", "G", ev => superPowerEv(
-    ev,
-    "Cabal",
-    () => (gameState.bystanders.withTop(c => KOEv(ev, c)), addAttackEvent(ev, Math.floor(gameState.ko.count(isBystander)/4)))
-  )),
+  uc: makeHeroCard("Corvus Glaive", "Rictus Grin", 6, u, 3, Color.STRENGTH, "Cabal", "G", ev => superPowerEv(ev, "Cabal", () => (gameState.bystanders.withTop(c => KOEv(ev, c)), addAttackEvent(ev, Math.floor(gameState.ko.count(isBystander)/4))))),
 // {TEAMPOWER Cabal} You may KO a Bystander from the Escape Pile and from each player's Victory Pile. You get +1 Attack for each Bystander KO'd this way.
   ra: makeHeroCard("Corvus Glaive", "Atom-Splitting Glaive", 8, u, 6, Color.TECH, "Cabal", "", ev => {
     superPowerEv(ev, "Cabal", () => {
@@ -2715,11 +2531,7 @@ addHeroTemplates("Secret Wars Volume 2", [
       r.limit(isVillain).each(c => {
         addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
         // TODO reveal until end of turn
-        superPowerLikelyEv(
-          ev,
-          [Color.RANGED, Color.RANGED],
-          () => addAttackEvent(ev, c.printedVP || 0)
-        );
+        superPowerLikelyEv(ev, [Color.RANGED, Color.RANGED], () => addAttackEvent(ev, c.printedVP || 0));
       });
     });
   }),
@@ -2779,11 +2591,7 @@ addHeroTemplates("Secret Wars Volume 2", [
 // To play this card, you must discard a card from your hand.
   c2: makeHeroCard("Ruby Summers", "Heir to Legends", 5, 2, 2, Color.STRENGTH | Color.RANGED, "X-Men", "FD", [], { playCost: 1, playCostType: 'DISCARD' }),
 // {TEAMPOWER X-Men} Whenever you defeat a villain or mastermind this turn, you get +2 Recruit.
-  uc: makeHeroCard("Ruby Summers", "Form of Solid Ruby", 6, 0, 4, Color.STRENGTH, "X-Men", "FD", ev => superPowerEv(
-    ev,
-    "X-Men",
-    () => addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), () => addRecruitEvent(ev, 2))
-  )),
+  uc: makeHeroCard("Ruby Summers", "Form of Solid Ruby", 6, 0, 4, Color.STRENGTH, "X-Men", "FD", ev => superPowerEv(ev, "X-Men", () => addTurnTrigger('DEFEAT', ev => isEnemy(ev.what), () => addRecruitEvent(ev, 2)))),
 // To play this card, you must discard three cards from your hand.
   ra: makeHeroCard("Ruby Summers", "Extinction Blast", 8, u, 10, Color.RANGED, "X-Men", "", [], { playCost: 3, playCostType: 'DISCARD' }),
 },
@@ -2791,13 +2599,9 @@ addHeroTemplates("Secret Wars Volume 2", [
   name: "Shang-Chi",
   team: "Marvel Knights",
 // {POWER Instinct} You may shuffle your discard pile into your deck.
-  c1: makeHeroCard("Shang-Chi", "Shuffling Footwork", 3, 2, u, Color.INSTINCT, "Marvel Knights", "D", ev => superPowerLikelyEv(
-    ev,
-    Color.INSTINCT,
-    () => chooseMayEv(ev, "Shuffle discard into your deck", () => {
-      playerState.discard.each(c => shuffleIntoEv(ev, c, playerState.deck));
-    })
-  )),
+  c1: makeHeroCard("Shang-Chi", "Shuffling Footwork", 3, 2, u, Color.INSTINCT, "Marvel Knights", "D", ev => superPowerLikelyEv(ev, Color.INSTINCT, () => chooseMayEv(ev, "Shuffle discard into your deck", () => {
+    playerState.discard.each(c => shuffleIntoEv(ev, c, playerState.deck));
+  }))),
 // {WALLCRAWL}
 // {PATROL Rooftops}: If it's empty, you get +1 Attack.
   c2: makeHeroCard("Shang-Chi", "Acrobatic Kung-Fu", 4, u, 2, Color.INSTINCT | Color.COVERT, "Marvel Knights", "D", ev => patrolCity('ROOFTOPS', () => addAttackEvent(ev, 1)), { wallcrawl: true }),
@@ -2854,19 +2658,11 @@ addHeroTemplates("Secret Wars Volume 2", [
 // {POWER Strength} {XDRAMPAGE Colossus}. You get +2 Attack if at least one other player didn't reveal a Colossus card.
   uc: makeHeroCard("Soulsword Colossus", "Possessed by the Soulsword", 6, u, 3, Color.STRENGTH, "X-Men", "D", ev => {
     let gainAttack = false;
-    superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => xdRampageEv(ev, 'Colossus', p => gainAttack = gainAttack || p !== playerState)
-    );
+    superPowerEv(ev, Color.STRENGTH, () => xdRampageEv(ev, 'Colossus', p => gainAttack = gainAttack || p !== playerState));
     cont(ev, () => gainAttack && addAttackEvent(ev, 2));
   }),
 // {TEAMPOWER X-Men} You may gain an X-Men Hero from the HQ or the KO pile to your hand.
-  ra: makeHeroCard("Soulsword Colossus", "Rescue My Family from Hell", 7, u, 5, Color.INSTINCT, "X-Men", "F", ev => superPowerLikelyEv(
-    ev,
-    "X-Men",
-    () => selectCardOptEv(ev, "Choose an X-Men to gain", [...hqHeroes(), ...gameState.ko.deck].limit("X-Men"), c => gainToHandEv(ev, c))
-  )),
+  ra: makeHeroCard("Soulsword Colossus", "Rescue My Family from Hell", 7, u, 5, Color.INSTINCT, "X-Men", "F", ev => superPowerLikelyEv(ev, "X-Men", () => selectCardOptEv(ev, "Choose an X-Men to gain", [...hqHeroes(), ...gameState.ko.deck].limit("X-Men"), c => gainToHandEv(ev, c)))),
 },
 {
   name: "Spider-Gwen",
@@ -2894,11 +2690,7 @@ addHeroTemplates("Secret Wars Volume 2", [
   team: "X-Men",
 // {POWER Covert} Choose a Villain on the Rooftops or Bridge. It gets -2 Attack this turn.
   c1: makeHeroCard("Time-Traveling Jean Grey", "Throw Over the Railing", 3, u, 2, Color.COVERT, "X-Men", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => selectCardEv(ev, "Choose a Villain", cityVillains().limit(c => isLocation(c.location, 'BRIDGE', 'ROOFTOPS')), c => addTurnMod('defense', v => c === v, -2))
-    );
+    superPowerEv(ev, Color.COVERT, () => selectCardEv(ev, "Choose a Villain", cityVillains().limit(c => isLocation(c.location, 'BRIDGE', 'ROOFTOPS')), c => addTurnMod('defense', v => c === v, -2)));
   }),
 // {PATROL Bridge}: If it's empty, then when you draw a new hand of cards at the end of this turn, draw an extra card.
   c2: makeHeroCard("Time-Traveling Jean Grey", "Bridge to a Better Future", 4, u, u, Color.INSTINCT, "X-Men", "", ev => patrolCity('BRIDGE', () => addEndDrawMod(1))),
@@ -2909,13 +2701,9 @@ addHeroTemplates("Secret Wars Volume 2", [
     });
   }),
 // {TEAMPOWER X-Men} {PATROL any city space}: If it's empty, gain the hero in the HQ space under it. Put that hero on top of your deck.
-  ra: makeHeroCard("Time-Traveling Jean Grey", "Change History", 7, u, 5, Color.COVERT, "X-Men", "", ev => superPowerEv(
-    ev,
-    "X-Men",
-    () => selectCardEv(ev, 'Choose an empty city space', gameState.city.limit(d => !d.size), c => {
-      c.above && c.above.limit(isHero).withFirst(c => gainToDeckEv(ev, c));
-    })
-  )),
+  ra: makeHeroCard("Time-Traveling Jean Grey", "Change History", 7, u, 5, Color.COVERT, "X-Men", "", ev => superPowerEv(ev, "X-Men", () => selectCardEv(ev, 'Choose an empty city space', gameState.city.limit(d => !d.size), c => {
+    c.above && c.above.limit(isHero).withFirst(c => gainToDeckEv(ev, c));
+  }))),
 },
 ]);
 addHeroTemplates("Captain America 75th Anniversary", [
@@ -2924,11 +2712,7 @@ addHeroTemplates("Captain America 75th Anniversary", [
   team: "S.H.I.E.L.D.",
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} {OUTOFTIME}
 // GUN: 1
-  c1: makeHeroCard("Agent X-13", "Sniper Squad", 3, 1, 1, Color.RANGED, "S.H.I.E.L.D.", "G", ev => superPowerEv(
-    ev,
-    ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."],
-    () => outOfTimeEv(ev)
-  )),
+  c1: makeHeroCard("Agent X-13", "Sniper Squad", 3, 1, 1, Color.RANGED, "S.H.I.E.L.D.", "G", ev => superPowerEv(ev, ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."], () => outOfTimeEv(ev))),
 // You get +1 Attack for each other S.H.I.E.L.D. Hero you played this turn that costs 1 or more.
 // GUN: 1
   c2: makeHeroCard("Agent X-13", "Paramilitary Ops", 4, u, 2, Color.TECH, "S.H.I.E.L.D.", "GFD", ev => addAttackEvent(ev, turnState.cardsPlayed.limit('S.H.I.E.L.D.').count(c => c.cost >= 1))),
@@ -2990,13 +2774,9 @@ addHeroTemplates("Captain America 75th Anniversary", [
  ]),
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} You may KO a S.H.I.E.L.D. Hero that you played this turn. If you do, rescue a Bystander.
   c2: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "Reassign to Civilian Duty", 5, u, 2, Color.INSTINCT, "S.H.I.E.L.D.", "GFD", ev => {
-    superPowerLikelyEv(
-      ev,
-      ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."],
-      () => selectCardOptEv(ev, "KO a S.H.I.E.L.D. Hero", playerState.playArea.limit('S.H.I.E.L.D.'), c => {
-        KOEv(ev, c); rescueEv(ev);
-      })
-    );
+    superPowerLikelyEv(ev, ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."], () => selectCardOptEv(ev, "KO a S.H.I.E.L.D. Hero", playerState.playArea.limit('S.H.I.E.L.D.'), c => {
+      KOEv(ev, c); rescueEv(ev);
+    }));
   }),
 // {SAVIOR} {OUTOFTIME}
   uc: makeHeroCard("Steve Rogers, Director of S.H.I.E.L.D.", "Shadow of Wars Past", 4, u, 2, Color.COVERT, "S.H.I.E.L.D.", "GFD", ev => saviorPower() && outOfTimeEv(ev)),
@@ -3075,11 +2855,7 @@ addHeroTemplates("Civil War", [
 // DIVIDED: Light
 // {POWER Ranged} Reveal the top card of your deck. If it costs 1 or more, draw it.
   uc: makeDividedHeroCard(
-    makeHeroCard("Cloak", "Darkness", 6, u, 3, Color.COVERT, "Avengers", "", ev => superPowerEv(
-      ev,
-      Color.COVERT,
-      () => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c)))
-    )),
+    makeHeroCard("Cloak", "Darkness", 6, u, 3, Color.COVERT, "Avengers", "", ev => superPowerEv(ev, Color.COVERT, () => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c))))),
     makeHeroCard("Dagger", "Light", 6, 3, u, Color.RANGED, "Marvel Knights", "", ev => superPowerEv(ev, Color.RANGED, () => drawIfEv(ev, c => c.cost >= 1))),
   ),
 // Whenever you play a <b>Divided</b> card this turn: play both sides as if they were two different cards.
@@ -3152,11 +2928,7 @@ addHeroTemplates("Civil War", [
 // You get +1 Attack for each card in the HQ with an Attack icon.
   uc: makeHeroCard("Falcon", "Scout the Battlefield", 6, u, 0, Color.RANGED, "Avengers", "F", ev => addAttackEvent(ev, hqCards().count(hasAttackIcon))),
 // {TEAMPOWER Avengers} You get +Attack equal to the printed Attack of a Hero in the HQ.
-  ra: makeHeroCard("Falcon", "Fly in a Friend", 7, u, 4, Color.INSTINCT, "Avengers", "", ev => superPowerEv(
-    ev,
-    "Avengers",
-    () => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => addAttackEvent(ev, c.printedAttack || 0))
-  )),
+  ra: makeHeroCard("Falcon", "Fly in a Friend", 7, u, 4, Color.INSTINCT, "Avengers", "", ev => superPowerEv(ev, "Avengers", () => selectCardEv(ev, "Choose a Hero", hqHeroes(), c => addAttackEvent(ev, c.printedAttack || 0)))),
 },
 {
   name: "Goliath",
@@ -3200,11 +2972,7 @@ addHeroTemplates("Civil War", [
     makeHeroCard("Amadeus Cho", "Boy Genius", 3, u, u, Color.TECH, u, "", ev => drawEv(ev, 1)),
   ),
 // {POWER Strength} Reveal the top card of your deck. If it costs 0, KO it.
-  uc: makeHeroCard("Hercules", "Prince of Power", 5, 3, u, Color.STRENGTH, "Avengers", "F", ev => superPowerEv(
-    ev,
-    Color.STRENGTH,
-    () => revealPlayerDeckEv(ev, 1, cards => cards.filter(c => c.cost === 0).each(c => KOEv(ev, c)))
-  )),
+  uc: makeHeroCard("Hercules", "Prince of Power", 5, 3, u, Color.STRENGTH, "Avengers", "F", ev => superPowerEv(ev, Color.STRENGTH, () => revealPlayerDeckEv(ev, 1, cards => cards.filter(c => c.cost === 0).each(c => KOEv(ev, c))))),
 // Rescue a Bystander. Then, you get +1 Attack for each Bystander in your Victory Pile.
 // {TEAMPOWER Avengers} You get +1 Recruit for each Bystander in your Victory Pile.
   ra: makeHeroCard("Hercules", "Son of Zeus", 7, 0, 0, Color.STRENGTH, "Avengers", "", [ ev => rescueEv(ev), ev => {
@@ -3256,11 +3024,7 @@ addHeroTemplates("Civil War", [
     makeHeroCard("Jessica Jones", "Reckless", 3, u, 3, Color.INSTINCT, "Marvel Knights", "", ev => gainWoundEv(ev)),
   ),
 // {POWER Instinct} Look at the top three cards of your deck. Discard them all or put them back in any order.
-  uc: makeHeroCard("Luke Cage", "Sweet Christmas", 5, u, 3, Color.INSTINCT, "Avengers", "", ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => lookAtDeckEv(ev, 3, cards => chooseMayEv(ev, "Discard revealed cards", () => cards.each(c => discardEv(ev, c))))
-  )),
+  uc: makeHeroCard("Luke Cage", "Sweet Christmas", 5, u, 3, Color.INSTINCT, "Avengers", "", ev => superPowerEv(ev, Color.INSTINCT, () => lookAtDeckEv(ev, 3, cards => chooseMayEv(ev, "Discard revealed cards", () => cards.each(c => discardEv(ev, c)))))),
 // {TEAMPOWER Avengers} <b>Fortify</b> the Wound Stack. While it's fortified, players can't gain Wounds. At the beginning of your next turn, put this card in your discard pile.
   ra: makeHeroCard("Luke Cage", "Unbreakable Skin", 8, u, 6, Color.STRENGTH, "Avengers", "", ev => {
     superPowerEv(ev, "Avengers", () => {
@@ -3366,28 +3130,16 @@ addHeroTemplates("Civil War", [
 // {SIZECHANGING TECH}
 // {POWER Tech} Draw a card.
   c2: makeDividedHeroCard(
-    makeHeroCard("Stature", "Crush Ants", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => selectCardEv(ev, "Choose a Villain to defeat", villains().limit(c => c.defense <= 3), c => defeatEv(ev, c))
-    ), { sizeChanging: Color.STRENGTH }),
+    makeHeroCard("Stature", "Crush Ants", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPowerEv(ev, Color.STRENGTH, () => selectCardEv(ev, "Choose a Villain to defeat", villains().limit(c => c.defense <= 3), c => defeatEv(ev, c))), { sizeChanging: Color.STRENGTH }),
     makeHeroCard("Iron Lad", "Crush File Sizes", 5, 2, u, Color.TECH, "Avengers", "D", ev => superPowerEv(ev, Color.TECH, () => drawEv(ev, 1)), { sizeChanging: Color.TECH }),
   ),
 // {SIZECHANGING STRENGTH}
 // {POWER Strength} You get +1 Attack for each Villain in your Victory Pile that has a printed Attack 3 or less.
-  uc: makeHeroCard("Stature", "Growing Confidence", 6, u, 2, Color.STRENGTH, "Avengers", "FD", ev => superPowerLikelyEv(
-    ev,
-    Color.STRENGTH,
-    () => addAttackEvent(ev, playerState.victory.limit(isVillain).count(c => c.defense <= 3))
-  ), { sizeChanging: Color.STRENGTH }),
+  uc: makeHeroCard("Stature", "Growing Confidence", 6, u, 2, Color.STRENGTH, "Avengers", "FD", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, playerState.victory.limit(isVillain).count(c => c.defense <= 3))), { sizeChanging: Color.STRENGTH }),
 // {SIZECHANGING STRENGTH}
 // {POWER Strength} Defeat each Villain that has 4 Attack or less.
 // GUN: 1
-  ra: makeHeroCard("Stature", "Trample the Tiny", 8, u, 5, Color.STRENGTH, "Avengers", "G", ev => superPowerEv(
-    ev,
-    Color.STRENGTH,
-    () => villains().limit(c => c.defense <= 3).each(c => defeatEv(ev, c))
-  ), { sizeChanging: Color.STRENGTH }),
+  ra: makeHeroCard("Stature", "Trample the Tiny", 8, u, 5, Color.STRENGTH, "Avengers", "G", ev => superPowerEv(ev, Color.STRENGTH, () => villains().limit(c => c.defense <= 3).each(c => defeatEv(ev, c))), { sizeChanging: Color.STRENGTH }),
 },
 {
   name: "Storm & Black Panther",
@@ -3459,11 +3211,7 @@ addHeroTemplates("Civil War", [
     let sel: Card[] = [];
     lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to discard", cards, c => { sel.push(c); discardEv(ev, c); }));
     cont(ev, () => sel.limit(c => c.location === playerState.discard).each(c => {
-      superPowerLikelyEv(
-        ev,
-        [Color.INSTINCT, Color.INSTINCT],
-        () => chooseMayEv(ev, "KO the card discarded", () => KOEv(ev, c))
-      );
+      superPowerLikelyEv(ev, [Color.INSTINCT, Color.INSTINCT], () => chooseMayEv(ev, "KO the card discarded", () => KOEv(ev, c)));
     }));
   }),
 // If an Ambush effect would occur, you may discard this card to cancel that effect and draw two cards.
@@ -3652,11 +3400,7 @@ addHeroTemplates("Deadpool", [
 // {POWER Tech} You get +2 Attack, usable only against Villains in the Sewers or Bridge or the Mastermind.
   c2: makeHeroCard("Stingray", "Superpowered Swimsuit", 2, u, .5, Color.TECH, "Mercs for Money", "FD", [
     ev => drawEv(ev, 1),
-    ev => superPowerLikelyEv(
-      ev,
-      Color.TECH,
-      () => addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'SEWERS', 'BRIDGE'), 2)
-    ),
+    ev => superPowerLikelyEv(ev, Color.TECH, () => addAttackSpecialEv(ev, c => isMastermind(c) || isLocation(c.location, 'SEWERS', 'BRIDGE'), 2)),
   ]),
 // {VIOLENCE} You may KO one of your cards or a card from your discard pile.
   uc: makeHeroCard("Stingray", "Sting of the Stingray's Sting", 5, 3, u, Color.RANGED, "Mercs for Money", "F", [], { excessiveViolence: ev => selectCardOptEv(ev, "Choose a card to KO", revealable().concat(playerState.discard.deck), c => KOEv(ev, c)) }),
@@ -3664,11 +3408,7 @@ addHeroTemplates("Deadpool", [
 // {TEAMPOWER Mercs for Money} You get 1/2 Attack for each Hero in the KO pile.
   ra: makeHeroCard("Stingray", "PhD in Oceanography", 8, u, 4, Color.TECH, "Mercs for Money", "D", [
     ev => KOHandOrDiscardEv(ev, undefined),
-    ev => superPowerLikelyEv(
-      ev,
-      "Mercs for Money",
-      () => addAttackEvent(ev, gameState.ko.count(isHero) / 2)
-    ),
+    ev => superPowerLikelyEv(ev, "Mercs for Money", () => addAttackEvent(ev, gameState.ko.count(isHero) / 2)),
   ]),
 },
 ]);
@@ -3699,11 +3439,7 @@ addHeroTemplates("Noir", [
 // GUN: 1
   c2: makeHeroCard("Daredevil Noir", "Listen for Heartbeats", 4, u, 2, Color.INSTINCT, "Marvel Knights", "GFD", ev => chooseCostEv(ev, n => investigateEv(ev, c => c.cost === n), 1)),
 // {POWER Covert} <b>Investigate</b> for a card that costs 0. KO that card.
-  uc: makeHeroCard("Daredevil Noir", "Discover the Bodies", 5, 3, u, Color.COVERT, "Marvel Knights", "F", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => investigateEv(ev, c => c.cost === 0, playerState.deck, c => KOEv(ev, c))
-  )),
+  uc: makeHeroCard("Daredevil Noir", "Discover the Bodies", 5, 3, u, Color.COVERT, "Marvel Knights", "F", ev => superPowerEv(ev, Color.COVERT, () => investigateEv(ev, c => c.cost === 0, playerState.deck, c => KOEv(ev, c)))),
 // Discard a card from the top or bottom of your deck. If it costs 0, you get +1 Attack and repeat this process. If your deck runs out, stop.
   ra: makeHeroCard("Daredevil Noir", "Hitting Rock Bottom", 7, u, 3, Color.INSTINCT, "Marvel Knights", "", ev => {
     const f = () => chooseOptionEv(ev, "Reveal a card from", [{l:"Top",v:false},{l:"Bottom",v:true}], v => revealPlayerDeckTopOrBottomEv(ev, 1, v, cards => cards.each(c => {
@@ -3723,13 +3459,9 @@ addHeroTemplates("Noir", [
 // GUN: 1
   c2: makeHeroCard("Iron Man Noir", "Mechanized Plate-Mail", 4, 2, u, Color.TECH, "Avengers", "GFD", ev => investigateEv(ev, Color.TECH)),
 // {POWER Tech} You may use the "Fight" ability of a Villain worth 1 VP in your Victory Pile.
-  uc: makeHeroCard("Iron Man Noir", "Learn from Enemies", 6, u, 3, Color.TECH, "Avengers", "", ev => superPowerLikelyEv(
-    ev,
-    Color.TECH,
-    () => selectCardOptEv(ev, "Choose a Villain", playerState.victory.limit(isVillain).limit(c => c.vp === 1), c => {
-      pushEffects(ev, c, 'fight', c.fight);
-    })
-  )),
+  uc: makeHeroCard("Iron Man Noir", "Learn from Enemies", 6, u, 3, Color.TECH, "Avengers", "", ev => superPowerLikelyEv(ev, Color.TECH, () => selectCardOptEv(ev, "Choose a Villain", playerState.victory.limit(isVillain).limit(c => c.vp === 1), c => {
+    pushEffects(ev, c, 'fight', c.fight);
+  }))),
 // Whenever you <b>Investigate</b> this turn, look a three cards instead of two.
 // Choose Recruit or Attack. <b>Investigate</b> for a card with that icon.
 // GUN: 1
@@ -3765,21 +3497,13 @@ addHeroTemplates("Noir", [
   c2: makeHeroCard("Spider-Man Noir", "Webs of Darkness", 2, u, 1, Color.RANGED, "Spider Friends", "FD", ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackEvent(ev, 2))),
 // {POWER Instinct} <b>Investigate</b> the Bystander Stack for a Bystander and rescue it.
 // TODO revealed bytstander deck
-  uc: makeHeroCard("Spider-Man Noir", "Solve the Crime", 2, u, 2, Color.INSTINCT, "Spider Friends", "FD", ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => investigateEv(ev, isBystander, gameState.bystanders, c => rescueEv(ev, c))
-  )),
+  uc: makeHeroCard("Spider-Man Noir", "Solve the Crime", 2, u, 2, Color.INSTINCT, "Spider Friends", "FD", ev => superPowerEv(ev, Color.INSTINCT, () => investigateEv(ev, isBystander, gameState.bystanders, c => rescueEv(ev, c)))),
 // {TEAMPOWER Spider Friends} <b>Investigate</b> each player's deck for a card that costs 2 or less, play a copy of that card, then put it into their discard pile.
   ra: makeHeroCard("Spider-Man Noir", "Spider-Totem's Chosen", 2, u, 1, Color.STRENGTH, "Spider Friends", "D", ev => {
-    superPowerEv(
-      ev,
-      "Spider Friends",
-      () => eachPlayer(p => investigateEv(ev, c => c.cost <= 2, p.deck, c => {
-        playCopyEv(ev, c);
-        discardEv(ev, c);
-      }))
-    );
+    superPowerEv(ev, "Spider Friends", () => eachPlayer(p => investigateEv(ev, c => c.cost <= 2, p.deck, c => {
+      playCopyEv(ev, c);
+      discardEv(ev, c);
+    })));
   }),
 },
 ]);
@@ -3840,11 +3564,7 @@ addHeroTemplates("X-Men", [
 // PIERCING
 // {POWER Ranged Covert} You may use Attack as if it were Piercing this turn.
 // 4 Piercing
-  ra: makeHeroCard("Banshee", "Bone-Shattering Howl", 8, u, u, Color.RANGED, "X-Men", "", ev => superPowerEv(
-    ev,
-    [Color.RANGED, Color.COVERT],
-    () => (turnState.piercingWithAttack = true)
-  ), { printedPiercing: 4 }),
+  ra: makeHeroCard("Banshee", "Bone-Shattering Howl", 8, u, u, Color.RANGED, "X-Men", "", ev => superPowerEv(ev, [Color.RANGED, Color.COVERT], () => (turnState.piercingWithAttack = true)), { printedPiercing: 4 }),
 },
 {
   name: "Beast",
@@ -3877,11 +3597,7 @@ addHeroTemplates("X-Men", [
   c2: makeHeroCard("Cannonball", "Carry to the Air", 4, 2, u, Color.STRENGTH, "X-Men", "D", ev => superPowerEv(ev, Color.STRENGTH, () => (turnState.nextHeroRecruit = 'SOARING')), { soaring: true }),
 // {SOARING FLIGHT}
 // {POWER Strength} Return a S.H.I.E.L.D. Hero from your discard pile to your hand.
-  uc: makeHeroCard("Cannonball", "Natural Leader", 6, u, 3, Color.STRENGTH, "X-Men", "", ev => superPowerEv(
-    ev,
-    Color.STRENGTH,
-    () => selectCardEv(ev, "Choose a card to put in your hand", playerState.discard.limit(isHero).limit('S.H.I.E.L.D.'), c => moveCardEv(ev, c, playerState.hand))
-  ), { soaring: true }),
+  uc: makeHeroCard("Cannonball", "Natural Leader", 6, u, 3, Color.STRENGTH, "X-Men", "", ev => superPowerEv(ev, Color.STRENGTH, () => selectCardEv(ev, "Choose a card to put in your hand", playerState.discard.limit(isHero).limit('S.H.I.E.L.D.'), c => moveCardEv(ev, c, playerState.hand))), { soaring: true }),
 // {SOARING FLIGHT}
 // If you played at least 6 other cards this turn, you get +2 Attack.
 // Attack: 4+
@@ -4068,11 +3784,7 @@ addHeroTemplates("X-Men", [
   c2: makeHeroCard("Polaris", "Electromagnetic Pulse", 4, u, u, Color.RANGED, "X-Men", "D", ev => superPowerEv(ev, Color.RANGED, () => drawEv(ev, 1)), { printedPiercing: 2 }),
 // {SOARING FLIGHT}
 // {POWER Covert} Look at the top two cards of your deck. You may KO one of them. Put the rest back in any order.
-  uc: makeHeroCard("Polaris", "Subtle Attunement", 6, u, 2, Color.COVERT, "X-Men", "D", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => lookAtDeckEv(ev, 2, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))
-  ), { soaring: true }),
+  uc: makeHeroCard("Polaris", "Subtle Attunement", 6, u, 2, Color.COVERT, "X-Men", "D", ev => superPowerEv(ev, Color.COVERT, () => lookAtDeckEv(ev, 2, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))), { soaring: true }),
 // {SOARING FLIGHT}
 // {XGENE X-Men} You can use Recruit as Attack this turn, and vice versa.
   ra: makeHeroCard("Polaris", "Reverse Polarity", 8, 4, u, Color.COVERT, "X-Men", "", ev => xGenePower("X-Men") && (turnState.attackWithRecruit = true, turnState.recruitWithAttack = true), { soaring: true }),
@@ -4149,15 +3861,11 @@ addHeroTemplates("Spider-Man Homecoming", [
   c2: makeHeroCard("High-Tech Spider-Man", "Recon Drone Connection", 2, u, 0, Color.TECH, "Spider Friends", "D", ev => dangerSenseEv(ev, 3), { wallcrawl: true }),
 // {WALLCRAWL}
 // {POWER Tech} Choose two Villains in adjacent city spaces. Each of them gets -1 Attack this turn.
-  uc: makeHeroCard("High-Tech Spider-Man", "Spider-Grip", 2, u, 2, Color.TECH, "Spider Friends", "D", ev => superPowerEv(
-    ev,
-    Color.TECH,
-    () => selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
-      selectCardEv(ev, "Choose an adjecent space", cityAdjacent(c.location).limit(d => d.has(isVillain)), d => {
-        [c, ...d.limit(isVillain)].each(c => addTurnMod('defense', v => v === c, -1));
-      });
-    })
-  ), { wallcrawl: true }),
+  uc: makeHeroCard("High-Tech Spider-Man", "Spider-Grip", 2, u, 2, Color.TECH, "Spider Friends", "D", ev => superPowerEv(ev, Color.TECH, () => selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
+    selectCardEv(ev, "Choose an adjecent space", cityAdjacent(c.location).limit(d => d.has(isVillain)), d => {
+      [c, ...d.limit(isVillain)].each(c => addTurnMod('defense', v => v === c, -1));
+    });
+  })), { wallcrawl: true }),
 // {WALLCRAWL}
 // {COORDINATE}
 // You get +3 Attack usable only against the Mastermind or Villains on the Rooftops or Streets.
@@ -4310,11 +4018,7 @@ addHeroTemplates("Champions", [
 // {POWER Strength} The first time you defeat a Villain this turn, rescue a Bystander.
   c1: makeHeroCard("Totally Awesome Hulk", "Beloved Behemoth", 4, u, 2, Color.STRENGTH, "Champions", "D", ev => {
     let once = false;
-    superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !once, ev => { once = true; rescueEv(ev); })
-    );
+    superPowerEv(ev, Color.STRENGTH, () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !once, ev => { once = true; rescueEv(ev); }));
   }, { sizeChanging: Color.STRENGTH }),
 // {SIZECHANGING TECH}
 // Draw a card.
@@ -4335,11 +4039,7 @@ addHeroTemplates("Champions", [
   name: "Viv Vision",
   team: "Champions",
 // {POWER Tech} Whenever you recruit a Hero from the HQ this turn, rescue a Bystander.
-  c1: makeHeroCard("Viv Vision", "Walking Wi-Fi", 3, 2, u, Color.TECH, "Champions", "D", ev => superPowerEv(
-    ev,
-    Color.TECH,
-    () => addTurnTrigger('RECRUIT', ev => ev.where.isHQ, ev => rescueEv(ev))
-  )),
+  c1: makeHeroCard("Viv Vision", "Walking Wi-Fi", 3, 2, u, Color.TECH, "Champions", "D", ev => superPowerEv(ev, Color.TECH, () => addTurnTrigger('RECRUIT', ev => ev.where.isHQ, ev => rescueEv(ev)))),
 // {SIZECHANGING TECH}
 // {POWER Tech} When you draw a new hand of cards at the end of this turn, draw an extra card.
   c2: makeHeroCard("Viv Vision", "Expanding Neural Network", 4, u, 2, Color.TECH, "Champions", "D", ev => superPowerEv(ev, Color.TECH, () => addEndDrawMod(1)), { sizeChanging: Color.TECH }),
@@ -4387,11 +4087,7 @@ addHeroTemplates("World War Hulk", [
     makeHeroCard("Bruce Banner", "Savage Hulk Unleashed", 5, u, 0, Color.STRENGTH, "Avengers", "F", ev => smashEv(ev, 4)),
   ),
 // {POWER Tech} Reveal the top card of your deck. If it costs 0, KO it.
-  uc: makeHeroCard("Bruce Banner", "Dangerous Testing", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPowerEv(
-    ev,
-    Color.TECH,
-    () => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c)))
-  )),
+  uc: makeHeroCard("Bruce Banner", "Dangerous Testing", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPowerEv(ev, Color.TECH, () => revealPlayerDeckEv(ev, 1, cards => cards.limit(c => c.cost === 0).each(c => KOEv(ev, c))))),
 // {OUTWIT}: Look at the top three cards of your deck. Draw one of them, KO one, and put one back.
   ra: makeHeroCard("Bruce Banner", "Gamma Ray Experiment", 7, u, 4, Color.TECH, "Avengers", "", ev => mayOutwitEv(ev, () => lookAtThreeEv(ev, 'DRAW', 'KO'))),
 },
@@ -4447,14 +4143,10 @@ addHeroTemplates("World War Hulk", [
 // {POWER Covert} The first time you defeat a Villain this turn, rescue a Bystander.
   c1: makeHeroCard("Hiroim", "Seek Redemption", 3, u, 2, Color.COVERT, "Warbound", "D", ev => {
     let done = false;
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !done, ev => {
-        done = true;
-        rescueEv(ev);
-      })
-    )
+    superPowerEv(ev, Color.COVERT, () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !done, ev => {
+      done = true;
+      rescueEv(ev);
+    }))
   }),
 // Draw a card.
 // If there are at least two Bystanders in your Victory Pile, {TRANSFORM} this into Hiroim Redeemed.
@@ -4465,14 +4157,10 @@ addHeroTemplates("World War Hulk", [
     makeHeroCard("Hiroim", "Hiroim Redeemed", 5, u, 1, Color.STRENGTH, "Warbound", "F", ev => addAttackEvent(ev, Math.floor(playerState.victory.count(isBystander) / 2))),
   ),
 // {TEAMPOWER Warbound} You may KO a 0-cost card from any player's discard pile. If you KO a Wound this way, rescue a Bystander.
-  uc: makeHeroCard("Hiroim", "Mystic Shadow Priest", 6, u, 2, Color.COVERT, "Warbound", "D", ev => superPowerLikelyEv(
-    ev,
-    "Warbound",
-    () => selectCardOptEv(ev, "Choose a card to KO", gameState.players.map(p => p.discard.limit(c => c.cost === 0)).merge(), c => {
-      KOEv(ev, c);
-      isWound(c) && rescueEv(ev);
-    })
-  )),
+  uc: makeHeroCard("Hiroim", "Mystic Shadow Priest", 6, u, 2, Color.COVERT, "Warbound", "D", ev => superPowerLikelyEv(ev, "Warbound", () => selectCardOptEv(ev, "Choose a card to KO", gameState.players.map(p => p.discard.limit(c => c.cost === 0)).merge(), c => {
+    KOEv(ev, c);
+    isWound(c) && rescueEv(ev);
+  }))),
 // Choose one: Rescue three Bystanders, or defeat any Villain or Mastermind whose Attack is less than the number of Bystanders in your Victory Pile.
   ra: makeHeroCard("Hiroim", "Blade of the People", 7, u, u, Color.INSTINCT, "Warbound", "", ev => {
     chooseOneEv(ev, "Choose one",
@@ -4584,14 +4272,10 @@ addHeroTemplates("World War Hulk", [
     makeHeroCard("Namora", "Master of Depths", 6, u, 0, Color.STRENGTH, "Champions", "", ev => smashEv(ev, 3, c => c.cost === 0 && isHero(c) && KOEv(ev, c))),
   ),
 // {POWER Covert} If the Bridge is empty, you may move a Villain there from another city space. A Villain moved this way gets -3 Attack this turn.
-  ra: makeHeroCard("Namora", "Turning The Tide", 7, u, 5, Color.COVERT, "Champions", "", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => withCity('BRIDGE', bridge => isCityEmpty(bridge) && selectCardOptEv(ev, "Choose a Villain to move to the Bridge", cityVillains(), c => {
-      moveCardEv(ev, c, bridge);
-      addTurnMod('defense', v => v === c, -3);
-    }))
-  )),
+  ra: makeHeroCard("Namora", "Turning The Tide", 7, u, 5, Color.COVERT, "Champions", "", ev => superPowerEv(ev, Color.COVERT, () => withCity('BRIDGE', bridge => isCityEmpty(bridge) && selectCardOptEv(ev, "Choose a Villain to move to the Bridge", cityVillains(), c => {
+    moveCardEv(ev, c, bridge);
+    addTurnMod('defense', v => v === c, -3);
+  })))),
 },
 {
   name: "No-Name, Brood Queen",
@@ -4734,14 +4418,10 @@ addHeroTemplates("World War Hulk", [
 // TRANSFORMED
 // {WOUNDED FURY}
   uc: makeTransformingHeroCard(
-    makeHeroCard("Skaar, Son of Hulk", "Mood Swings", 5, 3, u, Color.INSTINCT, "Avengers", "F", ev => superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => chooseMayEv(ev, "Gain a Wound and Transform", () => {
-        gainWoundEv(ev);
-        transformHeroEv(ev, ev.source);
-      })
-    )),
+    makeHeroCard("Skaar, Son of Hulk", "Mood Swings", 5, 3, u, Color.INSTINCT, "Avengers", "F", ev => superPowerLikelyEv(ev, Color.INSTINCT, () => chooseMayEv(ev, "Gain a Wound and Transform", () => {
+      gainWoundEv(ev);
+      transformHeroEv(ev, ev.source);
+    }))),
     makeHeroCard("Skaar, Son of Hulk", "Raging Savage", 6, u, 3, Color.STRENGTH, "Avengers", "F", ev => woundedFuryEv(ev)),
   ),
 // {WOUNDED FURY}
@@ -4771,13 +4451,9 @@ addHeroTemplates("Ant-Man", [
   c1: makeHeroCard("Ant-Man", "Ride the Ants", 4, u, 1, Color.TECH, "Avengers", "F", ev => drawEv(ev, 1), { sizeChanging: Color.TECH }),
 // {USIZECHANGING TECH 3}
 // {POWER Tech} You may discard a card. If you do, draw a card.
-  c2: makeHeroCard("Ant-Man", "Risky Science", 5, u, 2, Color.TECH, "Avengers", "D", ev => superPowerLikelyEv(
-    ev,
-    Color.TECH,
-    () => selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => {
-      discardEv(ev, c); drawEv(ev);
-    })
-  ), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
+  c2: makeHeroCard("Ant-Man", "Risky Science", 5, u, 2, Color.TECH, "Avengers", "D", ev => superPowerLikelyEv(ev, Color.TECH, () => selectCardOptEv(ev, "Choose a card to discard", playerState.hand.deck, c => {
+    discardEv(ev, c); drawEv(ev);
+  })), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
 // {SIZECHANGING TECH}
 // You get +1 Attack for each extra card you drew this turn.
   uc: makeHeroCard("Ant-Man", "Giant Ego", 6, u, 2, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev, pastEvents('DRAW').count(e => e.who === playerState)), { sizeChanging: Color.TECH }),
@@ -4857,11 +4533,7 @@ addHeroTemplates("Ant-Man", [
   c1: makeHeroCard("Black Knight", "Amulet of Avalon", 3, u, 0, Color.INSTINCT, "Avengers", "F", ev => chooseClassEv(ev, c => empowerEv(ev, c))), // TODO choose color
 // {POWER Strength} Return a 0-cost card from your discard pile to your hand.
 // GUN: 1
-  c2: makeHeroCard("Black Knight", "Defend the Weak", 3, 2, u, Color.STRENGTH, "Avengers", "GD", ev => superPowerEv(
-    ev,
-    Color.STRENGTH,
-    () => selectCardEv(ev, "Choose a card to return to your hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand))
-  )),
+  c2: makeHeroCard("Black Knight", "Defend the Weak", 3, 2, u, Color.STRENGTH, "Avengers", "GD", ev => superPowerEv(ev, Color.STRENGTH, () => selectCardEv(ev, "Choose a card to return to your hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)))),
 // When a Master Strike is played, before it takes effect, you may discard this card. If you do, draw three extra cards at the end of this turn.
   uc: makeHeroCard("Black Knight", "Flying Steed", 6, u, 3, Color.COVERT, "Avengers", "", [], { trigger: {
     event: 'STRIKE',
@@ -5034,20 +4706,16 @@ addHeroTemplates("Dimensions", [
   }), { cardActions: [ switcherooActionEv(6) ] }),
 // {POWER Covert} <b>Investigate</b> the Villain Deck for a Villain. You may put it into your Victory Pile and do its Fight effect. Otherwise, put it back on the top or bottom of that deck.
   ra: makeHeroCard("Jessica Jones", "Uncover Hidden Evil", 7, u, 4, Color.COVERT, "Marvel Knights", "", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => investigateEv(ev, isVillain, gameState.villaindeck, c => {
-        chooseOneEv(ev, "Put the Villain",
-          ["Your Victory Pile", () => {
-            moveCardEv(ev, c, playerState.victory);
-            pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use
-          }],
-          ["Top of the Villain Deck", () => moveCardEv(ev, c, gameState.villaindeck)],
-          ["Bottom of the Villain Deck", () => moveCardEv(ev, c, gameState.villaindeck, true)],
-        )
-      })
-    );
+    superPowerEv(ev, Color.COVERT, () => investigateEv(ev, isVillain, gameState.villaindeck, c => {
+      chooseOneEv(ev, "Put the Villain",
+        ["Your Victory Pile", () => {
+          moveCardEv(ev, c, playerState.victory);
+          pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use
+        }],
+        ["Top of the Villain Deck", () => moveCardEv(ev, c, gameState.villaindeck)],
+        ["Bottom of the Villain Deck", () => moveCardEv(ev, c, gameState.villaindeck, true)],
+      )
+    }));
   }),
 },
 {
@@ -5070,11 +4738,7 @@ addHeroTemplates("Dimensions", [
     });
   }, { teleport: true }),
 // {POWER Strength} You get +1 Attack for each empty city space.
-  ra: makeHeroCard("Man-Thing", "Eternity of Solitude", 7, u, 5, Color.STRENGTH, u, "", ev => superPowerLikelyEv(
-    ev,
-    Color.STRENGTH,
-    () => addAttackEvent(ev, gameState.city.count(isCityEmpty))
-  )),
+  ra: makeHeroCard("Man-Thing", "Eternity of Solitude", 7, u, 5, Color.STRENGTH, u, "", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, gameState.city.count(isCityEmpty)))),
 },
 {
   name: "Ms. America",
@@ -5085,13 +4749,9 @@ addHeroTemplates("Dimensions", [
 // <b>Investigate</b> for an Avengers card and {TELEPORT} that card.
   c2: makeHeroCard("Ms. America", "Search Parallel Dimensions", 4, 2, u, Color.RANGED, "Avengers", "FD", ev => investigateEv(ev, 'Avengers', playerState.deck, c => teleportEv(ev, c))),
 // {POWER Strength} Reveal the top card of your deck. KO it or {TELEPORT} it.
-  uc: makeHeroCard("Ms. America", "Kick a Hole in Reality", 6, u, 3, Color.STRENGTH, "Avengers", "F", ev => superPowerEv(
-    ev,
-    Color.STRENGTH,
-    () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
-      chooseOneEv(ev, "Choose", ["KO", () => KOEv(ev, c)], ["Teleport", () => teleportEv(ev, c)]);
-    }))
-  )),
+  uc: makeHeroCard("Ms. America", "Kick a Hole in Reality", 6, u, 3, Color.STRENGTH, "Avengers", "F", ev => superPowerEv(ev, Color.STRENGTH, () => revealPlayerDeckEv(ev, 1, cards => cards.each(c => {
+    chooseOneEv(ev, "Choose", ["KO", () => KOEv(ev, c)], ["Teleport", () => teleportEv(ev, c)]);
+  })))),
 // You get +1 Attack for each other card in your hand.
   ra: makeHeroCard("Ms. America", "Hyper-Cosmic Awareness", 7, u, 0, Color.COVERT, "Avengers", "F", ev => addAttackEvent(ev, playerState.hand.size)),
 },
@@ -5125,11 +4785,7 @@ addHeroTemplates("Revelations", [
   name: "Captain Marvel, Agent of S.H.I.E.L.D.",
   team: "S.H.I.E.L.D.",
 // {TEAMPOWER S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D., S.H.I.E.L.D.} Draw a card.
-  c1: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "The Sword of S.H.I.E.L.D.", 3, 2, u, Color.STRENGTH, "S.H.I.E.L.D.", "FD", ev => superPowerEv(
-    ev,
-    ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."],
-    () => drawEv(ev)
-  )),
+  c1: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "The Sword of S.H.I.E.L.D.", 3, 2, u, Color.STRENGTH, "S.H.I.E.L.D.", "FD", ev => superPowerEv(ev, ["S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D.", "S.H.I.E.L.D."], () => drawEv(ev))),
 // If you drew any extra cards this turn, you get +1 Attack.
   c2: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "Radiant Blast", 4, u, 2, Color.RANGED, "S.H.I.E.L.D.", "FD", ev => pastEvents('DRAW').has(e => e.who === playerState) && addAttackEvent(ev, 1)),
 // {POWER Ranged} {LAST STAND}
@@ -5137,14 +4793,9 @@ addHeroTemplates("Revelations", [
 // Choose one: Draw three cards or {LAST STAND}.
 // {POWER Strength Strength} Instead, do both.
   ra: makeHeroCard("Captain Marvel, Agent of S.H.I.E.L.D.", "Higher, Further, Faster", 7, u, 0, Color.STRENGTH, "S.H.I.E.L.D.", "", ev => {
-    superPowerEv(
-      ev,
-      [Color.STRENGTH, Color.STRENGTH],
-      () => { drawEv(ev, 3); lastStandEv(ev); },
-      () => {
-        chooseOneEv(ev, "Choose one", ["Draw three cards", () => drawEv(ev, 3)], ["Last Stand", () => lastStandEv(ev)]);
-      }
-    );
+    superPowerEv(ev, [Color.STRENGTH, Color.STRENGTH], () => { drawEv(ev, 3); lastStandEv(ev); }, () => {
+      chooseOneEv(ev, "Choose one", ["Draw three cards", () => drawEv(ev, 3)], ["Last Stand", () => lastStandEv(ev)]);
+    });
   }),
 },
 {
@@ -5168,11 +4819,7 @@ addHeroTemplates("Revelations", [
   name: "Hellcat",
   team: "Avengers",
 // {POWER Instinct} Choose one - Draw a card or you get +1 Attack.
-  c1: makeHeroCard("Hellcat", "Catlike Agility", 2, u, 1, Color.INSTINCT, "Avengers", "FD", ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["+1 Attack", () => addAttackEvent(ev, 1)])
-  )),
+  c1: makeHeroCard("Hellcat", "Catlike Agility", 2, u, 1, Color.INSTINCT, "Avengers", "FD", ev => superPowerEv(ev, Color.INSTINCT, () => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["+1 Attack", () => addAttackEvent(ev, 1)]))),
 // Reveal the top card of any deck. If it's not a Scheme Twist, you may put it on the bottom of that deck.
 // {POWER Instinct} Choose one - Draw a card or you get +1 Recruit.
   c2: makeHeroCard("Hellcat", "Part-Time PI", 3, 2, u, Color.INSTINCT, "Avengers", "D", [ ev => {
@@ -5184,11 +4831,7 @@ addHeroTemplates("Revelations", [
       else revealDeckEv(ev, d, 1, f);
       // TODO scheme decks
     });
-  }, ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["+1 Recruit", () => addRecruitEvent(ev, 1)])
-  ) ]),
+  }, ev => superPowerEv(ev, Color.INSTINCT, () => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["+1 Recruit", () => addRecruitEvent(ev, 1)])) ]),
 // Guess Villain, Bystander, Strike, or Twist. Then reveal the top card of the Villain Deck. If you guessed right, you get +2 Attack.
 // {TEAMPOWER Avengers} If it was a Villain, you may fight it this turn.
   uc: makeHeroCard("Hellcat", "Demon Sight", 5, u, 2, Color.COVERT, "Avengers", "D", ev => {
@@ -5199,11 +4842,7 @@ addHeroTemplates("Revelations", [
       {l:"Twist", v:isTwist},
     ], f => revealVillainDeckEv(ev, 1, cards => {
       cards.has(f) && addAttackEvent(ev, 2);
-      superPowerEv(
-        ev,
-        "Avengers",
-        () => cards.limit(isVillain).each(c => addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true))
-      );
+      superPowerEv(ev, "Avengers", () => cards.limit(isVillain).each(c => addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true)));
     }));
   }),
 // If a Master Strike or Scheme Twist would occur, you may discard this card from your hand instead. If you do, draw three cards, then shuffle that Strike or Twist back into the Villain Deck.
@@ -5245,22 +4884,14 @@ addHeroTemplates("Revelations", [
     lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Discard revealed", cards, c => {
       discardEv(ev, c)
     }));
-    superPowerEv(
-      ev,
-      Color.INSTINCT,
-      () => cont(ev, () => turnState.pastEvents.limit(e => e.type === "DISCARD" && e.parent === ev).each(e => {
-        chooseMayEv(ev, "KO discarded card", () => KOEv(ev, e.what));
-      }))
-    );
+    superPowerEv(ev, Color.INSTINCT, () => cont(ev, () => turnState.pastEvents.limit(e => e.type === "DISCARD" && e.parent === ev).each(e => {
+      chooseMayEv(ev, "KO discarded card", () => KOEv(ev, e.what));
+    })));
   }),
 // <b>Hyperspeed</b> your entire remaining deck. (Don't reshuffle.)
 // {TEAMPOWER Avengers, Avengers, Avengers, Avengers} Before you do that, put your discard pile on top of your deck.
   ra: makeHeroCard("Quicksilver", "Around the World Punch", 8, u, 0, Color.STRENGTH, "Avengers", "", [
-    ev => superPowerEv(
-      ev,
-      ["Avengers", "Avengers", "Avengers", "Avengers"],
-      () => shuffleIntoEv(ev, playerState.discard, playerState.deck)
-    ),
+    ev => superPowerEv(ev, ["Avengers", "Avengers", "Avengers", "Avengers"], () => shuffleIntoEv(ev, playerState.discard, playerState.deck)),
     ev => hyperspeedEv(ev) ]),
 },
 {
@@ -5362,11 +4993,7 @@ addHeroTemplates("Revelations", [
 // {HYPERSPEED 5}
 // {POWER Ranged} You may KO a card from your discard pile.
 // GUN: 1
-  uc: makeHeroCard("War Machine", "Hypersonic Cannon", 5, u, 0, Color.RANGED, "Avengers", "GF", [ ev => hyperspeedEv(ev, 5), ev => superPowerLikelyEv(
-    ev,
-    Color.RANGED,
-    () => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c))
-  ) ]),
+  uc: makeHeroCard("War Machine", "Hypersonic Cannon", 5, u, 0, Color.RANGED, "Avengers", "GF", [ ev => hyperspeedEv(ev, 5), ev => superPowerLikelyEv(ev, Color.RANGED, () => selectCardOptEv(ev, "Choose a card to KO", playerState.discard.deck, c => KOEv(ev, c))) ]),
 // Whenever you defeat a Villain or Mastermind this turn, draw a card and rescue a Bystander.
 // GUN: 1
   ra: makeHeroCard("War Machine", "Overwhelming Firepower", 8, u, 5, Color.TECH, "Avengers", "G", ev => {
@@ -5412,13 +5039,9 @@ addHeroTemplates("S.H.I.E.L.D.", [
   team: "S.H.I.E.L.D.",
 // To play this, you must discard a S.H.I.E.L.D. Hero.
 // {POWER Ranged} You may send the Hero you discarded {UNDERCOVER}.
-  c1: makeHeroCard("Quake", "Going Underground", 3, 3, u, Color.RANGED, "S.H.I.E.L.D.", "", ev => superPowerLikelyEv(
-    ev,
-    Color.RANGED,
-    () => chooseMayEv(ev, "Send the discarded Hero undercover", () => {
-      pastEvents("DISCARD").limit(e => e.parent == ev.parent).each(e => sendUndercoverEv(ev, e.what));
-    })
-  ), { playCost: 1, playCostType: 'DISCARD', playCostLimit: c => isHero(c) && isTeam('S.H.I.E.L.D.')(c) }),
+  c1: makeHeroCard("Quake", "Going Underground", 3, 3, u, Color.RANGED, "S.H.I.E.L.D.", "", ev => superPowerLikelyEv(ev, Color.RANGED, () => chooseMayEv(ev, "Send the discarded Hero undercover", () => {
+    pastEvents("DISCARD").limit(e => e.parent == ev.parent).each(e => sendUndercoverEv(ev, e.what));
+  })), { playCost: 1, playCostType: 'DISCARD', playCostLimit: c => isHero(c) && isTeam('S.H.I.E.L.D.')(c) }),
 // {SHIELDLEVEL 2} You get +2 Attack.
 // GUN: 1
   c2: makeHeroCard("Quake", "Aftershock", 4, u, 2, Color.RANGED, "S.H.I.E.L.D.", "GFD", ev => shieldLevelPower(2) && addAttackEvent(ev, 2)),
@@ -5450,11 +5073,7 @@ addHeroTemplates("S.H.I.E.L.D.", [
   c1: makeHeroCard("Deathlok", "Authorize Lethal Force", 2, u, 0, Color.TECH, "S.H.I.E.L.D.", "GFD", [ ev => drawEv(ev), ev => shieldLevelPower(1) && addAttackEvent(ev, 1) ]),
 // {POWER Tech} You may send a S.H.I.E.L.D. Hero {UNDERCOVER} from your discard pile or the KO pile.
   c2: makeHeroCard("Deathlok", "Reanimate Into Service", 4, u, 2, Color.TECH, "S.H.I.E.L.D.", "D", ev => 
-    superPowerLikelyEv(
-      ev,
-      Color.TECH,
-      () => selectCardOptEv(ev, "Chose a Hero to send undercover", [...gameState.ko.deck, ...playerState.discard.deck].limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c))
-    )),
+    superPowerLikelyEv(ev, Color.TECH, () => selectCardOptEv(ev, "Chose a Hero to send undercover", [...gameState.ko.deck, ...playerState.discard.deck].limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c)))),
 // {SHIELDLEVEL 3} You get +3 Attack
 // If your S.H.I.E.L.D. Level is less than 3, you may send a S.H.I.E.L.D. card from your discard pile {UNDERCOVER}.
 // GUN: 1
@@ -5478,11 +5097,7 @@ addHeroTemplates("S.H.I.E.L.D.", [
 // GUN: 1
   c1: makeHeroCard("Mockingbird", "Take Cover", 3, 2, u, Color.INSTINCT, "S.H.I.E.L.D.", "GD", ev => {
     lookAtDeckEv(ev, 1, cards => {
-      superPowerLikelyEv(
-        ev,
-        Color.INSTINCT,
-        () => selectCardOptEv(ev, "Undercover revealed", cards.limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c))
-      )
+      superPowerLikelyEv(ev, Color.INSTINCT, () => selectCardOptEv(ev, "Undercover revealed", cards.limit(isHero).limit('S.H.I.E.L.D.'), c => sendUndercoverEv(ev, c)))
       cont(ev, () => selectCardOptEv(ev, "Discard revealed", cards, c => discardEv(ev, c)));
     });
   }),
@@ -5592,11 +5207,7 @@ addHeroTemplates("Heroes of Asgard", [
 // [Instinct] : You get +1 Attack for every 4 Heroes in the KO pile.
   ra: makeHeroCard("Valkyrie", "Ride of the Valkyries", 7, u, 4, Color.INSTINCT, "Heroes of Asgard", "", [
     ev => heroConquerorEv(ev, 'STREETS', 1),
-    ev => superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => addAttackEvent(ev, Math.floor(gameState.ko.count(isHero)/4))
-    )
+    ev => superPowerLikelyEv(ev, Color.INSTINCT, () => addAttackEvent(ev, Math.floor(gameState.ko.count(isHero)/4)))
   ]),
 },
 {
@@ -5750,13 +5361,9 @@ addHeroTemplates("New Mutants", [
   ]),
 // {POWER Tech} The first time you defeat a Villain this turn, you may KO one of your cards or a card from your discard pile.
   uc: makeHeroCard("Warlock", "Techno-Organic Adaptation", 6, u, 3, Color.COVERT, "X-Men", "",
-  ev => superPowerEv(
-    ev,
-    Color.TECH,
-    () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !pastEvents('DEFEAT').has(e => isVillain(e.what)), { after: ev => {
-      selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck]);
-    } })
-  )),
+  ev => superPowerEv(ev, Color.TECH, () => addTurnTrigger('DEFEAT', ev => isVillain(ev.what) && !pastEvents('DEFEAT').has(e => isVillain(e.what)), { after: ev => {
+    selectCardAndKOEv(ev, [...handOrDiscard(), ...playerState.playArea.deck]);
+  } }))),
 // {SUNLIGHT} Draw 3 cards.
 // {MOONLIGHT} You get +3 Recruit and +3 Attack.
 // {TEAMPOWER X-Men, X-Men, X-Men, X-Men} Instead, you get both.
@@ -5773,13 +5380,9 @@ addHeroTemplates("New Mutants", [
   name: "Karma",
   team: "X-Men",
 // {POWER Covert} Choose a Villain. You get +1 Attack for each Villain adjacent to it.
-  c1: makeHeroCard("Karma", "Sow Rivalry", 3, u, 2, Color.COVERT, "X-Men", "FD", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => selectCardEv(ev, "Choose a Villain", villains(), c => {
-      addAttackEvent(ev, cityAdjacent(c.location).sum(d => d.count(isVillain)));
-    })
-  )),
+  c1: makeHeroCard("Karma", "Sow Rivalry", 3, u, 2, Color.COVERT, "X-Men", "FD", ev => superPowerEv(ev, Color.COVERT, () => selectCardEv(ev, "Choose a Villain", villains(), c => {
+    addAttackEvent(ev, cityAdjacent(c.location).sum(d => d.count(isVillain)));
+  }))),
 // Guess a color. Then reveal the top card of the Hero Deck and put it back on the top or bottom of that deck. If you guessed right, you get +2 Attack.
   c2: makeHeroCard("Karma", "Temporary Possession", 4, u, 2, Color.COVERT, "X-Men", "D", ev => chooseColorEv(ev, color => {
     revealHeroDeckEv(ev, 1, cards => {
@@ -5793,13 +5396,9 @@ addHeroTemplates("New Mutants", [
     addTurnTrigger('RECRUIT', ev => ev.what === c && ev.where === gameState.herodeck, () => selectCardOptEv(ev, "Choose a card to KO", [...revealable(), ...playerState.discard.deck], c => KOEv(ev, c)));
   }))),
 // {TEAMPOWER X-Men} Choose a Villain in the city. You get +Attack equal to its VP, usable only against other Villains or the Mastermind.
-  ra: makeHeroCard("Karma", "Control Like a Puppet", 8, u, 5, Color.RANGED, "X-Men", "", ev => superPowerEv(
-    ev,
-    "X-Men",
-    () => selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
-      c.vp && addAttackSpecialEv(ev, c1 => (isMastermind(c1) || isVillain(c1)) && c !== c1, c.vp);
-    } )
-  )),
+  ra: makeHeroCard("Karma", "Control Like a Puppet", 8, u, 5, Color.RANGED, "X-Men", "", ev => superPowerEv(ev, "X-Men", () => selectCardEv(ev, "Choose a Villain", cityVillains(), c => {
+    c.vp && addAttackSpecialEv(ev, c1 => (isMastermind(c1) || isVillain(c1)) && c !== c1, c.vp);
+  } ))),
 },
 ]);
 addHeroTemplates("Into the Cosmos", [
@@ -5835,11 +5434,7 @@ addHeroTemplates("Into the Cosmos", [
   team: "Avengers",
 // {POWER Covert} Whenever you recruit a Hero from the HQ this turn, gain a Shard.
   c1: makeHeroCard("Quasar", "Manipulate Gravitons", 3, 2, u, Color.COVERT, "Avengers", "D", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => addTurnTrigger('RECRUIT', ev => ev.where.isHQ, { after: ev => gainShardEv(ev) })
-    );
+    superPowerEv(ev, Color.COVERT, () => addTurnTrigger('RECRUIT', ev => ev.where.isHQ, { after: ev => gainShardEv(ev) }));
   }),
 // {BURN A SHARD}: You get +3 Attack
   c2: makeHeroCard("Quasar", "Cosmic Champion", 4, u, 2, Color.RANGED, "Avengers", "FD", ev => {
@@ -5875,11 +5470,7 @@ addHeroTemplates("Into the Cosmos", [
 // {POWER Covert} {BURN 4 SHARDS}: Defeat a Villain.
   uc: makeHeroCard("Adam Warlock", "Soulblast", 5, u, u, Color.COVERT, "Avengers", "FD", [
     ev => gainShardEv(ev, 2),
-    ev => superPowerEv(
-      ev,
-      Color.COVERT,
-      () => setBurnShardEv(ev, 4, ev => selectCardEv(ev, "Choose a Villain", villains(), c => defeatEv(ev, c)))
-    ),
+    ev => superPowerEv(ev, Color.COVERT, () => setBurnShardEv(ev, 4, ev => selectCardEv(ev, "Choose a Villain", villains(), c => defeatEv(ev, c)))),
   ]),
 // Gain 4 Shards.
 // {TEAMPOWER Avengers, Avengers} {BURN 8 SHARDS}: Defeat the Mastermind once. Then reveal the top card of the Villain Deck. If it's a Master Strike, then Adam Warlock is corrupted by power. At the start of next turn, add the Magus Mastermind to the game with one random Tactic. (If he has never been in this game.)
@@ -5920,11 +5511,7 @@ addHeroTemplates("Into the Cosmos", [
 // {POWER Tech} You get +1 Recruit or +1 Attack.
   c1: makeHeroCard("Nova", "Draw From the Worldmind", 2, 0, 0, Color.TECH, "Avengers", "FD", [
     ev => drawEv(ev),
-    ev => superPowerEv(
-      ev,
-      Color.TECH,
-      () => chooseOneEv(ev, "Choose one", ["Recruit", () => addRecruitEvent(ev, 1)], ["Attack", () => addAttackEvent(ev, 1)])
-    )
+    ev => superPowerEv(ev, Color.TECH, () => chooseOneEv(ev, "Choose one", ["Recruit", () => addRecruitEvent(ev, 1)], ["Attack", () => addAttackEvent(ev, 1)]))
   ]),
 // Choose one: You get +2 Recruit, or you gain a Shard.
 // {POWER Ranged} Instead, do both.
@@ -5972,13 +5559,9 @@ addHeroTemplates("Into the Cosmos", [
 // {DANGERSENSE 3}
 // {TEAMPOWER Guardians of the Galaxy} You may do the Fight effect of a Henchman Villain revealed this way. (Don't defeat it.)
   uc: makeHeroCard("Yondu", "Anticipate Their Movements", 5, u, 1, Color.INSTINCT, "Guardians of the Galaxy", "", 
-    ev => dangerSenseEv(ev, 3, cards => superPowerLikelyEv(
-      ev,
-      "Guardians of the Galaxy",
-      () => selectCardOptEv(ev, "Choose a Villain", cards.limit(isHenchmanVillain), c => {
-        pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use 
-      })
-    ))),
+    ev => dangerSenseEv(ev, 3, cards => superPowerLikelyEv(ev, "Guardians of the Galaxy", () => selectCardOptEv(ev, "Choose a Villain", cards.limit(isHenchmanVillain), c => {
+      pushEffects(ev, c, 'fight', c.fight); // TODO abstract pushEffect use 
+    })))),
 // Choose one: Gain a Hero from the HQ for free, or gain a Shard for each empty city space.
 // {TEAMPOWER Guardians of the Galaxy, Guardians of the Galaxy, Guardians of the Galaxy} Do both.
   ra: makeHeroCard("Yondu", "Space Pirate", 7, u, u, Color.TECH, "Guardians of the Galaxy", "", ev => {
@@ -6065,13 +5648,9 @@ addHeroTemplates("Into the Cosmos", [
 // GUN: 1
   c2: makeHeroCard("Nebula", "Galactic Rogue", 5, u, 3, Color.INSTINCT, "Guardians of the Galaxy", "GF", [ ev => {
     selectCardEv(ev, "Choose a Villain", villains(), c => attachShardEv(ev, c));
-  }, ev => superPowerEv(
-    ev,
-    [Color.INSTINCT, Color.TECH],
-    () => selectCardEv(ev, "Choose a Shard", villains().limit(c => c.attached('SHARD').size > 0), c => {
-      c.attached('SHARD').withFirst(c => gainShardEv(ev, c));
-    })
-  ) ]),
+  }, ev => superPowerEv(ev, [Color.INSTINCT, Color.TECH], () => selectCardEv(ev, "Choose a Shard", villains().limit(c => c.attached('SHARD').size > 0), c => {
+    c.attached('SHARD').withFirst(c => gainShardEv(ev, c));
+  })) ]),
 // {POWER Tech} Choose another player. Unless that player reveals a [Covert] Hero, take one of their Shards or "rescue" a Bystander from their Victory Pile.
   uc: makeHeroCard("Nebula", "Illusion Device", 4, u, 2, Color.TECH, "Guardians of the Galaxy", "D", ev => superPowerEv(ev, Color.TECH, () => chooseOtherPlayerEv(ev, p => {
     revealOrEv(ev, Color.COVERT, () => chooseOneEv(ev, "Choose one",
@@ -6095,11 +5674,7 @@ addHeroTemplates("Realm of Kings", [
 // {WHEN RECRUITED} You may KO one of your cards with no rules text.
 // {POWER Ranged} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Recruit.
   c1: makeHeroCard("Black Bolt", "Break the Silence", 3, 2, u, Color.RANGED, "Inhumans", "D",
-    ev => superPowerEv(
-      ev,
-      Color.RANGED,
-      () => thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2))
-    ),
+    ev => superPowerEv(ev, Color.RANGED, () => thronesFavorGainOrMaySpendEv(ev, () => addRecruitEvent(ev, 2))),
     { whenRecruited: ev => selectCardOptEv(ev, "Choose a card to KO", revealable().limit(hasFlag("N")), c => KOEv(ev, c)) }),
   c2: makeHeroCard("Black Bolt", "Worldess Murmur", 5, 1, 3, Color.RANGED, "Inhumans", "N"),
 // {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to reveal the top two cards of your deck. Put each of those cards with no rules text into your hand and put the rest back in any order.
@@ -6128,20 +5703,12 @@ addHeroTemplates("Realm of Kings", [
   }),
 // {WHEN RECRUITED} Draw a card and gain the {THRONES FAVOR}.
 // {POWER Instinct} Gain the {THRONES FAVOR}. If you already have it, you may spend it to draw a card.
-  c2: makeHeroCard("Medusa", "Splitting Hairs", 3, u, 2, Color.INSTINCT, "Inhumans", "D", ev => superPowerEv(
-    ev,
-    Color.INSTINCT,
-    () => thronesFavorGainOrMaySpendEv(ev, ev => drawEv(ev))
-  ), {
+  c2: makeHeroCard("Medusa", "Splitting Hairs", 3, u, 2, Color.INSTINCT, "Inhumans", "D", ev => superPowerEv(ev, Color.INSTINCT, () => thronesFavorGainOrMaySpendEv(ev, ev => drawEv(ev))), {
     whenRecruited: ev => { drawEv(ev); thronesFavorGainEv(ev); }
   }),
 // {WHEN RECRUITED} Gain the {THRONES FAVOR}.
 // {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to KO one of your cards.
-  uc: makeHeroCard("Medusa", "Royal Command", 5, u, 3, Color.INSTINCT, "Inhumans", "", ev => superPowerEv(
-    ev,
-    "Inhumans",
-    () => thronesFavorGainOrMaySpendEv(ev, ev => selectCardAndKOEv(ev, revealable()))
-  ), {
+  uc: makeHeroCard("Medusa", "Royal Command", 5, u, 3, Color.INSTINCT, "Inhumans", "", ev => superPowerEv(ev, "Inhumans", () => thronesFavorGainOrMaySpendEv(ev, ev => selectCardAndKOEv(ev, revealable()))), {
     whenRecruited: thronesFavorGainEv
   }),
 // {WHEN RECRUITED} Draw two cards and gain the {THRONES FAVOR}.
@@ -6154,11 +5721,7 @@ addHeroTemplates("Realm of Kings", [
   name: "Crystal",
   team: "Inhumans",
 // {POWER Strength Instinct Covert Ranged} You get +3 Attack
-  c1: makeHeroCard("Crystal", "Earth, Air, Fire, and Water", 3, u, 2, Color.RANGED, "Inhumans", "FD", ev => superPowerLikelyEv(
-    ev,
-    [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.RANGED],
-    () => addAttackEvent(ev, 3)
-  )),
+  c1: makeHeroCard("Crystal", "Earth, Air, Fire, and Water", 3, u, 2, Color.RANGED, "Inhumans", "FD", ev => superPowerLikelyEv(ev, [Color.STRENGTH, Color.INSTINCT, Color.COVERT, Color.RANGED], () => addAttackEvent(ev, 3))),
 // Choose [Strength], [Instinct], [Covert], or [Ranged]. This card is only that Hero Class this turn.
 // Draw a card.
   c2: makeHeroCard("Crystal", "Master the Four Elements", 4, 1, u, Color.INSTINCT, "Inhumans", "F", [
@@ -6219,11 +5782,7 @@ addHeroTemplates("Realm of Kings", [
 // {WHEN RECRUITED} You may {TELEPORT} a 0-cost Hero from your hand.
 // {POWER Covert} You may {TELEPORT} another card from your hand.
   c1: makeHeroCard("Gorgon", "Lockjaw, Inhuman's Best Friend", 3, 2, u, Color.COVERT, "Inhumans", "D", ev => {
-    superPowerLikelyEv(
-      ev,
-      Color.COVERT,
-      () => selectCardOptEv(ev, "Choose a card to Teleport", playerState.hand.limit(c => c !== ev.source), c => teleportEv(ev, c))
-    );
+    superPowerLikelyEv(ev, Color.COVERT, () => selectCardOptEv(ev, "Choose a card to Teleport", playerState.hand.limit(c => c !== ev.source), c => teleportEv(ev, c)));
   }, {
     whenRecruited: ev => selectCardOptEv(ev, "Choose a Hero to Teleport", playerState.hand.limit(isHero).limit(c => c.cost === 0), c => teleportEv(ev, c)),
   }),
@@ -6339,13 +5898,9 @@ addHeroTemplates("Annihilation", [
   ]),
 // {TEAMPOWER Fantastic Four} You may look at the top two cards of your deck. If you do, KO one of them and put the other back.
   uc: makeHeroCard("Brainstorm", "Reprogram Doombot Legions", 6, u, 3, Color.TECH, "Fantastic Four", "",
-    ev => superPowerLikelyEv(
-      ev,
-      "Fantastic Four",
-      () => chooseMayEv(ev, "Look at the top two cards of your deck", () => {
-        revealPlayerDeckEv(ev, 2, cards => selectCardAndKOEv(ev, cards));
-      })
-    ),
+    ev => superPowerLikelyEv(ev, "Fantastic Four", () => chooseMayEv(ev, "Look at the top two cards of your deck", () => {
+      revealPlayerDeckEv(ev, 2, cards => selectCardAndKOEv(ev, cards));
+    })),
   ),
 // Use one of Dr. Doom's Mastermind Tactics. You can't use any of them more than once per game. If you have already used them all, get +4 Attack instead.
 // (Take another turn; or draw three extra cards at end of turn; or you may recruit a [Tech] or [Ranged] Hero for free; or all other players draw a card or discard a card.)
@@ -6471,11 +6026,7 @@ addHeroTemplates("Messiah Complex", [
 // {WHEN RECRUITED} [Instinct]: {CLONE}
 // {POWER Instinct} You get another +2 Recruit usable only to recruit Heroes that cost 5 or more.
   c1: makeHeroCard("Shatterstar", "Strive for Greatness", 3, 2, u, Color.INSTINCT, "X-Force", "D",
-    ev => superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => addRecruitSpecialEv(ev, c => isHero(c) && c.cost >= 5, 2)
-    ),
+    ev => superPowerLikelyEv(ev, Color.INSTINCT, () => addRecruitSpecialEv(ev, c => isHero(c) && c.cost >= 5, 2)),
     { whenRecruited: ev => superPowerEv(ev, Color.INSTINCT, () => cloneHeroEv(ev)) }),
 // {WHEN RECRUITED} [Instinct]: {CLONE}
 // {POWER Instinct} Draw a card.
@@ -6488,11 +6039,7 @@ addHeroTemplates("Messiah Complex", [
 // {WHEN RECRUITED} X-Force: {CLONE}
 // [Ranged] , [Instinct]: {SHATTER} the Mastermind.
   ra: makeHeroCard("Shatterstar", "Gene-Spliced Creation", 5, u, 2, Color.INSTINCT, "X-Force", "FD",
-    ev => superPowerEv(
-      ev,
-      [Color.RANGED, Color.INSTINCT],
-      () => shatterSelectEv(ev, gameState.mastermind.deck)
-    ),
+    ev => superPowerEv(ev, [Color.RANGED, Color.INSTINCT], () => shatterSelectEv(ev, gameState.mastermind.deck)),
     { whenRecruited: ev => superPowerEv(ev, "X-Force", () => cloneHeroEv(ev)) }),
 },
 {
@@ -6501,11 +6048,7 @@ addHeroTemplates("Messiah Complex", [
 // {WHEN RECRUITED} {CLONE}
 // {POWER Tech} {INVESTIGATE} the Sidekick Stack for a card and put it in your discard pile.
   c1: makeHeroCard("Stepford Cuckoos", "Find Mutants with Cerebro", 2, u, 1, Color.TECH, "X-Men", "D",
-    ev => superPowerEv(
-      ev,
-      Color.TECH,
-      () => investigateEv(ev, () => true, gameState.sidekick, c => moveCardEv(ev, c, playerState.discard))
-    ),
+    ev => superPowerEv(ev, Color.TECH, () => investigateEv(ev, () => true, gameState.sidekick, c => moveCardEv(ev, c, playerState.discard))),
     { whenRecruited: ev => cloneHeroEv(ev) }),
 // {WHEN RECRUITED} {CLONE}
 // {TACTICAL FORMATION 22}: You get +1 Attack.
@@ -6620,11 +6163,7 @@ addHeroTemplates("Messiah Complex", [
   c1: makeHeroCard("Siryn", "Echolocation", 2, u, 1, Color.COVERT, "X-Factor", "FD", ev => chooseClassEv(ev, color => investigateEv(ev, color))),
 // {POWER Covert} {SHATTER} each Hero currently in the HQ whose printed cost is 2, 4, 6, and/or 8.
   c2: makeHeroCard("Siryn", "Hypnotic Call", 4, u, 2, Color.COVERT, "X-Factor", "D",
-    ev => superPowerEv(
-      ev,
-      Color.COVERT,
-      () => shatterHeroesEv(ev, hqHeroes().limit(c => [2, 4, 6, 8].includes(c.cost)))
-    )),
+    ev => superPowerEv(ev, Color.COVERT, () => shatterHeroesEv(ev, hqHeroes().limit(c => [2, 4, 6, 8].includes(c.cost))))),
 // <b>Tactical Formation 246: Shatter</b> all Villains.
   uc: makeHeroCard("Siryn", "Three-Octave Arpeggio", 6, u, 4, Color.RANGED, "X-Factor", "FD",
     ev => tacticalFormation('246') && shatterAllEv(ev, fightableCards().limit(isVillain))),
@@ -6643,11 +6182,7 @@ addHeroTemplates("Messiah Complex", [
   c2: makeHeroCard("Rictor", "Unearth Tectonic Power", 5, u, 2, Color.INSTINCT, "X-Factor", "FD", ev => investigateEv(ev, Color.RANGED | Color.INSTINCT)),
 // {POWER Ranged} {INVESTIGATE} for a card that costs 0, KO it or discard it.
   uc: makeHeroCard("Rictor", "Trace the Fault Lines", 4, 2, u, Color.RANGED, "X-Factor", "FD",
-    ev => superPowerEv(
-      ev,
-      Color.RANGED,
-      () => investigateEv(ev, c => c.cost === 0, playerState.deck, c => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c)))
-    )),
+    ev => superPowerEv(ev, Color.RANGED, () => investigateEv(ev, c => c.cost === 0, playerState.deck, c => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c), () => discardEv(ev, c))))),
 // {SHATTER} the Mastermind or {SHATTER} all Heroes currently in the HQ.
   ra: makeHeroCard("Rictor", "Massive Earthquake", 7, u, u, Color.RANGED, "X-Factor", "", ev => {
     chooseOneEv(ev, "Choose a target", ["Mastermind", () => shatterSelectEv(ev, gameState.mastermind.deck)], ["Heroes in HQ", () => shatterHeroesEv(ev, hqHeroes())]);
@@ -6688,13 +6223,9 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
   }),
 // {POWER Ranged} You may choose a player to make a {DEMONIC BARGAIN} to KO up to one Hero of their choice from their hand or discard pile.
   uc: makeHeroCard("Clea", "Bind the Dark Dimension", 6, u, 3, Color.RANGED, "Marvel Knights", "", ev => {
-    superPowerLikelyEv(
-      ev,
-      Color.RANGED,
-      () => chooseMayEv(ev, "Bargain", ev => choosePlayerEv(ev, p => {
-        demonicBargain(ev, ev => KOHandOrDiscardEv(ev, isHero, undefined, p), p);
-      }))
-    );
+    superPowerLikelyEv(ev, Color.RANGED, () => chooseMayEv(ev, "Bargain", ev => choosePlayerEv(ev, p => {
+      demonicBargain(ev, ev => KOHandOrDiscardEv(ev, isHero, undefined, p), p);
+    })));
   }),
 // {RITUAL ARTIFACT} If any cards were “revealed”, “looked at”, or “discarded” from any deck, you may discard the Purple Gem to get +6 Attack. (Just drawing or playing a card from a deck doesn’t count.)
   ra: makeHeroCard("Clea", "The Purple Gem", 7, u, u, Color.COVERT, "Marvel Knights", "", ev => addAttackEvent(ev, 6),
@@ -6769,13 +6300,9 @@ addHeroTemplates("Doctor Strange and the Shadows of Nightmare", [
 // {POWER Ranged} You may choose a player to make a {DEMONIC BARGAIN} to draw two extra cards at the end of this turn.
   uc: makeHeroCard("The Vishanti", "Agamotto", 4, u, 2, Color.RANGED, u, "D", [ ev => {
     revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to discard", cards, c => discardEv(ev, c)));
-  }, ev => superPowerLikelyEv(
-    ev,
-    Color.RANGED,
-    () => chooseMayEv(ev, "Bargain", ev => choosePlayerEv(ev, p => {
-      demonicBargain(ev, () => addTurnTrigger('CLEANUP', u, ev => drawEv(ev, 2, p)), p);
-    }))
-  ) ]),
+  }, ev => superPowerLikelyEv(ev, Color.RANGED, () => chooseMayEv(ev, "Bargain", ev => choosePlayerEv(ev, p => {
+    demonicBargain(ev, () => addTurnTrigger('CLEANUP', u, ev => drawEv(ev, 2, p)), p);
+  }))) ]),
 // {RITUAL ARTIFACT} If any player gained a Wound, you may set aside the Book of the Vishanti to KO up to one Wound from any player’s discard pile, then draw three cards. Then discard the Book of the Vishanti. You can use this during any player’s turn.
   ra: makeHeroCard("The Vishanti", "The Book of the Vishanti", 7, u, u, Color.COVERT, u, "", ev => {
     const agent = owner(ev.what); // can be different that the current player
@@ -6816,11 +6343,7 @@ addHeroTemplates("Marvel Studios' Guardians of the Galaxy", [
 // DIVIDED: Take
 // DIVHERO: Yondu
 // {TEAMPOWER Guardians of the Galaxy} Reveal the top card of your deck. If it's an Artifact, draw it.
-    makeHeroCard("Yondu", "Take", 4, u, 2, Color.RANGED, "Guardians of the Galaxy", "D", ev => superPowerEv(
-      ev,
-      "Guardians of the Galaxy",
-      () => revealPlayerDeckEv(ev, 1, cards => cards.has(isArtifact) && cards.each(c => drawCardEv(ev, c)))
-    )),
+    makeHeroCard("Yondu", "Take", 4, u, 2, Color.RANGED, "Guardians of the Galaxy", "D", ev => superPowerEv(ev, "Guardians of the Galaxy", () => revealPlayerDeckEv(ev, 1, cards => cards.has(isArtifact) && cards.each(c => drawCardEv(ev, c))))),
   ),
 // You may discard an Artifact you control to get +1 Attack.
 // GUN: 1
@@ -6996,34 +6519,22 @@ addHeroTemplates("Black Panther", [
 // ---
 // {POWER Instinct} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +2 Attack.
   c2: makeHeroCard("King Black Panther", "Vibranium Claws", 4, u, 2, Color.INSTINCT | Color.TECH, "Heroes of Wakanda", "D",
-    ev => superPowerEv(
-      ev,
-      Color.INSTINCT,
-      () => thronesFavorGainOrMaySpendEv(ev, () => addAttackEvent(ev, 2))
-    ), heroAmbush(Color.INSTINCT, ev => addAttackEvent(ev, 2)),
+    ev => superPowerEv(ev, Color.INSTINCT, () => thronesFavorGainOrMaySpendEv(ev, () => addAttackEvent(ev, 2))), heroAmbush(Color.INSTINCT, ev => addAttackEvent(ev, 2)),
   ),
 // [Covert] <b>Ambush</b>: Look at the top card of your deck. Draw or KO it.
 // ---
 // {POWER Covert} Gain the {THRONES FAVOR}. If you already have it, you may look at the top card of your deck. Draw or KO it.
   uc: makeHeroCard("King Black Panther", "Heart-Shaped Herb", 5, u, 3, Color.STRENGTH | Color.COVERT, "Heroes of Wakanda", "",
-    ev => superPowerEv(
-      ev,
-      Color.COVERT,
-      () => thronesFavorGainOrMaySpendEv(ev, () => chooseMayEv(ev, "Look at the deck", () =>
-        revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))
-      ))
-    ),
+    ev => superPowerEv(ev, Color.COVERT, () => thronesFavorGainOrMaySpendEv(ev, () => chooseMayEv(ev, "Look at the deck", () =>
+      revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))
+    ))),
     heroAmbush(Color.COVERT, ev => revealPlayerDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c), () => cards.each(c => drawCardEv(ev, c))))),
   ),
 // Heroes of Wakanda <b>Ambush</b>: You get +1 Attack for each Hero Class you have.
 // ---
 // {TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already have it, you may spend it to get +1 Recruit and +1 Attack for each Hero Class you have.
   ra: makeHeroCard("King Black Panther", "Unite the Tribes of Wakanda", 8, 0, 5, Color.STRENGTH | Color.RANGED, "Heroes of Wakanda", "", ev => {
-    superPowerEv(
-      ev,
-      "Heroes of Wakanda",
-      () => thronesFavorGainOrMaySpendEv(ev, () => { addRecruitEvent(ev, numClasses()); addAttackEvent(ev, numClasses()); })
-    );
+    superPowerEv(ev, "Heroes of Wakanda", () => thronesFavorGainOrMaySpendEv(ev, () => { addRecruitEvent(ev, numClasses()); addAttackEvent(ev, numClasses()); }));
   }, heroAmbush("Heroes of Wakanda", ev => addAttackEvent(ev, numClasses()))),
 },
 {
@@ -7045,11 +6556,7 @@ addHeroTemplates("Black Panther", [
 // {POWER Covert Ranged} Gain the {THRONES FAVOR}. If you already had it, you may spend it to Wound the Mastermind twice.
   uc: makeHeroCard("Queen Storm of Wakanda", "Forked Lightning", 6, u, 3, Color.COVERT | Color.RANGED, "Heroes of Wakanda", "", [
     ev => villainIn('ROOFTOPS', 'BRIDGE').each(c => woundEnemyEv(ev, c)),
-    ev => superPowerEv(
-      ev,
-      [Color.COVERT, Color.RANGED],
-      () => thronesFavorGainOrMaySpendEv(ev, () => withMastermind(ev, c => woundEnemyEv(ev, c, 2)))
-    )]),
+    ev => superPowerEv(ev, [Color.COVERT, Color.RANGED], () => thronesFavorGainOrMaySpendEv(ev, () => withMastermind(ev, c => woundEnemyEv(ev, c, 2))))]),
 // Choose up to three Heroes from the HQ. Put them on the bottom of the Hero Deck.
 // {TEAMPOWER Heroes of Wakanda} Gain the {THRONES FAVOR}. If you already had it, you may spend it to get <b>Empowered</b> by [Covert], then get <b>Empowered</b> by [Ranged].
   ra: makeHeroCard("Queen Storm of Wakanda", "Thunderous Tempest", 8, u, 5, Color.RANGED, "Heroes of Wakanda", "", [
@@ -7067,25 +6574,17 @@ addHeroTemplates("Black Panther", [
 // ---
 // {POWER Instinct} You may draw a card and get +1 Attack. If you do, gain a Wound.
   c1: makeHeroCard("General Okoye", "To My Last Breath", 3, u, 2, Color.INSTINCT, "Heroes of Wakanda", "D",
-    ev => superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => chooseMayEv(ev, "Activate superpower", () => { drawEv(ev); addAttackEvent(ev, 1); gainWoundEv(ev); })
-    ),
+    ev => superPowerLikelyEv(ev, Color.INSTINCT, () => chooseMayEv(ev, "Activate superpower", () => { drawEv(ev); addAttackEvent(ev, 1); gainWoundEv(ev); })),
     heroAmbush(Color.INSTINCT, ev => drawEv(ev))
   ),
 // You may gain a S.H.I.E.L.D. Officer.
 // {POWER Strength} Instead, you may KO a S.H.I.E.L.D. Officer or Wound from your hand or discard pile to get +2 Attack.
   c2: makeHeroCard("General Okoye", "Lead the Dora Milaje", 4, u, 2, Color.STRENGTH | Color.INSTINCT, "Heroes of Wakanda", "D", [
     ev => chooseMayEv(ev, "Gain a S.H.I.E.L.D. Officer", () => gameState.officer.withTop(c => gainEv(ev, c))),
-    ev => superPowerLikelyEv(
-      ev,
-      Color.STRENGTH,
-      () => selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isShieldOfficer(c)), c => {
-        KOEv(ev, c);
-        addAttackEvent(ev, 2);
-      })
-    )
+    ev => superPowerLikelyEv(ev, Color.STRENGTH, () => selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isShieldOfficer(c)), c => {
+      KOEv(ev, c);
+      addAttackEvent(ev, 2);
+    }))
   ]),
 // Once per turn, when a player gains a Wound, you may reveal this card to return that Wound to the Wound Stack, draw a card, and Wound a Villain.
   uc: makeHeroCard("General Okoye", "Sovereign Bodyguard", 5, u, 3, Color.STRENGTH, "Heroes of Wakanda", "", ev => [], { trigger:
@@ -7101,14 +6600,10 @@ addHeroTemplates("Black Panther", [
 // {TEAMPOWER Heroes of Wakanda} You may KO a S.H.I.E.L.D. Hero or Wound from your hand or discard pile to get +2 Attack.
 // GUN: 1
   ra: makeHeroCard("General Okoye", "Direct the Agents of Wakanda", 7, u, 4, Color.COVERT, "Heroes of Wakanda", "GD",
-    ev => superPowerLikelyEv(
-      ev,
-      "Heroes of Wakanda",
-      () => selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isTeam('S.H.I.E.L.D.')(c)), c => {
-        KOEv(ev, c);
-        addAttackEvent(ev, 2);
-      })
-    )),
+    ev => superPowerLikelyEv(ev, "Heroes of Wakanda", () => selectCardOptEv(ev, "Choose a card to KO", handOrDiscard().limit(c => isWound(c) || isTeam('S.H.I.E.L.D.')(c)), c => {
+      KOEv(ev, c);
+      addAttackEvent(ev, 2);
+    }))),
 },
 {
   name: "Princess Shuri",
@@ -7132,13 +6627,9 @@ addHeroTemplates("Black Panther", [
   }, ev => superPowerEv(ev, Color.TECH, () => chooseColorEv(ev, c => empowerEv(ev, c))) ]),
 // {TEAMPOWER Heroes of Wakanda} This turn, each card entering the HQ also has "<b>Ambush</b>: If you have any cards that share a color with this, you get +2 Attack."
   ra: makeHeroCard("Princess Shuri", "Become the Next Black Panther", 7, 3, 3, Color.INSTINCT, "Heroes of Wakanda", "D",
-    ev => superPowerEv(
-      ev,
-      "Heroes of Wakanda",
-      () => addTurnSet('heroAmbush', c => c.location.isHQ, (c, v) => combineHandlers(v,
-        heroAmbush(c.color, ev => addAttackEvent(ev, 2)).heroAmbush
-    ))
-    )),
+    ev => superPowerEv(ev, "Heroes of Wakanda", () => addTurnSet('heroAmbush', c => c.location.isHQ, (c, v) => combineHandlers(v,
+      heroAmbush(c.color, ev => addAttackEvent(ev, 2)).heroAmbush
+  )))),
 },
 {
   name: "White Wolf",
@@ -7146,33 +6637,21 @@ addHeroTemplates("Black Panther", [
 // [Tech] <b>Ambush</b>: Wound a Villain.
 // ---
 // {POWER Tech} Wound a Villain.
-  c1: makeHeroCard("White Wolf", "Cloaking Tech Ambush", 4, u, 2, Color.TECH, "Heroes of Wakanda", "FD", ev => superPowerLikelyEv(
-    ev,
-    Color.TECH,
-    () => selectCardOptEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c))
-  ),
+  c1: makeHeroCard("White Wolf", "Cloaking Tech Ambush", 4, u, 2, Color.TECH, "Heroes of Wakanda", "FD", ev => superPowerLikelyEv(ev, Color.TECH, () => selectCardOptEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c))),
     heroAmbush(Color.TECH, ev => selectCardOptEv(ev, "Choose a Villain to Wound", villains(), c => woundEnemyEv(ev, c)))
   ),
 // {POWER Covert} <b>Ambush</b>: Wound the Mastermind.
 // ---
 // {POWER Covert} If any Villain or Mastermind has any Wounds, you get +2 Recruit.
   c2: makeHeroCard("White Wolf", "Secret Assignment", 3, 2, u, Color.COVERT, "Heroes of Wakanda", "D",
-    ev => superPowerLikelyEv(
-      ev,
-      Color.COVERT,
-      () => fightableCards().limit(isEnemy).has(c => c.attached('WOUND').size > 0) && addRecruitEvent(ev, 2)
-    ),
+    ev => superPowerLikelyEv(ev, Color.COVERT, () => fightableCards().limit(isEnemy).has(c => c.attached('WOUND').size > 0) && addRecruitEvent(ev, 2)),
     heroAmbush(Color.COVERT, ev => withMastermind(ev, c => woundEnemyEv(ev, c)))
   ),
 // Heroes of Wakanda <b>Ambush</b>: You may KO one of your cards.
 // ---
 // {TEAMPOWER Heroes of Wakanda} If any Villain or Mastermind has any Wounds, you may KO a card from your hand or discard pile.
   uc: makeHeroCard("White Wolf", "Command the Hatut Zeraze", 5, u, 3, Color.COVERT | Color.TECH, "Heroes of Wakanda", "",
-    ev => superPowerLikelyEv(
-      ev,
-      "Heroes of Wakanda",
-      () => fightableCards().limit(isEnemy).has(c => c.attached('WOUND').size > 0) && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c))
-    ),
+    ev => superPowerLikelyEv(ev, "Heroes of Wakanda", () => fightableCards().limit(isEnemy).has(c => c.attached('WOUND').size > 0) && selectCardOptEv(ev, "Choose a card to KO", handOrDiscard(), c => KOEv(ev, c))),
     heroAmbush("Heroes of Wakanda", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(), c => KOEv(ev, c)))
   ),
 // [Tech] <b>Ambush</b>: Wound each Villain and the Mastermind.
@@ -7275,11 +6754,7 @@ addHeroTemplates("Black Widow", [
 // ---
 // {POWER Covert} You may send one of your other Heroes {UNDERCOVER}.
   uc: makeHeroCard("Red Guardian", "Death Was Only A Ruse", 6, u, 3, Color.STRENGTH, u, "",
-    ev => superPowerLikelyEv(
-      ev,
-      Color.COVERT,
-      () => selectCardOptEv(ev, "Choose a Hero to send Undercover", yourHeroes().limit(c => c !== ev.source), c => sendUndercoverEv(ev, c))
-    ), {
+    ev => superPowerLikelyEv(ev, Color.COVERT, () => selectCardOptEv(ev, "Choose a Hero to send Undercover", yourHeroes().limit(c => c !== ev.source), c => sendUndercoverEv(ev, c))), {
     whenRecruited: whenRecruitedSendUndercover,
     triggers: [{
       event: "STRIKE",
@@ -7451,8 +6926,7 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
 // {POWER Strength} You may have this card make all Attack instead of Recruit.
   uc: makeHeroCard("Black Panther", "Council of War", 5, 3, 0, Color.STRENGTH | Color.COVERT, "Avengers", "", ev => {
     const amount = yourHeroes().count(isMuliColor) + ev.source.printedRecruit;
-    superPowerLikelyEv(ev, Color.STRENGTH, () => chooseOneEv(ev, "Make", ["Attack", () => addAttackEvent(ev, amount)], ["Recruit", () => addRecruitEvent(ev, amount)]),
-      () => addRecruitEvent(ev, amount));
+    superPowerLikelyEv(ev, Color.STRENGTH, () => chooseOneEv(ev, "Make", ["Attack", () => addAttackEvent(ev, amount)], ["Recruit", () => addRecruitEvent(ev, amount)]), () => addRecruitEvent(ev, amount));
   }, { customRecruitAndAttack: true }),
 // Reveal the top card of your deck. If it's multicolored, draw it. Otherwise, put it back or discard it.
 // {POWER Tech} You may KO that card.
@@ -7522,20 +6996,12 @@ addHeroTemplates("Marvel Studios The Infinity Saga", [
     });
   }),
 // {POWER Strength} You may gain a Wound. If you do, KO up to two other cards from your hand and/or discard pile.
-  uc: makeHeroCard("Bruce Banner", "Hulk Gets Smashed", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPowerEv(
-    ev,
-    Color.STRENGTH,
-    () => gameState.wounds.withTop(c => chooseMayEv(ev, "Gain a wound", () => {
-      gainEv(ev, c);
-      selectObjectsUpToEv(ev, "Choose a card to KO", 2, handOrDiscard().limit(c1 => c1 !== c), c => KOEv(ev, c));
-    }))
-  )),
+  uc: makeHeroCard("Bruce Banner", "Hulk Gets Smashed", 5, u, 2, Color.STRENGTH, "Avengers", "D", ev => superPowerEv(ev, Color.STRENGTH, () => gameState.wounds.withTop(c => chooseMayEv(ev, "Gain a wound", () => {
+    gainEv(ev, c);
+    selectObjectsUpToEv(ev, "Choose a card to KO", 2, handOrDiscard().limit(c1 => c1 !== c), c => KOEv(ev, c));
+  })))),
 // {POWER Tech} You get +1 Attack for each Henchman in your Victory Pile.
-  u2: makeHeroCard("Bruce Banner", "Crush Puny Weaklings", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPowerLikelyEv(
-    ev,
-    Color.TECH,
-    () => addAttackEvent(ev, playerState.victory.count(isHenchman))
-  )),
+  u2: makeHeroCard("Bruce Banner", "Crush Puny Weaklings", 6, u, 3, Color.TECH, "Avengers", "F", ev => superPowerLikelyEv(ev, Color.TECH, () => addAttackEvent(ev, playerState.victory.count(isHenchman)))),
 // [Tech] {SACRIFICE}: Gain up to one other Hero from the KO pile. Then combine your deck and discard pile. Put all those cards that cost 0 into your discard pile.
 // Shuffle the rest into a new deck.
   ra: makeHeroCard("Bruce Banner", "Reverse The Snap", 7, u, 5, Color.TECH, "Avengers", "", ev => sacrificeEv(ev, Color.TECH, () => {
@@ -7641,11 +7107,7 @@ addHeroTemplates("Midnight Sons", [
     ev => selectCardOptEv(ev, "Choose a Villain to Hunt for Victims", fightableCards(), c => {
       huntForVictimsEv(ev, c, b => {
         selectCardOptEv(ev, "Choose a Hero to KO", handOrDiscard().limit(isHero), c => KOEv(ev, c));
-        superPowerLikelyEv(
-          ev,
-          Color.TECH,
-          () => chooseMayEv(ev, "Rescue the Bystander", () => rescueEv(ev, b))
-        );
+        superPowerLikelyEv(ev, Color.TECH, () => chooseMayEv(ev, "Rescue the Bystander", () => rescueEv(ev, b)));
       });
     })),
 // {PATROL any city space}: If it's empty, you get the printed Recruit and Attack of the Hero in the HQ space under that city space.
@@ -7873,11 +7335,7 @@ addHeroTemplates("Marvel Studios What If...?", [
   c2: makeHeroCard("Killmonger, Spec Ops", "No Matter the Price", 4, u, 2, Color.TECH, "Guardians of the Multiverse", "FD", ev => superPowerLikelyEv(ev, [Color.TECH, Color.STRENGTH], () => addAttackEvent(ev, 3))),
 // {POWER Strength} You get +1 Attack for each different Villain Group in your Victory Pile.
   c3: makeHeroCard("Killmonger, Spec Ops", "Violence Leaves Scars", 5, u, 3, Color.STRENGTH, "Guardians of the Multiverse", "F", ev => {
-    superPowerLikelyEv(
-      ev,
-      Color.STRENGTH,
-      () => addAttackEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup))
-    );
+    superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup)));
   }),
 // {WHAT IF} {LIBERATE 3}
   uc: makeHeroCard("Killmonger, Spec Ops", "Hostage Rescue", 3, u, 2, Color.STRENGTH, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => liberateEv(ev, 3))),
@@ -7890,11 +7348,7 @@ addHeroTemplates("Marvel Studios What If...?", [
 // {POWER Strength} {LIBERATE 2} for each Mastermind Tactic in your Victory Pile.
   ra: makeHeroCard("Killmonger, Spec Ops", "I'm the King, Baby!", 7, u, 4, Color.STRENGTH, "Guardians of the Multiverse", "D", [
     ev => addAttackEvent(ev, playerState.victory.limit(c => !!c.villainGroup).uniqueCount(c => c.villainGroup)),
-    ev => superPowerEv(
-      ev,
-      Color.STRENGTH,
-      () => liberateEv(ev, 2 * playerState.victory.count(isTactic))
-    ) ]),
+    ev => superPowerEv(ev, Color.STRENGTH, () => liberateEv(ev, 2 * playerState.victory.count(isTactic))) ]),
 },
 {
   name: "Party Thor",
@@ -7968,13 +7422,9 @@ addHeroTemplates("Marvel Studios What If...?", [
   c3: makeHeroCard("Uatu, The Watcher", "Break the Oath", 4, u, 2, Color.RANGED, "Guardians of the Multiverse", "FD", ev => whatIfEv(ev, () => addAttackEvent(ev, 2))),
 // {POWER Covert} Choose a Hero Name. You are <b>Empowered</b> by that Hero Name.
   uc: makeHeroCard("Uatu, The Watcher", "Anoint a Champion", 5, u, 2, Color.COVERT, "Guardians of the Multiverse", "FD", ev => {
-    superPowerEv(
-      ev,
-      Color.COVERT,
-      () => chooseOptionEv(ev, "Choose a Hero Name", splitDivided(hqHeroes()).unique(c => c.heroName).map(v => ({l:v, v})), name => {
-        empowerEv(ev, isHeroName(name));
-      })
-    );
+    superPowerEv(ev, Color.COVERT, () => chooseOptionEv(ev, "Choose a Hero Name", splitDivided(hqHeroes()).unique(c => c.heroName).map(v => ({l:v, v})), name => {
+      empowerEv(ev, isHeroName(name));
+    }));
   }),
 // [Ranged] {SOULBIND} You get +2 Attack and you may do that Villain's Fight effect.
   u2: makeHeroCard("Uatu, The Watcher", "History Repeats", 6, u, 3, Color.RANGED, "Guardians of the Multiverse", "FD", ev => {
@@ -8070,20 +7520,16 @@ addHeroTemplates("Ant-Man and the Wasp", [
   )), { uSizeChanging: { color: Color.STRENGTH, amount: 3 } }),
 // {USIZECHANGING TECH 3}
 // {POWER Tech} Reveal the top card of the Villain Deck. If it's a Bystander, rescue it. If it's a Villain worth 2 VP or less, you may fight it this turn. If you rescue or defeat that card, don't play a card from the Villain Deck next turn.
-  u2: makeHeroCard("Cassie Lang", "Quantum Beacon", 5, u, 3, Color.TECH, "Avengers", "D", ev => superPowerEv(
-    ev,
-    Color.TECH,
-    () => revealVillainDeckEv(ev, 1, cards => cards.each(c => {
-      if (isBystander(c)) {
-        rescueEv(ev, c);
-        addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--); // TODO check if this refers to the current player next turn
-      } else if (isVillain(c) && c.vp <= 2) {
-        addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
-        addTurnTrigger('FIGHT', ev => ev.what === c, ev => gameState.bystanders.withTop(b => moveCardEv(ev, b, gameState.villaindeck)) );
-        addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
-      }
-    }))
-  ), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
+  u2: makeHeroCard("Cassie Lang", "Quantum Beacon", 5, u, 3, Color.TECH, "Avengers", "D", ev => superPowerEv(ev, Color.TECH, () => revealVillainDeckEv(ev, 1, cards => cards.each(c => {
+    if (isBystander(c)) {
+      rescueEv(ev, c);
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--); // TODO check if this refers to the current player next turn
+    } else if (isVillain(c) && c.vp <= 2) {
+      addTurnSet('isFightable', card => c === gameState.villaindeck.top && card === c, () => true);
+      addTurnTrigger('FIGHT', ev => ev.what === c, ev => gameState.bystanders.withTop(b => moveCardEv(ev, b, gameState.villaindeck)) );
+      addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
+    }
+  }))), { uSizeChanging: { color: Color.TECH, amount: 3 } }),
 // {USIZECHANGING STRENGTH 5}
 // You get +1 Attack for each Villain worth 2 VP or less in your Victory Pile.
   ra: makeHeroCard("Cassie Lang", "Inspire Revolution", 9, u, 5, Color.STRENGTH, "Avengers", "D", ev => addAttackEvent(ev,
@@ -8102,48 +7548,28 @@ addHeroTemplates("Ant-Man and the Wasp", [
 // {POWER Ranged} You get +2 Attack.
   c3: makeHeroCard("Freedom Fighters", "Xolum", 5, u, 2, Color.RANGED, u, "FD", [ ev => heroConquerorEv(ev, 'BRIDGE', 1), ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackEvent(ev, 2)) ]),
 // {POWER Ranged} Choose Recruit or Attack. Then {EXPLORE} You get the printed value of the icon you chose on the Found Hero.
-  uc: makeHeroCard("Freedom Fighters", "Quaz", 6, 2, 2, Color.RANGED, u, "D", ev => superPowerEv(
-    ev,
-    Color.RANGED,
-    () => chooseOptionEv(ev, "Choose an icon", [{l:"Recruit",v:hasRecruitIcon},{l:"Attack",v:hasAttackIcon}], f =>
-      exploreEv(ev, c => f(c) && (f === hasRecruitIcon ? addRecruitEvent(ev, c.printedRecruit) : addAttackEvent(ev, c.printedAttack))))
-  )),
+  uc: makeHeroCard("Freedom Fighters", "Quaz", 6, 2, 2, Color.RANGED, u, "D", ev => superPowerEv(ev, Color.RANGED, () => chooseOptionEv(ev, "Choose an icon", [{l:"Recruit",v:hasRecruitIcon},{l:"Attack",v:hasAttackIcon}], f =>
+    exploreEv(ev, c => f(c) && (f === hasRecruitIcon ? addRecruitEvent(ev, c.printedRecruit) : addAttackEvent(ev, c.printedAttack)))))),
 // Reveal the top card of your deck. If that card has any "holes" printed inside any of its icons <b>(0, 4, 6, 8, or 9)</b>, draw it.
 // {POWER Instinct} You may KO the card you drew this way.
   u2: makeHeroCard("Freedom Fighters", "Veb", 2, u, 1, Color.INSTINCT, u, "D", ev => {
     drawIfEv(ev, c => [0, 4, 6, 8, 9].has(v => [c.printedAttack, c.printedRecruit, c.printedDefense, c.printedCost, c.printedVP, c.printedPiercing].includes(v)), c => {
-      superPowerLikelyEv(
-        ev,
-        Color.INSTINCT,
-        () => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c))
-      );
+      superPowerLikelyEv(ev, Color.INSTINCT, () => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c)));
     });
   }),
 // {EXPLORE}
 // {POWER Instinct} You may choose a player to gain the Found Hero.
   ra: makeHeroCard("Freedom Fighters", "Freedom Forever", 7, u, 5, Color.INSTINCT, u, "", ev => exploreEv(ev, c => {
-    superPowerLikelyEv(
-      ev,
-      Color.INSTINCT,
-      () => selectCardOptEv(ev, "Choose a player to gain the Hero", gameState.players, p => gainEv(ev, c, p))
-    );
+    superPowerLikelyEv(ev, Color.INSTINCT, () => selectCardOptEv(ev, "Choose a player to gain the Hero", gameState.players, p => gainEv(ev, c, p)));
   })),
 },
 {
   name: "Janet Van Dyne",
   team: "(Unaffiliated)",
 // {POWER Ranged} {EXPLORE} You get +Attack equal to the Found Hero's printed Attack.
-  c1: makeHeroCard("Janet Van Dyne", "Prepare for War", 4, u, 2, Color.RANGED, u, "FD", ev => superPowerEv(
-    ev,
-    Color.RANGED,
-    () => exploreEv(ev, c => c.printedAttack && addAttackEvent(ev, c.printedAttack))
-  )),
+  c1: makeHeroCard("Janet Van Dyne", "Prepare for War", 4, u, 2, Color.RANGED, u, "FD", ev => superPowerEv(ev, Color.RANGED, () => exploreEv(ev, c => c.printedAttack && addAttackEvent(ev, c.printedAttack)))),
 // {POWER Covert}  {EXPLORE} You get +Recruit equal to the Found Hero's printed Recruit.
-  c2: makeHeroCard("Janet Van Dyne", "Search for Peace", 3, 2, u, Color.COVERT, u, "FD", ev => superPowerEv(
-    ev,
-    Color.COVERT,
-    () => exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit))
-  )),
+  c2: makeHeroCard("Janet Van Dyne", "Search for Peace", 3, 2, u, Color.COVERT, u, "FD", ev => superPowerEv(ev, Color.COVERT, () => exploreEv(ev, c => c.printedRecruit && addRecruitEvent(ev, c.printedRecruit)))),
 // {SIZECHANGING COVERT}
 // {POWER Covert} {EXPLORE} Then you get +1 Attack for each time you explored this turn.
   c3: makeHeroCard("Janet Van Dyne", "Wasp of Another Generation", 5, u, 2, Color.COVERT, u, "FD", ev => superPowerEv(ev, Color.COVERT, () => exploreEv(ev, () => {
@@ -8306,15 +7732,11 @@ addHeroTemplates("2099", [
     });
   }, ev => cyberModEv(ev, Color.TECH, 3, () => addAttackEvent(ev, 2)) ]),
 // {TEAMPOWER Marvel Knights} You may KO a Henchman from your Victory Pile. If you do, you get +2 Attack and you may do that Henchman's Fight effect.
-  uc: makeHeroCard("Ghost Rider 2099", "Death Beyond Death", 5, u, 3, Color.COVERT, "Marvel Knights", "DA", ev => superPowerLikelyEv(
-    ev,
-    "Marvel Knights",
-    () => selectCardOptEv(ev, "Choose a Henchman to KO", playerState.victory.limit(isHenchman), c => {
-      KOEv(ev, c);
-      addAttackEvent(ev, 2);
-      pushEffects(ev, c, 'fight', c.fight);
-    })
-  )),
+  uc: makeHeroCard("Ghost Rider 2099", "Death Beyond Death", 5, u, 3, Color.COVERT, "Marvel Knights", "DA", ev => superPowerLikelyEv(ev, "Marvel Knights", () => selectCardOptEv(ev, "Choose a Henchman to KO", playerState.victory.limit(isHenchman), c => {
+    KOEv(ev, c);
+    addAttackEvent(ev, 2);
+    pushEffects(ev, c, 'fight', c.fight);
+  }))),
 // You may send a card from the HQ {UNDERCOVER}.
 // {CYBER-MOD TECH} {FATED FUTURE} and you get +1 Attack for each [Tech] card in your Victory Pile.
   ra: makeHeroCard("Ghost Rider 2099", "Infernal Chainsaw", 7, u, 4, Color.TECH, "Marvel Knights", "DA", [ ev => {
@@ -8431,13 +7853,9 @@ addHeroTemplates("Weapon X", [
 // {WEAPON X SEQUENCE}
 // {POWER Tech} You may KO one of your cards that has the same cost as any of your other cards.
   ra: makeHeroCard("Fantomex", "Weapon XIII", 4, u, 1, Color.TECH, "X-Force", "A", [ ev => weaponXSequenceEv(ev), ev => {
-    superPowerLikelyEv(
-      ev,
-      Color.TECH,
-      () => selectCardOptEv(ev, "Choose a card to KO", revealable().limit(c => revealable().has(c2 => c2 !== c && c2.cost === c.cost)), c => {
-        KOEv(ev, c);
-      })
-    );
+    superPowerLikelyEv(ev, Color.TECH, () => selectCardOptEv(ev, "Choose a card to KO", revealable().limit(c => revealable().has(c2 => c2 !== c && c2.cost === c.cost)), c => {
+      KOEv(ev, c);
+    }));
   }]),
 },
 {
@@ -8482,11 +7900,7 @@ addHeroTemplates("Weapon X", [
 // {POWER Strength} You may KO the card you Berserked.
   uc: makeHeroCard("Weapon H", "Slice and Smash", 5, u, 2, Color.STRENGTH, "Avengers", "FDA", ev => berserkEv(ev, 1, c => {
     discardEv(ev, c);
-    superPowerLikelyEv(
-      ev,
-      Color.STRENGTH,
-      () => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c))
-    );
+    superPowerLikelyEv(ev, Color.STRENGTH, () => selectCardOptEv(ev, "Choose a card to KO", [c], c => KOEv(ev, c)));
   })),
 // {WEAPON X SEQUENCE}
 // {POWER Strength} Using the Wound Deck, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, {BERSERK}, putting those discarded Wounds on the bottom of the Wound Deck.
@@ -8504,11 +7918,7 @@ addHeroTemplates("Weapon X", [
 // {BERSERK}
 // {POWER Instinct} You may KO a Wound from your hand or discard pile. If you do, {BERSERK} again.
   c2: makeHeroCard("Weapon X (Wolverine)", "Raging Regeneration", 4, u, 2, Color.INSTINCT, "Marvel Knights", "FDA", [ ev => berserkEv(ev, 1),
-    ev => superPowerEv(
-      ev,
-      Color.INSTINCT,
-      () => KOHandOrDiscardEv(ev, isWound, () => berserkEv(ev, 1))
-    ) ]),
+    ev => superPowerEv(ev, Color.INSTINCT, () => KOHandOrDiscardEv(ev, isWound, () => berserkEv(ev, 1))) ]),
 // You may gain a Wound. If you do, {BERSERK}, {BERSERK}.
   uc: makeHeroCard("Weapon X (Wolverine)", "Violent Conditioning", 3, u, 2, Color.INSTINCT, "Marvel Knights", "FDA", ev => {
     chooseMayEv(ev, "Gain a Wound", () => {
@@ -8521,16 +7931,12 @@ addHeroTemplates("Weapon X", [
 // If you gain a Wound this way, {BERSERK}.
   ra: makeHeroCard("Weapon X (Wolverine)", "Escape the Weapon X Lab", 6, u, 3, Color.INSTINCT, "Marvel Knights", "A", [
     ev => weaponXSequenceEv(ev),
-    ev => superPowerEv(
-      ev,
-      Color.INSTINCT,
-      () => revealDeckEv(ev, gameState.wounds, cards => !cards.has(isEnragingWound), cards => {
-        cards.limit(isEnragingWound).each(c => {
-          gainToHandEv(ev, c);
-          berserkEv(ev, 1);
-        });
-      }, false, true)
-    ),
+    ev => superPowerEv(ev, Color.INSTINCT, () => revealDeckEv(ev, gameState.wounds, cards => !cards.has(isEnragingWound), cards => {
+      cards.limit(isEnragingWound).each(c => {
+        gainToHandEv(ev, c);
+        berserkEv(ev, 1);
+      });
+    }, false, true)),
   ]),
 },
 ]);
