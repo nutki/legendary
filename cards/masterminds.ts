@@ -735,7 +735,7 @@ makeMastermindCard("Shiklah, the Demon Bride", 9, 6, "Monster Metropolis", ev =>
 // CLASS: [Covert]
 // You get +1 Attack for each Hero with an odd-numbered cost you played this turn. <i>(0 is even.)</i>
 // ATTACK: 5+
-  makeGainableCard(makeTacticsCard("Shiklah's Husband, Deadpool"), u, 5, Color.COVERT, u, "", ev => addAttackEvent(ev, turnState.cardsPlayed.count(isCostOdd))),
+  makeGainableCard(makeTacticsCard("Shiklah's Husband, Deadpool"), u, 5, Color.COVERT, u, "AT", ev => addAttackEvent(ev, turnState.cardsPlayed.count(isCostOdd))),
   [ "Drain Life", ev => {
   // {FATEFULRESURRECTION}. If she resurrects, defeat a Villain in the city for free.
     fatefulResurrectionTacticEv(ev, () => selectCardEv(ev, "Select a Villain to defeat", cityVillains(), c => defeatEv(ev, c)));
@@ -2259,7 +2259,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
-  }), u, u, 0, u, "", ev => KOHandOrDiscardEv(ev), oncePerTurnArtifact()),
+  }), u, u, 0, u, "4T", ev => KOHandOrDiscardEv(ev), oncePerTurnArtifact()),
 // ---
 // {ARTIFACT} Once per turn, you may defeat a Villain worth 2VP or less.
 // ATTACK: +2
@@ -2272,7 +2272,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
-  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a villain to defeat", villains().limit(c => c.vp <= 2), c => defeatEv(ev, c)), oncePerTurnArtifact()),
+  }), u, u, 0, u, "D4T", ev => selectCardEv(ev, "Choose a villain to defeat", villains().limit(c => c.vp <= 2), c => defeatEv(ev, c)), oncePerTurnArtifact()),
 // ---
 // {ARTIFACT} Once per turn, draw a card.
 // ATTACK: +3
@@ -2285,7 +2285,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       playVillainousWeapon(ev, ev.source);
     }
-  }), u, u, 0, u, "", ev => drawEv(ev), oncePerTurnArtifact()),
+  }), u, u, 0, u, "4T", ev => drawEv(ev), oncePerTurnArtifact()),
   [ "Vulnerable to Cold Iron", ev => {
   // You get +2 Recruit for each [Tech] Hero you have.
     addRecruitEvent(ev, 2 * yourHeroes().count(Color.TECH));
@@ -2315,7 +2315,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       attachCardEv(ev, ev.source, ev.source.mastermind, 'WEAPON');
     }
-  }), u, u, 0, u, "", u, {
+  }), u, u, 0, u, "D4T", u, {
     isArtifact: true,
     trigger: {
       event: 'GAIN',
@@ -2339,7 +2339,7 @@ addTemplates("MASTERMINDS", "Heroes of Asgard", [
       addStatSet('isVillainousWeapon', c => c === ev.source, () => true);
       attachCardEv(ev, ev.source, ev.source.mastermind, 'WEAPON');
     }
-  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'BRIDGE', 3), {
+  }), u, u, 0, u, "T", ev => heroConquerorEv(ev, 'BRIDGE', 3), {
     ...thrownArtifact,
   }),
   [ "Seize Bifrost, The Rainbow Bridge", ev => {
@@ -3070,24 +3070,24 @@ addTemplates("MASTERMINDS", "Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: +4
   // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
   makeGainableCard(makeTacticsCard("Hood of the Accuser", { printedDefense: 4, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
-  u, u, Color.GRAY, u, "D", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(owner(ev.source)), c => KOEv(ev, c), () => {}, owner(ev.source)), triggeredArtifactAnyTurn('STRIKE', () => true)),
+  u, u, Color.GRAY, u, "DT", ev => selectCardOptEv(ev, "Choose a card to KO", revealable(owner(ev.source)), c => KOEv(ev, c), () => {}, owner(ev.source)), triggeredArtifactAnyTurn('STRIKE', () => true)),
 // ---
 // <b>Triggered Artifact</b> - Whenever you gain your first Wound in any turn, you may KO it.
 // ATTACK: +5
   makeGainableCard(makeTacticsCard("Ancient Kree Armor", { printedDefense: 5, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
-  u, u, Color.GRAY, u, "D", ev => {
+  u, u, Color.GRAY, u, "DT", ev => {
     selectCardOptEv(ev, "Choose a Wound to KO", handOrDiscard().limit(isWound), c => KOEv(ev, c));
   }, { isArtifact: true, trigger: { event: 'GAIN', match: (ev, source) => isWound(ev.what) && ev.who === owner(source) && !pastEvents('GAIN').has(pev => isWound(pev.what) && pev.who === owner(source)), after: ev => chooseMayEv(ev, "KO the Wound", () => KOEv(ev, ev.parent.what))}}),
 // ---
 // <b>Triggered Artifact</b> - Whenever you recruit a Hero from the HQ, you get +2 Attack.
 // ATTACK: +6
   makeGainableCard(makeTacticsCard("The Cosmi-Rod Warhammer", { printedDefense: 6, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
-  u, u, Color.GRAY, u, "D", ev => addAttackEvent(ev, 2), triggeredArifact('RECRUIT', ev => ev.where.isHQ)),
+  u, u, Color.GRAY, u, "DT", ev => addAttackEvent(ev, 2), triggeredArifact('RECRUIT', ev => ev.where.isHQ)),
 // ---
 // <b>Triggered Artifact</b> - Whenever a Scheme Twist is completed, draw two cards.
 // ATTACK: +3
   makeGainableCard(makeTacticsCard("Ronan's Throne", { printedDefense: 3, fight: ev => ev.source.mastermind.commonTacticEffect(ev)}),
-  u, u, Color.GRAY, u, "D", ev => drawEv(ev, 2, owner(ev.source)), triggeredArtifactAnyTurn('TWIST', () => true)),
+  u, u, Color.GRAY, u, "DT", ev => drawEv(ev, 2, owner(ev.source)), triggeredArtifactAnyTurn('TWIST', () => true)),
 ], {
   commonTacticEffect: ev => {
     // KO one of your Heroes. Rescue 2 Bystanders. Ronan captures this card as a {VILLAINOUS WEAPON}.
@@ -3353,9 +3353,8 @@ addTemplates("MASTERMINDS", "Black Widow", [
   [ "Unveil Project Four", ev => {
   // Each other player reveals their hand and discards each card with a "4" printed anywhere on it. (The copyright date line doesn't count.)
     eachOtherPlayerVM(p => {
-      // TODO make it a deuce like flag
       // TODO multiplayer reveal
-      p.hand.limit(c => `${c.cardName}${c.printedAttack}${c.printedCost}${c.printedRecruit}${c.printedPiercing}`.includes("4")).each(c => discardEv(ev, c));
+      p.hand.limit(hasFlag("4")).each(c => discardEv(ev, c));
     });
   // If this is not the last Tactic, play two cards from the Villain Deck.
     ev.source.mastermind.commonTacticEffect(ev);

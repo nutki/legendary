@@ -85,7 +85,7 @@ makeHenchmenCard("M.O.D.O.K.s", 3, {
 // CLASS: [Strength]/[Ranged]
 // RECRUIT: 2+
 // {POWER Strength Ranged} You get +1 Recruit.
-makeGainableCard(makeHenchmenCard("Thor Corps", 3, {}, u), 2, u, Color.STRENGTH | Color.RANGED, "Avengers", "D", ev => superPowerLikelyEv(ev, [Color.STRENGTH, Color.RANGED], () => addRecruitEvent(ev, 1))),
+makeGainableCard(makeHenchmenCard("Thor Corps", 3, {}, u), 2, u, Color.STRENGTH | Color.RANGED, "Avengers", "DR", ev => superPowerLikelyEv(ev, [Color.STRENGTH, Color.RANGED], () => addRecruitEvent(ev, 1))),
 ]);
 addTemplates("HENCHMEN", "Secret Wars Volume 2", [
 // While in the Sewers, Rooftops or Bridge, this is in "wolf form" and gets +2 Attack.

@@ -55,7 +55,7 @@ addBystanderTemplates("X-Men", [
 // CLASS: [Tech]
 // Look at the top two cards of your deck. Draw one and discard the other.
 // COST: 2
-[ 1, makeGainableCard(makeBystanderCard("Cypher"), u, u, Color.TECH, "X-Men", "D", ev => lookAtDeckEv(ev, 2, cards => {
+[ 1, makeGainableCard(makeBystanderCard("Cypher"), u, u, Color.TECH, "X-Men", "DT", ev => lookAtDeckEv(ev, 2, cards => {
   selectCardEv(ev, "Choose a card to draw", cards, c => {
     drawCardEv(ev, c);
     cards.limit(c1 => c1 !== c).each(c => discardEv(ev, c));
@@ -65,25 +65,25 @@ addBystanderTemplates("X-Men", [
 // {POWER Tech} You may KO a card from your hand or discard pile.
 // RECRUIT: 2
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Heartless Computer Scientist"), 2, u, Color.TECH, u, "D", ev => superPowerEv(ev, Color.TECH, () => KOHandOrDiscardEv(ev, undefined)), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Heartless Computer Scientist"), 2, u, Color.TECH, u, "DT", ev => superPowerEv(ev, Color.TECH, () => KOHandOrDiscardEv(ev, undefined)), { printedCost: 3 }) ],
 // TEAM: X-Men
 // CLASS: [Covert]
 // Reveal the top card of the Hero Deck. You get +Attack equal to its printed Attack.
 // ATTACKG: 0+
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Karma"), u, 0, Color.COVERT, "X-Men", "", ev => revealHeroDeckEv(ev, 1, cards => addAttackEvent(ev, cards.sum(c => c.printedAttack || 0))), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Karma"), u, 0, Color.COVERT, "X-Men", "AT", ev => revealHeroDeckEv(ev, 1, cards => addAttackEvent(ev, cards.sum(c => c.printedAttack || 0))), { printedCost: 3 }) ],
 // TEAM: X-Men
 // CLASS: [Ranged]
 // Teleport (Instead of playing this card, you may set it aside. At the end of the turn, add it to your hand as an extra card.)
 // ATTACKG: 2
 // COST: 4
-[ 1, makeGainableCard(makeBystanderCard("Magik"), u, 2, Color.RANGED, "X-Men", "D", [], { teleport: true, printedCost: 4 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Magik"), u, 2, Color.RANGED, "X-Men", "D4T", [], { teleport: true, printedCost: 4 }) ],
 // TEAM: X-Men
 // CLASS: [Ranged]
 // Chose one: Draw a card or you get +2 Attack.
 // ATTACKG: 0+
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Magma"), u, 0, Color.RANGED, "X-Men", "D", ev => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["Get +2 Attack", () => addAttackEvent(ev, 2)]), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Magma"), u, 0, Color.RANGED, "X-Men", "DA", ev => chooseOneEv(ev, "Choose one", ["Draw a card", () => drawEv(ev)], ["Get +2 Attack", () => addAttackEvent(ev, 2)]), { printedCost: 3 }) ],
 // CLASS: [Instinct]
 // Draw a card.
 // ATTACKG: 1
@@ -100,7 +100,7 @@ addBystanderTemplates("X-Men", [
 // {POWER Strength} You get +1 Attack.
 // 2+ Attack.
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Sunspot"), u, 2, Color.STRENGTH, "X-Men", "D", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, 1)), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Sunspot"), u, 2, Color.STRENGTH, "X-Men", "DA", ev => superPowerLikelyEv(ev, Color.STRENGTH, () => addAttackEvent(ev, 1)), { printedCost: 3 }) ],
 // TEAM: X-Men
 // CLASS: [Tech]
 // {POWER Tech} Draw a card.
@@ -112,7 +112,7 @@ addBystanderTemplates("X-Men", [
 // {BERSERK}, {BERSERK}, {BERSERK}
 // ATTACKG: 0+
 // COST: 3
-[ 1, makeGainableCard(makeBystanderCard("Wolfsbane"), u, 0, Color.INSTINCT, "X-Men", "", ev => berserkEv(ev, 3), { printedCost: 3 }) ],
+[ 1, makeGainableCard(makeBystanderCard("Wolfsbane"), u, 0, Color.INSTINCT, "X-Men", "A", ev => berserkEv(ev, 3), { printedCost: 3 }) ],
 ]);
 addBystanderTemplates("Spider-Man Homecoming", [
 // RESCUE: reveal the top two cards of your deck. Put any that cost 2 or less into your hand. Put the rest back in any order.
@@ -183,7 +183,7 @@ addBystanderTemplates("Revelations", [
 }) ],
 // RESCUE: reveal the top 3 cards of your deck. Draw each of them that has at least 10 words of rules text. Put the rest back in any order. (Numerals, icons, and punctuation don't count.)
 [ 1, makeBystanderCard("Lawyer", ev => revealPlayerDeckEv(ev, 3, cards => {
-  cards.limit(hasFlag("T")).each(c => drawCardEv(ev, c)); // TODO 10+ rule words flag
+  cards.limit(hasFlag("T")).each(c => drawCardEv(ev, c));
 })) ],
 // RESCUE: choose Recruit or Attack. Then {HYPERSPEED 3} for that icon.
 [ 1, makeBystanderCard("Rocket Test Pilot", ev => hyperspeedEv(ev, 3, "CHOOSE")) ],
