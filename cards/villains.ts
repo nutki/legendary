@@ -922,7 +922,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Mind Gem", 6, u, {
     ambush: ev => attachShardEv(ev, ev.source, gameState.ko.count(isTwist) + gameState.scheme.attached("TWIST").size),
-  }), u, u, 0, u, "D", ev => addRecruitEvent(ev, 2), oncePerTurnArtifact()) ],
+  }), u, u, 0, u, "DT", ev => addRecruitEvent(ev, 2), oncePerTurnArtifact()) ],
 // AMBUSH: Power Gem gains a Shard for each Master Strike in the KO pile and/or stacked next to the Mastermind.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - Once per turn, you get +2 Attack.
@@ -930,7 +930,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Power Gem", 7, u, {
     ambush: ev => attachShardEv(ev, ev.source, strikerCount(false)),
-  }), u, u, 0, u, "D", ev => addAttackEvent(ev, 2), oncePerTurnArtifact()) ],
+  }), u, u, 0, u, "DT", ev => addAttackEvent(ev, 2), oncePerTurnArtifact()) ],
 // AMBUSH: Reality Gem gains a Shard for each Infinity Gem Villain card in the city and/or Escape pile.
 // FIGHT: Put this into your discard pile as an Artifact.
 // Artifact - Before you play a card from the Villain Deck, you may first reveal the top card of the Villain Deck. If it's not a Scheme Twist, you may put it on the bottom of the Villain Deck. If you do, gain a Shard.
@@ -938,7 +938,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 2, makeGainableCard(makeVillainCard("Infinity Gems", "Reality Gem", 5, u, {
     ambush: ev => attachShardEv(ev, ev.source, cityVillains().count(isGroup("Infinity Gems")) + gameState.escaped.count(isGroup("Infinity Gems"))),
-  }), u, u, 0, u, "", [], { isArtifact: true, trigger: {
+  }), u, u, 0, u, "T", [], { isArtifact: true, trigger: {
     event: "VILLAINDRAW",
     match: (ev, source) => owner(source) === playerState && isControlledArtifact(source) && (!ev.what || ev.what.location === gameState.villaindeck),
     before: ev => revealVillainDeckEv(ev, 1, cards => cards.limit(c => !isTwist(c)).each(c => chooseMayEv(ev, "Put on the bottom of the Villain Deck", () => { moveCardEv(ev, c, gameState.villaindeck, true); gainShardEv(ev); }))),
@@ -950,7 +950,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 1, makeGainableCard(makeVillainCard("Infinity Gems", "Soul Gem", 6, u, {
     ambush: ev => attachShardEv(ev, ev.source, cityVillains().size),
-  }), u, u, 0, u, "", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { ...oncePerTurnArtifact(), triggers: [{
+  }), u, u, 0, u, "T", ev => addAttackEvent(ev, ev.source.attached('SHARD').size), { ...oncePerTurnArtifact(), triggers: [{
     event: "MOVECARD",
     match: (ev, source) => ev.what === source && isControlledArtifact(source),
     before: ev => ev.parent.what.attached('SHARD').each(c => moveCardEv(ev, c, gameState.shard)),
@@ -966,7 +966,7 @@ addVillainTemplates("Guardians of the Galaxy", [
 // VP: 0
   [ 2, makeGainableCard(makeVillainCard("Infinity Gems", "Space Gem", 5, u, {
     ambush: ev => attachShardEv(ev, ev.source, gameState.city.count(l => l.size === 0)),
-  }), u, u, 0, u, "", ev => {
+  }), u, u, 0, u, "T", ev => {
     selectCardOptEv(ev, "Choose a Villain to move", cityVillains(), v => {
       selectCardEv(ev, "Choose a new city space", gameState.city.limit(l => l !== v.location), dest => swapCardsEv(ev, v.location, dest));
       gainShardEv(ev);
@@ -982,7 +982,7 @@ addVillainTemplates("Guardians of the Galaxy", [
       attachShardEv(ev, ev.source, c.vp);
       villainDrawEv(ev, c);
     })),
-  }), u, u, 0, u, "", [], { isArtifact: true, trigger: {
+  }), u, u, 0, u, "T", [], { isArtifact: true, trigger: {
     event: "PLAY",
     match: (ev, source) => ev.what === source,
     after: ev => gameState.extraTurn = true, // TODO mutliplayer, once per game
@@ -1236,14 +1236,14 @@ addVillainTemplates("Secret Wars Volume 1", [
 // CLASS: [Strength]
 // You get +1 Attack for each color of Hero you have
 // ATTACKG: 0+
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain America", 6, u, {}), u, 0, Color.STRENGTH, "Avengers", "", ev => addAttackEvent(ev, numColors()))],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain America", 6, u, {}), u, 0, Color.STRENGTH, "Avengers", "AT", ev => addAttackEvent(ev, numColors()))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 4
 // GAINABLE
 // CLASS: [Ranged]
 // {TELEPORT}
 // RECRUIT: 2
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain Marvel", 4, u, {}), 2, u, Color.RANGED, "Avengers", "D", [], { teleport: true })],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Captain Marvel", 4, u, {}), 2, u, Color.RANGED, "Avengers", "D4", [], { teleport: true })],
 // FIGHT: Gain this as a Hero.
 // ESCAPE: {XDRAMPAGE Thor}
 // ATTACK: 7
@@ -1253,14 +1253,14 @@ addVillainTemplates("Secret Wars Volume 1", [
 // ATTACKG: 3+
   [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Thor", 7, u, {
     escape: ev => xdRampageEv(ev, 'Thor'),
-  }), u, 3, Color.RANGED, "Avengers", "", ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackEvent(ev, 3)))],
+  }), u, 3, Color.RANGED, "Avengers", "A", ev => superPowerLikelyEv(ev, Color.RANGED, () => addAttackEvent(ev, 3)))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
 // CLASS: [Covert]
 // {POWER Covert} You get +2 Attack.
 // ATTACKG: 2+
-  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, "Avengers", "D", ev => superPowerLikelyEv(ev, Color.COVERT, () => addAttackEvent(ev, 2)))],
+  [ 2, makeGainableCard(makeVillainCard("Manhattan (Earth-1610)", "Ultimate Wasp", 5, u, {}), u, 2, Color.COVERT, "Avengers", "DA", ev => superPowerLikelyEv(ev, Color.COVERT, () => addAttackEvent(ev, 2)))],
 ]},
 { name: "Sentinel Territories", cards: [
 // FIGHT: <i>Colossus changes the future:</i> Don't play a Villain card at the beginning of next turn.
@@ -1532,7 +1532,7 @@ addVillainTemplates("Secret Wars Volume 2", [
 // CLASS: [Ranged]
 // <i>Spectrum:</i> You get +2 Attack.
 // ATTACKG: 2+
-  [ 3, makeGainableCard(makeVillainCard("X-Men '92", "'92 Jubilee", 4, u, {}), u, 2, Color.RANGED, "X-Men", "D", ev => spectrumPower() && addAttackEvent(ev, 2)) ],
+  [ 3, makeGainableCard(makeVillainCard("X-Men '92", "'92 Jubilee", 4, u, {}), u, 2, Color.RANGED, "X-Men", "D4A", ev => spectrumPower() && addAttackEvent(ev, 2)) ],
 // ESCAPE: '92 Professor X ascends to become a new Mastermind. He gains the ability, "<b>Master Strike</b>: Stack the two heroes from the HQ with the highest cost next to '92 Professor X. He gets +1 Attack for each Hero stacked there. Players can recruit the top card of the stack."
 // ATTACK: 8+
 // VP: 6
@@ -2154,7 +2154,7 @@ addVillainTemplates("X-Men", [
 // ATTACKG: 2+
   [ 2, makeGainableCard(makeVillainCard("Dark Descendants", "Havok, Brainwashed", 6, u, {
     escape: ev => withMastermind(ev, m => dominateEv(ev, m, ev.source)),
-  }), u, 2, Color.RANGED, "X-Men", "D", ev => xGenePower(Color.RANGED) && addAttackEvent(ev, 2))],
+  }), u, 2, Color.RANGED, "X-Men", "DA", ev => xGenePower(Color.RANGED) && addAttackEvent(ev, 2))],
 // AMBUSH: Each player reveals their hand and chooses one of their non-grey Heroes. Nemesis Dominates those Heroes.
 // ATTACK: 5
 // VP: 5
@@ -2382,7 +2382,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Instinct]} The next Hero you recruit from the HQ has Soaring Flight.
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Shadow-X", "Dark Angel", 4, u, {
-  }), u, 2, Color.INSTINCT, "X-Men", "D", ev => xGenePower(Color.INSTINCT) && (turnState.nextHeroRecruit = 'SOARING'))],
+  }), u, 2, Color.INSTINCT, "X-Men", "D4T", ev => xGenePower(Color.INSTINCT) && (turnState.nextHeroRecruit = 'SOARING'))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
@@ -2390,7 +2390,7 @@ addVillainTemplates("X-Men", [
 // {XGENE [Tech]} You may KO a card from your hand or discard pile.
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Beast", 5, u, {
-  }), u, 2, Color.TECH, "X-Men", "D", ev => xGenePower(Color.TECH) && KOHandOrDiscardEv(ev, undefined))],
+  }), u, 2, Color.TECH, "X-Men", "DT", ev => xGenePower(Color.TECH) && KOHandOrDiscardEv(ev, undefined))],
 // AMBUSH: Each player reveals a [Ranged] Hero or discards a card.
 // FIGHT: Gain this as a Hero.
 // ATTACK: 7
@@ -2400,7 +2400,7 @@ addVillainTemplates("X-Men", [
 // ATTACKG: 3
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Cyclops", 7, u, {
     ambush: ev => eachPlayer(p => revealOrEv(ev, Color.RANGED, () => pickDiscardEv(ev, 1, p), p)),
-  }), u, 3, Color.RANGED, "X-Men", "", ev => xGenePower(Color.RANGED) && selectCardEv(ev, "Choose a Hero to put in your hand", playerState.discard.limit(isHero).limit(Color.RANGED), c => moveCardEv(ev, c, playerState.hand)))],
+  }), u, 3, Color.RANGED, "X-Men", "T", ev => xGenePower(Color.RANGED) && selectCardEv(ev, "Choose a Hero to put in your hand", playerState.discard.limit(isHero).limit(Color.RANGED), c => moveCardEv(ev, c, playerState.hand)))],
 // FIGHT: Gain this as a Hero.
 // ATTACK: 5
 // GAINABLE
@@ -2418,7 +2418,7 @@ addVillainTemplates("X-Men", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Shadow-X", "Dark Marvel Girl", 4, u, {
     ambush: ev => hqHeroes().limit('X-Men').limit(c => c.cost <= 4).each(c => dominateEv(ev, ev.source, c)),
-  }), u, 2, Color.COVERT, "X-Men", "D", ev => xGenePower(Color.COVERT) && rescueEv(ev))],
+  }), u, 2, Color.COVERT, "X-Men", "D4", ev => xGenePower(Color.COVERT) && rescueEv(ev))],
 ]},
 { name: "Shi'ar Imperial Guard", cards: [
 // FIGHT: If you fought Blackthorn in the Sewers or Streets, each other player gains a Wound.
@@ -3354,7 +3354,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 0+
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Captain America", 4, u, {
     fight: ev => poisonBondEv(ev, cityVillains()),
-  }), u, 0, Color.INSTINCT, "Venomverse", "", ev => addAttackEvent(ev, numColors()))],
+  }), u, 0, Color.INSTINCT, "Venomverse", "4T", ev => addAttackEvent(ev, numColors()))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Villain in the Bank. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3381,7 +3381,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Sabretooth", 4, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => isLocation(c.location, 'STREETS'))),
-  }), u, 2, Color.INSTINCT, "Venomverse", "D", ev => superPowerEv(ev, Color.INSTINCT, () => lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))))],
+  }), u, 2, Color.INSTINCT, "Venomverse", "D4T", ev => superPowerEv(ev, Color.INSTINCT, () => lookAtDeckEv(ev, 1, cards => selectCardOptEv(ev, "Choose a card to KO", cards, c => KOEv(ev, c)))))],
 // FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city with an odd-numbered Attack. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3390,7 +3390,7 @@ addVillainTemplates("Venom", [
 // ATTACKG: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Scarlet Witch", 3, u, {
     fight: ev => poisonBondEv(ev, cityVillains().limit(c => c.defense % 2 === 1)),
-  }), u, 2, Color.COVERT, "Venomverse", "D", ev => drawIfEv(ev, isCostOdd))],
+  }), u, 2, Color.COVERT, "Venomverse", "DT", ev => drawIfEv(ev, isCostOdd))],
 // FIGHT: This <b>Symbiote Bonds</b> with another Villain in the city. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 2
 // GAINABLE
@@ -3399,7 +3399,7 @@ addVillainTemplates("Venom", [
 // ATTACK: 2
   [ 1, makeGainableCard(makeVillainCard("Poisons", "Poison Spider-Man", 2, u, {
     fight: ev => poisonBondEv(ev, cityVillains()),
-  }), u, 2, Color.COVERT, "Venomverse", "D", ev => drawIfEv(ev, c => c.cost <= 2))],
+  }), u, 2, Color.COVERT, "Venomverse", "DT", ev => drawIfEv(ev, c => c.cost <= 2))],
 // FIGHT: This <b>Symbiote Bonds</b> with a Villain on the Rooftops or Bridge. If already bonded or unable to bond, gain this as a Hero instead.
 // ATTACK: 3
 // GAINABLE
@@ -3887,14 +3887,14 @@ addVillainTemplates("Heroes of Asgard", [
 // {ARTIFACT} Once per turn, if you are {WORTHY}, you get +2 Recruit.
 // ATTACK: +4
   [ 1, makeGainableCard(makeVillainousWeaponCard("Dark Council", "The Casket of Ancient Winters", 4, {
-  }), u, u, 0, u, "D", ev => worthyPower() && addRecruitEvent(ev, 2), oncePerTurnArtifact())],
+  }), u, u, 0, u, "D4T", ev => worthyPower() && addRecruitEvent(ev, 2), oncePerTurnArtifact())],
 // {VILLAINOUS WEAPON}
 // GAINABLE
 // {THROWN ARTIFACT} When you throw this, you get +3 Attack.
 // ATTACK: +3
 // FLAVOR: Malekith eventually seized Jarnbjorn and cut off Thor's left arm.
   [ 1, makeGainableCard(makeVillainousWeaponCard("Dark Council", "Jarnbjorn, First Axe of Thor", 3, {
-  }), u, u, 0, u, "F", ev => addAttackEvent(ev, 3), { ...thrownArtifact })],
+  }), u, u, 0, u, "FT", ev => addAttackEvent(ev, 3), { ...thrownArtifact })],
 ]},
 { name: "Omens of Ragnarok", cards: [
 // {BRIDGE CONQUEROR 3}
@@ -3964,13 +3964,13 @@ addVillainTemplates("Heroes of Asgard", [
         attachCardEv(ev, ev.source, c, 'WEAPON');
       }));
     },
-  }), u, u, 0, u, "", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), oncePerTurnArtifact())],
+  }), u, u, 0, u, "4T", ev => selectCardEv(ev, "Choose a card to return to hand", playerState.discard.limit(c => c.cost === 0), c => moveCardEv(ev, c, playerState.hand)), oncePerTurnArtifact())],
 // {VILLAINOUS WEAPON}
 // GAINABLE
 // {ARTIFACT} Once per turn, you get {STREETS CONQUEROR 1}.
 // ATTACK: +3
   [ 1, makeGainableCard(makeVillainousWeaponCard("Omens of Ragnarok", "The Hel-Crown", 3, {
-  }), u, u, 0, u, "", ev => heroConquerorEv(ev, 'STREETS', 1), oncePerTurnArtifact())],
+  }), u, u, 0, u, "T", ev => heroConquerorEv(ev, 'STREETS', 1), oncePerTurnArtifact())],
 ]},
 ]);
 addVillainTemplates("New Mutants", [
@@ -4575,7 +4575,7 @@ addVillainTemplates("Annihilation", [
 // ATTACKG: 2
   [ 2, makeGainableCard(makeVillainCard("Timelines of Kang", "Iron Lad", 4, u, {
     fight: ev => choosePlayerEv(ev, p => gainEv(ev, ev.source, p)),
-  }), u, 2, Color.TECH, u, "D", ev => superPowerEv(ev, Color.TECH, () => outOfTimeEv(ev)))],
+  }), u, 2, Color.TECH, u, "D4", ev => superPowerEv(ev, Color.TECH, () => outOfTimeEv(ev)))],
 ]},
 ]);
 addVillainTemplates("Messiah Complex", [
@@ -5019,7 +5019,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // FLAVOR: Art contains a gun.
   [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "Korath's Disrupter Rifle", 3, {
     ambush: ev => cityVillains().limit(c => c.cardName === "Korath the Pursuer").firstOnly().each(c => attachCardEv(ev, ev.source, c, 'WEAPON')),
-  }), u, u, Color.GRAY, u, "G", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => ev.what.cost >= 6))],
+  }), u, u, Color.GRAY, u, "GT", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => ev.what.cost >= 6))],
 // {VILLAINOUS WEAPON}
 // AMBUSH: If a Follower of Ronan captures this, each player gains a Wound.
 // GAINABLE
@@ -5027,7 +5027,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: +4
   [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "\"The Dark Aster\" Flagship", 4, {
     ambush: ev => ev.where?.has(isGroup("Followers of Ronan")) && eachPlayer(p => gainWoundEv(ev, p)),
-  }), u, u, Color.GRAY, u, "", ev => addRecruitEvent(ev, 1), triggeredArifact('DEFEAT', ev => isVillain(ev.what)))],
+  }), u, u, Color.GRAY, u, "4T", ev => addRecruitEvent(ev, 1), triggeredArifact('DEFEAT', ev => isVillain(ev.what)))],
 // {VILLAINOUS WEAPON}
 // AMBUSH: Put all Heroes from the HQ on the bottom of the Hero Deck.
 // GAINABLE
@@ -5035,7 +5035,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: +6
   [ 1, makeGainableCard(makeVillainousWeaponCard("Followers of Ronan", "The Orb", 6, {
     ambush: ev => hqHeroes().each(c => moveCardEv(ev, c, gameState.herodeck, true)),
-  }), u, u, Color.GRAY, u, "", ev => {
+  }), u, u, Color.GRAY, u, "T", ev => {
     // This is Kang the Conqueror's tactic ability
     if (!incPerGame('extra-turn', ev.source)) {
       addFutureTrigger(ev => turnState.villainCardsToPlay > 0 && turnState.villainCardsToPlay--);
@@ -5101,7 +5101,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: +2
   [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Scavanged Blade", 2, {
     ambush: ev =>  playAnotherEv(ev),
-  }), u, u, Color.GRAY, u, "D", ev => chooseMayEv(ev, "Get +2 Attack?", () => {
+  }), u, u, Color.GRAY, u, "DT", ev => chooseMayEv(ev, "Get +2 Attack?", () => {
     addAttackEvent(ev, 2);
     isCopy(ev.source) || shuffleIntoEv(ev, ev.source, gameState.villaindeck);
   }), triggeredArifact('PLAY', ev => isColor(Color.STRENGTH | Color.INSTINCT)(ev.what)))],
@@ -5112,7 +5112,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
 // ATTACK: +3
   [ 1, makeGainableCard(makeVillainousWeaponCard("Ravagers", "Ravager Starship \"Eclector\"", 3, {
     ambush: ev => ev.where && ev.where.limit(isGroup("Ravagers")).withFirst(c2 => cityVillains().filter(c => isGroup("Ravagers")(c) && c !== c2).withFirst(c => swapCardsEv(ev, c2, c))),
-  }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.TECH)(ev.what)))],
+  }), u, u, Color.GRAY, u, "T", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.TECH)(ev.what)))],
 // {VILLAINOUS WEAPON}
 // AMBUSH: If Yondu is in the city, he captures this. If he is in any player's Victory Pile, he enters an empty city space, then ca[tures this.
 // GAINABLE
@@ -5125,7 +5125,7 @@ addVillainTemplates("Marvel Studios' Guardians of the Galaxy", [
       });
       cont(ev, () => cityVillains().limit(c => c.cardName === "Yondu Udonta").withFirst(c => attachCardEv(ev, ev.source, c, 'WEAPON')));
     },
-  }), u, u, Color.GRAY, u, "", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.COVERT | Color.RANGED)(ev.what)))],
+  }), u, u, Color.GRAY, u, "4T", ev => addAttackEvent(ev, 1), triggeredArifact('PLAY', ev => isColor(Color.COVERT | Color.RANGED)(ev.what)))],
 ]},
 ]);
 addVillainTemplates("Black Panther", [
@@ -6548,7 +6548,7 @@ addVillainTemplates("Weapon X", [
     fightFail: ev => selectCardEv(ev, "Choose a Hero to KO", playerState.discard.limit(isNonGrayHero), c => KOEv(ev, c)),
     escape: ev => eachPlayer(p => pickDiscardEv(ev, 1, p, isNonGrayHero)),
     trigger: enemyBerserkTrigger(2),
-  }), u, 2, Color.INSTINCT, "X-Force", "D", ev => superPowerEv(ev, Color.INSTINCT, () => berserkEv(ev, 2)))],
+  }), u, 2, Color.INSTINCT, "X-Force", "DA", ev => superPowerEv(ev, Color.INSTINCT, () => berserkEv(ev, 2)))],
 // {BERSERK}
 // AMBUSH: Choose a card named "Feral" from any player's discard pile to enter the city as a Villain.
 // FIGHT: Draw the card you Berserked.
