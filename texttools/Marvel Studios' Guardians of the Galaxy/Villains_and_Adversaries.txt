@@ -39,13 +39,13 @@ Nebula gets +2 Attack while she <b>Commands</b> the Followers of Ronan.
 #VP: 4
 
 #SUBNAME: Korath's Disrupter Rifle
+#GUN: 1
 #COPIES: 1
 {VILLAINOUS WEAPON}
 #AMBUSH: If Korath is in the city, he captures this.
 #GAINABLE
 <b>Triggered Artifact</b> - Whenever you play a card that costs 6 or more, you get +1 Attack.
 #ATTACK: +3
-#FLAVOR: Art contains a gun.
 
 #SUBNAME: "The Dark Aster" Flagship
 #COPIES: 1
