@@ -587,8 +587,8 @@ function chooseForEachPlayerEv(ev: Ev, desc: string, cards: Card[], effect1: (p:
 function playHorrorEv(ev: Ev) {
   cont(ev, () => {
     gameState.horror.withTop(c => {
-      moveCardEv(ev, c, gameState.horror, true);
-      pushEffects(ev, c, undefined, c.ambush);
+      attachCardEv(ev, c, gameState.scheme, 'HORROR');
+      pushEffects(ev, c, 'ambush', c.ambush);
     })
   })
 }

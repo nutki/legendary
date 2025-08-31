@@ -220,7 +220,7 @@ makeHorrorCard("Endless Hatred", ev => gameState.triggers.push({ event: 'TWIST',
 // The Mastermind has +2 Attack.
 makeHorrorCard("Enraged Mastermind", ev => addStatMod('defense', isMastermind, 2)),
 // After you defeat the Mastermind's four Tactics, you must still fight the Mastermind a fifth time to put the Mastermind card in your Victory Pile and win.
-makeHorrorCard("Fight to the End", ev => addStatSet('isFightable', isMastermind, c => c.location === gameState.mastermind)),
+makeHorrorCard("Fight to the End", ev => gameState.finalBlow = true),
 // The Mastermind has +1 Attack for each Mastermind Tactic among all players' Victory Piles.
 makeHorrorCard("Growing Threat", ev => addStatMod('defense', isMastermind, () => gameState.players.sum(p => p.victory.count(isTactic)))),
 // Whenever you play a Henchman Villain from the Villain Deck, play another card from the Villain Deck.
@@ -242,7 +242,7 @@ makeHorrorCard("Psychic Infection", ev => moveCardEv(ev, ev.source, playerState.
 // This Horror Ascends to become a new 9-Attack "Master Plan" Token Mastermind worth 5 VP. It gains the ability "Master Strike: Each player reveals a Tech Hero or gains a Wound."
 makeHorrorCard("Shadow of the Disciple", ev => ascendToMastermind(ev, ev => eachPlayer(p => revealOrEv(ev, Color.TECH, () => gainWoundEv(ev, p), p)), 5)),
 // AMBUSH: Play two cards from the Villain Deck.
-makeHorrorCard("Surprise Assault", ev => { villainDrawEv(ev); villainDrawEv(ev); }),
+makeHorrorCard("Surprise Assault", ev => playAnotherEv(ev, 2)),
 // AMBUSH: Put this into your discard pile. If this is in your hand at the start of your turn, the player on your left gains this card and the player on your right gains a Wound.
 makeHorrorCard("Viral Infection", ev => moveCardEv(ev, ev.source, playerState.discard), { trigger: { event: 'TURNSTART', match: (ev, source) => source.location === playerState.hand, after: ev => { gainEv(ev, ev.source, playerState.left); gainWoundEv(ev, playerState.right); }} }),
 // The Mastermind has +3 Attack.

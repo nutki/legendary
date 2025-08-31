@@ -1659,6 +1659,8 @@ if (gameSetup.withMadame) gameState.madame.addNewCard(madameHydraTemplate, 12);
 if (gameSetup.withNewRecruits) gameState.newRecruit.addNewCard(newRecruitsTemplate, 15);
 if (gameSetup.withBindings) gameState.bindings.addNewCard(bindingsTemplate, getParam('bindings'));
 if (gameSetup.withShards) gameState.shard.addNewCard(shardTemplate, getParam('shards'));
+horrorTemplates.forEach(t => gameState.horror.addNewCard(t));
+gameState.horror.shuffle();
 gameSetup.bystanders.map(findBystanderTemplate).forEach(t => t.cards.forEach(c => gameState.bystanders.addNewCard(c[1], c[0])));
 if (gameState.bystanders.deck.uniqueCount(b => b.cardName) > 1) {
   gameState.bystanders.faceup = false;

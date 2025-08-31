@@ -44,6 +44,7 @@ function cardImageName(card: Card): string {
   if (card.cardType === "BYSTANDER" && card.cardName !== "Bystander") return imageName("bystanders", card);
   if (card.cardType === "WOUND" && card.cardName !== "Wound") return imageName("wounds", card);
   if (card.cardType === "TOKEN") return imageName("tokens", card);
+  if (card.cardType === "HORROR") return imageName("horrors", card);
   return imageName("", card);
 }
 function makeDisplayAttached(c: Deck | Card) {
