@@ -172,7 +172,7 @@ If you played at least 7 other cards this turn you get +2 Attack.
 #COST: 5
 #GUN: 1
 
-#SUBNAME: 2&gt;4
+#SUBNAME: 2>4
 #COPIES: 1
 #CLASS: [Tech]
 #ATTACK: 4

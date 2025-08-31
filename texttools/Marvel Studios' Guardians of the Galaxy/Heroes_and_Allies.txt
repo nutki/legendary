@@ -200,13 +200,15 @@ Reveal your hand. You get +1 Attack for each different card name in your hand.
 #SUBNAME: I Am Invisible/Xandar Is Invincible
 #COPIES: 3
 #DIVIDED: I Am Invisible
-#DIVHERO: Drax - Guardians of the Glaxy
+#DIVHERO: Drax
+#DIVTEAM: Guardians of the Glaxy
 #CLASS: [Instinct]
 #ATTACK: 2
 {VIOLENCE} Reveal the top card of your deck. If it's [Strength] or [Instinct], draw it.
 #COST: 4
 #DIVIDED: Xandar Is Invincible
-#DIVHERO: Irani Rael - Unaffiliated
+#DIVHERO: Irani Rael
+#DIVTEAM: Unaffiliated
 #CLASS: [Tech]
 #RECRUIT: 2+
 If there are no Villains in the city, you get +1 Recruit.
@@ -222,13 +224,15 @@ If there are no Villains in the city, you get +1 Recruit.
 #SUBNAME: Remove His Spine/Also Illegal
 #COPIES: 2
 #DIVIDED: Remove His Spine
-#DIVHERO: Drax - Guardians of the Glaxy
+#DIVHERO: Drax
+#DIVTEAM: Guardians of the Glaxy
 #CLASS: [Strength]
 #ATTACK: 3
 {VIOLENCE} Reveal the top card of your deck. You may KO it.
 #COST: 6
 #DIVIDED: Also Illegal
-#DIVHERO: Rhomann Dey - Unaffiliated
+#DIVHERO: Rhomann Dey
+#DIVTEAM: Unaffiliated
 #CLASS: [Instinct]
 #RECRUIT: 3+
 {POWER Instinct} You get +1 Recruit.
@@ -255,14 +259,16 @@ Double the Attack you have.
 #SUBNAME: Selfless/Selfish
 #COPIES: 3
 #DIVIDED: Selfless
-#DIVHERO: Mantis - Guardians of the Glaxy
+#DIVHERO: Mantis
+#DIVTEAM: Guardians of the Glaxy
 #CLASS: [Instinct]
 #RECRUIT: 2
 {POWER Instinct} Draw a card.
 Another player draws a card.
 #COST: 4
 #DIVIDED: Selfish
-#DIVHERO: Ego - Unaffiliated
+#DIVHERO: Ego
+#DIVTEAM: Unaffiliated
 #CLASS: [Ranged]
 #ATTACK: 2
 {POWER Ranged} Draw a card.

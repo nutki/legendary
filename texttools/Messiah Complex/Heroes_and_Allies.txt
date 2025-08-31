@@ -163,15 +163,15 @@ Draw a card.
 If any player would gain a Wound, you may discard this card instead. If you do, draw two cards.
 #COST: 5
 
-#SUBNAME: Go Big
+#SUBNAME: Go Big/Treasure Hunt
 #COPIES: 3
+#DIVIDED: Go Big
 #CLASS: [Strength]
 #ATTACK: 2+
 {TACTICAL FORMATION 445}: You get +3 Attack.
 #COST: 4
 #FLAVOR: If that doesn't work, try a new plan: go way bigger.
-#SUBNAME: Treasure Hunt
-#COPIES: 1
+#DIVIDED: Treasure Hunt
 #CLASS: [Strength]
 #ATTACK: 3
 {INVESTIGATE} for one of these options, then a different option, then a third different option:

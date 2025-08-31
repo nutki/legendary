@@ -17,14 +17,14 @@
 #ATTACK: 3
 #COST: 5
 
-#SUBNAME: Declaration of War
+#SUBNAME: Declaration of War/The King's Speech
 #COPIES: 3
+#DIVIDED: Declaration of War
 #CLASS: [Tech]
 #ATTACK: 2
 {TEAMPOWER Inhumans} Gain the {THRONES FAVOR}. If you already have it, you may spend it to reveal the top two cards of your deck. Put each of those cards with no rules text into your hand and put the rest back in any order.
 #COST: 4
-#SUBNAME: The King's Speech
-#COPIES: 1
+#DIVIDED: The King's Speech
 #CLASS: [Ranged]
 #ATTACK: 5
 Gain the {THRONES FAVOR}. If you already have it, you may spend it to choose "Speak" or "Don't Speak" then reveal the top 3 cards of your deck:
