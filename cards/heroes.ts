@@ -4434,13 +4434,13 @@ addHeroTemplates("World War Hulk", [
 },
 ]);
 addHeroTemplates("Marvel Studios Phase 1", [
-copyHeroTemplate("Black Widow"),
-copyHeroTemplate("Captain America"),
-copyHeroTemplate("Hawkeye"),
-copyHeroTemplate("Hulk"),
-copyHeroTemplate("Iron Man"),
-copyHeroTemplate("Nick Fury"),
-copyHeroTemplate("Thor"),
+copyHeroTemplate("Black Widow", { c1: "GDT", c2: "GD", uc: "4AT", ra: "G4" }),
+copyHeroTemplate("Captain America", { c1: "GRT", c2: "4AT", uc: "4T", ra: "AT" }),
+copyHeroTemplate("Hawkeye", { c1: "", c2: "FD4A", uc: "T", ra: "T" }),
+copyHeroTemplate("Hulk", { c1: "DA", c2: "D4AT", uc: "4", ra: "A" }),
+copyHeroTemplate("Iron Man", { c1: "", c2: "FDA", uc: "AT", ra: "" }),
+copyHeroTemplate("Nick Fury", { c1: "4T", c2: "DA", uc: "GAT", ra: "GT" }),
+copyHeroTemplate("Thor", { c1: "FDR", c2: "D4AT", uc: "A", ra: "A" }),
 ]);
 addHeroTemplates("Ant-Man", [
 {

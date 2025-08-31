@@ -767,13 +767,14 @@ function copyHenchmenTemplate(name: string, newName: string) {
   card.cardName = newName;
   return card;
 }
-function copyHeroTemplate(name: string) {
+function copyHeroTemplate(name: string, flags?: Partial<Record<keyof ReturnType<typeof findHeroTemplate>, string>>) {
   const t = {...findHeroTemplate(name)};
   for (const k of ['c1', 'c2', 'c3', 'uc', 'u2', 'ra'] as const) if (t[k]) {
     const card = t[k];
     const newCard = new Card('HERO', card.cardName);
     Object.assign(newCard, card);
     t[k] = newCard;
+    if (flags?.[k]) newCard.flags = flags[k];
   }
   return t;
 }
