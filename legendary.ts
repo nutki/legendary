@@ -838,7 +838,7 @@ interface Ev<TSchemeState = any> {
   attachedCards?: Record<string, Card[]> // For fight effect - cards that were attached to the villain
   likely?: LikelyOption
 }
-const likelyConfig: LikelyChoice[] = [ ];
+let likelyConfig: LikelyChoice[] = [ ];
 type LikelyChoice = "SUPERPOWER" | "OUTWIT" | "STRIKEORDER" | "DEFEATORDER";
 type LikelyOption = { type: LikelyChoice, idx: number };
 interface EvParams {
@@ -3487,9 +3487,13 @@ function startGame(): void {
   setUiConfig(gameState.gameSetup);
   mainLoop();
 }
+function saveLikelyConfig(): void {
+  localStorage.setItem('legendaryLikelyConfig', JSON.stringify(likelyConfig));
+}
 function startApp(): void {
   runChecks();
   const lastSetup: Setup = JSON.parse(localStorage.getItem('legendarySetup')) || exampleGameSetup;
+  try { likelyConfig = JSON.parse(localStorage.getItem('legendaryLikelyConfig')) || []; } catch(e) {}
   setupInit();
   setupSet(lastSetup);
   undoLog.init();

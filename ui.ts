@@ -596,6 +596,7 @@ function makeLikelySkips(): void {
     i.addEventListener("change", function() {
       if (this.checked) likelyConfig.push(v);
       else if (likelyConfig.includes(v)) likelyConfig.splice(likelyConfig.indexOf(v), 1);
+      saveLikelyConfig();
     });
     const l = document.createElement('label');
     l.classList.add('multiselectlabel');
