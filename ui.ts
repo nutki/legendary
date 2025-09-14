@@ -765,16 +765,16 @@ function initUI() {
     fullControl = !fullControl;
     updateFullControlDisplay();
   };
-  // track Shift key state
+  // track Control key state
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Shift" && !fullControlShift) {
+    if (e.key === "Control" && !fullControlShift) {
       fullControlShift = true;
       updateFullControlDisplay();
     } else if (e.key === "ArrowLeft") prevPlayerAction();
     else if (e.key === "ArrowRight") nextPlayerAction();
   });
   window.addEventListener("keyup", (e) => {
-    if (e.key === "Shift" && fullControlShift) {
+    if (e.key === "Control" && fullControlShift) {
       fullControlShift = false;
       updateFullControlDisplay();
     }
