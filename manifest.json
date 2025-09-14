@@ -1,0 +1,20 @@
+{
+  "name": "Legendary HQ",
+  "short_name": "Legendary HQ",
+  "start_url": "legendary.html",
+  "display": "fullscreen",
+  "background_color": "#555",
+  "theme_color": "#333",
+  "icons": [
+    {
+      "src": "icons/recruit_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/recruit_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

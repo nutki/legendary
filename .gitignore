@@ -6,3 +6,4 @@ images/**/*.png
 fonts/**/*.ttf
 fonts/**/*.otf
 node_modules
+.netlify
