@@ -3338,11 +3338,11 @@ function handleClickAction(id: string) {
     autoOpenMultiClickActionPopup();
   }
 }
-function clickCard(ev: MouseEvent): void {
+function clickCard(ev: MouseEvent | TouchEvent): boolean {
   if (currentClickActions) {
     currentClickActions = undefined;
     displayGame();
-    return;
+    return true;
   }
   for (let node = <Element>ev.target; node; node = <Element>node.parentNode) {
     if (node.classList?.contains("count") || node.classList?.contains("capturedHint")) return;
@@ -3350,13 +3350,14 @@ function clickCard(ev: MouseEvent): void {
     const deckId = node.getAttribute && node.getAttribute('data-deck-id');
     if (id && clickActions[id]) {
       handleClickAction(id);
-      return;
+      return true;
     }
     if (clickActions[deckId]) {
       handleClickAction(deckId);
-      return;
+      return true;
     }
   }
+  return false;
 }
 function playEvent(ev: Ev) {
   ev.setId();

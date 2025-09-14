@@ -716,6 +716,12 @@ function getFullControl() {
 }
 function initUI() {
   window.onclick = clickCard;
+  window.addEventListener('click', function(e) {
+    clickCard(e);
+  });
+  window.addEventListener('touchend', function(e) {
+   if (clickCard(e)) e.preventDefault();
+  }, {passive: false});
   document.getElementById("undo").onclick = () => { if (undoLog.canUndo()) { undoLog.undo(); startGame(); } };
   document.getElementById("start").onclick = () => { if (globalFormSetup) {
     undoLog.init(globalFormSetup); startGame();
