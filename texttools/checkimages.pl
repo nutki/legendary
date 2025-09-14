@@ -10,8 +10,9 @@
   WOUNDS => "Wounds_and_Bindings.txt",
   SETUPCARDS => "Setup_Cards.txt",
   HORRORS => "Horrors.txt",
+  AMBITIONS => "Ambitions.txt",
 );
-@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS SIDEKICKS WOUNDS SETUPCARDS HORRORS);
+@inputkeys = qw(HEROES MASTERMINDS VILLAINS HENCHMEN SCHEMES BYSTANDERS SIDEKICKS WOUNDS SETUPCARDS HORRORS AMBITIONS);
 my ($exp) = @ARGV;
 for $type (@inputkeys) {
   my $file = $input{$type};
@@ -89,6 +90,9 @@ for $type (@inputkeys) {
     } elsif ($type eq "HORRORS") {
       parse();
       checkimage("horrors", $_{CARDNAME});
+    } elsif ($type eq "AMBITIONS") {
+      parse();
+      checkimage("ambitions", $_{CARDNAME});
     } else {
       die "unknown type $type";
     }
