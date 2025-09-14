@@ -838,7 +838,8 @@ interface Ev<TSchemeState = any> {
   attachedCards?: Record<string, Card[]> // For fight effect - cards that were attached to the villain
   likely?: LikelyOption
 }
-type LikelyChoice = "SUPERPOWER" | "OUTWIT" | "STRIKEORDER";
+const likelyConfig: LikelyChoice[] = [ ];
+type LikelyChoice = "SUPERPOWER" | "OUTWIT" | "STRIKEORDER" | "DEFEATORDER";
 type LikelyOption = { type: LikelyChoice, idx: number };
 interface EvParams {
   where?: Deck
@@ -904,7 +905,7 @@ class Ev implements EvParams {
     Ev.nextId.set(this.type, id + 1);
   }
   hasLikelySkip(fullControl: boolean = false) {
-    return !!this.likely && !fullControl;
+    return !!this.likely && !likelyConfig.includes(this.likely.type) && !fullControl;
   }
   static nextId = new Map<string, number>();
 };
@@ -2586,15 +2587,15 @@ function selectObjectsAnyEv<T>(ev: Ev, desc: string, objects: T[], effect1: (o: 
 //   selectObjectsMinMaxEv(ev, desc, 0, 1, objects, effect1, undefined, false, who);
 // }
 
-function selectCardOrEv<T>(ev: Ev, desc: string, cards: T[], effect1: (c: T) => void, effect0: () => void, who?: Player) {
+function selectCardOrEv<T>(ev: Ev, desc: string, cards: T[], effect1: (c: T) => void, effect0: () => void, who?: Player, likely?: LikelyChoice) {
   who = who || playerState;
   if (!cards.length) {
     if (effect0) effect0();
     return;
   }
-  pushEv(ev, "SELECTCARD1", { options: cards, desc, ui: true, agent: who, result1: effect1 });
+  pushEv(ev, "SELECTCARD1", { options: cards, desc, ui: true, agent: who, result1: effect1, likely: likely ? { idx: 0, type: likely } : undefined });
 }
-function selectCardEv<T>(ev: Ev, desc: string, cards: T[], effect: (c: T) => void, who?: Player) { selectCardOrEv(ev, desc, cards, effect, undefined, who); }
+function selectCardEv<T>(ev: Ev, desc: string, cards: T[], effect: (c: T) => void, who?: Player, likely?: LikelyChoice) { selectCardOrEv(ev, desc, cards, effect, undefined, who, likely); }
 function selectCardAndKOEv(ev: Ev, cards: Card[], who?: Player) { selectCardEv(ev, "Choose a card to KO", cards, sel => KOEv(ev, sel), who); }
 function selectCardOptEv<T>(ev: Ev, desc: string, cards: T[], effect1: (c: T) => void, effect0?: () => void, who?: Player) {
   who = who || playerState;
@@ -2687,14 +2688,14 @@ function distributeEvenlyEv<P,C>(ev: Ev, desc: (o: C) => string, objects: C[], t
     if (availableTargets.length === 0) availableTargets = [...targets];
   }, who)));
 }
-function chooseOrderEv<T>(ev: Ev, desc: string, objects: T[], effect: (o: T) => void, who: Player = playerState) {
+function chooseOrderEv<T>(ev: Ev, desc: string, objects: T[], effect: (o: T) => void, who: Player = playerState, likely: LikelyChoice = undefined) {
   if (objects.length === 1) {
     cont(ev, () => effect(objects[0]));
   } if (objects.length > 1) {
     selectCardEv(ev, desc, objects, o => {
       effect(o);
-      chooseOrderEv(ev, desc, objects.filter(o2 => o2 !== o), effect, who);
-    }, who);
+      chooseOrderEv(ev, desc, objects.filter(o2 => o2 !== o), effect, who, likely);
+    }, who, likely);
   }
 }
 function allEnemies(): Card[] {
@@ -2978,12 +2979,11 @@ function playTwist(ev: Ev): void {
 function playStrikeEv(ev: Ev, what: Card) { pushEv(ev, "STRIKE", { func: playStrike, what: what, where: what.location }); }
 function playStrike(ev: Ev) {
   moveCardEv(ev, ev.what, gameState.ko);
-  // TODO mastermind order
   const nr = ++gameState.strikeCount;
-  getMasterminds().each(m => {
+  chooseOrderEv(ev, "Choose Mastermind order", getMasterminds(), (m: Card) => {
     pushEffects(ev, m, "strike", m.strike, { what: ev.what, nr });
     m.isAdaptingMastermind && adaptMastermindEv(ev, m);
-  });
+  }, playerState, 'STRIKEORDER');
   if (gameState.advancedSolo === true) playAnotherEv(ev);
 }
 function playTrap(ev: Ev) {
@@ -3184,13 +3184,13 @@ function villainDefeat(ev: Ev, bondedChoice?: boolean): void {
   if (bondedChoice) c = bonded;
   const moveToVictory = [...b, c];
   if (riseOfTheLivingDeadInSetup())
-    chooseOrderEv(ev, "Choose victory pile order", moveToVictory, bc => moveCardEv(ev, bc, playerState.victory));
+    chooseOrderEv(ev, "Choose victory pile order", moveToVictory, bc => moveCardEv(ev, bc, playerState.victory), playerState);
   else
     moveToVictory.forEach(card => moveCardEv(ev, card, playerState.victory));
   if (bondedChoice === false) cont(ev, () => moveCardEv(ev, bonded, ev.where));
   chooseOrderEv(ev, "Choose rescue and fight order", moveToVictory, bc => {
     bc === c ? pushEffects(ev, c, "fight", c.fight, { where: ev.where, attachedCards }) : rescueEv(ev, bc);
-  });
+  }, playerState, 'DEFEATORDER');
   if (unbindEffect) pushEv(ev, "EFFECT", { source: c, func: unbindEffect });
   if (fightingMastermind && ev.what.isAdaptingMastermind) adaptMastermindEv(ev, ev.what);
 }
@@ -3396,7 +3396,10 @@ function mainLoop(): void {
   }
   let ev = popEvent();
   while (!ev.ui || ev.hasLikelySkip(getFullControl())) {
-    if (ev.ui) { pushEvents(<Ev>ev.options[0]); undoLog.write(ev.likely.idx + 1, true); } else playEvent(ev);
+    if (ev.ui) {
+      if (ev.type === "SELECTEVENT") pushEvents(<Ev>ev.options[ev.likely.idx]); else ev.result1((<Card[]>ev.options)[ev.likely.idx]);
+      undoLog.write(ev.likely.idx + 1, true);
+    } else playEvent(ev);
     ev = popEvent();
   }
   currentClickActions = undefined;

@@ -580,6 +580,30 @@ function setupChange(): void {
   if (globalFormSetup) document.getElementById("start").classList.remove("disabled");
   else document.getElementById("start").classList.add("disabled");
 }
+function makeLikelySkips(): void {
+  const options: [LikelyChoice, string][] = [
+    ['SUPERPOWER', 'Always confirm Superpower use'],
+    ['OUTWIT', 'Always confirm Outwit use'],
+    ['STRIKEORDER', 'Always chose strike ability order with multiple masterminds'],
+    ['DEFEATORDER', 'Always chose defeat/rescue ability order'],
+  ];
+  const el = document.getElementById("likelySkips");
+  options.map(([v, t]) => {
+    const i = document.createElement('input');
+    i.type = "checkbox";
+    i.id = `likely_${v}`;
+    i.checked = likelyConfig.includes(v);
+    i.addEventListener("change", function() {
+      if (this.checked) likelyConfig.push(v);
+      else if (likelyConfig.includes(v)) likelyConfig.splice(likelyConfig.indexOf(v), 1);
+    });
+    const l = document.createElement('label');
+    l.classList.add('multiselectlabel');
+    l.appendChild(i);
+    l.appendChild(document.createTextNode(t));
+    el.appendChild(l);
+  });
+}
 function setupInit(): void {
   makeBystanderSelects("setup_bystanders");
   makeBystanderSelects("setup_sidekicks", 'SIDEKICKS');
@@ -587,6 +611,7 @@ function setupInit(): void {
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
   makeSelects("setup_mastermind", "MASTERMINDS", "Extra Mastermind", [ undefined ]);
+  makeLikelySkips();
 }
 function chooseSelects(name: string, values: string[]): void {
   values.forEach((v, i) => {
