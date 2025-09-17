@@ -487,7 +487,7 @@ function makeOptions(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN
 }
 function selectRandom(id: string) {
   const e = <HTMLSelectElement>document.getElementById(id);
-  const options = [...e.options].filter(o => !o.disabled).map(o => o.value);
+  const options = [...e.options].filter(o => !o.disabled && o.value).map(o => o.value);
   if (options.length) e.value = options[Math.floor(Math.random() * options.length)];
   setupChange.call(e);
 }
