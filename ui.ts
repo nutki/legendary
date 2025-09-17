@@ -60,7 +60,7 @@ function makeDisplayCard(c: Card): string {
   return res + makeDisplayAttached(c);
 }
 function setSourceImg(name: string, transform?: string) {
-  const r = div("card", { id: "source2" }, img(name, "cardface", transform), div("frame"));
+  const r = div("card", { id: "source2" }, makeCardFace(name, transform), div("frame"));
   positionCard(r, {size: 'large', x:7.5, y:0});
   document.getElementById("card-container").appendChild(r);
 }
@@ -70,6 +70,13 @@ function clearSourceImg() {
 function makeDisplayPlayAreaImg(c: Card) {
   const gone = !playerState.playArea.deck.has(c2 => c2.id === c.id);
   return makeDisplayCardImg(c, gone);
+}
+function makeCardFace(src: string, transform?: string) {
+  const i = img(src, "cardface", transform);
+  const placeholder = img('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM0NV39HwAD0gIWu1P/WwAAAABJRU5ErkJggg==', "cardface", transform);
+  i.onload = () => { placeholder.style.display = 'none'; };
+  i.onerror = () => { i.setAttribute('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO87eLyHwAFyQJkk9PiMAAAAABJRU5ErkJggg=='); };
+  return div("cardfacecontainer", {}, placeholder, i);
 }
 function img(src: string, className?: string, transform?: string) {
   const e = document.createElement('img');
@@ -127,7 +134,7 @@ function makeDisplayCardImg(c: Card, gone: boolean = false, id: boolean = true, 
    onmouseleave: "clearSourceImg()",
   };
   if (id) options['data-card-id'] = c.id;
-  const d = div(gone ? "card gone" : "card", options, img(src, "cardface", transform));
+  const d = div(gone ? "card gone" : "card", options, makeCardFace(src, transform));
   if (faceUp && c.defense !== c.printedDefense)
     d.appendChild(div("attackHint", {}, text(c.defense)));
   if (faceUp && c.printedCost !== undefined && effectiveCost(c) !== c.printedCost)
@@ -478,14 +485,21 @@ function makeOptions(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN
     el.add(option);
   });
 }
+function selectRandom(id: string) {
+  const e = <HTMLSelectElement>document.getElementById(id);
+  const options = [...e.options].filter(o => !o.disabled).map(o => o.value);
+  if (options.length) e.value = options[Math.floor(Math.random() * options.length)];
+  setupChange.call(e);
+}
 function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN' | 'MASTERMINDS' | 'SCHEMES', name: string, values: string[]) {
   let selected = values.map((a, i) => {
     let e = document.getElementById(id + i);
     if (!e) return undefined;
     return (<HTMLSelectElement>e).value;
   });
-  document.getElementById(id).innerHTML = values.map((heroName, i) => `<span><div>${name} ${i + 1}</div><div><select id="${id}${i}"></select></div></span>`).join('');
+  document.getElementById(id).innerHTML = values.map((heroName, i) => `<span><div>${name} ${i + 1}</div><div><select id="${id}${i}"></select></span><button id="${id}${i}_rand">?</button></div></span>`).join('');
   values.forEach((name, i) => {
+    document.getElementById(id + i + '_rand').addEventListener("click", () => selectRandom(id + i));
     makeOptions(id + i, templateType, selected[i], n => name === undefined || name.split('|').includes(n.templateId));
   });
 }
@@ -611,6 +625,7 @@ function setupInit(): void {
   makeBystanderSelects("setup_wounds", 'WOUNDS');
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
   makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
+  document.getElementById("setup_scheme_rand").addEventListener("click", () => selectRandom("setup_scheme"));
   makeSelects("setup_mastermind", "MASTERMINDS", "Extra Mastermind", [ undefined ]);
   makeLikelySkips();
 }
@@ -715,7 +730,6 @@ function getFullControl() {
   return fullControl !== fullControlShift;
 }
 function initUI() {
-  window.onclick = clickCard;
   window.addEventListener('click', function(e) {
     clickCard(e);
   });
