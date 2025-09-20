@@ -953,6 +953,16 @@ interface Templates {
     templateId?: string
     cards: [number, Card][]
   }[]
+  STARTINGDECKS: {
+    set?: string
+    templateId?: string
+    cards: [number, Card][]
+  }[]
+  OFFICERS: {
+    set?: string
+    templateId?: string
+    cards: [number, Card][]
+  }[]
 }
 // Card definitions
 let cardTemplates: Templates = {
@@ -965,6 +975,8 @@ let cardTemplates: Templates = {
   AMBITIONS: [],
   SIDEKICKS: [],
   WOUNDS: [],
+  STARTINGDECKS: [],
+  OFFICERS: [],
 };
 function addTemplates(type: 'HENCHMEN' | 'SCHEMES' | 'MASTERMINDS' | 'AMBITIONS', set: string, templates: Card[]) {
   templates.forEach(t => {
@@ -1007,7 +1019,7 @@ function addVillainTemplates(set: string, templates: Templates['VILLAINS']) {
     cardTemplates.VILLAINS.push(t);
   });
 }
-function addTemplatesWithCounts(type: 'BYSTANDERS' | 'SIDEKICKS' | 'WOUNDS', set: string, cards: [number, Card][]) {
+function addTemplatesWithCounts(type: 'BYSTANDERS' | 'SIDEKICKS' | 'WOUNDS' | 'STARTINGDECKS' | 'OFFICERS', set: string, cards: [number, Card][]) {
   cards.forEach(c => c[1].set = set);
   cardTemplates[type].push({
     templateId: set,
@@ -1043,6 +1055,8 @@ function findSchemeTemplate(name: string): Card { return cardTemplates.SCHEMES.f
 function findBystanderTemplate(name: string) { return cardTemplates.BYSTANDERS.filter(t => t.templateId === name)[0]; }
 function findSidekickTemplate(name: string) { return cardTemplates.SIDEKICKS.filter(t => t.templateId === name)[0]; }
 function findWoundTemplate(name: string) { return cardTemplates.WOUNDS.filter(t => t.templateId === name)[0]; }
+function findStartingDeckTemplate(name: string) { return cardTemplates.STARTINGDECKS.filter(t => t.templateId === name)[0]; }
+function findOfficerTemplate(name: string) { return cardTemplates.OFFICERS.filter(t => t.templateId === name)[0]; }
 const u: undefined = undefined;
 
 function makeSchemeCard<T = void>(name: string, counts: SetupParams | SetupParamModFunction, effect: (ev: Ev<T>) => void, triggers: Trigger[] | Trigger = [], initfunc?: (state?: T) => void) {
@@ -1621,12 +1635,11 @@ gameState.hq.forEach((c, i) => c.cityPosition = [i, 1]);
 gameState.scheme.addNewCard(findSchemeTemplate(gameSetup.scheme));
 // Init starting decks
 const handCards = {
-  SHIELD: [ shieldAgentTemplate, shieldTrooperTemplate ],
-  HYDRA: [ hydraOperativeTemplate, hydraSoldierTemplate ],
+  SHIELD: findStartingDeckTemplate("Legendary"),
+  HYDRA: findStartingDeckTemplate("Villains"),
 }[gameSetup.handType];
 gameState.players.forEach(p => {
-  p.deck.addNewCard(handCards[0], 8);
-  p.deck.addNewCard(handCards[1], 4);
+  handCards.cards.forEach(([n, c]) => p.deck.addNewCard(c, n));
   p.deck.shuffle();
 });
 // Init hero deck and populate initial HQ
@@ -1638,9 +1651,9 @@ gameSetup.heroes.map(findHeroTemplate).forEach(h => {
 });
 gameState.herodeck.shuffle();
 // Init auxiliary decks
-if (gameSetup.withOfficers) gameState.officer.addNewCard(officerTemplate, 30);
+if (gameSetup.withOfficers) findOfficerTemplate("Legendary").cards.each(([n, c]) => gameState.officer.addNewCard(c, n));
 if (gameSetup.withSpecialOfficers) {
-  shieldOfficerTemplates.each(([n, c]) => gameState.officer.addNewCard(c, n));
+  findOfficerTemplate("S.H.I.E.L.D.").cards.each(([n, c]) => gameState.officer.addNewCard(c, n));
   gameState.officer.faceup = false;
   gameState.officer.shuffle();
 }

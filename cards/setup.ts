@@ -3,6 +3,7 @@
 const shieldAgentTemplate = makeHeroCard(u, 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "GN");
 const shieldTrooperTemplate = makeHeroCard(u, 'S.H.I.E.L.D. Trooper', 0, u, 1, Color.GRAY, "S.H.I.E.L.D.", "GN");
 const officerTemplate = makeHeroCard(u /*'Maria Hill'*/, 'S.H.I.E.L.D. Officer', 3, 2, u, Color.GRAY, "S.H.I.E.L.D." ,"GDN");
+addTemplatesWithCounts("OFFICERS", "Legendary", [[30, officerTemplate]]);
 const twistTemplate = new Card("SCHEME TWIST", "Scheme Twist");
 const strikeTemplate = new Card("MASTER STRIKE", "Master Strike");
 addTemplatesWithCounts("WOUNDS", "Legendary", [[ 30,
@@ -251,7 +252,7 @@ makeHorrorCard("Tyrant Mastermind", ev => addStatMod('defense', isMastermind, 3)
 horrorTemplates.forEach(c => c.set = "X-Men");
 
 // Expansion S.H.I.E.L.D.
-const shieldOfficerTemplates: [number, Card][] = [
+addTemplatesWithCounts("OFFICERS", "S.H.I.E.L.D.", [
 // You may send this Hero {UNDERCOVER}.
 // GUN: 1
 [ 2, makeHeroCard("S.H.I.E.L.D. Officer", "Dum Dum Dugan", 3, 2, 1, Color.STRENGTH, "S.H.I.E.L.D.", "GD", ev => chooseUndercoverEv(ev)) ],
@@ -291,8 +292,7 @@ const shieldOfficerTemplates: [number, Card][] = [
       { l: "on top of your deck", v: () => moveCardEv(ev, ev.source, playerState.deck) },
     ], f => f())
   ); }) ],
-];
-shieldOfficerTemplates.forEach(([n, c]) => c.set = "S.H.I.E.L.D.");
+]);
 
 addTemplatesWithCounts("SIDEKICKS", "Messiah Complex", [
 // Choose a team. {INVESTIGATE} for a card of that team.
@@ -396,4 +396,14 @@ addTemplatesWithCounts("WOUNDS", "Weapon X", [
 // ATTACK: 2
 // HEAL: When you defeat a Henchman this turn, you may KO this Wound.
 [ 1, makeEnragingWoundCard("Wild Rage", u, 2, 'DEFEAT', ev => isHenchman(ev.what)) ],
+]);
+addTemplatesWithCounts("STARTINGDECKS", "Legendary", [ [ 8, shieldAgentTemplate], [ 4, shieldTrooperTemplate ]]);
+addTemplatesWithCounts("STARTINGDECKS", "Villains", [ [ 8, hydraOperativeTemplate], [ 4, hydraSoldierTemplate ]]);
+addTemplatesWithCounts("STARTINGDECKS", "Marvel Studios Phase 1", [
+  [ 8, makeHeroCard(u, 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "N")],
+  [ 4, makeHeroCard(u, 'S.H.I.E.L.D. Trooper', 1, 0, u, Color.GRAY, "S.H.I.E.L.D.", "GN")],
+]);
+addTemplatesWithCounts("STARTINGDECKS", "Marvel Studios What If...?", [
+  [ 8, makeHeroCard(u, 'S.H.I.E.L.D. Agent',   0, 1, u, Color.GRAY, "S.H.I.E.L.D.", "N")],
+  [ 4, makeHeroCard(u, 'S.H.I.E.L.D. Trooper', 1, 0, u, Color.GRAY, "S.H.I.E.L.D.", "N")],
 ]);
