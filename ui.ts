@@ -1,3 +1,143 @@
+// UI Utils
+interface DropdownOption { label: string, value: string, group: string};
+class Dropdown {
+  container: HTMLElement;
+  options: DropdownOption[];
+  filteredOptions: DropdownOption[];
+  selected: DropdownOption | undefined;
+  dropdown: HTMLDivElement;
+  input: HTMLInputElement;
+  list: HTMLDivElement;
+  activeIndex: number;
+  clearButton: HTMLButtonElement;
+  static byId: Map<string, Dropdown> = new Map();
+  constructor(container: HTMLElement, options: DropdownOption[]) {
+    const selected = Dropdown.byId.get(container.id)?.value;
+    this.container = container;
+    this.options = this.filteredOptions = options;
+    this.selected = options.find(o => o.value === selected);
+    if (options.length === 1) this.selected = options[0];
+    this.createDropdown();
+    Dropdown.byId.set(container.id, this);
+  }
+  createDropdown() {
+    this.dropdown = document.createElement('div');
+    this.dropdown.className = 'dropdown';
+    this.input = document.createElement('input');
+    this.input.className = 'dropdown-input';
+    this.input.type = 'text';
+    this.input.value = this.selected ? this.selected.label : '';
+    this.input.placeholder = 'Select or search...';
+    this.input.addEventListener('keydown', (e) => this.onKeyDown(e));
+    this.input.addEventListener('input', () => this.onInput());
+    this.input.addEventListener('focus', () => {
+      this.showList();
+      this.input.select();
+    });
+    this.input.addEventListener('blur', () => {
+      this.input.value = this.selected ? this.selected.label : '';
+      this.filteredOptions = this.options;
+      this.renderList();
+      this.hideList();
+      setupChange.call(this)
+    });
+    this.clearButton = document.createElement('button');
+    this.clearButton.textContent = '×';
+    this.clearButton.className = 'dropdown-clear';
+    this.clearButton.addEventListener('click', () => {
+      this.input.value = '';
+      this.filteredOptions = this.options;
+      this.renderList();
+      this.selectOption(undefined);
+      setupChange.call(this);
+    });
+    this.list = document.createElement('div');
+    this.activeIndex = -1;
+    this.list.className = 'dropdown-list';
+    this.list.style.display = 'none';
+    this.dropdown.appendChild(this.input);
+    this.dropdown.appendChild(this.list);
+    if (this.options.length > 1) this.dropdown.appendChild(this.clearButton);
+    this.container.appendChild(this.dropdown);
+    this.renderList();
+  }
+  onInput() {
+    const value = this.input.value.toLowerCase();
+    this.filteredOptions = this.options.filter(opt => opt.label.toLowerCase().includes(value));
+    this.renderList();
+    this.showList();
+    this.activeIndex = -1;
+  }
+  renderList() {
+    this.list.innerHTML = '';
+    if (this.filteredOptions.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'dropdown-group';
+      empty.textContent = 'No results';
+      this.list.appendChild(empty);
+      return;
+    }
+    let currentGroup = '';
+    this.filteredOptions.forEach((opt, idx) => {
+      if (opt.group !== currentGroup) {
+        currentGroup = opt.group;
+        const groupHeader = document.createElement('div');
+        groupHeader.className = 'dropdown-group';
+        groupHeader.textContent = currentGroup;
+        this.list.appendChild(groupHeader);
+      }
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = opt.label;
+      item.addEventListener('mousedown', () => this.selectOption(opt));
+      if (opt === this.selected) {
+        item.classList.add('hover');
+        setTimeout(() => item.scrollIntoView({ block: 'nearest' }), 0);
+      }
+      this.list.appendChild(item);
+    });
+  }
+  onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'ArrowDown' && this.activeIndex < this.filteredOptions.length - 1) {
+      this.selectOption(this.filteredOptions[++this.activeIndex]); this.renderList(); e.preventDefault();
+    } else if (e.key === 'ArrowUp' && this.activeIndex > 0) {
+      this.selectOption(this.filteredOptions[--this.activeIndex]); this.renderList(); e.preventDefault();
+    } else if (e.key === 'ArrowUp' && this.activeIndex == -1) {
+      this.activeIndex = this.filteredOptions.length - 1;
+      this.selectOption(this.filteredOptions[this.activeIndex]); this.renderList(); e.preventDefault();
+    } else if (e.key === 'Enter' && this.activeIndex >= 0 && this.activeIndex < this.filteredOptions.length) {
+      this.selectOption(this.filteredOptions[this.activeIndex]);
+      this.hideList();
+      this.input.blur();
+      e.preventDefault();
+    } else if (e.key === 'Escape') {
+      this.input.blur();
+      e.preventDefault();
+    }
+  }
+  showList() {
+    const availiableHeight = window.innerHeight - this.input.getBoundingClientRect().bottom - 10;
+    const availiableHeightAbove = this.input.getBoundingClientRect().top - 10;
+    if (availiableHeight > availiableHeightAbove) {
+      this.list.style.maxHeight = availiableHeight + 'px';
+      this.list.classList.remove('top');
+    } else {
+      this.list.style.maxHeight = availiableHeightAbove + 'px';
+      this.list.classList.add('top');
+    }
+    this.list.style.display = 'block';
+    this.list.querySelectorAll('.hover').forEach(item => setTimeout(() => item.scrollIntoView({ block: 'nearest' }), 0));
+  }
+  hideList() { this.list.style.display = 'none'; this.activeIndex = -1; }
+  selectOption(opt: DropdownOption | undefined) {
+    this.selected = opt;
+    this.input.value = opt ? opt.label : '';
+    this.renderList();
+  }
+  get value() { return this.selected?.value; }
+  get id() { return this.container.id; }
+  setValue(value: string) { this.selectOption(this.options.find(o => o.value === value)); }
+}
 // GUI
 const uiConfig = {
   usesShieldLevel: false,
@@ -464,43 +604,24 @@ function setMessage(msg: string, gameOverMsg: string): void {
 }
 
 // Game setup selection screen
-function makeOptions(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN' | 'MASTERMINDS' | 'SCHEMES', current: string, f: (name: any) => boolean = () => true) {
+function makeDropdownOptions(templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN' | 'MASTERMINDS' | 'SCHEMES', f: (name: any) => boolean = () => true) {
   const values = cardTemplates[templateType].filter(f);
-  const el = <HTMLSelectElement>document.getElementById(id);
-  el.addEventListener("change", setupChange);
-  if (values.length !== 1) el.add(document.createElement("option"));
-  let set = "Legendary";
-  values.forEach(s => {
-    if (s.set !== set) {
-      set = s.set;
-      const option = document.createElement("option");
-      option.text = `---- ${set} ----`;
-      option.disabled = true;
-      el.add(option);
-    }
-    const option = document.createElement("option");
-    option.text = s instanceof Card ? s.cardName : s.name;
-    option.value = s.templateId;
-    if (current === s.templateId) option.selected = true;
-    el.add(option);
-  });
+  return values.map(s => ({ value: s.templateId, group: s.set, label: s instanceof Card ? s.cardName : s.name }))
 }
 function selectRandom(id: string) {
-  const e = <HTMLSelectElement>document.getElementById(id);
-  const options = [...e.options].filter(o => !o.disabled && o.value).map(o => o.value);
-  if (options.length) e.value = options[Math.floor(Math.random() * options.length)];
-  setupChange.call(e);
+  const dd = Dropdown.byId.get(id);
+  if (!dd) return;
+  const options = dd.options.filter(o => o.value);
+  if (options.length) {
+    dd.setValue(options[Math.floor(Math.random() * options.length)].value);
+    setupChange.call(dd);
+  }
 }
 function makeSelects(id: string, templateType: 'HEROES' | 'VILLAINS' | 'HENCHMEN' | 'MASTERMINDS' | 'SCHEMES', name: string, values: string[]) {
-  let selected = values.map((a, i) => {
-    let e = document.getElementById(id + i);
-    if (!e) return undefined;
-    return (<HTMLSelectElement>e).value;
-  });
-  document.getElementById(id).innerHTML = values.map((heroName, i) => `<span><div>${name} ${i + 1}</div><div><select id="${id}${i}"></select></span><button id="${id}${i}_rand">?</button></div></span>`).join('');
+  document.getElementById(id).innerHTML = values.map((heroName, i) => `<span><div>${name} ${i + 1}</div><div></span><div class="dropdown-container" id="${id}${i}"></div><button id="${id}${i}_rand">?</button></div></span>`).join('');
   values.forEach((name, i) => {
+    new Dropdown(document.getElementById(id + i), makeDropdownOptions(templateType, n => name === undefined || name.split('|').includes(n.templateId)));
     document.getElementById(id + i + '_rand').addEventListener("click", () => selectRandom(id + i));
-    makeOptions(id + i, templateType, selected[i], n => name === undefined || name.split('|').includes(n.templateId));
   });
 }
 function makeBystanderSelects(id: string, templateType: keyof Templates = 'BYSTANDERS') {
@@ -541,7 +662,7 @@ function setBysternderSelects(id: string, value: string[]) {
   checkAllBystanderSelects(id);
 }
 function getSelects(name: string, t: string[]): boolean {
-  const n = t.map((old, i) => t[i] = (<HTMLSelectElement>document.getElementById(name + i)).value);
+  const n = t.map((old, i) => t[i] = Dropdown.byId.get(name + i)?.value || '');
   return n.every(v => v) && n.uniqueCount(v => v) === n.length;
 }
 let globalFormSetup: Setup;
@@ -549,11 +670,9 @@ function setupChange(): void {
   if (/\d+$/.test(this.id)) {
     const prefix = this.id.replace(/\d+$/, '');
     const currentValue = this.value;
-    const selects = document.querySelectorAll<HTMLSelectElement>(`select[id^="${prefix}"]`);
-    selects.forEach(select => {
-      if (select !== this && select.value === currentValue) {
-        select.value = '';
-      }
+    const dropdowns = [...Dropdown.byId.entries()].filter(([k, v]) => k.startsWith(prefix)).map(([k, v]) => v);
+    dropdowns.forEach(select => {
+      if (select.id !== this.id && select.value === currentValue) select.setValue(undefined);
     });
   }
   if (this.type === "checkbox") {
@@ -562,14 +681,14 @@ function setupChange(): void {
     checkAllBystanderSelects("setup_wounds");
   }
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
-  const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
-  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
-  if (!sel.value || !mel.value) {
+  const selValue = Dropdown.byId.get("setup_scheme")?.value;
+  const melValue = Dropdown.byId.get("setup_mastermind0")?.value;
+  if (!selValue || !melValue) {
     globalFormSetup = undefined;
     document.getElementById("start").classList.add("disabled");
     return;
   };
-  const tmp = getGameSetup(sel.value, mel.value, parseInt(pel.value));  
+  const tmp = getGameSetup(selValue, melValue, parseInt(pel.value));
   makeSelects("setup_heroes", "HEROES", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "Villains Group", tmp.villains);
   makeSelects("setup_henchmen", "HENCHMEN", "Henchmen Group", tmp.henchmen);
@@ -624,24 +743,19 @@ function setupInit(): void {
   makeBystanderSelects("setup_sidekicks", 'SIDEKICKS');
   makeBystanderSelects("setup_wounds", 'WOUNDS');
   [...document.getElementsByTagName("input"), ...document.getElementsByTagName("select")].each(i => i.addEventListener("change", setupChange));
-  makeOptions("setup_scheme", "SCHEMES", "cardName", undefined);
+  new Dropdown(document.getElementById("setup_scheme"), makeDropdownOptions("SCHEMES"));
   document.getElementById("setup_scheme_rand").addEventListener("click", () => selectRandom("setup_scheme"));
-  makeSelects("setup_mastermind", "MASTERMINDS", "Extra Mastermind", [ undefined ]);
   makeLikelySkips();
 }
 function chooseSelects(name: string, values: string[]): void {
   values.forEach((v, i) => {
-    const el = <HTMLSelectElement>document.getElementById(name + i);
-    el.value = v;
+    Dropdown.byId.get(name + i)?.setValue(v);
   });
 }
 function setupSet(s: Setup): void {
   const pel = <HTMLSelectElement>document.getElementById("setup_players");
-  const sel = <HTMLSelectElement>document.getElementById("setup_scheme");
-  const mel = <HTMLSelectElement>document.getElementById("setup_mastermind0");
   pel.value = s.numPlayers.toString();
-  sel.value = s.scheme;
-  mel.value = s.mastermind[0];
+  Dropdown.byId.get("setup_scheme")?.setValue(s.scheme);
   const tmp = getGameSetup(s.scheme, s.mastermind[0], s.numPlayers);
   makeSelects("setup_heroes", "HEROES", "Hero", tmp.heroes);
   makeSelects("setup_villains", "VILLAINS", "Villains Group", tmp.villains);
@@ -680,7 +794,7 @@ function closePopupDecks() {
   getPopups().each(d => d.classList.add("hidden"));
 }
 function autoOpenPopupDecks(cardSelect: boolean) {
-  const topLevelSelects = [...document.querySelectorAll<HTMLSelectElement>(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
+  const topLevelSelects = [...document.querySelectorAll(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
   const idToDeck = new Map<string, Deck>(Deck.deckList.map(d => [d.id, d]));
   getPopups().each(d => {
     const deck = idToDeck.get(d.getAttribute("data-popup-id"));
@@ -689,7 +803,7 @@ function autoOpenPopupDecks(cardSelect: boolean) {
   });
 }
 function autoOpenMultiClickActionPopup() {
-  const topLevelSelects = [...document.querySelectorAll<HTMLSelectElement>(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
+  const topLevelSelects = [...document.querySelectorAll(".select:not(.popup .select)")].map(e => e.getAttribute("data-card-id"));
   if (topLevelSelects.includes(currentClickActions)) return;
   getPopups().each(d => {
     const localSelects = [...d.getElementsByClassName("select")].map(e => e.getAttribute("data-card-id"));

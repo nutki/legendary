@@ -419,6 +419,67 @@ div.shardHint {
 .numberstar { position: relative; font-size: 30%; top: -10%; }
 .number .size2 { font-size: 66%; }
 .number .size3 { font-size: 50%; }
+.dropdown-container {
+  display: inline-block;
+}
+.dropdown {
+  display: inline-block;
+  position: relative;
+  width: 350px;
+  font-size: 13px;
+}
+.dropdown-input {
+  font-size: 13px;
+  width: 100%;
+  padding: 2px 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.dropdown-list {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 10;
+  border-radius: 4px;
+}
+.dropdown-list.top {
+  bottom: 100%;
+  top: unset;
+}
+.dropdown-item {
+  padding: 4px;
+  cursor: pointer;
+}
+.dropdown-item:hover, .dropdown-item.hover {
+  background-color: #eaeaea;
+}
+.dropdown-group {
+  padding: 4px 10px;
+  color: #555;
+  font-style: italic;
+  font-size: small;
+  margin: auto auto;
+}
+.dropdown-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0;
+}
 </style>
 </head>
 <body>
@@ -495,7 +556,7 @@ div.shardHint {
 <div id="setupPage" style="position: absolute;top:0;">
 <div id="setupform">
 <span><div>Players</div><div><select id="setup_players"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div></span>
-<span><div>Scheme</div><div><select id="setup_scheme"></select><button id="setup_scheme_rand">?</button></div></span>
+<span><div>Scheme</div><div><div class="dropdown-container" id="setup_scheme"></div><button id="setup_scheme_rand">?</button></div></span>
 <div id="setup_mastermind"></div>
 <div id="setup_villains"></div>
 <div id="setup_henchmen"></div>
